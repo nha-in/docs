@@ -26742,8 +26742,9 @@ paths:
                     type: string
                     example: ACTIVE
                   message:
-                    type: string
-                    nullable: true
+                    type:
+                      - string
+                      - "null"
                     example: null
                   fullName:
                     type: string
@@ -27773,8 +27774,9 @@ paths:
                     type: string
                     example: ACTIVE
                   message:
-                    type: string
-                    nullable: true
+                    type:
+                      - string
+                      - "null"
                     example: null
                   fullName:
                     type: string

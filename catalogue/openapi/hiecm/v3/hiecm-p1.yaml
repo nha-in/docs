@@ -1061,8 +1061,7 @@ paths:
                           type: string
                         gender:
                           type: string
-                        email:
-                          nullable: true
+                        email: {}
                         profilePhoto:
                           type: string
                         status:
@@ -1071,14 +1070,10 @@ paths:
                           type: string
                         districtCode:
                           type: string
-                        subDistrictCode:
-                          nullable: true
-                        villageCode:
-                          nullable: true
-                        townCode:
-                          nullable: true
-                        wardCode:
-                          nullable: true
+                        subDistrictCode: {}
+                        villageCode: {}
+                        townCode: {}
+                        wardCode: {}
                         pincode:
                           type: string
                         address:
@@ -1091,12 +1086,10 @@ paths:
                           type: string
                         subdistrictName:
                           type: string
-                        villageName:
-                          nullable: true
+                        villageName: {}
                         townName:
                           type: string
-                        wardName:
-                          nullable: true
+                        wardName: {}
                         authMethods:
                           type: array
                           items:
@@ -1110,8 +1103,7 @@ paths:
                           type: string
                         verificationType:
                           type: string
-                        emailVerified:
-                          nullable: true
+                        emailVerified: {}
                         ABHANumber:
                           type: string
                         preferredAbhaAddress:
@@ -1641,8 +1633,9 @@ paths:
                 type: object
                 properties:
                   healthIdNumber:
-                    type: string
-                    nullable: true
+                    type:
+                      - string
+                      - "null"
                   abhaAddress:
                     type: string
                   authMethods:
@@ -1654,8 +1647,7 @@ paths:
                     items: {}
                   status:
                     type: string
-                  message:
-                    nullable: true
+                  message: {}
                   fullName:
                     type: string
                   mobile:
@@ -1914,11 +1906,13 @@ paths:
                       expiresIn:
                         type: integer
                       refreshToken:
-                        type: string
-                        nullable: true
+                        type:
+                          - string
+                          - "null"
                       refreshExpiresIn:
-                        type: integer
-                        nullable: true
+                        type:
+                          - integer
+                          - "null"
                       switchProfileEnabled:
                         type: boolean
                   accounts:
@@ -1944,8 +1938,7 @@ paths:
                           type: string
                         gender:
                           type: string
-                        email:
-                          nullable: true
+                        email: {}
                         profilePhoto:
                           type: string
                         status:
@@ -1954,14 +1947,10 @@ paths:
                           type: string
                         districtCode:
                           type: string
-                        subDistrictCode:
-                          nullable: true
-                        villageCode:
-                          nullable: true
-                        townCode:
-                          nullable: true
-                        wardCode:
-                          nullable: true
+                        subDistrictCode: {}
+                        villageCode: {}
+                        townCode: {}
+                        wardCode: {}
                         pincode:
                           type: string
                         address:
@@ -1974,12 +1963,10 @@ paths:
                           type: string
                         subdistrictName:
                           type: string
-                        villageName:
-                          nullable: true
+                        villageName: {}
                         townName:
                           type: string
-                        wardName:
-                          nullable: true
+                        wardName: {}
                         authMethods:
                           type: array
                           items:
@@ -1993,8 +1980,7 @@ paths:
                           type: string
                         verificationType:
                           type: string
-                        emailVerified:
-                          nullable: true
+                        emailVerified: {}
                         ABHANumber:
                           type: string
                         preferredAbhaAddress:

@@ -861,6 +861,37 @@ for (const [module, spec] of Object.entries(specs)) {
   }
 }
 
+// 14. OpenAPI 3.1 has no nullable; JSON Schema says null with a type array.
+// nullable: true joins 'null' to the type, and is dropped where the schema
+// names no type, since an untyped schema already accepts null. nullable: false
+// restates the default, so it is dropped and counted rather than logged per
+// field. Examples are skipped: a field named nullable there is data.
+for (const [module, spec] of Object.entries(specs)) {
+  let dropped = 0;
+  const walk = (node, label, where) => {
+    if (Array.isArray(node)) return node.forEach((v, i) => walk(v, label, `${where}[${i}]`));
+    if (!node || typeof node !== 'object') return;
+    if (node.nullable === true) {
+      delete node.nullable;
+      if (node.type === undefined) note(module, label, `\`${where}\`: nullable: true dropped; the schema names no type, so it already accepts null`);
+      else {
+        node.type = [...new Set([...[node.type].flat(), 'null'])];
+        note(module, label, `\`${where}\`: nullable: true written as type [${node.type.join(', ')}]; OpenAPI 3.1 has no nullable`);
+      }
+    } else if (node.nullable === false) { delete node.nullable; dropped++; }
+    for (const [k, v] of Object.entries(node)) if (k !== 'example' && k !== 'examples') walk(v, label, where ? `${where}.${k}` : k);
+  };
+  for (const group of ['paths', 'webhooks']) {
+    for (const [path, item] of Object.entries(spec[group] ?? {})) {
+      for (const [k, v] of Object.entries(item)) walk(v, METHODS.includes(k) ? v.operationId : `${path} ${k}`, '');
+    }
+  }
+  for (const [kind, defs] of Object.entries(spec.components ?? {})) {
+    for (const [name, def] of Object.entries(defs)) walk(def, `components.${kind}.${name}`, '');
+  }
+  if (dropped) note(module, 'schemas', `${dropped} nullable: false dropped; it restates the OpenAPI 3.1 default and 3.1 has no nullable`);
+}
+
 const emit = (spec) => {
   const doc = new Document(spec);
   visit(doc, {Scalar(_, node) { if (typeof node.value === 'string' && DATEISH.test(node.value)) node.type = 'QUOTE_DOUBLE'; }});

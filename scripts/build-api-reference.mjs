@@ -128,13 +128,16 @@ const ENCRYPTED_FIELDS = new Set(['loginId', 'aadhaar', 'otpValue', 'password'])
 // integrator sends when the call goes right.
 const firstBranch = (schema) => schema?.oneOf?.[0] ?? schema?.anyOf?.[0] ?? schema;
 
+// A 3.1 type array such as [string, 'null'] is read as its non-null member.
+const typeOf = (schema) => (Array.isArray(schema?.type) ? schema.type.find((t) => t !== 'null') : schema?.type);
+
 // The one value a field can take, where the schema allows only one: a one
 // value enum, or an array that must carry exactly its listed items, as the M1
 // use case scopes do. Try it fills these in and locks them.
 function fixedValue(property) {
   if (property.enum?.length === 1) return property.enum[0];
   const items = property.items?.enum;
-  if (property.type === 'array' && items?.length && property.minItems === items.length && property.maxItems === items.length) return items;
+  if (typeOf(property) === 'array' && items?.length && property.minItems === items.length && property.maxItems === items.length) return items;
   return undefined;
 }
 
@@ -146,9 +149,9 @@ function fields(schema, prefix = '', depth = 0) {
   const rows = [];
   for (const [name, raw] of Object.entries(schema.properties ?? {})) {
     const property = firstBranch(raw ?? {});
-    const type = property.type === 'array'
-      ? `${property.items?.type ?? 'object'}[]`
-      : property.type ?? 'object';
+    const type = typeOf(property) === 'array'
+      ? `${typeOf(property.items) ?? 'object'}[]`
+      : typeOf(property) ?? 'object';
     rows.push({
       name: prefix ? `${prefix}.${name}` : name,
       type,
@@ -159,7 +162,7 @@ function fields(schema, prefix = '', depth = 0) {
       encrypted: property['x-abdm-encrypted'] === true || ENCRYPTED_FIELDS.has(name),
       fixed: fixedValue(property),
     });
-    const child = property.type === 'array' ? property.items : property;
+    const child = typeOf(property) === 'array' ? property.items : property;
     if (child?.properties) {
       rows.push(...fields(child, prefix ? `${prefix}.${name}` : name, depth + 1));
     }
@@ -184,7 +187,7 @@ function sampleFromSchema(schema, name = '', depth = 0) {
   if (Array.isArray(schema.enum) && schema.enum.length > 0) return schema.enum[0];
 
   const type =
-    schema.type ?? (schema.properties ? 'object' : schema.items ? 'array' : 'string');
+    typeOf(schema) ?? (schema.properties ? 'object' : schema.items ? 'array' : 'string');
 
   if (type === 'object') {
     const properties = schema.properties ?? {};
@@ -1067,14 +1070,14 @@ for (const {platform, version, files} of tree) {
             required: Boolean(p.required),
             description: htmlToMarkdown(p.description),
             example: p.example ?? p.schema?.example,
-            type: p.schema?.type ?? 'string',
+            type: typeOf(p.schema) ?? 'string',
           })),
         pathParams: parameters
           .filter((p) => p.in === 'path')
-          .map((p) => ({name: p.name, required: true, description: htmlToMarkdown(p.description), type: p.schema?.type ?? 'string'})),
+          .map((p) => ({name: p.name, required: true, description: htmlToMarkdown(p.description), type: typeOf(p.schema) ?? 'string'})),
         queryParams: parameters
           .filter((p) => p.in === 'query')
-          .map((p) => ({name: p.name, required: Boolean(p.required), description: htmlToMarkdown(p.description), type: p.schema?.type ?? 'string', example: p.example ?? p.schema?.example})),
+          .map((p) => ({name: p.name, required: Boolean(p.required), description: htmlToMarkdown(p.description), type: typeOf(p.schema) ?? 'string', example: p.example ?? p.schema?.example})),
         body: fields(requestSchema),
         // An explicit example wins; otherwise the schema supplies one, so the
         // panel and the curl are never blank for an operation that takes a body.

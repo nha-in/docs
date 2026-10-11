@@ -112,18 +112,15 @@ paths:
                   properties:
                     intent:
                       type: string
-                      nullable: false
                       example: OPEN_PAYMENT_ORDER
                       description: The intention of share API call
                     abhaAddress:
                       type: string
                       example: <ABHA_ADDRESS>
-                      nullable: false
                       description: The abha address of the patient. Should start with Alphanumeric . and _ in the middle and must be ending with @abdm or @sbx
                     patientUid:
                       type: string
                       example: string
-                      nullable: false
                       description: Patient UId(unique ID).
                     procedures:
                       type: array
@@ -189,13 +186,11 @@ paths:
                               amount: 629.12
                     response:
                       type: object
-                      nullable: false
                       required:
                         - requestId
                       properties:
                         requestId:
                           type: string
-                          nullable: false
                           example: 6c3d4e5c-09d1-****-817b-a0c82d130c53
                       description: This is the response request-id which is generated from the share API
                 - type: object
@@ -215,13 +210,11 @@ paths:
                           example: string
                     response:
                       type: object
-                      nullable: false
                       required:
                         - requestId
                       properties:
                         requestId:
                           type: string
-                          nullable: false
                           example: 6c3d4e5c-09d1-****-817b-a0c82d130c53
                       description: This is the response request-id which is generated from the share API
       responses:
@@ -334,11 +327,9 @@ paths:
                     type: string
                     pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
                     description: 'ABDM-2500 - Service Unavailable. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
-                    nullable: false
                     example: ABDM-2500
                   message:
                     type: string
-                    nullable: false
                     example: Service Unavailable
       x-abdm-nha-operation-id: scan-gateway 2
   /api/hiecm/scan-gateway/v3/patient/on-selection:
@@ -392,17 +383,14 @@ paths:
                   properties:
                     intent:
                       type: string
-                      nullable: false
                       example: PAYMENT_ORDER
                       description: The intention of share API call
                     openOrderRequestId:
                       type: object
-                      nullable: false
                       example: b767614f-153a-4aa3-946f-1622596f0fab
                       description: This is the request-id which is generated from the share/Open Order Request id api
                     abhaAddress:
                       type: string
-                      nullable: false
                       example: <ABHA_ADDRESS>
                       description: abha address of the user/patient.
                     procedures:
@@ -463,7 +451,6 @@ paths:
                               amount: 629.12
                     paymentBundle:
                       type: object
-                      nullable: false
                       required:
                         - paymentMode
                         - paymentUrl
@@ -474,45 +461,37 @@ paths:
                       properties:
                         paymentMode:
                           type: string
-                          nullable: false
                           example: GATEWAY
                           description: Specifies the mode of payment. For example, “GATEWAY” indicates that the payment is processed through a payment gateway
                         paymentUrl:
                           type: string
-                          nullable: false
                           example: string
                           description: A URL provided by the payment gateway for processing the payment. This is typically a link where the user can complete the payment transaction.
                         orderNumber:
                           type: string
-                          nullable: false
                           example: string
                           description: " A unique identifier for the order associated with the payment. This helps in tracking and referencing the specific transaction."
                         amount:
                           type: number
                           format: double
-                          nullable: false
                           example: 1250.55
                           description: The total amount to be paid. This is usually a numeric value representing the cost of the transaction.
                         merchantId:
                           type: string
-                          nullable: false
                           example: "123465"
                           description: A unique identifier for the merchant receiving the payment. This ID is used to identify the merchant in the payment system.
                         description:
                           type: string
-                          nullable: false
                           example: Testing
                           description: A brief description of the payment or the transaction. This can include details about what the payment is for or any other relevant information.
                       description: This should be populated for payments
                     response:
                       type: object
-                      nullable: false
                       required:
                         - requestId
                       properties:
                         requestId:
                           type: string
-                          nullable: false
                           example: 6c3d4e5c-09d1-***-817b-a0c82d130c53
                       description: This is the response request-id which is generated randomly.
                 - type: object
@@ -530,13 +509,11 @@ paths:
                           example: string
                     response:
                       type: object
-                      nullable: false
                       required:
                         - requestId
                       properties:
                         requestId:
                           type: string
-                          nullable: false
                           example: 6c3d4e5c-09d1-***-817b-a0c82d130c53
                       description: This is the response request-id which is generated randomly.
       responses:
@@ -649,11 +626,9 @@ paths:
                     type: string
                     pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
                     description: 'ABDM-2500 - Service Unavailable. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
-                    nullable: false
                     example: ABDM-2500
                   message:
                     type: string
-                    nullable: false
                     example: Service Unavailable
       x-abdm-nha-operation-id: scan-gateway 2 (2)
   /api/hiecm/scan-gateway/v3/patient/scan-pay/notify:
@@ -711,7 +686,6 @@ paths:
               properties:
                 acknowledgement:
                   type: object
-                  nullable: false
                   required:
                     - status
                     - abhaAddress
@@ -723,37 +697,30 @@ paths:
                   properties:
                     status:
                       type: string
-                      nullable: false
                       example: SUCCESS/ CANCELED/ PENDING/ FAIL/ REFUND_INITIATED/ REFUND_SUCCESS
                       description: " Indicates the outcome of the transaction. Possible values are: <br></br>SUCCESS: The transaction was completed successfully. <br></br>FAIL: The transaction failed. <br></br>CANCELED: The transaction was cancelled. <br></br>PENDING: The transaction in pending.<br></br> REFUND_INITIATED: refund initiated.<br></br>REFUND_SUCCESS: refunded successfully"
                     abhaAddress:
                       type: string
-                      nullable: false
                       example: <username>@sbx
                       description: The abha addresss of the user, formatted as <ABHA_ADDRESS>. This is a unique identifier for the user in the health system.
                     transactionId:
                       type: string
-                      nullable: false
                       example: string
                       description: A unique identifier for the transaction. This helps in tracking and referencing the specific transaction.
                     orderNumber:
                       type: string
-                      nullable: false
                       example: string
                       description: A unique identifier for the order associated with the transaction. This helps in tracking and referencing the specific order.
                     openOrderRequestId:
                       type: object
-                      nullable: false
                       example: b767614f-153a-4aa3-946f-1622596f0fab
                       description: This is the response request-id which is generated from the share/openOrder api
                     paymentDate:
                       type: string
-                      nullable: false
                       example: "2025-01-20T07:47:49.102Z"
                       description: ISO Timestamp.
                     paymentRecipetLink:
                       type: string
-                      nullable: false
                       example: PDF URL LINK of RECIPT
                       description: This attribute holds the URL link to the payment receipt. It is a string that provides a direct link to a PDF document or other format of the receipt for the transaction.
                   description: The intention of share API call
@@ -867,11 +834,9 @@ paths:
                     type: string
                     pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
                     description: 'ABDM-2500 - Service Unavailable. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
-                    nullable: false
                     example: ABDM-2500
                   message:
                     type: string
-                    nullable: false
                     example: Service Unavailable
       x-abdm-nha-operation-id: abdm-patient-share 1
   /api/hiecm/scan-gateway/v3/patient/scan-pay/on-order-status:
@@ -921,7 +886,6 @@ paths:
                   properties:
                     acknowledgement:
                       type: object
-                      nullable: false
                       required:
                         - status
                         - abhaAddress
@@ -933,49 +897,40 @@ paths:
                       properties:
                         status:
                           type: string
-                          nullable: false
                           example: SUCCESS/ CANCELED/ PENDING/ FAIL/ REFUND_INITIATED/ REFUND_SUCCESS
                           description: " Indicates the outcome of the transaction. Possible values are: <br></br>SUCCESS: The transaction was completed successfully. <br></br>FAIL: The transaction failed. <br></br>CANCELED: The transaction was cancelled. <br></br>PENDING: The transaction in pending.<br></br> REFUND_INITIATED: refund initiated.<br></br>REFUND_SUCCESS: refunded successfully"
                         abhaAddress:
                           type: string
-                          nullable: false
                           example: <username>@sbx
                           description: The abha Address of the user, formatted as <ABHA_ADDRESS>. This is a unique identifier for the user in the health system.
                         transactionId:
                           type: string
-                          nullable: false
                           example: string
                           description: A unique identifier for the transaction. This helps in tracking and referencing the specific transaction.
                         orderNumber:
                           type: string
-                          nullable: false
                           example: string
                           description: A unique identifier for the order associated with the transaction. This helps in tracking and referencing the specific order.
                         openOrderRequestId:
                           type: string
-                          nullable: false
                           example: Queried Request id
                           description: The unique identifier for the queried request. This ID is used to track and reference the specific request within the system.
                         paymentDate:
                           type: string
-                          nullable: false
                           example: Transaction Date UTC
                           description: he date and time when the transaction occurred, formatted in UTC
                         paymentRecipetLink:
                           type: string
-                          nullable: false
                           example: PDF URL LINK of RECIPT
                           description: This attribute holds the URL link to the payment receipt. It is a string that provides a direct link to a PDF document or other format of the receipt for the transaction.
                       description: The intention of share API call
                     response:
                       type: object
-                      nullable: false
                       required:
                         - requestId
                       properties:
                         requestId:
                           type: string
-                          nullable: false
                           example: b767614f-153a-***-946f-1622596f0fab
                       description: This is the response request-id which is generated from the share api
                 - type: object
@@ -993,13 +948,11 @@ paths:
                           example: string
                     response:
                       type: object
-                      nullable: false
                       required:
                         - requestId
                       properties:
                         requestId:
                           type: string
-                          nullable: false
                           example: 6c3d4e5c-09d1-***-817b-a0c82d130c53
                       description: This is the response request-id which is generated randomly.
       responses:
@@ -1112,11 +1065,9 @@ paths:
                     type: string
                     pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
                     description: 'ABDM-2500 - Service Unavailable. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
-                    nullable: false
                     example: ABDM-2500
                   message:
                     type: string
-                    nullable: false
                     example: Service Unavailable
       x-abdm-nha-operation-id: scan-gateway 2 (3)
   /api/hiecm/scan-gateway/v3/patient/share/open-order:
@@ -1186,36 +1137,30 @@ paths:
               properties:
                 intent:
                   type: string
-                  nullable: false
                   example: OPEN_PAYMENT_ORDER
                   description: The intention of share API call
                 metaData:
                   type: object
                   description: A key-value pair carrying the location longitude and latitude.
-                  nullable: false
                   required:
                     - hipId
                     - counterId
                   properties:
                     hipId:
                       type: string
-                      nullable: false
                       example: HIP_1
                       description: The service ID of the health information provider
                     counterId:
                       type: number
-                      nullable: false
                       example: 123-456
                 profile:
                   type: object
-                  nullable: false
                   required:
                     - patient
                   description: This should populated only for PAYMENT_SHARE
                   properties:
                     patient:
                       type: object
-                      nullable: false
                       required:
                         - abhaNumber
                         - abhaAddress
@@ -1228,18 +1173,17 @@ paths:
                         - phoneNumber
                       properties:
                         abhaNumber:
-                          type: string
-                          nullable: true
+                          type:
+                            - string
+                            - "null"
                           example: 91-7507-xxxx-xxxx
                           description: The abha number of the patient. Should be only 14 digit
                         abhaAddress:
                           type: string
-                          nullable: false
                           example: <ABHA_ADDRESS>
                           description: The abha address of the patient. Should start with Alphanumeric . and  _  in the middle and must be ending with @abdm or @sbx
                         name:
                           type: string
-                          nullable: false
                           example: name
                           description: The name of the patient. Only alphabets.
                         gender:
@@ -1249,25 +1193,23 @@ paths:
                             - F
                             - O
                             - D
-                          nullable: false
                           example: M
                           description: The gender of the patient
                         dayOfBirth:
-                          type: string
+                          type:
+                            - string
+                            - "null"
                           format: number
-                          nullable: true
                           example: string
                           description: The day of birth of the patient. Only allows numeric values between 1 abd 31
                         monthOfBirth:
                           type: string
                           format: number
-                          nullable: false
                           example: string
                           description: The month of birth of the patient. Only allows numeric values between 1 abd 12
                         yearOfBirth:
                           type: string
                           format: number
-                          nullable: false
                           example: string
                           description: The month of birth of the patient. Only allows numeric values and must be 4 digit ranging between 1900 and 2200
                         address:
@@ -1277,27 +1219,24 @@ paths:
                           properties:
                             line:
                               type: string
-                              nullable: false
                               example: Address line 1
                               description: The address line
                             district:
-                              type: string
-                              nullable: true
+                              type:
+                                - string
+                                - "null"
                               example: XXXXXXX
                               description: The district and should only contain alphabets
                             state:
                               type: string
-                              nullable: false
                               example: XXXXXX
                               description: The state and should only contain alphabets
                             pincode:
                               type: string
-                              nullable: false
                               example: XXXXXX
                               description: Should be 5 digits and only contain numbers
                         phoneNumber:
                           type: string
-                          nullable: false
                           example: 987654xxxx
                           description: The mobile number of the patient. Must be 10 digit and contain only 0-9
       responses:
@@ -1410,11 +1349,9 @@ paths:
                     type: string
                     pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
                     description: 'ABDM-2500 - Service Unavailable. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
-                    nullable: false
                     example: ABDM-2500
                   message:
                     type: string
-                    nullable: false
                     example: Service Unavailable
       x-abdm-nha-operation-id: abdm-patient-share 1 (2)
   /api/hiecm/scan-gateway/v3/patient/selection:
@@ -1486,17 +1423,14 @@ paths:
                   properties:
                     intent:
                       type: string
-                      nullable: false
                       example: PAYMENT_ORDER
                       description: The intention of share API call
                     openOrderRequestId:
                       type: object
-                      nullable: false
                       example: b767614f-153a-***-946f-1622596f0fab
                       description: This is the response request-id which is generated from the share/openOrder api
                     abhaAddress:
                       type: string
-                      nullable: false
                       example: <ABHA_ADDRESS>
                       description: abha address of the user/patient.
                     procedures:
@@ -1665,11 +1599,9 @@ paths:
                     type: string
                     pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
                     description: 'ABDM-2500 - Service Unavailable. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
-                    nullable: false
                     example: ABDM-2500
                   message:
                     type: string
-                    nullable: false
                     example: Service Unavailable
       x-abdm-nha-operation-id: abdm-patient-share 1 (3)
   /api/hiecm/scan-gateway/v3/patient/scan-pay/on-notify:
@@ -1719,7 +1651,6 @@ paths:
                   properties:
                     acknowledgement:
                       type: object
-                      nullable: false
                       required:
                         - status
                         - abhaAddress
@@ -1732,48 +1663,39 @@ paths:
                       properties:
                         status:
                           type: string
-                          nullable: false
                           example: SUCCESS/ CANCELED/ PENDING/ FAIL/ REFUND_INITIATED/ REFUND_SUCCESS
                           description: " Indicates the outcome of the transaction. Possible values are: <br></br>SUCCESS: The transaction was completed successfully. <br></br>FAIL: The transaction failed. <br></br>CANCELED: The transaction was cancelled. <br></br>PENDING: The transaction in pending.<br></br> REFUND_INITIATED: refund initiated.<br></br>REFUND_SUCCESS: refunded successfully"
                         abhaAddress:
                           type: string
-                          nullable: false
                           example: <username>@sbx
                           description: The health ID of the user, formatted as <ABHA_ADDRESS>. This is a unique identifier for the user in the health system.
                         transactionId:
                           type: string
-                          nullable: false
                           example: string
                           description: A unique identifier for the transaction. This helps in tracking and referencing the specific transaction.
                         orderNumber:
                           type: string
-                          nullable: false
                           example: string
                           description: A unique identifier for the order associated with the transaction. This helps in tracking and referencing the specific order.
                         openOrderRequestId:
                           type: object
-                          nullable: false
                           example: b767614f-153a-4aa3-946f-1622596f0fab
                           description: This is the response request-id which is generated from the share/openOrder api
                         paymentDate:
                           type: string
-                          nullable: false
                           example: "2025-01-20T07:47:49.102Z"
                           description: ISO Timestamp.
                         paymentRecipetLink:
                           type: string
-                          nullable: false
                           example: PDF URL LINK of RECIPT
                           description: This attribute holds the URL link to the payment receipt. It is a string that provides a direct link to a PDF document or other format of the receipt for the transaction. The intention of share API call
                     response:
                       type: object
-                      nullable: false
                       required:
                         - requestId
                       properties:
                         requestId:
                           type: string
-                          nullable: false
                           example: b767614f-153a-***-946f-1622596f0fab
                       description: This is the response request-id which is generated from the share api
                 - type: object
@@ -1791,13 +1713,11 @@ paths:
                           example: string
                     response:
                       type: object
-                      nullable: false
                       required:
                         - requestId
                       properties:
                         requestId:
                           type: string
-                          nullable: false
                           example: 6c3d4e5c-09d1-***-817b-a0c82d130c53
                       description: This is the response request-id which is generated randomly.
       responses:
@@ -1910,11 +1830,9 @@ paths:
                     type: string
                     pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
                     description: 'ABDM-2500 - Service Unavailable. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
-                    nullable: false
                     example: ABDM-2500
                   message:
                     type: string
-                    nullable: false
                     example: Service Unavailable
       x-abdm-nha-operation-id: scan-gateway 2 (4)
   /api/hiecm/scan-gateway/v3/patient/scan-pay/order-status:
@@ -1982,7 +1900,6 @@ paths:
               properties:
                 queryStatus:
                   type: object
-                  nullable: false
                   required:
                     - orderNumber
                     - abhaAddress
@@ -1990,17 +1907,14 @@ paths:
                   properties:
                     orderNumber:
                       type: string
-                      nullable: false
                       example: string
                       description: " A unique identifier for the order. This helps in tracking and referencing the specific order associated with the query."
                     abhaAddress:
                       type: string
-                      nullable: false
                       example: <ABHA_ADDRESS>
                       description: abha address of the user/patient.
                     openOrderRequestId:
                       type: string
-                      nullable: false
                       example: 0d8bd16b-117c-4d07-9916-109fe3a9ab88
                       description: The request id is generated from the /share/Open Order Request id
                   description: The queryStatus is used to check the status of a specific order and its associated patient-share request.
@@ -2114,11 +2028,9 @@ paths:
                     type: string
                     pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
                     description: 'ABDM-2500 - Service Unavailable. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
-                    nullable: false
                     example: ABDM-2500
                   message:
                     type: string
-                    nullable: false
                     example: Service Unavailable
       x-abdm-nha-operation-id: abdm-patient-share 1 (4)
   /api/hiecm/scan-gateway/v3/patient/scan-pay/details:
@@ -2442,11 +2354,9 @@ paths:
                     type: string
                     pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
                     description: 'ABDM-2500 - Service Unavailable. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
-                    nullable: false
                     example: ABDM-2500
                   message:
                     type: string
-                    nullable: false
                     example: Service Unavailable
       x-abdm-nha-operation-id: scan-gateway 7
   /api/hiecm/gateway/v3/scanPay/updateVersion:
@@ -2497,17 +2407,14 @@ paths:
               properties:
                 recordShareEnabled:
                   type: boolean
-                  nullable: false
                   example: true
                   description: It describes whether the record share is enabled or not.
                 scanPayEnabled:
                   type: boolean
-                  nullable: false
                   example: true
                   description: It describes whether the scan pay is enabled or not.
                 scanPayVersion:
                   type: string
-                  nullable: false
                   example: v2
                   description: It describes the version.
                 serviceId:
@@ -2608,11 +2515,9 @@ paths:
                     type: string
                     pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
                     description: 'ABDM-2500 - Service Unavailable. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
-                    nullable: false
                     example: ABDM-2500
                   message:
                     type: string
-                    nullable: false
                     example: Service Unavailable
       x-abdm-nha-operation-id: scan-gateway 8
 webhooks:
@@ -2665,30 +2570,27 @@ webhooks:
               properties:
                 intent:
                   type: string
-                  nullable: false
                   example: OPEN_PAYMENT_ORDER
                   description: The intention of share API call
                 metaData:
                   type: object
                   description: A key-value pair carrying the location longitude and latitude.
-                  nullable: false
                   required:
                     - hipId
                     - counterId
                   properties:
                     hipId:
                       type: string
-                      nullable: false
                       example: HIP_1
                       description: The service ID of the health information provider
                     counterId:
                       type: number
-                      nullable: false
                       example: 1
                       description: it describes the counterId.
                 profile:
-                  type: object
-                  nullable: true
+                  type:
+                    - object
+                    - "null"
                   required:
                     - patient
                   description: This should populated only for PAYMENT_SHARE
@@ -2705,18 +2607,17 @@ webhooks:
                         - phoneNUmber
                       properties:
                         abhaNumber:
-                          type: string
-                          nullable: true
+                          type:
+                            - string
+                            - "null"
                           example: 91-7507-xxxx-xxxx
                           description: The abha number of the patient. Should be only 14 digit
                         abhaAddress:
                           type: string
-                          nullable: false
                           example: <ABHA_ADDRESS>
                           description: The abha address of the patient. Should start with Alphanumeric . and  _  in the middle and must be ending with @abdm or @sbx
                         name:
                           type: string
-                          nullable: false
                           example: name
                           description: The name of the patient. Only alphabets.
                         gender:
@@ -2726,56 +2627,52 @@ webhooks:
                             - F
                             - O
                             - D
-                          nullable: false
                           example: M
                           description: The gender of the patient
                         dayOfBirth:
-                          type: string
+                          type:
+                            - string
+                            - "null"
                           format: number
-                          nullable: true
                           example: string
                           description: The day of birth of the patient. Only allows numeric values between 1 abd 31
                         monthOfBirth:
                           type: string
                           format: number
-                          nullable: false
                           example: string
                           description: The month of birth of the patient. Only allows numeric values between 1 abd 12
                         yearOfBirth:
                           type: string
                           format: number
-                          nullable: false
                           example: string
                           description: The month of birth of the patient. Only allows numeric values and must be 4 digit ranging between 1900 and 2200
                         address:
                           type: object
-                          nullable: false
                           required:
                             - line
                           properties:
                             line:
-                              type: string
-                              nullable: true
+                              type:
+                                - string
+                                - "null"
                               example: Address line 1
                               description: The address line
                             district:
-                              type: string
-                              nullable: true
+                              type:
+                                - string
+                                - "null"
                               example: XXXXXXX
                               description: The district and should only contain alphabets
                             state:
                               type: string
-                              nullable: false
                               example: XXXXXX
                               description: The state and should only contain alphabets
                             pincode:
                               type: string
-                              nullable: false
                               example: XXXXXX
                               description: Should be 5 digits and only contain numbers
                         phoneNumber:
                           type: string
-                          nullable: false
                           example: 987654xxxx
                           description: The mobile number of the patient. Must be 10 digit and contain only 0-9
       responses:
@@ -2867,11 +2764,9 @@ webhooks:
                     type: string
                     pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
                     description: 'ABDM-2500 - Service Unavailable. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
-                    nullable: false
                     example: ABDM-2500
                   message:
                     type: string
-                    nullable: false
                     example: Service Unavailable
       x-abdm-nha-operation-id: patient-share 1
       x-abdm-answered-by: scan-and-pay_post_scan_gateway_v3_patient_on_share_open_order
@@ -2925,18 +2820,15 @@ webhooks:
               properties:
                 intent:
                   type: string
-                  nullable: false
                   example: PAYMENT_ORDER
                   description: The intention of share API call
                 openOrderRequestId:
                   type: object
-                  nullable: false
                   example: 6c3d4e5c-09d1-4ecc-817b-a0c82d130c53
                   description: This is the response request-id which is generated from the share API
                 abhaAddress:
                   type: string
                   example: <ABHA_ADDRESS>
-                  nullable: false
                   description: The abha address of the patient. Should start with Alphanumeric . and _ in the middle and must be ending with @abdm or @sbx
                 procedures:
                   type: array
@@ -3083,11 +2975,9 @@ webhooks:
                     type: string
                     pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
                     description: 'ABDM-2500 - Service Unavailable. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
-                    nullable: false
                     example: ABDM-2500
                   message:
                     type: string
-                    nullable: false
                     example: Service Unavailable
       x-abdm-nha-operation-id: patient-share 1 (2)
       x-abdm-answered-by: scan-and-pay_post_scan_gateway_v3_patient_on_selection
@@ -3140,7 +3030,6 @@ webhooks:
                   properties:
                     acknowledgement:
                       type: object
-                      nullable: false
                       required:
                         - status
                         - abhaAddress
@@ -3152,48 +3041,39 @@ webhooks:
                       properties:
                         status:
                           type: string
-                          nullable: false
                           example: SUCCESS/ CANCELED/ PENDING/ FAIL/ REFUND_INITIATED/ REFUND_SUCCESS
                           description: " Indicates the outcome of the transaction. Possible values are: <br></br>SUCCESS: The transaction was completed successfully. <br></br>FAIL: The transaction failed. <br></br>CANCELED: The transaction was cancelled. <br></br>PENDING: The transaction in pending.<br></br> REFUND_INITIATED: refund initiated.<br></br>REFUND_SUCCESS: refunded successfully"
                         abhaAddress:
                           type: string
-                          nullable: false
                           example: <username>@sbx
                           description: The abha addresss of the user, formatted as <ABHA_ADDRESS>. This is a unique identifier for the user in the health system.
                         transactionId:
                           type: string
-                          nullable: false
                           example: string
                           description: A unique identifier for the transaction. This helps in tracking and referencing the specific transaction.
                         orderNumber:
                           type: string
-                          nullable: false
                           example: string
                           description: A unique identifier for the order associated with the transaction. This helps in tracking and referencing the specific order.
                         openOrderRequestId:
                           type: object
-                          nullable: false
                           example: b767614f-153a-4aa3-946f-1622596f0fab
                           description: This is the response request-id which is generated from the share/openOrder api
                         paymentDate:
                           type: string
-                          nullable: false
                           example: "2025-01-20T07:47:49.102Z"
                           description: ISO Timestamp.
                         paymentRecipetLink:
                           type: string
-                          nullable: false
                           example: PDF URL LINK of RECIPT
                           description: This attribute holds the URL link to the payment receipt. It is a string that provides a direct link to a PDF document or other format of the receipt for the transaction.
                     response:
                       type: object
-                      nullable: false
                       required:
                         - requestId
                       properties:
                         requestId:
                           type: string
-                          nullable: false
                           example: b767614f-153a-4aa3-946f-1622596f0fab
                       description: This is the response request-id which is generated from the share api
       responses:
@@ -3285,11 +3165,9 @@ webhooks:
                     type: string
                     pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
                     description: 'ABDM-2500 - Service Unavailable. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
-                    nullable: false
                     example: ABDM-2500
                   message:
                     type: string
-                    nullable: false
                     example: Service Unavailable
       x-abdm-nha-operation-id: patient-share 2
       x-abdm-triggered-by: scan-and-pay_post_scan_gateway_v3_patient_scan_pay_notify
@@ -3340,7 +3218,6 @@ webhooks:
               properties:
                 queryStatus:
                   type: object
-                  nullable: false
                   required:
                     - orderNumber
                     - abhaAddress
@@ -3348,17 +3225,14 @@ webhooks:
                   properties:
                     orderNumber:
                       type: string
-                      nullable: false
                       example: string
                       description: " A unique identifier for the order. This helps in tracking and referencing the specific order associated with the query."
                     abhaAddress:
                       type: string
-                      nullable: false
                       example: <ABHA_ADDRESS>
                       description: abha address of the user/patient.
                     openOrderRequestId:
                       type: string
-                      nullable: false
                       example: 0d8bd16b-117c-4d07-9916-109fe3a9ab88
                       description: " A unique identifier for the patient-share request. This ID is used to track and reference the specific request within the system."
                   description: The queryStatus is used to check the status of a specific order and its associated patient-share request.
@@ -3451,11 +3325,9 @@ webhooks:
                     type: string
                     pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
                     description: 'ABDM-2500 - Service Unavailable. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
-                    nullable: false
                     example: ABDM-2500
                   message:
                     type: string
-                    nullable: false
                     example: Service Unavailable
       x-abdm-nha-operation-id: patient-share 2 (2)
       x-abdm-answered-by: scan-and-pay_post_scan_gateway_v3_patient_scan_pay_on_ord_21f376
@@ -3511,17 +3383,14 @@ webhooks:
               properties:
                 intent:
                   type: string
-                  nullable: false
                   example: OPEN_PAYMENT_ORDER
                   description: The intention of share API call
                 abhaAddress:
                   type: string
                   example: <ABHA_ADDRESS>
-                  nullable: false
                   description: The abha address of the patient. Should start with Alphanumeric . and _ in the middle and must be ending with @abdm or @sbx
                 patientUid:
                   type: string
-                  nullable: false
                   example: string5
                 procedures:
                   type: array
@@ -3587,13 +3456,11 @@ webhooks:
                           amount: 629.12
                 response:
                   type: object
-                  nullable: false
                   required:
                     - requestId
                   properties:
                     requestId:
                       type: string
-                      nullable: false
                       example: 6c3d4e5c-09d1-4ecc-817b-a0c82d130c53
                   description: This is the response request-id which is generated from the share API
       responses:
@@ -3685,11 +3552,9 @@ webhooks:
                     type: string
                     pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
                     description: 'ABDM-2500 - Service Unavailable. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
-                    nullable: false
                     example: ABDM-2500
                   message:
                     type: string
-                    nullable: false
                     example: Service Unavailable
       x-abdm-nha-operation-id: patient-share 2 (3)
       x-abdm-triggered-by: scan-and-pay_post_scan_gateway_v3_patient_share_open_order
@@ -3745,17 +3610,14 @@ webhooks:
               properties:
                 intent:
                   type: string
-                  nullable: false
                   example: PAYMENT_ORDER
                   description: The intention of share API call
                 openOrderRequestId:
                   type: object
-                  nullable: false
                   example: b767614f-153a-4aa3-946f-1622596f0fab
                   description: This is the response request-id which is generated from the share api
                 abhaAddress:
                   type: string
-                  nullable: false
                   example: <ABHA_ADDRESS>
                 procedures:
                   type: array
@@ -3815,7 +3677,6 @@ webhooks:
                           amount: 629.12
                 paymentBundle:
                   type: object
-                  nullable: false
                   required:
                     - paymentMode
                     - paymentUrl
@@ -3826,45 +3687,37 @@ webhooks:
                   properties:
                     paymentMode:
                       type: string
-                      nullable: false
                       example: GATEWAY
                       description: Specifies the mode of payment. For example, “GATEWAY” indicates that the payment is processed through a payment gateway
                     paymentUrl:
                       type: string
-                      nullable: false
                       example: string
                       description: A URL provided by the payment gateway for processing the payment. This is typically a link where the user can complete the payment transaction.
                     orderNumber:
                       type: string
-                      nullable: false
                       example: string
                       description: " A unique identifier for the order associated with the payment. This helps in tracking and referencing the specific transaction."
                     amount:
                       type: string
                       format: double
-                      nullable: false
                       example: "1250.55"
                       description: The total amount to be paid. This is usually a numeric value representing the cost of the transaction.
                     merchantId:
                       type: string
-                      nullable: false
                       example: "123465"
                       description: A unique identifier for the merchant receiving the payment. This ID is used to identify the merchant in the payment system.
                     description:
                       type: string
-                      nullable: false
                       example: Testing
                       description: A brief description of the payment or the transaction. This can include details about what the payment is for or any other relevant information.
                   description: This should be populated for payments
                 response:
                   type: object
-                  nullable: false
                   required:
                     - requestId
                   properties:
                     requestId:
                       type: string
-                      nullable: false
                       example: b767614f-153a-4aa3-946f-1622596f0fab
                   description: This is the response request-id which is generated from the share api
       responses:
@@ -3956,11 +3809,9 @@ webhooks:
                     type: string
                     pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
                     description: 'ABDM-2500 - Service Unavailable. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
-                    nullable: false
                     example: ABDM-2500
                   message:
                     type: string
-                    nullable: false
                     example: Service Unavailable
       x-abdm-nha-operation-id: patient-share 2 (4)
       x-abdm-triggered-by: scan-and-pay_post_scan_gateway_v3_patient_selection
@@ -4013,7 +3864,6 @@ webhooks:
               properties:
                 acknowledgement:
                   type: object
-                  nullable: false
                   required:
                     - status
                     - abhaAddress
@@ -4025,37 +3875,30 @@ webhooks:
                   properties:
                     status:
                       type: string
-                      nullable: false
                       example: SUCCESS/ CANCELED/ PENDING/ FAIL/ REFUND_INITIATED/ REFUND_SUCCESS
                       description: " Indicates the outcome of the transaction. Possible values are: <br></br>SUCCESS: The transaction was completed successfully. <br></br>FAIL: The transaction failed. <br></br>CANCELED: The transaction was cancelled. <br></br>PENDING: The transaction in pending.<br></br> REFUND_INITIATED: refund initiated.<br></br>REFUND_SUCCESS: refunded successfully"
                     abhaAddress:
                       type: string
-                      nullable: false
                       example: <username>@sbx
                       description: The abha addresss of the user, formatted as <ABHA_ADDRESS>. This is a unique identifier for the user in the health system.
                     transactionId:
                       type: string
-                      nullable: false
                       example: string
                       description: A unique identifier for the transaction. This helps in tracking and referencing the specific transaction.
                     orderNumber:
                       type: string
-                      nullable: false
                       example: string
                       description: A unique identifier for the order associated with the transaction. This helps in tracking and referencing the specific order.
                     openOrderRequestId:
                       type: object
-                      nullable: false
                       example: b767614f-153a-4aa3-946f-1622596f0fab
                       description: This is the response request-id which is generated from the share/openOrder api
                     paymentDate:
                       type: string
-                      nullable: false
                       example: "2025-01-20T07:47:49.102Z"
                       description: ISO Timestamp.
                     paymentRecipetLink:
                       type: string
-                      nullable: false
                       example: PDF URL LINK of RECIPT
                       description: This attribute holds the URL link to the payment receipt. It is a string that provides a direct link to a PDF document or other format of the receipt for the transaction.
                   description: The intention of share API call
@@ -4148,11 +3991,9 @@ webhooks:
                     type: string
                     pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
                     description: 'ABDM-2500 - Service Unavailable. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
-                    nullable: false
                     example: ABDM-2500
                   message:
                     type: string
-                    nullable: false
                     example: Service Unavailable
       x-abdm-nha-operation-id: patient-share 2 (5)
       x-abdm-answered-by: scan-and-pay_post_scan_gateway_v3_patient_scan_pay_on_notify
@@ -4206,7 +4047,6 @@ webhooks:
                   properties:
                     acknowledgement:
                       type: object
-                      nullable: false
                       required:
                         - status
                         - abhaAddress
@@ -4218,49 +4058,40 @@ webhooks:
                       properties:
                         status:
                           type: string
-                          nullable: false
                           example: SUCCESS/ CANCELED/ PENDING/ FAIL/ REFUND_INITIATED/ REFUND_SUCCESS
                           description: " Indicates the outcome of the transaction. Possible values are: <br></br>SUCCESS: The transaction was completed successfully. <br></br>FAIL: The transaction failed. <br></br>CANCELED: The transaction was cancelled. <br></br>PENDING: The transaction in pending.<br></br> REFUND_INITIATED: refund initiated.<br></br>REFUND_SUCCESS: refunded successfully"
                         abhaAddress:
                           type: string
-                          nullable: false
                           example: <username>@sbx
                           description: The abha Address of the user, formatted as <ABHA_ADDRESS>. This is a unique identifier for the user in the health system.
                         transactionId:
                           type: string
-                          nullable: false
                           example: string
                           description: A unique identifier for the transaction. This helps in tracking and referencing the specific transaction.
                         orderNumber:
                           type: string
-                          nullable: false
                           example: string
                           description: A unique identifier for the order associated with the transaction. This helps in tracking and referencing the specific order.
                         openOrderRequestId:
                           type: string
-                          nullable: false
                           example: Queried Request id
                           description: The unique identifier for the queried request. This ID is used to track and reference the specific request within the system.
                         paymentDate:
                           type: string
-                          nullable: false
                           example: Transaction Date UTC
                           description: he date and time when the transaction occurred, formatted in UTC
                         paymentRecipetLink:
                           type: string
-                          nullable: false
                           example: PDF URL LINK of RECIPT
                           description: This attribute holds the URL link to the payment receipt. It is a string that provides a direct link to a PDF document or other format of the receipt for the transaction.
                       description: The intention of share API call
                     response:
                       type: object
-                      nullable: false
                       required:
                         - requestId
                       properties:
                         requestId:
                           type: string
-                          nullable: false
                           example: b767614f-153a-4aa3-946f-1622596f0fab
                       description: This is the response request-id which is generated from the share api
       responses:
@@ -4352,11 +4183,9 @@ webhooks:
                     type: string
                     pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
                     description: 'ABDM-2500 - Service Unavailable. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
-                    nullable: false
                     example: ABDM-2500
                   message:
                     type: string
-                    nullable: false
                     example: Service Unavailable
       x-abdm-nha-operation-id: patient-share 2 (6)
       x-abdm-triggered-by: scan-and-pay_post_scan_gateway_v3_patient_scan_pay_order_status

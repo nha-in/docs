@@ -133,22 +133,18 @@ paths:
                   properties:
                     identifier:
                       type: object
-                      nullable: false
                       required:
                         - name
                         - id
                       properties:
                         name:
                           type: string
-                          nullable: false
                           example: AB - PMJAY
                         id:
                           type: string
-                          nullable: false
                           example: PMJAY
                     facilityType:
                       type: array
-                      nullable: false
                       items:
                         type: string
                         enum:
@@ -158,30 +154,26 @@ paths:
                         example: HIP
                     isHIP:
                       type: boolean
-                      nullable: false
                       example: true
                     isHiu:
                       type: boolean
-                      nullable: false
                       example: false
                     isHealthLocker:
                       type: boolean
-                      nullable: false
                       example: true
                     isPhr:
                       type: boolean
-                      nullable: false
                       example: true
                     isGovtEntity:
-                      type: boolean
-                      nullable: true
+                      type:
+                        - boolean
+                        - "null"
                       example: false
                     endpoints:
                       type: object
                       properties:
                         healthLockerEndpoints:
                           type: array
-                          nullable: false
                           items:
                             type: object
                             required:
@@ -190,16 +182,13 @@ paths:
                             properties:
                               use:
                                 type: string
-                                nullable: false
                                 example: registration
                               connectionType:
                                 type: string
-                                nullable: false
                                 example: HTTPS
                               address:
                                 type: string
                                 format: uri
-                                nullable: false
                                 example: https://abc.com/register
         "204":
           description: No Content
@@ -306,11 +295,9 @@ paths:
                     type: string
                     pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
                     description: 'ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing ": " separator (`ABDM-1024: `); match on the code itself and tolerate the separator.'
-                    nullable: false
                     example: ABDM-1024
                   message:
                     type: string
-                    nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: abdm-gateway4
     servers: &a1
@@ -363,22 +350,18 @@ paths:
                 properties:
                   identifier:
                     type: object
-                    nullable: false
                     required:
                       - name
                       - id
                     properties:
                       name:
                         type: string
-                        nullable: false
                         example: AB - PMJAY
                       id:
                         type: string
-                        nullable: false
                         example: PMJAY
                   facilityType:
                     type: array
-                    nullable: false
                     items:
                       type: string
                       enum:
@@ -388,7 +371,6 @@ paths:
                       example: HIP
                   isHIP:
                     type: boolean
-                    nullable: false
                     example: true
         "204":
           description: No Content
@@ -495,11 +477,9 @@ paths:
                     type: string
                     pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
                     description: 'ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing ": " separator (`ABDM-1024: `); match on the code itself and tolerate the separator.'
-                    nullable: false
                     example: ABDM-1024
                   message:
                     type: string
-                    nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: abdm-gateway5
     servers: *a1
@@ -546,22 +526,18 @@ paths:
                   properties:
                     identifier:
                       type: object
-                      nullable: false
                       required:
                         - name
                         - id
                       properties:
                         name:
                           type: string
-                          nullable: false
                           example: AB - PMJAY
                         id:
                           type: string
-                          nullable: false
                           example: PMJAY
                     facilityType:
                       type: array
-                      nullable: false
                       items:
                         type: string
                         enum:
@@ -571,7 +547,6 @@ paths:
                         example: HIP
                     isHIP:
                       type: boolean
-                      nullable: false
                       example: true
         "204":
           description: No Content
@@ -678,11 +653,9 @@ paths:
                     type: string
                     pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
                     description: 'ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing ": " separator (`ABDM-1024: `); match on the code itself and tolerate the separator.'
-                    nullable: false
                     example: ABDM-1024
                   message:
                     type: string
-                    nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: abdm-gateway6
     servers: *a1
@@ -787,7 +760,6 @@ paths:
                                 - Prescription
                                 - WellnessRecord
                                 - Invoice
-                              nullable: false
                               example: DiagnosticReport
                             careContexts:
                               type: array
@@ -954,13 +926,11 @@ paths:
                 hip:
                   type: object
                   description: Identifier and name of the health information provider.
-                  nullable: false
                   required:
                     - id
                   properties:
                     id:
                       type: string
-                      nullable: false
                       example: cowin_hip_01
                       description: The service ID of the health information provider
                 unverifiedIdentifiers:
@@ -979,11 +949,9 @@ paths:
                           - MOBILE
                           - ABHA_NUMBER
                           - ABHA_ADDRESS
-                        nullable: false
                         example: MOBILE
                       value:
                         type: string
-                        nullable: false
                         example: +9198765*****
                         description: Allows alphanumeric characters and special characters like "^(\\+)?[a-zA-Z0-9_\\-@,. ]{0,255}$"
       responses:
@@ -1129,12 +1097,10 @@ paths:
                 transactionId:
                   type: string
                   format: uuid
-                  nullable: false
                   example: f901b782-bfdf-4224-9f8d-da2cadc20c0d
                   description: UUID from discover request callback to track the entire user link flow
                 patient:
                   type: array
-                  nullable: false
                   items:
                     type: object
                     required:
@@ -1146,12 +1112,12 @@ paths:
                     properties:
                       referenceNumber:
                         type: string
-                        nullable: false
                         example: <ABHA_ADDRESS>
                         description: A patient identifier with which patient is registered in the facility/hospital.Allows alpha numeric characters and special characters like "^[a-zA-Z0-9_\\-@,. ()/:\\\\]{0,255}$"
                       display:
-                        type: string
-                        nullable: true
+                        type:
+                          - string
+                          - "null"
                         example: Test
                         description: Display text for patient reference.Allows alpha numeric characters and special characters like "^[a-zA-Z0-9_\\-@,. \"':|()/]{0,255}$"
                       careContexts:
@@ -1164,17 +1130,16 @@ paths:
                           properties:
                             referenceNumber:
                               type: string
-                              nullable: false
                               example: abc123
                               description: An identifier of patient's care context created in HIP. A care context is a group of patient's health data (Not the actual health data).Allows alpha numeric characters and special characters like "^[a-zA-Z0-9_\\-@,. ()/:\\\\]{0,255}$"
                             display:
-                              type: string
-                              nullable: true
+                              type:
+                                - string
+                                - "null"
                               example: Sugar Test
                               description: Display text for care context reference.Allows alpha numeric characters and special characters like "^[a-zA-Z0-9_\\-@,. \"':|()/]{0,255}$"
                       hiType:
                         type: string
-                        nullable: false
                         enum:
                           - DiagnosticReport
                           - DischargeSummary
@@ -1188,7 +1153,6 @@ paths:
                         description: The health information type
                       count:
                         type: integer
-                        nullable: false
                         example: 1
                         description: The count should match the number of care contexts in the payload
       responses:
@@ -1333,13 +1297,11 @@ paths:
               properties:
                 token:
                   type: integer
-                  nullable: false
                   example: 123456
                   description: The token number. Must be 6 digit and contain only 0-9. Allows the numerical values like "[\\d]*$"
                 linkRefNumber:
                   type: string
                   format: uuid
-                  nullable: false
                   example: d353b782-bfdf-4224-9f8d-da2cadc20c0d
                   description: The link reference number from the /on-init call back . Allows alpha numeric characters and special characters like "^[a-zA-Z0-9_\\-@,. \"':|()/]{0,255}$"
       responses:
@@ -1485,7 +1447,6 @@ paths:
               properties:
                 intent:
                   type: string
-                  nullable: false
                   enum:
                     - PROFILE_SHARE
                     - RECORD_SHARE
@@ -1495,7 +1456,6 @@ paths:
                 metaData:
                   type: object
                   description: A key-value pair carrying the location longitude and latitude.
-                  nullable: false
                   required:
                     - hipId
                     - context
@@ -1504,41 +1464,40 @@ paths:
                   properties:
                     hipId:
                       type: string
-                      nullable: false
                       example: HIP_1
                       description: The service ID of the health information provider. Allows alpha numeric character and special characters like [A-Z a-z 0-9]+[A-Z a-z 0-9 @//_//-]*[A-Z a-z 0-9]
                     context:
                       type: string
-                      nullable: false
                       example: "6"
                       description: This is a counter Id. Allows alpha numeric character and special characters like ^(?:[a-zA-Z0-9 ]|[a-zA-Z0-9 ][a-zA-Z0-9.\\-_ ]*[a-zA-Z0-9 ]){1,250}$
                     hprId:
-                      type: string
-                      nullable: true
+                      type:
+                        - string
+                        - "null"
                       example: <EMAIL>
                       description: Healthcare Professionals Registry id. Allows alpha numeric character and special characters like [a-zA-Z0-9][a-zA-Z0-9_.]+[a-zA-Z0-9]@(dr.abdm|hpr.abdm)$|^[1-9][0-9]{13}$
                     latitude:
-                      type: number
+                      type:
+                        - number
+                        - "null"
                       format: float
-                      nullable: true
                       example: 20.5937
                       description: The latitude of the location.Allows alpha numeric character and special characters like ^[0-9-.]+$
                     longitude:
-                      type: number
+                      type:
+                        - number
+                        - "null"
                       format: float
-                      nullable: true
                       example: 78.9629
                       description: The longitude of the location.Allows alpha numeric character and special characters like ^[0-9-.]+$
                 profile:
                   type: object
-                  nullable: false
                   description: This should populated only for PROFILE_SHARE
                   required:
                     - patient
                   properties:
                     patient:
                       type: object
-                      nullable: false
                       required:
                         - abhaAddress
                         - name
@@ -1548,18 +1507,17 @@ paths:
                         - phoneNumber
                       properties:
                         abhaNumber:
-                          type: string
-                          nullable: true
+                          type:
+                            - string
+                            - "null"
                           example: <ABHA_NUMBER>
                           description: The abha number of the patient. Should be only 14 digit. Allows alpha numeric character and special characters like ^(\\d+-?){13}\\d$
                         abhaAddress:
                           type: string
-                          nullable: false
                           example: <ABHA_ADDRESS>
                           description: The abha address of the patient. Should start with Alphanumeric . and  _  in the middle and must be ending with @abdm or @sbx and Allows alpha numeric character and special characters like ^[a-zA-Z0-9][a-zA-Z0-9_.\-!]+[a-zA-Z0-9]@(abdm|sbx)$
                         name:
                           type: string
-                          nullable: false
                           example: <NAME>
                           description: The name of the patient. Allows alpha numeric character and special characters like ^[a-zA-Z0-9.-_,]+(([',. -][a-zA-Z0-9. ])?[a-zA-Z0-9. ]*)*$
                         gender:
@@ -1571,25 +1529,25 @@ paths:
                             - D
                             - T
                             - U
-                          nullable: false
                           example: M
                           description: The gender of the patient
                         dayOfBirth:
-                          type: string
+                          type:
+                            - string
+                            - "null"
                           format: number
-                          nullable: true
                           example: <DOB>
                           description: The day of birth of the patient. Only allows numeric values between 1 abd 31 and ^(?!\\s*$)(0?[1-9]|[12][0-9]|3[01])$
                         monthOfBirth:
-                          type: string
+                          type:
+                            - string
+                            - "null"
                           format: number
-                          nullable: true
                           example: <DOB>
                           description: The month of birth of the patient. Only allows numeric values between 1 abd 12 and ^(?!\\s*$)(0?[1-9]|[1][0-2])$
                         yearOfBirth:
                           type: string
                           format: number
-                          nullable: false
                           example: "9999"
                           description: The month of birth of the patient. Only allows numeric values and must be 4 digit ranging between 1900 and 2200 and ^(?!\\s*$)(19|20|21|22)\\d{2}$
                         address:
@@ -1598,28 +1556,29 @@ paths:
                             - line
                           properties:
                             line:
-                              type: string
-                              nullable: true
+                              type:
+                                - string
+                                - "null"
                               example: Address line 1
                               description: The address line
                             district:
-                              type: string
-                              nullable: true
+                              type:
+                                - string
+                                - "null"
                               example: Coimbatore
                               description: The district and should only contain alphabets
                             state:
                               type: string
-                              nullable: false
                               example: Tamil Nadu
                               description: The state and should only contain alphabets like [A-Z a-z]+[A-Z a-z //' ']*$
                             pincode:
                               type: string
-                              nullable: false
                               example: <PINCODE>
                               description: Should be 5 digits and only contain numbers
                         phoneNumber:
-                          type: string
-                          nullable: true
+                          type:
+                            - string
+                            - "null"
                           example: <MOBILE_NUMBER>
                           description: The mobile number of the patient. Must be 10 digit and contain only 0-9 and it allows only numbers like ^(\+\d{1,3}[- ]?)?\d{10}$
       responses:
@@ -1770,11 +1729,9 @@ paths:
                     type: string
                     pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
                     description: 'ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing ": " separator (`ABDM-1024: `); match on the code itself and tolerate the separator.'
-                    nullable: false
                     example: ABDM-1024
                   message:
                     type: string
-                    nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: abdm-patient-share-hip 1
     servers: *a1
@@ -1839,47 +1796,37 @@ paths:
                         id:
                           type: integer
                           format: int64
-                          nullable: false
                           example: 1
                         patientId:
                           type: string
-                          nullable: false
                           format: email
                           example: <ABHA_ADDRESS>
                         tokenNumber:
                           type: string
                           description: Token number at the HMIS/LMIS to be provided to the patient.
-                          nullable: false
                           example: "1"
                         hipId:
                           type: string
-                          nullable: false
                           example: ABDM_HIP
                         hipName:
                           type: string
-                          nullable: false
                           example: Health Information Provider Name
                         hipAddress:
                           type: string
-                          nullable: false
                           example: sample address
                         expiresIn:
                           type: integer
-                          nullable: false
                           example: 1800
                         clientId:
                           type: string
                           description: A unique identifier assigned to a client application by the authorization server.
-                          nullable: false
                           example: ABDM
                         dateCreated:
                           type: string
                           format: date-time
-                          nullable: false
                           example: "2024-09-11T07:31:02.357Z"
                         counterCode:
                           type: string
-                          nullable: false
                           example: Counter 1
         "400":
           description: Bad Request
@@ -2026,11 +1973,9 @@ paths:
                     type: string
                     pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
                     description: 'ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing ": " separator (`ABDM-1024: `); match on the code itself and tolerate the separator.'
-                    nullable: false
                     example: ABDM-1024
                   message:
                     type: string
-                    nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: profile-share 3
     servers: *a1
@@ -2114,29 +2059,28 @@ paths:
                             - Prescription
                             - WellnessRecord
                             - Invoice
-                          nullable: false
                           example: Prescription
                       hip:
                         type: object
                         description: Identifier and name of the health information provider.
-                        nullable: false
                         required:
                           - id
                           - name
                         properties:
                           id:
                             type: string
-                            nullable: false
                             example: ABCD_12345
                             description: The service ID of the health information provider. Allows alpha numeric character and special characters like[A-Z a-z 0-9]+[A-Z a-z 0-9 //_//-]*[A-Z a-z 0-9]$
                           name:
-                            type: string
-                            nullable: true
+                            type:
+                              - string
+                              - "null"
                             example: ABCD Hospital
                             description: The name of the health information provider. Allows alpha numeric and special characters like "^[a-zA-Z]+[A-Za-z0-9_\\-@,().\\s\\xa0:/]+"
                           type:
-                            type: string
-                            nullable: true
+                            type:
+                              - string
+                              - "null"
                             example: HIP
                             description: |-
                               The type of the health information provider. Allows alpha numeric and special characters like
@@ -2145,25 +2089,23 @@ paths:
                         type: array
                         description: List of care contexts linked at the HIP end for the identified patient.
                         items:
-                          type: object
-                          nullable: true
+                          type:
+                            - object
+                            - "null"
                           required:
                             - patientReference
                             - careContextReference
                           properties:
                             patientReference:
                               type: string
-                              nullable: false
                               example: batman@tmh
                               description: A patient identifier with which patient is registered in the facility/hospital. Allows alpha numeric character and special characters like ^[a-zA-Z0-9_\\-@,. \":/]{0,255}$
                             careContextReference:
                               type: string
-                              nullable: false
                               example: Episode1
                               description: An identifier of patient's care context created in HIP. A care context is a group of patient's health data (Not the actual health data). Allows alpha numeric character and special characters like ^[a-zA-Z0-9_\\-@,().\"/:| ]{0,255}$
                       permission:
                         type: object
-                        nullable: false
                         required:
                           - accessMode
                           - dateRange
@@ -2172,7 +2114,6 @@ paths:
                         properties:
                           dateRange:
                             type: object
-                            nullable: false
                             required:
                               - from
                               - to
@@ -2180,18 +2121,15 @@ paths:
                               from:
                                 type: string
                                 format: date-time
-                                nullable: false
                                 example: "2021-09-28T12:30:08.573Z"
                                 description: Should be UTC date time in ISO format. Allows alpha numeric character and special characters like "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$"
                               to:
                                 type: string
                                 format: date-time
-                                nullable: false
                                 example: "2021-09-28T12:30:08.573Z"
                                 description: Should be UTC date time in ISO format. Allows alpha numeric character and special characters like "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$"
                           frequency:
                             type: object
-                            nullable: false
                             required:
                               - unit
                               - value
@@ -2199,7 +2137,6 @@ paths:
                             properties:
                               unit:
                                 type: string
-                                nullable: false
                                 enum:
                                   - HOUR
                                   - DAY
@@ -2209,18 +2146,17 @@ paths:
                               value:
                                 type: number
                                 format: int32
-                                nullable: false
                                 example: 1
                                 description: The frequency unit value. Should be be a integer.Allows alpha numeric character and special characters like ^[a-zA-Z0-9_\\-@,. \":/]{0,255}$
                               repeats:
-                                type: number
+                                type:
+                                  - number
+                                  - "null"
                                 format: int32
-                                nullable: true
                                 example: 0
                                 description: Should be be a integer
                           accessMode:
                             type: string
-                            nullable: false
                             enum:
                               - VIEW
                               - STORE
@@ -2230,7 +2166,6 @@ paths:
                           dataEraseAt:
                             type: string
                             format: date-time
-                            nullable: false
                             example: "2021-09-28T12:30:08.573Z"
                             description: The date at which the consent expire. Should be UTC date time in ISO format. Allows alpha numeric character and special characters like "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$"
       responses:
@@ -2243,7 +2178,6 @@ paths:
                 properties:
                   message:
                     type: string
-                    nullable: false
                     example: Successful creation of consent artefact.
                   consentIds:
                     type: array
@@ -2251,9 +2185,10 @@ paths:
                       type: object
                       properties:
                         id:
-                          type: string
+                          type:
+                            - string
+                            - "null"
                           format: uuid
-                          nullable: true
                           example: f29f0e59-8388-4698-9fe6-05db67aeac46
         "400":
           description: Bad Request
@@ -2369,11 +2304,9 @@ paths:
                     type: string
                     pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
                     description: 'ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing ": " separator (`ABDM-1024: `); match on the code itself and tolerate the separator.'
-                    nullable: false
                     example: ABDM-1024
                   message:
                     type: string
-                    nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: abdm-consent-management 1 (2)
     servers: *a1
@@ -2434,8 +2367,9 @@ paths:
                 - reason
               properties:
                 reason:
-                  type: string
-                  nullable: true
+                  type:
+                    - string
+                    - "null"
                   example: Not authorized
                   description: The reason to deny the consent request. Allows alpha numeric characters and special characters like "^[a-zA-Z0-9_\\-@,. \":]{1,255}$"
       responses:
@@ -2542,11 +2476,9 @@ paths:
                     type: string
                     pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
                     description: 'ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing ": " separator (`ABDM-1024: `); match on the code itself and tolerate the separator.'
-                    nullable: false
                     example: ABDM-1024
                   message:
                     type: string
-                    nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: abdm-consent-management 2 (2)
     servers: *a1
@@ -2604,7 +2536,6 @@ paths:
                   type: array
                   items:
                     type: string
-                    nullable: false
                     example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
                     description: The list of consent artefact ids that needs to be revoked. Allows alpha numeric character and special characters like "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
       responses:
@@ -2719,11 +2650,9 @@ paths:
                     type: string
                     pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
                     description: 'ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing ": " separator (`ABDM-1024: `); match on the code itself and tolerate the separator.'
-                    nullable: false
                     example: ABDM-1024
                   message:
                     type: string
-                    nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: abdm-consent-management 3 (4)
     servers: *a1
@@ -2784,11 +2713,9 @@ paths:
                 properties:
                   requestId:
                     type: string
-                    nullable: false
                     example: e5ec415f-c098-40f6-a0db-faa162fc5295
                   purpose:
                     type: object
-                    nullable: false
                     required:
                       - text
                       - code
@@ -2796,7 +2723,6 @@ paths:
                     properties:
                       text:
                         type: string
-                        nullable: false
                         enum:
                           - Care Management
                           - Break the Glass
@@ -2806,7 +2732,6 @@ paths:
                           - Self Requested
                       code:
                         type: string
-                        nullable: false
                         enum:
                           - CAREMGT
                           - BTG
@@ -2816,100 +2741,95 @@ paths:
                           - PATRQT
                       refUri:
                         type: string
-                        nullable: false
                         example: www.abc.com
                         description: The reference URL.Allows alpha numeric and special characters like "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
                   patient:
                     type: object
-                    nullable: false
                     required:
                       - id
                     properties:
                       id:
                         type: string
-                        nullable: false
                         example: <ABHA_ADDRESS>
                         description: The abha address of the patient
                   hip:
-                    type: object
+                    type:
+                      - object
+                      - "null"
                     description: Identifier and name of the health information provider.
-                    nullable: true
                     required:
                       - id
                       - name
                     properties:
                       id:
                         type: string
-                        nullable: false
                         example: cowin_hip_01
                         description: The service ID of the health information provider. Allows alpha numeric character and special characters like [A-Z a-z 0-9]+[A-Z a-z 0-9 //_//-]*[A-Z a-z 0-9]$
                       name:
-                        type: string
-                        nullable: true
+                        type:
+                          - string
+                          - "null"
                         example: Cowin
                         description: The name of the health information provider. Allows alpha numeric and special characters like "^[a-zA-Z]+[A-Za-z0-9_\\-@,().\\s\\xa0:/]+"
                       type:
-                        type: string
-                        nullable: true
+                        type:
+                          - string
+                          - "null"
                         example: HIP
                         description: The type of the health information provider. Allows alpha numeric and special characters like "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
                   hiu:
                     type: object
-                    nullable: false
                     required:
                       - id
                       - name
                     properties:
                       id:
                         type: string
-                        nullable: false
                         example: cowin_hiu_01
                         description: The service ID of the health information user.  Allows alpha numeric character and special characters like [A-Z a-z 0-9]+[A-Z a-z 0-9 //_//-]*[A-Z a-z 0-9]$
                       name:
-                        type: string
-                        nullable: true
+                        type:
+                          - string
+                          - "null"
                         example: Cowin
                         description: The name of the health information user. Allows alpha numeric and special characters like "^[a-zA-Z]+[A-Za-z0-9_\\-@,().\\s\\xa0:/]+"
                       type:
-                        type: string
-                        nullable: true
+                        type:
+                          - string
+                          - "null"
                         example: HIU
                         description: The type of the health information user. Allows alpha numeric and special characters like "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
                   careContexts:
                     type: array
                     description: List of care contexts linked at the HIP end for the identified patient.
                     items:
-                      type: object
-                      nullable: true
+                      type:
+                        - object
+                        - "null"
                       required:
                         - patientReference
                         - careContextReference
                       properties:
                         patientReference:
                           type: string
-                          nullable: false
                           example: batman@tmh
                           description: A patient identifier with which patient is registered in the facility/hospital
                         careContextReference:
                           type: string
-                          nullable: false
                           example: Episode1
                           description: An identifier of patient's care context created in HIP. A care context is a group of patient's health data (Not the actual health data)
                   requester:
                     type: object
-                    nullable: false
                     required:
                       - name
                       - identifier
                     properties:
                       name:
                         type: string
-                        nullable: false
                         example: <ABHA_ADDRESS>
                         description: The name of the requester
                       identifier:
                         type: object
-                        nullable: false
                         required:
                           - value
                           - type
@@ -2917,22 +2837,18 @@ paths:
                         properties:
                           value:
                             type: string
-                            nullable: false
                             example: REG1
                             description: The type of the identification. Allows alpha numeric character and special characters like "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
                           type:
                             type: string
-                            nullable: false
                             example: MH1001
                             description: The identification value. Allows alpha numeric character and special characters like  "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
                           system:
                             type: string
-                            nullable: false
                             example: https://www.sample.com
                             description: Allows alpha numeric character and special characters like "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
                   status:
                     type: string
-                    nullable: false
                     enum:
                       - REQUESTED
                       - EXPIRED
@@ -2943,12 +2859,10 @@ paths:
                   createdAt:
                     type: string
                     format: date-time
-                    nullable: false
                     example: "2021-09-28T12:30:08.573Z"
                   lastUpdated:
                     type: string
                     format: date-time
-                    nullable: false
                     example: "2021-09-28T12:30:08.573Z"
                   hiType:
                     type: array
@@ -2963,11 +2877,9 @@ paths:
                         - Prescription
                         - WellnessRecord
                         - Invoice
-                      nullable: false
                       example: Prescription
                   permission:
                     type: object
-                    nullable: false
                     required:
                       - accessMode
                       - dateRange
@@ -2976,7 +2888,6 @@ paths:
                     properties:
                       accessMode:
                         type: string
-                        nullable: false
                         enum:
                           - VIEW
                           - STORE
@@ -2985,7 +2896,6 @@ paths:
                         example: VIEW
                       dateRange:
                         type: object
-                        nullable: false
                         required:
                           - from
                           - to
@@ -2993,24 +2903,20 @@ paths:
                           from:
                             type: string
                             format: date-time
-                            nullable: false
                             example: "2021-09-28T12:30:08.573Z"
                             description: Should be UTC date time in ISO format
                           to:
                             type: string
                             format: date-time
-                            nullable: false
                             example: "2021-09-28T12:30:08.573Z"
                             description: Should be UTC date time in ISO format
                       dataEraseAt:
                         type: string
                         format: date-time
-                        nullable: false
                         example: "2021-09-28T12:30:08.573Z"
                         description: The date at which the consent expire. Should be UTC date time in ISO format
                       frequency:
                         type: object
-                        nullable: false
                         required:
                           - unit
                           - value
@@ -3018,7 +2924,6 @@ paths:
                         properties:
                           unit:
                             type: string
-                            nullable: false
                             enum:
                               - HOUR
                               - DAY
@@ -3028,13 +2933,13 @@ paths:
                           value:
                             type: number
                             format: int32
-                            nullable: false
                             example: 1
                             description: The frequency unit value. Should be be a integer
                           repeats:
-                            type: number
+                            type:
+                              - number
+                              - "null"
                             format: int32
-                            nullable: true
                             example: 0
                             description: Should be be a integer
         "400":
@@ -3138,11 +3043,9 @@ paths:
                     type: string
                     pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
                     description: 'ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing ": " separator (`ABDM-1024: `); match on the code itself and tolerate the separator.'
-                    nullable: false
                     example: ABDM-1024
                   message:
                     type: string
-                    nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: abdm-consent-management 4
     servers: *a1
@@ -3222,29 +3125,25 @@ paths:
                 properties:
                   size:
                     type: integer
-                    nullable: false
                     example: 10
                   limit:
                     type: integer
-                    nullable: false
                     example: 10
                   offset:
                     type: integer
-                    nullable: false
                     example: 0
                   requests:
                     type: array
                     items:
-                      type: object
-                      nullable: true
+                      type:
+                        - object
+                        - "null"
                       properties:
                         requestId:
                           type: string
-                          nullable: false
                           example: e5ec415f-c098-40f6-a0db-faa162fc5295
                         purpose:
                           type: object
-                          nullable: false
                           required:
                             - text
                             - code
@@ -3252,7 +3151,6 @@ paths:
                           properties:
                             text:
                               type: string
-                              nullable: false
                               enum:
                                 - Care Management
                                 - Break the Glass
@@ -3262,7 +3160,6 @@ paths:
                                 - Self Requested
                             code:
                               type: string
-                              nullable: false
                               enum:
                                 - CAREMGT
                                 - BTG
@@ -3272,100 +3169,95 @@ paths:
                                 - PATRQT
                             refUri:
                               type: string
-                              nullable: false
                               example: www.abc.com
                               description: The reference URL. Should be a valid URL
                         patient:
                           type: object
-                          nullable: false
                           required:
                             - id
                           properties:
                             id:
                               type: string
-                              nullable: false
                               example: <ABHA_ADDRESS>
                               description: The abha address of the patient
                         hip:
-                          type: object
+                          type:
+                            - object
+                            - "null"
                           description: Identifier and name of the health information provider.
-                          nullable: true
                           required:
                             - id
                             - name
                           properties:
                             id:
                               type: string
-                              nullable: false
                               example: cowin_hip_01
                               description: The service ID of the health information provider. Allows alpha numeric character and special characters like [A-Z a-z 0-9]+[A-Z a-z 0-9 //_//-]*[A-Z a-z 0-9]$
                             name:
-                              type: string
-                              nullable: true
+                              type:
+                                - string
+                                - "null"
                               example: Cowin
                               description: The name of the health information provider. Allows alpha numeric and special characters like _\-@,():/
                             type:
-                              type: string
-                              nullable: true
+                              type:
+                                - string
+                                - "null"
                               example: HIP
                               description: The type of the health information provider. Allows alpha numeric and special characters like _\-@,. ":/
                         hiu:
                           type: object
-                          nullable: false
                           required:
                             - id
                             - name
                           properties:
                             id:
                               type: string
-                              nullable: false
                               example: cowin_hiu_01
                               description: The service ID of the health information user.  Allows alpha numeric character and special characters like [A-Z a-z 0-9]+[A-Z a-z 0-9 //_//-]*[A-Z a-z 0-9]$
                             name:
-                              type: string
-                              nullable: true
+                              type:
+                                - string
+                                - "null"
                               example: Cowin
                               description: The name of the health information user. Allows alpha numeric and special characters like _\-@,():/
                             type:
-                              type: string
-                              nullable: true
+                              type:
+                                - string
+                                - "null"
                               example: HIU
                               description: The type of the health information user. Allows alpha numeric and special characters like _\-@,. ":/
                         careContexts:
                           type: array
                           description: List of care contexts linked at the HIP end for the identified patient.
                           items:
-                            type: object
-                            nullable: true
+                            type:
+                              - object
+                              - "null"
                             required:
                               - patientReference
                               - careContextReference
                             properties:
                               patientReference:
                                 type: string
-                                nullable: false
                                 example: batman@tmh
                                 description: A patient identifier with which patient is registered in the facility/hospital
                               careContextReference:
                                 type: string
-                                nullable: false
                                 example: Episode1
                                 description: An identifier of patient's care context created in HIP. A care context is a group of patient's health data (Not the actual health data)
                         requester:
                           type: object
-                          nullable: false
                           required:
                             - name
                             - identifier
                           properties:
                             name:
                               type: string
-                              nullable: false
                               example: <ABHA_ADDRESS>
                               description: The name of the requester
                             identifier:
                               type: object
-                              nullable: false
                               required:
                                 - value
                                 - type
@@ -3373,22 +3265,18 @@ paths:
                               properties:
                                 value:
                                   type: string
-                                  nullable: false
                                   example: REG1
                                   description: The type of the identification. Allows alpha numeric character and special characters like _\-@,. ":/
                                 type:
                                   type: string
-                                  nullable: false
                                   example: MH1001
                                   description: The identification value. Allows alpha numeric character and special characters like _\-@,. ":/
                                 system:
                                   type: string
-                                  nullable: false
                                   example: https://www.sample.com
                                   description: Allows alpha numeric character and special characters like _\-@,. ":/
                         status:
                           type: string
-                          nullable: false
                           enum:
                             - REQUESTED
                             - EXPIRED
@@ -3399,12 +3287,10 @@ paths:
                         createdAt:
                           type: string
                           format: date-time
-                          nullable: false
                           example: "2021-09-28T12:30:08.573Z"
                         lastUpdated:
                           type: string
                           format: date-time
-                          nullable: false
                           example: "2021-09-28T12:30:08.573Z"
                         hiType:
                           type: array
@@ -3419,11 +3305,9 @@ paths:
                               - Prescription
                               - WellnessRecord
                               - Invoice
-                            nullable: false
                             example: Prescription
                         permission:
                           type: object
-                          nullable: false
                           required:
                             - accessMode
                             - dateRange
@@ -3432,7 +3316,6 @@ paths:
                           properties:
                             accessMode:
                               type: string
-                              nullable: false
                               enum:
                                 - VIEW
                                 - STORE
@@ -3441,7 +3324,6 @@ paths:
                               example: VIEW
                             dateRange:
                               type: object
-                              nullable: false
                               required:
                                 - from
                                 - to
@@ -3449,24 +3331,20 @@ paths:
                                 from:
                                   type: string
                                   format: date-time
-                                  nullable: false
                                   example: "2021-09-28T12:30:08.573Z"
                                   description: Should be UTC date time in ISO format
                                 to:
                                   type: string
                                   format: date-time
-                                  nullable: false
                                   example: "2021-09-28T12:30:08.573Z"
                                   description: Should be UTC date time in ISO format
                             dataEraseAt:
                               type: string
                               format: date-time
-                              nullable: false
                               example: "2021-09-28T12:30:08.573Z"
                               description: The date at which the consent expire. Should be UTC date time in ISO format
                             frequency:
                               type: object
-                              nullable: false
                               required:
                                 - unit
                                 - value
@@ -3474,7 +3352,6 @@ paths:
                               properties:
                                 unit:
                                   type: string
-                                  nullable: false
                                   enum:
                                     - HOUR
                                     - DAY
@@ -3484,13 +3361,13 @@ paths:
                                 value:
                                   type: number
                                   format: int32
-                                  nullable: false
                                   example: 1
                                   description: The frequency unit value. Should be be a integer
                                 repeats:
-                                  type: number
+                                  type:
+                                    - number
+                                    - "null"
                                   format: int32
-                                  nullable: true
                                   example: 0
                                   description: Should be be a integer
         "400":
@@ -3595,11 +3472,9 @@ paths:
                     type: string
                     pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
                     description: 'ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing ": " separator (`ABDM-1024: `); match on the code itself and tolerate the separator.'
-                    nullable: false
                     example: ABDM-1024
                   message:
                     type: string
-                    nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: abdm-consent-management 5 (3)
     servers: *a1
@@ -3659,7 +3534,6 @@ paths:
                 type: array
                 items:
                   type: object
-                  nullable: false
                   required:
                     - status
                     - consentDetail
@@ -3672,11 +3546,11 @@ paths:
                         - DENIED
                         - EXPIRED
                         - REVOKED
-                      nullable: false
                       example: GRANTED
                     consentDetail:
-                      type: object
-                      nullable: true
+                      type:
+                        - object
+                        - "null"
                       required:
                         - purpose
                         - patient
@@ -3686,13 +3560,13 @@ paths:
                         - permission
                       properties:
                         consentId:
-                          type: string
-                          nullable: true
+                          type:
+                            - string
+                            - "null"
                           example: e5ec415f-c098-40f6-a0db-faa162fc5295
                           description: Allows alpha numeric character and special characters like "^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$";
                         purpose:
                           type: object
-                          nullable: false
                           required:
                             - text
                             - code
@@ -3700,7 +3574,6 @@ paths:
                           properties:
                             text:
                               type: string
-                              nullable: false
                               enum:
                                 - Care Management
                                 - Break the Glass
@@ -3710,7 +3583,6 @@ paths:
                                 - Self Requested
                             code:
                               type: string
-                              nullable: false
                               enum:
                                 - CAREMGT
                                 - BTG
@@ -3720,100 +3592,97 @@ paths:
                                 - PATRQT
                             refUri:
                               type: string
-                              nullable: false
                               example: www.abc.com
                               description: The reference URL. Should be a valid URL
                         patient:
                           type: object
-                          nullable: false
                           required:
                             - id
                           properties:
                             id:
                               type: string
-                              nullable: false
                               example: <ABHA_ADDRESS>
                               description: The abha address of the patient
                         hip:
-                          type: object
+                          type:
+                            - object
+                            - "null"
                           description: Identifier and name of the health information provider.
-                          nullable: true
                           required:
                             - id
                             - name
                           properties:
                             id:
                               type: string
-                              nullable: false
                               example: cowin_hip_01
                               description: The service ID of the health information provider. Allows alpha numeric character and special characters like [A-Z a-z 0-9]+[A-Z a-z 0-9 //_//-]*[A-Z a-z 0-9]$
                             name:
-                              type: string
-                              nullable: true
+                              type:
+                                - string
+                                - "null"
                               example: Cowin
                               description: The name of the health information provider. Allows alpha numeric and special characters like _\-@,():/
                             type:
-                              type: string
-                              nullable: true
+                              type:
+                                - string
+                                - "null"
                               example: HIP
                               description: The type of the health information provider. Allows alpha numeric and special characters like _\-@,. ":/
                         hiu:
                           type: object
-                          nullable: false
                           required:
                             - id
                             - name
                           properties:
                             id:
                               type: string
-                              nullable: false
                               example: cowin_hiu_01
                               description: The service ID of the health information user.  Allows alpha numeric character and special characters like [A-Z a-z 0-9]+[A-Z a-z 0-9 //_//-]*[A-Z a-z 0-9]$
                             name:
-                              type: string
-                              nullable: true
+                              type:
+                                - string
+                                - "null"
                               example: Cowin
                               description: The name of the health information user. Allows alpha numeric and special characters like _\-@,():/
                             type:
-                              type: string
-                              nullable: true
+                              type:
+                                - string
+                                - "null"
                               example: HIU
                               description: The type of the health information user. Allows alpha numeric and special characters like _\-@,. ":/
                         careContexts:
                           type: array
                           description: List of care contexts linked at the HIP end for the identified patient.
                           items:
-                            type: object
-                            nullable: true
+                            type:
+                              - object
+                              - "null"
                             required:
                               - patientReference
                               - careContextReference
                             properties:
                               patientReference:
                                 type: string
-                                nullable: false
                                 example: batman@tmh
                                 description: A patient identifier with which patient is registered in the facility/hospital
                               careContextReference:
                                 type: string
-                                nullable: false
                                 example: Episode1
                                 description: An identifier of patient's care context created in HIP. A care context is a group of patient's health data (Not the actual health data)
                         requester:
-                          type: object
-                          nullable: true
+                          type:
+                            - object
+                            - "null"
                           required:
                             - name
                             - identifier
                           properties:
                             name:
                               type: string
-                              nullable: false
                               example: <ABHA_ADDRESS>
                               description: The name of the requester
                             identifier:
                               type: object
-                              nullable: false
                               required:
                                 - value
                                 - type
@@ -3821,40 +3690,32 @@ paths:
                               properties:
                                 value:
                                   type: string
-                                  nullable: false
                                   example: REG1
                                   description: The type of the identification. Allows alpha numeric character and special characters like _\-@,. ":/
                                 type:
                                   type: string
-                                  nullable: false
                                   example: MH1001
                                   description: The identification value. Allows alpha numeric character and special characters like _\-@,. ":/
                                 system:
                                   type: string
-                                  nullable: false
                                   example: https://www.sample.com
                                   description: Allows alpha numeric character and special characters like _\-@,. ":/
                         createdAt:
                           type: string
                           format: date-time
-                          nullable: false
                           example: "2021-09-28T12:30:08.573Z"
                         lastUpdated:
                           type: string
                           format: date-time
-                          nullable: false
                           example: "2021-09-28T12:30:08.573Z"
                         schemaVersion:
                           type: string
-                          nullable: false
                           example: v3
                         consentManager:
                           type: object
-                          nullable: false
                           properties:
                             id:
                               type: string
-                              nullable: false
                               example: abdm
                         hiTypes:
                           type: array
@@ -3870,11 +3731,9 @@ paths:
                               - Prescription
                               - WellnessRecord
                               - Invoice
-                            nullable: false
                             example: Prescription
                         permission:
                           type: object
-                          nullable: false
                           required:
                             - accessMode
                             - dateRange
@@ -3883,7 +3742,6 @@ paths:
                           properties:
                             accessMode:
                               type: string
-                              nullable: false
                               enum:
                                 - VIEW
                                 - STORE
@@ -3892,7 +3750,6 @@ paths:
                               example: VIEW
                             dateRange:
                               type: object
-                              nullable: false
                               required:
                                 - from
                                 - to
@@ -3900,24 +3757,20 @@ paths:
                                 from:
                                   type: string
                                   format: date-time
-                                  nullable: false
                                   example: "2021-09-28T12:30:08.573Z"
                                   description: Should be UTC date time in ISO format
                                 to:
                                   type: string
                                   format: date-time
-                                  nullable: false
                                   example: "2021-09-28T12:30:08.573Z"
                                   description: Should be UTC date time in ISO format
                             dataEraseAt:
                               type: string
                               format: date-time
-                              nullable: false
                               example: "2021-09-28T12:30:08.573Z"
                               description: The date at which the consent expire. Should be UTC date time in ISO format
                             frequency:
                               type: object
-                              nullable: false
                               required:
                                 - unit
                                 - value
@@ -3925,7 +3778,6 @@ paths:
                               properties:
                                 unit:
                                   type: string
-                                  nullable: false
                                   enum:
                                     - HOUR
                                     - DAY
@@ -3935,18 +3787,17 @@ paths:
                                 value:
                                   type: number
                                   format: int32
-                                  nullable: false
                                   example: 1
                                   description: The frequency unit value. Should be be a integer
                                 repeats:
-                                  type: number
+                                  type:
+                                    - number
+                                    - "null"
                                   format: int32
-                                  nullable: true
                                   example: 0
                                   description: Should be be a integer
                     signature:
                       type: string
-                      nullable: false
                       example: Signature of CM as defined in W3C standards; Base64 encoded
         "400":
           description: Bad Request. The request could not be processed because it was malformed or failed validation - a missing mandatory field, a value in the wrong format, or a header that did not match the body.
@@ -4050,11 +3901,9 @@ paths:
                     type: string
                     pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
                     description: 'ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing ": " separator (`ABDM-1024: `); match on the code itself and tolerate the separator.'
-                    nullable: false
                     example: ABDM-1024
                   message:
                     type: string
-                    nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: abdm-consent-management 7
     servers: *a1
@@ -4124,11 +3973,11 @@ paths:
                       - DENIED
                       - EXPIRED
                       - REVOKED
-                    nullable: false
                     example: GRANTED
                   consentDetail:
-                    type: object
-                    nullable: true
+                    type:
+                      - object
+                      - "null"
                     required:
                       - purpose
                       - patient
@@ -4138,13 +3987,13 @@ paths:
                       - permission
                     properties:
                       consentId:
-                        type: string
-                        nullable: true
+                        type:
+                          - string
+                          - "null"
                         example: e5ec415f-c098-40f6-a0db-faa162fc5295
                         description: Allows alpha numeric character and special characters like "^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$";
                       purpose:
                         type: object
-                        nullable: false
                         required:
                           - text
                           - code
@@ -4152,7 +4001,6 @@ paths:
                         properties:
                           text:
                             type: string
-                            nullable: false
                             enum:
                               - Care Management
                               - Break the Glass
@@ -4162,7 +4010,6 @@ paths:
                               - Self Requested
                           code:
                             type: string
-                            nullable: false
                             enum:
                               - CAREMGT
                               - BTG
@@ -4172,100 +4019,97 @@ paths:
                               - PATRQT
                           refUri:
                             type: string
-                            nullable: false
                             example: www.abc.com
                             description: The reference URL. Should be a valid URL
                       patient:
                         type: object
-                        nullable: false
                         required:
                           - id
                         properties:
                           id:
                             type: string
-                            nullable: false
                             example: <ABHA_ADDRESS>
                             description: The abha address of the patient
                       hip:
-                        type: object
+                        type:
+                          - object
+                          - "null"
                         description: Identifier and name of the health information provider.
-                        nullable: true
                         required:
                           - id
                           - name
                         properties:
                           id:
                             type: string
-                            nullable: false
                             example: cowin_hip_01
                             description: The service ID of the health information provider. Allows alpha numeric character and special characters like [A-Z a-z 0-9]+[A-Z a-z 0-9 //_//-]*[A-Z a-z 0-9]$
                           name:
-                            type: string
-                            nullable: true
+                            type:
+                              - string
+                              - "null"
                             example: Cowin
                             description: The name of the health information provider. Allows alpha numeric and special characters like _\-@,():/
                           type:
-                            type: string
-                            nullable: true
+                            type:
+                              - string
+                              - "null"
                             example: HIP
                             description: The type of the health information provider. Allows alpha numeric and special characters like _\-@,. ":/
                       hiu:
                         type: object
-                        nullable: false
                         required:
                           - id
                           - name
                         properties:
                           id:
                             type: string
-                            nullable: false
                             example: cowin_hiu_01
                             description: The service ID of the health information user.  Allows alpha numeric character and special characters like [A-Z a-z 0-9]+[A-Z a-z 0-9 //_//-]*[A-Z a-z 0-9]$
                           name:
-                            type: string
-                            nullable: true
+                            type:
+                              - string
+                              - "null"
                             example: Cowin
                             description: The name of the health information user. Allows alpha numeric and special characters like _\-@,():/
                           type:
-                            type: string
-                            nullable: true
+                            type:
+                              - string
+                              - "null"
                             example: HIU
                             description: The type of the health information user. Allows alpha numeric and special characters like _\-@,. ":/
                       careContexts:
                         type: array
                         description: List of care contexts linked at the HIP end for the identified patient.
                         items:
-                          type: object
-                          nullable: true
+                          type:
+                            - object
+                            - "null"
                           required:
                             - patientReference
                             - careContextReference
                           properties:
                             patientReference:
                               type: string
-                              nullable: false
                               example: batman@tmh
                               description: A patient identifier with which patient is registered in the facility/hospital
                             careContextReference:
                               type: string
-                              nullable: false
                               example: Episode1
                               description: An identifier of patient's care context created in HIP. A care context is a group of patient's health data (Not the actual health data)
                       requester:
-                        type: object
-                        nullable: true
+                        type:
+                          - object
+                          - "null"
                         required:
                           - name
                           - identifier
                         properties:
                           name:
                             type: string
-                            nullable: false
                             example: <ABHA_ADDRESS>
                             description: The name of the requester
                           identifier:
                             type: object
-                            nullable: false
                             required:
                               - value
                               - type
@@ -4273,40 +4117,32 @@ paths:
                             properties:
                               value:
                                 type: string
-                                nullable: false
                                 example: REG1
                                 description: The type of the identification. Allows alpha numeric character and special characters like _\-@,. ":/
                               type:
                                 type: string
-                                nullable: false
                                 example: MH1001
                                 description: The identification value. Allows alpha numeric character and special characters like _\-@,. ":/
                               system:
                                 type: string
-                                nullable: false
                                 example: https://www.sample.com
                                 description: Allows alpha numeric character and special characters like _\-@,. ":/
                       createdAt:
                         type: string
                         format: date-time
-                        nullable: false
                         example: "2021-09-28T12:30:08.573Z"
                       lastUpdated:
                         type: string
                         format: date-time
-                        nullable: false
                         example: "2021-09-28T12:30:08.573Z"
                       schemaVersion:
                         type: string
-                        nullable: false
                         example: v3
                       consentManager:
                         type: object
-                        nullable: false
                         properties:
                           id:
                             type: string
-                            nullable: false
                             example: abdm
                       hiTypes:
                         type: array
@@ -4322,11 +4158,9 @@ paths:
                             - Prescription
                             - WellnessRecord
                             - Invoice
-                          nullable: false
                           example: Prescription
                       permission:
                         type: object
-                        nullable: false
                         required:
                           - accessMode
                           - dateRange
@@ -4335,7 +4169,6 @@ paths:
                         properties:
                           accessMode:
                             type: string
-                            nullable: false
                             enum:
                               - VIEW
                               - STORE
@@ -4344,7 +4177,6 @@ paths:
                             example: VIEW
                           dateRange:
                             type: object
-                            nullable: false
                             required:
                               - from
                               - to
@@ -4352,24 +4184,20 @@ paths:
                               from:
                                 type: string
                                 format: date-time
-                                nullable: false
                                 example: "2021-09-28T12:30:08.573Z"
                                 description: Should be UTC date time in ISO format
                               to:
                                 type: string
                                 format: date-time
-                                nullable: false
                                 example: "2021-09-28T12:30:08.573Z"
                                 description: Should be UTC date time in ISO format
                           dataEraseAt:
                             type: string
                             format: date-time
-                            nullable: false
                             example: "2021-09-28T12:30:08.573Z"
                             description: The date at which the consent expire. Should be UTC date time in ISO format
                           frequency:
                             type: object
-                            nullable: false
                             required:
                               - unit
                               - value
@@ -4377,7 +4205,6 @@ paths:
                             properties:
                               unit:
                                 type: string
-                                nullable: false
                                 enum:
                                   - HOUR
                                   - DAY
@@ -4387,18 +4214,17 @@ paths:
                               value:
                                 type: number
                                 format: int32
-                                nullable: false
                                 example: 1
                                 description: The frequency unit value. Should be be a integer
                               repeats:
-                                type: number
+                                type:
+                                  - number
+                                  - "null"
                                 format: int32
-                                nullable: true
                                 example: 0
                                 description: Should be be a integer
                   signature:
                     type: string
-                    nullable: false
                     example: Signature of CM as defined in W3C standards; Base64 encoded
         "400":
           description: Bad Request
@@ -4501,11 +4327,9 @@ paths:
                     type: string
                     pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
                     description: 'ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing ": " separator (`ABDM-1024: `); match on the code itself and tolerate the separator.'
-                    nullable: false
                     example: ABDM-1024
                   message:
                     type: string
-                    nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: abdm-consent-management 6 (2)
     servers: *a1
@@ -4585,33 +4409,29 @@ paths:
                 properties:
                   size:
                     type: integer
-                    nullable: false
                     example: 10
                   limit:
                     type: integer
-                    nullable: false
                     example: 10
                   offset:
                     type: integer
-                    nullable: false
                     example: 0
                   consentArtefacts:
                     type: array
                     description: List of consent artefact ids that were created.
                     items:
-                      type: object
-                      nullable: true
+                      type:
+                        - object
+                        - "null"
                       properties:
                         status:
                           type: string
-                          nullable: false
                           enum:
                             - GRANTED
                             - EXPIRED
                             - REVOKED
                         consentDetail:
                           type: object
-                          nullable: false
                           required:
                             - purpose
                             - patient
@@ -4621,13 +4441,13 @@ paths:
                             - permission
                           properties:
                             consentId:
-                              type: string
-                              nullable: true
+                              type:
+                                - string
+                                - "null"
                               example: e5ec415f-c098-40f6-a0db-faa162fc5295
                               description: Allows alpha numeric character and special characters like "^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$";
                             purpose:
                               type: object
-                              nullable: false
                               required:
                                 - text
                                 - code
@@ -4635,7 +4455,6 @@ paths:
                               properties:
                                 text:
                                   type: string
-                                  nullable: false
                                   enum:
                                     - Care Management
                                     - Break the Glass
@@ -4645,7 +4464,6 @@ paths:
                                     - Self Requested
                                 code:
                                   type: string
-                                  nullable: false
                                   enum:
                                     - CAREMGT
                                     - BTG
@@ -4655,100 +4473,97 @@ paths:
                                     - PATRQT
                                 refUri:
                                   type: string
-                                  nullable: false
                                   example: www.abc.com
                                   description: The reference URL. Should be a valid URL
                             patient:
                               type: object
-                              nullable: false
                               required:
                                 - id
                               properties:
                                 id:
                                   type: string
-                                  nullable: false
                                   example: <ABHA_ADDRESS>
                                   description: The abha address of the patient
                             hip:
-                              type: object
+                              type:
+                                - object
+                                - "null"
                               description: Identifier and name of the health information provider.
-                              nullable: true
                               required:
                                 - id
                                 - name
                               properties:
                                 id:
                                   type: string
-                                  nullable: false
                                   example: cowin_hip_01
                                   description: The service ID of the health information provider. Allows alpha numeric character and special characters like [A-Z a-z 0-9]+[A-Z a-z 0-9 //_//-]*[A-Z a-z 0-9]$
                                 name:
-                                  type: string
-                                  nullable: true
+                                  type:
+                                    - string
+                                    - "null"
                                   example: Cowin
                                   description: The name of the health information provider. Allows alpha numeric and special characters like _\-@,():/
                                 type:
-                                  type: string
-                                  nullable: true
+                                  type:
+                                    - string
+                                    - "null"
                                   example: HIP
                                   description: The type of the health information provider. Allows alpha numeric and special characters like _\-@,. ":/
                             hiu:
                               type: object
-                              nullable: false
                               required:
                                 - id
                                 - name
                               properties:
                                 id:
                                   type: string
-                                  nullable: false
                                   example: cowin_hiu_01
                                   description: The service ID of the health information user. Allows alpha numeric character and special characters like [A-Z a-z 0-9]+[A-Z a-z 0-9 //_//-]*[A-Z a-z 0-9]$
                                 name:
-                                  type: string
-                                  nullable: true
+                                  type:
+                                    - string
+                                    - "null"
                                   example: Cowin
                                   description: The name of the health information user. Allows alpha numeric and special characters like _\-@,():/
                                 type:
-                                  type: string
-                                  nullable: true
+                                  type:
+                                    - string
+                                    - "null"
                                   example: HIU
                                   description: The type of the health information user. Allows alpha numeric and special characters like _\-@,. ":/
                             careContexts:
                               type: array
                               description: List of care contexts linked at the HIP end for the identified patient.
                               items:
-                                type: object
-                                nullable: true
+                                type:
+                                  - object
+                                  - "null"
                                 required:
                                   - patientReference
                                   - careContextReference
                                 properties:
                                   patientReference:
                                     type: string
-                                    nullable: false
                                     example: batman@tmh
                                     description: A patient identifier with which patient is registered in the facility/hospital
                                   careContextReference:
                                     type: string
-                                    nullable: false
                                     example: Episode1
                                     description: An identifier of patient's care context created in HIP. A care context is a group of patient's health data (Not the actual health data)
                             requester:
-                              type: object
-                              nullable: true
+                              type:
+                                - object
+                                - "null"
                               required:
                                 - name
                                 - identifier
                               properties:
                                 name:
                                   type: string
-                                  nullable: false
                                   example: <ABHA_ADDRESS>
                                   description: The name of the requester
                                 identifier:
                                   type: object
-                                  nullable: false
                                   required:
                                     - value
                                     - type
@@ -4756,40 +4571,32 @@ paths:
                                   properties:
                                     value:
                                       type: string
-                                      nullable: false
                                       example: REG1
                                       description: The type of the identification. Allows alpha numeric character and special characters like _\-@,. ":/
                                     type:
                                       type: string
-                                      nullable: false
                                       example: MH1001
                                       description: The identification value. Allows alpha numeric character and special characters like _\-@,. ":/
                                     system:
                                       type: string
-                                      nullable: false
                                       example: https://www.sample.com
                                       description: Allows alpha numeric character and special characters like _\-@,. ":/
                             createdAt:
                               type: string
                               format: date-time
-                              nullable: false
                               example: "2021-09-28T12:30:08.573Z"
                             lastUpdated:
                               type: string
                               format: date-time
-                              nullable: false
                               example: "2021-09-28T12:30:08.573Z"
                             schemaVersion:
                               type: string
-                              nullable: false
                               example: v3
                             consentManager:
                               type: object
-                              nullable: false
                               properties:
                                 id:
                                   type: string
-                                  nullable: false
                                   example: abdm
                             hiTypes:
                               type: array
@@ -4805,11 +4612,9 @@ paths:
                                   - Prescription
                                   - WellnessRecord
                                   - Invoice
-                                nullable: false
                                 example: Prescription
                             permission:
                               type: object
-                              nullable: false
                               required:
                                 - accessMode
                                 - dateRange
@@ -4818,7 +4623,6 @@ paths:
                               properties:
                                 accessMode:
                                   type: string
-                                  nullable: false
                                   enum:
                                     - VIEW
                                     - STORE
@@ -4827,7 +4631,6 @@ paths:
                                   example: VIEW
                                 dateRange:
                                   type: object
-                                  nullable: false
                                   required:
                                     - from
                                     - to
@@ -4835,24 +4638,20 @@ paths:
                                     from:
                                       type: string
                                       format: date-time
-                                      nullable: false
                                       example: "2021-09-28T12:30:08.573Z"
                                       description: Should be UTC date time in ISO format
                                     to:
                                       type: string
                                       format: date-time
-                                      nullable: false
                                       example: "2021-09-28T12:30:08.573Z"
                                       description: Should be UTC date time in ISO format
                                 dataEraseAt:
                                   type: string
                                   format: date-time
-                                  nullable: false
                                   example: "2021-09-28T12:30:08.573Z"
                                   description: The date at which the consent expire. Should be UTC date time in ISO format
                                 frequency:
                                   type: object
-                                  nullable: false
                                   required:
                                     - unit
                                     - value
@@ -4860,7 +4659,6 @@ paths:
                                   properties:
                                     unit:
                                       type: string
-                                      nullable: false
                                       enum:
                                         - HOUR
                                         - DAY
@@ -4870,19 +4668,18 @@ paths:
                                     value:
                                       type: number
                                       format: int32
-                                      nullable: false
                                       example: 1
                                       description: The frequency unit value. Should be be a integer
                                     repeats:
-                                      type: number
+                                      type:
+                                        - number
+                                        - "null"
                                       format: int32
-                                      nullable: true
                                       example: 0
                                       description: Should be be a integer
                         signature:
                           type: string
                           format: byte
-                          nullable: false
                           example: e8nY601CYDsC0FKoDjSp+7GeQ2s2R8oZncLCz5ce+pEuDOr5bZV0aaHjwJg4b9S9V+twjt4hbojx3fl7egrt8+0c+lfPTi5/bBUAQXCABTfFmtFU7jn65HlTt8kgkiONx26ZBhJ0wX3xjYI72PPtzYIiT5Q08YtDoILA62KceioV7lwuKssw7wC4ECbBAvRuXT121TmtrPhf+0myJATSnaajS06S6OthrKfZLNTUFf3pFiJzqouSTrjNblOX6DT2+JuO3rom1Szz/03c0HQG+wWASv+PO3J6uRs0UI4JvKmM/4tP+Z+/HPKM15K5U5K+4pqf6czKrbIDpkT/kP8bGg==
         "400":
           description: Bad Request. The request could not be processed because it was malformed or failed validation - a missing mandatory field, a value in the wrong format, or a header that did not match the body.
@@ -4986,11 +4783,9 @@ paths:
                     type: string
                     pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
                     description: 'ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing ": " separator (`ABDM-1024: `); match on the code itself and tolerate the separator.'
-                    nullable: false
                     example: ABDM-1024
                   message:
                     type: string
-                    nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: abdm-consent-management 8
     servers: *a1
@@ -5048,12 +4843,10 @@ paths:
               properties:
                 isApplicableForAllHIPs:
                   type: boolean
-                  nullable: false
                   example: false
                   description: A boolean value to denote if the policy is applicable to all the HIPs or only the specified HIP
                 hiu:
                   type: object
-                  nullable: false
                   required:
                     - id
                     - name
@@ -5061,17 +4854,18 @@ paths:
                   properties:
                     id:
                       type: string
-                      nullable: false
                       example: cowin_hiu_01
                       description: The service ID of the health information user.  Allows alpha numeric character and special characters like [A-Z a-z 0-9]+[A-Z a-z 0-9 //_//-]*[A-Z a-z 0-9]$
                     name:
-                      type: string
-                      nullable: true
+                      type:
+                        - string
+                        - "null"
                       example: Cowin
                       description: The name of the health information user. Allows alpha numeric and special characters like  "^[a-zA-Z]+[A-Za-z0-9_\\-@,().\\s\\xa0:/]+"
                     type:
-                      type: string
-                      nullable: true
+                      type:
+                        - string
+                        - "null"
                       example: HIU
                       description: The type of the health information user. Allows alpha numeric and special characters like "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
                 includedSources:
@@ -5079,7 +4873,6 @@ paths:
                   description: Included sources, carrying the list of hi types.
                   items:
                     type: object
-                    nullable: false
                     required:
                       - hiTypes
                       - purpose
@@ -5099,11 +4892,9 @@ paths:
                             - Prescription
                             - WellnessRecord
                             - Invoice
-                          nullable: false
                           example: Prescription
                       purpose:
                         type: object
-                        nullable: false
                         required:
                           - text
                           - code
@@ -5111,7 +4902,6 @@ paths:
                         properties:
                           text:
                             type: string
-                            nullable: false
                             enum:
                               - Care Management
                               - Break the Glass
@@ -5121,7 +4911,6 @@ paths:
                               - Self Requested
                           code:
                             type: string
-                            nullable: false
                             enum:
                               - CAREMGT
                               - BTG
@@ -5131,13 +4920,13 @@ paths:
                               - PATRQT
                           refUri:
                             type: string
-                            nullable: false
                             example: www.abc.com
                             description: The reference URL. Should be a valid URL. Allows alpha numeric character and special characters like "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
                       hip:
-                        type: object
+                        type:
+                          - object
+                          - "null"
                         description: Identifier and name of the health information provider.
-                        nullable: true
                         required:
                           - id
                           - name
@@ -5145,24 +4934,24 @@ paths:
                         properties:
                           id:
                             type: string
-                            nullable: false
                             example: cowin_hip_01
                             description: The service ID of the health information provider. Allows alpha numeric character and special characters like [A-Z a-z 0-9]+[A-Z a-z 0-9 //_//-]*[A-Z a-z 0-9]$
                           name:
-                            type: string
-                            nullable: true
+                            type:
+                              - string
+                              - "null"
                             example: Cowin
                             description: The name of the health information provider. Allows alpha numeric and special characters like "^[a-zA-Z]+[A-Za-z0-9_\\-@,().\\s\\xa0:/]+"
                           type:
-                            type: string
-                            nullable: true
+                            type:
+                              - string
+                              - "null"
                             example: HIP
                             description: |-
                               The type of the health information provider. Allows alpha numeric and special characters like
                                "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
                       period:
                         type: object
-                        nullable: false
                         required:
                           - from
                           - to
@@ -5170,13 +4959,11 @@ paths:
                           from:
                             type: string
                             format: date-time
-                            nullable: false
                             example: "2021-09-28T12:30:08.573Z"
                             description: Should be UTC date time in ISO format.Allows alpha numeric and special characters like "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$"
                           to:
                             type: string
                             format: date-time
-                            nullable: false
                             example: "2021-09-28T12:30:08.573Z"
                             description: Should be UTC date time in ISO format.Allows alpha numeric and special characters like "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$"
                 excludedSources:
@@ -5184,7 +4971,6 @@ paths:
                   description: Excluded sources, carrying the list of hi types.
                   items:
                     type: object
-                    nullable: false
                     required:
                       - hiTypes
                       - period
@@ -5203,11 +4989,9 @@ paths:
                             - Prescription
                             - WellnessRecord
                             - Invoice
-                          nullable: false
                           example: Prescription
                       purpose:
                         type: object
-                        nullable: false
                         required:
                           - text
                           - code
@@ -5215,7 +4999,6 @@ paths:
                         properties:
                           text:
                             type: string
-                            nullable: false
                             enum:
                               - Care Management
                               - Break the Glass
@@ -5225,7 +5008,6 @@ paths:
                               - Self Requested
                           code:
                             type: string
-                            nullable: false
                             enum:
                               - CAREMGT
                               - BTG
@@ -5235,13 +5017,13 @@ paths:
                               - PATRQT
                           refUri:
                             type: string
-                            nullable: false
                             example: www.abc.com
                             description: The reference URL. Should be a valid URL. Allows alpha numeric and special characters like "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
                       hip:
-                        type: object
+                        type:
+                          - object
+                          - "null"
                         description: Identifier and name of the health information provider.
-                        nullable: true
                         required:
                           - id
                           - name
@@ -5249,24 +5031,24 @@ paths:
                         properties:
                           id:
                             type: string
-                            nullable: false
                             example: cowin_hip_01
                             description: The service ID of the health information provider. Allows alpha numeric character and special characters like [A-Z a-z 0-9]+[A-Z a-z 0-9 //_//-]*[A-Z a-z 0-9]$
                           name:
-                            type: string
-                            nullable: true
+                            type:
+                              - string
+                              - "null"
                             example: Cowin
                             description: The name of the health information provider. Allows alpha numeric and special characters like "^[a-zA-Z]+[A-Za-z0-9_\\-@,().\\s\\xa0:/]+"
                           type:
-                            type: string
-                            nullable: true
+                            type:
+                              - string
+                              - "null"
                             example: HIP
                             description: |-
                               The type of the health information provider. Allows alpha numeric and special characters like
                                "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
                       period:
                         type: object
-                        nullable: false
                         required:
                           - from
                           - to
@@ -5274,13 +5056,11 @@ paths:
                           from:
                             type: string
                             format: date-time
-                            nullable: false
                             example: "2021-09-28T12:30:08.573Z"
                             description: Should be UTC date time in ISO format.Allows alpha numeric and special characters like "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$"
                           to:
                             type: string
                             format: date-time
-                            nullable: false
                             example: "2021-09-28T12:30:08.573Z"
                             description: Should be UTC date time in ISO format. Allows alpha numeric and special characters like "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$"
       responses:
@@ -5400,11 +5180,9 @@ paths:
                     type: string
                     pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
                     description: 'ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing ": " separator (`ABDM-1024: `); match on the code itself and tolerate the separator.'
-                    nullable: false
                     example: ABDM-1024
                   message:
                     type: string
-                    nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: abdm-consent-management 12
     servers: *a1
@@ -5464,13 +5242,15 @@ paths:
                 type: object
                 properties:
                   message:
-                    type: string
-                    nullable: true
+                    type:
+                      - string
+                      - "null"
                     example: Successfully disabled auto approval policy
                   error:
-                    type: object
+                    type:
+                      - object
+                      - "null"
                     description: The error code and message, if any occurred.
-                    nullable: true
                     required:
                       - code
                       - message
@@ -5478,12 +5258,10 @@ paths:
                       code:
                         type: string
                         pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
-                        nullable: false
                         example: ABDM-1001
                         description: 'ABDM-1001 - No data found. May be returned either bare (`ABDM-1001`) or with a trailing ": " separator (`ABDM-1001: `); match on the code itself and tolerate the separator.'
                       message:
                         type: string
-                        nullable: false
                         example: unable to connect database
                         description: The appropriate error message
         "400":
@@ -5587,11 +5365,9 @@ paths:
                     type: string
                     pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
                     description: 'ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing ": " separator (`ABDM-1024: `); match on the code itself and tolerate the separator.'
-                    nullable: false
                     example: ABDM-1024
                   message:
                     type: string
-                    nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: abdm-consent-management 13
     servers: *a1
@@ -5651,13 +5427,15 @@ paths:
                 type: object
                 properties:
                   message:
-                    type: string
-                    nullable: true
+                    type:
+                      - string
+                      - "null"
                     example: Successfully enabled auto approval policy
                   error:
-                    type: object
+                    type:
+                      - object
+                      - "null"
                     description: The error code and message, if any occurred.
-                    nullable: true
                     required:
                       - code
                       - message
@@ -5665,12 +5443,10 @@ paths:
                       code:
                         type: string
                         pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
-                        nullable: false
                         example: ABDM-1001
                         description: 'ABDM-1001 - No data found. May be returned either bare (`ABDM-1001`) or with a trailing ": " separator (`ABDM-1001: `); match on the code itself and tolerate the separator.'
                       message:
                         type: string
-                        nullable: false
                         example: unable to connect database
                         description: The appropriate error message
         "400":
@@ -5774,11 +5550,9 @@ paths:
                     type: string
                     pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
                     description: 'ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing ": " separator (`ABDM-1024: `); match on the code itself and tolerate the separator.'
-                    nullable: false
                     example: ABDM-1024
                   message:
                     type: string
-                    nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: abdm-consent-management 14
     servers: *a1
@@ -6659,10 +6433,8 @@ paths:
                         type: string
                       expiresIn:
                         type: integer
-                      refreshToken:
-                        nullable: true
-                      refreshExpiresIn:
-                        nullable: true
+                      refreshToken: {}
+                      refreshExpiresIn: {}
               examples:
                 Switch Profile:
                   value:
@@ -7132,8 +6904,7 @@ paths:
                           type: string
                         gender:
                           type: string
-                        email:
-                          nullable: true
+                        email: {}
                         profilePhoto:
                           type: string
                         status:
@@ -7142,14 +6913,10 @@ paths:
                           type: string
                         districtCode:
                           type: string
-                        subDistrictCode:
-                          nullable: true
-                        villageCode:
-                          nullable: true
-                        townCode:
-                          nullable: true
-                        wardCode:
-                          nullable: true
+                        subDistrictCode: {}
+                        villageCode: {}
+                        townCode: {}
+                        wardCode: {}
                         pincode:
                           type: string
                         address:
@@ -7162,12 +6929,10 @@ paths:
                           type: string
                         subdistrictName:
                           type: string
-                        villageName:
-                          nullable: true
+                        villageName: {}
                         townName:
                           type: string
-                        wardName:
-                          nullable: true
+                        wardName: {}
                         authMethods:
                           type: array
                           items:
@@ -7181,8 +6946,7 @@ paths:
                           type: string
                         verificationType:
                           type: string
-                        emailVerified:
-                          nullable: true
+                        emailVerified: {}
                         ABHANumber:
                           type: string
                         preferredAbhaAddress:
@@ -7629,11 +7393,9 @@ webhooks:
                 transactionId:
                   type: string
                   format: uuid
-                  nullable: false
                   example: f901b782-bfdf-4224-9f8d-da2cadc20c0d
                 patient:
                   type: array
-                  nullable: false
                   items:
                     type: object
                     required:
@@ -7644,12 +7406,12 @@ webhooks:
                     properties:
                       referenceNumber:
                         type: string
-                        nullable: false
                         example: abc123
                         description: A patient identifier with which patient is registered in the facility/hospital.Allows alpha numeric characters and special characters like "^[a-zA-Z0-9_\\-@,. ()/:\\\\]{0,255}$"
                       display:
-                        type: string
-                        nullable: true
+                        type:
+                          - string
+                          - "null"
                         example: "12345"
                         description: Display text for patient reference.Allows alpha numeric characters and special characters like "^[a-zA-Z0-9_\\-@,. \"':|()/]{0,255}$"
                       careContexts:
@@ -7663,17 +7425,16 @@ webhooks:
                           properties:
                             referenceNumber:
                               type: string
-                              nullable: false
                               example: abc123
                               description: An identifier of patient's care context created in HIP. A care context is a group of patient's health data (Not the actual health data).Allows alpha numeric characters and special characters like "^[a-zA-Z0-9_\\-@,. ()/:\\\\]{0,255}$"
                             display:
-                              type: string
-                              nullable: true
+                              type:
+                                - string
+                                - "null"
                               example: "12345"
                               description: Display text for care context reference. Allows alpha numeric characters and special characters like "^[a-zA-Z0-9_\\-@,. \"':|()/]{0,255}$"
                       hiType:
                         type: string
-                        nullable: false
                         enum:
                           - DiagnosticReport
                           - DischargeSummary
@@ -7687,18 +7448,17 @@ webhooks:
                         description: The health information type
                       count:
                         type: integer
-                        nullable: false
                         example: 1
                         description: The count should match the number of care contexts in the payload
                 createdAt:
                   type: string
                   format: date-time
-                  nullable: false
                   example: "2024-12-31T05:45:35.429Z"
                 error:
-                  type: object
+                  type:
+                    - object
+                    - "null"
                   description: The error code and message, if any occurred.
-                  nullable: true
                   required:
                     - code
                     - message
@@ -7706,24 +7466,20 @@ webhooks:
                     code:
                       type: string
                       pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
-                      nullable: false
                       example: ABDM-1001
                       description: 'ABDM-1001 - No data found. May be returned either bare (`ABDM-1001`) or with a trailing ": " separator (`ABDM-1001: `); match on the code itself and tolerate the separator.'
                     message:
                       type: string
-                      nullable: false
                       example: No data found
                       description: The appropriate error message
                 response:
                   type: object
-                  nullable: false
                   required:
                     - requestId
                   properties:
                     requestId:
                       type: string
                       format: uuid
-                      nullable: false
                       minimum: 36
                       maximum: 50
                       example: f29f0e59-8388-4698-9fe6-05db67aeac46
@@ -7939,14 +7695,14 @@ webhooks:
                 - response
               properties:
                 transactionId:
-                  type: string
+                  type:
+                    - string
+                    - "null"
                   format: uuid
-                  nullable: true
                   example: f901b782-bfdf-4224-9f8d-da2cadc20c0d
                   description: UUID from discover request callback to track the entire user link flow
                 link:
                   type: object
-                  nullable: false
                   required:
                     - referenceNumber
                     - authenticationType
@@ -7955,7 +7711,6 @@ webhooks:
                     referenceNumber:
                       type: string
                       format: uuid
-                      nullable: false
                       example: d353b782-bfdf-4224-9f8d-da2cadc20c0d
                       description: The link reference number. Allows alpha numeric characters and special characters like "^[a-zA-Z0-9_\\-@,. ()/:\\\\]{0,255}$"
                     authenticationType:
@@ -7963,12 +7718,10 @@ webhooks:
                       enum:
                         - DIRECT
                         - MEDIATED
-                      nullable: false
                       example: DIRECT
                       description: The authenticationType. Allows alpha numeric characters and special characters like "^[a-zA-Z0-9_\\-@,. \"':|()/]{0,255}$"
                     meta:
                       type: object
-                      nullable: false
                       required:
                         - communicationMedium
                         - communicationHint
@@ -7979,24 +7732,24 @@ webhooks:
                           enum:
                             - MOBILE
                             - EMAIL
-                          nullable: false
                           example: MOBILE
                           description: The communication medium. Allows alpha numeric characters and special characters like"^[a-zA-Z0-9_\\-@,. \"':|()/]{0,255}$
                         communicationHint:
-                          type: string
-                          nullable: true
+                          type:
+                            - string
+                            - "null"
                           example: OTP
                           description: The communication hint. Allows alpha numeric characters and special characters like "^[a-zA-Z0-9_\\-@,. \"':|()/]{0,255}$
                         communicationExpiry:
                           type: string
                           format: date-time
-                          nullable: false
                           example: "2024-05-01T05:22:34.123Z"
                           description: The communication expiry date. Should be UTC date in ISO format.Allows alpha numeric characters and special characters like "^[a-zA-Z0-9_\\-@,. \"':|()/]{0,255}$
                 error:
-                  type: object
+                  type:
+                    - object
+                    - "null"
                   description: The error code and message, if any occurred.
-                  nullable: true
                   required:
                     - code
                     - message
@@ -8004,24 +7757,20 @@ webhooks:
                     code:
                       type: string
                       pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
-                      nullable: false
                       example: ABDM-1001
                       description: 'ABDM-1001 - No data found. May be returned either bare (`ABDM-1001`) or with a trailing ": " separator (`ABDM-1001: `); match on the code itself and tolerate the separator.'
                     message:
                       type: string
-                      nullable: false
                       example: No data found
                       description: The appropriate error message
                 response:
                   type: object
-                  nullable: false
                   required:
                     - requestId
                   properties:
                     requestId:
                       type: string
                       format: uuid
-                      nullable: false
                       minimum: 36
                       maximum: 50
                       example: f29f0e59-8388-4698-9fe6-05db67aeac46
@@ -8155,14 +7904,12 @@ webhooks:
               properties:
                 response:
                   type: object
-                  nullable: false
                   required:
                     - requestId
                   properties:
                     requestId:
                       type: string
                       format: uuid
-                      nullable: false
                       minimum: 36
                       maximum: 50
                       example: f29f0e59-8388-4698-9fe6-05db67aeac46
@@ -8170,7 +7917,6 @@ webhooks:
                   description: The request id is from the link/confirm callback
                 patient:
                   type: object
-                  nullable: false
                   required:
                     - referenceNumber
                     - display
@@ -8180,12 +7926,12 @@ webhooks:
                   properties:
                     referenceNumber:
                       type: string
-                      nullable: false
                       example: abc123
                       description: A patient identifier with which patient is registered in the facility/hospitalauthenticationType.Allows alpha numeric characters and special characters like "^[a-zA-Z0-9_\\-@,. \"':|()/]{0,255}$
                     display:
-                      type: string
-                      nullable: true
+                      type:
+                        - string
+                        - "null"
                       example: "12345"
                       description: Display text for patient reference.Allows alpha numeric characters and special characters like "^[a-zA-Z0-9_\\-@,. \"':|()/]{0,255}$"
                     careContexts:
@@ -8199,17 +7945,16 @@ webhooks:
                         properties:
                           referenceNumber:
                             type: string
-                            nullable: false
                             example: abc123
                             description: An identifier of patient's care context created in HIP. A care context is a group of patient's health data (Not the actual health data).Allows alpha numeric characters and special characters like "^[a-zA-Z0-9_\\-@,. \"':|()/]{0,255}$
                           display:
-                            type: string
-                            nullable: true
+                            type:
+                              - string
+                              - "null"
                             example: "12345"
                             description: Display text for care context reference. Allows alpha numeric characters and special characters like "^[a-zA-Z0-9_\\-@,. \"':|()/]{0,255}$"
                     hiType:
                       type: string
-                      nullable: false
                       enum:
                         - DiagnosticReport
                         - DischargeSummary
@@ -8223,13 +7968,13 @@ webhooks:
                       description: The health information type
                     count:
                       type: integer
-                      nullable: false
                       example: 1
                       description: The count should match the number of care contexts in the payload
                 error:
-                  type: object
+                  type:
+                    - object
+                    - "null"
                   description: The error code and message, if any occurred.
-                  nullable: true
                   required:
                     - code
                     - message
@@ -8237,12 +7982,10 @@ webhooks:
                     code:
                       type: string
                       pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
-                      nullable: false
                       example: ABDM-1001
                       description: 'ABDM-1001 - No data found. May be returned either bare (`ABDM-1001`) or with a trailing ": " separator (`ABDM-1001: `); match on the code itself and tolerate the separator.'
                     message:
                       type: string
-                      nullable: false
                       example: No data found
                       description: The appropriate error message
       responses:
@@ -8375,7 +8118,6 @@ webhooks:
                   properties:
                     acknowledgement:
                       type: object
-                      nullable: false
                       required:
                         - abhaAddress
                         - status
@@ -8383,12 +8125,10 @@ webhooks:
                       properties:
                         status:
                           type: string
-                          nullable: false
                           example: SUCCESS
                           description: The status of the transaction.Allows like (SUCCESS|FAILED)
                         abhaAddress:
                           type: string
-                          nullable: false
                           example: <ABHA_ADDRESS>
                           description: The abha address of the patient. Should start with Alphanumeric . and  _  in the middle and must be ending with @abdm or @sbx and Allows alpha numeric character and special characters like ^[a-zA-Z0-9][a-zA-Z0-9_.\-!]+[a-zA-Z0-9]@(abdm|sbx)$
                         profile:
@@ -8401,22 +8141,18 @@ webhooks:
                           properties:
                             context:
                               type: string
-                              nullable: false
                               example: "43"
                               description: This is a counter Id. Allows alpha numeric character and special characters like ^(?:[a-zA-Z0-9 ]|[a-zA-Z0-9 ][a-zA-Z0-9.\\-_ ]*[a-zA-Z0-9 ]){1,250}$
                             tokenNumber:
                               type: string
-                              nullable: false
                               example: "3"
                               description: The token number generated at HIP for the request
                             expiry:
                               type: number
-                              nullable: false
                               example: 180
                               description: The expiry time and should be only numeric value.Allows alpha numeric character and special characters like [\d]*$
                     error:
                       type: object
-                      nullable: false
                       description: error is optional object in case of Sucess response.
                       required:
                         - code
@@ -8426,22 +8162,18 @@ webhooks:
                           type: string
                           pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
                           description: 'ABDM-9999 - Unknown exception. May be returned either bare (`ABDM-9999`) or with a trailing ": " separator (`ABDM-9999: `); match on the code itself and tolerate the separator.'
-                          nullable: false
                           example: ABDM-9999
                         message:
                           type: string
-                          nullable: false
                           example: Unknown exception
                     response:
                       type: object
-                      nullable: false
                       required:
                         - requestId
                       properties:
                         requestId:
                           type: string
                           format: uuid
-                          nullable: false
                           example: 6f0b4665-a915-4c92-aa36-65afb4a2cd71
                           description: The requestId that was passed.Allows alpha numeric character and special characters like [0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}
       responses:
@@ -8551,11 +8283,9 @@ webhooks:
                     type: string
                     pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
                     description: 'ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing ": " separator (`ABDM-1024: `); match on the code itself and tolerate the separator.'
-                    nullable: false
                     example: ABDM-1024
                   message:
                     type: string
-                    nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: profile-share 2
       x-abdm-triggered-by: p2_post_patient_share_v3_share

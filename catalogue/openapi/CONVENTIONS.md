@@ -13,9 +13,15 @@ without three different shapes of truth.
 | `hiecm-m2.yaml` | Create and link records | `dev.abdm.gov.in` |
 | `hiecm-m3.yaml` | Fetch data with consent | `dev.abdm.gov.in` |
 | `hiecm-m4.yaml` | Register facilities and professionals | `apihspsbx.abdm.gov.in` |
-| `hiecm-p1.yaml`, `hiecm-p2.yaml`, `hiecm-p3.yaml` | The PHR modules P1 to P3 | `phrsbx.abdm.gov.in` |
-| `hiecm-phr-services.yaml` | PHR application services | `phrsbx.abdm.gov.in` |
+| `hiecm-p1.yaml` | PHR registration and login | `abhasbx.abdm.gov.in` |
+| `hiecm-p2.yaml` | PHR Consents Management. Its calls under `/abha/api/v3/phr/app` carry `abhasbx.abdm.gov.in` on the call | `dev.abdm.gov.in` |
+| `hiecm-p3.yaml` | PHR subscriptions | `dev.abdm.gov.in` |
+| `hiecm-p4.yaml` | Health lockers | `dev.abdm.gov.in` |
 | `hiecm-scan-and-register.yaml`, `hiecm-record-share.yaml`, `hiecm-scan-and-pay.yaml` | The three counter QR use cases. `x-portal.section: use-cases` groups them in the API sidebar | `dev.abdm.gov.in` |
+
+`scripts/ingest-nha.mjs` writes every HIE-CM file except
+`hiecm-record-share.yaml`, which is written by hand. Change a generated file
+by changing the script, never the YAML.
 
 The NHCX files under `nhcx/v1/` are one per module of the exchange, and are
 not written in this repository. The NHCX package writes them with
@@ -60,31 +66,62 @@ authoring in 3.1 removes a translation step, and 3.1 gives us top-level
 
 ABDM callbacks are HTTPS POSTs from the gateway to a URL you registered.
 That is what OpenAPI 3.1 `webhooks` describes. Each callback is one entry
-under `webhooks`, keyed by the callback path with slashes removed, so
-`/on-add-contexts` becomes `on_add_contexts`.
+under `webhooks`, keyed by the full callback path as NHA's file writes it,
+so `/api/v3/hiu/consent/request/on-init` is the key. That is the path ABDM
+calls on the bridge URL you registered.
+
+A webhook names the call it belongs to with `x-abdm-triggered-by` or
+`x-abdm-answered-by`. See [extensions.md](extensions.md).
 
 Keeping callbacks in the module file means one retrievable chunk per
 callback, carrying its own `operationId`, indexed by the same pipeline as
 the request operations.
 
+## One operation per use case
+
+Where one URL serves several use cases, as M1's do, each use case is its own
+operation. The path key carries the use case after a `#`, and
+`x-actual-path` carries the URL on the wire:
+
+```yaml
+paths:
+  /abha/api/v3/enrollment/request/otp#aadhaar-otp:
+    post:
+      x-actual-path: /abha/api/v3/enrollment/request/otp
+```
+
+The `#` suffix is never sent to a server. The reference shows
+`x-actual-path` on the page, in the curl and in the samples.
+
 ## operationId
 
 The join key for everything downstream, so it is stable and unique across
-all files. Format:
+all files. `scripts/ingest-nha.mjs` writes it as:
 
 ```
-<module>_<tag>_<action>
+<module>_<method>_<pathslug>
 ```
 
-Lowercase, underscores only, no dots, at most 64 characters, because MCP
-tool names must match `^[a-zA-Z0-9_-]{1,64}$` and generators derive tool
-names from `operationId` directly. Examples:
+The path slug is the path, `#` suffix included, with its leading
+`/abha/api`, `/api/hiecm`, `/api` or `/apis` removed, the braces dropped
+from each `{parameter}`, lowercased, and every run of other characters
+turned into one underscore. The module keeps its hyphens. NHA's own id, where
+the file gave one, is kept in `x-abdm-nha-operation-id`.
+
+An id is at most 64 characters, because MCP tool names must match
+`^[a-zA-Z0-9_-]{1,64}$` and generators derive tool names from `operationId`
+directly. A longer id is cut to 57 characters and ends in `_` and the first
+six hex digits of the full id's sha256. A repeated id gains `_2`, then `_3`.
+Examples:
 
 ```
-gateway_sessions_create
-m1_abha_creation_request_otp
-m2_webhook_on_add_care_contexts
+gateway_get_gateway_v3_bridge_services
+m1_post_v3_enrollment_request_otp_aadhaar_otp
+scan-and-pay_post_scan_gateway_v3_patient_selection
+m2_post_user_initiated_linking_v3_patient_care_context_on_8c9340
 ```
+
+The NHCX port writes its own ids, such as `claim_v1_claim_submit`.
 
 Renaming an `operationId` is a breaking change for every compiled skill and
 every indexed chunk. Treat it like renaming an atom id.
