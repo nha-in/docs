@@ -1,0 +1,26 @@
+{
+  "catalogue_version": "2026.08.24",
+  "results": [
+    {
+      "id": "hiecm.error.abdm-1035",
+      "kind": "atom",
+      "summary": "The gateway rejected the call.",
+      "title": "ABDM-1035 facility not onboarded",
+      "url": "/docs/hiecm/v3/reference/error-codes#m2-linking-and-sharing"
+    },
+    {
+      "id": "hiecm.flow.m2-link-care-context",
+      "kind": "atom",
+      "summary": "Tell ABDM about a visit.",
+      "title": "Link a care context",
+      "url": ""
+    },
+    {
+      "id": "hiecm.endpoint.m1-enrolment-by-aadhaar",
+      "kind": "atom",
+      "summary": "POST enrol/byAadhaar creates an ABHA from an Aadhaar OTP.",
+      "title": "Enrol an ABHA by Aadhaar",
+      "url": ""
+    }
+  ]
+}

@@ -26,5 +26,6 @@
       "ref": "OPConsultRecord"
     }
   ],
+  "kind": "fhir",
   "limits": "This is a structural check against the pinned NRCES profiles (ndhm.in 0.7.2) plus ABDM transport rules. It does not validate terminology and is not a certification. Run the official HL7 validator with the same IG version for full conformance; the catalogue's validator recipe atom explains how."
 }

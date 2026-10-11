@@ -12,20 +12,22 @@ func TestRoute(t *testing.T) {
 		shape Shape
 		tools []string
 	}{
-		{"ABHA", false, Define, []string{"search_docs"}},
-		{"what is a care context", false, Define, []string{"search_docs"}},
-		{"how do i create abha without aadhar", false, HowDoI, []string{"search_docs"}},
-		{"can a phr app register with just a phone number", false, HowDoI, []string{"search_docs"}},
-		{"is abha number the same as abha address", false, Compare, []string{"search_docs"}},
-		{"difference between HIP and HIU", false, Compare, []string{"search_docs"}},
-		{"getting ABDM-1016 on sessions", false, Diagnose, []string{"search_docs", "decode_error"}},
-		{"what headers does POST /api/hiecm/gateway/v3/sessions need", false, HowDoI, []string{"search_docs", "list_operations"}},
-		{"gateway_sessions_create returns 401", false, Diagnose, []string{"search_docs", "get_operation"}},
-		{"why is this failing", true, Diagnose, []string{"search_docs", "decode_error", "validate_request"}},
-		{"which version of the catalogue is this", false, Meta, []string{"search_docs"}},
-		{"link record", false, HowDoI, []string{"search_docs"}},
-		{"create abha", false, HowDoI, []string{"search_docs"}},
-		{"what makes an address invalid", false, Define, []string{"search_docs"}},
+		{"ABHA", false, Define, []string{"abdm_search"}},
+		{"what is a care context", false, Define, []string{"abdm_search"}},
+		{"how do i create abha without aadhar", false, HowDoI, []string{"abdm_search"}},
+		{"can a phr app register with just a phone number", false, HowDoI, []string{"abdm_search"}},
+		{"is abha number the same as abha address", false, Compare, []string{"abdm_search"}},
+		{"difference between HIP and HIU", false, Compare, []string{"abdm_search"}},
+		{"getting ABDM-1016 on sessions", false, Diagnose, []string{"abdm_search", "abdm_decode_error"}},
+		// A path is not an operationId: abdm_search (kind operation) finds the
+		// id, and abdm_get then reads the contract.
+		{"what headers does POST /api/hiecm/gateway/v3/sessions need", false, HowDoI, []string{"abdm_search", "abdm_get"}},
+		{"gateway_sessions_create returns 401", false, Diagnose, []string{"abdm_search", "abdm_get"}},
+		{"why is this failing", true, Diagnose, []string{"abdm_search", "abdm_decode_error", "abdm_validate"}},
+		{"which version of the catalogue is this", false, Meta, []string{"abdm_search"}},
+		{"link record", false, HowDoI, []string{"abdm_search"}},
+		{"create abha", false, HowDoI, []string{"abdm_search"}},
+		{"what makes an address invalid", false, Define, []string{"abdm_search"}},
 	}
 	for _, c := range cases {
 		got := Route(Input{Question: c.q, HasAttachment: c.att})

@@ -4,52 +4,311 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"path/filepath"
+	"reflect"
+	"slices"
 	"strings"
 	"testing"
 
+	"github.com/modelcontextprotocol/go-sdk/mcp"
 	"github.com/nha-in/docs/mcp/internal/catalogue"
 	"github.com/nha-in/docs/mcp/internal/embed"
 	"github.com/nha-in/docs/mcp/internal/index"
+	"github.com/nha-in/docs/mcp/internal/route"
 )
 
-func TestToolDefsMatchMCP(t *testing.T) {
-	r := fixtureReader(t, false)
-	defs := NewTools(r, nil).Defs()
-	want := []string{"search_docs", "get_atom", "related_atoms", "decode_error",
-		"list_operations", "get_operation", "catalogue_info",
-		"list_fhir_profiles", "get_fhir_profile", "get_fhir_example"}
-	if len(defs) != len(want) {
-		t.Fatalf("got %d defs, want %d", len(defs), len(want))
+var sixTools = []string{"abdm_search", "abdm_get", "abdm_related",
+	"abdm_decode_error", "abdm_validate", "abdm_catalogue_info"}
+
+func TestToolDefsAreTheSixTools(t *testing.T) {
+	defs := NewTools(fixtureReader(t, false), nil).Defs()
+	if len(defs) != len(sixTools) {
+		t.Fatalf("got %d defs, want %d", len(defs), len(sixTools))
 	}
 	for i, d := range defs {
-		if d.Name != want[i] {
-			t.Errorf("def %d = %q, want %q", i, d.Name, want[i])
+		if d.Name != sixTools[i] {
+			t.Errorf("def %d = %q, want %q", i, d.Name, sixTools[i])
 		}
-		if d.Description == "" || d.InputSchema == nil || d.Call == nil {
+		if d.Description == "" || d.InputSchema == nil || d.OutputSchema == nil || d.Call == nil {
 			t.Errorf("def %q is incomplete", d.Name)
 		}
 	}
 }
 
-func TestToolDefCallSearch(t *testing.T) {
-	r := fixtureReader(t, false)
-	defs := NewTools(r, nil).Defs()
-	out, err := defs[0].Call(context.Background(),
-		json.RawMessage(`{"query": "timestamp"}`))
+// tools/list is what a client sees: the six tools, then every old name as a
+// deprecated alias, each read-only and each declaring an output schema.
+func TestToolsListIsSixToolsPlusAliases(t *testing.T) {
+	res, err := connect(t, false, nil).ListTools(context.Background(), nil)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, ok := out["hits"]; !ok {
-		t.Fatalf("search result missing hits: %v", out)
+	var names []string
+	for _, tool := range res.Tools {
+		names = append(names, tool.Name)
+		if tool.OutputSchema == nil {
+			t.Errorf("%s declares no outputSchema", tool.Name)
+		}
+		if tool.Annotations == nil || !tool.Annotations.ReadOnlyHint {
+			t.Errorf("%s is not marked readOnlyHint", tool.Name)
+		}
 	}
-	if _, ok := out["catalogue_version"]; !ok {
-		t.Fatalf("search result missing catalogue_version: %v", out)
+	want := append(append([]string{}, sixTools...), "search_docs", "list_atoms",
+		"list_operations", "list_fhir_profiles", "get_atom", "get_operation",
+		"get_fhir_profile", "get_fhir_example", "related_atoms", "decode_error",
+		"validate_request", "validate_fhir", "catalogue_info")
+	if !reflect.DeepEqual(sorted(names), sorted(want)) {
+		t.Fatalf("tools/list = %v, want %v", names, want)
+	}
+	for _, tool := range res.Tools {
+		isNew := strings.HasPrefix(tool.Name, "abdm_")
+		deprecated := strings.HasPrefix(tool.Description, "Deprecated alias for `abdm_")
+		if isNew == deprecated {
+			t.Errorf("%s: new=%v but deprecated=%v: %q", tool.Name, isNew, deprecated, tool.Description)
+		}
+	}
+}
+
+func sorted(s []string) []string {
+	out := slices.Clone(s)
+	slices.Sort(out)
+	return out
+}
+
+func TestGetDispatchesByIdShape(t *testing.T) {
+	for id, kind := range map[string]string{
+		"hiecm.error.abdm-1062":       "atom",
+		"shared.glossary.link-token":  "atom",
+		"m1_post_profile_verify":      "operation",
+		"linkAddContexts":             "operation",
+		"fhir:OPConsultRecord":        "fhir_profile",
+		"fhir:OPConsultation":         "fhir_profile",
+		"fhir-example:OPConsultation": "fhir_example",
+	} {
+		if got := kindOfID(id); got != kind {
+			t.Errorf("%s: got %s, want %s", id, got, kind)
+		}
+	}
+}
+
+// callResult calls a tool and returns its text and whether it is an error.
+func callResult(t *testing.T, sess *mcp.ClientSession, tool string, args map[string]any) (string, bool, any) {
+	t.Helper()
+	res, err := sess.CallTool(context.Background(), &mcp.CallToolParams{Name: tool, Arguments: args})
+	if err != nil {
+		t.Fatal(err)
+	}
+	return res.Content[0].(*mcp.TextContent).Text, res.IsError, res.StructuredContent
+}
+
+// Every id abdm_search hands out opens with abdm_get: that is what makes one
+// search tool and one get tool enough.
+func TestEveryIdSearchReturnsOpensWithGet(t *testing.T) {
+	sess := connect(t, false, nil)
+	for _, kind := range []string{"atom", "operation", "fhir_profile"} {
+		var out struct {
+			Results []struct {
+				ID, Kind string
+			} `json:"results"`
+		}
+		txt := callText(t, sess, "abdm_search", map[string]any{"kind": kind})
+		if err := json.Unmarshal([]byte(txt), &out); err != nil || len(out.Results) == 0 {
+			t.Fatalf("kind %s listed nothing: %v %s", kind, err, txt)
+		}
+		for _, r := range out.Results {
+			if r.Kind != kind {
+				t.Errorf("listing kind %s returned a %s", kind, r.Kind)
+			}
+			if txt, isErr, _ := callResult(t, sess, "abdm_get", map[string]any{"id": r.ID}); isErr {
+				t.Errorf("abdm_get %s: %s", r.ID, txt)
+			}
+		}
+	}
+}
+
+func TestGetUnknownIdNamesTheCorrectedCall(t *testing.T) {
+	sess := connect(t, false, nil)
+	for id, want := range map[string]string{
+		"hiecm.error.abdm-1036":  "hiecm.error.abdm-1035",
+		"linkAddContext":         "linkAddContexts",
+		"fhir:OPConsult":         "fhir:OPConsultRecord",
+		"fhir-example:OPConsult": "fhir-example:OPConsultation",
+		// An ABDM hiType is not an operationId: say which id would work.
+		"OPConsultation": `"fhir:OPConsultation"`,
+	} {
+		txt, isErr, _ := callResult(t, sess, "abdm_get", map[string]any{"id": id})
+		if !isErr {
+			t.Errorf("%s: want isError", id)
+		}
+		if !strings.Contains(txt, want) || !strings.Contains(txt, "abdm_") {
+			t.Errorf("%s: error does not name %s and the call to make: %s", id, want, txt)
+		}
+	}
+}
+
+func TestSearchWithAnEmptyQueryListsOneKind(t *testing.T) {
+	sess := connect(t, false, nil)
+	out := callText(t, sess, "abdm_search", map[string]any{"kind": "atom", "type": "error"})
+	if !strings.Contains(out, "hiecm.error.abdm-1035") || strings.Contains(out, "hiecm.flow.") {
+		t.Errorf("atom listing by type: %s", out)
+	}
+	out = callText(t, sess, "abdm_search", map[string]any{"kind": "operation", "module": "m2"})
+	if !strings.Contains(out, `"id":"linkAddContexts"`) ||
+		!strings.Contains(out, `"url":"/docs/hiecm/v3/api/m2/endpoints/linkaddcontexts"`) {
+		t.Errorf("operation listing: %s", out)
+	}
+	out = callText(t, sess, "abdm_search", map[string]any{"kind": "operation", "query": "add contexts"})
+	if !strings.Contains(out, "linkAddContexts") {
+		t.Errorf("every word of the query must match somewhere in the operation: %s", out)
+	}
+	out = callText(t, sess, "abdm_search", map[string]any{"kind": "fhir_profile"})
+	if !strings.Contains(out, `"id":"fhir:OPConsultRecord"`) {
+		t.Errorf("fhir listing: %s", out)
+	}
+	txt, isErr, _ := callResult(t, sess, "abdm_search", map[string]any{})
+	if !isErr || !strings.Contains(txt, `kind "atom", "operation" or "fhir_profile"`) {
+		t.Errorf("an empty query with no kind must say what to pass: %v %s", isErr, txt)
+	}
+}
+
+func TestSearchListingPaginates(t *testing.T) {
+	sess := connect(t, false, nil)
+	var page struct {
+		Results    []map[string]any `json:"results"`
+		Total      int              `json:"total"`
+		NextOffset *int             `json:"next_offset"`
+	}
+	txt := callText(t, sess, "abdm_search", map[string]any{"kind": "atom", "limit": 2})
+	if err := json.Unmarshal([]byte(txt), &page); err != nil {
+		t.Fatal(err)
+	}
+	if len(page.Results) != 2 || page.Total != 3 || page.NextOffset == nil || *page.NextOffset != 2 {
+		t.Fatalf("first page: %s", txt)
+	}
+	page.NextOffset = nil
+	txt = callText(t, sess, "abdm_search", map[string]any{"kind": "atom", "limit": 2, "offset": 2})
+	if err := json.Unmarshal([]byte(txt), &page); err != nil {
+		t.Fatal(err)
+	}
+	if len(page.Results) != 1 || page.NextOffset != nil {
+		t.Fatalf("last page: %s", txt)
+	}
+}
+
+func TestConciseAndDetailedSearch(t *testing.T) {
+	sess := connect(t, true, embed.NewFake(64))
+	var out struct {
+		Results []map[string]any `json:"results"`
+	}
+	txt := callText(t, sess, "abdm_search", map[string]any{"query": "ABDM-1035"})
+	if err := json.Unmarshal([]byte(txt), &out); err != nil {
+		t.Fatal(err)
+	}
+	for _, r := range out.Results {
+		for k := range r {
+			if k != "id" && k != "kind" && k != "title" && k != "summary" && k != "url" {
+				t.Errorf("concise result carries %q: %v", k, r)
+			}
+		}
+	}
+	txt = callText(t, sess, "abdm_search", map[string]any{"query": "ABDM-1035", "response_format": "detailed"})
+	if !strings.Contains(txt, `"snippet"`) || !strings.Contains(txt, `"milestone"`) {
+		t.Errorf("detailed result lacks snippet or milestone: %s", txt)
+	}
+}
+
+// The budget: a concise search at limit 10 stays under 4,000 characters,
+// here with every field at the longest length the catalogue holds today
+// (title 135, summary 325, id 56 characters).
+func TestConciseSearchAtLimitTenStaysUnder4000(t *testing.T) {
+	var atoms []catalogue.Atom
+	for i := 0; i < 12; i++ {
+		atoms = append(atoms, catalogue.Atom{
+			ID:   fmt.Sprintf("hiecm.troubleshooting.budget-%02d-%s", i, strings.Repeat("x", 30)),
+			Type: "troubleshooting", Gateway: "hiecm", Milestone: "M2",
+			Title:   "budget " + strings.Repeat("longword ", 16),
+			Summary: "budget " + strings.Repeat("sentence ", 35),
+			Body:    "## In plain words\n\nbudget", SourcePath: "x.md",
+			DocURL: "/docs/hiecm/v3/getting-started/some-long-page-name", DocAnchor: "some-long-section-anchor",
+			Related: map[string][]string{},
+		})
+	}
+	dbPath := filepath.Join(t.TempDir(), "catalogue.db")
+	if err := index.Build(dbPath, atoms, nil, nil, nil, nil, nil, nil,
+		index.Meta{CatalogueVersion: "2026.08.24", BuiltAt: "2026-08-24T00:00:00Z"}); err != nil {
+		t.Fatal(err)
+	}
+	r, err := index.Open(dbPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { r.Close() })
+	out, err := NewTools(r, nil).Search(context.Background(), searchIn{Query: "budget", Limit: 10})
+	if err != nil {
+		t.Fatal(err)
+	}
+	b, _ := json.Marshal(out)
+	if n := len(out["results"].([]map[string]any)); n != 10 {
+		t.Fatalf("got %d results, want 10", n)
+	}
+	if len(b) >= 4000 {
+		t.Fatalf("concise search at limit 10 is %d characters, budget 4000:\n%s", len(b), b)
+	}
+}
+
+// structuredContent is what a client validates against outputSchema; the
+// text is what a model reads. They must be the same JSON.
+func TestStructuredContentMatchesText(t *testing.T) {
+	sess := connect(t, true, embed.NewFake(64))
+	for _, c := range []struct {
+		tool string
+		args map[string]any
+	}{
+		{"abdm_search", map[string]any{"query": "ABDM-1035"}},
+		{"abdm_search", map[string]any{"kind": "operation"}},
+		{"abdm_get", map[string]any{"id": "hiecm.error.abdm-1035"}},
+		{"abdm_get", map[string]any{"id": "linkAddContexts"}},
+		{"abdm_get", map[string]any{"id": "fhir:OPConsultRecord"}},
+		{"abdm_get", map[string]any{"id": "fhir-example:OPConsultation"}},
+		{"abdm_related", map[string]any{"id": "hiecm.flow.m2-link-care-context"}},
+		{"abdm_decode_error", map[string]any{"input": "ABDM-1035"}},
+		{"abdm_validate", map[string]any{"kind": "request", "operation_id": "linkAddContexts", "body": `{"abhaNumber":"1"}`}},
+		{"abdm_validate", map[string]any{"kind": "fhir", "bundle_json": `{"resourceType":"Bundle"}`}},
+		{"abdm_catalogue_info", map[string]any{}},
+	} {
+		txt, isErr, structured := callResult(t, sess, c.tool, c.args)
+		if isErr || structured == nil {
+			t.Errorf("%s %v: isError=%v structured=%v: %s", c.tool, c.args, isErr, structured, txt)
+			continue
+		}
+		var a, b any
+		sb, _ := json.Marshal(structured)
+		json.Unmarshal(sb, &a)
+		json.Unmarshal([]byte(txt), &b)
+		if !reflect.DeepEqual(a, b) {
+			t.Errorf("%s: structuredContent and text differ", c.tool)
+		}
+	}
+}
+
+func TestValidateNamesWhatIsMissing(t *testing.T) {
+	sess := connect(t, false, nil)
+	for _, c := range []struct {
+		args map[string]any
+		want string
+	}{
+		{map[string]any{"kind": "request", "body": "{}"}, `abdm_search`},
+		{map[string]any{"kind": "fhir"}, "bundle_json"},
+		{map[string]any{"kind": "request", "operation_id": "linkAddContext", "body": "{}"}, "linkAddContexts"},
+	} {
+		txt, isErr, _ := callResult(t, sess, "abdm_validate", c.args)
+		if !isErr || !strings.Contains(txt, c.want) {
+			t.Errorf("%v: want an error naming %q, got %v %s", c.args, c.want, isErr, txt)
+		}
 	}
 }
 
 // newTestTools builds a Tools over the fixture snapshot with a fake
-// embedder, the same setup TestLookupOpensTopHitsAndWalksOneHop uses, so
-// Lookup (and anything bound to it) has real hits to return.
+// embedder, so Lookup (and anything bound to it) has real hits to return.
 func newTestTools(t *testing.T) *Tools {
 	t.Helper()
 	return NewTools(fixtureReader(t, true), embed.NewFake(64))
@@ -63,10 +322,31 @@ func keys(m map[string]any) []string {
 	return out
 }
 
-func TestChatToolsForBindsSearchDocsToLookup(t *testing.T) {
+// The chat surface uses only the new names, whatever the router picks.
+func TestChatToolSetUsesOnlyNewNames(t *testing.T) {
 	tools := newTestTools(t)
-	defs := tools.ChatToolsFor([]string{"search_docs", "decode_error", "list_operations"})
-	if len(defs) != 3 || defs[0].Name != "search_docs" || defs[1].Name != "decode_error" || defs[2].Name != "list_operations" {
+	for _, q := range []string{"what is a care context", "getting ABDM-1016 on sessions",
+		"what headers does POST /api/hiecm/gateway/v3/sessions need",
+		"gateway_sessions_create returns 401"} {
+		for _, att := range []bool{false, true} {
+			for _, d := range tools.ChatToolsFor(route.Route(route.Input{Question: q, HasAttachment: att}).Tools) {
+				if !strings.HasPrefix(d.Name, "abdm_") || strings.HasPrefix(d.Description, "Deprecated") {
+					t.Errorf("%q: chat set carries %s", q, d.Name)
+				}
+			}
+		}
+	}
+	for _, d := range ChatTools(tools.Defs()) {
+		if d.Name == "abdm_validate" {
+			t.Error("the unrouted chat set must not carry abdm_validate: validating a FHIR bundle is MCP only")
+		}
+	}
+}
+
+func TestChatToolsForBindsSearchToLookup(t *testing.T) {
+	tools := newTestTools(t)
+	defs := tools.ChatToolsFor([]string{"abdm_search", "abdm_decode_error", "abdm_get"})
+	if len(defs) != 3 || defs[0].Name != "abdm_search" || defs[1].Name != "abdm_decode_error" || defs[2].Name != "abdm_get" {
 		t.Fatalf("got %+v", defs)
 	}
 	out, err := defs[0].Call(context.Background(), json.RawMessage(`{"query":"link care contexts"}`))
@@ -74,19 +354,29 @@ func TestChatToolsForBindsSearchDocsToLookup(t *testing.T) {
 		t.Fatal(err)
 	}
 	if _, ok := out["passages"]; !ok {
-		t.Errorf("chat search_docs must return a passage pack, got keys %v", keys(out))
+		t.Errorf("chat abdm_search must return a passage pack, got keys %v", keys(out))
 	}
 	if !strings.Contains(defs[0].Description, "Call this when") {
 		t.Errorf("description must state when to call it, got %q", defs[0].Description)
 	}
+	// kind operation finds operations, which the passage pack never holds.
+	out, err = defs[0].Call(context.Background(), json.RawMessage(`{"query":"add-contexts","kind":"operation"}`))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if b, _ := json.Marshal(out); !strings.Contains(string(b), "linkAddContexts") {
+		t.Errorf("chat abdm_search kind operation: %s", b)
+	}
 }
 
-func TestChatToolsForBindsValidateRequest(t *testing.T) {
-	r := fixtureReader(t, false)
-	tools := NewTools(r, nil)
-	defs := tools.ChatToolsFor([]string{"search_docs", "validate_request"})
-	if len(defs) != 2 || defs[0].Name != "search_docs" || defs[1].Name != "validate_request" {
+func TestChatToolsForBindsValidateToRequestsOnly(t *testing.T) {
+	tools := NewTools(fixtureReader(t, false), nil)
+	defs := tools.ChatToolsFor([]string{"abdm_search", "abdm_validate"})
+	if len(defs) != 2 || defs[1].Name != "abdm_validate" {
 		t.Fatalf("got %+v", defs)
+	}
+	if _, ok := defs[1].InputSchema.Properties["bundle_json"]; ok {
+		t.Error("chat abdm_validate must not offer FHIR bundle validation")
 	}
 	out, err := defs[1].Call(context.Background(), json.RawMessage(
 		`{"operation_id":"linkAddContexts","body":"{\"abhaNumber\":\"91-1234\"}"}`))
@@ -97,86 +387,7 @@ func TestChatToolsForBindsValidateRequest(t *testing.T) {
 		t.Errorf("valid body rejected: %v", out)
 	}
 	if _, ok := out["required_parameters"]; !ok {
-		t.Errorf("chat validate_request must return required_parameters, got keys %v", keys(out))
-	}
-}
-
-func defByName(t *testing.T, defs []ToolDef, name string) ToolDef {
-	t.Helper()
-	for _, d := range defs {
-		if d.Name == name {
-			return d
-		}
-	}
-	t.Fatalf("no tool def named %q", name)
-	return ToolDef{}
-}
-
-func TestToolDefCallListFHIRProfiles(t *testing.T) {
-	r := fixtureReader(t, false)
-	defs := NewTools(r, nil).Defs()
-	out, err := defByName(t, defs, "list_fhir_profiles").Call(context.Background(), json.RawMessage(`{}`))
-	if err != nil {
-		t.Fatal(err)
-	}
-	profiles, ok := out["profiles"].([]index.FHIRProfileSummary)
-	if !ok || len(profiles) != 1 || profiles[0].ProfileName != "OPConsultRecord" {
-		t.Fatalf("list_fhir_profiles result = %v", out)
-	}
-	if _, ok := out["catalogue_version"]; !ok {
-		t.Fatalf("list_fhir_profiles result missing catalogue_version: %v", out)
-	}
-}
-
-func TestToolDefCallGetFHIRProfile(t *testing.T) {
-	r := fixtureReader(t, false)
-	defs := NewTools(r, nil).Defs()
-	def := defByName(t, defs, "get_fhir_profile")
-
-	out, err := def.Call(context.Background(), json.RawMessage(`{"profile":"OPConsultRecord"}`))
-	if err != nil {
-		t.Fatal(err)
-	}
-	if out["profile_name"] != "OPConsultRecord" {
-		t.Fatalf("get_fhir_profile by profile name = %v", out)
-	}
-
-	// Same digest, looked up by its ABDM hiType instead of its profile name.
-	out, err = def.Call(context.Background(), json.RawMessage(`{"profile":"OPConsultation"}`))
-	if err != nil {
-		t.Fatal(err)
-	}
-	if out["profile_name"] != "OPConsultRecord" {
-		t.Fatalf("get_fhir_profile by hiType = %v", out)
-	}
-
-	if _, err := def.Call(context.Background(), json.RawMessage(`{"profile":"NoSuchProfile"}`)); err == nil {
-		t.Fatal("want an error for an unknown profile")
-	}
-}
-
-func TestToolDefCallGetFHIRExample(t *testing.T) {
-	r := fixtureReader(t, false)
-	defs := NewTools(r, nil).Defs()
-	def := defByName(t, defs, "get_fhir_example")
-
-	out, err := def.Call(context.Background(), json.RawMessage(`{"record_type":"OPConsultation"}`))
-	if err != nil {
-		t.Fatal(err)
-	}
-	if out["record_type"] != "OPConsultation" {
-		t.Fatalf("get_fhir_example result = %v", out)
-	}
-	exJSON, err := json.Marshal(out["example"])
-	if err != nil {
-		t.Fatal(err)
-	}
-	if !strings.Contains(string(exJSON), `"resourceType":"Bundle"`) {
-		t.Fatalf("get_fhir_example example missing bundle content: %s", exJSON)
-	}
-
-	if _, err := def.Call(context.Background(), json.RawMessage(`{"record_type":"NoSuchType"}`)); err == nil {
-		t.Fatal("want an error for an unknown record type")
+		t.Errorf("chat abdm_validate must return required_parameters, got keys %v", keys(out))
 	}
 }
 

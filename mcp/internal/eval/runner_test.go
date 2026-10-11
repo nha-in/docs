@@ -12,16 +12,20 @@ import (
 	"github.com/nha-in/docs/mcp/internal/server/servertest"
 )
 
-// toolThenAnswer searches once, then answers, which is the shape of every
-// real question.
+// toolThenAnswer searches and opens the hit, then answers, which is the
+// shape of every real question. The open matters: a concise abdm_search
+// result carries no body, so the X-HIP-ID the answer quotes reaches the
+// model, and the guard's corpus, only through abdm_get.
 type toolThenAnswer struct{ round int }
 
 func (m *toolThenAnswer) Stream(ctx context.Context, system string, tools []chat.ToolDef,
 	msgs []chat.Message, maxTokens int, onText func(string)) (chat.Reply, error) {
 	m.round++
 	if m.round == 1 {
-		return chat.Reply{ToolCalls: []chat.ToolCall{{ID: "1", Name: "search_docs",
-			Input: json.RawMessage(`{"query":"ABDM-1035"}`)}}, StopReason: "tool_use"}, nil
+		return chat.Reply{ToolCalls: []chat.ToolCall{
+			{ID: "1", Name: "abdm_search", Input: json.RawMessage(`{"query":"ABDM-1035"}`)},
+			{ID: "2", Name: "abdm_get", Input: json.RawMessage(`{"id":"hiecm.error.abdm-1035"}`)},
+		}, StopReason: "tool_use"}, nil
 	}
 	onText("`ABDM-1035` means the `X-HIP-ID` header is not registered.\n\n")
 	return chat.Reply{Text: "`ABDM-1035` means the `X-HIP-ID` header is not registered.", StopReason: "end_turn"}, nil
@@ -49,7 +53,7 @@ func TestRunWritesATranscriptWithToolsAndSources(t *testing.T) {
 	if tr.Answer == "" || len(tr.Sources) == 0 || tr.Sources[0].ID != "hiecm.error.abdm-1035" {
 		t.Fatalf("transcript incomplete: %+v", tr)
 	}
-	if len(tr.Calls) != 2 || len(tr.Calls[0].ToolResults) != 1 || tr.Calls[0].ToolResults[0].Name != "search_docs" {
+	if len(tr.Calls) != 2 || len(tr.Calls[0].ToolResults) != 2 || tr.Calls[0].ToolResults[0].Name != "abdm_search" {
 		t.Fatalf("tool trace missing: %+v", tr.Calls)
 	}
 	if tr.Corpus == "" {
@@ -101,8 +105,8 @@ func (m *twoCallsThenAnswer) Stream(ctx context.Context, system string, tools []
 	m.round++
 	if m.round == 1 {
 		return chat.Reply{ToolCalls: []chat.ToolCall{
-			{ID: "1", Name: "search_docs", Input: json.RawMessage(`{"query":"ABDM-1035"}`)},
-			{ID: "2", Name: "catalogue_info", Input: json.RawMessage(`{}`)},
+			{ID: "1", Name: "abdm_search", Input: json.RawMessage(`{"query":"ABDM-1035"}`)},
+			{ID: "2", Name: "abdm_catalogue_info", Input: json.RawMessage(`{}`)},
 		}, StopReason: "tool_use"}, nil
 	}
 	onText("fine")
@@ -131,7 +135,7 @@ func TestRunPairsToolResultsWithTheCallThatMadeThem(t *testing.T) {
 		t.Fatalf("calls = %d, want 2", len(tr.Calls))
 	}
 	got := tr.Calls[0].ToolResults
-	if len(got) != 2 || got[0].Name != "search_docs" || got[1].Name != "catalogue_info" {
+	if len(got) != 2 || got[0].Name != "abdm_search" || got[1].Name != "abdm_catalogue_info" {
 		t.Fatalf("tool results out of order or missing: %+v", got)
 	}
 	if len(tr.Calls[1].ToolResults) != 0 {

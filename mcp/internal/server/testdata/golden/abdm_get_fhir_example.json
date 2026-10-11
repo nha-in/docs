@@ -18,5 +18,7 @@
       }
     ]
   },
+  "id": "fhir-example:OPConsultation",
+  "kind": "fhir_example",
   "record_type": "OPConsultation"
 }

@@ -796,12 +796,39 @@ func TestCollectSourcesFromPassages(t *testing.T) {
 				"doc_url": "/docs/glossary/abha-number"},
 		},
 	}
-	collectSources(&sources, "search_docs", result)
+	collectSources(&sources, "abdm_search", result)
 	if len(sources) != 2 {
 		t.Fatalf("got %d sources, want 2: %+v", len(sources), sources)
 	}
 	if sources[0].ID != "hiecm.glossary.abha-address" || sources[1].ID != "hiecm.glossary.abha-number" {
 		t.Errorf("sources = %+v", sources)
+	}
+}
+
+// The MCP's own abdm_search (the unrouted chat set) returns "results": its
+// top three atoms are sources, an operation never is, and abdm_get
+// contributes the one atom it read.
+func TestCollectSourcesFromResultsAndGet(t *testing.T) {
+	var sources []Source
+	collectSources(&sources, "abdm_search", map[string]any{"results": []map[string]any{
+		{"id": "linkAddContexts", "kind": "operation", "title": "POST /links", "url": "/docs/x"},
+		{"id": "hiecm.error.abdm-1035", "kind": "atom", "title": "ABDM-1035", "url": "/docs/errors#m2"},
+	}})
+	collectSources(&sources, "abdm_get", map[string]any{"kind": "operation", "id": "linkAddContexts"})
+	collectSources(&sources, "abdm_get", map[string]any{"kind": "atom", "id": "shared.glossary.hip",
+		"title": "HIP", "doc_url": "/docs/glossary/hip"})
+	if len(sources) != 2 || sources[0].ID != "hiecm.error.abdm-1035" || sources[0].URL != "/docs/errors#m2" ||
+		sources[1].ID != "shared.glossary.hip" {
+		t.Fatalf("sources = %+v", sources)
+	}
+}
+
+// The prompt and the retry nudge name only the tools the chat is given.
+func TestPromptNamesOnlyTheNewTools(t *testing.T) {
+	for _, old := range []string{"search_docs", "get_atom", "list_operations", "get_operation", "decode_error`", " decode_error"} {
+		if strings.Contains(SystemPrompt("")+lookFirst, old) {
+			t.Errorf("prompt still names %q", old)
+		}
 	}
 }
 

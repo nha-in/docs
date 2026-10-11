@@ -81,21 +81,19 @@ func Route(in Input) Result {
 		r.Shape = HowDoI
 	}
 
-	r.Tools = []string{"search_docs"}
+	r.Tools = []string{"abdm_search"}
 	if len(r.ErrorCodes) > 0 || (r.Shape == Diagnose && r.OperationRef == "") {
-		r.Tools = append(r.Tools, "decode_error")
+		r.Tools = append(r.Tools, "abdm_decode_error")
 	}
-	if strings.HasPrefix(r.OperationRef, "/") {
-		// A path-shaped ref ("/api/hiecm/gateway/v3/sessions") is not an
-		// operationId: get_operation only resolves exact ids, so handing it
-		// out here would give the model a tool it can only call by
-		// guessing. list_operations can search by path instead.
-		r.Tools = append(r.Tools, "list_operations")
-	} else if r.OperationRef != "" {
-		r.Tools = append(r.Tools, "get_operation")
+	if r.OperationRef != "" {
+		// An operationId opens directly. A path-shaped ref
+		// ("/api/hiecm/gateway/v3/sessions") is not an id: abdm_search with
+		// kind operation finds the id by path, and abdm_get then reads the
+		// contract, which the old list_operations route could not reach.
+		r.Tools = append(r.Tools, "abdm_get")
 	}
 	if in.HasAttachment {
-		r.Tools = append(r.Tools, "validate_request")
+		r.Tools = append(r.Tools, "abdm_validate")
 	}
 	return r
 }

@@ -28,7 +28,7 @@ flowchart TB
     end
     subgraph REND["Renderings, all generated from 01"]
         DOCS["04 · Docs site<br/>Docusaurus + Scalar references, self-hosted"]
-        MCP["02 · Docs MCP server<br/>own Go server, hybrid retrieval, thirteen tools plus skills"]
+        MCP["02 · Docs MCP server<br/>own Go server, hybrid retrieval, six tools plus skills"]
         SK["03 · Skills + plugin + index<br/>compiled, validated, installable alone or together"]
     end
     subgraph USERS["Who uses what"]
@@ -435,26 +435,24 @@ As built, the CI box above runs on every push and pull request, plus `go vet`, `
 
 One server, built by us, in Go: `docs-mcp`. It serves the Catalogue to machines the way the site serves it to people. A CI-run indexer compiles the Catalogue (atoms plus the OpenAPI files) into a single SQLite snapshot: full-text index, chunk embeddings, the atom relationship graph, error-code mappings, and every operation's contract. The server reads that snapshot read-only and exposes streamable HTTP MCP at `/mcp`, a JSON search endpoint for the site's search box at `/api/search`, and `/healthz`.
 
-Thirteen tools, each answering a different kind of question:
+Six tools, each read-only and each declaring an output schema, because a coding agent chooses better among six tools than thirteen and every result it gets back names ids the next tool accepts:
 
 | Tool | Answers |
 |---|---|
-| `search_docs` | hybrid keyword plus semantic search, ranked, with verification status on every hit |
-| `get_atom` | one atom in full |
-| `related_atoms` | the graph walk: a flow's errors, callbacks, tests, concepts, both directions |
-| `decode_error` | paste an error code or raw gateway body, get the matching error atoms and fixes, and the specification rows: code, message, status and the operation whose response examples return it |
-| `list_atoms` | enumeration by type and milestone |
-| `catalogue_info` | version, build time, coverage and verification counts |
-| `list_operations` / `get_operation` | the exact machine contract from the OpenAPI files |
-| `validate_request` | check a candidate request body against an operation's schema locally, before the sandbox |
-| `list_fhir_profiles` / `get_fhir_profile` / `get_fhir_example` | the pinned NRCeS profile digests and their golden examples, read together because each omits what the other carries |
-| `validate_fhir` | a structural pre-flight check of a document bundle against those profiles, tier 1 of two, never logging the bundle |
+| `abdm_search` | hybrid keyword plus semantic search over the atoms; with `kind` it matches operations or FHIR profiles instead, and with an empty query it lists one kind, paginated. Concise results by default: id, kind, title, one-line summary, url |
+| `abdm_get` | one item in full by the id `abdm_search` returned: an atom, an operation's exact contract, an NRCeS profile digest (`fhir:`) or a golden example bundle (`fhir-example:`) |
+| `abdm_related` | the graph walk: a flow's errors, callbacks, tests, concepts, both directions |
+| `abdm_decode_error` | paste an error code or raw gateway body, get the matching error atoms and fixes, and the specification rows: code, message, status and the operation whose response examples return it |
+| `abdm_validate` | `kind: request` checks a candidate request body against an operation's schema locally, before the sandbox; `kind: fhir` is the structural pre-flight of a document bundle against the pinned profiles, tier 1 of two, never logging the bundle |
+| `abdm_catalogue_info` | version, build time, coverage counts |
+
+The thirteen names served before these six answer for one release as deprecated aliases, each returning exactly what the tool it maps to returns, and are then removed.
 
 Beside the tools, the server offers the compiled integrator skills two ways, because MCP clients reach for them differently. Each skill section is a resource at `skill://<skill>/<section>`, and each skill is a prompt taking an optional `section` argument, where omitting it returns the router that says which section to read. Both read the same rows of the snapshot, so a skill cannot say one thing on one surface and something else on the other, and both stamp `catalogue_version` the way every tool response does. This is what makes the loops vendor neutral: the plugin reaches Agent Plugins 1.0 hosts, and the MCP reaches everything else. A snapshot built without a skills directory registers neither, and serves its tools alone.
 
 Retrieval is hybrid: FTS5 keyword ranking (error codes weighted highest) fused with cosine similarity over per-section chunk embeddings from a self-hosted Ollama sidecar running `nomic-embed-text`. Reciprocal rank fusion merges the two. Degradation is a design rule: without Ollama the indexer builds keyword-only and the server answers from keyword search alone, reporting `embeddings: false` on `/healthz`. Search never hard-depends on the sidecar.
 
-Rules that keep it honest: every response carries `catalogue_version`; an atom result carries no status, because atoms have none; an unknown id returns the closest valid ids, never a guess; `decode_error` with no matching atom says exactly that. Nothing executes against NHA: the earlier idea of a Scalar Installation MCP is superseded, its search-mode value covered by `get_operation` and `validate_request`, and execute mode remains a Phase 2 concern with its own safety design (per-caller credentials, never shared).
+Rules that keep it honest: every response carries `catalogue_version`; an atom result carries no status, because atoms have none; an unknown id returns the closest valid ids, never a guess; `abdm_decode_error` with no matching atom says exactly that. Nothing executes against NHA: the earlier idea of a Scalar Installation MCP is superseded, its search-mode value covered by `abdm_get` and `abdm_validate`, and execute mode remains a Phase 2 concern with its own safety design (per-caller credentials, never shared).
 
 | MCP | Where it comes from | Use in V1 |
 |---|---|---|

@@ -1,9 +1,9 @@
 ---
 name: portal-architecture
 description: 'The architecture of the ABDM Developer Portal: the four building blocks, how the Catalogue compiles into docs, skills and MCP surfaces, the seven binding principles, the atom model, and what is deliberately excluded from V1. Use whenever someone asks how the portal fits together, why a design decision was made, whether something belongs in V1, where a new capability should live, or proposes a change to the structure. Also use before designing any new component so it lands in the right layer instead of beside it.'
-plan_version: 2026.09.28
+plan_version: 2026.09.28-2
 plan_source: abdm-v1-phase1-architecture-and-plan.md
-plan_hash: sha256:b504e9424235906f7ad60616c3dfae402ac5e71d62b8aaa30ab582c7affac368
+plan_hash: sha256:aea56aec3d3f277f4bee46153c6cbd58dcdc1d07cd2f4a5fe9fdfc38e4449c26
 compiled_from_plan: true
 ---
 
@@ -86,7 +86,7 @@ Use this when someone proposes a capability and you need to place it.
 | A new way to explain existing knowledge | An atom body edit, or a skill template change. Never a new parallel document. |
 | A new agent capability | A skill compiled from atoms, registered in the index. |
 | A deterministic repeated operation | A script under `skills/*/scripts/`, registered in the index. |
-| Something that calls NHA at runtime | Search-mode value is covered by `get_operation` and `validate_request` on the Docs MCP. Execute mode is a Phase 2 concern with its own per-caller credentials. |
+| Something that calls NHA at runtime | Search-mode value is covered by `abdm_get` and `abdm_validate` on the Docs MCP. Execute mode is a Phase 2 concern with its own per-caller credentials. |
 | Anything Eka-specific | The overlay repo. Not the core Catalogue. See `dpg-governance`. |
 | Conformance evidence, ledger, gate, simulators | Phase 2. They depend on this Catalogue existing first. |
 

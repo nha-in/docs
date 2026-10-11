@@ -10,8 +10,8 @@ func searchTrace(ids ...string) ToolTrace {
 	for _, id := range ids {
 		hits = append(hits, map[string]any{"id": id})
 	}
-	out, _ := json.Marshal(map[string]any{"hits": hits})
-	return ToolTrace{Name: "search_docs", Input: json.RawMessage(`{"query":"hims"}`), Output: out}
+	out, _ := json.Marshal(map[string]any{"results": hits})
+	return ToolTrace{Name: "abdm_search", Input: json.RawMessage(`{"query":"hims"}`), Output: out}
 }
 
 func TestRetrievalScoresTheFirstSearch(t *testing.T) {
@@ -34,5 +34,21 @@ func TestRetrievalMissIsZero(t *testing.T) {
 func TestRetrievalUnscoredWithoutASearch(t *testing.T) {
 	if r := Retrieval(answerCase(), Transcript{}); r.Scored {
 		t.Fatal("scored a case that made no search")
+	}
+}
+
+// The chat's abdm_search returns a passage pack, not hits; its passages are
+// what the model read, so they are what is scored. A transcript recorded
+// before the rename still scores under its old name.
+func TestRetrievalScoresPassagesAndTheOldName(t *testing.T) {
+	out, _ := json.Marshal(map[string]any{"passages": []map[string]any{{"id": "a"}, {"id": "shared.glossary.hmis"}}})
+	tr := Transcript{Calls: []ModelCall{{ToolResults: []ToolTrace{{Name: "abdm_search", Output: out}}}}}
+	if r := Retrieval(answerCase(), tr); !r.Scored || r.RR != 0.5 {
+		t.Fatalf("passages: got %+v", r)
+	}
+	hits, _ := json.Marshal(map[string]any{"hits": []map[string]any{{"id": "shared.glossary.hmis"}}})
+	old := ToolTrace{Name: "search_docs", Output: hits}
+	if r := Retrieval(answerCase(), Transcript{Calls: []ModelCall{{ToolResults: []ToolTrace{old}}}}); r.RR != 1 {
+		t.Fatalf("old name: got %+v", r)
 	}
 }

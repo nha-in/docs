@@ -28,19 +28,19 @@ const CAPABILITIES = [
     label: 'Search',
     detail:
       'Hybrid keyword and semantic search over every page here, so an agent retrieves the paragraph it needs instead of loading the site.',
-    tools: 'search_docs, get_atom, related_atoms, list_atoms',
+    tools: 'abdm_search, abdm_get, abdm_related',
   },
   {
     label: 'Decode',
     detail:
       'Turn an error code you just received into what it means and what to do, without you finding the right table.',
-    tools: 'decode_error',
+    tools: 'abdm_decode_error',
   },
   {
     label: 'Validate',
     detail:
-      'Check a request body against the specification before you send it, and list or read any operation.',
-    tools: 'validate_request, list_operations, get_operation',
+      'Check a request body or a FHIR bundle before you send it, and find or read any operation.',
+    tools: 'abdm_validate, abdm_search, abdm_get',
   },
 ];
 

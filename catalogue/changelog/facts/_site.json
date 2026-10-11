@@ -1,23 +1,16 @@
 {
   "corrections": {},
   "mcpTools": [
-    "catalogue_info",
-    "decode_error",
-    "get_atom",
-    "get_fhir_example",
-    "get_fhir_profile",
-    "get_operation",
-    "list_atoms",
-    "list_fhir_profiles",
-    "list_operations",
-    "related_atoms",
-    "search_docs",
-    "validate_fhir",
-    "validate_request"
+    "abdm_catalogue_info",
+    "abdm_decode_error",
+    "abdm_get",
+    "abdm_related",
+    "abdm_search",
+    "abdm_validate"
   ],
   "plugins": {
-    "abdm-contributors-assistant": "0.3.0",
-    "abdm-integrators-assistant": "0.5.0",
+    "abdm-contributors-assistant": "0.3.1",
+    "abdm-integrators-assistant": "0.5.1",
     "nhcx": "1.0.0"
   },
   "procedures": {},

@@ -264,7 +264,7 @@ func (a *streamAssembler) handle(event types.ConverseStreamOutput) {
 	case *types.ConverseStreamOutputMemberContentBlockStop:
 		idx := blockIndex(e.Value.ContentBlockIndex)
 		if p, ok := a.pending[idx]; ok {
-			// A zero-argument tool call (e.g. catalogue_info) never gets a
+			// A zero-argument tool call (e.g. abdm_catalogue_info) never gets a
 			// ToolUseInputDelta, so p.input stays "". json.RawMessage("")
 			// is not valid JSON, and every tool's Call handler does
 			// json.Unmarshal(raw, &in) — default to an empty object so

@@ -1,0 +1,1031 @@
+[
+  {
+    "annotations": {
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Catalogue version, build time, embeddings status and coverage counts by gateway, milestone and type. Use this to check which snapshot you are talking to and how complete it is.",
+    "inputSchema": {
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "name": "abdm_catalogue_info",
+    "outputSchema": {
+      "properties": {
+        "atoms": {
+          "type": "object"
+        },
+        "built_at": {
+          "type": "string"
+        },
+        "catalogue_version": {
+          "type": "string"
+        },
+        "embeddings": {
+          "type": "boolean"
+        },
+        "operations": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "atoms",
+        "built_at",
+        "catalogue_version",
+        "embeddings",
+        "operations"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "annotations": {
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Extract ABDM error codes from a code or raw response body and return, per code, the matching narrative error atoms with their fixes plus the specification rows (code, message, http status, returning operation_id, module). Use this first for any error response from the gateway, before reaching for abdm_search.",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "input": {
+          "description": "an error code or a raw gateway response body",
+          "type": "string"
+        }
+      },
+      "required": [
+        "input"
+      ],
+      "type": "object"
+    },
+    "name": "abdm_decode_error",
+    "outputSchema": {
+      "properties": {
+        "catalogue_version": {
+          "type": "string"
+        },
+        "codes": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "catalogue_version",
+        "codes"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "annotations": {
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Read one item in full by an id that abdm_search returned. The id's shape says what it is: an atom id such as hiecm.error.abdm-1035 returns the atom's fields and markdown body; an operationId such as linkAddContexts returns the exact OpenAPI contract; fhir:\u003cprofile name or ABDM hiType\u003e, such as fhir:OPConsultRecord, returns the NRCES profile digest; fhir-example:\u003chiType\u003e, such as fhir-example:OPConsultation, returns a known-good document bundle. An unknown id is an error that names the closest valid ids.",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "description": "an id exactly as abdm_search returned it: hiecm.error.abdm-1035, linkAddContexts, fhir:OPConsultRecord or fhir-example:OPConsultation",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "type": "object"
+    },
+    "name": "abdm_get",
+    "outputSchema": {
+      "properties": {
+        "catalogue_version": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "atom",
+            "operation",
+            "fhir_profile",
+            "fhir_example"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "catalogue_version",
+        "id",
+        "kind"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "annotations": {
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Walk the catalogue graph from one atom id, both directions. Related atoms come back grouped by their own type (concept, flow, endpoint, callback, error, test, ...), each atom once. Use this to move from one exact atom to its neighbours; use abdm_search when you do not have a starting atom.",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "description": "an atom id, for example hiecm.flow.m2-link-care-context",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "type": "object"
+    },
+    "name": "abdm_related",
+    "outputSchema": {
+      "properties": {
+        "catalogue_version": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "related": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "catalogue_version",
+        "id",
+        "related"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "annotations": {
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Find anything in the ABDM catalogue and get back ids that abdm_get opens. With a query it ranks the written guidance (atoms: concepts, flows, endpoints, callbacks, errors, tests, glossary entries, decisions, FHIR mappings, sandbox notes, troubleshooting) by hybrid keyword and semantic search. kind operation matches API operations whose operationId, summary or path contains every word of the query; kind fhir_profile does the same for the NRCES FHIR profiles. With an empty query and a kind it lists that kind, filtered and paginated: pass next_offset back as offset for the next page. response_format concise (the default) returns id, kind, title, summary and url per result; detailed adds type, milestone and snippet for atoms, and method, path, module and tag for operations.",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "gateway": {
+          "description": "atoms only: one gateway's atoms; shared atoms always come too",
+          "enum": [
+            "hiecm",
+            "nhcx",
+            "uhi"
+          ],
+          "type": "string"
+        },
+        "kind": {
+          "description": "what to return: atom (written guidance), operation (API operations), fhir_profile (NRCES profiles) or any",
+          "enum": [
+            "any",
+            "atom",
+            "operation",
+            "fhir_profile"
+          ],
+          "type": "string"
+        },
+        "limit": {
+          "description": "results per call: default 10 with a query and 25 for a listing, at most 25 for an atom query and 100 otherwise",
+          "maximum": 100,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "milestone": {
+          "description": "atoms only: M1 to M4 or P1 to P4",
+          "type": "string"
+        },
+        "module": {
+          "description": "operations only: the specification module, for example gateway, m1 or m2",
+          "type": "string"
+        },
+        "offset": {
+          "description": "skip this many results: the next_offset of the previous page",
+          "minimum": 0,
+          "type": "integer"
+        },
+        "query": {
+          "description": "what to look for: your own words, an error code, an operationId or a path. Leave empty, with a kind, to list that kind",
+          "type": "string"
+        },
+        "response_format": {
+          "description": "concise (default) or detailed",
+          "enum": [
+            "concise",
+            "detailed"
+          ],
+          "type": "string"
+        },
+        "type": {
+          "description": "atoms only: the atom type",
+          "enum": [
+            "concept",
+            "flow",
+            "endpoint",
+            "callback",
+            "error",
+            "test",
+            "glossary",
+            "decision",
+            "fhir",
+            "sandbox",
+            "troubleshooting"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "name": "abdm_search",
+    "outputSchema": {
+      "properties": {
+        "catalogue_version": {
+          "type": "string"
+        },
+        "results": {
+          "items": {
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "kind": {
+                "enum": [
+                  "atom",
+                  "operation",
+                  "fhir_profile"
+                ],
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "kind",
+              "title"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "catalogue_version",
+        "results"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "annotations": {
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Check something locally before sending it anywhere. kind request validates a candidate request body (body, raw JSON) against one operation's schema (operation_id) and lists the required headers and parameters that body validation cannot see. kind fhir runs a structural pre-flight check of a FHIR document bundle (bundle_json, optionally record_type) against the pinned NRCES profiles and ABDM transport rules, returning findings with locations and fixes; it does not validate terminology and does not replace the official HL7 validator, whose recipe the catalogue carries. The bundle is never logged.",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "body": {
+          "description": "kind request: the candidate request body as raw JSON",
+          "type": "string"
+        },
+        "bundle_json": {
+          "description": "kind fhir: the FHIR document bundle, as a JSON string",
+          "type": "string"
+        },
+        "kind": {
+          "description": "request or fhir",
+          "enum": [
+            "request",
+            "fhir"
+          ],
+          "type": "string"
+        },
+        "operation_id": {
+          "description": "kind request: the operationId, from abdm_search with kind operation",
+          "type": "string"
+        },
+        "record_type": {
+          "description": "kind fhir: optional expected ABDM hiType, for example OPConsultation",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "type": "object"
+    },
+    "name": "abdm_validate",
+    "outputSchema": {
+      "properties": {
+        "catalogue_version": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "request",
+            "fhir"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "catalogue_version",
+        "kind"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "annotations": {
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Deprecated alias for `abdm_catalogue_info`; removed in the next release. Call abdm_catalogue_info.",
+    "inputSchema": {
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "name": "catalogue_info",
+    "outputSchema": {
+      "properties": {
+        "atoms": {
+          "type": "object"
+        },
+        "built_at": {
+          "type": "string"
+        },
+        "catalogue_version": {
+          "type": "string"
+        },
+        "embeddings": {
+          "type": "boolean"
+        },
+        "operations": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "atoms",
+        "built_at",
+        "catalogue_version",
+        "embeddings",
+        "operations"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "annotations": {
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Deprecated alias for `abdm_decode_error`; removed in the next release. Call abdm_decode_error.",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "input": {
+          "description": "an error code or a raw gateway response body",
+          "type": "string"
+        }
+      },
+      "required": [
+        "input"
+      ],
+      "type": "object"
+    },
+    "name": "decode_error",
+    "outputSchema": {
+      "properties": {
+        "catalogue_version": {
+          "type": "string"
+        },
+        "codes": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "catalogue_version",
+        "codes"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "annotations": {
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Deprecated alias for `abdm_get`; removed in the next release. Call abdm_get with the atom id.",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "description": "the atom id, for example hiecm.error.abdm-1035",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "type": "object"
+    },
+    "name": "get_atom",
+    "outputSchema": {
+      "properties": {
+        "catalogue_version": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "atom",
+            "operation",
+            "fhir_profile",
+            "fhir_example"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "catalogue_version",
+        "id",
+        "kind"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "annotations": {
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Deprecated alias for `abdm_get`; removed in the next release. Call abdm_get with id \"fhir-example:\u003chiType\u003e\".",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "record_type": {
+          "description": "the ABDM hiType, for example OPConsultation",
+          "type": "string"
+        }
+      },
+      "required": [
+        "record_type"
+      ],
+      "type": "object"
+    },
+    "name": "get_fhir_example",
+    "outputSchema": {
+      "properties": {
+        "catalogue_version": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "atom",
+            "operation",
+            "fhir_profile",
+            "fhir_example"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "catalogue_version",
+        "id",
+        "kind"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "annotations": {
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Deprecated alias for `abdm_get`; removed in the next release. Call abdm_get with id \"fhir:\u003cprofile or hiType\u003e\".",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "profile": {
+          "description": "the NRCES profile name, for example OPConsultRecord, or an ABDM hiType such as OPConsultation",
+          "type": "string"
+        }
+      },
+      "required": [
+        "profile"
+      ],
+      "type": "object"
+    },
+    "name": "get_fhir_profile",
+    "outputSchema": {
+      "properties": {
+        "catalogue_version": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "atom",
+            "operation",
+            "fhir_profile",
+            "fhir_example"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "catalogue_version",
+        "id",
+        "kind"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "annotations": {
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Deprecated alias for `abdm_get`; removed in the next release. Call abdm_get with the operationId as id.",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "operation_id": {
+          "description": "the operationId",
+          "type": "string"
+        }
+      },
+      "required": [
+        "operation_id"
+      ],
+      "type": "object"
+    },
+    "name": "get_operation",
+    "outputSchema": {
+      "properties": {
+        "catalogue_version": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "atom",
+            "operation",
+            "fhir_profile",
+            "fhir_example"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "catalogue_version",
+        "id",
+        "kind"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "annotations": {
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Deprecated alias for `abdm_search`; removed in the next release. Call abdm_search with kind \"atom\" and no query.",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "milestone": {
+          "description": "optional milestone filter",
+          "type": "string"
+        },
+        "type": {
+          "description": "optional atom type filter",
+          "enum": [
+            "concept",
+            "flow",
+            "endpoint",
+            "callback",
+            "error",
+            "test",
+            "glossary",
+            "decision",
+            "fhir",
+            "sandbox",
+            "troubleshooting"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "name": "list_atoms",
+    "outputSchema": {
+      "properties": {
+        "catalogue_version": {
+          "type": "string"
+        },
+        "results": {
+          "items": {
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "kind": {
+                "enum": [
+                  "atom",
+                  "operation",
+                  "fhir_profile"
+                ],
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "kind",
+              "title"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "catalogue_version",
+        "results"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "annotations": {
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Deprecated alias for `abdm_search`; removed in the next release. Call abdm_search with kind \"fhir_profile\".",
+    "inputSchema": {
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "name": "list_fhir_profiles",
+    "outputSchema": {
+      "properties": {
+        "catalogue_version": {
+          "type": "string"
+        },
+        "results": {
+          "items": {
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "kind": {
+                "enum": [
+                  "atom",
+                  "operation",
+                  "fhir_profile"
+                ],
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "kind",
+              "title"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "catalogue_version",
+        "results"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "annotations": {
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Deprecated alias for `abdm_search`; removed in the next release. Call abdm_search with kind \"operation\".",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "module": {
+          "description": "optional exact module filter",
+          "type": "string"
+        },
+        "q": {
+          "description": "optional case-insensitive filter over operation_id, summary and path",
+          "type": "string"
+        },
+        "tag": {
+          "description": "optional exact tag filter",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "name": "list_operations",
+    "outputSchema": {
+      "properties": {
+        "catalogue_version": {
+          "type": "string"
+        },
+        "results": {
+          "items": {
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "kind": {
+                "enum": [
+                  "atom",
+                  "operation",
+                  "fhir_profile"
+                ],
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "kind",
+              "title"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "catalogue_version",
+        "results"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "annotations": {
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Deprecated alias for `abdm_related`; removed in the next release. Call abdm_related.",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "description": "the atom id, for example hiecm.error.abdm-1035",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "type": "object"
+    },
+    "name": "related_atoms",
+    "outputSchema": {
+      "properties": {
+        "catalogue_version": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "related": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "catalogue_version",
+        "id",
+        "related"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "annotations": {
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Deprecated alias for `abdm_search`; removed in the next release. Call abdm_search with kind \"atom\" and response_format \"detailed\".",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "limit": {
+          "description": "max results, default 10, cap 25",
+          "type": "integer"
+        },
+        "milestone": {
+          "description": "optional milestone filter, M1 to M4",
+          "type": "string"
+        },
+        "query": {
+          "description": "the search query",
+          "type": "string"
+        },
+        "type": {
+          "description": "optional atom type filter",
+          "enum": [
+            "concept",
+            "flow",
+            "endpoint",
+            "callback",
+            "error",
+            "test",
+            "glossary",
+            "decision",
+            "fhir",
+            "sandbox",
+            "troubleshooting"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "type": "object"
+    },
+    "name": "search_docs",
+    "outputSchema": {
+      "properties": {
+        "catalogue_version": {
+          "type": "string"
+        },
+        "results": {
+          "items": {
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "kind": {
+                "enum": [
+                  "atom",
+                  "operation",
+                  "fhir_profile"
+                ],
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "kind",
+              "title"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "catalogue_version",
+        "results"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "annotations": {
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Deprecated alias for `abdm_validate`; removed in the next release. Call abdm_validate with kind \"fhir\".",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "bundle_json": {
+          "description": "the FHIR document bundle to check, as a JSON string",
+          "type": "string"
+        },
+        "record_type": {
+          "description": "optional expected ABDM hiType, for example OPConsultation",
+          "type": "string"
+        }
+      },
+      "required": [
+        "bundle_json"
+      ],
+      "type": "object"
+    },
+    "name": "validate_fhir",
+    "outputSchema": {
+      "properties": {
+        "catalogue_version": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "request",
+            "fhir"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "catalogue_version",
+        "kind"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "annotations": {
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Deprecated alias for `abdm_validate`; removed in the next release. Call abdm_validate with kind \"request\".",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "body": {
+          "description": "the candidate request body as raw JSON",
+          "type": "string"
+        },
+        "operation_id": {
+          "description": "the operationId, from abdm_search with kind operation",
+          "type": "string"
+        }
+      },
+      "required": [
+        "operation_id",
+        "body"
+      ],
+      "type": "object"
+    },
+    "name": "validate_request",
+    "outputSchema": {
+      "properties": {
+        "catalogue_version": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "request",
+            "fhir"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "catalogue_version",
+        "kind"
+      ],
+      "type": "object"
+    }
+  }
+]

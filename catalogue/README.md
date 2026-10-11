@@ -67,11 +67,11 @@ What feeds which MCP tool:
 
 | Content | Tools |
 |---|---|
-| Atoms | search_docs, get_atom, related_atoms, decode_error, list_atoms, catalogue_info |
-| Specs | list_operations, get_operation, validate_request |
+| Atoms | abdm_search, abdm_get, abdm_related, abdm_decode_error, abdm_catalogue_info |
+| Specs | abdm_search (kind operation), abdm_get, abdm_validate (kind request) |
 
 Known limits, tracked for the ingestion phase: `webhooks` sections are
-not yet indexed (only `paths` operations appear in list_operations), and
+not yet indexed (only `paths` operations appear in abdm_search), and
 `.yml` is not accepted.
 
 ## The atom contract, in brief

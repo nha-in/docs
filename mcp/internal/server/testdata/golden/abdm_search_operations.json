@@ -1,0 +1,13 @@
+{
+  "catalogue_version": "2026.08.24",
+  "results": [
+    {
+      "id": "linkAddContexts",
+      "kind": "operation",
+      "summary": "Add care contexts",
+      "title": "POST /links/link/add-contexts",
+      "url": "/docs/hiecm/v3/api/m2/endpoints/linkaddcontexts"
+    }
+  ],
+  "total": 1
+}

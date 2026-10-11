@@ -5,247 +5,29 @@ package server
 import (
 	"context"
 	"encoding/json"
-	"errors"
-	"fmt"
 	"log/slog"
-	"sync"
 	"time"
 
-	"github.com/google/jsonschema-go/jsonschema"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 	"github.com/nha-in/docs/mcp/internal/embed"
-	"github.com/nha-in/docs/mcp/internal/fhir"
 	"github.com/nha-in/docs/mcp/internal/index"
 )
 
-const serverVersion = "0.1.0"
+const serverVersion = "0.2.0"
 
-// atomTypeValues are the catalogue atom types, used to enumerate the type
-// filters of search_docs and list_atoms.
-var atomTypeValues = []any{
-	"concept", "flow", "endpoint", "callback", "error",
-	"test", "glossary", "decision", "fhir", "sandbox", "troubleshooting",
-}
+// readOnly marks every tool: each reads one immutable snapshot and touches
+// nothing outside it, so a repeated call has no further effect.
+var readOnly = &mcp.ToolAnnotations{ReadOnlyHint: true, IdempotentHint: true, OpenWorldHint: new(bool)}
 
-// schemaWithAtomTypeEnum infers the input schema for In and constrains its
-// "type" property to the known atom types.
-func schemaWithAtomTypeEnum[In any]() *jsonschema.Schema {
-	s, err := jsonschema.For[In](nil)
-	if err != nil {
-		panic(err)
-	}
-	s.Properties["type"].Enum = atomTypeValues
-	return s
-}
-
-// maxUnfilteredOperations caps list_operations output when no filter is
-// given; the full listing runs to hundreds of operations and tens of
-// kilobytes.
-const maxUnfilteredOperations = 60
-
-// NewMCPServer wires the thirteen tools. emb may be nil (keyword-only).
+// NewMCPServer wires the six tools and, for one release, the thirteen old
+// names as deprecated aliases. emb may be nil (keyword-only).
 func NewMCPServer(r *index.Reader, emb embed.Embedder) *mcp.Server {
 	s := mcp.NewServer(&mcp.Implementation{Name: "abdm-docs", Version: serverVersion}, nil)
 	s.AddReceivingMiddleware(toolCallLoggingMiddleware)
-	versioned := func(fields map[string]any) map[string]any {
-		fields["catalogue_version"] = r.CatalogueVersion()
-		return fields
-	}
-
 	tools := NewTools(r, emb)
-
-	mcp.AddTool(s, &mcp.Tool{
-		Name:        "search_docs",
-		Description: searchDocsDescription,
-		InputSchema: schemaWithAtomTypeEnum[searchIn](),
-	}, func(ctx context.Context, req *mcp.CallToolRequest, in searchIn) (*mcp.CallToolResult, any, error) {
-		out, err := tools.SearchDocs(ctx, in)
-		if err != nil {
-			return nil, nil, err
-		}
-		return jsonResult(out)
-	})
-
-	mcp.AddTool(s, &mcp.Tool{
-		Name:        "get_atom",
-		Description: getAtomDescription,
-	}, func(ctx context.Context, req *mcp.CallToolRequest, in getAtomIn) (*mcp.CallToolResult, any, error) {
-		out, err := tools.GetAtom(ctx, in)
-		if err != nil {
-			return notFoundOrErr(err)
-		}
-		return jsonResult(out)
-	})
-
-	mcp.AddTool(s, &mcp.Tool{
-		Name:        "related_atoms",
-		Description: relatedAtomsDescription,
-	}, func(ctx context.Context, req *mcp.CallToolRequest, in getAtomIn) (*mcp.CallToolResult, any, error) {
-		out, err := tools.RelatedAtoms(ctx, in)
-		if err != nil {
-			return notFoundOrErr(err)
-		}
-		return jsonResult(out)
-	})
-
-	mcp.AddTool(s, &mcp.Tool{
-		Name:        "decode_error",
-		Description: decodeErrorDescription,
-	}, func(ctx context.Context, req *mcp.CallToolRequest, in decodeIn) (*mcp.CallToolResult, any, error) {
-		out, err := tools.DecodeError(ctx, in)
-		if err != nil {
-			return nil, nil, err
-		}
-		return jsonResult(out)
-	})
-
-	type listAtomsIn struct {
-		Type      string `json:"type,omitempty" jsonschema:"optional atom type filter, one of: concept, flow, endpoint, callback, error, test, glossary, decision, fhir, sandbox, troubleshooting"`
-		Milestone string `json:"milestone,omitempty" jsonschema:"optional milestone filter"`
+	for _, d := range append(tools.Defs(), tools.aliasDefs()...) {
+		register(s, d)
 	}
-	mcp.AddTool(s, &mcp.Tool{
-		Name: "list_atoms",
-		Description: "Enumerate catalogue atoms by type and milestone, for example all M2 test cases. " +
-			"Use this to enumerate what the catalogue covers; use search_docs when you have an intent rather than a category.",
-		InputSchema: schemaWithAtomTypeEnum[listAtomsIn](),
-	}, func(ctx context.Context, req *mcp.CallToolRequest, in listAtomsIn) (*mcp.CallToolResult, any, error) {
-		refs, err := r.ListAtoms(in.Type, in.Milestone)
-		if err != nil {
-			return nil, nil, err
-		}
-		return jsonResult(versioned(map[string]any{"atoms": atomRefsJSON(refs)}))
-	})
-
-	mcp.AddTool(s, &mcp.Tool{
-		Name:        "catalogue_info",
-		Description: catalogueInfoDescription,
-	}, func(ctx context.Context, req *mcp.CallToolRequest, in emptyIn) (*mcp.CallToolResult, any, error) {
-		out, err := tools.CatalogueInfo(ctx, in)
-		if err != nil {
-			return nil, nil, err
-		}
-		return jsonResult(out)
-	})
-
-	mcp.AddTool(s, &mcp.Tool{
-		Name:        "list_operations",
-		Description: listOperationsDescription,
-	}, func(ctx context.Context, req *mcp.CallToolRequest, in listOpsIn) (*mcp.CallToolResult, any, error) {
-		out, err := tools.ListOperations(ctx, in)
-		if err != nil {
-			return nil, nil, err
-		}
-		return jsonResult(out)
-	})
-
-	mcp.AddTool(s, &mcp.Tool{
-		Name:        "get_operation",
-		Description: getOperationDescription,
-	}, func(ctx context.Context, req *mcp.CallToolRequest, in getOpIn) (*mcp.CallToolResult, any, error) {
-		out, err := tools.GetOperation(ctx, in)
-		if err != nil {
-			return notFoundOrErr(err)
-		}
-		return jsonResult(out)
-	})
-
-	mcp.AddTool(s, &mcp.Tool{
-		Name:        "list_fhir_profiles",
-		Description: listFhirProfilesDescription,
-	}, func(ctx context.Context, req *mcp.CallToolRequest, in emptyFhirIn) (*mcp.CallToolResult, any, error) {
-		out, err := tools.ListFHIRProfiles(ctx, in)
-		if err != nil {
-			return nil, nil, err
-		}
-		return jsonResult(out)
-	})
-
-	mcp.AddTool(s, &mcp.Tool{
-		Name:        "get_fhir_profile",
-		Description: getFhirProfileDescription,
-	}, func(ctx context.Context, req *mcp.CallToolRequest, in getFhirProfileIn) (*mcp.CallToolResult, any, error) {
-		out, err := tools.GetFHIRProfile(ctx, in)
-		if err != nil {
-			return notFoundOrErr(err)
-		}
-		return jsonResult(out)
-	})
-
-	mcp.AddTool(s, &mcp.Tool{
-		Name:        "get_fhir_example",
-		Description: getFhirExampleDescription,
-	}, func(ctx context.Context, req *mcp.CallToolRequest, in getFhirExampleIn) (*mcp.CallToolResult, any, error) {
-		out, err := tools.GetFHIRExample(ctx, in)
-		if err != nil {
-			return notFoundOrErr(err)
-		}
-		return jsonResult(out)
-	})
-
-	mcp.AddTool(s, &mcp.Tool{
-		Name:        "validate_request",
-		Description: validateRequestDescription,
-	}, func(ctx context.Context, req *mcp.CallToolRequest, in validateIn) (*mcp.CallToolResult, any, error) {
-		out, err := tools.ValidateRequest(ctx, in)
-		if err != nil {
-			return notFoundOrErr(err)
-		}
-		return jsonResult(out)
-	})
-
-	// loadAllDigests loads every indexed profile digest once and caches it
-	// for the lifetime of this server: digests are immutable per snapshot,
-	// and validate_fhir would otherwise re-read every profile digest from
-	// the reader on every call.
-	var (
-		digestsOnce  sync.Once
-		digestsCache map[string]*fhir.ProfileDigest
-		digestsErr   error
-	)
-	loadAllDigests := func(r *index.Reader) (map[string]*fhir.ProfileDigest, error) {
-		digestsOnce.Do(func() {
-			summaries, err := r.ListFHIRProfiles()
-			if err != nil {
-				digestsErr = err
-				return
-			}
-			m := make(map[string]*fhir.ProfileDigest, len(summaries))
-			for _, sm := range summaries {
-				d, err := r.GetFHIRProfile(sm.ProfileName)
-				if err != nil {
-					digestsErr = err
-					return
-				}
-				m[sm.ProfileName] = d
-			}
-			digestsCache = m
-		})
-		return digestsCache, digestsErr
-	}
-
-	type validateFhirIn struct {
-		BundleJSON string `json:"bundle_json" jsonschema:"the FHIR document bundle to check, as a JSON string"`
-		RecordType string `json:"record_type,omitempty" jsonschema:"optional expected ABDM hiType, for example OPConsultation"`
-	}
-	mcp.AddTool(s, &mcp.Tool{
-		Name: "validate_fhir",
-		Description: "Structural pre-flight check of a FHIR document bundle against the pinned NRCES profiles and ABDM transport rules. " +
-			"Returns findings with locations and concrete fixes, never a bare pass or fail. " +
-			"This is tier 1: it does not validate terminology and does not replace the official HL7 validator, whose recipe the catalogue carries.",
-	}, func(ctx context.Context, req *mcp.CallToolRequest, in validateFhirIn) (*mcp.CallToolResult, any, error) {
-		if len(in.BundleJSON) > 2<<20 {
-			return jsonResult(versioned(map[string]any{"error": "bundle exceeds the 2 MiB limit"}))
-		}
-		digests, err := loadAllDigests(r)
-		if err != nil {
-			return nil, nil, err
-		}
-		findings := fhir.Validate([]byte(in.BundleJSON), in.RecordType, digests)
-		return jsonResult(versioned(map[string]any{
-			"findings": findings,
-			"limits":   fmt.Sprintf(fhir.LimitsTemplate, r.FHIRIGVersion()),
-		}))
-	})
 
 	// The compiled skills, as one resource per section and one prompt per
 	// skill. A snapshot built before skills were indexed has no rows and
@@ -255,6 +37,29 @@ func NewMCPServer(r *index.Reader, emb embed.Embedder) *mcp.Server {
 	}
 
 	return s
+}
+
+// register adds one ToolDef to the server. The SDK validates the arguments
+// against d.InputSchema and the result against d.OutputSchema, and sends the
+// result twice: as structuredContent for a client that reads the schema, and
+// as the same JSON in a text block for one that does not. An error from
+// d.Call comes back as an isError result carrying its message, which every
+// tool writes to say what to call instead.
+func register(s *mcp.Server, d ToolDef) {
+	mcp.AddTool(s, &mcp.Tool{
+		Name: d.Name, Description: d.Description, Annotations: readOnly,
+		InputSchema: d.InputSchema, OutputSchema: d.OutputSchema,
+	}, func(ctx context.Context, req *mcp.CallToolRequest, in json.RawMessage) (*mcp.CallToolResult, any, error) {
+		out, err := d.Call(ctx, in)
+		if err != nil {
+			return nil, nil, err
+		}
+		b, err := json.Marshal(out)
+		if err != nil {
+			return nil, nil, err
+		}
+		return &mcp.CallToolResult{Content: []mcp.Content{&mcp.TextContent{Text: string(b)}}}, out, nil
+	})
 }
 
 func searchHitsJSON(hits []index.SearchHit) []map[string]any {
@@ -311,27 +116,4 @@ func toolCallLoggingMiddleware(next mcp.MethodHandler) mcp.MethodHandler {
 		slog.Info("tool_call", attrs...)
 		return res, err
 	}
-}
-
-func jsonResult(v any) (*mcp.CallToolResult, any, error) {
-	b, err := json.MarshalIndent(v, "", "  ")
-	if err != nil {
-		return nil, nil, err
-	}
-	return &mcp.CallToolResult{
-		Content: []mcp.Content{&mcp.TextContent{Text: string(b)}},
-	}, nil, nil
-}
-
-func notFoundOrErr(err error) (*mcp.CallToolResult, any, error) {
-	var nf *index.NotFoundError
-	if errors.As(err, &nf) {
-		return &mcp.CallToolResult{
-			IsError: true,
-			Content: []mcp.Content{&mcp.TextContent{
-				Text: fmt.Sprintf("%s. Use search_docs, list_atoms or list_operations to find valid ids.", nf.Error()),
-			}},
-		}, nil, nil
-	}
-	return nil, nil, err
 }

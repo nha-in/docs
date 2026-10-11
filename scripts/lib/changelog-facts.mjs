@@ -216,9 +216,11 @@ function artefacts(root) {
       plugins[json.name ?? name] = String(json.version ?? '');
     }
   }
-  const mcpFile = join(root, 'mcp', 'internal', 'server', 'mcp.go');
+  // The tools are the tool* constants in tools.go. The deprecated aliases in
+  // aliases.go are old names kept for a release, not tools to announce.
+  const mcpFile = join(root, 'mcp', 'internal', 'server', 'tools.go');
   const mcpTools = existsSync(mcpFile)
-    ? sortedUnique([...readFileSync(mcpFile, 'utf8').matchAll(/^\s*Name:\s*"([a-z_]+)"/gm)].map((m) => m[1]))
+    ? sortedUnique([...readFileSync(mcpFile, 'utf8').matchAll(/^\s*tool[A-Z]\w*\s*=\s*"([a-z_]+)"/gm)].map((m) => m[1]))
     : [];
   return {skills: sortedUnique(skills), plugins, mcpTools};
 }

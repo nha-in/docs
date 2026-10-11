@@ -58,15 +58,31 @@ answer contract, is specified in support-agent-playbook.md.
 
 ## Tools
 
-search_docs, get_atom, related_atoms, decode_error, list_atoms,
-catalogue_info, list_operations, get_operation, validate_request,
-list_fhir_profiles, get_fhir_profile, get_fhir_example, validate_fhir.
-Every response carries catalogue_version. validate_fhir never logs bundle contents — the
-tool-call logging middleware records only the tool name, duration and
-whether it errored — and, like validate_request, is not part of the
-chat tool set. A bundle over the 2 MiB input cap gets a different
-response shape: just `error` and `catalogue_version`, with no
-`findings` or `limits` field.
+Six tools, each read-only, each declaring an `outputSchema` and returning
+the same JSON as `structuredContent` and as text:
+
+| Tool | Does |
+|---|---|
+| `abdm_search` | With a query, hybrid search over the atoms. `kind: operation` or `kind: fhir_profile` matches operations or FHIR profiles by every word of the query. An empty query with a kind lists that kind, paginated by `limit` and `offset` (`next_offset` says where the next page starts). `response_format: concise` (default) returns id, kind, title, summary and url; `detailed` adds type, milestone and snippet, or method, path, module and tag. A concise search at `limit: 10` stays under 4,000 characters. |
+| `abdm_get` | One item in full by an id `abdm_search` returned. The id's shape decides: `gateway.type.slug` is an atom, a bare operationId is an operation, `fhir:<profile or hiType>` is a profile digest, `fhir-example:<hiType>` is an example bundle. An unknown id is an error naming the closest valid ids in that same form. |
+| `abdm_related` | The graph walk from one atom, both directions, grouped by type. |
+| `abdm_decode_error` | Error codes in a code or response body, matched to error atoms and specification rows. |
+| `abdm_validate` | `kind: request` checks a body against an operation's schema; `kind: fhir` runs the structural FHIR pre-flight. |
+| `abdm_catalogue_info` | Snapshot version, build time, embeddings status and coverage counts. |
+
+Every response carries `catalogue_version`. `abdm_validate` never logs a
+bundle: the tool-call logging middleware records only the tool name,
+duration and whether it errored. A bundle over the 2 MiB input cap gets
+`error` in place of `findings` and `limits`.
+
+The thirteen names served before these six (`search_docs`, `get_atom`,
+`related_atoms`, `decode_error`, `list_atoms`, `catalogue_info`,
+`list_operations`, `get_operation`, `validate_request`,
+`list_fhir_profiles`, `get_fhir_profile`, `get_fhir_example`,
+`validate_fhir`) are deprecated aliases for one release, in
+`internal/server/aliases.go`: each maps its old input to one of the six
+and returns exactly what that tool returns. They are removed in the next
+release.
 
 An atom marked `audience: contributor` in its frontmatter never reaches the
 snapshot, so nothing that documents how this catalogue is built can be
@@ -106,10 +122,14 @@ that file leniently and so does this one.
 
 `POST /api/chat` is a server-sent-events endpoint behind the site's "Ask
 AI" panel. It runs an agent loop against a Claude model on Amazon Bedrock,
-using the same ten read tools listed above (not list_atoms,
-validate_request or validate_fhir) — so the assistant's retrieval quality
-is exactly the MCP server's retrieval quality, never a separate,
-duplicated path.
+using the tools listed above, by the same names and never the deprecated
+ones, so the assistant's retrieval quality is exactly the MCP server's
+retrieval quality, never a separate, duplicated path. The router
+(`internal/route`) offers `abdm_search` to every question,
+`abdm_decode_error` for an error code, `abdm_get` when the question names
+an operation, and `abdm_validate`, cut to request bodies, when the reader
+attaches a file. The chat's `abdm_search` returns whole pages with their
+related pages named rather than snippets.
 
 The endpoint is off by default. Set `CHAT_MODEL` to a Bedrock model or
 inference-profile id to turn it on; leave it empty and `/api/chat` answers

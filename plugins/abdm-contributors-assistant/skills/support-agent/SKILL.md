@@ -11,7 +11,7 @@ Its value is not that it answers quickly. It is that it answers **only from the 
 
 ## Tools it calls
 
-All nine tools the Docs MCP serves are available to it: `search_docs`, `get_atom`, `related_atoms`, `decode_error`, `list_atoms`, `catalogue_info`, `list_operations`, `get_operation`, `validate_request`. Every response carries `catalogue_version`; an atom result carries no status, because atoms have none; an unknown id returns the closest matches, never a guess; `decode_error` with no matching atom says so explicitly.
+The Docs MCP serves six tools and all six are available to it: `abdm_search` (atoms by query; operations and FHIR profiles with `kind`; any one kind listed with an empty query), `abdm_get` (one atom, operation, FHIR profile or example by the id `abdm_search` returned), `abdm_related`, `abdm_decode_error`, `abdm_validate` and `abdm_catalogue_info`. The thirteen older names still answer for one release as deprecated aliases; do not call them. Every response carries `catalogue_version`; an atom result carries no status, because atoms have none; an unknown id returns the closest matches, never a guess; `abdm_decode_error` with no matching atom says so explicitly.
 
 ## The loop
 
@@ -66,7 +66,7 @@ Weekly: triage the issues, and for each one decide whether it is a missing atom,
 ## Configuration notes
 
 - The Docs MCP is public with no auth in V1: a read-only server over public docs, rate limited at the reverse proxy. The Ollama sidecar behind it is never exposed. Add auth and quotas only when abuse is observed.
-- The agent reads the Catalogue through the Docs MCP; it does not call NHA. The earlier idea of a separate Installation MCP is superseded, its search-mode value covered by `get_operation` and `validate_request`.
+- The agent reads the Catalogue through the Docs MCP; it does not call NHA. The earlier idea of a separate Installation MCP is superseded, its search-mode value covered by `abdm_get` and `abdm_validate`.
 - If the Ollama sidecar is down, the server still answers from keyword search alone and reports `embeddings: false` on `/healthz`. This is a designed degradation, not an outage.
 
 ## Related

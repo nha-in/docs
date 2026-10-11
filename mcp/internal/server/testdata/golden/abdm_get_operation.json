@@ -1,6 +1,8 @@
 {
   "catalogue_version": "2026.08.24",
   "doc_path": "/docs/hiecm/v3/api/m2/endpoints/linkaddcontexts",
+  "id": "linkAddContexts",
+  "kind": "operation",
   "operation_id": "linkAddContexts",
   "spec": {
     "summary": "Add care contexts"

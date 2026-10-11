@@ -54,7 +54,7 @@ The agent runs on Claude Haiku by default and escalates to Claude Sonnet on defi
 | Escalation model | Sonnet (latest, pinned) | Multi-source synthesis, debugging, validator retries |
 | Temperature | 0 | Support answers must be reproducible |
 | Max output tokens | 800 | The answer shape fits in far less |
-| Tool set | `search_docs`, `get_atom`, `decode_error`, `related_atoms` | Read-only. Nothing else. |
+| Tool set | `abdm_search`, `abdm_get`, `abdm_decode_error`, `abdm_related` | Read-only. Nothing else. |
 | Max tool calls per question | 6 | Cost bound and loop bound |
 
 Escalate one question from Haiku to Sonnet when any of these fires:
@@ -63,7 +63,7 @@ Escalate one question from Haiku to Sonnet when any of these fires:
 2. A post-validator rejects the Haiku draft. Retry once on Sonnet, then fall to the gap path.
 3. The question spans more than one gateway or milestone.
 4. The question contains a pasted code snippet or stack trace. Debugging is a reasoning task, and Haiku is the wrong tool for it.
-5. `decode_error` matches nothing but `search_docs` returns candidates.
+5. `abdm_decode_error` matches nothing but `abdm_search` returns candidates.
 
 Haiku constraints that shape this design: it drifts on long instruction lists and it is weaker at multi-hop reasoning. So the system prompt stays under 1,400 tokens, the tool set stays at four, and anything that can be enforced in code is enforced in code. Do not add prompt rules to fix a Haiku failure. Add a validator.
 
@@ -106,7 +106,7 @@ Every question passes through nine steps. Steps 1, 2, 6, 7 and 8 are determinist
 
 1. **Sanitise.** Strip markup. Detect and mask personal data in memory before the model sees it: Aadhaar numbers, ABHA numbers and addresses, mobile numbers, email addresses, patient names, OTP values, bearer tokens and client secrets. Each becomes a typed placeholder such as `<MASKED_ABHA>`. The mask is one way and the raw text is never written anywhere. See section 9.
 2. **Extract.** Regex out error codes (`ABDM-`, `GATEWAY-` and `MIS-` prefixes), endpoint paths, header names and HTTP status codes. These seed retrieval and skip a model round trip in the common case.
-3. **Retrieve.** If step 2 found an error code, call `decode_error` first. Otherwise call `search_docs` with the question plus extracted identifiers. Follow with `get_atom` on the top hits and `related_atoms` when the top hit is a flow. Hybrid search is the server's job. The agent does not re-rank. Retrieval carries each matched chunk's section heading and anchor through to the draft, because that is what the citation deep-links to.
+3. **Retrieve.** If step 2 found an error code, call `abdm_decode_error` first. Otherwise call `abdm_search` with the question plus extracted identifiers. Follow with `abdm_get` on the top hits and `abdm_related` when the top hit is a flow. Hybrid search is the server's job. The agent does not re-rank. Retrieval carries each matched chunk's section heading and anchor through to the draft, because that is what the citation deep-links to.
 4. **Gate.** If no retrieved source clears the relevance floor, stop. Do not let the model answer anyway. Go to the gap path. This gate is the single most important control in the system: it makes "never answer from general knowledge" a property of the pipeline rather than a hope about the model.
 5. **Compose.** The model drafts the answer as JSON matching the schema in section 7, from the retrieved sources only.
 6. **Validate.** Run every post-validator in section 8. A draft that fails any validator is never shown to a user.

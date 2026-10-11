@@ -85,12 +85,12 @@ func TestToolCallLogging(t *testing.T) {
 	defer slog.SetDefault(prev)
 
 	sess := connect(t, false, nil)
-	callText(t, sess, "catalogue_info", map[string]any{})
+	callText(t, sess, "abdm_catalogue_info", map[string]any{})
 
 	recs := h.toolCallRecords()
 	var matches []slog.Record
 	for _, r := range recs {
-		if v, ok := recordAttr(r, "tool"); ok && v == "catalogue_info" {
+		if v, ok := recordAttr(r, "tool"); ok && v == "abdm_catalogue_info" {
 			matches = append(matches, r)
 		}
 	}
@@ -116,7 +116,7 @@ func TestToolCallLoggingErrorFlag(t *testing.T) {
 
 	sess := connect(t, false, nil)
 	_, err := sess.CallTool(context.Background(), &mcp.CallToolParams{
-		Name: "get_atom", Arguments: map[string]any{"id": "does.not.exist"},
+		Name: "abdm_get", Arguments: map[string]any{"id": "does.not.exist"},
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -127,7 +127,7 @@ func TestToolCallLoggingErrorFlag(t *testing.T) {
 	for _, r := range recs {
 		toolV, _ := recordAttr(r, "tool")
 		errV, hasErr := recordAttr(r, "error")
-		if toolV == "get_atom" && hasErr && errV == true {
+		if toolV == "abdm_get" && hasErr && errV == true {
 			found = true
 		}
 	}
@@ -153,8 +153,8 @@ func TestValidateFhirArgsNeverLogged(t *testing.T) {
 
 	sess := connect(t, false, nil)
 	if _, err := sess.CallTool(context.Background(), &mcp.CallToolParams{
-		Name:      "validate_fhir",
-		Arguments: map[string]any{"bundle_json": bundle},
+		Name:      "abdm_validate",
+		Arguments: map[string]any{"kind": "fhir", "bundle_json": bundle},
 	}); err != nil {
 		t.Fatal(err)
 	}

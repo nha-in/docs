@@ -64,13 +64,13 @@ func TestMCPSessionSurvivesReplicaChange(t *testing.T) {
 		}
 	}
 	res, err := sess.CallTool(context.Background(), &mcp.CallToolParams{
-		Name: "search_docs", Arguments: map[string]any{"query": "abha"},
+		Name: "abdm_search", Arguments: map[string]any{"query": "abha"},
 	})
 	if err != nil {
 		t.Fatalf("tools/call across replicas: %v", err)
 	}
 	if res.IsError {
-		t.Fatalf("search_docs returned an error result: %+v", res.Content)
+		t.Fatalf("abdm_search returned an error result: %+v", res.Content)
 	}
 	if lb.n.Load() < 4 {
 		t.Fatalf("expected requests to spread over both replicas, saw %d requests", lb.n.Load())

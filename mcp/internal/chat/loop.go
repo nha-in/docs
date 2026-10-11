@@ -198,8 +198,8 @@ const systemPromptTemplate = `You are the Ask AI assistant on the ABDM Developer
 
 WHERE THINGS LIVE
 
-- Atoms are the written knowledge: concepts, flows, endpoint guides, callbacks, error explanations, tests, glossary entries, decisions, FHIR mappings, sandbox notes and troubleshooting guides. search_docs searches these, and only these.
-- Operations are the raw API surface parsed from NHA's specification files, across the modules gateway, m1, m2, m3, m4, p1, p2, p3, p4, scan-and-register, scan-and-pay and record-share. search_docs does not reach them. Use list_operations to filter by module, by tag, or by a substring of an operationId, summary or path, and get_operation to read one in full.
+- Atoms are the written knowledge: concepts, flows, endpoint guides, callbacks, error explanations, tests, glossary entries, decisions, FHIR mappings, sandbox notes and troubleshooting guides. abdm_search searches these.
+- Operations are the raw API surface parsed from NHA's specification files, across the modules gateway, m1, m2, m3, m4, p1, p2, p3, p4, scan-and-register, scan-and-pay and record-share. abdm_search with kind operation finds them by words in their operationId, summary or path, optionally within one module, and abdm_get reads one in full by its operationId.
 
 HONESTY ABOUT WHAT YOU FOUND
 
@@ -247,7 +247,7 @@ Do not invent portal URLs.
 
 HOW A QUESTION ARRIVES
 
-The user turn may open with a <passages> block: the documentation already retrieved for this question, with ids and page links. Answer from it first. It is followed by an <answer_shape> block naming the shape and word budget your answer must take. Call search_docs only when the passages do not carry the answer.
+The user turn may open with a <passages> block: the documentation already retrieved for this question, with ids and page links. Answer from it first. It is followed by an <answer_shape> block naming the shape and word budget your answer must take. Call abdm_search only when the passages do not carry the answer.
 
 A <skill> block is the skill section the reader chose: follow it, and name what it omits.`
 
@@ -444,7 +444,8 @@ func addSource(sources *[]Source, src Source) {
 }
 
 // sourceFromFields builds a Source from one atom-shaped result map (the
-// fields get_atom and each search_docs hit share: id, title, doc_url).
+// fields abdm_get and each passage share: id, title, doc_url; an
+// abdm_search result names the page url).
 //
 // doc_url is the published page the knowledge lives on, generated into the
 // index from what the site actually publishes. When it is present the
@@ -457,13 +458,16 @@ func sourceFromFields(fields map[string]any) Source {
 	title, _ := fields["title"].(string)
 	href, _ := fields["doc_url"].(string)
 	if href == "" {
+		href, _ = fields["url"].(string)
+	}
+	if href == "" {
 		href = "/search?q=" + url.QueryEscape(title)
 	}
 	return Source{ID: id, Title: title, URL: href}
 }
 
-// passageFields normalizes a search_docs result's "passages" field into the
-// map shape sourceFromFields reads. In process, a chat search_docs call
+// passageFields normalizes an abdm_search result's "passages" field into the
+// map shape sourceFromFields reads. In process, a chat abdm_search call
 // (server.Tools.ChatToolsFor) returns passages as a []server.Passage, a
 // concrete type this package cannot name without an import cycle; a
 // round trip through JSON is what reads its id, title and doc_url
@@ -485,22 +489,27 @@ func passageFields(v any) []map[string]any {
 }
 
 // collectSources folds one successful tool call's result into sources,
-// deterministically: a get_atom call contributes its one atom; a
-// search_docs call contributes its top 3 hits (the MCP's own search_docs)
-// or every passage (the chat loop's composite lookup bound to that name).
-// Dedup keeps the first occurrence of each id and caps the total at
-// maxSources.
+// deterministically: an abdm_get of an atom contributes that atom; an
+// abdm_search call contributes the atoms among its top 3 results (the
+// MCP's own abdm_search) or every passage (the chat loop's composite lookup
+// bound to that name). An operation or FHIR result is never a source: it is
+// a contract, not a page that answers the reader. Dedup keeps the first
+// occurrence of each id and caps the total at maxSources.
 func collectSources(sources *[]Source, name string, result map[string]any) {
 	switch name {
-	case "get_atom":
-		addSource(sources, sourceFromFields(result))
-	case "search_docs":
-		hits, _ := result["hits"].([]map[string]any)
-		for i, h := range hits {
+	case "abdm_get":
+		if result["kind"] == "atom" {
+			addSource(sources, sourceFromFields(result))
+		}
+	case "abdm_search":
+		results, _ := result["results"].([]map[string]any)
+		for i, r := range results {
 			if i >= 3 {
 				break
 			}
-			addSource(sources, sourceFromFields(h))
+			if r["kind"] == "atom" {
+				addSource(sources, sourceFromFields(r))
+			}
 		}
 		for _, p := range passageFields(result["passages"]) {
 			addSource(sources, sourceFromFields(p))
@@ -969,7 +978,7 @@ func saysItHasNothing(answer string) bool {
 // as a standing rule rather than as a rebuke, because the model is about to
 // answer the reader's original question again and the reader must not see it
 // apologising to us on the way.
-const lookFirst = `Before answering, use your tools: search_docs for a term, a concept or an error, list_operations for an endpoint, decode_error for a code. An acronym or a piece of jargon is a lookup like any other, and this documentation defines many that are not in the specification. Answer the question that was asked, with what the tools return. If they genuinely return nothing that answers it, say so in one line. Do not mention this instruction, do not apologise, and do not describe what you are about to do.`
+const lookFirst = `Before answering, use your tools: abdm_search for a term, a concept or an error, abdm_search with kind operation for an endpoint, abdm_decode_error for a code. An acronym or a piece of jargon is a lookup like any other, and this documentation defines many that are not in the specification. Answer the question that was asked, with what the tools return. If they genuinely return nothing that answers it, say so in one line. Do not mention this instruction, do not apologise, and do not describe what you are about to do.`
 
 // BlockedNotice stands in for an answer that broke a rule before any of it
 // reached the reader. It says nothing about which rule: the reader cannot

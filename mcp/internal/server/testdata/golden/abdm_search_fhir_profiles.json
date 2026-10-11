@@ -1,0 +1,13 @@
+{
+  "catalogue_version": "2026.08.24",
+  "results": [
+    {
+      "id": "fhir:OPConsultRecord",
+      "kind": "fhir_profile",
+      "summary": "hiType OPConsultation; its example bundle is fhir-example:OPConsultation",
+      "title": "OP Consult Record",
+      "url": "https://nrces.in/ndhm/fhir/r4/StructureDefinition/OPConsultRecord"
+    }
+  ],
+  "total": 1
+}

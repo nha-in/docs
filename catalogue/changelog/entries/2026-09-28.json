@@ -1,0 +1,75 @@
+[
+  {
+    "id": "d05e3a524dce",
+    "date": "2026-09-28",
+    "kind": "artefact-added",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": "/docs/hiecm/v3/getting-started/build-with-ai",
+    "count": 6,
+    "items": [
+      {
+        "artefact": "mcp-tool",
+        "name": "abdm_catalogue_info"
+      },
+      {
+        "artefact": "mcp-tool",
+        "name": "abdm_decode_error"
+      },
+      {
+        "artefact": "mcp-tool",
+        "name": "abdm_get"
+      },
+      {
+        "artefact": "mcp-tool",
+        "name": "abdm_related"
+      },
+      {
+        "artefact": "mcp-tool",
+        "name": "abdm_search"
+      },
+      {
+        "artefact": "mcp-tool",
+        "name": "abdm_validate"
+      }
+    ]
+  },
+  {
+    "id": "08cfdca7b14a",
+    "date": "2026-09-28",
+    "kind": "plugin-version",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": null,
+    "count": 1,
+    "items": [
+      {
+        "name": "abdm-contributors-assistant",
+        "from": "0.3.0",
+        "to": "0.3.1"
+      }
+    ]
+  },
+  {
+    "id": "31f06699a16e",
+    "date": "2026-09-28",
+    "kind": "plugin-version",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": null,
+    "count": 1,
+    "items": [
+      {
+        "name": "abdm-integrators-assistant",
+        "from": "0.5.0",
+        "to": "0.5.1"
+      }
+    ]
+  }
+]

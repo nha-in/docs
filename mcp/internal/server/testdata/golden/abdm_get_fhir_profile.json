@@ -2,6 +2,8 @@
   "catalogue_version": "2026.08.24",
   "description": "A record of an outpatient consultation.",
   "fixed": null,
+  "id": "fhir:OPConsultRecord",
+  "kind": "fhir_profile",
   "profile_name": "OPConsultRecord",
   "record_type": "OPConsultation",
   "required": [
