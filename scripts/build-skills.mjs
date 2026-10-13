@@ -22,7 +22,7 @@ import {parse} from 'yaml';
 import {cleanDescription} from './lib/titles.mjs';
 import {errorsFromSpec} from './lib/spec-errors.mjs';
 import {loadJourneys, stepDataName} from './lib/journeys.mjs';
-import {tryAsking, tryAskingSection} from './lib/try-asking.mjs';
+import {tryAsking, tryAskingSection, planSection, PLAN_RULE} from './lib/try-asking.mjs';
 import {NHCX, nhcxEntry} from './lib/nhcx-skills.mjs';
 import {UHI_SERVICES, skillFolder, uhiHostedBy} from './lib/uhi-skills.mjs';
 import {loadAtoms} from './lib/atoms.mjs';
@@ -1287,6 +1287,10 @@ const promptLines = [
   '- Nothing in these skills has been run against the ABDM sandbox. Verify response shapes against real calls before relying on them.',
   `- The skills are snapshots. The current documentation lives at ${promptRef('/')}; prefer it, and the MCP server when connected, over any downloaded copy that has aged.`,
   '',
+  '## 5. Plan before you build',
+  '',
+  ...PLAN_RULE,
+  '',
 ];
 // What a manual download has to fetch. A skill is a folder now, and an agent
 // following the prompt below should not have to parse Markdown links to learn
@@ -1387,6 +1391,10 @@ const nhcxPromptLines = [
   '- The skills hold the bundles they send to the pinned samples in the NHCX package. Check response shapes against real sandbox calls before relying on them.',
   `- The skills are snapshots. The current documentation lives at ${promptRef('/docs/nhcx/v1')}; prefer it, and the MCP server when connected, over any downloaded copy that has aged.`,
   '',
+  '## 5. Plan before you build',
+  '',
+  ...PLAN_RULE,
+  '',
 ];
 writeFileSync(join(promptDir, 'nhcx.md'), `${nhcxPromptLines.join('\n')}\n`);
 
@@ -1451,6 +1459,10 @@ const uhiPromptLines = [
   'Tell the user what you installed and where you suggest starting. Offer three prompts from the **Try asking** section of the skills that fit, and ask what they are building.',
   `The skills are snapshots. The current documentation lives at ${promptRef('/docs/uhi/v1')}; prefer it, and the MCP server when connected, over any downloaded copy that has aged.`,
   '',
+  '## 5. Plan before you build',
+  '',
+  ...PLAN_RULE,
+  '',
 ];
 writeFileSync(join(promptDir, 'uhi.md'), `${uhiPromptLines.join('\n')}\n`);
 console.log('Wrote agent-setup/nhcx.md.');
@@ -1499,6 +1511,7 @@ function writeStartCommand({plugin, command, what, slugs}) {
     '2. What it can do, from the three lists below, one line each. Leave out what does not bear on `$ARGUMENTS` when it is given.',
     '3. Three or four prompts from **Try asking**, picked to suit `$ARGUMENTS` when it is given.',
     '4. Ask what they are building, and whether the code for it exists yet. Then load the one skill below that fits, or dispatch the agent when the goal spans more than one.',
+    '5. Before anything is built, follow **The plan file** below.',
     '',
     '## Skills, one per module, each with a prompt to start it',
     '',
@@ -1506,6 +1519,7 @@ function writeStartCommand({plugin, command, what, slugs}) {
     '',
     ...(agents.length ? ['## Agents', '', ...agents, ''] : []),
     ...(commands.length ? ['## Commands', '', ...commands, ''] : []),
+    ...planSection(),
     '## Try asking',
     '',
     ...slugs.slice(0, 3).map((slug) => `- "${manifest[slug].example}"`),

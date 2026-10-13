@@ -11,6 +11,7 @@ Introduce this plugin in the order below, then stop and wait for an answer.
 2. What it can do, from the three lists below, one line each. Leave out what does not bear on `$ARGUMENTS` when it is given.
 3. Three or four prompts from **Try asking**, picked to suit `$ARGUMENTS` when it is given.
 4. Ask what they are building, and whether the code for it exists yet. Then load the one skill below that fits, or dispatch the agent when the goal spans more than one.
+5. Before anything is built, follow **The plan file** below.
 
 ## Skills, one per module, each with a prompt to start it
 
@@ -39,6 +40,23 @@ Introduce this plugin in the order below, then stop and wait for an answer.
 - `/abdm-decode-error`: Turn an ABDM response into the code, the cause and the named fix.
 - `/abdm-preflight`: Check what must be true before any ABDM call, so a later failure is about the flow.
 - `/abdm-prove-encryption`: Prove your RSA padding against the ABDM sandbox before you build a flow on it.
+
+## The plan file
+
+Integration work starts from a plan file and keeps it current. Before the first change to the codebase and the first sandbox call:
+
+1. Look for `INTEGRATION-PLAN.md` at the root of the repository. If it exists, read it, say in one line where the work stands, and resume from the first step that is not `done`.
+2. If it does not exist, scope the work first: the goal, the role, the modules and the skill that carries each, the routes the interview switched on, and what is out of scope. Write the file with every step `pending` and its exit condition, show it to the person, and start when they agree.
+3. After every step, update the file at once: its status, the evidence that proves its exit condition (a request id, a passing test, a file changed), the date, and the count and percentage of steps `done`.
+
+| Status | Means |
+|---|---|
+| `pending` | Not started |
+| `in progress` | The step being worked on now. One at a time |
+| `done` | Its exit condition was observed, and the evidence is in the file |
+| `blocked` | Waiting on something only the person can give. The file names it and asks one question |
+
+The last steps are the module's functional test cases. Their run log is its own file, linked from the plan. Never write a secret to the plan: no token, client secret, OTP, password or patient identifier.
 
 ## Try asking
 

@@ -41,15 +41,40 @@ A skill answers "how do I do this task". You answer "what should happen, and in 
 
 An EUA completes Milestone 2 on HIE-CM before it can be onboarded onto any UHI service. This plugin does not carry that work. The `abdm-integrators-assistant` plugin does, in its `abdm-m2` skill. When the goal builds an EUA and M2 is not observed as complete, stop and say so before any UHI step.
 
+## The plan file
+
+Integration work starts from `INTEGRATION-PLAN.md` at the root of the repository and keeps it current. It is how the person, and the next session or the next tool, knows what was planned and where it stands.
+
+1. **Before the first change.** Look for the file. If it exists, read it, say in one line where the work stands, and resume from the first step that is not `done`. If it does not, scope the goal with the person (the role, the modules, the routes the interview switches on, what is out of scope), write the plan with every step `pending`, show it, and start when they agree.
+2. **After every step.** Update the file at once: the step's status, the evidence that proves its exit condition, the date, and the count and percentage of steps `done`. A step is `done` only when its exit condition was observed and the evidence is in the file.
+3. **When blocked.** Mark the step `blocked`, name what only the person can give, and ask one question.
+4. **At the end.** The last steps are the functional test cases. Link their run log from the plan, and mark the plan finished only when every mandatory case has an outcome.
+
+Never write a secret to the file: no token, client secret, OTP, password or patient identifier. Status is one of `pending`, `in progress`, `done` or `blocked`, with one step `in progress` at a time.
+
+```markdown
+# Integration plan
+Goal: let patients in our app book a physical consultation.
+Role: EUA. Skills: uhi-consultation, with Milestone 2 on HIE-CM first.
+Out of scope: the HSPA side, ambulance and blood bank.
+Progress: 2 of 7 steps done (29%). Updated 2026-10-13.
+
+| # | Step | Skill | Exit condition | Status | Evidence |
+|---|---|---|---|---|---|
+| 1 | Subscriber registered, keys proved | uhi-consultation | `/uhi-prove-signing` passes | done | signature verified, 2026-10-12 |
+| 2 | Search | uhi-consultation | `on_search` callback arrives | done | message id 41ac... |
+| 3 | Select and init | uhi-consultation | `on_init` callback arrives | in progress | |
+```
+
 ## The loop
 
 One loop per step, eight passes per step, then escalate.
 
-1. **Observe.** Read the repository before assuming anything about it: what exists, which IDs and keys are configured, which callback endpoints already answer, which steps are already built. The registration steps that open each skill's `references/scaffold.md` are the first Observe: check each holds before the first journey. Never assume the previous step worked.
+1. **Observe.** Read `INTEGRATION-PLAN.md` first, then the repository, before assuming anything about it: what exists, which IDs and keys are configured, which callback endpoints already answer, which steps are already built. The registration steps that open each skill's `references/scaffold.md` are the first Observe: check each holds before the first journey. Never assume the previous step worked.
 2. **Orient.** Match the goal to a service and a role, and load that skill by its plugin name, `uhi-integrators-assistant:uhi-consultation` for example, then open the one reference the step needs. Load one skill at a time; do not read every folder.
 3. **Decide.** Pick the next step whose prerequisites are all observed. When two orders are possible, take the one with the fewest calls and the fewest interruptions of the integrator.
 4. **Act.** Run the skill's step. Paste the response and the callback into the loop log.
-5. **Validate.** Compare what came back to the step's exit condition. Observed, move on. Not observed, hand the failing call or the missing callback to `uhi-call-debugger` with the service named, and wait for the original step to succeed before continuing.
+5. **Validate.** Compare what came back to the step's exit condition. Observed, record it in the plan file and move on. Not observed, hand the failing call or the missing callback to `uhi-call-debugger` with the service named, and wait for the original step to succeed before continuing.
 
 ## Where the goal crosses services
 
@@ -80,3 +105,4 @@ The table is the starting order. A skill's frontmatter overrides it when the two
 2. The prerequisites, and which were observed rather than assumed
 3. The steps in order, each with its exit condition and the pasted observation
 4. What was not completed, and the one question that would unblock it
+5. `INTEGRATION-PLAN.md`, current: every step's status and evidence, and the percentage done

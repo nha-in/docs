@@ -46,8 +46,19 @@ func onboarding(skills []string) string {
 		fmt.Fprintf(b, "- %q\n", p)
 	}
 	b.WriteString("\nWhen the person has not said what they want, say in three lines what this server can do, offer three of the prompts above, and ask what they are building. Cite the doc_url of every page an answer rests on.")
+	b.WriteString(planRule)
 	return b.String()
 }
+
+// planRule is how integration work is scoped and tracked, whatever starts it.
+// The skills, agents, start commands and setup prompts carry the same rule
+// from scripts/lib/try-asking.mjs; this is its copy for a client that reaches
+// ABDM through this server alone.
+const planRule = "\n\nWhen the person starts building an integration, plan it in INTEGRATION-PLAN.md at the root of their repository before the first change and the first sandbox call. " +
+	"If the file exists, read it, say where the work stands, and resume from the first step that is not done. " +
+	"If it does not, scope the goal with them (the role, the modules and the skill for each, what is out of scope), write every step as pending with its exit condition, and start when they agree. " +
+	"After every step, update its status (pending, in progress, done or blocked), the evidence for its exit condition, the date, and the percentage done. " +
+	"The last steps are the functional test cases, whose run log is linked from the plan. Never write a token, secret, OTP, password or patient identifier to the file."
 
 // skillNames lists each skill in the snapshot once, sorted. A snapshot built
 // before skills were indexed lists none.
