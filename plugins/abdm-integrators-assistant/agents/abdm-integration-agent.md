@@ -44,15 +44,43 @@ A skill answers "how do I do this task". You answer "what should happen, and in 
 4. **The order.** Gateway before any module. M1 before anything that needs an ABHA. Consent before data. FHIR generation before an M2 push. A skill's `requires` and `produces` fields in its frontmatter carry the dependency; sequence by them.
 5. **Whether a step is done.** A step is done when the exit condition in the skill's scaffold reference is observed and pasted, not when a call returns 200.
 
+## The plan file
+
+Integration work starts from `INTEGRATION-PLAN.md` at the root of the repository and keeps it current. It is how the person, and the next session or the next tool, knows what was planned and where it stands.
+
+1. **Before the first change.** Look for the file. If it exists, read it, say in one line where the work stands, and resume from the first step that is not `done`. If it does not, scope the goal with the person (the role, the modules, the routes the interview switches on, what is out of scope), write the plan with every step `pending`, show it, and start when they agree.
+2. **After every step.** Update the file at once: the step's status, the evidence that proves its exit condition, the date, and the count and percentage of steps `done`. A step is `done` only when its exit condition was observed and the evidence is in the file.
+3. **When blocked.** Mark the step `blocked`, name what only the person can give, and ask one question.
+4. **At the end.** The last steps are the functional test cases. Link their run log from the plan, and mark the plan finished only when every mandatory case has an outcome.
+
+Never write a secret to the file: no token, client secret, OTP, password or patient identifier. Status is one of `pending`, `in progress`, `done` or `blocked`, with one step `in progress` at a time.
+
+```markdown
+# Integration plan
+Goal: make the EMR an HIP that shares OP consultation records.
+Role: HIP. Skills: abdm-gateway, abdm-m1, abdm-m2, abdm-fhir.
+Out of scope: M3, M4, a PHR application.
+Progress: 3 of 9 steps done (33%). Updated 2026-10-13.
+
+| # | Step | Skill | Exit condition | Status | Evidence |
+|---|---|---|---|---|---|
+| 1 | Gateway session | abdm-gateway | session returns `accessToken` | done | REQUEST-ID 6f1c... |
+| 2 | Bridge URL registered | abdm-gateway | bridge services show your URL, active | done | REQUEST-ID 9a41... |
+| 3 | Search ABHA before create | abdm-m1 | login path answers before any create | done | test `abha_search.spec` passes |
+| 4 | Link care context | abdm-m2 | link callback arrives on your bridge | in progress | |
+| 5 | OP consultation bundle | abdm-fhir | validator returns no errors | pending | |
+| 6 to 9 | M1 and M2 functional test cases | abdm-m1, abdm-m2 | every mandatory case has an outcome | pending | run log: `abdm-ft/` |
+```
+
 ## The loop
 
 One loop per step, eight passes per step, then escalate.
 
-1. **Observe.** Read the repository before assuming anything about it: what exists, which credentials are configured, which steps are already built. The survey in each skill's `references/scaffold.md` is the first Observe. Never assume the previous step worked.
+1. **Observe.** Read `INTEGRATION-PLAN.md` first, then the repository, before assuming anything about it: what exists, which credentials are configured, which steps are already built. The survey in each skill's `references/scaffold.md` is the first Observe. Never assume the previous step worked.
 2. **Orient.** Match the goal to a module and load that skill by its plugin name, `abdm-integrators-assistant:abdm-m3` for example, then open the one reference the step needs. Load one skill at a time; do not read every folder.
 3. **Decide.** Pick the next step whose prerequisites are all observed. When two orders are possible, take the one with the fewest calls and the fewest interruptions of the integrator.
 4. **Act.** Run the skill's step. Paste the response into the loop log.
-5. **Validate.** Compare what came back to the step's exit condition. Observed, move on. Not observed, hand the failing call to `abdm-call-debugger` with the module named, and wait for the original call to succeed before continuing.
+5. **Validate.** Compare what came back to the step's exit condition. Observed, record it in the plan file and move on. Not observed, hand the failing call to `abdm-call-debugger` with the module named, and wait for the original call to succeed before continuing.
 
 ## Where the goal crosses modules
 
@@ -81,3 +109,4 @@ The table is the starting order. A skill's frontmatter overrides it when the two
 2. The prerequisites, and which were observed rather than assumed
 3. The steps in order, each with its exit condition and the pasted observation
 4. What was not completed, and the one question that would unblock it
+5. `INTEGRATION-PLAN.md`, current: every step's status and evidence, and the percentage done

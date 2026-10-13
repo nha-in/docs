@@ -7,6 +7,8 @@ Walks the ABDM M1 functional test cases, ABHA creation and verification, against
 - Runs every M1 test case in the ABHA creation and verification set against your system and the sandbox, one case at a time
 - Records, for each case, the sandbox response and REQUEST-ID that prove it, or the screen that has to be attested, or the human step it stopped at
 - Writes a manifest of case ids to request ids at the end, which is the evidence a reviewer checks against the gateway rather than a folder of screenshots
+- Checks that every credential, person and device the chosen cases need is ready before the first call, and stops when a required one is missing
+- Logs every case to a run log file in your repository as it runs, and asks for every OTP, password and approval in the terminal, never skipping one
 
 ## What it needs from you
 
@@ -18,6 +20,7 @@ Walks the ABDM M1 functional test cases, ABHA creation and verification, against
 | A person with an Aadhaar linked mobile, for OTP cases | Present at the desk for the run. Every OTP is a human step and the skill stops for it |
 | A fingerprint or face device, for the biometric cases | Only if you claim those cases. Without one they are recorded as not run |
 | Whether you are a government or a private integrator | The set marks some cases mandatory for one and optional for the other |
+| A folder for the run log | Your repository. `abdm-ft/` unless you name another |
 
 ## Say one of these
 
@@ -28,7 +31,19 @@ Walks the ABDM M1 functional test cases, ABHA creation and verification, against
 
 ## What happens first
 
-One question: which cases. All of them, one function group, or a list of ids. Then the preconditions for the first case are checked before anything is sent. Nothing else is asked until a case needs a human.
+One question: which cases. All of them, one function group, or a list of ids. Then the preconditions for the first case are checked before anything is sent. Then the readiness check below. After it, nothing else is asked until a case needs a human or an authentication step.
+
+**Readiness check.** The run does not start until every row of "What it needs from you" that the chosen cases use is confirmed. Ask for each one in the terminal, one at a time. Record each in the run log's header as `ready`, `missing` or `not needed`, never the value itself.
+
+| Row | Ready when |
+|---|---|
+| Credentials | They are set in the environment or typed at a hidden prompt, and the first session call the cases use returns its token |
+| Your system | It answers on the address you gave, against the sandbox hosts |
+| People and devices | Each is named for this run: who receives the OTPs, who approves in the PHR app, which device scans |
+| Entity type and claimed capabilities | Answered, because they decide which cases are mandatory |
+| The run log | Its folder exists and can be written: `abdm-ft/` in your repository unless you name another |
+
+A `missing` row that a mandatory case needs stops the run before the first call. Say what is missing and ask the one question that would fix it.
 
 ## How this skill runs
 
@@ -75,12 +90,51 @@ matched: exit condition for CRT_ABHA_101, step 2
 next: CRT_ABHA_113
 ```
 
+### The run log
+
+The run is logged to a file as it happens, so the person can follow it, stop and resume it, and hand it to a reviewer. Create it before the first case, at `abdm-ft/m1-<YYYYMMDD-HHMM>.md`.
+
+- The header names this skill, the set, the entity type, the time started, and the readiness check row by row.
+- Every case chosen gets a row before the first call, each `pending`.
+- A case reads `running` while its loop runs. When it ends, update its row at once: outcome, request ids, the literal that matched or the reason, and the evidence file for a `screen` case. Then append its run record block under the table.
+- A stopped run resumes from the log: the first row that is still `pending` or `running` is the next case.
+- Never write a secret to it: no token, OTP, password, Aadhaar number, full mobile, client secret or private key. A request id, a txnId and a masked mobile are fine.
+
+```markdown
+# M1 functional test run, 2026-10-13 10:12
+Readiness: credentials ready; system ready; OTP person ready; biometric device not needed.
+
+| Case | Outcome | Request ids | Observed |
+|---|---|---|---|
+| CRT_ABHA_101 | passed | 6f1c..., a02d... | exit condition matched, pasted below |
+| CRT_ABHA_102 | needs-human | b7a1... | OTP prompt shown, left blank |
+| CRT_ABHA_103 | running | | |
+| CRT_ABHA_104 | pending | | |
+```
+
+### Authentication is never skipped
+
+Every step that needs someone to authenticate stops and asks in the terminal. That covers the session token, every OTP, a password or PIN, a captcha, a biometric scan, a hosted login page, and a consent or subscription the person approves in their PHR app.
+
+| Do | Never |
+|---|---|
+| Prompt at the moment the case needs it, naming what is needed and where it went, such as "the OTP sent to the mobile ending 1234" | Skip the step and go on to the next call |
+| Read OTPs, passwords and secrets with input hidden, and hold them only for that call | Use a fixed, test or default OTP, or one from an earlier run |
+| Fetch a fresh session token at the start of the run from the credentials in the readiness check | Hard code a token, or reuse one from an earlier run |
+| Wait while the person approves on their phone, then observe the callback or status that proves it | Mock, stub or replay a response so the case can carry on |
+| Record `needs-human` only after the prompt was shown and left blank | Record any outcome for an authentication step that was never asked |
+
+A runner that reaches an authenticated call without asking is broken, not finished. Stop, fix the runner, and run the case again.
+
 ### When the run is a script
 
 Asked for a test script, a test command or automated tests, build one interactive terminal runner that walks the cases below. It does the typing. Every rule above still holds.
 
 | Rule | Why |
 |---|---|
+| Before the first case, run the readiness check and create the run log | A run that starts without its credentials, people or devices fails cases for the wrong reason |
+| Every step in "Authentication is never skipped" is a terminal prompt, read with input hidden | A skipped login proves nothing, and a runner that never asks reaches no success path |
+| Update the run log after every case, then write the manifest beside it at the end | The person follows the run as it happens, and a stopped run resumes from the log |
 | Name every check by its case id from this skill, such as `CRT_ABHA_101`. Never invent a numbering such as `TC01` | The functional testing report quotes these ids. A check with no case id answers nothing a reviewer asks |
 | At each `human` step, stop and prompt in the terminal for the value: Aadhaar number, mobile, OTP, the chosen address. Read it from stdin, encrypt it, send it | Every M1 success path passes through an OTP. A runner that never asks never reaches one |
 | Never write a typed value to disk, a log or the manifest, and never hard code one | An Aadhaar number and an OTP belong to the person, not the run |
@@ -375,7 +429,7 @@ This case is run from the person's ABHA app, and the call that proves it lands o
 
 ## When the last case is recorded
 
-Write the manifest. It is the whole report. Case ids to request ids, nothing else, so a reviewer checks it against the gateway's own record rather than reading screenshots. Secrets never appear in it: no tokens, no OTPs, no Aadhaar numbers, no client secret.
+Mark the run log finished, with the time and the count of each outcome. Then write the manifest beside it, with the same name and `.json`. It is the whole report. Case ids to request ids, nothing else, so a reviewer checks it against the gateway's own record rather than reading screenshots. Secrets never appear in it: no tokens, no OTPs, no Aadhaar numbers, no client secret.
 
 ```json
 {

@@ -17,7 +17,7 @@ import {readdirSync, readFileSync, writeFileSync, existsSync} from 'node:fs';
 import {join} from 'node:path';
 import {root, loadAtoms} from './lib/atoms.mjs';
 import {NHCX, nhcxEntry} from './lib/nhcx-skills.mjs';
-import {tryAsking, IDLE_RULE} from './lib/try-asking.mjs';
+import {tryAsking, IDLE_RULE, PLAN_RULE} from './lib/try-asking.mjs';
 
 const check = process.argv.includes('--check');
 const skillsDir = join(root, 'plugins', 'nhcx', 'skills');
@@ -53,7 +53,7 @@ function folders(slug) {
 function tryAskingLines(slug) {
   if (!NHCX[slug]) return [];
   const prompts = tryAsking(nhcxEntry(slug, join(skillsDir, slug)));
-  return ['', '**Try asking**', '', ...prompts.map((p) => `- "${p}"`), '', IDLE_RULE];
+  return ['', '**Try asking**', '', ...prompts.map((p) => `- "${p}"`), '', IDLE_RULE, '', '**The plan file**', '', ...PLAN_RULE];
 }
 
 function block(slug) {

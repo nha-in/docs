@@ -23,7 +23,7 @@ func TestOnboardingReachesClientAndStartPrompt(t *testing.T) {
 		t.Fatal(err)
 	}
 	text := got.Messages[0].Content.(*mcp.TextContent).Text
-	for _, want := range []string{"decode_error", "abdm-m1", "an HIU"} {
+	for _, want := range []string{"decode_error", "abdm-m1", "an HIU", "INTEGRATION-PLAN.md"} {
 		if !strings.Contains(text, want) {
 			t.Errorf("start prompt lacks %q", want)
 		}
