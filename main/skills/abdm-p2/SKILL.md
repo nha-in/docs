@@ -41,14 +41,33 @@ What it cannot do yet matters as much. Read **Before anything else** below befor
 - "Link this user's records to their ABHA address from the PHR app"
 - "What has to be in place before my first P2 call?"
 - "My P2 call returned ABDM-9999. What is wrong, and how do I fix it?"
+- "Walk me through the P2 test cases before go-live"
 
 Loaded with no task? Say in three lines what this skill does. Offer the prompts above. Then ask what the person is building, and whether the code for it exists yet.
+
+## The plan file
+
+Integration work starts from a plan file and keeps it current. Before the first change to the codebase and the first sandbox call:
+
+1. Look for `INTEGRATION-PLAN.md` at the root of the repository. If it exists, read it, say in one line where the work stands, and resume from the first step that is not `done`.
+2. If it does not exist, scope the work first: the goal, the role, the modules and the skill that carries each, the routes the interview switched on, and what is out of scope. Write the file with every step `pending` and its exit condition, show it to the person, and start when they agree.
+3. After every step, update the file at once: its status, the evidence that proves its exit condition (a request id, a passing test, a file changed), the date, and the count and percentage of steps `done`.
+
+| Status | Means |
+|---|---|
+| `pending` | Not started |
+| `in progress` | The step being worked on now. One at a time |
+| `done` | Its exit condition was observed, and the evidence is in the file |
+| `blocked` | Waiting on something only the person can give. The file names it and asks one question |
+
+The last steps are the module's functional test cases. Their run log is its own file, linked from the plan. Never write a secret to the plan: no token, client secret, OTP, password or patient identifier.
 
 ## What is in this folder
 
 - **Scaffold.** Survey the codebase first when one exists, then build it flow by flow against the sandbox, as a loop that ends when the step's exit condition holds rather than on a call returning 200. [references/scaffold.md](references/scaffold.md)
 - **Integrate.** 39 operations, with their hosts and headers. [references/integrate.md](references/integrate.md)
 - **Debug.** The loop from a failed call to a named fix, and 2 error codes from the specification's examples. [references/debug.md](references/debug.md)
+- **Test.** The functional test cases, one loop each, with the evidence the sandbox can vouch for and the manifest that replaces a screenshot report. [references/test.md](references/test.md)
 
 This file is the map. Each line above is a file beside it, opened one at a time rather than read through.
 

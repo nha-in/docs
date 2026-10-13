@@ -59,10 +59,11 @@ Every M4 call in one file: 104 operations.
 - ScaffoldBuilds each flow until the sandbox confirms it.
 - Integrate91 operations, with hosts and headers.
 - DebugNo error code is recorded yet.
+- TestTests from offline pins to a live sandbox.
 
-`mkdir -p .claude/skills/abdm-m4/references && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m4/SKILL.md -o .claude/skills/abdm-m4/SKILL.md && for f in scaffold integrate debug; do curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m4/references/$f.md -o .claude/skills/abdm-m4/references/$f.md; done`
+`mkdir -p .claude/skills/abdm-m4/references && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m4/SKILL.md -o .claude/skills/abdm-m4/SKILL.md && for f in scaffold integrate debug test; do curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m4/references/$f.md -o .claude/skills/abdm-m4/references/$f.md; done`
 
-[Open in Claude](claude://code/new?q=Install%20the%20ABDM%20M4%20agent%20skill%20into%20this%20project%2C%20then%20help%20me%20use%20it.%0A%0ARun%20this%3A%0Amkdir%20-p%20.claude%2Fskills%2Fabdm-m4%2Freferences%20%26%26%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fskills%2Fabdm-m4%2FSKILL.md%20-o%20.claude%2Fskills%2Fabdm-m4%2FSKILL.md%20%26%26%20for%20f%20in%20scaffold%20integrate%20debug%3B%20do%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fskills%2Fabdm-m4%2Freferences%2F%24f.md%20-o%20.claude%2Fskills%2Fabdm-m4%2Freferences%2F%24f.md%3B%20done%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20ABDM%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
+[Open in Claude](claude://code/new?q=Install%20the%20ABDM%20M4%20agent%20skill%20into%20this%20project%2C%20then%20help%20me%20use%20it.%0A%0ARun%20this%3A%0Amkdir%20-p%20.claude%2Fskills%2Fabdm-m4%2Freferences%20%26%26%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fskills%2Fabdm-m4%2FSKILL.md%20-o%20.claude%2Fskills%2Fabdm-m4%2FSKILL.md%20%26%26%20for%20f%20in%20scaffold%20integrate%20debug%20test%3B%20do%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fskills%2Fabdm-m4%2Freferences%2F%24f.md%20-o%20.claude%2Fskills%2Fabdm-m4%2Freferences%2F%24f.md%3B%20done%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20ABDM%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
 
 Drops the skill into this project. Claude loads it when a task matches.
 

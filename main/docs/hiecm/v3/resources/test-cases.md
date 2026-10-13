@@ -6,24 +6,24 @@ Test cases are the checks your integration has to pass before it goes live. An e
 
 Each module has its own set. Run the cases for every module you integrated.
 
-| Module                                                                                                        | What the cases cover                                            | Cases                                                                  |
-| ------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| [M1 Identity](/docs/main/docs/hiecm/v3/milestones/m1)                                                         | ABHA creation, verification, profile update and profile sharing | [66 cases](/docs/main/docs/hiecm/v3/resources/test-cases/m1)           |
-| [M2 Health Information Provider](/docs/main/docs/hiecm/v3/milestones/m2)                                      | Linking care contexts, and sharing the records you hold         | [Not yet published](/docs/main/docs/hiecm/v3/resources/test-cases/m2)  |
-| [M3 Health Information User](/docs/main/docs/hiecm/v3/milestones/m3)                                          | Consent requests, and fetching records from other providers     | [Not yet published](/docs/main/docs/hiecm/v3/resources/test-cases/m3)  |
-| [M4 Registry Integration](/docs/main/docs/hiecm/v3/milestones/m4)                                             | Facility and professional registration                          | [190 cases](/docs/main/docs/hiecm/v3/resources/test-cases/m4)          |
-| PHR application, [P1](/docs/main/docs/hiecm/v3/milestones/p1) to [P4](/docs/main/docs/hiecm/v3/milestones/p4) | The PHR application's own flows                                 | [Not yet published](/docs/main/docs/hiecm/v3/resources/test-cases/phr) |
+| Module                                                                                                        | What the cases cover                                                                                   | Cases                                                          |
+| ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------- |
+| [M1 Identity](/docs/main/docs/hiecm/v3/milestones/m1)                                                         | ABHA creation, verification, profile update and profile sharing                                        | [66 cases](/docs/main/docs/hiecm/v3/resources/test-cases/m1)   |
+| [M2 Health Information Provider](/docs/main/docs/hiecm/v3/milestones/m2)                                      | Linking care contexts, and sharing the records you hold                                                | [36 cases](/docs/main/docs/hiecm/v3/resources/test-cases/m2)   |
+| [M3 Health Information User](/docs/main/docs/hiecm/v3/milestones/m3)                                          | Consent requests, and fetching records from other providers                                            | [16 cases](/docs/main/docs/hiecm/v3/resources/test-cases/m3)   |
+| [M4 Registry Integration](/docs/main/docs/hiecm/v3/milestones/m4)                                             | Facility search, registration, update and linkage in the HFR, and professional profiles in the HPR     | [190 cases](/docs/main/docs/hiecm/v3/resources/test-cases/m4)  |
+| PHR application, [P1](/docs/main/docs/hiecm/v3/milestones/p1) to [P4](/docs/main/docs/hiecm/v3/milestones/p4) | Registration and login, linking and sharing records, consents and subscriptions, and the health locker | [200 cases](/docs/main/docs/hiecm/v3/resources/test-cases/phr) |
 
 ## How to read a case
 
 A module's cases are grouped by flow, such as ABHA creation through Aadhaar OTP. Each group opens with who it applies to, then lists one case per row.
 
-| Column           | What it holds                                                                                                                                                                       |
-| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Case and marking | The case id, such as `CRT_ABHA_101`, and under it whether the case applies to you. Quote the id when you report a result or ask about a case. Each id is also a link you can share. |
-| What is tested   | What your system has to do. Open **Steps** under it for how the tester checks it.                                                                                                   |
-| Pass when        | The result the tester has to see.                                                                                                                                                   |
-| APIs             | Every API the case calls. A path that is exactly one API links to its reference page. A case with none is checked on your screens or in your records.                               |
+| Column           | What it holds                                                                                                                                                                                                                                                                   |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Case and marking | The case id, such as `CRT_ABHA_101`, and under it whether the case applies to you. Quote the id when you report a result or ask about a case. Each id is also a link you can share. The PHR cases carry no id, so each is named by its PHR milestone and row, such as `P1 1.1`. |
+| What is tested   | What your system has to do. Open **Steps** under it for how the tester checks it.                                                                                                                                                                                               |
+| Pass when        | The result the tester has to see.                                                                                                                                                                                                                                               |
+| APIs             | Every API the case calls. A path that is exactly one API links to its reference page. A case with none is checked on your screens or in your records.                                                                                                                           |
 
 ## Markings
 
