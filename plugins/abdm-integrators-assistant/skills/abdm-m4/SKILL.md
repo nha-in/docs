@@ -37,6 +37,7 @@ What it cannot do yet matters as much. Read **Before anything else** below befor
 - "Onboard this facility to the HFR and link its HIP bridge"
 - "What has to be in place before my first M4 call?"
 - "My M4 call failed. Here is the response: what is wrong, and how do I fix it?"
+- "Walk me through the M4 test cases before go-live"
 
 Loaded with no task? Say in three lines what this skill does. Offer the prompts above. Then ask what the person is building, and whether the code for it exists yet.
 
@@ -62,6 +63,7 @@ The last steps are the module's functional test cases. Their run log is its own 
 - **Scaffold.** Survey the codebase first when one exists, then build it flow by flow against the sandbox, as a loop that ends when the step's exit condition holds rather than on a call returning 200. [references/scaffold.md](references/scaffold.md)
 - **Integrate.** 91 operations, with their hosts and headers. [references/integrate.md](references/integrate.md)
 - **Debug.** The specification's examples return no error code for this module. [references/debug.md](references/debug.md)
+- **Test.** The functional test cases, one loop each, with the evidence the sandbox can vouch for and the manifest that replaces a screenshot report. [references/test.md](references/test.md)
 
 This file is the map. Each line above is a file beside it, opened one at a time rather than read through.
 

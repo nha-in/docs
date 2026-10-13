@@ -39,6 +39,7 @@ What it cannot do yet matters as much. Read **Before anything else** below befor
 - "Raise a consent request and fetch the records it covers"
 - "What has to be in place before my first M3 call?"
 - "My M3 call failed. Here is the response: what is wrong, and how do I fix it?"
+- "Walk me through the M3 test cases before go-live"
 
 Loaded with no task? Say in three lines what this skill does. Offer the prompts above. Then ask what the person is building, and whether the code for it exists yet.
 
@@ -65,6 +66,7 @@ The last steps are the module's functional test cases. Their run log is its own 
 - **Design.** What the journey around the calls has to do, and what a screen is forbidden to claim. [references/design.md](references/design.md)
 - **Integrate.** 16 operations, with their hosts and headers. [references/integrate.md](references/integrate.md)
 - **Debug.** The specification's examples return no error code for this module. [references/debug.md](references/debug.md)
+- **Test.** The functional test cases, one loop each, with the evidence the sandbox can vouch for and the manifest that replaces a screenshot report. [references/test.md](references/test.md)
 
 This file is the map. Each line above is a file beside it, opened one at a time rather than read through.
 
