@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"fmt"
+	"os"
 	"regexp"
 	"sort"
 	"strings"
@@ -29,7 +30,57 @@ type skillIn struct {
 
 const skillToolDescription = "Load the ABDM integration skill for a task. Call it first for any request to build, integrate, test or debug an ABDM module, such as 'integrate M1' or 'run the M2 test cases', before search or get. " +
 	"Pass the task in the person's words, or a skill name. It returns the skill's router: follow it, and load the section it names with this tool again, giving name and section. " +
+	"It also gives the commands to install the plugin the skill ships in: ask the person once whether to install it, before the first step. " +
 	"With no arguments it lists every skill."
+
+// A skill loaded through this tool lives for one session. Installed as a
+// plugin, it loads by itself in every later session, offline, and in clients
+// that never call this tool. So every answer asks the person, once, to
+// install the plugin for the skill's gateway, with the commands the setup
+// prompts publish.
+
+// marketplaceName is the name in .claude-plugin/marketplace.json, which
+// `claude plugin install <plugin>@<marketplace>` has to name. A test reads the
+// manifest, so a rename there fails here rather than publishing a command
+// that points nowhere.
+const marketplaceName = "abdm-portal"
+
+// siteURL is where the setup prompts are published.
+const siteURL = "https://docs.abdm.gov.in"
+
+// marketplaceRepo is the repository the marketplace is added from: the same
+// MARKETPLACE_REPO override the site build reads, then its default.
+func marketplaceRepo() string {
+	if repo := os.Getenv("MARKETPLACE_REPO"); repo != "" {
+		return repo
+	}
+	return "nha-in/docs"
+}
+
+// gatewayPlugin is the plugin that carries a skill, by the skill's prefix,
+// and the setup prompt for clients that install from neither marketplace.
+var gatewayPlugin = map[string]struct{ plugin, setup string }{
+	"abdm": {"abdm-integrators-assistant", "/agent-setup/prompt.md"},
+	"uhi":  {"uhi-integrators-assistant", "/agent-setup/uhi.md"},
+	"nhcx": {"nhcx", "/agent-setup/nhcx.md"},
+}
+
+// installBlock asks the person to install the plugin a skill ships in. It is
+// empty for a skill whose prefix names no plugin.
+func installBlock(name string) string {
+	prefix, _, _ := strings.Cut(name, "-")
+	gp, ok := gatewayPlugin[prefix]
+	if !ok {
+		return ""
+	}
+	repo := marketplaceRepo()
+	return fmt.Sprintf("Install the plugin first. %s ships in the %s plugin. Unless it is already installed in this client, ask the person once, before the first step, whether to install it, and run the command they approve:\n"+
+		"- Claude Code: `claude plugin marketplace add %s && claude plugin install %s@%s`\n"+
+		"- Codex: `codex plugin marketplace add %s`, then install %s from the plugin directory\n"+
+		"- Any other agent: follow %s%s\n"+
+		"Installed, the skill loads by itself in every later session and works offline. Until then, keep loading it with this tool. If they decline, carry on with this tool and do not ask again this session.\n",
+		name, gp.plugin, repo, gp.plugin, marketplaceName, repo, gp.plugin, siteURL, gp.setup)
+}
 
 // skillPrefix is what a skill name carries before the part a person says.
 var skillPrefix = regexp.MustCompile(`^(abdm|uhi|nhcx|hiecm)-`)
@@ -172,7 +223,10 @@ func loadSkill(r *index.Reader, in skillIn) (*mcp.CallToolResult, any, error) {
 	if got.Section != "" {
 		section = got.Section
 	}
-	fmt.Fprintf(b, "skill: %s, %s. Chosen because %s.\n", name, section, why)
+	fmt.Fprintf(b, "skill: %s, %s. Chosen because %s.\n\n", name, section, why)
+	if install := installBlock(name); install != "" {
+		b.WriteString(install + "\n")
+	}
 	if len(others) > 0 {
 		fmt.Fprintf(b, "The task also names: %s. Load each when the work reaches it.\n", strings.Join(others, ", "))
 	}

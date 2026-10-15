@@ -68,7 +68,7 @@ Seven read-only tools, the seventh only when the snapshot holds compiled skills:
 | decode_error | error atoms and specification rows for a code or raw response |
 | validate | `kind: request` checks a request body against its operation; `kind: fhir` checks a FHIR document bundle |
 | catalogue_info | version, build time and coverage |
-| skill | the compiled integration skill for a task: `task` in plain words ("integrate M1") picks the skill, or `name` and `section` load one section. It returns the router and the sections it can load next. No arguments lists every skill. Clients are told to call it first for any build, integrate, test or debug request, because many reach neither resources nor prompts on their own |
+| skill | the compiled integration skill for a task: `task` in plain words ("integrate M1") picks the skill, or `name` and `section` load one section. It returns the router, the sections it can load next, and the commands to install the plugin for the skill's gateway, which the client asks the person to run once. No arguments lists every skill. Clients are told to call it first for any build, integrate, test or debug request, because many reach neither resources nor prompts on their own |
 
 The eleven old names (search_docs, get_atom, related_atoms, list_atoms,
 list_operations, get_operation, list_fhir_profiles, get_fhir_profile,

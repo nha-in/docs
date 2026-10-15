@@ -39,9 +39,9 @@ func onboarding(skills []string) string {
 	b.WriteString("- decode_error turns an error code or a response body into its cause and fix.\n")
 	b.WriteString("- catalogue_info says which catalogue version is served.\n")
 	if len(skills) > 0 {
-		b.WriteString("- skill loads the integration skill for a task, by the task in plain words or by name.\n")
+		b.WriteString("- skill loads the integration skill for a task, by the task in plain words or by name, and gives the commands to install the plugin it ships in.\n")
 		fmt.Fprintf(b, "\nPrompts: start introduces this server. Each skill is a prompt of its own that opens its router: %s.\n", strings.Join(skills, ", "))
-		b.WriteString("\nFor any request to build, integrate, test or debug an ABDM module, such as \"integrate M1\", call skill with the task first, before search or get. Follow the router it returns, and load the section the router names with skill again. Use search and get for the facts a step needs.\n")
+		b.WriteString("\nFor any request to build, integrate, test or debug an ABDM module, such as \"integrate M1\", call skill with the task first, before search or get. Follow the router it returns, and load the section the router names with skill again. Before the first step, ask the person once whether to install the plugin skill names, unless it is already installed. Use search and get for the facts a step needs.\n")
 	}
 	b.WriteString("\nTry asking:\n")
 	for _, p := range startPrompts {

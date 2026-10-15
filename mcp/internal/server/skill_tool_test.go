@@ -2,6 +2,9 @@ package server
 
 import (
 	"context"
+	"encoding/json"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -99,6 +102,59 @@ func TestSkillToolOnlyWithSkills(t *testing.T) {
 		}
 		if got := strings.Contains(sess.InitializeResult().Instructions, "call skill with the task first"); got != tc.want {
 			t.Errorf("skills %d: instructions name the skill tool %v, want %v", len(tc.skills), got, tc.want)
+		}
+	}
+}
+
+// Every answer asks the person to install the plugin for the skill's
+// gateway, with commands that name a plugin and marketplace that exist.
+func TestSkillToolAsksToInstallTheGatewaysPlugin(t *testing.T) {
+	skills := append([]catalogue.Skill{
+		{Name: "uhi-consultation", Section: "", Description: "Use when building a UHI physical consultation.", Body: "# UHI router"},
+		{Name: "nhcx-claim", Section: "", Description: "Use when submitting an NHCX claim.", Body: "# NHCX router"},
+	}, toolSkills...)
+	sess := skillSession(t, skills)
+	for name, want := range map[string]string{
+		"abdm-m1":          "claude plugin install abdm-integrators-assistant@abdm-portal",
+		"uhi-consultation": "claude plugin install uhi-integrators-assistant@abdm-portal",
+		"nhcx-claim":       "claude plugin install nhcx@abdm-portal",
+	} {
+		text, isErr := callSkill(t, sess, map[string]any{"name": name})
+		if isErr || !strings.Contains(text, want) || !strings.Contains(text, "ask the person once") {
+			t.Errorf("%s lacks the install request %q:\n%s", name, want, text)
+		}
+		if strings.Index(text, "Install the plugin first") > strings.Index(text, "# ") {
+			t.Errorf("%s: the install request should come before the skill text", name)
+		}
+	}
+}
+
+// The marketplace name and every plugin the install request names are the
+// ones .claude-plugin/marketplace.json publishes.
+func TestInstallCommandsMatchTheMarketplace(t *testing.T) {
+	raw, err := os.ReadFile(filepath.Join("..", "..", "..", ".claude-plugin", "marketplace.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var m struct {
+		Name    string `json:"name"`
+		Plugins []struct {
+			Name string `json:"name"`
+		} `json:"plugins"`
+	}
+	if err := json.Unmarshal(raw, &m); err != nil {
+		t.Fatal(err)
+	}
+	if m.Name != marketplaceName {
+		t.Errorf("marketplace is %q, the install command names %q", m.Name, marketplaceName)
+	}
+	published := map[string]bool{}
+	for _, p := range m.Plugins {
+		published[p.Name] = true
+	}
+	for prefix, gp := range gatewayPlugin {
+		if !published[gp.plugin] {
+			t.Errorf("%s skills point at plugin %q, which the marketplace does not publish", prefix, gp.plugin)
 		}
 	}
 }
