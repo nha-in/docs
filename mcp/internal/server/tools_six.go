@@ -12,14 +12,14 @@ import (
 
 type searchSixIn struct {
 	Query             string `json:"query,omitempty" jsonschema:"what you are looking for, in your words; leave empty with filters to list"`
-	Kind              string `json:"kind,omitempty" jsonschema:"atom (default), operation or fhir_profile"`
-	Type              string `json:"type,omitempty" jsonschema:"atom type filter, one of: concept, flow, endpoint, callback, error, test, glossary, decision, fhir, sandbox, troubleshooting"`
+	Kind              string `json:"kind,omitempty" jsonschema:"atom (default), operation, fhir_profile or skill"`
+	Type              string `json:"type,omitempty" jsonschema:"atom type filter"`
 	Milestone         string `json:"milestone,omitempty" jsonschema:"atom milestone filter, M1 to M4"`
-	Module            string `json:"module,omitempty" jsonschema:"operation module filter, one of gateway, m1, m2, m3, m4, p1, p2, p3, p4, scan-and-register, scan-and-pay, record-share"`
-	Side              string `json:"side,omitempty" jsonschema:"atom side filter: provider, payer, hip or hiu; atoms for both sides always match"`
-	IncludeDeprecated bool   `json:"include_deprecated,omitempty" jsonschema:"also return atoms marked deprecated, which are hidden by default"`
+	Module            string `json:"module,omitempty" jsonschema:"operation module filter, such as m1 or scan-and-pay"`
+	Side              string `json:"side,omitempty" jsonschema:"atom side: provider, payer, hip or hiu"`
+	IncludeDeprecated bool   `json:"include_deprecated,omitempty" jsonschema:"also return deprecated atoms"`
 	Limit             int    `json:"limit,omitempty" jsonschema:"max results, default 10, cap 25"`
-	ResponseFormat    string `json:"response_format,omitempty" jsonschema:"concise (default): id, type, title, url, short summary; detailed: adds snippet and milestone"`
+	ResponseFormat    string `json:"response_format,omitempty" jsonschema:"concise (default) or detailed"`
 }
 
 type getSixIn struct {
@@ -81,8 +81,19 @@ func (t *Tools) Search(ctx context.Context, in searchSixIn) (map[string]any, err
 			}
 			return t.versioned(map[string]any{"atoms": atomRefsJSON(refs)}), nil
 		}
-		return format(t.SearchDocs(ctx, searchIn{Query: in.Query, Type: in.Type, Milestone: in.Milestone, Limit: in.Limit, Kind: "atom",
+		out, err := format(t.SearchDocs(ctx, searchIn{Query: in.Query, Type: in.Type, Milestone: in.Milestone, Limit: in.Limit, Kind: "atom",
 			Side: in.Side, IncludeDeprecated: in.IncludeDeprecated}))
+		if err == nil && out != nil {
+			// A query that names a skill, such as "integrate M1", is a task:
+			// say which skill carries it, so a client that went to search
+			// first still finds the loop rather than only the facts.
+			if hint := t.skillHint(in.Query); hint != nil {
+				out["skill"] = hint
+			}
+		}
+		return out, err
+	case "skill":
+		return t.searchSkills(in.Query, in.Limit)
 	case "operation":
 		// An intent finds operations by what they do; a module, or no query,
 		// lists them as list_operations did.
@@ -93,7 +104,7 @@ func (t *Tools) Search(ctx context.Context, in searchSixIn) (map[string]any, err
 	case "fhir_profile":
 		return t.ListFHIRProfiles(ctx, emptyFhirIn{})
 	default:
-		return nil, fmt.Errorf("kind %q is not one of atom, operation, fhir_profile", in.Kind)
+		return nil, fmt.Errorf("kind %q is not one of atom, operation, fhir_profile, skill", in.Kind)
 	}
 }
 
@@ -122,7 +133,7 @@ func (t *Tools) Validate(ctx context.Context, in validateSixIn) (map[string]any,
 }
 
 const (
-	searchDescription       = "Find catalogue atoms, API operations or FHIR profiles. Use kind: atom (default) for concepts, errors, flows and glossary terms; kind: operation for an endpoint by what it does or its path; kind: fhir_profile to list profiles. Leave query empty with type or milestone to list atoms. Returns ids to pass to get; response_format concise (default) keeps each hit to id, type, title, url and a short summary."
+	searchDescription       = "Find facts by what they are about: kind atom (default) for concepts, errors, flows and glossary terms; operation for an endpoint by what it does or its path; fhir_profile for profiles; skill for the integration skill a task needs, which the skill tool then loads. Returns ids to pass to get. An empty query with type or milestone lists atoms."
 	getDescription          = "Read one item in full by id. The id's shape picks the kind: an atom id (hiecm.error.abdm-1035), an operationId (m2_post_v3_token_generate_token), fhir:<profile> or fhir-example:<hiType>. Use search first when you do not have an id."
 	validateDescription     = "Check a candidate before you send it. kind: request checks a request body against its operation's schema; kind: fhir checks a FHIR document bundle against the pinned NRCES profiles and ABDM rules. Findings name locations and fixes."
 	validateFhirDescription = "Structural pre-flight check of a FHIR document bundle against the pinned NRCES profiles and ABDM transport rules. " +
@@ -133,6 +144,65 @@ const (
 )
 
 // deprecated is the description an old tool name carries for its last release.
+// deprecated is an old tool name's whole description: one line pointing at
+// its replacement. The names stay registered because published skills still
+// call them, the NHCX skills taken from nhcx-skills above all, but a client
+// loads every tool's description into its model's context on every request,
+// and the full text of eleven duplicates doubled the tool list. desc is kept
+// as an argument so each alias still names what it was for in the source.
 func deprecated(repl, desc string) string {
-	return "Deprecated alias for `" + repl + "`; removed in the next release. " + desc
+	_ = desc
+	return "Deprecated: use `" + repl + "`, which does what this did."
+}
+
+// skillHint is the skill a search query names outright, such as "integrate
+// M1", or nil. A skill matched only by its description is not offered here:
+// a search for facts should not be steered by a loose word match.
+func (t *Tools) skillHint(query string) map[string]any {
+	routers, _, err := skillCatalogue(t.r)
+	if err != nil || len(routers) == 0 {
+		return nil
+	}
+	names, whys := rankSkills(query, onGateway(routers, taskGateway(query)))
+	if len(names) == 0 || !strings.HasPrefix(whys[0], "the task names") {
+		return nil
+	}
+	return map[string]any{"name": names[0], "load": "call skill with name " + names[0] + " for the steps, in order"}
+}
+
+// searchSkills ranks the integration skills for a task, within the gateway
+// the task names.
+func (t *Tools) searchSkills(query string, limit int) (map[string]any, error) {
+	routers, _, err := skillCatalogue(t.r)
+	if err != nil {
+		return nil, err
+	}
+	if limit <= 0 || limit > 25 {
+		limit = 10
+	}
+	candidates := onGateway(routers, taskGateway(query))
+	var names, whys []string
+	if strings.TrimSpace(query) == "" {
+		for _, sk := range candidates {
+			names, whys = append(names, sk.Name), append(whys, "")
+		}
+	} else {
+		names, whys = rankSkills(query, candidates)
+	}
+	desc := map[string]string{}
+	for _, sk := range routers {
+		desc[sk.Name] = sk.Description
+	}
+	hits := []map[string]any{}
+	for i, n := range names {
+		if i == limit {
+			break
+		}
+		hit := map[string]any{"name": n, "gateway": gatewayLabel[skillGateway(n)], "summary": firstSentence(desc[n]), "load": "call skill with name " + n}
+		if whys[i] != "" {
+			hit["why"] = whys[i]
+		}
+		hits = append(hits, hit)
+	}
+	return t.versioned(map[string]any{"skills": hits}), nil
 }
