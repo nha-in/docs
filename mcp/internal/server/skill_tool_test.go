@@ -158,3 +158,64 @@ func TestInstallCommandsMatchTheMarketplace(t *testing.T) {
 		}
 	}
 }
+
+var gatewaySkills = append([]catalogue.Skill{
+	{Name: "uhi-consultation", Section: "", Description: "Use when building a UHI physical consultation booking.", Body: "# UHI consultation router"},
+	{Name: "uhi-ambulance", Section: "", Description: "Use when booking an ambulance on UHI.", Body: "# UHI ambulance router"},
+	{Name: "nhcx-claim", Section: "", Description: "Use when submitting an NHCX claim with a consultation bill.", Body: "# NHCX claim router"},
+}, toolSkills...)
+
+// A task stays on its gateway: it picks, names and installs only from that
+// gateway, and a skill from another gateway is refused rather than loaded.
+func TestSkillToolKeepsATaskOnItsGateway(t *testing.T) {
+	sess := skillSession(t, gatewaySkills)
+
+	// "consultation" appears in a UHI skill name and an NHCX description;
+	// naming NHCX keeps the choice on NHCX.
+	text, isErr := callSkill(t, sess, map[string]any{"task": "NHCX: send the consultation claim"})
+	if isErr || !strings.Contains(text, "# NHCX claim router") || !strings.Contains(text, "install only the nhcx plugin") {
+		t.Errorf("an NHCX task left NHCX:\n%s", text)
+	}
+	if strings.Contains(text, "abdm-integrators-assistant") || strings.Contains(text, "uhi-integrators-assistant") {
+		t.Errorf("an NHCX task offered another gateway's plugin:\n%s", text)
+	}
+
+	// The gateway argument does the same, and other skills the task names
+	// come only from that gateway.
+	text, _ = callSkill(t, sess, map[string]any{"task": "consultation and ambulance and M1", "gateway": "uhi"})
+	if !strings.Contains(text, "skill: uhi-") || !strings.Contains(text, "uhi-ambulance") || strings.Contains(text, "abdm-m1") {
+		t.Errorf("a UHI task named another gateway's skill:\n%s", text)
+	}
+
+	// A named skill from another gateway is refused, with that gateway's list.
+	text, isErr = callSkill(t, sess, map[string]any{"name": "abdm-m1", "gateway": "uhi"})
+	if !isErr || !strings.Contains(text, "uhi-consultation") || strings.Contains(text, "abdm-m2") {
+		t.Errorf("a cross-gateway load was not refused cleanly:\n%s", text)
+	}
+
+	text, isErr = callSkill(t, sess, map[string]any{"task": "integrate M1", "gateway": "pmjay"})
+	if !isErr || !strings.Contains(text, "not one of hiecm, uhi or nhcx") {
+		t.Errorf("an unknown gateway returned %q", text)
+	}
+}
+
+// search finds skills too: kind skill ranks them for a task, and a plain
+// search whose query names a skill says which one carries the steps.
+func TestSearchFindsSkills(t *testing.T) {
+	sess := skillSession(t, gatewaySkills)
+	res, err := sess.CallTool(context.Background(), &mcp.CallToolParams{Name: "search", Arguments: map[string]any{"query": "UHI book an ambulance", "kind": "skill"}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	text := res.Content[0].(*mcp.TextContent).Text
+	if res.IsError || !strings.Contains(text, `"name": "uhi-ambulance"`) || strings.Contains(text, "abdm-") {
+		t.Errorf("kind skill for a UHI task returned:\n%s", text)
+	}
+	res, err = sess.CallTool(context.Background(), &mcp.CallToolParams{Name: "search", Arguments: map[string]any{"query": "integrate M1"}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if text := res.Content[0].(*mcp.TextContent).Text; !strings.Contains(text, `"name": "abdm-m1"`) {
+		t.Errorf("a search naming M1 carried no skill hint:\n%s", text)
+	}
+}

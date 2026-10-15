@@ -26,6 +26,7 @@ type skillIn struct {
 	Task    string `json:"task,omitempty" jsonschema:"what the person wants, in their words, such as 'integrate M1' or 'run the M2 test cases'. Picks the skill when name is not given"`
 	Name    string `json:"name,omitempty" jsonschema:"a skill name, such as abdm-m1. Omit to pick by task"`
 	Section string `json:"section,omitempty" jsonschema:"one section of the skill, such as scaffold, integrate, debug or test. Omit for the router, which says which section to read"`
+	Gateway string `json:"gateway,omitempty" jsonschema:"hiecm, uhi or nhcx: keeps the choice to that gateway's skills. Taken from the task when it names one"`
 }
 
 const skillToolDescription = "Load the ABDM integration skill for a task. Call it first for any request to build, integrate, test or debug an ABDM module, such as 'integrate M1' or 'run the M2 test cases', before search or get. " +
@@ -82,6 +83,63 @@ func installBlock(name string) string {
 		name, gp.plugin, repo, gp.plugin, marketplaceName, repo, gp.plugin, siteURL, gp.setup)
 }
 
+// A task is on one gateway, and the skill tool keeps it there: it picks only
+// among that gateway's skills, names only that gateway's other skills, and
+// asks to install only that gateway's plugin. A UHI consultation never pulls
+// in an HIE-CM module or the HIE-CM plugin unless the person names it.
+var gatewayOfPrefix = map[string]string{"abdm": "hiecm", "uhi": "uhi", "nhcx": "nhcx"}
+
+var gatewayLabel = map[string]string{"hiecm": "HIE-CM", "uhi": "UHI", "nhcx": "NHCX"}
+
+// skillGateway is the gateway a skill belongs to, by its name's prefix.
+func skillGateway(name string) string {
+	prefix, _, _ := strings.Cut(name, "-")
+	return gatewayOfPrefix[prefix]
+}
+
+// gatewayArg reads the gateway argument, accepting the ways people write it.
+func gatewayArg(arg string) (string, bool) {
+	switch strings.ToLower(strings.TrimSpace(arg)) {
+	case "":
+		return "", true
+	case "hiecm", "hie-cm", "hie cm", "abdm":
+		return "hiecm", true
+	case "uhi":
+		return "uhi", true
+	case "nhcx":
+		return "nhcx", true
+	}
+	return "", false
+}
+
+// taskGateway is the gateway a task names outright, or none.
+func taskGateway(task string) string {
+	t := words(task)
+	switch {
+	case strings.Contains(t, " uhi "):
+		return "uhi"
+	case strings.Contains(t, " nhcx "):
+		return "nhcx"
+	case strings.Contains(t, " hiecm ") || strings.Contains(t, " hie cm "):
+		return "hiecm"
+	}
+	return ""
+}
+
+// onGateway keeps the skills of one gateway; an empty gateway keeps all.
+func onGateway(routers []catalogue.Skill, gateway string) []catalogue.Skill {
+	if gateway == "" {
+		return routers
+	}
+	var out []catalogue.Skill
+	for _, sk := range routers {
+		if skillGateway(sk.Name) == gateway {
+			out = append(out, sk)
+		}
+	}
+	return out
+}
+
 // skillPrefix is what a skill name carries before the part a person says.
 var skillPrefix = regexp.MustCompile(`^(abdm|uhi|nhcx|hiecm)-`)
 
@@ -105,48 +163,66 @@ func words(text string) string {
 
 var stop = map[string]bool{"with": true, "from": true, "that": true, "this": true, "when": true, "into": true, "your": true, "have": true, "what": true, "abdm": true, "integrate": true, "build": true, "using": true, "make": true}
 
-// pickSkill chooses the skill a task is about. A skill the task names wins,
-// the longest name first so "scan and pay" beats a shorter word inside it.
-// Failing that, the description sharing the most words with the task wins.
-// It returns the name, why it was chosen, and any other skill the task names.
-func pickSkill(task string, routers []catalogue.Skill) (string, string, []string) {
+// rankSkills orders the skills a task could mean. A skill the task names
+// comes first, the longest name first so "scan and pay" beats a shorter word
+// inside it. Then any skill whose description shares words with the task,
+// most first. Each comes with why it ranked.
+func rankSkills(task string, routers []catalogue.Skill) ([]string, []string) {
 	t := words(task)
 	type hit struct {
-		name, alias string
+		name, why string
+		named     int
+		score     int
 	}
 	var hits []hit
 	for _, sk := range routers {
+		h := hit{name: sk.Name}
 		for _, a := range aliases(sk.Name) {
-			if strings.Contains(t, " "+a+" ") {
-				hits = append(hits, hit{sk.Name, a})
-				break
+			if strings.Contains(t, " "+a+" ") && len(a) > h.named {
+				h.named, h.why = len(a), fmt.Sprintf("the task names %q", a)
 			}
 		}
-	}
-	if len(hits) > 0 {
-		sort.SliceStable(hits, func(i, j int) bool { return len(hits[i].alias) > len(hits[j].alias) })
-		var others []string
-		for _, h := range hits[1:] {
-			others = append(others, h.name)
-		}
-		return hits[0].name, fmt.Sprintf("the task names %q", hits[0].alias), others
-	}
-	best, score := "", 0
-	for _, sk := range routers {
-		n := 0
-		for _, w := range strings.Fields(t) {
-			if len(w) >= 4 && !stop[w] && strings.Contains(words(sk.Description), " "+w+" ") {
-				n++
+		if h.named == 0 {
+			desc := words(sk.Description)
+			for _, w := range strings.Fields(t) {
+				if len(w) >= 4 && !stop[w] && strings.Contains(desc, " "+w+" ") {
+					h.score++
+				}
 			}
+			h.why = fmt.Sprintf("its description shares %d word(s) with the task", h.score)
 		}
-		if n > score {
-			best, score = sk.Name, n
+		if h.named > 0 || h.score > 0 {
+			hits = append(hits, h)
 		}
 	}
-	if best == "" {
+	sort.SliceStable(hits, func(i, j int) bool {
+		if hits[i].named != hits[j].named {
+			return hits[i].named > hits[j].named
+		}
+		return hits[i].score > hits[j].score
+	})
+	var names, whys []string
+	for _, h := range hits {
+		names, whys = append(names, h.name), append(whys, h.why)
+	}
+	return names, whys
+}
+
+// pickSkill chooses the skill a task is about, and the other skills the task
+// names on the same gateway. A skill matched only by its description is never
+// an "other": that would load guesses.
+func pickSkill(task string, routers []catalogue.Skill) (string, string, []string) {
+	names, whys := rankSkills(task, routers)
+	if len(names) == 0 {
 		return "", "", nil
 	}
-	return best, fmt.Sprintf("its description shares %d word(s) with the task", score), nil
+	var others []string
+	for i, n := range names[1:] {
+		if strings.HasPrefix(whys[i+1], "the task names") && skillGateway(n) == skillGateway(names[0]) {
+			others = append(others, n)
+		}
+	}
+	return names[0], whys[0], others
 }
 
 // skillCatalogue is every skill's router and its sections, in name order.
@@ -169,11 +245,28 @@ func skillCatalogue(r *index.Reader) ([]catalogue.Skill, map[string][]string, er
 
 func skillList(routers []catalogue.Skill) string {
 	b := &strings.Builder{}
-	b.WriteString("Skills on this server. Load one with name, or describe the task:\n")
-	for _, sk := range routers {
-		fmt.Fprintf(b, "- %s: %s\n", sk.Name, firstSentence(sk.Description))
+	b.WriteString("Skills on this server, by gateway. Load one with name, or describe the task:\n")
+	for _, gw := range []string{"hiecm", "uhi", "nhcx"} {
+		on := onGateway(routers, gw)
+		if len(on) == 0 {
+			continue
+		}
+		fmt.Fprintf(b, "\n%s, in the %s plugin:\n", gatewayLabel[gw], gatewayPlugin[pluginPrefix(gw)].plugin)
+		for _, sk := range on {
+			fmt.Fprintf(b, "- %s: %s\n", sk.Name, firstSentence(sk.Description))
+		}
 	}
 	return b.String()
+}
+
+// pluginPrefix is the skill prefix a gateway's plugin uses.
+func pluginPrefix(gateway string) string {
+	for prefix, gw := range gatewayOfPrefix {
+		if gw == gateway {
+			return prefix
+		}
+	}
+	return ""
 }
 
 func firstSentence(text string) string {
@@ -200,14 +293,26 @@ func loadSkill(r *index.Reader, in skillIn) (*mcp.CallToolResult, any, error) {
 	if len(routers) == 0 {
 		return toolText("This server holds no skills. Use search and get.", true)
 	}
+	gateway, ok := gatewayArg(in.Gateway)
+	if !ok {
+		return toolText(fmt.Sprintf("Gateway %q is not one of hiecm, uhi or nhcx.", in.Gateway), true)
+	}
+	if gateway == "" {
+		gateway = taskGateway(in.Task)
+	}
 	name, why, others := strings.TrimSpace(in.Name), "named in the call", []string(nil)
+	if name != "" && gateway != "" && skillGateway(name) != gateway && hasRouter(routers, name) {
+		return toolText(fmt.Sprintf("%s is a %s skill, and this task is on %s. Its skills:\n\n%s",
+			name, gatewayLabel[skillGateway(name)], gatewayLabel[gateway], skillList(onGateway(routers, gateway))), true)
+	}
 	if name == "" {
+		candidates := onGateway(routers, gateway)
 		if strings.TrimSpace(in.Task) == "" {
-			return toolText(skillList(routers), false)
+			return toolText(skillList(candidates), false)
 		}
-		name, why, others = pickSkill(in.Task, routers)
+		name, why, others = pickSkill(in.Task, candidates)
 		if name == "" {
-			return toolText("No skill matches that task.\n\n"+skillList(routers), true)
+			return toolText("No skill matches that task.\n\n"+skillList(candidates), true)
 		}
 	}
 	got, err := r.GetSkill(name, strings.TrimSpace(in.Section))
@@ -223,7 +328,12 @@ func loadSkill(r *index.Reader, in skillIn) (*mcp.CallToolResult, any, error) {
 	if got.Section != "" {
 		section = got.Section
 	}
-	fmt.Fprintf(b, "skill: %s, %s. Chosen because %s.\n\n", name, section, why)
+	fmt.Fprintf(b, "skill: %s, %s. Chosen because %s.\n", name, section, why)
+	if gw := skillGateway(name); gw != "" {
+		fmt.Fprintf(b, "Gateway: %s. Keep this task on it: load only %s-* skills and install only the %s plugin, unless the person names another gateway.\n",
+			gatewayLabel[gw], pluginPrefix(gw), gatewayPlugin[pluginPrefix(gw)].plugin)
+	}
+	b.WriteString("\n")
 	if install := installBlock(name); install != "" {
 		b.WriteString(install + "\n")
 	}

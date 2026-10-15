@@ -17,7 +17,7 @@ import (
 	"github.com/nha-in/docs/mcp/internal/index"
 )
 
-const serverVersion = "0.1.0"
+const serverVersion = "0.2.0"
 
 // atomTypeValues are the catalogue atom types, used to enumerate the type
 // filters of search_docs and list_atoms.
@@ -34,6 +34,17 @@ func schemaWithAtomTypeEnum[In any]() *jsonschema.Schema {
 		panic(err)
 	}
 	s.Properties["type"].Enum = atomTypeValues
+	return s
+}
+
+// aliasSchema is an old tool name's input schema: the same argument names
+// and types, so a published skill's call still validates, without the
+// per-argument text, which the replacement tool's schema carries.
+func aliasSchema[In any]() *jsonschema.Schema {
+	s := mustSchemaFor[In]()
+	for _, prop := range s.Properties {
+		prop.Description = ""
+	}
 	return s
 }
 
@@ -98,7 +109,7 @@ func NewMCPServer(r *index.Reader, emb embed.Embedder) *mcp.Server {
 	mcp.AddTool(s, &mcp.Tool{
 		Name:        "search_docs",
 		Description: deprecated("search", searchDocsDescription),
-		InputSchema: schemaWithAtomTypeEnum[searchIn](),
+		InputSchema: aliasSchema[searchIn](),
 	}, func(ctx context.Context, req *mcp.CallToolRequest, in searchIn) (*mcp.CallToolResult, any, error) {
 		out, err := tools.SearchDocs(ctx, in)
 		if err != nil {
@@ -110,6 +121,7 @@ func NewMCPServer(r *index.Reader, emb embed.Embedder) *mcp.Server {
 	mcp.AddTool(s, &mcp.Tool{
 		Name:        "get_atom",
 		Description: deprecated("get", getAtomDescription),
+		InputSchema: aliasSchema[getAtomIn](),
 	}, func(ctx context.Context, req *mcp.CallToolRequest, in getAtomIn) (*mcp.CallToolResult, any, error) {
 		out, err := tools.GetAtom(ctx, in)
 		if err != nil {
@@ -121,6 +133,7 @@ func NewMCPServer(r *index.Reader, emb embed.Embedder) *mcp.Server {
 	mcp.AddTool(s, &mcp.Tool{
 		Name:        "related_atoms",
 		Description: deprecated("related", relatedAtomsDescription),
+		InputSchema: aliasSchema[getAtomIn](),
 	}, func(ctx context.Context, req *mcp.CallToolRequest, in getAtomIn) (*mcp.CallToolResult, any, error) {
 		out, err := tools.RelatedAtoms(ctx, in)
 		if err != nil {
@@ -148,7 +161,7 @@ func NewMCPServer(r *index.Reader, emb embed.Embedder) *mcp.Server {
 	mcp.AddTool(s, &mcp.Tool{
 		Name:        "list_atoms",
 		Description: deprecated("search", listAtomsDescription),
-		InputSchema: schemaWithAtomTypeEnum[listAtomsIn](),
+		InputSchema: aliasSchema[listAtomsIn](),
 	}, func(ctx context.Context, req *mcp.CallToolRequest, in listAtomsIn) (*mcp.CallToolResult, any, error) {
 		refs, err := r.ListAtoms(in.Type, in.Milestone)
 		if err != nil {
@@ -172,6 +185,7 @@ func NewMCPServer(r *index.Reader, emb embed.Embedder) *mcp.Server {
 	mcp.AddTool(s, &mcp.Tool{
 		Name:        "list_operations",
 		Description: deprecated("search", listOperationsDescription),
+		InputSchema: aliasSchema[listOpsIn](),
 	}, func(ctx context.Context, req *mcp.CallToolRequest, in listOpsIn) (*mcp.CallToolResult, any, error) {
 		out, err := tools.ListOperations(ctx, in)
 		if err != nil {
@@ -183,6 +197,7 @@ func NewMCPServer(r *index.Reader, emb embed.Embedder) *mcp.Server {
 	mcp.AddTool(s, &mcp.Tool{
 		Name:        "get_operation",
 		Description: deprecated("get", getOperationDescription),
+		InputSchema: aliasSchema[getOpIn](),
 	}, func(ctx context.Context, req *mcp.CallToolRequest, in getOpIn) (*mcp.CallToolResult, any, error) {
 		out, err := tools.GetOperation(ctx, in)
 		if err != nil {
@@ -194,6 +209,7 @@ func NewMCPServer(r *index.Reader, emb embed.Embedder) *mcp.Server {
 	mcp.AddTool(s, &mcp.Tool{
 		Name:        "list_fhir_profiles",
 		Description: deprecated("search", listFhirProfilesDescription),
+		InputSchema: aliasSchema[emptyFhirIn](),
 	}, func(ctx context.Context, req *mcp.CallToolRequest, in emptyFhirIn) (*mcp.CallToolResult, any, error) {
 		out, err := tools.ListFHIRProfiles(ctx, in)
 		if err != nil {
@@ -205,6 +221,7 @@ func NewMCPServer(r *index.Reader, emb embed.Embedder) *mcp.Server {
 	mcp.AddTool(s, &mcp.Tool{
 		Name:        "get_fhir_profile",
 		Description: deprecated("get", getFhirProfileDescription),
+		InputSchema: aliasSchema[getFhirProfileIn](),
 	}, func(ctx context.Context, req *mcp.CallToolRequest, in getFhirProfileIn) (*mcp.CallToolResult, any, error) {
 		out, err := tools.GetFHIRProfile(ctx, in)
 		if err != nil {
@@ -216,6 +233,7 @@ func NewMCPServer(r *index.Reader, emb embed.Embedder) *mcp.Server {
 	mcp.AddTool(s, &mcp.Tool{
 		Name:        "get_fhir_example",
 		Description: deprecated("get", getFhirExampleDescription),
+		InputSchema: aliasSchema[getFhirExampleIn](),
 	}, func(ctx context.Context, req *mcp.CallToolRequest, in getFhirExampleIn) (*mcp.CallToolResult, any, error) {
 		out, err := tools.GetFHIRExample(ctx, in)
 		if err != nil {
@@ -227,6 +245,7 @@ func NewMCPServer(r *index.Reader, emb embed.Embedder) *mcp.Server {
 	mcp.AddTool(s, &mcp.Tool{
 		Name:        "validate_request",
 		Description: deprecated("validate", validateRequestDescription),
+		InputSchema: aliasSchema[validateIn](),
 	}, func(ctx context.Context, req *mcp.CallToolRequest, in validateIn) (*mcp.CallToolResult, any, error) {
 		out, err := tools.ValidateRequest(ctx, in)
 		if err != nil {
@@ -238,6 +257,7 @@ func NewMCPServer(r *index.Reader, emb embed.Embedder) *mcp.Server {
 	mcp.AddTool(s, &mcp.Tool{
 		Name:        "validate_fhir",
 		Description: deprecated("validate", validateFhirDescription),
+		InputSchema: aliasSchema[validateFhirIn](),
 	}, func(ctx context.Context, req *mcp.CallToolRequest, in validateFhirIn) (*mcp.CallToolResult, any, error) {
 		out, err := tools.ValidateFHIR(ctx, in)
 		if err != nil {

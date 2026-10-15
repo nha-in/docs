@@ -62,18 +62,23 @@ Seven read-only tools, the seventh only when the snapshot holds compiled skills:
 
 | Tool | Does |
 |---|---|
-| search | atoms (default), API operations by intent or path (`kind: operation`), or FHIR profiles (`kind: fhir_profile`); an empty query with a type or milestone lists atoms; `response_format` concise (default) or detailed |
+| search | atoms (default), API operations by intent or path (`kind: operation`), FHIR profiles (`kind: fhir_profile`), or the integration skill for a task (`kind: skill`); a query that names a skill, such as "integrate M1", also returns a `skill` hint; an empty query with a type or milestone lists atoms; `response_format` concise (default) or detailed |
 | get | one item by id, the id's shape picking the kind: atom id, operationId, `fhir:<profile>`, `fhir-example:<hiType>` |
 | related | the atom graph walk |
 | decode_error | error atoms and specification rows for a code or raw response |
 | validate | `kind: request` checks a request body against its operation; `kind: fhir` checks a FHIR document bundle |
 | catalogue_info | version, build time and coverage |
-| skill | the compiled integration skill for a task: `task` in plain words ("integrate M1") picks the skill, or `name` and `section` load one section. It returns the router, the sections it can load next, and the commands to install the plugin for the skill's gateway, which the client asks the person to run once. No arguments lists every skill. Clients are told to call it first for any build, integrate, test or debug request, because many reach neither resources nor prompts on their own |
+| skill | the compiled integration skill for a task: `task` in plain words ("integrate M1") picks the skill, or `name` and `section` load one section. A task stays on one gateway, named by `gateway` (hiecm, uhi or nhcx) or by the task ("UHI", "NHCX", "HIE-CM"): the tool picks, names and asks to install only from that gateway. It returns the router, the sections it can load next, and the commands to install the plugin for the skill's gateway, which the client asks the person to run once. No arguments lists every skill. Clients are told to call it first for any build, integrate, test or debug request, because many reach neither resources nor prompts on their own |
 
 The eleven old names (search_docs, get_atom, related_atoms, list_atoms,
 list_operations, get_operation, list_fhir_profiles, get_fhir_profile,
-get_fhir_example, validate_request, validate_fhir) are deprecated aliases
-for one release, each returning exactly what it did.
+get_fhir_example, validate_request, validate_fhir) are deprecated aliases,
+each returning exactly what it did. They stay registered because published
+skills still call them, the NHCX skills taken from nhcx-skills above all, but
+each carries a one-line description pointing at its replacement and its
+argument names without their text, since a client loads every tool's
+definition into its model's context on every request. Remove them once
+nhcx-skills calls the new names.
 
 Every response carries catalogue_version. FHIR validation never logs bundle
 contents: the tool-call logging middleware records only the tool name,
@@ -103,8 +108,8 @@ URL.
 The tools answer a question an agent already knows how to ask. The compiled
 integrator skills answer the question before that: what the steps are, in
 what order, and how to tell when one worked. `cmd/indexer` reads them from
-`-skills` (default `../plugins/abdm-integrators-assistant/skills`, or
-`SKILLS_DIR`) into the snapshot, so the server still reads the database and
+`-skills`, a comma-separated list of folders (default the HIE-CM, UHI and
+NHCX plugins' skills, or `SKILLS_DIR`), into the snapshot, so the server still reads the database and
 nothing else, and the server offers them two ways:
 
 - **Resources**, one per section, at `skill://<skill>` for the router and

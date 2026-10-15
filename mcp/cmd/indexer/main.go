@@ -45,8 +45,9 @@ func main() {
 	region := flag.String("aws-region", envOr("AWS_REGION", ""), "AWS region, for -embed-provider bedrock")
 	nrces := flag.String("nrces", envOr("NRCES_PACKAGE", "../catalogue/openapi/.raw/nrces-ndhm.in-6.5.0.tgz"),
 		"path to the pinned NRCES IG package; empty skips FHIR indexing")
-	skills := flag.String("skills", envOr("SKILLS_DIR", "../plugins/abdm-integrators-assistant/skills"),
-		"path to the compiled integrator skills; empty skips skill indexing")
+	skills := flag.String("skills", envOr("SKILLS_DIR",
+		"../plugins/abdm-integrators-assistant/skills,../plugins/uhi-integrators-assistant/skills,../plugins/nhcx/skills"),
+		"comma-separated skill folders, one per plugin; empty skips skill indexing")
 	flag.Parse()
 	emb, err := embed.New(context.Background(), embed.Config{
 		Provider:  *provider,
@@ -200,14 +201,19 @@ func run(catDir, outPath, nrcesPath, skillsDir string, emb embed.Embedder) error
 	// the loops from the database like everything else. An absent
 	// directory is not an error: the server then offers its tools and no
 	// prompts, which is what it did before skills were indexed.
-	if skillsDir != "" {
-		switch loaded, err := catalogue.LoadSkills(skillsDir); {
+	// One folder per plugin, so the HIE-CM, UHI and NHCX skills are all
+	// served, each under its own gateway's prefix.
+	for _, dir := range strings.Split(skillsDir, ",") {
+		if dir = strings.TrimSpace(dir); dir == "" {
+			continue
+		}
+		switch loaded, err := catalogue.LoadSkills(dir); {
 		case errors.Is(err, fs.ErrNotExist):
-			fmt.Fprintf(os.Stderr, "no skills at %s, the server will offer no prompts\n", skillsDir)
+			fmt.Fprintf(os.Stderr, "no skills at %s, the server will offer none from it\n", dir)
 		case err != nil:
-			return fmt.Errorf("load skills: %w", err)
+			return fmt.Errorf("load skills from %s: %w", dir, err)
 		default:
-			meta.Skills = loaded
+			meta.Skills = append(meta.Skills, loaded...)
 		}
 	}
 

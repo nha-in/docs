@@ -79,8 +79,9 @@ What feeds which MCP tool:
 
 | Content | Tools |
 |---|---|
-| Atoms | search_docs, get_atom, related_atoms, decode_error, list_atoms, catalogue_info |
-| Specs | list_operations, get_operation, validate_request |
+| Atoms | search, get, related, decode_error, catalogue_info |
+| Specs | search with `kind: operation`, get, validate with `kind: request` |
+| Skills | skill, and search with `kind: skill` |
 
 Known limits, tracked for the ingestion phase: `.yml` is not accepted.
 `webhooks` operations are indexed with the `paths` ones and marked as
