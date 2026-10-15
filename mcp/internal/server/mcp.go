@@ -42,7 +42,8 @@ func schemaWithAtomTypeEnum[In any]() *jsonschema.Schema {
 // kilobytes.
 const maxUnfilteredOperations = 60
 
-// NewMCPServer wires six tools and, for one release, eleven deprecated
+// NewMCPServer wires six tools, a seventh, skill, when the snapshot holds
+// skills, and, for one release, eleven deprecated
 // aliases: the old names, each delegating as before. emb may be nil
 // (keyword-only).
 func NewMCPServer(r *index.Reader, emb embed.Embedder) *mcp.Server {
@@ -253,6 +254,7 @@ func NewMCPServer(r *index.Reader, emb embed.Embedder) *mcp.Server {
 	}
 	if len(skills) > 0 {
 		addStartPrompt(s, skills)
+		addSkillTool(s, r)
 	}
 
 	return s
