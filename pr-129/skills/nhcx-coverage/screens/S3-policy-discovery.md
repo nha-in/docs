@@ -136,6 +136,18 @@ Verdict tiles (money shows as "₹" with thousands separators and no decimals, o
 
 Verdict details: Disposition, Outcome, In force ("Yes" or "No"), Pre-authorisation ("Required", "Not required", or "-" when the payer did not say), Checked at, Correlation.
 
+**Coverage benefits card** (shown under the verdict whenever the reply listed items; [F3. CoverageEligibilityResponse](../fhir/F3-coverage-eligibility-response.md) "Itemised benefits", D9 `benefit_items_json`). One row per `insurance[].item`:
+
+| Column | Content |
+|---|---|
+| Item | the package display (else its name, else its code), with the code and category as a muted sub-line; the wallet row is marked "Policy wallet"; the description when the payer gave one |
+| Cover | chip "Covered" or "Excluded" (`excluded`), then "Term: Annual" or "Lifetime" and "Network: ..." when given |
+| Authorisation | "Required", "Not required" or "-" (`authorizationRequired`) |
+| Benefits | one line per `benefit`: "<type>: allowed <amount> · used <amount>", money as `₹` with separators, a count as the number, a text as given |
+| Supporting documents | the `authorizationSupporting` displays, comma separated |
+
+The same table sits on the Line items tab's benefits card (S8. Line Items (in nhcx-preauth)), where the benefits check is sent from.
+
 #### S3L. LAYOUT
 The arrangement below is the reference implementation's [REF](../references/PAYERS.md#markers): follow the target HMIS's own screen conventions. What is required is in DESCRIPTION and ACTIONS: the fields, options, columns, statuses, messages and actions.
 
