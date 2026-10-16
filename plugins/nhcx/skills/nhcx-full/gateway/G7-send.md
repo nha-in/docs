@@ -209,7 +209,7 @@ post_with_token(url, body, label):               // shared with G4 and G10 (labe
 ```
 
 #### G7U. USED BY
-- Screens: [S5. Claim Master](../screens/S5-claim-master.md), [S12. Payments](../screens/S12-payments.md), [S17. Beneficiary Discovery](../screens/S17-beneficiary-discovery.md)
+- Screens: [S12. Payments](../screens/S12-payments.md), [S17. Beneficiary Discovery](../screens/S17-beneficiary-discovery.md)
 - APIs: [A2. Coverage Eligibility Check](../apis/A2-coverage-eligibility-check.md), [A3. Insurance Plan Request](../apis/A3-insurance-plan-request.md), [A4. Pre-auth Submit](../apis/A4-preauth-submit.md), [A5. Claim Submit](../apis/A5-claim-submit.md), [A6. Task Submit (cancel, status, reprocess, release)](../apis/A6-task-submit.md), [A7. Communication Reply](../apis/A7-communication-on-request.md), [A8. Payment Notice Acknowledgement](../apis/A8-paymentnotice-on-request.md), [A10. Transaction Related](../apis/A10-txn-related.md), [A11. Transaction Dispatch](../apis/A11-txn-dispatch.md), [A15. Adjudicator Process Case](../apis/A15-adjudicator-process-case.md)
 - Callbacks: [C9. Payer Communication](../callbacks/C9-communication-request.md), [C10. Payment Notice](../callbacks/C10-paymentnotice-request.md)
 - FHIR: [F1. Bundle](../fhir/F1-bundle.md), [F12. Communication](../fhir/F12-communication.md), [F14. Payment acknowledgement](../fhir/F14-payment-acknowledgement.md)

@@ -133,7 +133,6 @@ parse_public_key(text):
 ```
 
 #### G6U. USED BY
-- Screens: [S5. Claim Master](../screens/S5-claim-master.md)
 - APIs: [A12. Transaction FHIR](../apis/A12-txn-fhir.md)
 - FHIR: [F1. Bundle](../fhir/F1-bundle.md)
 - Gateway: [G2. Configuration and Participants](G2-configuration.md), [G4. Registry and Certificates](G4-registry.md), [G5. Protocol Headers](G5-protocol-headers.md), [G7. Send](G7-send.md), [G8. Receive](G8-receive.md)

@@ -80,7 +80,7 @@ The page never reloads itself, because that would throw away whatever is being t
 | 9 | `claim` | Claim | S11 (the bill, the send, the verdict and settlement) |
 | 10 | `payments` | Payments | S12 |
 
-Numbers 4 is kept free: the Validate tab was removed in 1.7.0 and its checks moved under the lines ([S8. Line Items](S8-line-items.md)). An optional tab **Discharge intimation** sits between Communication and Discharge when the integration decision `claim.dischargeIntimation` (L1.10) is yes (S11. Claim Submission (in nhcx-claim)).
+Numbers 4 is kept free: the Validate tab was removed in 1.7.0 and its checks moved under the lines ([S8. Line Items](S8-line-items.md)). An optional tab **Discharge intimation** sits between Communication and Discharge when the integration decision `claim.dischargeIntimation` (L1.A) is yes (S11. Claim Submission (in nhcx-claim)).
 
 Tab rules:
 - No `tab`, or an unknown key, opens Eligibility.

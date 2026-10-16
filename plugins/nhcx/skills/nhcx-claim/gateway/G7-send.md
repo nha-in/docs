@@ -209,7 +209,6 @@ post_with_token(url, body, label):               // shared with G4 and G10 (labe
 ```
 
 #### G7U. USED BY
-- Screens: [S5. Claim Master](../screens/S5-claim-master.md)
 - APIs: [A5. Claim Submit](../apis/A5-claim-submit.md), [A6. Task Submit (cancel, status, reprocess, release)](../apis/A6-task-submit.md), [A10. Transaction Related](../apis/A10-txn-related.md), [A11. Transaction Dispatch](../apis/A11-txn-dispatch.md), [A15. Adjudicator Process Case](../apis/A15-adjudicator-process-case.md)
 - FHIR: [F1. Bundle](../fhir/F1-bundle.md)
 - Database: [D18. claim_preauth](../database/D18-claim-preauth.md), [D21. claim_payment](../database/D21-claim-payment.md), [D29. claim_enquiry](../database/D29-claim-enquiry.md)
