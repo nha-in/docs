@@ -81,7 +81,7 @@ For any type other than Death, the death time is cleared. Success: "Discharge re
 - The first row is always `HDS` Hospital discharge summary.
 - The other rows are the documents the payer deferred to the claim:
   - With an auth-requirements ruling, the ruling's requirements that are not due at pre-authorisation.
-  - Without one, the package master's documents for the quoted packages whose stage is `post` or `both` (D11's stage rule), and any `pre` document that was not attached at the pre-authorisation stage. Each row carries the stage chip ("Post (claim)", "Both" or "Pre-auth").
+  - Without one, the package master's documents for the quoted packages whose stage is `post` (D11's stage rule), and any `pre` document that was not attached at the pre-authorisation stage. Each row carries the stage chip ("Post (claim)", "Both" or "Pre-auth").
 
 The note beside the "Attach chosen files" button reads "The discharge summary is always wanted; the rest are the requirements the payer's ruling deferred to this stage." When nothing else is listed and no summary is attached, it reads "Only the discharge summary is listed, run the authorisation-requirements check on the pre-authorisation tab to learn what else this payer wants with the claim."
 
@@ -91,7 +91,7 @@ Each code keeps one file, and a new file replaces the old one. The summary is fi
 
 **Forms for the claim card.** The payer's questionnaires to answer for the claim leg (the rule is D12's). The card is left out when no form applies. The forms listed are:
 - With an auth-requirements ruling: every form the master carries for the quoted packages and the policy that the ruling did not name (D12: the ruling's forms were the pre-authorisation's, the rest are answered at discharge), each with the chip "Post (claim)".
-- Without a ruling: the quoted packages' own forms whose stage is `post` or `both` (their claim-stage standard treatment guideline checklists, PMJAY's claim STQ; D12 `stage`) and the policy's own forms; the pre-authorisation STQ already answered on S9 is not asked again unless its stage is `both` [PAYER](../references/PAYERS.md#markers).
+- Without a ruling: the quoted packages' own forms whose stage is `post` (their claim-stage standard treatment guideline checklists, PMJAY's claim STQ; D12 `stage`) and the policy's own forms; the pre-authorisation STQ already answered on S9 is not asked again [PAYER](../references/PAYERS.md#markers).
 - Conditional forms (D12): the LAMA or DAMA questionnaire only once that discharge type is recorded in the Discharge card above; the Death questionnaire only when the discharge type is Death or the HMIS has the patient declared dead. Recording the discharge therefore changes which forms this card lists.
 - Without a stage-Discharge token on the Verification tab (S18), the scheme's Discharge Consent form, even when nothing lists it; its question is an attachment (the signed declaration), so the desk uploads it here, and the claim is refused PAYR-1363 without it [PAYER](../references/PAYERS.md#markers).
 
