@@ -173,6 +173,10 @@ assert.equal(revealStep(600, 0, false, true), 600, 'reduced motion shows it all'
 assert.deepEqual(toBlocks('one\ntwo'), [{kind: 'p', text: 'one two'}]);
 assert.deepEqual(toBlocks('- a\n- b'), [{kind: 'ul', items: ['a', 'b']}]);
 assert.deepEqual(toBlocks('1. a\n2. b'), [{kind: 'ol', items: ['a', 'b']}]);
+assert.deepEqual(toBlocks('1. a\n\n2. b\n\n3. c'), [{kind: 'ol', items: ['a', 'b', 'c']}]);
+assert.deepEqual(toBlocks('1. a\n\nthen\n\n2. b'), [
+  {kind: 'ol', items: ['a']}, {kind: 'p', text: 'then'}, {kind: 'ol', items: ['b']},
+]);
 assert.deepEqual(toBlocks('```json\n{"a":1}'), [
   {kind: 'code', text: '{"a":1}', lang: 'json', closed: false},
 ]);

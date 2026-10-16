@@ -12,6 +12,7 @@ import (
 	"unicode/utf8"
 
 	"github.com/nha-in/docs/mcp/internal/guard"
+	"github.com/nha-in/docs/mcp/internal/index"
 	"github.com/nha-in/docs/mcp/internal/route"
 )
 
@@ -72,6 +73,10 @@ type Source struct {
 	ID    string `json:"id"`
 	Title string `json:"title"`
 	URL   string `json:"url"`
+	// kind is the atom's type. It never reaches the panel; it lets the loop
+	// leave error atoms out of the citations for a question that is not
+	// about an error.
+	kind string
 }
 
 // Service runs the agent loop: stream from the model, execute any tool
@@ -461,7 +466,15 @@ func sourceFromFields(fields map[string]any) Source {
 	if href == "" {
 		href = "/search?q=" + url.QueryEscape(title)
 	}
-	return Source{ID: id, Title: title, URL: href}
+	kind, _ := fields["type"].(string)
+	return Source{ID: id, Title: title, URL: href, kind: kind}
+}
+
+// NewSource builds a citation for an atom found by the lookup. An atom with no
+// published page gets the same search fallback as sourceFromFields, so a chip
+// never has an empty link.
+func NewSource(id, title, href, kind string) Source {
+	return sourceFromFields(map[string]any{"id": id, "title": title, "doc_url": href, "type": kind})
 }
 
 // atomIDRe is an atom id's shape; package chat cannot import server, which
@@ -550,7 +563,7 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 		if err := emit("text", map[string]string{"delta": greetingFor(cmd.Gateway)}); err != nil {
 			return err
 		}
-		return s.finish(nil, emit)
+		return s.finish(nil, question, emit)
 	}
 	// The gateway the reader's page belongs to scopes every search this
 	// question makes, the pre-retrieval and the model's own, unless the
@@ -626,7 +639,7 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 			if err := emit("skill", use); err != nil {
 				return err
 			}
-			return s.finish(nil, emit)
+			return s.finish(nil, question, emit)
 		}
 		use.Module, use.ResolvedBy = module, by
 		if body, ok := s.Skill(module, cmd.Name); ok {
@@ -852,9 +865,9 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 				// too: they belong to an answer the reader never saw. When
 				// part of the answer did reach the reader they keep their
 				// citations, because that part is what those sources back.
-				return s.finish(nil, emit)
+				return s.finish(nil, question, emit)
 			}
-			return s.finish(sources, emit)
+			return s.finish(sources, question, emit)
 		}
 
 		// The round ended in a tool call, so whatever text it produced was
@@ -944,18 +957,19 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 				return textErr
 			}
 			if g.blocked && g.released.Len() == 0 {
-				return s.finish(nil, emit)
+				return s.finish(nil, question, emit)
 			}
-			return s.finish(sources, emit)
+			return s.finish(sources, question, emit)
 		}
 	}
 	// Unreachable: the loop above always returns by round == MaxToolCalls.
-	return s.finish(sources, emit)
+	return s.finish(sources, question, emit)
 }
 
 // finish emits the sources event (only when there is at least one source)
 // followed by done, and returns nil -- the loop's only successful exit.
-func (s *Service) finish(sources []Source, emit func(event string, data any) error) error {
+func (s *Service) finish(sources []Source, question string, emit func(event string, data any) error) error {
+	sources = flowsFirst(withoutErrorSources(sources, question), question)
 	if len(sources) > 0 {
 		if err := emit("sources", sources); err != nil {
 			return err
@@ -1167,4 +1181,47 @@ func lookupQuery(turns []Turn) string {
 		return prev + " " + last
 	}
 	return last
+}
+
+// asksAboutAnError spots a question that is about a failure: the word error,
+// an ABDM code, a status code or a rejection.
+var asksAboutAnErrorRe = regexp.MustCompile(`(?i)\b(?:errors?|fail(?:s|ed|ure|ing)?|reject(?:s|ed|ion)?|exception|abdm-\d{4}|[45]\d\d)\b`)
+
+// withoutErrorSources leaves error atoms out of the citations unless the
+// question is about an error. Every error atom of a gateway links to the
+// one error codes page, so for a question about linking or consent it is a
+// chip that opens a page with nothing to do with the answer.
+func withoutErrorSources(sources []Source, question string) []Source {
+	if asksAboutAnErrorRe.MatchString(question) {
+		return sources
+	}
+	kept := make([]Source, 0, len(sources))
+	for _, src := range sources {
+		if src.kind != "error" {
+			kept = append(kept, src)
+		}
+	}
+	return kept
+}
+
+// flowsFirst puts a milestone's flow atoms ahead of the other citations when
+// the question asks for that milestone's flow. The flow is what the reader
+// asked to walk through, and its chip opens the milestone page; the concepts
+// and callbacks around it follow in the order they were found.
+func flowsFirst(sources []Source, question string) []Source {
+	if len(index.FlowMilestones(question)) == 0 {
+		return sources
+	}
+	out := make([]Source, 0, len(sources))
+	for _, src := range sources {
+		if src.kind == "flow" {
+			out = append(out, src)
+		}
+	}
+	for _, src := range sources {
+		if src.kind != "flow" {
+			out = append(out, src)
+		}
+	}
+	return out
 }

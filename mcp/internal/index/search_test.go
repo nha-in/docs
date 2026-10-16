@@ -419,3 +419,65 @@ func TestDefinitionQuestionsPreferTheGlossary(t *testing.T) {
 		t.Error("a full sentence about an error is not definition shaped")
 	}
 }
+
+func TestFlowMilestones(t *testing.T) {
+	cases := map[string][]string{
+		"What is the step by step flow for m1 or m2": {"M1", "M2"},
+		"walk me through the P2 journey":             {"P2"},
+		"what is the flow for M3 and m3":             {"M3"},
+		"what does M2 mean":                          nil,
+		"how do I link a care context":               nil,
+	}
+	for q, want := range cases {
+		if got := FlowMilestones(q); strings.Join(got, ",") != strings.Join(want, ",") {
+			t.Errorf("%q: milestones %v, want %v", q, got, want)
+		}
+	}
+}
+
+func TestFlowQuestionLeadsWithTheMilestoneFlows(t *testing.T) {
+	flow := func(id, ms string) catalogue.Atom {
+		return catalogue.Atom{ID: id, Type: "flow", Gateway: "hiecm", Milestone: ms, Title: id,
+			Summary: "A flow.", Body: "## In plain words\n\nA flow.", Related: map[string][]string{}}
+	}
+	atoms := append(fixtureAtoms(),
+		flow("hiecm.flow.m1-find-abha", "M1"), flow("hiecm.flow.m2-flow-under-test", "M2"),
+		catalogue.Atom{ID: "hiecm.decision.spec-per-module", Type: "decision", Gateway: "hiecm", Milestone: "n/a",
+			Title: "One file per module", Summary: "Each step by step flow of m1 or m2 lives in a spec.",
+			Body: "## In plain words\n\nstep by step flow m1 m2", Related: map[string][]string{}},
+	)
+	dbPath := filepath.Join(t.TempDir(), "catalogue.db")
+	if err := Build(dbPath, atoms, nil, fixtureOps(), fixtureSpecErrors(), nil, nil, nil, Meta{CatalogueVersion: "v", BuiltAt: "t"}); err != nil {
+		t.Fatal(err)
+	}
+	r, err := Open(dbPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer r.Close()
+	hits, err := r.SearchIn(context.Background(), "step by step flow for m1 or m2", "", "", "hiecm", 5, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var got []string
+	for _, h := range hits {
+		got = append(got, h.ID)
+	}
+	want := map[string]bool{"hiecm.flow.m1-find-abha": false, "hiecm.flow.m2-flow-under-test": false}
+	for _, id := range got[:min(3, len(got))] {
+		if _, ok := want[id]; ok {
+			want[id] = true
+		}
+	}
+	for id, seen := range want {
+		if !seen {
+			t.Errorf("%s not in the top three: %v", id, got)
+		}
+	}
+	other, _ := r.SearchIn(context.Background(), "step by step flow for m1 or m2", "", "", "nhcx", 5, nil)
+	for _, h := range other {
+		if h.Type == "flow" && h.Milestone != "n/a" && strings.HasPrefix(h.ID, "hiecm.") {
+			t.Errorf("an NHCX-scoped search returned %s", h.ID)
+		}
+	}
+}

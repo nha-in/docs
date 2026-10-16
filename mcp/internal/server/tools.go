@@ -688,7 +688,7 @@ func ChatHooks(tools *Tools) (
 		var srcs []chat.Source
 		var facts guard.PackFacts
 		for _, p := range pack.Passages {
-			srcs = append(srcs, chat.Source{ID: p.ID, Title: p.Title, URL: p.DocURL})
+			srcs = append(srcs, chat.NewSource(p.ID, p.Title, p.DocURL, p.Type))
 			if p.Type == "flow" {
 				facts.FlowTitles = append(facts.FlowTitles, p.Title)
 			}

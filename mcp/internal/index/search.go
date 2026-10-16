@@ -243,6 +243,13 @@ func (r *Reader) searchAtoms(ctx context.Context, query string, f Filter,
 		}
 		ftsHits = fuse(limit, ftsHits, glossary)
 	}
+	// A question asking for the flow of a named milestone adds that
+	// milestone's flow atoms to the fusion, so the walkthrough is not
+	// outranked by the broad concepts and decisions that merely mention it.
+	flows := r.milestoneFlows(query, f, limit)
+	if len(flows) > 0 {
+		ftsHits = fuse(limit, ftsHits, flows)
+	}
 	useVectors := emb != nil && r.EmbeddingsEnabled()
 	if emb != nil && r.EmbeddingsEnabled() && emb.Model() != r.EmbeddingModel() {
 		return nil, fmt.Errorf("embedding model mismatch: index built with %q, server configured with %q",
@@ -272,7 +279,70 @@ func (r *Reader) searchAtoms(ctx context.Context, query string, f Filter,
 		}
 		return ftsHits, nil
 	}
-	return fuse(limit, ftsHits, vecHits, glossary), nil
+	return fuse(limit, ftsHits, vecHits, glossary, flows), nil
+}
+
+var (
+	milestoneRe = regexp.MustCompile(`(?i)\b([mp][1-4])\b`)
+	flowAskRe   = regexp.MustCompile(`(?i)\b(flow|flows|step[- ]by[- ]step|end[- ]to[- ]end|walk-?through|journey|sequence)\b|how (?:does|do|to)\b.*\b(?:work|integrate)\b`)
+)
+
+// FlowMilestones are the milestones a flow-shaped question names, upper
+// cased and in the order asked: "step by step flow for m1 or m2" is M1, M2.
+// A question that names a milestone without asking for a flow gets none.
+func FlowMilestones(query string) []string {
+	if !flowAskRe.MatchString(query) {
+		return nil
+	}
+	var out []string
+	seen := map[string]bool{}
+	for _, m := range milestoneRe.FindAllString(query, -1) {
+		m = strings.ToUpper(m)
+		if !seen[m] {
+			seen[m] = true
+			out = append(out, m)
+		}
+	}
+	return out
+}
+
+// milestoneFlows is the flow atoms of the milestones a flow-shaped question
+// names, as one ranked list for the fusion. Milestones belong to the HIE-CM
+// gateway, so a question scoped to another gateway gets none, and neither
+// does a search already narrowed by type or milestone.
+func (r *Reader) milestoneFlows(query string, f Filter, limit int) []SearchHit {
+	if f.Type != "" || f.Milestone != "" || (f.Gateway != "" && f.Gateway != "hiecm") {
+		return nil
+	}
+	// One list per milestone, taken in turn: M1 has seven flows, and a
+	// question about M1 or M2 must not be filled with M1's alone.
+	var lists [][]SearchHit
+	for _, m := range FlowMilestones(query) {
+		refs, err := r.ListAtoms("flow", m)
+		if err != nil {
+			slog.Warn("milestone flows unavailable", "milestone", m, "error", err)
+			continue
+		}
+		var list []SearchHit
+		for _, a := range refs {
+			list = append(list, SearchHit{Kind: "atom", ID: a.ID, Type: a.Type, Milestone: a.Milestone,
+				Title: a.Title, DocURL: a.DocURL, DocAnchor: a.DocAnchor})
+		}
+		lists = append(lists, list)
+	}
+	var out []SearchHit
+	for i := 0; ; i++ {
+		took := false
+		for _, list := range lists {
+			if i < len(list) {
+				out = append(out, list[i])
+				took = true
+			}
+		}
+		if !took {
+			return out
+		}
+	}
 }
 
 // definitionRe is a question asking what something is.

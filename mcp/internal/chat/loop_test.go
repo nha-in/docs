@@ -1304,3 +1304,14 @@ func TestSourcesComeFromTheNewToolNames(t *testing.T) {
 		t.Fatalf("get must cite atoms and only atoms: %+v", got)
 	}
 }
+
+func TestFlowsFirstOnlyForAFlowQuestion(t *testing.T) {
+	src := []Source{{ID: "a", kind: "concept"}, {ID: "b", kind: "flow"}, {ID: "c", kind: "callback"}}
+	got := flowsFirst(src, "what is the step by step flow for m1 or m2")
+	if got[0].ID != "b" || got[1].ID != "a" || got[2].ID != "c" {
+		t.Errorf("flow question order = %v", got)
+	}
+	if got := flowsFirst(src, "how do I link a care context"); got[0].ID != "a" {
+		t.Errorf("a non-flow question was reordered: %v", got)
+	}
+}
