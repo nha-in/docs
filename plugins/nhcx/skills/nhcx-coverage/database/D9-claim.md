@@ -53,6 +53,7 @@ Other writes:
 | created_at | TEXT | NOT NULL | ISO timestamp the case was opened |
 | status | TEXT | NOT NULL, default `'draft'` | eligibility status: `draft`, `checking`, `eligible`, `not-eligible`, `error` |
 | search_id_type | TEXT | null | how the beneficiary was searched: `MemberId`, `MobileNo`, `AbhaNumber` |
+| benefit_items_json | JSON | null | every `insurance[].item` of the last eligibility reply with its benefits, cover, term and authorisation ([F3. CoverageEligibilityResponse](../fhir/F3-coverage-eligibility-response.md) "Itemised benefits"), written by C2; read by S3 and S8 |
 | search_id_value | TEXT | null | the value searched |
 | member_id | TEXT | NOT NULL | beneficiary / member ID from the selected policy; `pmjayId` [PAYER](../references/PAYERS.md#markers) and `subscriberId`. Replaced by the chosen member's id when the desk picks another member of the same card |
 | beneficiary_member_id | TEXT | null | the member id of the person the desk (or an unambiguous reply) chose as the patient; null while a reply with several people awaits the choice. Added by migration |
