@@ -8,6 +8,31 @@ Find out what the target HMIS already has for every spec item: screens, APIs, ca
 - The NHCX knowledge source ([KNOWLEDGE.md](../references/KNOWLEDGE.md)).
 - The spec indexes: [screens](../screens/INDEX.md), [apis](../apis/INDEX.md), [callbacks](../callbacks/INDEX.md), [fhir](../fhir/INDEX.md), [database](../database/INDEX.md), [gateway](../gateway/INDEX.md).
 
+### L1.A Ask the integrator first
+Some behaviour is the hospital's to decide, not the protocol's, and the skill never guesses it. **Before anything else in L1, before the knowledge source is picked or a file is read**, ask the user every question below in one numbered message and wait for the answers, record every answer in `nhcx-plan/plan.json` under `decisions` with the key given, and build the screens to the answer. A question whose answer the user leaves open is recorded as the default in brackets and flagged in the progress log.
+
+| Key | Question | Default | Where it lands |
+|---|---|---|---|
+| `claim.registrationRequired` | Must a claim start from a patient on the register, or may a walk-in start one on identifiers alone? | required | S1. Search Policy (in nhcx-coverage), [S19. NHCX Settings](../screens/S19-nhcx-settings.md), [D1. organization](../database/D1-organization.md) |
+| `claim.captureMemberId` | Is the member id asked for at the start, beside the ABHA and mobile numbers? | yes | S1. Search Policy (in nhcx-coverage), [S19. NHCX Settings](../screens/S19-nhcx-settings.md) |
+| `plan.trigger` | When the case's payer has no package master yet: is the InsurancePlan fetch sent automatically on opening the case, or by the desk ("Fetch insurance plan")? | manual | [S7. Insurance Plan](../screens/S7-insurance-plan.md) |
+| `plan.refresh` | Is a stored master refreshed automatically on a schedule, or only by the desk ("Fetch again")? If automatically, how often? | manual | [S7. Insurance Plan](../screens/S7-insurance-plan.md) |
+| `plan.scope` | Is the master fetched once per payer and policy and reused across cases, or fetched for every case? | once, reused | [S7. Insurance Plan](../screens/S7-insurance-plan.md), [D10. claim_plan](../database/D10-claim-plan.md) |
+| `plan.fields` | Which fields of the payer's InsurancePlan does the hospital need on screen? The reader must carry every field the knowledge package's InsurancePlan example holds ([F5. InsurancePlan](../fhir/F5-insuranceplan.md)); L6 checks the reader against that example. | all of [F5. InsurancePlan](../fhir/F5-insuranceplan.md) | [F5. InsurancePlan](../fhir/F5-insuranceplan.md), [S7. Insurance Plan](../screens/S7-insurance-plan.md) |
+| `preauth.benefitsFirst` | Is the benefits check (A2 `benefits`) offered on the quoted set before the pre-authorisation? It never blocks the send. | offered | [S8. Line Items](../screens/S8-line-items.md), S3. Policy Discovery (in nhcx-coverage) |
+| `preauth.authRequirementsFirst` | Is the authorisation-requirements ruling (S8.2) offered before the pre-authorisation? It never blocks the send. | offered | [S8. Line Items](../screens/S8-line-items.md) |
+| `preauth.admission` | May a pre-authorisation be sent before the patient is admitted (an intimation on a planned admission), or only against a current stay? | before admission allowed: the admission is never a condition of the pre-authorisation | [S4. Claim Creation Form](../screens/S4-claim-creation-form.md), [S9. Pre-authorisation](../screens/S9-preauthorisation.md) |
+| `preauth.autoCancelHours` | When a pre-authorisation is approved and the patient is not admitted within how many hours is it withdrawn automatically (A6 cancel)? 0 means never. | 0 (never) | [S9. Pre-authorisation](../screens/S9-preauthorisation.md), [A6. Task Submit (cancel, status, reprocess, release)](../apis/A6-task-submit.md) |
+| `preauth.queryMode` | Confirmed from the payer adapter, not asked: a line-item query is answered by resubmitting the pre-authorisation (PMJAY, `resubmit`); an order-level query comes as a CommunicationRequest and is answered with a Communication (S10. Communication (in nhcx-communication)). | from [PAYERS.md](../references/PAYERS.md) | [S9. Pre-authorisation](../screens/S9-preauthorisation.md), S10. Communication (in nhcx-communication) |
+| `documents.additional` | May the desk attach documents beyond those the payer named (an "Additional document" row with a free code)? | yes | [S9. Pre-authorisation](../screens/S9-preauthorisation.md), S11. Claim Submission (in nhcx-claim), [D28. claim_document](../database/D28-claim-document.md) |
+| `documents.aadhaar` | Is the beneficiary's Aadhaar carried as supporting information (identifier typed `ADN`) on the pre-authorisation and the claim, where the payer wants it? | where the payer wants it | [S9. Pre-authorisation](../screens/S9-preauthorisation.md), [F8. Claim](../fhir/F8-claim.md), [F15. Patient](../fhir/F15-patient.md) |
+| `verification.biometric` | Is the beneficiary's biometric authentication ([S18. Beneficiary Verification](../screens/S18-beneficiary-verification.md)) required at this hospital for every payer, only where the payer requires it, or not used? | where the payer requires it | [S18. Beneficiary Verification](../screens/S18-beneficiary-verification.md), [PAYERS.md](../references/PAYERS.md) |
+| `claim.admissionRequired` | Is a claim refused unless the case is on an admission in the HMIS? | yes: the claim always needs the stay it bills | S11. Claim Submission (in nhcx-claim) |
+| `claim.dischargeIntimation` | Does the hospital send a discharge intimation to the payer before the claim? If yes, the Claim tab gains a "Discharge intimation" step (an A6 Task on the pre-authorisation thread, or the payer's own form) and the discharge is recorded there. | no | S11. Claim Submission (in nhcx-claim), [S6. Claim Detail](../screens/S6-claim-detail.md) |
+| `payer.letters` | Which payer documents does the desk need to see on the case: the approval letter (code `PAU`) and any document the payer attaches to its ClaimResponse or CommunicationRequest? | all | [S9. Pre-authorisation](../screens/S9-preauthorisation.md), S10. Communication (in nhcx-communication), [C5. Pre-auth Reply](../callbacks/C5-preauth-on-submit.md) |
+
+The answers shape every later step (L1's matching of the claim screens, L2's mapping, L3's plan); a later change of an answer is a `corrected` entry in the progress log and reopens the spec it lands on.
+
 ### L1.0 Pick the knowledge source
 Call the nhcx-docs MCP `catalogue_info`. If it answers, the source is the MCP; record its catalogue version. If not, download the latest `nhcx-package` release zip into `nhcx-plan/knowledge/`, extract it and check it against `MANIFEST`, as [KNOWLEDGE.md](../references/KNOWLEDGE.md) describes. Write `nhcx-plan/knowledge.json`. Every later step reads NHCX facts from this source.
 
@@ -54,31 +79,6 @@ Look for NHCX protocol code: JWE encryption, `x-hcx-*` headers, ABDM session tok
 
 ### L1.9 Write discovery.json
 One entry per spec id. A spec with no match is still listed, as `missing`.
-
-### L1.10 Ask the integration decisions
-Some behaviour is the hospital's to decide, not the protocol's, and the skill never guesses it. Before L2, ask the user each question below (one message, numbered), record every answer in `nhcx-plan/plan.json` under `decisions` with the key given, and build the screens to the answer. A question whose answer the user leaves open is recorded as the default in brackets and flagged in the progress log.
-
-| Key | Question | Default | Where it lands |
-|---|---|---|---|
-| `claim.registrationRequired` | Must a claim start from a patient on the register, or may a walk-in start one on identifiers alone? | required | S1. Search Policy (in nhcx-coverage), [S19. NHCX Settings](../screens/S19-nhcx-settings.md), [D1. organization](../database/D1-organization.md) |
-| `claim.captureMemberId` | Is the member id asked for at the start, beside the ABHA and mobile numbers? | yes | S1. Search Policy (in nhcx-coverage), [S19. NHCX Settings](../screens/S19-nhcx-settings.md) |
-| `plan.trigger` | When the case's payer has no package master yet: is the InsurancePlan fetch sent automatically on opening the case, or by the desk ("Fetch insurance plan")? | manual | [S7. Insurance Plan](../screens/S7-insurance-plan.md) |
-| `plan.refresh` | Is a stored master refreshed automatically on a schedule, or only by the desk ("Fetch again")? If automatically, how often? | manual | [S7. Insurance Plan](../screens/S7-insurance-plan.md) |
-| `plan.scope` | Is the master fetched once per payer and policy and reused across cases, or fetched for every case? | once, reused | [S7. Insurance Plan](../screens/S7-insurance-plan.md), [D10. claim_plan](../database/D10-claim-plan.md) |
-| `plan.fields` | Which fields of the payer's InsurancePlan does the hospital need on screen? The reader must carry every field the knowledge package's InsurancePlan example holds ([F5. InsurancePlan](../fhir/F5-insuranceplan.md)); L6 checks the reader against that example. | all of [F5. InsurancePlan](../fhir/F5-insuranceplan.md) | [F5. InsurancePlan](../fhir/F5-insuranceplan.md), [S7. Insurance Plan](../screens/S7-insurance-plan.md) |
-| `preauth.benefitsFirst` | Is the benefits check (A2 `benefits`) offered on the quoted set before the pre-authorisation? It never blocks the send. | offered | [S8. Line Items](../screens/S8-line-items.md), S3. Policy Discovery (in nhcx-coverage) |
-| `preauth.authRequirementsFirst` | Is the authorisation-requirements ruling (S8.2) offered before the pre-authorisation? It never blocks the send. | offered | [S8. Line Items](../screens/S8-line-items.md) |
-| `preauth.admission` | May a pre-authorisation be sent before the patient is admitted (an intimation on a planned admission), or only against a current stay? | before admission allowed: the admission is never a condition of the pre-authorisation | [S4. Claim Creation Form](../screens/S4-claim-creation-form.md), [S9. Pre-authorisation](../screens/S9-preauthorisation.md) |
-| `preauth.autoCancelHours` | When a pre-authorisation is approved and the patient is not admitted within how many hours is it withdrawn automatically (A6 cancel)? 0 means never. | 0 (never) | [S9. Pre-authorisation](../screens/S9-preauthorisation.md), [A6. Task Submit (cancel, status, reprocess, release)](../apis/A6-task-submit.md) |
-| `preauth.queryMode` | Confirmed from the payer adapter, not asked: a line-item query is answered by resubmitting the pre-authorisation (PMJAY, `resubmit`); an order-level query comes as a CommunicationRequest and is answered with a Communication (S10. Communication (in nhcx-communication)). | from [PAYERS.md](../references/PAYERS.md) | [S9. Pre-authorisation](../screens/S9-preauthorisation.md), S10. Communication (in nhcx-communication) |
-| `documents.additional` | May the desk attach documents beyond those the payer named (an "Additional document" row with a free code)? | yes | [S9. Pre-authorisation](../screens/S9-preauthorisation.md), S11. Claim Submission (in nhcx-claim), [D28. claim_document](../database/D28-claim-document.md) |
-| `documents.aadhaar` | Is the beneficiary's Aadhaar carried as supporting information (identifier typed `ADN`) on the pre-authorisation and the claim, where the payer wants it? | where the payer wants it | [S9. Pre-authorisation](../screens/S9-preauthorisation.md), [F8. Claim](../fhir/F8-claim.md), [F15. Patient](../fhir/F15-patient.md) |
-| `verification.biometric` | Is the beneficiary's biometric authentication ([S18. Beneficiary Verification](../screens/S18-beneficiary-verification.md)) required at this hospital for every payer, only where the payer requires it, or not used? | where the payer requires it | [S18. Beneficiary Verification](../screens/S18-beneficiary-verification.md), [PAYERS.md](../references/PAYERS.md) |
-| `claim.admissionRequired` | Is a claim refused unless the case is on an admission in the HMIS? | yes: the claim always needs the stay it bills | S11. Claim Submission (in nhcx-claim) |
-| `claim.dischargeIntimation` | Does the hospital send a discharge intimation to the payer before the claim? If yes, the Claim tab gains a "Discharge intimation" step (an A6 Task on the pre-authorisation thread, or the payer's own form) and the discharge is recorded there. | no | S11. Claim Submission (in nhcx-claim), [S6. Claim Detail](../screens/S6-claim-detail.md) |
-| `payer.letters` | Which payer documents does the desk need to see on the case: the approval letter (code `PAU`) and any document the payer attaches to its ClaimResponse or CommunicationRequest? | all | [S9. Pre-authorisation](../screens/S9-preauthorisation.md), S10. Communication (in nhcx-communication), [C5. Pre-auth Reply](../callbacks/C5-preauth-on-submit.md) |
-
-The answers shape L3's integration plan; a later change of an answer is a `corrected` entry in the progress log and reopens the spec it lands on.
 
 #### L1O. OUTPUT
 `nhcx-plan/discovery.json`:
@@ -132,6 +132,6 @@ Record in `nhcx-plan/progress.json` and regenerate `nhcx-plan/progress.md`, as [
 - Every S, A, C, F, D and G id from the indexes appears once in `items`, or its whole kind appears as one `missing` entry (`"spec": "A*"`) when L1.1 found no NHCX code.
 - Every `found` or `partial` item has at least one location, and each location opens to the lines named.
 - `technology` has no empty field the later steps need (framework, database, migrations, tests).
-- `nhcx-plan/plan.json` holds a `decisions` entry for every key of L1.10, each either the user's answer or the default marked as such.
+- `nhcx-plan/plan.json` holds a `decisions` entry for every key of L1.A, each either the user's answer or the default marked as such.
 - `abdm` says whether an ABDM module exists and, when it does, names its facility, ABHA, screen and token locations; `billing` names the bill, receipt and adjustment models or says they do not exist.
 - Every sub-step of L1 has its `started` and closing entries in progress.json, and every file changed is named in one.

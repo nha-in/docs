@@ -209,7 +209,7 @@ post_with_token(url, body, label):               // shared with G4 and G10 (labe
 ```
 
 #### G7U. USED BY
-- Screens: [S5. Claim Master](../screens/S5-claim-master.md), [S12. Payments](../screens/S12-payments.md)
+- Screens: [S12. Payments](../screens/S12-payments.md)
 - APIs: [A8. Payment Notice Acknowledgement](../apis/A8-paymentnotice-on-request.md), [A10. Transaction Related](../apis/A10-txn-related.md), [A11. Transaction Dispatch](../apis/A11-txn-dispatch.md)
 - Callbacks: [C10. Payment Notice](../callbacks/C10-paymentnotice-request.md)
 - FHIR: [F1. Bundle](../fhir/F1-bundle.md), [F14. Payment acknowledgement](../fhir/F14-payment-acknowledgement.md)

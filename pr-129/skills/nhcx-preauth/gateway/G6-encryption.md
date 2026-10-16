@@ -133,7 +133,6 @@ parse_public_key(text):
 ```
 
 #### G6U. USED BY
-- Screens: [S5. Claim Master](../screens/S5-claim-master.md)
 - APIs: [A12. Transaction FHIR](../apis/A12-txn-fhir.md)
 - Callbacks: [C4. Insurance Plan Reply](../callbacks/C4-insuranceplan-on-request.md)
 - FHIR: [F1. Bundle](../fhir/F1-bundle.md), [F5. InsurancePlan](../fhir/F5-insuranceplan.md)

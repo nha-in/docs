@@ -209,7 +209,6 @@ post_with_token(url, body, label):               // shared with G4 and G10 (labe
 ```
 
 #### G7U. USED BY
-- Screens: [S5. Claim Master](../screens/S5-claim-master.md)
 - APIs: [A7. Communication Reply](../apis/A7-communication-on-request.md), [A10. Transaction Related](../apis/A10-txn-related.md), [A11. Transaction Dispatch](../apis/A11-txn-dispatch.md)
 - Callbacks: [C9. Payer Communication](../callbacks/C9-communication-request.md)
 - FHIR: [F1. Bundle](../fhir/F1-bundle.md), [F12. Communication](../fhir/F12-communication.md)
