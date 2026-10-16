@@ -39,6 +39,8 @@ NHCX messages are encrypted to the recipient's registered encryption certificate
 
 **`fetch_participant`** accepts either answer shape: the record itself, or `{"participants": [...]}`, in which case the entry whose code matches is used, else the first entry.
 
+**`fetch_participants(role, entity_type, from_date, to_date)`** (nha:A1, `POST <urls.participant>/fetch/participants/list`, body `{"role": "PROVIDER" | "PAYER" | "TPA", "fromdate": "dd/MM/yyyy", "todate": "dd/MM/yyyy", "entitytype": "Gov" | "Pvt"}`) is the participant list behind the participant master ([D33. participant](../database/D33-participant.md)). The registry has no name search: it lists one role at a time for a registration window, dates `dd/MM/yyyy` only, and `entitytype` `Gov` narrows to government and `Pvt` to private; **sent without an entity type it answers the private list only** [SANDBOX](../references/PAYERS.md#markers), so the master is filled with two calls per role. The window defaults to the last ten years [REF](../references/PAYERS.md#markers). The answer arrives as `{"participantdetails": [...]}`, `{"participants": [...]}` or a bare array, each row `participantcode`, `participantname`, `address`, `state`; status and roles still come per code from `fetch_participant`. In the sandbox the provider list holds over 10,000 government and 2,500 private hospitals [SANDBOX](../references/PAYERS.md#markers). Errors: `PARTICIPANT_ROLE` for a role outside the three, `PARTICIPANT_HTTP_<status>` (`participant registry refused the <role> list`), `PARTICIPANT_BAD_JSON`.
+
 **`post_registry`** exists for registry calls the gateway does not model (the ABHA link calls and the policy search, G10). It adds the token handling, the refresh on 401 and the timeout, and interprets nothing: the caller gets the status and body as the registry sent them. Registry error bodies look like `{"error": {"code": "NHCX-1016", "message": "..."}}` or carry a top-level `message`.
 
 #### G4Q. INPUT
@@ -141,4 +143,5 @@ client.post_registry(path, body):
 ```
 
 #### G4U. USED BY
+- Database: [D33. participant](../database/D33-participant.md)
 - Gateway: [G1. Embedding](G1-embedding.md), [G2. Configuration and Participants](G2-configuration.md), [G3. Session Token](G3-session-token.md), [G6. Encryption](G6-encryption.md), [G7. Send](G7-send.md), [G11. Startup Checks and Health](G11-startup-checks.md)

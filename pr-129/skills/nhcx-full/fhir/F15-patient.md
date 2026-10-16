@@ -44,7 +44,7 @@ Not sent: `address`, `photo`, `given`/`family` names, MRN, ABHA address, `active
 |---|---|
 | `meta.profile[0]` | `.../StructureDefinition/Patient` |
 | `identifier[0]` | type `MB` (as above), value the member id entered on the check form (A2) |
-| `identifier[]` typed `ABHA` | the ABHA number searched on, only on a discovery that also gives a member id (A2) |
+| `identifier[]` typed `ABHA` | the ABHA number given as additional information on a discovery (A2); on a discovery by policy number, with no member id, it is the only member-side identifier |
 | `identifier[]` typed `ADN` "Adhaar number" under `ndhm-identifier-type-code` | the Aadhaar number given as additional information on a discovery (A2), 12 digits; absent otherwise |
 | `telecom[0]` | `{system: "phone", value: <mobile>}`, the mobile given as additional information on a discovery; absent otherwise |
 
@@ -63,7 +63,7 @@ Not sent: `address`, `photo`, `given`/`family` names, MRN, ABHA address, `active
 Empty values are not written. Patients in ClaimResponse, Task, communication and payment bundles are not read.
 
 #### F15U. USED BY
-- Screens: [S17. Beneficiary Discovery](../screens/S17-beneficiary-discovery.md)
+- Screens: [S9. Pre-authorisation](../screens/S9-preauthorisation.md), [S17. Beneficiary Discovery](../screens/S17-beneficiary-discovery.md)
 - APIs: [A2. Coverage Eligibility Check](../apis/A2-coverage-eligibility-check.md), [A4. Pre-auth Submit](../apis/A4-preauth-submit.md), [A5. Claim Submit](../apis/A5-claim-submit.md), [A7. Communication Reply](../apis/A7-communication-on-request.md)
 - Callbacks: [C2. Coverage Eligibility Verdict](../callbacks/C2-coverage-eligibility-on-check.md), [C3. Authorisation Requirements Ruling](../callbacks/C3-auth-requirements-on-check.md), [C5. Pre-auth Reply](../callbacks/C5-preauth-on-submit.md), [C6. Claim Reply](../callbacks/C6-claim-on-submit.md), [C7. Cancel Reply](../callbacks/C7-cancel-on-submit.md), [C8. Enquiry Reply](../callbacks/C8-enquiry-on-submit.md), [C9. Payer Communication](../callbacks/C9-communication-request.md)
 - FHIR: [F2. CoverageEligibilityRequest](F2-coverage-eligibility-request.md), [F7. QuestionnaireResponse](F7-questionnaireresponse.md), [F8. Claim](F8-claim.md), [F12. Communication](F12-communication.md), [F18. Coverage](F18-coverage.md), [F19. Other bundle resources](F19-other-resources.md)

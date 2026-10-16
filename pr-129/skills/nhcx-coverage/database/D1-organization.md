@@ -11,14 +11,14 @@ The facility row is the provider on every NHCX message. Its `participant_code` i
 Lifecycle:
 - Created once, by seeding, when the table is empty. The seeded row has `is_default = 1`, `type_code = 'prov'` and no `participant_code`.
 - The application reads "the facility" as the first row ordered by `is_default DESC, id`. No screen adds a second row.
-- Updated from the NHCX settings screen ([S19. NHCX Settings](../screens/S19-nhcx-settings.md)): every column except `id` and `is_default` is overwritten on save, and `identifier_value` only when no ABDM module supplies it. `name` and `identifier_value` are required. `identifier_type_code` defaults to `NHRR`, `identifier_system` to `https://facility.abdm.gov.in`, `type_code` to `prov`, `country` to `India`.
+- Updated from the NHCX settings screen ([S19. NHCX Settings](../screens/S19-nhcx-settings.md)): every column except `id` and `is_default` is overwritten on save, and `identifier_value` only when no ABDM module supplies it. The two claim-start switches (`registration_required`, `capture_member_id`) are saved from the same screen and read by the policy search ([S1. Search Policy](../screens/S1-search-policy.md)) through the options the claim screens load. `name` and `identifier_value` are required. `identifier_type_code` defaults to `NHRR`, `identifier_system` to `https://facility.abdm.gov.in`, `type_code` to `prov`, `country` to `India`.
 - Never deleted. It is a master table and survives the "clear transactional data" reset.
 
 Guards that read it:
 - The eligibility check refuses to send while `identifier_value` is blank ("Set the facility's HFR ID under Settings before raising claims.") or `participant_code` is blank ("Set the facility's NHCX participant code under Settings before raising claims."). The InsurancePlan request refuses the same way, ending "before fetching a package master." instead.
 - The session token call (A16, served by [G3. Session Token](../gateway/G3-session-token.md)) and the payer adjudication calls (A15) use `participant_code` to name the participant.
 
-Payers are not rows in this table. A claim carries its payer on [D9. claim](D9-claim.md) (`payer_id`, `payer_name`), and the payer's participant code is mapped to a payer adapter by the `payer_adapter` kind of [D8. terminology](D8-terminology.md).
+Payers are not rows in this table. A claim carries its payer on [D9. claim](D9-claim.md) (`payer_id`, `payer_name`), the payer's participant code is mapped to a payer adapter by the `payer_adapter` kind of [D8. terminology](D8-terminology.md), and every participant on the exchange is listed in the participant master [D32. participant](D32-participant.md).
 
 #### D1C. COLUMNS
 | column | type | null/default | meaning (and allowed values) |
@@ -31,6 +31,8 @@ Payers are not rows in this table. A claim carries its payer on [D9. claim](D9-c
 | identifier_system | TEXT | NOT NULL | identifier namespace; default on save `https://facility.abdm.gov.in` |
 | identifier_value | TEXT | NOT NULL | the HFR / facility ID; sent as `providerId` |
 | participant_code | TEXT | null | the facility's NHCX participant code; `x-hcx-sender_code` on every send. Added by migration on older databases |
+| registration_required | INTEGER | NOT NULL, default 1 | 1: a claim starts from a patient on the register ([S1. Search Policy](../screens/S1-search-policy.md) step 1 offers the register only); 0: the desk may also start a walk-in claim on the identifiers alone |
+| capture_member_id | INTEGER | NOT NULL, default 1 | 1: the member id is offered as an identifier at the start beside the ABHA number and the mobile number; 0: the search starts from those two only |
 | type_code | TEXT | NOT NULL, default `'prov'` | HL7 organization-type: `prov`, `dept`, `team`, `ins`, `other` |
 | type_display | TEXT | NOT NULL, default `'Healthcare Provider'` | display of `type_code` |
 | phone | TEXT | null | facility phone; provider telecom on the eligibility check |
@@ -51,7 +53,7 @@ Payers are not rows in this table. A claim carries its payer on [D9. claim](D9-c
 - No unique constraints or indexes beyond the primary key.
 
 #### D1U. USED BY
-- Screens: [S19. NHCX Settings](../screens/S19-nhcx-settings.md)
+- Screens: [S1. Search Policy](../screens/S1-search-policy.md), [S19. NHCX Settings](../screens/S19-nhcx-settings.md)
 - APIs: [A12. Transaction FHIR](../apis/A12-txn-fhir.md)
 - FHIR: [F2. CoverageEligibilityRequest](../fhir/F2-coverage-eligibility-request.md), [F17. Organization](../fhir/F17-organization.md), [F19. Other bundle resources](../fhir/F19-other-resources.md)
 - Database: [D3. patient](D3-patient.md), [D10. claim_plan](D10-claim-plan.md)

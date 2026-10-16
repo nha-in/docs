@@ -70,24 +70,25 @@ Why this matters: a member id is shared across a family card, and a child's admi
 
 | Field | Control | Default | Notes |
 |---|---|---|---|
-| Purpose (required) | dropdown | the case's last purpose, else `validation` | options below |
+| Purpose | read-only text "Validation, is the policy in force?" | `validation` | once the case exists only a validation is offered here; there is no dropdown |
 | Policy code | text | the case's policy code | help text "National health plan identifier on the card" |
 | Member ID (required) | text, required | the case's member ID | |
 
-Purpose options:
+The purposes of the exchange ([A2. Coverage Eligibility Check](../apis/A2-coverage-eligibility-check.md)) and where each is sent from:
 
-| Value (sent upstream) | Label |
-|---|---|
-| `validation` | Validation, is the policy in force? |
-| `benefits` | Benefits, what does the policy cover for this package? |
-| `discovery` | Discovery, find active coverage |
+| Value (sent upstream) | Label | Sent from |
+|---|---|---|
+| `validation` | Validation, is the policy in force? | this card, at registration and on "Check again" |
+| `benefits` | Benefits, what does the policy cover for this package? | the Line items tab S8. Line Items (in nhcx-preauth), on the quoted set, before a pre-authorisation or an enhancement; optional and never a condition of the send |
+| `discovery` | Discovery, find active coverage | its own page, [S17. Beneficiary Discovery](S17-beneficiary-discovery.md), where the payer is chosen and the policy named by number or member id |
+| `auth-requirements` | the ruling on the procedure set | the Line items tab S8. Line Items (in nhcx-preauth) (S8.2); optional and never a condition of the send |
 
-`validation` is used at registration. `benefits` is used before a pre-authorisation or an enhancement. `discovery` is what an indemnity payer answers when the policy is not yet known; a discovery that carries more than one identifier is sent from its own page, [S17. Beneficiary Discovery](S17-beneficiary-discovery.md). A fourth purpose, `auth-requirements`, uses the same exchange but is not offered here: it is sent on the chosen procedure set from the Validate step before pre-authorisation (see S9).
+The card used to offer the three purposes in a dropdown; from 1.7.0 it offers validation alone, because a desk that has a case already knows the policy, and the other two purposes have a place of their own [REF](../references/PAYERS.md#markers).
 
 The button reads "Send to payer" while the case is a draft, and "Check again" after any earlier check.
 
 Validation, in this order, before anything is sent. Each failure returns to S6 with the message as a red flash:
-- "Choose whether this check is a validation, a benefits check or a discovery."
+- "Choose whether this check is a validation, a benefits check or a discovery." (the server's guard on the purpose; the screen always sends `validation`)
 - "Member ID is required for an eligibility check."
 - "Policy code is required for a validation check." or "Policy code is required for a benefits check." (discovery may go without one)
 - "Set the facility's HFR ID under Settings before raising claims."
@@ -165,8 +166,9 @@ The arrangement below is the reference implementation's [REF](../references/PAYE
 |  PRE-AUTHORISATION  CHECKED AT    CORRELATION                    |
 |------------------------------------------------------------------|
 | [Card] Coverage eligibility check                                |
-|  Purpose *            Policy code          Member ID *           |
-|  [Validation, ... v]  [PMJAY/HP/S/G]       [MD5SLS4X5]           |
+|  Purpose              Policy code          Member ID *           |
+|   Validation, is the  [PMJAY/HP/S/G]       [MD5SLS4X5]           |
+|   policy in force?                                               |
 |                       National health plan                       |
 |                       identifier on the card                     |
 |------------------------------------------------------------------|

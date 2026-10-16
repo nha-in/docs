@@ -6,7 +6,7 @@ Changes that affect what you can build against, newest first. Each entry links t
 
 1 change
 
-- [The nhcx plugin is 1.0.8](/docs/pr-129/docs/whats-new/2026-10-16#the-nhcx-plugin-is-108)
+- [The nhcx plugin is 1.0.9](/docs/pr-129/docs/whats-new/2026-10-16#the-nhcx-plugin-is-109)
 
 ## 9 October 2026
 

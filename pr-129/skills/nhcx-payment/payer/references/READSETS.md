@@ -39,7 +39,7 @@ Always read, whatever the task: [CORE.md](CORE.md) (addresses and the exchange t
 | [G1](../gateway/G1-embedding.md) | Embedding | nothing else |
 | [G2](../gateway/G2-configuration.md) | Configuration and Participants | nothing else |
 | [G3](../gateway/G3-session-token.md) | Session Token | nothing else |
-| [G4](../gateway/G4-registry.md) | Registry and Certificates | nothing else |
+| [G4](../gateway/G4-registry.md) | Registry and Certificates | [D33](../database/D33-participant.md) |
 | [G5](../gateway/G5-protocol-headers.md) | Protocol Headers | nothing else |
 | [G6](../gateway/G6-encryption.md) | Encryption | nothing else |
 | [G7](../gateway/G7-send.md) | Send | nothing else |

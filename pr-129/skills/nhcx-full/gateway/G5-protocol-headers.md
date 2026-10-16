@@ -173,4 +173,5 @@ target_url(base, path):
 #### G5U. USED BY
 - APIs: [A2. Coverage Eligibility Check](../apis/A2-coverage-eligibility-check.md), [A3. Insurance Plan Request](../apis/A3-insurance-plan-request.md), [A4. Pre-auth Submit](../apis/A4-preauth-submit.md), [A5. Claim Submit](../apis/A5-claim-submit.md), [A6. Task Submit (cancel, status, reprocess, release)](../apis/A6-task-submit.md), [A7. Communication Reply](../apis/A7-communication-on-request.md), [A8. Payment Notice Acknowledgement](../apis/A8-paymentnotice-on-request.md)
 - FHIR: [F1. Bundle](../fhir/F1-bundle.md)
+- Database: [D32. participant](../database/D32-participant.md)
 - Gateway: [G2. Configuration and Participants](G2-configuration.md), [G4. Registry and Certificates](G4-registry.md), [G6. Encryption](G6-encryption.md), [G7. Send](G7-send.md), [G8. Receive](G8-receive.md), [G9. Ledger](G9-ledger.md)

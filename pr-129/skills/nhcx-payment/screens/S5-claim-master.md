@@ -5,7 +5,9 @@ claims/list?status=<status>[&patient=<id>]
 
 `patient` narrows the list to one patient's cases; the patient master's "Claims" shortcut (S13. Patient List (in nhcx-coverage), S15. Patient Detail (in nhcx-coverage)) opens the list this way, and the card title then reads "<n> claim(s) for <patient name>".
 
-Page title: Claims. This is the landing screen of the Claims section (sidebar item "Claims").
+Page title: Claim dashboard. This is the landing screen of the Claims section.
+
+**One module, two entries.** The Claims item of the navigation opens as one module with two screens under it: **Claim dashboard** (this screen, the ledger of cases) and **Claim management** (the stepper that starts a claim: S1. Search Policy (in nhcx-coverage), S2. Select Policy (in nhcx-coverage), then the case [S6. Claim Detail](S6-claim-detail.md)). Discovery (S17. Beneficiary Discovery (in nhcx-coverage)) has no entry of its own: it is reached from "None of these" on S2. Select Policy (in nhcx-coverage) and from the Eligibility tab. "New claim" on this screen opens Claim management at its first step.
 
 #### S5D. DESCRIPTION
 The ledger of every claim case the facility has opened, newest first (by case id, descending). Each row says who the beneficiary is, which policy and payer the case runs on, the wallet balance the payer reported, where the case stands in the scheme's ladder and the result of its eligibility check. It is the entry point for a new claim (S1) and for opening an existing case (S6).
@@ -124,6 +126,6 @@ The arrangement below is the reference implementation's [REF](../references/PAYE
 - Chips are small coloured labels. Two-line cells show a main value over a muted line.
 
 #### S5A. ACTIONS
-1. New claim: go to the Search Policy screen S1.
+1. New claim: open Claim management at its first step, the Search Policy screen S1.
 2. Claim number link: open the case on the Claim Detail screen S6, which lands on its first tab, Eligibility (S3).
 3. Filter: reload this screen with `?status=<value>`, or all claims when "All claims" is chosen.

@@ -11,7 +11,7 @@ Always read, whatever the task: [CORE.md](CORE.md) (addresses and the exchange t
 | [S5](../screens/S5-claim-master.md) | Claim Master | nothing else |
 | [S6](../screens/S6-claim-detail.md) | Claim Detail | nothing else |
 | [S10](../screens/S10-communication.md) | Communication | [D9](../database/D9-claim.md), [D15](../database/D15-claim-auth-requirement.md), [D23](../database/D23-claim-query.md), [D28](../database/D28-claim-document.md) |
-| [S19](../screens/S19-nhcx-settings.md) | NHCX Settings | [D1](../database/D1-organization.md), [G2](../gateway/G2-configuration.md), [G4](../gateway/G4-registry.md), [G6](../gateway/G6-encryption.md), [G8](../gateway/G8-receive.md), [G11](../gateway/G11-startup-checks.md) |
+| [S19](../screens/S19-nhcx-settings.md) | NHCX Settings | [D1](../database/D1-organization.md), [D32](../database/D32-participant.md), [G2](../gateway/G2-configuration.md), [G4](../gateway/G4-registry.md), [G6](../gateway/G6-encryption.md), [G8](../gateway/G8-receive.md), [G11](../gateway/G11-startup-checks.md) |
 
 ## APIs
 
@@ -38,7 +38,7 @@ Always read, whatever the task: [CORE.md](CORE.md) (addresses and the exchange t
 | [G1](../gateway/G1-embedding.md) | Embedding | nothing else |
 | [G2](../gateway/G2-configuration.md) | Configuration and Participants | [G6](../gateway/G6-encryption.md), [G8](../gateway/G8-receive.md), [G11](../gateway/G11-startup-checks.md) |
 | [G3](../gateway/G3-session-token.md) | Session Token | nothing else |
-| [G4](../gateway/G4-registry.md) | Registry and Certificates | nothing else |
+| [G4](../gateway/G4-registry.md) | Registry and Certificates | [D32](../database/D32-participant.md) |
 | [G5](../gateway/G5-protocol-headers.md) | Protocol Headers | nothing else |
 | [G6](../gateway/G6-encryption.md) | Encryption | nothing else |
 | [G7](../gateway/G7-send.md) | Send | nothing else |

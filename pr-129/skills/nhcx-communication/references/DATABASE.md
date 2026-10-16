@@ -10,6 +10,7 @@ Every table behind the claim, patient and practitioner flows, in one list. Each 
 | [D2](../database/D2-practitioner.md) | practitioner | Doctor or staff member of the facility. | none | none | none | [F8](../fhir/F8-claim.md), [F16](../fhir/F16-practitioner.md) |
 | [D3](../database/D3-patient.md) | patient | Registered patient. | none | none | none | [F15](../fhir/F15-patient.md) |
 | [D8](../database/D8-terminology.md) | terminology | Concept in one code list (a picker), for example one ICD-10 diagnosis with its SNOMED mapping, one department or one payer adapter mapping. | none | none | none | [F8](../fhir/F8-claim.md) |
+| [D32](../database/D32-participant.md) | participant | The participant master: every payer, provider and TPA on the exchange, government and private, pulled from the registry's participant list over a configured window (one year by default, ten in the sandbox) and refreshed daily. Primary key `code`. No parent table. | [S19](../screens/S19-nhcx-settings.md) | none | none | none |
 
 ## Claim
 

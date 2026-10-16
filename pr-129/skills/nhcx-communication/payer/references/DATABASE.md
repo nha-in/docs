@@ -11,6 +11,12 @@ Every table behind the desk, the registry, the products and the payments, in one
 | [D3](../database/D3-document-type.md) | document_type | The NHCX document taxonomy a policy may demand and a case document is filed under. | [S3](../screens/S3-case-desk.md) | none | [C1](../callbacks/C1-callback-door.md) | [F12](../fhir/F12-communication.md) |
 | [D31](../database/D31-audit-log.md) | audit_log | Every write and every exchange receipt, by whom and when. | none | [A5](../apis/A5-query-request.md), [A13](../apis/A13-adjudicate.md) | [C1](../callbacks/C1-callback-door.md), [C9](../callbacks/C9-communication.md) | none |
 
+## Members and enrolments
+
+| # | Table | What one row is | Screens | APIs | Callbacks | FHIR |
+|---|---|---|---|---|---|---|
+| [D33](../database/D33-participant.md) | participant | The participant master: every provider, payer and TPA on the exchange, government and private, pulled from the registry's participant list over a configured window (one year by default, ten in the sandbox) and refreshed daily. Primary key `code`. No parent table. | none | none | none | none |
+
 ## Case
 
 | # | Table | What one row is | Screens | APIs | Callbacks | FHIR |

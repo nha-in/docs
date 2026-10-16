@@ -13,13 +13,15 @@ Under the HMIS's facility settings, beside its other facility screens. Only a us
 | `POST settings/nhcx/key/stage` | Stage a new private key (upload or generate), without using it yet |
 | `POST settings/nhcx/key/activate` | Make the staged key the one that signs and opens messages; the old key stays as the previous key |
 | `POST settings/nhcx/key/retire` | Drop the previous key once nothing encrypted to it can still arrive |
+| `GET settings/nhcx/participants?role=&kind=&search=` | The participant master ([D32. participant](../database/D32-participant.md)): counts by role and kind, the last refresh, the rows |
+| `POST settings/nhcx/participants/refresh` | Pull the registry's participant list now |
 
 Breadcrumb: Settings > NHCX
 
 #### S19D. DESCRIPTION
 Everything an administrator changes about the facility's NHCX participation after onboarding, without a developer: the ids, the address NHCX delivers to, and the encryption key. Before this screen existed these values were set through the API or a test harness only, so onboarding a facility and rotating a key both needed a developer at the console.
 
-The screen is four cards.
+The screen is five cards.
 
 **Card 1: Identity.** The D1 fields:
 
@@ -31,6 +33,13 @@ The screen is four cards.
 | NHCX participant code | text, required, `<digits>@hcx` (the suffix is added when missing) | D1 `participant_code`; `x-hcx-sender_code` on every send |
 | Environment | read-only: `sandbox` or `production` from [G2. Configuration and Participants](../gateway/G2-configuration.md) `env`, with the NHCX base URL | not editable here: the environment and its URLs are configuration, changed by a deploy, never by a screen |
 | Email, phone, GSTIN, address | text | D1 |
+
+Then a block **"How a claim starts"** with two switches, both on by default ([D1. organization](../database/D1-organization.md) `registration_required`, `capture_member_id`; read by S1. Search Policy (in nhcx-coverage)):
+
+| Switch | Help text |
+|---|---|
+| A claim needs a registered patient | "On, the desk picks a patient from the register before searching a policy. Off, it may also start a claim for a walk-in on the identifiers alone." |
+| Ask for the member id at the start | "On, the member id is offered as an identifier beside the ABHA number and the mobile number. Off, the search starts from the ABHA number or the mobile number only." |
 
 Save rules, each a red flash: "Enter the facility name.", "Enter the facility's HFR id." (only when editable here), "Enter the NHCX participant code.", "A participant code is digits followed by @hcx." Success: "NHCX settings saved."
 
@@ -64,7 +73,9 @@ How rotation runs, in order:
 
 Messages, each a red flash: "That is not an RSA private key.", "The certificate does not belong to that private key.", "A key is already staged; retire or replace it first.", and the Activate refusal above. Success flashes: "New key staged. Download its certificate and upload it to the registry.", "Key activated. The previous key still opens messages until it is retired.", "Previous key retired."
 
-**Card 4: Hosted participants**, only when [G2. Configuration and Participants](../gateway/G2-configuration.md) lists `participants`: one read-only row per extra hosted code (code, name, whether it shares the default key), with G11 check 4's outcome. Hosted participants are configuration; the screen shows them and does not edit them.
+**Card 4: Participants on the exchange.** The participant master ([D32. participant](../database/D32-participant.md)): "Every payer, provider and TPA registered on NHCX in the last <windowYears> years, government and private, pulled from the participant registry and refreshed every 24 hours. The payer picker reads from this list." (the window is [D32. participant](../database/D32-participant.md)'s setting: 1 in production, 10 in the sandbox) Three tiles (Payers, Providers, TPAs), each with the active count and "<n> government · <n> private" under it; the line "Last refreshed <when>." with an amber chip "Older than a day" when stale, or "Not pulled yet. The list fills on the first payer search, or on Refresh now."; then a Role dropdown and a Find box over a scrollable table (Name, Participant code, Kind as a chip, State) of up to 200 rows. Header action "Refresh now" posts to `settings/nhcx/participants/refresh`, pulls every role for both kinds ([G4. Registry and Certificates](../gateway/G4-registry.md) `fetch_participants`) and flashes "Participant list refreshed: <n> payers, <n> providers, <n> TPAs."; a registry failure flashes red and changes nothing. The schedule ([SCAFFOLDING.md](../references/SCAFFOLDING.md), section 7) does the same daily.
+
+**Card 5: Hosted participants**, only when [G2. Configuration and Participants](../gateway/G2-configuration.md) lists `participants`: one read-only row per extra hosted code (code, name, whether it shares the default key), with G11 check 4's outcome. Hosted participants are configuration; the screen shows them and does not edit them.
 
 API: [A16. Gateway Token](../apis/A16-gateway-token.md) (the token the checks mint)
 
@@ -84,6 +95,9 @@ The arrangement below is the reference implementation's [REF](../references/PAYE
 |  Identifier type        NHCX participant code *   Environment    |
 |  [NHRR v]               [<facility code>]         sandbox        |
 |  Email  Phone  GSTIN  Address                                    |
+|  How a claim starts                                              |
+|   A claim needs a registered patient                     [on ]   |
+|   Ask for the member id at the start                     [on ]   |
 |------------------------------------------------------------------|
 | [Card] Registry record                          [(shield) Re-check]
 |  REGISTERED NAME   STATUS [Active]   ROLES provider              |
@@ -91,6 +105,14 @@ The arrangement below is the reference implementation's [REF](../references/PAYE
 |  REGISTERED CERTIFICATE  SHA-256 ab:cd:...  valid to 2028-03-01  |
 |                          [matches the active key]                |
 |  Checks: token ok · record ok · certificate match · endpoint ok  |
+|------------------------------------------------------------------|
+| [Card] Participants on the exchange             [(refresh) Refresh now]
+|  PAYERS          PROVIDERS          TPAS                         |
+|  250             12,927             29                           |
+|  49 gov · 201 pvt 10,380 gov · 2,547 pvt  0 gov · 29 pvt         |
+|  Last refreshed 16 Oct 2026 13:32.                               |
+|  Role [Payers v]  Find [sha        ]                             |
+|  SHA HP          <payer code> [Government]   Himachal Pradesh    |
 |------------------------------------------------------------------|
 | [Card] Encryption key                                            |
 |  Active    SHA-256 ab:cd:...  valid to 2028-03-01  since ...     |
@@ -103,10 +125,11 @@ The arrangement below is the reference implementation's [REF](../references/PAYE
 - Users without the facility-settings permission see every field read-only and no buttons except Re-check.
 
 #### S19A. ACTIONS
-1. Save: validate and write D1, flash "NHCX settings saved.", stay on the screen.
+1. Save: validate and write D1 (the identity fields and the two claim-start switches), flash "NHCX settings saved.", stay on the screen.
 2. Re-check: run G11's checks and the endpoint probe, show the outcomes under the Registry card.
 3. Stage a new key: upload or generate, write the staged slot, reload the gateway, offer the certificate for download.
 4. Download certificate (staged or active): the certificate PEM only.
 5. Activate: after the registry check passes, rotate the slots and reload the gateway.
 6. Retire: after the confirm, empty the previous slot.
-7. Breadcrumb "Settings": back to the HMIS's settings page.
+7. Refresh now: pull the participant list for every role and kind, upsert the master, flash the counts.
+8. Breadcrumb "Settings": back to the HMIS's settings page.

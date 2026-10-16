@@ -7,7 +7,7 @@ Breadcrumb: Claims (claims/list, S5) > <case number> (S6)
 
 Sub-pages in this file:
 - S8.1 Choose Line Items: claims/view/:caseid/lines/choose
-- S8.2 Authorisation Requirements card (shown on the Validate step, S4)
+- S8.2 Authorisation Requirements card, and the Benefits check card, both under the lines on this tab (there is no Validate tab from 1.7.0; the old `validate` tab key opens this tab)
 
 #### S8D. DESCRIPTION
 What the pre-authorisation quotes: the procedures being done, the implants the payer approves for them, and the ward or ICU tier the stay runs at. Every line comes from the payer's own package master (S7), priced at the payer's rate. There is no local price list on this path.
@@ -37,7 +37,7 @@ A ward or ICU tier is not a line of its own. Its rate is inside the amount of th
 
 Under the table, right-aligned: "Total ₹<sum of all line amounts>" (tiers included). Empty state: "Nothing quoted yet. The payer prices this preauth from its own package master - choose the procedure, the implants it approves and the ward tier."
 
-Nothing is sent to NHCX from this tab. Changing the lines after the payer has ruled on them marks the ruling stale on S8.2.
+Two optional checks are sent from this tab, once lines exist, and only from here: the **benefits check** (A2 `benefits` on the quoted set: "Benefits check" card, button "Ask what the policy covers", help "Sends the <n> quoted line(s) to the payer as a benefits check: what does the policy cover for these packages? Optional, before the pre-authorisation; the pre-authorisation can go without it."; the button reads "Awaiting the payer" while the case is `checking`; under it the last benefits check's status and time with its correlation id and transaction id, each copied on a click) and the **authorisation-requirements ruling** (S8.2). Both are checks, never gates: a pre-authorisation is sent with or without them, an unfavourable answer is shown and does not block, and a payer that never answers (PMJAY's sandbox) holds nothing up [SANDBOX](../references/PAYERS.md#markers). Under the two cards a hand-over card reads "Both checks are optional and never hold the pre-authorisation. The Pre-authorisation tab is open." with "Go to the pre-authorisation". Changing the lines after the payer has ruled on them marks the ruling stale on S8.2.
 
 Data: [D16. claim_line](../database/D16-claim-line.md)
 
@@ -66,7 +66,8 @@ The arrangement below is the reference implementation's [REF](../references/PAYE
 #### S8A. ACTIONS
 1. Choose line items: open S8.1.
 2. Go to the insurance plan (before the plan is ready): open S7.
-3. Validate tab: open S4, where S8.2 sends this set for a ruling.
+3. Ask what the policy covers: send the benefits check on the quoted set (A2 `benefits`) and reload the tab with "Eligibility request queued to the payer."
+4. Go to the pre-authorisation: open the Pre-authorisation tab (S4 and S9).
 4. Breadcrumb "Claims": S5. Case number: S6.
 
 ---
@@ -185,7 +186,7 @@ Data: [D11. claim_plan_benefit](../database/D11-claim-plan-benefit.md)
 ## S8.2 Authorisation Requirements
 
 #### S8.2R. ROUTE
-Card on claims/view/:caseid/validate (S4, the Validate step). Its action posts and returns to S4.
+Card on claims/view/:caseid/lines, under the quoted lines and the Benefits check card. Its action posts and returns to this tab. (Before 1.7.0 it sat on a Validate tab of its own; that tab is gone and its key opens Line items.)
 
 #### S8.2D. DESCRIPTION
 The payer's ruling on the quoted procedure set: whether each line needs authorisation or is excluded, and which documents and forms this particular set needs. A muted line "Payer adapter: <adapter name>" closes the card in every state.
@@ -258,6 +259,6 @@ Data: [D15. claim_auth_requirement](../database/D15-claim-auth-requirement.md)
 ```
 
 #### S8.2A ACTIONS:
-1. Validate procedure set / Check again: send the check and return to S4 with a flash.
+1. Validate procedure set / Check again: send the check and return to the Line items tab with a flash.
 2. Refresh (case header, S6): reload and poll for the ruling.
 3. Go to the pre-authorisation (the card under this one on S4): open S9.

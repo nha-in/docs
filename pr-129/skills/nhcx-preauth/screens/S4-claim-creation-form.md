@@ -1,10 +1,9 @@
 # S4. Claim Creation Form Screen
 
 #### S4R. ROUTE
-claims/view/:caseid/validate (the Validate step)
 claims/view/:caseid/preauth (the admission link and the draft)
 
-This is the step of a case that turns a validated procedure set into a pre-authorisation draft. It always works on one case opened from S2, so it carries that case's id. It is not a page of its own: it is the Validate tab of the Claim Detail shell together with the "Link the admitted patient", "Linked admission" and "Pre-authorisation draft" cards that open the Pre-authorisation tab (S9).
+This is the step of a case that turns a quoted procedure set into a pre-authorisation draft. It always works on one case opened from S2, so it carries that case's id. It is not a page of its own: it is the "Link the admitted patient", "Linked admission" and "Pre-authorisation draft" cards at the top of the Pre-authorisation tab of the Claim Detail shell, above the send card (S9). The two optional checks on the procedure set (the benefits check and the authorisation-requirements ruling) sit under the lines on the Line items tab ([S8. Line Items](S8-line-items.md)); since 1.7.0 there is no Validate tab, and neither check is a condition of the draft or the send.
 
 Breadcrumb: Claims (claims/list, S5) > <case number> (S6)
 

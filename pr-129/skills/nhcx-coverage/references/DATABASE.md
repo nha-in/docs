@@ -6,7 +6,7 @@ Every table behind the claim, patient and practitioner flows, in one list. Each 
 
 | # | Table | What one row is | Screens | APIs | Callbacks | FHIR |
 |---|---|---|---|---|---|---|
-| [D1](../database/D1-organization.md) | organization | The healthcare facility this installation represents. | [S19](../screens/S19-nhcx-settings.md) | [A12](../apis/A12-txn-fhir.md) | none | [F2](../fhir/F2-coverage-eligibility-request.md), [F17](../fhir/F17-organization.md), [F19](../fhir/F19-other-resources.md) |
+| [D1](../database/D1-organization.md) | organization | The healthcare facility this installation represents. | [S1](../screens/S1-search-policy.md), [S19](../screens/S19-nhcx-settings.md) | [A12](../apis/A12-txn-fhir.md) | none | [F2](../fhir/F2-coverage-eligibility-request.md), [F17](../fhir/F17-organization.md), [F19](../fhir/F19-other-resources.md) |
 | [D2](../database/D2-practitioner.md) | practitioner | Doctor or staff member of the facility. | none | none | none | [F16](../fhir/F16-practitioner.md) |
 | [D3](../database/D3-patient.md) | patient | Registered patient. | [S13](../screens/S13-patient-list.md), [S14](../screens/S14-patient-registration-form.md), [S15](../screens/S15-patient-detail.md), [S18](../screens/S18-beneficiary-verification.md) | [A18](../apis/A18-biometric-authentication.md), [A19](../apis/A19-abha-m1.md) | none | [F15](../fhir/F15-patient.md) |
 | [D4](../database/D4-encounter.md) | encounter | One OPD visit or IPD admission of a patient. | [S15](../screens/S15-patient-detail.md) | [A17](../apis/A17-claim-state.md) | none | none |
@@ -14,6 +14,7 @@ Every table behind the claim, patient and practitioner flows, in one list. Each 
 | [D6](../database/D6-observation.md) | observation | Measured or coded finding (a vital sign reading, a lab analyte, a wellness or dialysis reading). | [S15](../screens/S15-patient-detail.md) | none | none | none |
 | [D7](../database/D7-allergy.md) | allergy | Allergy or intolerance of a patient. | [S15](../screens/S15-patient-detail.md) | none | none | none |
 | [D8](../database/D8-terminology.md) | terminology | Concept in one code list (a picker), for example one ICD-10 diagnosis with its SNOMED mapping, one department or one payer adapter mapping. | [S15](../screens/S15-patient-detail.md) | none | none | none |
+| [D32](../database/D32-participant.md) | participant | The participant master: every payer, provider and TPA on the exchange, government and private, pulled from the registry's participant list over a configured window (one year by default, ten in the sandbox) and refreshed daily. Primary key `code`. No parent table. | [S2](../screens/S2-select-policy.md), [S17](../screens/S17-beneficiary-discovery.md), [S19](../screens/S19-nhcx-settings.md) | none | none | none |
 
 ## Claim
 
