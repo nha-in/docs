@@ -14,6 +14,8 @@ In-process:
 | `profiles.is_local(code)` | whether the code is one of the gateway's own |
 | `profiles.owns_key(public_key)` | whether a public key is one of the gateway's own |
 | `identity_for(code)` | the profile plus the ABDM client (G3, G4) acting as it, falling back to the default |
+| `reload()` | re-reads the config and the key store and rebuilds the profiles without a restart; a key that fails to parse leaves the old profiles in place and returns the error. Called by [S19. NHCX Settings](../screens/S19-nhcx-settings.md) after staging, activating or retiring a key |
+| `rotate_key(action, pem = none, cert = none)` | `stage` writes a new key and certificate to the staged slot, `activate` moves staged to active and active to previous, `retire` empties the previous slot; each then calls `reload`. The private key is written to the key store only, never returned, never logged |
 
 Environment URLs (`env`), each overridable under `urls`:
 
@@ -59,7 +61,10 @@ Keys that matter to sending and receiving:
 | `participant.participantId` | required | registry code, with or without `@hcx` |
 | `participant.name` | none | log label |
 | `participant.clientId`, `participant.clientSecret` | required | ABDM credentials from onboarding. Usually `${NHCX_CLIENT_ID}`, `${NHCX_CLIENT_SECRET}` |
-| `participant.privateKey` | required | RSA private key matching the registered encryption certificate: PEM, base64 of PEM, or `@file` (G6 key parsing) |
+| `participant.privateKey` | required | RSA private key matching the registered encryption certificate: PEM, base64 of PEM, or `@file` (G6 key parsing). The **active** key |
+| `participant.stagedPrivateKey` | none | a key staged for rotation ([S19. NHCX Settings](../screens/S19-nhcx-settings.md)): parsed and checked at load, opens nothing and signs nothing until it is activated |
+| `participant.previousPrivateKey` | none | the key active before the last rotation: tried second on inbound messages ([G8. Receive](G8-receive.md) `decrypt_for`) until it is retired. The three slots are rotated by S19 through `rotate_key`, which rewrites the `@file` targets in the key store and calls `reload` |
+| `keyStore` | the config file's directory | directory the three `@file` keys and their certificates live in; outside the repository, mode 700 |
 | `participants[]` | `[]` | hosted identities; same fields as `participant`. `clientId` and `clientSecret` both set or both blank; blank key or credentials inherit the default's |
 | `guests` | absent (off) | present turns guests on; `gateway.open`'s `guests` option overrides |
 | `ledger.enabled` | `true` | record every message (G9) |
@@ -69,7 +74,7 @@ Keys that matter to sending and receiving:
 | `certs.cacheHours` | `24` | recipient certificate cache lifetime (G4) |
 | `certs.refuseSelfKey` | production: true, sandbox: false [REF](../references/PAYERS.md#markers) | refuse a registry certificate that is one of our own keys for another participant (G4) |
 | `outboundTimeoutSeconds` | `30` | each call to ABDM: token, registry, NHCX gateway |
-| `maxBodyBytes` | `104857600` (100 MiB) [REF](../references/PAYERS.md#markers) | body cap on the NHCX-facing routes (G1); claim dossiers carry documents inline as base64 |
+| `maxBodyBytes` | `104857600` (100 MiB) [REF](../references/PAYERS.md#markers) | body cap on the NHCX-facing routes (G1); claim dossiers carry documents inline as base64 and a package master reply is about 45 MB [SANDBOX](../references/PAYERS.md#markers). The framework's and the proxy's own caps are raised to match ([G8. Receive](G8-receive.md)) |
 | `auth.mode` | `sessions` | `sessions` (JSON to the HIECM sessions endpoint) or `get-session` (form post to the registry's `/get/session`) (G3) |
 | `auth.tokenTtlSeconds` | `1200` | assumed token lifetime when the session answer carries none |
 | `cmId` | env default | `X-CM-ID` header on the `sessions` call |
@@ -176,5 +181,6 @@ identity_for(code):                           // profile plus its ABDM client
 ```
 
 #### G2U. USED BY
+- Screens: [S19. NHCX Settings](../screens/S19-nhcx-settings.md)
 - APIs: [A10. Transaction Related](../apis/A10-txn-related.md)
 - Gateway: [G1. Embedding](G1-embedding.md), [G3. Session Token](G3-session-token.md), [G4. Registry and Certificates](G4-registry.md), [G5. Protocol Headers](G5-protocol-headers.md), [G6. Encryption](G6-encryption.md), [G7. Send](G7-send.md), [G8. Receive](G8-receive.md), [G11. Startup Checks and Health](G11-startup-checks.md)

@@ -38,5 +38,5 @@ Into D12 `claim_plan_form`, one row per distinct url:
 
 #### F6U. USED BY
 - Callbacks: [C4. Insurance Plan Reply](../callbacks/C4-insuranceplan-on-request.md)
-- FHIR: [F1. Bundle](F1-bundle.md), [F5. InsurancePlan](F5-insuranceplan.md), [F7. QuestionnaireResponse](F7-questionnaireresponse.md)
+- FHIR: [F1. Bundle](F1-bundle.md), [F3. CoverageEligibilityResponse](F3-coverage-eligibility-response.md), [F5. InsurancePlan](F5-insuranceplan.md), [F7. QuestionnaireResponse](F7-questionnaireresponse.md)
 - Database: [D12. claim_plan_form](../database/D12-claim-plan-form.md)

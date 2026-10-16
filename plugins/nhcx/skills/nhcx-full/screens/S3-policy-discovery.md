@@ -7,6 +7,11 @@ Shown as the first tab, "Eligibility" (tab key `eligibility`), of the Claim Deta
 
 Form posts to: claims/view/:caseid/check (POST), then redirects back to S6.
 
+| Endpoint | Purpose |
+|---|---|
+| `POST claims/:caseid/check` | Send the eligibility check |
+| `POST claims/:caseid/beneficiary` | Choose which member of the policy is the patient (field `member_id`) |
+
 Breadcrumb (from S6): Claims (claims/list, S5) > <case number>
 
 #### S3D. DESCRIPTION
@@ -31,7 +36,24 @@ The tab is a stack of up to four cards, in this order:
 | Address | full address |
 | Found by | "<identifier label> · <identifier value>" from the S1 search, for example "Member ID · MD5SLS4X5" |
 
-After selection (S2) only member ID, ABHA, mobile and Found by are normally filled. Name, gender, date of birth, address, photo and a corrected ABHA come from the payer's eligibility reply.
+After selection (S2) only member ID, ABHA, mobile and Found by are normally filled. Name, gender, date of birth, address, photo and a corrected ABHA come from the payer's eligibility reply, and only once it is clear which person they belong to.
+
+**Who is the patient (the members table).** A family policy answers the check with every member on the card, not one person: PMJAY returns one Patient per member, three or more on a family card [PAYER](../references/PAYERS.md#markers). The reply is read into a list ([F3. CoverageEligibilityResponse](../fhir/F3-coverage-eligibility-response.md), D9 `beneficiaries_json`) and the Beneficiary card shows it whenever it holds more than one person, as a table above the detail grid:
+
+| Column | Content |
+|---|---|
+| (radio) | selected for the chosen member, when one is chosen |
+| Member | name over the member id |
+| Relationship | `Self`, `Spouse`, `Child`, ... from the member's own Coverage |
+| Gender, Date of birth | as returned |
+| ABHA | the member's ABHA, or "-" |
+| Checked | a chip "checked" on the member the payer's response is about |
+
+Under the table, a primary button "This is the patient" posts the selected `member_id` to `claims/:caseid/beneficiary`. The application never picks for the desk: when the reply holds several people and none carries the member id the case was opened with, no member is selected, the detail grid shows only the member id and "Found by", a warning chip "Choose the patient" sits in the card header, and S6's next action reads "Choose which member of the policy is the patient". Until the choice is made the admission link (S4), the plan fetch (S7) and every send are refused with "Choose which member of the policy is the patient on the Eligibility tab first." When exactly one person comes back, or one carries the case's member id, that person is chosen on arrival and the table still lists everyone, read-only, so the desk can see who else is on the card and change the choice.
+
+Choosing writes the person's details onto the case and makes their member id the case's `member_id`, so the next check, the pre-authorisation and the claim go out for the person in the bed. A choice made after an admission was linked unlinks it (the admission was matched on the earlier person's ABHA) and flashes "The admission was unlinked: it was matched to the previous beneficiary." A member id not on the list is refused: "That member is not on this policy's reply." Success flash: "<name> is the patient on this claim."
+
+Why this matters: a member id is shared across a family card, and a child's admission under the parent's details would send the parent's name, age and ABHA on the pre-authorisation and attach the claim to the parent's record. Response order says nothing about who is in the bed.
 
 **Policy card.** A three-column detail grid:
 
@@ -168,4 +190,5 @@ While awaiting the payer (check form hidden):
 1. Send to payer / Check again: validate, send the check (A2), set the case to Awaiting payer, and reload S6 on this tab with "Eligibility request queued to the payer." Validation failures reload with the message in red.
 2. Send again (only while awaiting the payer): ask "The payer has not replied to the last check yet. Send the same eligibility check again?" and on OK resend with the same purpose (default `validation`), policy code and member ID. The check form is withheld while an exchange is open so two checks on one case cannot be answered out of order; this button is the only way out of a stalled exchange.
 3. Refresh (in the S6 header while awaiting): reload S6, which polls once for the on_check reply.
-4. After an eligible verdict, the S6 next-action button "Fetch the package master" goes to the Insurance Plan tab S7.
+4. This is the patient: post the selected member id, write that person onto the case (and unlink a linked admission matched on another person), reload S6 on this tab with "<name> is the patient on this claim."
+5. After an eligible verdict with the patient known, the S6 next-action button "Fetch the package master" goes to the Insurance Plan tab S7. With the patient still to choose it reads "Choose which member of the policy is the patient" and stays on this tab.

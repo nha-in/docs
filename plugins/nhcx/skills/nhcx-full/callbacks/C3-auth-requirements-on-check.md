@@ -36,9 +36,9 @@ C3(envelope, corr):
         for each support in item.authorizationSupporting:
             s = adapter.read_supporting(support)
                 # "fullUrl: <url>" in text -> kind form, else document
-                # "Type: <stage>" -> stage (a document with none is "pre"; a form with none is "") [REF](../references/PAYERS.md#markers)
+                # "Type: <stage>" -> stage; none -> D11 stage rule on the wording (pre | post | both) [REF](../references/PAYERS.md#markers)
                 # "Procedure Code:<code>" -> for_code
-                # at_preauth = kind is form, or stage in adapter.preauth_stages
+                # at_preauth = stage in adapter.preauth_stages or stage == both
             key = (s.kind, s.code, s.form_url)
             if key in seen: continue
             seen += key

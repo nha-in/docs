@@ -33,6 +33,10 @@ Then, the language being known, write the report builder and its wrappers ([LOG.
 ### L1.3 Find the domain entities
 Locate patient, practitioner (doctor, staff), organization (facility), encounter (admission, visit), diagnosis, procedure, billing and insurance entities. For each: model or table name, file and lines, primary key, and the fields that look relevant to D3, D2, D1, D4, D5 and D9.
 
+Then look for an **ABDM module** already in the HMIS or mounted beside it (a plug, an app or a package): search `abdm`, `abha`, `hiecm`, `hip`, `hiu`, `health_facility`, `hf_id`, `hfr`, `consent`. Record it under `abdm` in `discovery.json`: whether one exists, its facility record and HFR id field, its ABHA record or identifier configuration and the identifier system it uses, its ABHA screens (link, create, verify) and their entry points, its session token code and cache key, and its **M2 health records**: the record model (the document bundles it holds or builds per `hiType`, search `hiType`, `care_context`, `DocumentReference`, `discharge_summary`, `DiagnosticReport`, `Prescription`), the care context's link to the admission, and the function that renders a record to PDF for the patient. Every one of these that exists is reused, not rebuilt ([SCAFFOLDING.md](../references/SCAFFOLDING.md), section 4a); L2 maps each reused field, and L3 leaves out the A19 and S13 to S15 ABHA additions when the module has them. A target with no ABDM module records `"abdm": {"present": false}`.
+
+Also locate the **billing or accounts module**: the bill or invoice of an admission, its payments or receipts, and adjustments. [D21. claim_payment](../database/D21-claim-payment.md) posts payer payments there (SCAFFOLDING section 4, Billing).
+
 ### L1.4 Match screens (S1 to S16)
 For each S spec, search the UI for a screen that does the same job (by route, title, form fields, table columns). Record the route, component or template file and lines, and which of the spec's fields, actions and states it covers.
 
@@ -70,6 +74,16 @@ One entry per spec id. A spec with no match is still listed, as `missing`.
   "entities": [
     {"name": "patient", "spec": "D3", "model": "", "file": "", "lines": "", "key": ""}
   ],
+  "abdm": {
+    "present": true,
+    "module": "<package or plug name>",
+    "facility": {"model": "", "hfr_field": "", "file": ""},
+    "abha": {"model": "", "number_field": "", "identifier_system": "", "file": ""},
+    "screens": [{"what": "link | create | verify", "entry": "", "file": ""}],
+    "token": {"function": "", "cache_key": "", "file": ""},
+    "records": {"model": "", "hitype_field": "", "care_context": {"model": "", "encounter_field": ""}, "render": {"function": "", "file": ""}}
+  },
+  "billing": {"bill": {"model": "", "file": ""}, "receipt": {"model": "", "file": ""}, "adjustment": {"model": "", "file": ""}},
   "items": [
     {
       "spec": "S9",
@@ -93,4 +107,5 @@ Record in `nhcx-plan/progress.json` and regenerate `nhcx-plan/progress.md`, as [
 - Every S, A, C, F, D and G id from the indexes appears once in `items`, or its whole kind appears as one `missing` entry (`"spec": "A*"`) when L1.1 found no NHCX code.
 - Every `found` or `partial` item has at least one location, and each location opens to the lines named.
 - `technology` has no empty field the later steps need (framework, database, migrations, tests).
+- `abdm` says whether an ABDM module exists and, when it does, names its facility, ABHA, screen and token locations; `billing` names the bill, receipt and adjustment models or says they do not exist.
 - Every sub-step of L1 has its `started` and closing entries in progress.json, and every file changed is named in one.

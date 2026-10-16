@@ -79,3 +79,4 @@ Received (read):
 #### F1U. USED BY
 - APIs: [A8. Payment Notice Acknowledgement](../apis/A8-paymentnotice-on-request.md), [A12. Transaction FHIR](../apis/A12-txn-fhir.md)
 - Callbacks: [C1. Callback Door](../callbacks/C1-callback-door.md), [C10. Payment Notice](../callbacks/C10-paymentnotice-request.md)
+- FHIR: [F3. CoverageEligibilityResponse](F3-coverage-eligibility-response.md)

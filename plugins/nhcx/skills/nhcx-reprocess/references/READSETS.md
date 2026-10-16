@@ -11,12 +11,13 @@ Always read, whatever the task: [CORE.md](CORE.md) (addresses and the exchange t
 | [S5](../screens/S5-claim-master.md) | Claim Master | nothing else |
 | [S6](../screens/S6-claim-detail.md) | Claim Detail | nothing else |
 | [S11](../screens/S11-claim-submission.md) | Claim Submission | [D9](../database/D9-claim.md), [D11](../database/D11-claim-plan-benefit.md), [D12](../database/D12-claim-plan-form.md), [D15](../database/D15-claim-auth-requirement.md), [D16](../database/D16-claim-line.md), [D17](../database/D17-claim-form-answer.md), [D20](../database/D20-claim-submission.md), [D21](../database/D21-claim-payment.md), [D23](../database/D23-claim-query.md), [D28](../database/D28-claim-document.md), [D29](../database/D29-claim-enquiry.md) |
+| [S19](../screens/S19-nhcx-settings.md) | NHCX Settings | [D1](../database/D1-organization.md), [G2](../gateway/G2-configuration.md), [G4](../gateway/G4-registry.md), [G6](../gateway/G6-encryption.md), [G8](../gateway/G8-receive.md), [G11](../gateway/G11-startup-checks.md) |
 
 ## APIs
 
 | To implement | What it is | Read with it |
 |---|---|---|
-| [A6](../apis/A6-task-submit.md) | Task Submit (cancel, status, reprocess, release) | [F1](../fhir/F1-bundle.md), [F10](../fhir/F10-task-claim-actions.md), [F17](../fhir/F17-organization.md), [D18](../database/D18-claim-preauth.md), [D29](../database/D29-claim-enquiry.md), [G5](../gateway/G5-protocol-headers.md), [G7](../gateway/G7-send.md), [G8](../gateway/G8-receive.md), [G9](../gateway/G9-ledger.md) |
+| [A6](../apis/A6-task-submit.md) | Task Submit (cancel, status, reprocess, release) | [F1](../fhir/F1-bundle.md), [F10](../fhir/F10-task-claim-actions.md), [F17](../fhir/F17-organization.md), [D18](../database/D18-claim-preauth.md), [D29](../database/D29-claim-enquiry.md), [G2](../gateway/G2-configuration.md), [G5](../gateway/G5-protocol-headers.md), [G6](../gateway/G6-encryption.md), [G7](../gateway/G7-send.md), [G8](../gateway/G8-receive.md), [G9](../gateway/G9-ledger.md), [G11](../gateway/G11-startup-checks.md) |
 | [A10](../apis/A10-txn-related.md) | Transaction Related | nothing else |
 | [A11](../apis/A11-txn-dispatch.md) | Transaction Dispatch | nothing else |
 | [A12](../apis/A12-txn-fhir.md) | Transaction FHIR | nothing else |
@@ -28,20 +29,20 @@ Always read, whatever the task: [CORE.md](CORE.md) (addresses and the exchange t
 | To implement | What it is | Read with it |
 |---|---|---|
 | [C1](../callbacks/C1-callback-door.md) | Callback Door | nothing else |
-| [C8](../callbacks/C8-enquiry-on-submit.md) | Enquiry Reply | [G8](../gateway/G8-receive.md) |
+| [C8](../callbacks/C8-enquiry-on-submit.md) | Enquiry Reply | [G2](../gateway/G2-configuration.md), [G6](../gateway/G6-encryption.md), [G8](../gateway/G8-receive.md), [G11](../gateway/G11-startup-checks.md) |
 
 ## Gateway
 
 | To implement | What it is | Read with it |
 |---|---|---|
 | [G1](../gateway/G1-embedding.md) | Embedding | nothing else |
-| [G2](../gateway/G2-configuration.md) | Configuration and Participants | nothing else |
+| [G2](../gateway/G2-configuration.md) | Configuration and Participants | [G6](../gateway/G6-encryption.md), [G8](../gateway/G8-receive.md), [G11](../gateway/G11-startup-checks.md) |
 | [G3](../gateway/G3-session-token.md) | Session Token | nothing else |
 | [G4](../gateway/G4-registry.md) | Registry and Certificates | nothing else |
 | [G5](../gateway/G5-protocol-headers.md) | Protocol Headers | nothing else |
 | [G6](../gateway/G6-encryption.md) | Encryption | nothing else |
 | [G7](../gateway/G7-send.md) | Send | nothing else |
-| [G8](../gateway/G8-receive.md) | Receive | nothing else |
+| [G8](../gateway/G8-receive.md) | Receive | [G2](../gateway/G2-configuration.md), [G6](../gateway/G6-encryption.md), [G11](../gateway/G11-startup-checks.md) |
 | [G9](../gateway/G9-ledger.md) | Ledger | nothing else |
 | [G10](../gateway/G10-beneficiary-registry.md) | Beneficiary Registry | nothing else |
 | [G11](../gateway/G11-startup-checks.md) | Startup Checks and Health | nothing else |

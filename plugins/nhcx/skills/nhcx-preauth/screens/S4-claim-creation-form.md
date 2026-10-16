@@ -13,7 +13,7 @@ The screen does three things, in order:
 
 1. Validate. It shows whether the procedure set chosen on Line Items (S8) has been sent to the payer for an authorisation ruling, and hands over to the pre-authorisation once it has.
 2. Link. It attaches the case to the patient's current IPD admission, matched on ABHA number.
-3. Draft. It captures the pre-authorisation draft: the stay dates, the ICD-10 diagnoses, the treating team and the case type with its estimate. Saving it keeps the draft in the application. Nothing goes to NHCX from this screen; the draft is sent from S9.
+3. Draft. It captures the pre-authorisation draft: the stay dates, the diagnoses, the treating team and the case type with its estimate. Saving it keeps the draft in the application. Nothing goes to NHCX from this screen; the draft is sent from S9.
 
 **Validate block**
 
@@ -35,24 +35,27 @@ Which card shows depends on the case:
 | Eligible with an ABHA number, not yet linked | "Link the admitted patient" with the matching admissions table |
 | Linked | "Linked admission" summary, then the draft form |
 
-Matching admissions are the current (not yet finished) IPD stays of patients whose ABHA number equals the policy's ABHA number, compared on digits only (the payer writes `91-7034-...`, the front desk may store it without dashes). Newest admission first.
+Matching admissions are the current (not yet finished) IPD stays of patients whose ABHA number equals the **chosen beneficiary's** ABHA number (S3. Policy Discovery (in nhcx-coverage)), compared on digits only (the payer writes `91-7034-...`, the front desk may store it without dashes). Newest admission first. While the eligibility reply offers several members and none is chosen, the card reads "Choose which member of the policy is the patient on the Eligibility tab first." with a button to S3, and no table is shown.
 
-The intro line reads: "The policy is eligible for **<beneficiary name or member id>** (ABHA <abha>). Link the claim to their current IPD stay to start the pre-authorisation."
+The intro line reads: "The policy is eligible for **<beneficiary name or member id>** (ABHA <abha>, <gender>, born <dob>). Link the claim to their current IPD stay to start the pre-authorisation."
 
-Matching admissions table columns: Patient (link to S15), MRN, Admission (encounter number, link to the admission), Ward / bed (`ward / bed`, or just the ward), Admitted (date and time), Doctor, and a primary "Link" button (link icon).
+Matching admissions table columns: Patient (name, with gender and date of birth from the HMIS record underneath, link to S15), MRN, Admission (encounter number, link to the admission), Ward / bed (`ward / bed`, or just the ward), Admitted (date and time), Doctor, a "Same person" column (green "matches" when the HMIS record's date of birth and gender equal the beneficiary's, amber "differs: <what differs>" otherwise), and a primary "Link" button (link icon).
+
+**The link is always the desk's action.** The application lists the candidates and never links one by itself, not even when exactly one admission matches, because an ABHA or member id can be shared or mis-entered across a family and the ABHA match alone is not proof of identity. "Link" opens a confirm that shows the payer's beneficiary (name, gender, date of birth, ABHA) beside the HMIS patient (name, gender, date of birth, MRN) and asks "Link this claim to <HMIS patient name>'s admission? The payer's beneficiary is <name>, <gender>, born <dob>." When the Same person column says "differs", the confirm adds in red "The date of birth or gender differs from the payer's record. Check it is the same person before linking." The case's `patient_id` carried from the patient master (S2) is a starting point only: it is shown as the first row when its admission matches, and cleared with the note "The patient this search was started from is not the beneficiary the payer returned." when its ABHA, name and date of birth all differ from the chosen beneficiary.
 
 Empty state: "No current IPD admission matches this ABHA number. Register the patient with this ABHA and admit them first." followed by two buttons, "Register patient" (user-plus icon, S14) and "New admission" (hospital icon).
 
 Link rules, checked on the server (errors show as a red flash on the Pre-authorisation tab):
 - Case must be eligible: "Link an admission only after the payer has confirmed the policy is eligible."
+- A beneficiary must be chosen when the reply offered several: "Choose which member of the policy is the patient on the Eligibility tab first."
 - The chosen stay must still be in the match list: "That admission is not a current IPD stay of a patient with this claim's ABHA number."
-- On success the case is linked to the patient and the admission, and the admission date defaults to the stay's start date when the case has none yet. Flash: "Admission linked to the claim."
+- On success the case is linked to the patient and the admission, `patient_confirmed_at` is stamped, and the admission date defaults to the stay's start date when the case has none yet. Flash: "Admission linked to the claim."
 
 Linked admission card fields (three columns): Patient (link to S15), MRN, Admission (link), Ward / bed (`ward / bed`, dashes when missing), Admitted, Consultant. Header action "Unlink" (unlink icon) asks "Detach this claim from the admission? The preauth draft is kept." and then detaches the patient and admission from the case, keeping the draft. Flash: "Admission unlinked."
 
 **Draft block: "Pre-authorisation draft"**
 
-A single form in a card. When a draft has been saved before, a three-column summary sits above the sections: Last saved (date and time), Case (`Package (HBP rate)` or `Non-package (itemised)`), Estimated amount (`₹` with two decimals, or `-`).
+A single form in a card. When a draft has been saved before, a three-column summary sits above the sections: Last saved (date and time), Case (`From insurance plan` or `Custom line items`), Estimated amount (`₹` with two decimals, or `-`).
 
 The form is an accordion of four sections, several open at once:
 
@@ -63,9 +66,9 @@ The form is an accordion of four sections, several open at once:
 | Admission date | date input, required | Defaults from the linked admission |
 | Provisional discharge date | date input, optional | Must not be before the admission date |
 
-2. **Diagnoses (ICD-10)**
-   - If the linked admission already records diagnoses that are not resolved, they are listed read-only as `<ICD-10 code> - <ICD-10 display>` with the hint "Recorded on the admission; change it there." ("there" links to the admission). Those diagnoses are what is saved; the form does not ask again.
-   - Otherwise the hint reads "The admission has no diagnosis recorded yet - add it on the admission, or pick one here for now." followed by repeating rows. Each row has one select, "Diagnosis (ICD-10)" (24rem), blank option "Select diagnosis". Options come from the diagnosis terminology and are labelled `<ICD-10 code> - <ICD-10 display>` (falling back to the base code and display). Each row has a red trash button to remove it, and "Add diagnosis" adds a row.
+2. **Diagnoses**. The payer adjudicates on ICD-10 (`Claim.diagnosis` is bound to `http://hl7.org/fhir/sid/icd-10`, [F8. Claim](../fhir/F8-claim.md)), so the desk picks the **ICD-10** code and only that. The application maps it to SNOMED CT through the diagnosis terminology ([D8. terminology](../database/D8-terminology.md) `alt_code`), holds both on the draft ([D25. claim_diagnosis](../database/D25-claim-diagnosis.md)) and sends both on the wire, ICD-10 as the first coding and SNOMED CT as the second, so a payer can tie the claim to the ABDM records of the same stay. The desk is never asked for a SNOMED code; a term with no SNOMED mapping goes out as ICD-10 alone.
+   - If the linked admission already records diagnoses that are not resolved, they are listed read-only as `<ICD-10 display>` with `ICD-10 <code> · SNOMED <code>` underneath (`ICD-10 <code>` alone when no SNOMED mapping exists), and the hint "Recorded on the admission; change it there." ("there" links to the admission). Those diagnoses are what is saved; the form does not ask again.
+   - Otherwise the hint reads "The admission has no diagnosis recorded yet - add it on the admission, or pick one here for now." followed by repeating rows. Each row has one search-as-you-type field, "Diagnosis (ICD-10)" (24rem), placeholder "Search a diagnosis", matching code or display as a substring in the HMIS's own ICD-10 diagnosis list when it has one (the mapping names it), else the local D8 `diagnosis` list. A chosen row shows `<ICD-10 display>` with `ICD-10 <code> · SNOMED <code>` underneath; when the term has no SNOMED mapping the second line reads `ICD-10 <code> · no SNOMED mapping` in muted grey and the save still goes through. Each row has a red trash button to remove it, and "Add diagnosis" adds a row.
 
 3. **Treating doctor**
    - If the admission names a consultant, it shows "<doctor name> - treating doctor" with the hint "The consultant on the admission; change it there." That consultant is saved with role `treating`.
@@ -83,10 +86,10 @@ The form is an accordion of four sections, several open at once:
 
    "Add doctor" adds a row; each row has a trash button.
 
-4. **Case and estimate**. Two radio buttons, "Package (HBP rate)" (`package`, the default) and "Non-package (itemised)" (`nonpackage`) [PAYER](../references/PAYERS.md#markers). Switching shows one of two boxes without a reload:
-   - Package box, when the payer's insurance plan (S7) is fetched and ready: a read-only table of the quoted lines with columns Kind (chip: Procedure info, Implant warning, "Ward / ICU tier"), Item (display with code underneath), Ward / ICU tier (tier chips `<label> · <code>` with `+₹<amount>`), Rate, Quantity, Amount, then "Total ₹<sum>" right-aligned, and a primary "Choose line items" button (list icon) that goes to the S8 picker. Empty text: "Nothing quoted yet, choose the procedure being done, the implants the payer approves for it and the ward tier."
-   - Package box, when no plan is ready: one "Package" select, blank "Select package", options from the local HBP package master as `<display> - ₹<rate>`, with help text "The rate is fixed by the local HBP master. Fetch the payer's insurance plan to quote against its own packages instead."
-   - Non-package box: label "Items" with help text "Prices are fixed by the charge master; you choose the quantity." then repeating rows of "Item (fixed price)" select (20rem, blank "Select item", options `<display> - ₹<price>` from the charge master) and "Quantity" number input (8rem, min 0.5, any step). "Add item" adds a row.
+4. **Case and estimate**. Two radio buttons, "From insurance plan" (stored as `package`, the default) and "Custom line items" (stored as `nonpackage`) [PAYER](../references/PAYERS.md#markers). The screen says where the lines come from, never "package" or "non-package": those are the stored values of D9 `case_type` and the wire's words, and the desk does not see them [REF](../references/PAYERS.md#markers). Switching shows one of two boxes without a reload:
+   - Insurance plan box, when the payer's insurance plan (S7) is fetched and ready: a read-only table of the quoted lines with columns Kind (chip: Procedure info, Implant warning, "Ward / ICU tier"), Item (display with code underneath), Ward / ICU tier (tier chips `<label> · <code>` with `+₹<amount>`), Rate, Quantity, Amount, then "Total ₹<sum>" right-aligned, and a primary "Choose line items" button (list icon) that goes to the S8 picker. Empty text: "Nothing quoted yet, choose the procedure being done, the implants the payer approves for it and the ward tier."
+   - Insurance plan box, when no plan is ready: one "Package" select, blank "Select package", options from the local HBP package master as `<display> - ₹<rate>`, with help text "The rate is fixed by the local HBP master. Fetch the payer's insurance plan to quote against its own packages instead."
+   - Custom line items box: label "Items" with help text "Prices are fixed by the charge master; you choose the quantity." then repeating rows of "Item (fixed price)" select (20rem, blank "Select item", options `<display> - ₹<price>` from the charge master) and "Quantity" number input (8rem, min 0.5, any step). "Add item" adds a row.
 
 Footer: primary "Save preauth draft" button (save icon).
 
@@ -95,16 +98,16 @@ Footer: primary "Save preauth draft" button (save icon).
 - No admission linked: "Link the admitted patient before drafting a pre-authorisation."
 - Admission date empty: "Enter the admission date."
 - Discharge before admission: "The provisional discharge date cannot be before the admission date."
-- No usable diagnosis: "Record the diagnosis on the admission (or pick one here) - the payer needs an ICD-10 code."
+- No usable diagnosis: "Record the diagnosis on the admission (or pick one here)."
 - Unknown role: "Choose a valid care team role."
 - No active doctor: "Set the consultant on the admission (or add a doctor here) - the payer needs a treating doctor."
-- Case type missing or unknown: "Choose whether this is a package or a non-package case."
+- Case type missing or unknown: "Choose whether the lines come from the insurance plan or are custom line items."
 - Package case with a ready plan and no Procedure line: "Quote at least one procedure for this package case - use “Choose line items”."
 - Package case without a plan and no package chosen: "Select the package for this case."
-- Non-package item with a quantity of zero or less: `Enter a quantity for "<item display>".`
-- Non-package case with no items: "Add at least one item to a non-package case."
+- Custom line item with a quantity of zero or less: `Enter a quantity for "<item display>".`
+- Custom line items with none added: "Add at least one custom line item."
 
-Pricing is never taken from the form. A package case with a ready plan takes the first Procedure line as the package and the sum of the quoted lines as the estimate. A local package takes its master rate. A non-package case re-reads each item's price from the charge master and prices each item at `price × quantity`, rounded to two decimals, with their sum as the estimate. Saving replaces the previously saved diagnoses, team and items. Flash on success: "Pre-authorisation draft saved."
+Pricing is never taken from the form. An insurance-plan case with a ready plan takes the first Procedure line as the package and the sum of the quoted lines as the estimate. A local package takes its master rate. A custom-line-items case re-reads each item's price from the charge master and prices each item at `price × quantity`, rounded to two decimals, with their sum as the estimate. Saving replaces the previously saved diagnoses, team and items. Flash on success: "Pre-authorisation draft saved."
 
 Data: [D9. claim](../database/D9-claim.md)
 
@@ -151,13 +154,14 @@ The arrangement below is the reference implementation's [REF](../references/PAYE
 |  v Stay                                                          |
 |    Admission date *     Provisional discharge date               |
 |    [dd-mm-yyyy]         [dd-mm-yyyy]                             |
-|  v Diagnoses (ICD-10)                                            |
-|    - K35.8 - Acute appendicitis                                  |
+|  v Diagnoses                                                     |
+|    - Acute appendicitis                                          |
+|      ICD-10 K35.8 · SNOMED 74400008                              |
 |    Recorded on the admission; change it there.                   |
 |  v Treating doctor                                               |
 |    Dr Rao - treating doctor                                      |
 |  v Case and estimate                                             |
-|    (o) Package (HBP rate)   ( ) Non-package (itemised)           |
+|    (o) From insurance plan   ( ) Custom line items               |
 |    Kind | Item | Ward / ICU tier | Rate | Quantity | Amount      |
 |                                           Total ₹25,000          |
 |                                    [(list) Choose line items]    |
@@ -187,7 +191,7 @@ Before linking, the Linked admission card and the draft card are replaced by:
 #### S4A. ACTIONS
 1. Go to the pre-authorisation: open the Pre-authorisation screen S9.
 2. Validate procedure set / Check again: send the procedure set for an authorisation ruling (see S8, section S8.2) and return here.
-3. Link (on an admission row): attach the case to that admission and show the Linked admission card and the draft form.
+3. Link (on an admission row): after the confirm that shows the payer's beneficiary beside the HMIS patient, attach the case to that admission and show the Linked admission card and the draft form.
 4. Patient name link: open Patient Detail S15.
 5. Register patient: open Patient Registration Form S14.
 6. New admission: open the admission form of the hospital's IPD module (outside this screen map).

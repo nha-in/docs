@@ -18,14 +18,14 @@ Results table columns:
 
 | Column header | Main line | Muted sub-line |
 |---|---|---|
-| Beneficiary | `name`, or "Unknown" | `member_id`, or "-" |
+| Member ID | `member_id`, or "-" | |
 | Product / policy | `product_name`, or "-" | `policy_code`, else `product_id` |
 | Payer | the payer's registered name from the participant registry (`payer_name`, G4, cached), else the code | `payer_id` |
 | ABHA | `abha_number`, or "-" | |
 | Mobile | `mobile_number`, or "-" | |
 | (blank header) | Select button | |
 
-The sandbox returns no beneficiary name at this stage, so the Beneficiary column normally reads "Unknown" over the member ID [SANDBOX](../references/PAYERS.md#markers). The name, gender, date of birth, address and ABHA arrive later with the payer's eligibility reply (S3).
+The table shows no beneficiary name and never a placeholder such as "Unknown": the registry returns no name at this stage [SANDBOX](../references/PAYERS.md#markers), and a name it did return is not yet verified. The name, gender, date of birth, address and ABHA arrive with the payer's eligibility reply and are shown on S3 once the desk has confirmed the beneficiary. The row's `name`, when any, is still kept on the opened case (D9) for S3 to compare against.
 
 The card title counts the rows: "1 policy found", or "N policies found" for any other count (including "0 policies found").
 
@@ -43,7 +43,7 @@ policy={"member_id": "MD5SLS4X5", "name": null, "policy_code": "PMJAY/HP/S/G",
         "raw": { ...the BIS row... }}
 ```
 
-Opening the claim makes no NHCX call. It saves a new draft claim (status Draft) around the chosen policy and the search identifier (shown on S3 as "Found by"), with D9 `patient_id` set when a `patient` was carried from the patient master ([S13. Patient List](S13-patient-list.md), [S15. Patient Detail](S15-patient-detail.md)); the admission is still linked on S4. The case number takes the form `NM-<yy>-<mmdd><serial>`, month-day and serial in base32, so numbers sort by date and then issue order [REF](../references/PAYERS.md#markers). The payer name is the registry's (G4), looked up by the payer id and cached; it never falls back to a configured label, the adapter's name or a default name, and a payer whose lookup failed is shown by its code.
+Opening the claim makes no NHCX call. It saves a new draft claim (status Draft) around the chosen policy and the search identifier (shown on S3 as "Found by"), with D9 `patient_id` set when a `patient` was carried from the patient master ([S13. Patient List](S13-patient-list.md), [S15. Patient Detail](S15-patient-detail.md)). That carried patient is where the search started, not a confirmed link: the admission is linked on S4 by the desk, after the payer's reply has said who the beneficiary is, and the carried patient is cleared there when it is not that person. The case number takes the form `NM-<yy>-<mmdd><serial>`, month-day and serial in base32, so numbers sort by date and then issue order [REF](../references/PAYERS.md#markers). The payer name is the registry's (G4), looked up by the payer id and cached; it never falls back to a configured label, the adapter's name or a default name, and a payer whose lookup failed is shown by its code.
 
 Data: [D9. claim](../database/D9-claim.md)
 
@@ -71,10 +71,10 @@ The arrangement below is the reference implementation's [REF](../references/PAYE
 |                                                                  |
 | [Card] 1 policy found                                            |
 |------------------------------------------------------------------|
-| Beneficiary | Product / policy   | Payer       | ABHA    | Mobile |  |
+| Member ID   | Product / policy   | Payer       | ABHA    | Mobile |  |
 |-------------|--------------------|-------------|---------|--------|--|
-| Unknown     | PMJAY for Himachal | Nhcx Pmjay  | 9170... | -      |[(+) Select]
-| MD5SLS4X5   | PMJAY/HP/S/G       | <payer code>|         |        |  |
+| MD5SLS4X5   | PMJAY for Himachal | Nhcx Pmjay  | 9170... | -      |[(+) Select]
+|             | PMJAY/HP/S/G       | <payer code>|         |        |  |
 |------------------------------------------------------------------|
 
 Empty result:

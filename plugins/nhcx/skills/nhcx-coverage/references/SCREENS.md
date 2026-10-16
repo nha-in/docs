@@ -21,3 +21,9 @@ Every screen of the claim, patient and practitioner flows, in one list. Each row
 | [S13](../screens/S13-patient-list.md) | Patient List | `patients/list` | Finds a registered patient by name, MRN, mobile or ABHA, and opens the chart or registers a new patient. | [A19](../apis/A19-abha-m1.md) | none |
 | [S14](../screens/S14-patient-registration-form.md) | Patient Registration Form | `patients/new`, `patients/edit/:id` | Registers or edits a patient, including the ABHA number and address that link a claim to an admission. | [A18](../apis/A18-biometric-authentication.md), [A19](../apis/A19-abha-m1.md) | none |
 | [S15](../screens/S15-patient-detail.md) | Patient Detail | `patients/view/:id` | The chart: overview, encounters, problems and allergies, vitals, laboratory and billing. | none | none |
+
+## Facility
+
+| # | Screen | Route | What it does | APIs | Callbacks |
+|---|---|---|---|---|---|
+| [S19](../screens/S19-nhcx-settings.md) | NHCX Settings | `settings/nhcx` | The facility's NHCX setup, kept by the desk's administrator: HFR id (shown from the ABDM module when it has one), participant code, the registered endpoint checked against the public URL, the certificate check, key rotation, and the startup checks run on demand. | none | none |

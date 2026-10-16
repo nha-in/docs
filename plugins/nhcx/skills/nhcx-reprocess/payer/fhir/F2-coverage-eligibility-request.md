@@ -1,7 +1,7 @@
 # F2. CoverageEligibilityRequest
 
 #### F2R. RESOURCE
-`CoverageEligibilityRequest`, received on `v1/coverageeligibility/check` inside a bundle a hospital built ([F1. Bundle](F1-bundle.md)). No profile is required or checked: a discovery request in the wild follows the scheme's reference bundle (patient identifiers typed `PMJAY`, `JHN`, `PI`) and a validation request the generic NRCeS profile (typed `ABHA`, `MO`, `MB`), and the exchange carries whatever the sender's builder made [PAYER](../references/PAYERS.md#markers). It is read by C2. Coverage Eligibility Check (in nhcx-coverage/payer) and answered at once by A1. Eligibility Answer (in nhcx-coverage/payer) with an [F3. CoverageEligibilityResponse](F3-coverage-eligibility-response.md).
+`CoverageEligibilityRequest`, received on `v1/coverageeligibility/check` inside a bundle a hospital built ([F1. Bundle](F1-bundle.md)). No profile is required or checked: a discovery request in the wild follows the scheme's reference bundle (patient identifiers typed the scheme's own way, `JHN`, `PI`) and a validation request the generic NRCeS profile (typed `ABHA`, `MO`, `MB`), and the exchange carries whatever the sender's builder made [PAYER](../references/PAYERS.md#markers). It is read by C2. Coverage Eligibility Check (in nhcx-coverage/payer) and answered at once by A1. Eligibility Answer (in nhcx-coverage/payer) with an [F3. CoverageEligibilityResponse](F3-coverage-eligibility-response.md).
 
 #### F2D. DESCRIPTION
 The question "is this person covered", and for one purpose "what do you need with this procedure set". The parser walks the bundle as plain maps, takes every handle it recognises, and never fails on a shape it merely does not know: an odd bundle still deserves an answer, and "no cover found" is one. The only condition for the bundle to count as an eligibility question is that a `CoverageEligibilityRequest` resource is in it; nothing else in the bundle is required.
@@ -19,7 +19,7 @@ A request with no purpose at all is answered as a validation [REF](../references
 
 **Handles.** Everything the person might be found by is collected, in this precedence, then reduced to three lookups (ABHA, mobile, member id) the enrolment store runs ([D6. subscription](../database/D6-subscription.md) joined to [D5. member](../database/D5-member.md)):
 
-- `Patient.identifier[]`, classified by the type coding first, then by the system when the type says nothing: `ABHA` or `JHN` is the ABHA number (kept only when its digits are a whole 14-digit number); `MO` the mobile (digits only, at least 10); `MB`, `PI` or `PMJAY` the member id; an untyped identifier on a `healthid.` system is the ABHA, on a `/mobile` system the mobile, otherwise the first untyped value becomes the member id.
+- `Patient.identifier[]`, classified by the type coding first, then by the system when the type says nothing: `ABHA` or `JHN` is the ABHA number (kept only when its digits are a whole 14-digit number); `MO` the mobile (digits only, at least 10); `MB` or `PI` the member id; an untyped identifier on a `healthid.` system is the ABHA, on a `/mobile` system the mobile; otherwise the first identifier whose type is none of `ABHA`, `JHN`, `MO` or `ADN` (whatever scheme-specific type it carries, or none) becomes the member id. No scheme's identifier type is named in the reader.
 - `Patient.name[0]` (text, else given and family joined) as the patient name, echoed on a no-cover answer.
 - `Patient.telecom[]` with system `phone` (or none) as the mobile, when no identifier gave one.
 - `Coverage.subscriberId`, what the hospital's desk actually typed: folded into whichever slot is still empty by its shape, 14 digits is an ABHA, 10 to 12 digits with at most separators is a mobile, anything else a member id.
@@ -41,7 +41,7 @@ A request with no purpose at all is answered as a validation [REF](../references
 | `item[].quantity.value`, `item[].unitPrice.value`, `item[].net.value` | `items[].quantity`, `.unit_price`, `.net` | as sent; the answer says what the payer allows |
 | `Patient.identifier[]` typed `ABHA`, `JHN`, or on a `healthid.` system | handle `abha_no` | canonical 14 digits, else ignored |
 | `Patient.identifier[]` typed `MO`, or on a `/mobile` system | handle `mobile` | digits only, at least 10 |
-| `Patient.identifier[]` typed `MB`, `PI`, `PMJAY`, or the first untyped value | handle `member_id` | first one wins |
+| `Patient.identifier[]` typed `MB` or `PI`, else the first not typed `ABHA`, `JHN`, `MO` or `ADN` | handle `member_id` | first one wins |
 | `Patient.name[0].text`, else `given` joined with `family` | `patient_name` | echoed on the no-cover answer |
 | `Patient.telecom[]` (system `phone` or none) `.value` | handle `mobile` | only when no identifier gave one |
 | `Coverage.subscriberId` | whichever of `abha_no`, `mobile`, `member_id` is still empty, by shape | |

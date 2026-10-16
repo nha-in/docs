@@ -12,6 +12,7 @@ Every FHIR resource the application builds for NHCX or reads back, in one list. 
 
 | # | Resource | Direction | What it is | Used by |
 |---|---|---|---|---|
+| [F3](../fhir/F3-coverage-eligibility-response.md) | CoverageEligibilityResponse | received | The payer's verdict (in force, wallet, pre-auth needed) or its ruling on each quoted item with the documents and forms required. | none |
 | [F7](../fhir/F7-questionnaireresponse.md) | QuestionnaireResponse | sent | One per payer form answered for the leg being sent, pointed at from the Claim's supportingInfo. | [A5](../apis/A5-claim-submit.md), [A18](../apis/A18-biometric-authentication.md) |
 
 ## Pre-authorisation and claim
@@ -30,4 +31,4 @@ Every FHIR resource the application builds for NHCX or reads back, in one list. 
 | [F16](../fhir/F16-practitioner.md) | Practitioner and PractitionerRole | sent | The care team doctors (HPR id, degree coding) on claim-side bundles, and the fixed PractitionerRole that enters an eligibility check. | [A5](../apis/A5-claim-submit.md) |
 | [F17](../fhir/F17-organization.md) | Organization | sent and received | The provider (HFR id) and the payer (participant code). | [A5](../apis/A5-claim-submit.md), [A6](../apis/A6-task-submit.md), [C6](../callbacks/C6-claim-on-submit.md), [C8](../callbacks/C8-enquiry-on-submit.md) |
 | [F18](../fhir/F18-coverage.md) | Coverage | sent | The policy: policy code and member id, `NONE` for a discovery, plus the payer's Coverage read back (plan name, period, relationship). | [A5](../apis/A5-claim-submit.md), [C6](../callbacks/C6-claim-on-submit.md) |
-| [F19](../fhir/F19-other-resources.md) | Other bundle resources | sent | Procedure (one per package, planned or completed) and Location, plus a table of which F file covers every other resource. | [A5](../apis/A5-claim-submit.md) |
+| [F19](../fhir/F19-other-resources.md) | Other bundle resources | sent | Procedure (one per package, planned or completed), Location, and DocumentReference (one per health record sent as structured data), plus a table of which F file covers every other resource. | [A5](../apis/A5-claim-submit.md) |

@@ -57,4 +57,5 @@ Delete: never directly. The row goes with its claim (`ON DELETE CASCADE`) or wit
 - Screens: [S6. Claim Detail](../screens/S6-claim-detail.md), [S8. Line Items](../screens/S8-line-items.md)
 - APIs: [A2. Coverage Eligibility Check](../apis/A2-coverage-eligibility-check.md), [A10. Transaction Related](../apis/A10-txn-related.md), [A11. Transaction Dispatch](../apis/A11-txn-dispatch.md), [A13. Transaction List](../apis/A13-txn-list.md), [A17. Claim State](../apis/A17-claim-state.md)
 - Callbacks: [C1. Callback Door](../callbacks/C1-callback-door.md), [C3. Authorisation Requirements Ruling](../callbacks/C3-auth-requirements-on-check.md)
+- FHIR: [F3. CoverageEligibilityResponse](../fhir/F3-coverage-eligibility-response.md)
 - Database: [D9. claim](D9-claim.md), [D10. claim_plan](D10-claim-plan.md), [D12. claim_plan_form](D12-claim-plan-form.md), [D14. claim_auth_item](D14-claim-auth-item.md), [D15. claim_auth_requirement](D15-claim-auth-requirement.md), [D16. claim_line](D16-claim-line.md)

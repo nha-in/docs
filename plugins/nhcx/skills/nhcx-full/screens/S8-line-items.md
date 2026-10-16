@@ -91,7 +91,8 @@ The picker. Three blocks, top to bottom: what is on the pre-authorisation, what 
 | Item | Name, code underneath |
 | Speciality | Speciality name or `-` |
 | Ward / ICU tier | Tier chips as on S8, each with its own red "Remove" button (confirm "Take this tier off the preauth?") |
-| Rate | The plan's rate as text. Where the plan prices the line at zero or names no rate, a number input instead (8rem, min 0, step 0.01), since such a package is billed at the hospital's own price [PAYER](../references/PAYERS.md#markers) |
+| Rate | The plan's rate as text. Where the price is **open** (the plan names no rate, or names zero and offers no ward or ICU tier for the package), a number input instead (8rem, min 0, step 0.01), since such a package is billed at the hospital's own price [PAYER](../references/PAYERS.md#markers). A zero rate with tiers is not open: the package is priced by its tiers alone, the cell reads "tiers only" and cannot be typed over |
+| Cycle | For a package the payer bills per cycle or session (chemotherapy, dialysis, PMJAY's cyclic packages [PAYER](../references/PAYERS.md#markers)): the cycle number of this line, from 1. Blank for everything else |
 | Quantity | Number input (6rem, min 1, step 1), whole numbers |
 | Amount | `₹` whole rupees |
 | (action) | Red "Remove" button, confirm "Take this line off the preauth?" |
@@ -120,16 +121,18 @@ Built from the procedures already on the pre-authorisation, from what their plan
 
 A filter row above the card, a GET form: "Search" (text, at least 18rem, matches code or name as a substring), "Speciality" (blank "All specialities", options `<name> (<count>)`), "Type" (blank "Any type", `Procedure` or `Implant`), and a primary "Search" button. Unlike S7 there is no Clear button.
 
-Card title "<n> in the payer's package master". Columns: Code, Package, Speciality, Type (chip, Procedure info, otherwise warning), Rate, and "Add". A benefit whose kind a pre-authorisation cannot quote (a policy-wide allowance such as an ambulance or room sub-limit) gets no Add button. Every package is listed, with no row limit: paged 100 rows a page with "Previous" and "Next" and "Page <p> of <q>" [REF](../references/PAYERS.md#markers), and the search and filters narrow the whole package master. Empty: "Nothing matches that search."
+Card title "<n> in the payer's package master". Columns: Code, Package, Speciality, Type (chip, Procedure info, otherwise warning), Rate (as on S7: the rate, "tiers only", or "open"), and "Add". One row per package **per speciality**: Dengue `MG004A` is three rows on a PMJAY master, and the desk adds the one for the speciality the case is treated under, which is what goes out as `Claim.item.category` [PAYER](../references/PAYERS.md#markers). A benefit whose kind a pre-authorisation cannot quote (a policy-wide allowance such as an ambulance or room sub-limit) gets no Add button. Every package is listed, with no row limit: paged 100 rows a page with "Previous" and "Next" and "Page <p> of <q>" [REF](../references/PAYERS.md#markers), and the search and filters narrow the whole package master. Empty: "Nothing matches that search."
 
-**Adding a line** posts the kind, the code, and for a tier the parent procedure code. The price is read from the plan at add time, never from the form: a Procedure or Implant takes the benefit's rate, a tier takes the rate its parent procedure lists for it (different procedures price the same ward differently [PAYER](../references/PAYERS.md#markers)). The new line starts at quantity 1. Rules, each shown verbatim as a red flash:
+**Adding a line** posts the kind, the code, the speciality (`category_code`), and for a tier the parent procedure code. The price is read from the plan at add time, never from the form: a Procedure or Implant takes the benefit's rate under that speciality, a tier takes the rate its parent procedure lists for it (different procedures price the same ward differently [PAYER](../references/PAYERS.md#markers)). The new line starts at quantity 1. Rules, each shown verbatim as a red flash:
 - Kind not one of the three: "That is not something a preauth can quote."
 - No code: "Nothing was selected."
 - Plan not ready: "Fetch the payer's insurance plan first, the preauth quotes its packages and its rates."
+- Speciality missing when the code is listed under more than one: "Pick the speciality this package is quoted under."
 - Tier with an unknown parent: "Pick the procedure this ward tier belongs to."
 - Tier the parent does not offer: "That ward tier is not offered for this package."
-- Code not in the plan as that kind: "<code> is not a <kind in lower case> in this plan."
-- Already quoted: "<code> is already on this preauth."
+- Code not in the plan as that kind under that speciality: "<code> is not a <kind in lower case> in this plan under <speciality>."
+- Already quoted, and the package is not cyclic: "<code> is already on this preauth."
+- Already quoted, and the package **is** cyclic (the plan's conditions mark it so, or the adapter lists it, [PAYERS.md](../references/PAYERS.md)) [PAYER](../references/PAYERS.md#markers): a new line is added as the next cycle, flash "<code> added as cycle <n>." PMJAY wants one item per cycle on an enhancement, so a second cycle is a second line, not a quantity of 2 ([D16. claim_line](../database/D16-claim-line.md)).
 - Success: "<code> added."
 
 Every action returns to S8.1.
@@ -207,7 +210,7 @@ Then an accordion:
 2. "Needed for this pre-authorisation (<n>)": requirements the payer marked for the pre-authorisation stage.
 3. "Needed later, with the claim (<n>)", only when there are any, with the muted note "The payer marked these for a stage after pre-authorisation, so they are not asked for here."
 
-Requirement tables: columns Kind (chip `Form` info or `Document` warning), Code, What, For (the line code it belongs to), Stage. Empty: "Nothing listed."
+Requirement tables: columns Kind (chip `Form` info or `Document` warning), Code, What, For (the line code it belongs to), Stage (chip "Pre-auth", "Post (claim)" or "Both", D11's stage rule). Empty: "Nothing listed."
 
 **Sending.** Checked before any call (red flash on S4):
 - Case not eligible: "Check the policy's eligibility before validating a procedure set against it."

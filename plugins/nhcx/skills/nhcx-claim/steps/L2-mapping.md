@@ -12,7 +12,7 @@ Map every field the specs need to where it lives in the target HMIS, and to the 
 For facility, practitioner, patient and code lists: pair each spec column with the target's table and column. Pay attention to the identifiers NHCX needs: ABHA number and address (D3), HPR id, registration number and qualification (D2), HFR id and participant code (D1).
 
 ### L2.2 Map clinical and admission data (D4, D5)
-Admission or encounter, dates, ward, treating doctor, diagnoses with ICD-10 codes. Note how the target marks an admission as current and how it stores diagnosis codes.
+Admission or encounter, dates, ward, treating doctor, diagnoses with ICD-10 codes (and the SNOMED CT mapping, when the target holds one). Note how the target marks an admission as current and how it stores diagnosis codes.
 
 ### L2.3 Map claim data (D9 to D30)
 Most claim tables are new in a target without NHCX. Mark each as `new`, or pair it with an existing insurance or TPA table when one exists. Record where the target keeps policy, payer and member id today.
@@ -43,7 +43,9 @@ A field the target does not hold is `missing` with the proposed fix (new column,
     }
   ],
   "codes": [
-    {"system": "ICD-10", "spec": ["D25.code", "F8:diagnosis[].diagnosisCodeableConcept"],
+    {"system": "ICD-10", "spec": ["D25.icd10_code", "F8:diagnosis[].diagnosisCodeableConcept.coding[0]"],
+     "target": {"table": "", "column": ""}, "status": "mapped | lookup | missing", "notes": ""},
+    {"system": "SNOMED CT", "spec": ["D25.snomed_code", "F8:diagnosis[].diagnosisCodeableConcept.coding[1]"],
      "target": {"table": "", "column": ""}, "status": "mapped | lookup | missing", "notes": ""}
   ],
   "tables": [

@@ -158,14 +158,31 @@ C1 archives every inbound envelope, and services archive every outbound one, bes
 |---|---|---|
 | Patient | S13, S14, S15, D3 | ABHA number and address fields on the form, the ABHA search in the list, the ABHA chip on the chart. The ABHA number is what links a claim to an admission. |
 | Practitioner | S16, D2 | HPR id, registration number and qualification; retired practitioners drop out of pickers. The care team on the pre-auth comes from here. |
-| Facility settings | D1 | HFR id and NHCX participant code. |
-| Patient (ABHA) | D3, A19 | "Register with ABHA" on the list and "Verify or create an ABHA" on the form and the chart, filling the file from the ABHA service's profile. |
+| Facility settings | D1, S19 | The NHCX settings screen: HFR id (read from the HMIS's ABDM module when it has one), participant code, the registered endpoint checked against the public URL, the certificate check, and key rotation. |
+| Patient (ABHA) | D3, A19 | "Register with ABHA" on the list and "Verify or create an ABHA" on the form and the chart, filling the file from the ABHA service's profile. **Built only when the HMIS has no ABDM module that already does this** (section 4a). |
+| Billing | D21, S12 | A payment notice is posted to the HMIS's own billing or accounts module as a payer receipt against the admission's bill, with the shortfall as an adjustment; S12 shows the posting. |
 | Admission (encounter) | D4 | Nothing new if the HMIS already marks the current admission and its dates; S4 links a case to it. |
 | Navigation | L3 | A "Claims" entry on the home screen, sidebar or navbar, opening S5. |
 
 Two patterns are allowed where the HMIS's own tables should not change:
 - **NHCX-owned one-to-one extension tables** for D1 (the facility's HFR id and participant code) and D2 (the practitioner's HPR id and `active` flag), keyed on the HMIS row, instead of altering the HMIS's own tables; the ABHA number goes through the HMIS's own identifier mechanism when it has one (an identifier table or a typed identifier list), else onto D3. Mapping.json records which was chosen.
-- **Coexistence with an ABDM plug** that already owns the ABHA screens (M1, consent): NHCX's entry points sit beside the plug's, never inside them; the two keep separate identifier systems; and claims match a patient only on the NHCX-recorded ABHA number, read through the identifier mechanism above, never on the plug's internal ids.
+- **An HMIS that already has an ABDM module** (a plug, an app or a package that does HIE-CM, M1, HIP or HIU work) is reused, never duplicated. Section 4a says what is reused and how.
+
+## 4a. Reusing the HMIS's ABDM module
+
+L1.3 looks for an ABDM module (search `abdm`, `abha`, `hiecm`, `hip`, `hiu`, `health_facility`, `hf_id`, `hfr`) and records it in `discovery.json` under `abdm` with its model, service and screen files. When one exists, the rules below are binding, and `mapping.json` names the exact field or function reused for each row. A build that reimplements one of these beside an existing one is wrong, even when the skill's own spec (A19, D1, D3, G3) describes the standalone version: those specs describe what to build when there is nothing to reuse.
+
+| What | Reuse when the ABDM module has it | Build only when it does not |
+|---|---|---|
+| Facility HFR id ([D1. organization](../database/D1-organization.md) `identifier_value`) | Read from the module's facility record (for example a `HealthFacility.hf_id`). NHCX stores only what the module does not hold: the participant code and the identifier type. The NHCX settings screen ([S19. NHCX Settings](../screens/S19-nhcx-settings.md)) shows the value and where it comes from, and does not offer a second field for it. | The D1 column, edited on S19 |
+| Patient ABHA number and address ([D3. patient](../database/D3-patient.md)) | Read and write through the module's ABHA record or identifier configuration, under the identifier system the module already uses. Claims match a patient on that same value, digits only. There is one ABHA per patient in the HMIS, never one under an NHCX system and another under the module's. | D3 columns or the HMIS's identifier mechanism |
+| ABHA create and verify ([A19. ABHA Create and Verify (ABDM M1)](../apis/A19-abha-m1.md), S13 to S15 additions) | The module's own screens and flow. NHCX adds nothing; its patient screens link to the module's "Link ABHA" entry point. | A19 with the S13 to S15 additions |
+| ABDM session token ([G3. Session Token](../gateway/G3-session-token.md)) | One token per client id across the application: G3's cache is the module's token cache (or the module reads G3's), never two caches for one client. | G3's own cache |
+| Health records as claim documents ([D28. claim_document](../database/D28-claim-document.md), S9, S10, S11, [D17. claim_form_answer](../database/D17-claim-form-answer.md) file answers) | The module's M2 records: the care contexts of the admission and the document bundles it holds or builds for the eight `hiType`s (DischargeSummary, DiagnosticReport, Prescription, OPConsultation, Invoice, ImmunizationRecord, HealthDocumentRecord, WellnessRecord). The picker reads the HMIS's own record tables (OPConsultation, Prescription, DiagnosticReport, DischargeSummary, HealthDocumentRecord, Invoice at least), not only the records the module has staged or linked. The desk picks a record ("From records") instead of scanning and uploading it; what is attached is the record's M2 bundle, sent as structured data (a `DocumentReference` entry, F19), with the record's own PDF or the HMIS's rendering only for a payer that does not take FHIR. The picker also offers "Write a record", opening the module's own screen that files a record of the chosen `hiType` for this patient, so a missing discharge summary is written from the claim, not found later. `mapping.json` names the module's record model, its care-context link to the admission, the function that builds a record's bundle, the function that renders a record, and the route of its record screens. Read M2 with the `abdm-m2` prompt ([KNOWLEDGE.md](KNOWLEDGE.md)). | File upload alone; the "From records" button is absent |
+| Biometric authentication ([A18. Biometric Authentication](../apis/A18-biometric-authentication.md)) | Nothing: the HCX biometric service for claims is different from the module's ABHA enrolment biometrics. Build A18. | A18 |
+| NHCX gateway, claims, callbacks (G, A1 to A17, C) | Nothing: these are NHCX, not ABDM. | all of them |
+
+Sharing one ABHA record means the ABHA linked through the module's screens is seen by NHCX, and an ABHA NHCX records (from a payer's eligibility reply, with the desk's confirmation, S3. Policy Discovery (in nhcx-coverage)) is seen by the module. Where the module keeps the ABHA on its own model rather than on the patient, D3's `abha_number` is read through a function the mapping names, and no NHCX column duplicates it.
 
 ## 5. Dependency direction
 

@@ -81,4 +81,4 @@ A `lama` or `dama` discharge at `Before Surgery` or `During Surgery` makes the c
 - APIs: [A10. Transaction Related](../apis/A10-txn-related.md), [A11. Transaction Dispatch](../apis/A11-txn-dispatch.md), [A12. Transaction FHIR](../apis/A12-txn-fhir.md), [A13. Transaction List](../apis/A13-txn-list.md), [A17. Claim State](../apis/A17-claim-state.md)
 - Callbacks: [C1. Callback Door](../callbacks/C1-callback-door.md), [C8. Enquiry Reply](../callbacks/C8-enquiry-on-submit.md)
 - FHIR: [F10. Task (claim actions)](../fhir/F10-task-claim-actions.md)
-- Database: [D9. claim](D9-claim.md), [D16. claim_line](D16-claim-line.md), [D21. claim_payment](D21-claim-payment.md), [D23. claim_query](D23-claim-query.md), [D29. claim_enquiry](D29-claim-enquiry.md)
+- Database: [D9. claim](D9-claim.md), [D12. claim_plan_form](D12-claim-plan-form.md), [D16. claim_line](D16-claim-line.md), [D21. claim_payment](D21-claim-payment.md), [D23. claim_query](D23-claim-query.md), [D29. claim_enquiry](D29-claim-enquiry.md)

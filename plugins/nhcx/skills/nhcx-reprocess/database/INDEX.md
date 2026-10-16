@@ -9,7 +9,7 @@ The tables behind the claim, patient and practitioner screens. Screens (S), APIs
 | [D1](D1-organization.md) | organization | The healthcare facility this installation represents. | [D1-organization.md](D1-organization.md) |
 | [D2](D2-practitioner.md) | practitioner | Doctor or staff member of the facility. | [D2-practitioner.md](D2-practitioner.md) |
 | [D3](D3-patient.md) | patient | Registered patient. | [D3-patient.md](D3-patient.md) |
-| [D8](D8-terminology.md) | terminology | Concept in one code list (a picker), for example one ICD-10/SNOMED diagnosis, one department or one payer adapter mapping. | [D8-terminology.md](D8-terminology.md) |
+| [D8](D8-terminology.md) | terminology | Concept in one code list (a picker), for example one ICD-10 diagnosis with its SNOMED mapping, one department or one payer adapter mapping. | [D8-terminology.md](D8-terminology.md) |
 
 ## Claim
 
@@ -50,7 +50,7 @@ The tables behind the claim, patient and practitioner screens. Screens (S), APIs
 
 | # | Table | What one row is | File |
 |---|---|---|---|
-| [D28](D28-claim-document.md) | claim_document | Supporting file (PDF or image) attached to a claim for one leg, stored inline with the payer requirement it answers. Primary key `id`. Parent table: `claim` (D9). | [D28-claim-document.md](D28-claim-document.md) |
+| [D28](D28-claim-document.md) | claim_document | Supporting document attached to a claim for one leg: an uploaded PDF or image, or a health record the HMIS already holds, sent as its FHIR bundle (structured data), stored inline with the payer requirement it answers. Primary key `id`. Parent table: `claim` (D9). | [D28-claim-document.md](D28-claim-document.md) |
 | [D29](D29-claim-enquiry.md) | claim_enquiry | Small Task exchange a claim starts beside its main legs: a status enquiry, a reprocess request or a balance release request. Primary key `id`. Parent table: `claim` (D9), many rows per claim. | [D29-claim-enquiry.md](D29-claim-enquiry.md) |
 
 ## Numbering

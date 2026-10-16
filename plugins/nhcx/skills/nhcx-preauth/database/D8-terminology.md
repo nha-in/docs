@@ -7,9 +7,9 @@ One row is one concept in one code list (a picker), for example one ICD-10/SNOME
 Every picker in the application reads this table by `kind`, ordered by `sort_order, display`. A single concept is looked up by `kind` and `code`. Records that use a concept copy its code and display onto themselves, so later edits or deletes here never rewrite history.
 
 Kinds the claim flow reads:
-- `diagnosis`: SNOMED CT concept in `code` / `display`, with the ICD-10 code in `alt_code` / `alt_display`. The pre-auth quotes the ICD-10 (`alt_code`, else `code`).
+- `diagnosis`: ICD-10 concept in `code` / `display` (`system` `http://hl7.org/fhir/sid/icd-10`), with the mapped SNOMED CT concept in `alt_code` / `alt_display` (`alt_system` `http://snomed.info/sct`), empty when no mapping is known. The desk picks the ICD-10 ([S4. Claim Creation Form](../screens/S4-claim-creation-form.md)); the pre-auth sends it as the first coding and the SNOMED CT `alt_code` as the second ([F8. Claim](../fhir/F8-claim.md)).
 - `claim_package`: local HBP package list used only when the payer's package master ([D10](D10-claim-plan.md)) is not `ready`; `extra` is the package rate in rupees [PAYER](../references/PAYERS.md#markers).
-- `charge`: charge master for a non-package case; `extra` is `price|invoice type code`, and the price is the unit price of a [D27. claim_item](D27-claim-item.md).
+- `charge`: charge master for custom line items (`case_type` `nonpackage`); `extra` is `price|invoice type code`, and the price is the unit price of a [D27. claim_item](D27-claim-item.md).
 - `payer_adapter`: maps a payer's NHCX participant code (`code`, for example `<payer code>`) to the adapter key in `extra` (`pmjay`, `kyrocare` or `generic`, see [PAYERS.md](../references/PAYERS.md)). The claim's `payer_id` is matched on its numeric part, so `<n>`, `<n>@hcx` and `<n>@HCX` reach the same row. A payer with no row falls back to `generic`.
 - `department`, `service_type`: practitioner department and specialty ([D2](D2-practitioner.md)).
 - `vital`: the vitals written to [D6](D6-observation.md), with `unit`, `ref_low`, `ref_high`.
@@ -33,8 +33,8 @@ Lifecycle:
 | system | TEXT | NOT NULL | code system URL (SNOMED, LOINC, ICD-10, or a local system) |
 | code | TEXT | NOT NULL | the code |
 | display | TEXT | NOT NULL | the display name |
-| alt_system | TEXT | null | optional secondary coding system, for example ICD-10 next to SNOMED for a diagnosis |
-| alt_code | TEXT | null | secondary code (the ICD-10 code of a diagnosis) |
+| alt_system | TEXT | null | optional secondary coding system, for example SNOMED CT next to ICD-10 for a diagnosis |
+| alt_code | TEXT | null | secondary code (the SNOMED CT code mapped to an ICD-10 diagnosis) |
 | alt_display | TEXT | null | secondary display |
 | unit | TEXT | null | unit for measurable concepts (vitals, analytes) |
 | ref_low | REAL | null | reference range low |
@@ -50,5 +50,6 @@ Lifecycle:
 
 #### D8U. USED BY
 - Screens: [S4. Claim Creation Form](../screens/S4-claim-creation-form.md), [S15. Patient Detail](../screens/S15-patient-detail.md), [S16. Practitioner Master](../screens/S16-practitioner-master.md)
+- FHIR: [F8. Claim](../fhir/F8-claim.md)
 - Database: [D1. organization](D1-organization.md), [D2. practitioner](D2-practitioner.md), [D5. condition](D5-condition.md), [D6. observation](D6-observation.md), [D7. allergy](D7-allergy.md), [D25. claim_diagnosis](D25-claim-diagnosis.md), [D27. claim_item](D27-claim-item.md)
 - Tests: [T1. Test Configuration](../tests/T1-test-configuration.md)

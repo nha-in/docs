@@ -30,7 +30,7 @@ HTTP route the gateway calls:
 
 Every call to ABDM (registry, NHCX gateway) carries a session token minted from a participant's ABDM client id and secret.
 
-**Cache.** One in-memory map, shared by every profile, keyed by client id. A hosted profile with blank credentials uses the default's client id and so shares the default's token: one session per distinct client id, never one per code. If no client id exists anywhere the key is a per-code sentinel so profiles do not collide. Nothing is persisted; a restart fetches again.
+**Cache.** One in-memory map, shared by every profile, keyed by client id. When the HMIS has an ABDM module with a session token cache for the same client id, there is one cache, not two: G3 reads and writes the module's cache (or the module is pointed at G3's), so one client id holds one session across the application ([SCAFFOLDING.md](../references/SCAFFOLDING.md), section 4a). A hosted profile with blank credentials uses the default's client id and so shares the default's token: one session per distinct client id, never one per code. If no client id exists anywhere the key is a per-code sentinel so profiles do not collide. Nothing is persisted; a restart fetches again.
 
 **Freshness.** `client.token()` returns the cached token while more than one minute of its lifetime remains; otherwise it fetches. The lifetime is `expiresIn` (or `expires_in`) seconds from the answer, else `auth.tokenTtlSeconds` (1200) [REF](../references/PAYERS.md#markers). The token loop of G1 calls `client.token()` for every profile every minute, so the token is normally renewed before a send needs it.
 

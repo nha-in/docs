@@ -54,7 +54,7 @@ The page never reloads itself, because that would throw away whatever is being t
 | Stage `preauth`/`enhancement`, `draft` or `refused` | Send the pre-authorisation | Pre-authorisation (S9) |
 | Stage `preauth`/`enhancement`, `rejected` | Send a fresh pre-authorisation | Pre-authorisation (S9) |
 | Stage `preauth`/`enhancement`, `approved`/`partial`, lines added since | Send the enhancement (<n> added) | Pre-authorisation (S9) |
-| Same, nothing added, no discharge recorded | Record the discharge | Claim (S11) |
+| Same, nothing added, no discharge recorded | Record the discharge | Discharge (S11, discharge card) |
 | Same, discharge recorded | File the claim | Claim (S11) |
 | Stage `preauth`/`enhancement`, `requested`/`answered`/`resubmitted` | With the payer; ask where it stands | Pre-authorisation (S9) |
 | Stage `claim`, `queried` | Answer the claim query (resubmission payer), else "Answer the payer's query" | Claim (S11) / Communication (S10) |
@@ -77,8 +77,9 @@ The page never reloads itself, because that would throw away whatever is being t
 | 5 | `verification` | Verification | S18 (the beneficiary authenticated against their ABHA, at the stage the stay is at) |
 | 6 | `preauth` | Pre-authorisation | S4 (link admission, draft form) and S9 (send, verdict, documents, forms) |
 | 7 | `communication` | Communication | S10 |
-| 8 | `claim` | Claim | S11 |
-| 9 | `payments` | Payments | S12 |
+| 8 | `discharge` | Discharge | S11 (the discharge card, the discharge summary on file for the stay, and the way on to Verification and Claim) |
+| 9 | `claim` | Claim | S11 (the bill, the send, the verdict and settlement) |
+| 10 | `payments` | Payments | S12 |
 
 Tab rules:
 - No `tab`, or an unknown key, opens Eligibility.
@@ -120,7 +121,7 @@ The arrangement below is the reference implementation's [REF](../references/PAYE
 | Next: [Answer the payer (1)] [With the payer; ask where it stands]           |
 |------------------------------------------------------------------------------|
 | Eligibility | Insurance plan | Line items | Validate | Verification |       |
-| Pre-authorisation | Communication | Claim | Payments                         |
+| Pre-authorisation | Communication | Discharge | Claim | Payments             |
 |------------------------------------------------------------------------------|
 |                                                                              |
 |  <active tab content: S3, S7, S8, S8.2, S18, S4+S9, S10, S11 or S12>        |
@@ -141,7 +142,8 @@ The arrangement below is the reference implementation's [REF](../references/PAYE
 5. Tab "Verification": show S18.
 6. Tab "Pre-authorisation": show S4 (admission link and pre-auth draft) above S9 (sending and the payer's verdict).
 7. Tab "Communication": show S10.
-8. Tab "Claim": show S11.
+8. Tab "Discharge": show the discharge part of S11: the stay, the discharge card (or the recorded discharge), the discharge summary on file, then buttons on to Verification (S18, stage Discharge) and Claim.
+9. Tab "Claim": show the rest of S11: the recorded discharge read-only (with a "Record the discharge" button back to the Discharge tab while the stay is open), the claim-stage requirements, the bill, the send and the settlement.
 9. Tab "Payments": show S12.
 10. Next-action button: reload this screen on the tab the action names (see the table in S6D).
 11. Refresh: reload this screen on the current URL's tab, polling every leg that is out with the payer.

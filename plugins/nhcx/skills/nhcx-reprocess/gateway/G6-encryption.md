@@ -26,6 +26,8 @@ Every NHCX payload is a compact JWE: encrypted to the recipient's registered cer
 
 **Compact shape.** Five dot-separated parts with a non-empty first part (the protected header). An empty encrypted key part passes the shape check; decryption then fails.
 
+**Size.** `decrypt` must open a JWE whose ciphertext part is tens of megabytes: a PMJAY package master arrives as about 45 MB of compact JWE [SANDBOX](../references/PAYERS.md#markers). Several JOSE libraries cap each compact segment at a few hundred kilobytes as a denial-of-service guard (Authlib's JWE refuses a segment over 256 KB; others have similar defaults), and the failure surfaces as a parse error on a message that is in fact well formed. The implementation either raises the library's limit for this call, or splits the compact string on the dots itself and runs the two primitives directly: RSA-OAEP (SHA-256 or SHA-1 per `alg`) on the encrypted key, then AES-GCM or AES-CBC-HMAC on the ciphertext with the protected header as additional authenticated data. The plaintext is returned as bytes once, not copied through intermediate strings, and the library chosen is named with its limit in `code-plan.json`. L7 includes a dry-run decrypt of a 50 MB fixture (G8).
+
 **Reading the header without the key.** `parse_header` base64url-decodes the first part (padding tolerated) and parses it as a JSON object. The inbound path uses it to pick the addressed profile and to record refused messages with their ids (G8).
 
 **Which key opens an inbound message** is decided in G8: the addressed profile's key first, then every other distinct key held, and `DECRYPT_FAILED` when none opens it.

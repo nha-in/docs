@@ -44,7 +44,7 @@ Refused before any call, auth-requirements:
 |---|---|---|
 | Aadhaar number | 12 digits once spaces and hyphens are removed, else "An Aadhaar number has 12 digits" | Patient identifier typed `ADN` |
 | Mobile number | 10 digits, else "A mobile number has 10 digits" | Patient `telecom`, system `phone` |
-| Member ID | free text | becomes the member the bundle names (the `PMJAY` and `MB` identifiers and `Coverage.subscriberId`); the identifier searched on then rides beside it: an ABHA number as an identifier typed `ABHA`, a mobile as the phone |
+| Member ID | free text | becomes the member the bundle names (the Patient identifier typed `MB` and `Coverage.subscriberId`); the identifier searched on then rides beside it: an ABHA number as an identifier typed `ABHA`, a mobile as the phone |
 
 The Aadhaar number is sent to the payer and kept in the stored bundle; screens that list a check show its last four digits only.
 

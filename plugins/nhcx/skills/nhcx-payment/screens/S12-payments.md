@@ -8,21 +8,23 @@ This is the Payments tab of the Claim Detail shell S6. Its route is `claims/view
 | Endpoint | Purpose |
 |---|---|
 | `POST claims/:caseid/payments/:pid/ack` | Send a payment notice's acknowledgement (again) |
+| `POST claims/:caseid/payments/:pid/post` | Post the payment to the HMIS's billing (again) |
 
 Breadcrumb: Claims (claims/list, S5) > `<claim number>`
 
 #### S12D. DESCRIPTION
-Every payment notice the payer has sent about this claim, newest first. The payer starts this leg, not the hospital. There is nothing to submit here. The only action is re-sending an acknowledgement that failed.
+Every payment notice the payer has sent about this claim, newest first, and what each did to the admission's bill in the HMIS. The payer starts this leg, not the hospital. There is nothing to submit here. The actions are re-sending an acknowledgement that failed and re-posting a payment to billing that failed.
 
-**Intro card.** The card is titled "Payments" and reads: "The payer starts this leg: it posts a **payment notice** when money moves, typically one when payment is initiated and another when it clears, matched to this claim by the `CLN` number inside it. Each is acknowledged back automatically the moment it lands."
+**Intro card.** The card is titled "Payments" and reads: "The payer starts this leg: it posts a **payment notice** when money moves, typically one when payment is initiated and another when it clears, matched to this claim by the `CLN` number inside it. Each is acknowledged back automatically the moment it lands, and each payment is posted to the admission's bill as an insurer receipt."
 
-Below the text are three stat tiles:
+Below the text are four stat tiles:
 
 | Tile | Value | Tone |
 |---|---|---|
 | Notices | Count of notices on the claim | info |
 | Paid so far | Paid total (see below) | success when above zero |
 | Claimed | The claim's requested amount, `-` before a claim is filed | default |
+| Shortfall | Claimed minus approved once the claim is decided, else `-`; the amount posted to the bill as a payer adjustment | warning when above zero |
 
 **Empty state.** When no notice has arrived, a centred placeholder with an inbox icon reads: "No payment notice yet. One arrives from NHCX when the payer moves money for this claim."
 
@@ -47,7 +49,17 @@ Below the text are three stat tiles:
     | `sent` | Acknowledged | success |
     | `error` | Acknowledgement failed | danger |
 
-- **Detail list** (three columns): Amount, Currency, Payment date, UTR, Claim number (the `CLN` the notice named), Received, Acknowledged, Correlation id (the notice's, copied on a click).
+  - **Billing chip:**
+
+    | Billing status | Label | Tone |
+    |---|---|---|
+    | `posted` | Posted to bill `<billing_ref>` | success |
+    | `pending` | Not posted to billing | warning |
+    | `error` | Billing posting failed | danger |
+    | `none` | No billing module | neutral |
+
+- **Detail list** (three columns): Amount, Currency, Payment date, UTR, Claim number (the `CLN` the notice named), Received, Acknowledged, Posted to billing (date and the HMIS receipt reference, a link to the receipt when the HMIS has a page for it), Correlation id (the notice's, copied on a click).
+- **Billing error.** When the last posting failed, its error text is shown in red, and the header offers "Post to billing again". A notice that does not count towards the paid total (initiated, no UTR) is not posted and its chip reads "Not posted: payment not cleared".
 - **Breakdown table.** Shown when the reconciliation carries detail lines. Columns: Reference, Type (display, else code), Date, Amount.
 - **Acknowledgement error.** When the last acknowledgement failed, its error text is shown in red.
 - **Header action.** When the acknowledgement is not `sent`, a primary button with a check icon. It reads "Acknowledge" when pending and "Acknowledge again" after an error.
@@ -67,6 +79,8 @@ A failed acknowledgement never rejects the notice:
 - The notice keeps the acknowledgement status `error` with the message, and the card offers "Acknowledge again".
 
 **Manual acknowledgement.** The route answers the not found page ("Payment notice") when the notice does not belong to this claim. On success it flashes "Payment acknowledged to the payer." and returns to S12. Otherwise it flashes the send error from [G7. Send](../gateway/G7-send.md) in red. A missing facility setup gives "Set the facility's HFR ID and NHCX participant code under Settings first."
+
+**Posting to the HMIS's billing.** Every notice that counts towards the paid total is posted to the linked admission's bill the moment it lands ([D21. claim_payment](../database/D21-claim-payment.md)): an insurer receipt for the amount under the UTR, and, on the clearing notice of a decided claim, a payer adjustment for the shortfall with the payer's deduction reasons. The posting goes through the one billing hook the integration bound to the HMIS's receipt and adjustment records; the hospital's own billing screens then show the bill settled, part-settled or adjusted, without re-keying. "Post to billing" / "Post to billing again" re-runs it; the route refuses with "This payment is not cleared yet." for an initiated notice and "No admission is linked to this claim, so there is no bill to post to." when D9 `encounter_id` is null. Success flash: "Payment posted to the bill as receipt <ref>." An HMIS without a billing module shows the neutral chip and offers no button.
 
 **Paid total.** "Paid so far", the S6 header chip "Paid ₹X", the balance on the S11 release form and the "paid in full" checks all use the same sum. The rules are:
 - Only notices whose status is `paid` or `cleared` count.
@@ -129,6 +143,7 @@ The arrangement below is the reference implementation's [REF](../references/PAYE
 
 #### S12A. ACTIONS
 1. Acknowledge / Acknowledge again: send the payment acknowledgement for that notice and reload S12, where the chip shows "Acknowledged" or the error.
+1a. Post to billing / Post to billing again: post the receipt (and the shortfall adjustment) to the HMIS's bill and reload S12, where the billing chip shows the receipt reference or the error.
 2. Refresh (S6 header, when shown): reload S6 on this tab. Notices arrive pushed through the callback door, so a reload shows new ones.
 3. Next "Acknowledge the payment notice" (S6 header): come to this tab.
 4. Claim tab: go to Claim Submission S11, for example to ask for the unpaid balance.

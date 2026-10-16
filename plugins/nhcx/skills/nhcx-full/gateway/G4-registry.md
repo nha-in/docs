@@ -141,7 +141,7 @@ client.post_registry(path, body):
 ```
 
 #### G4U. USED BY
-- Screens: [S2. Select Policy](../screens/S2-select-policy.md)
+- Screens: [S2. Select Policy](../screens/S2-select-policy.md), [S19. NHCX Settings](../screens/S19-nhcx-settings.md)
 - APIs: [A1. Policy Search](../apis/A1-policy-search.md)
 - FHIR: [F17. Organization](../fhir/F17-organization.md)
 - Database: [D9. claim](../database/D9-claim.md)

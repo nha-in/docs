@@ -6,10 +6,12 @@ One row is the healthcare facility this installation represents; primary key `id
 #### D1D. DESCRIPTION
 The facility row is the provider on every NHCX message. Its `participant_code` is the `x-hcx-sender_code` on every outbound send. Its `identifier_value` (the HFR / facility ID) is the `providerId` on the eligibility check, the InsurancePlan discovery Task and the pre-auth and claim bundles. `name` and `phone` fill the provider Organization.
 
+**Where the HFR id comes from.** When the HMIS has an ABDM module with a facility record (for example a `HealthFacility.hf_id`), that record is the HFR id: `identifier_value` is read from it through the function the mapping names, and the NHCX settings screen ([S19. NHCX Settings](../screens/S19-nhcx-settings.md)) shows it read-only with its source. Only an HMIS without such a record edits `identifier_value` on S19. The two are never both editable, so the facility's registry id lives in one place ([SCAFFOLDING.md](../references/SCAFFOLDING.md), section 4a). The participant code is NHCX's own and is always edited on S19.
+
 Lifecycle:
 - Created once, by seeding, when the table is empty. The seeded row has `is_default = 1`, `type_code = 'prov'` and no `participant_code`.
 - The application reads "the facility" as the first row ordered by `is_default DESC, id`. No screen adds a second row.
-- Updated from the facility settings screen: every column except `id` and `is_default` is overwritten on save. `name` and `identifier_value` are required. `identifier_type_code` defaults to `NHRR`, `identifier_system` to `https://facility.abdm.gov.in`, `type_code` to `prov`, `country` to `India`.
+- Updated from the NHCX settings screen ([S19. NHCX Settings](../screens/S19-nhcx-settings.md)): every column except `id` and `is_default` is overwritten on save, and `identifier_value` only when no ABDM module supplies it. `name` and `identifier_value` are required. `identifier_type_code` defaults to `NHRR`, `identifier_system` to `https://facility.abdm.gov.in`, `type_code` to `prov`, `country` to `India`.
 - Never deleted. It is a master table and survives the "clear transactional data" reset.
 
 Guards that read it:
@@ -49,6 +51,7 @@ Payers are not rows in this table. A claim carries its payer on [D9. claim](D9-c
 - No unique constraints or indexes beyond the primary key.
 
 #### D1U. USED BY
+- Screens: [S19. NHCX Settings](../screens/S19-nhcx-settings.md)
 - APIs: [A12. Transaction FHIR](../apis/A12-txn-fhir.md), [A14. Adjudicator User Role](../apis/A14-adjudicator-user-role.md), [A15. Adjudicator Process Case](../apis/A15-adjudicator-process-case.md), [A16. Gateway Token](../apis/A16-gateway-token.md)
 - FHIR: [F2. CoverageEligibilityRequest](../fhir/F2-coverage-eligibility-request.md), [F4. Task (InsurancePlan discovery)](../fhir/F4-task-insuranceplan.md), [F14. Payment acknowledgement](../fhir/F14-payment-acknowledgement.md), [F17. Organization](../fhir/F17-organization.md), [F19. Other bundle resources](../fhir/F19-other-resources.md)
 - Database: [D3. patient](D3-patient.md), [D10. claim_plan](D10-claim-plan.md)

@@ -6,16 +6,16 @@ Every table behind the claim, patient and practitioner flows, in one list. Each 
 
 | # | Table | What one row is | Screens | APIs | Callbacks | FHIR |
 |---|---|---|---|---|---|---|
-| [D1](../database/D1-organization.md) | organization | The healthcare facility this installation represents. | none | [A12](../apis/A12-txn-fhir.md) | none | [F14](../fhir/F14-payment-acknowledgement.md), [F17](../fhir/F17-organization.md) |
+| [D1](../database/D1-organization.md) | organization | The healthcare facility this installation represents. | [S19](../screens/S19-nhcx-settings.md) | [A12](../apis/A12-txn-fhir.md) | none | [F14](../fhir/F14-payment-acknowledgement.md), [F17](../fhir/F17-organization.md) |
 | [D2](../database/D2-practitioner.md) | practitioner | Doctor or staff member of the facility. | none | none | none | [F16](../fhir/F16-practitioner.md) |
 | [D3](../database/D3-patient.md) | patient | Registered patient. | none | none | none | [F15](../fhir/F15-patient.md) |
-| [D8](../database/D8-terminology.md) | terminology | Concept in one code list (a picker), for example one ICD-10/SNOMED diagnosis, one department or one payer adapter mapping. | none | none | none | none |
+| [D8](../database/D8-terminology.md) | terminology | Concept in one code list (a picker), for example one ICD-10 diagnosis with its SNOMED mapping, one department or one payer adapter mapping. | none | none | none | none |
 
 ## Claim
 
 | # | Table | What one row is | Screens | APIs | Callbacks | FHIR |
 |---|---|---|---|---|---|---|
-| [D9](../database/D9-claim.md) | claim | Claim episode (case) around one selected policy, from eligibility to payment. | [S5](../screens/S5-claim-master.md), [S6](../screens/S6-claim-detail.md), [S12](../screens/S12-payments.md) | [A10](../apis/A10-txn-related.md), [A11](../apis/A11-txn-dispatch.md), [A13](../apis/A13-txn-list.md), [A17](../apis/A17-claim-state.md) | [C1](../callbacks/C1-callback-door.md), [C10](../callbacks/C10-paymentnotice-request.md) | [F13](../fhir/F13-paymentnotice.md), [F14](../fhir/F14-payment-acknowledgement.md), [F15](../fhir/F15-patient.md), [F17](../fhir/F17-organization.md), [F18](../fhir/F18-coverage.md) |
+| [D9](../database/D9-claim.md) | claim | Claim episode (case) around one selected policy, from eligibility to payment. | [S5](../screens/S5-claim-master.md), [S6](../screens/S6-claim-detail.md), [S12](../screens/S12-payments.md) | [A10](../apis/A10-txn-related.md), [A11](../apis/A11-txn-dispatch.md), [A13](../apis/A13-txn-list.md), [A17](../apis/A17-claim-state.md) | [C1](../callbacks/C1-callback-door.md), [C10](../callbacks/C10-paymentnotice-request.md) | [F3](../fhir/F3-coverage-eligibility-response.md), [F13](../fhir/F13-paymentnotice.md), [F14](../fhir/F14-payment-acknowledgement.md), [F15](../fhir/F15-patient.md), [F17](../fhir/F17-organization.md), [F18](../fhir/F18-coverage.md) |
 
 ## Legs and verdicts
 
