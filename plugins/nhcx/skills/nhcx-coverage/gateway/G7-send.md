@@ -209,7 +209,7 @@ post_with_token(url, body, label):               // shared with G4 and G10 (labe
 ```
 
 #### G7U. USED BY
-- Screens: [S5. Claim Master](../screens/S5-claim-master.md)
+- Screens: [S5. Claim Master](../screens/S5-claim-master.md), [S17. Beneficiary Discovery](../screens/S17-beneficiary-discovery.md)
 - APIs: [A2. Coverage Eligibility Check](../apis/A2-coverage-eligibility-check.md), [A10. Transaction Related](../apis/A10-txn-related.md), [A11. Transaction Dispatch](../apis/A11-txn-dispatch.md)
 - FHIR: [F1. Bundle](../fhir/F1-bundle.md)
 - Gateway: [G1. Embedding](G1-embedding.md), [G2. Configuration and Participants](G2-configuration.md), [G3. Session Token](G3-session-token.md), [G4. Registry and Certificates](G4-registry.md), [G5. Protocol Headers](G5-protocol-headers.md), [G6. Encryption](G6-encryption.md), [G9. Ledger](G9-ledger.md)

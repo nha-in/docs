@@ -11,15 +11,15 @@ Always read, whatever the task: [CORE.md](CORE.md) (addresses and the exchange t
 | [S4](../screens/S4-claim-creation-form.md) | Claim Creation Form | [F8](../fhir/F8-claim.md), [D2](../database/D2-practitioner.md), [D3](../database/D3-patient.md), [D4](../database/D4-encounter.md), [D5](../database/D5-condition.md), [D8](../database/D8-terminology.md), [D9](../database/D9-claim.md), [D16](../database/D16-claim-line.md), [D25](../database/D25-claim-diagnosis.md), [D26](../database/D26-claim-care-team.md), [D27](../database/D27-claim-item.md) |
 | [S5](../screens/S5-claim-master.md) | Claim Master | nothing else |
 | [S6](../screens/S6-claim-detail.md) | Claim Detail | nothing else |
-| [S7](../screens/S7-insurance-plan.md) | Insurance Plan | [D10](../database/D10-claim-plan.md), [D11](../database/D11-claim-plan-benefit.md), [D12](../database/D12-claim-plan-form.md) |
+| [S7](../screens/S7-insurance-plan.md) | Insurance Plan | [F5](../fhir/F5-insuranceplan.md), [D10](../database/D10-claim-plan.md), [D11](../database/D11-claim-plan-benefit.md), [D12](../database/D12-claim-plan-form.md), [G2](../gateway/G2-configuration.md), [G6](../gateway/G6-encryption.md), [G8](../gateway/G8-receive.md), [G11](../gateway/G11-startup-checks.md) |
 | [S8](../screens/S8-line-items.md) | Line Items | [D10](../database/D10-claim-plan.md), [D11](../database/D11-claim-plan-benefit.md), [D13](../database/D13-claim-auth.md), [D14](../database/D14-claim-auth-item.md), [D15](../database/D15-claim-auth-requirement.md), [D16](../database/D16-claim-line.md) |
-| [S9](../screens/S9-preauthorisation.md) | Pre-authorisation | [D9](../database/D9-claim.md), [D11](../database/D11-claim-plan-benefit.md), [D12](../database/D12-claim-plan-form.md), [D15](../database/D15-claim-auth-requirement.md), [D16](../database/D16-claim-line.md), [D17](../database/D17-claim-form-answer.md), [D18](../database/D18-claim-preauth.md), [D19](../database/D19-claim-predetermination.md), [D23](../database/D23-claim-query.md), [D28](../database/D28-claim-document.md), [D29](../database/D29-claim-enquiry.md), [D30](../database/D30-counter.md) |
+| [S9](../screens/S9-preauthorisation.md) | Pre-authorisation | [F3](../fhir/F3-coverage-eligibility-response.md), [F15](../fhir/F15-patient.md), [D9](../database/D9-claim.md), [D11](../database/D11-claim-plan-benefit.md), [D12](../database/D12-claim-plan-form.md), [D15](../database/D15-claim-auth-requirement.md), [D16](../database/D16-claim-line.md), [D17](../database/D17-claim-form-answer.md), [D18](../database/D18-claim-preauth.md), [D19](../database/D19-claim-predetermination.md), [D23](../database/D23-claim-query.md), [D28](../database/D28-claim-document.md), [D29](../database/D29-claim-enquiry.md), [D30](../database/D30-counter.md) |
 | [S13](../screens/S13-patient-list.md) | Patient List | [D3](../database/D3-patient.md) |
 | [S14](../screens/S14-patient-registration-form.md) | Patient Registration Form | [D3](../database/D3-patient.md) |
 | [S15](../screens/S15-patient-detail.md) | Patient Detail | [D3](../database/D3-patient.md), [D4](../database/D4-encounter.md), [D5](../database/D5-condition.md), [D6](../database/D6-observation.md), [D7](../database/D7-allergy.md), [D8](../database/D8-terminology.md) |
 | [S16](../screens/S16-practitioner-master.md) | Practitioner Master | [F16](../fhir/F16-practitioner.md), [D2](../database/D2-practitioner.md), [D8](../database/D8-terminology.md), [D26](../database/D26-claim-care-team.md) |
 | [S18](../screens/S18-beneficiary-verification.md) | Beneficiary Verification | [D3](../database/D3-patient.md), [D31](../database/D31-biometric-auth.md) |
-| [S19](../screens/S19-nhcx-settings.md) | NHCX Settings | [D1](../database/D1-organization.md), [G2](../gateway/G2-configuration.md), [G4](../gateway/G4-registry.md), [G6](../gateway/G6-encryption.md), [G8](../gateway/G8-receive.md), [G11](../gateway/G11-startup-checks.md) |
+| [S19](../screens/S19-nhcx-settings.md) | NHCX Settings | [D1](../database/D1-organization.md), [D32](../database/D32-participant.md), [G2](../gateway/G2-configuration.md), [G4](../gateway/G4-registry.md), [G6](../gateway/G6-encryption.md), [G8](../gateway/G8-receive.md), [G11](../gateway/G11-startup-checks.md) |
 
 ## APIs
 
@@ -58,7 +58,7 @@ Always read, whatever the task: [CORE.md](CORE.md) (addresses and the exchange t
 | [G1](../gateway/G1-embedding.md) | Embedding | nothing else |
 | [G2](../gateway/G2-configuration.md) | Configuration and Participants | [G6](../gateway/G6-encryption.md), [G8](../gateway/G8-receive.md), [G11](../gateway/G11-startup-checks.md) |
 | [G3](../gateway/G3-session-token.md) | Session Token | nothing else |
-| [G4](../gateway/G4-registry.md) | Registry and Certificates | nothing else |
+| [G4](../gateway/G4-registry.md) | Registry and Certificates | [D32](../database/D32-participant.md) |
 | [G5](../gateway/G5-protocol-headers.md) | Protocol Headers | nothing else |
 | [G6](../gateway/G6-encryption.md) | Encryption | nothing else |
 | [G7](../gateway/G7-send.md) | Send | nothing else |

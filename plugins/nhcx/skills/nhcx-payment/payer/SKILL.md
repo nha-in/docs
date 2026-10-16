@@ -3,10 +3,10 @@ name: nhcx-payer-payment
 description: >-
   Build NHCX (India's National Health Claims Exchange) payer-side payments into an existing payer system: raising and completing a disbursement, sending the payment notice with its reconciliation when money moves and again with the UTR, recording the hospital's acknowledgement, and answering a hospital's payment enquiry, with the embedded NHCX gateway it needs. Use when a payer system must tell hospitals about payments over NHCX.
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
-**Version 1.0.1**, built 2026-10-16, checked against NHA's NHCX package 1.0.0.
+**Version 1.1.0**, built 2026-10-16, checked against NHA's NHCX package 1.0.0.
 
 # READ FIRST: CORE
 Before anything else, read [references/CORE.md](references/CORE.md) and keep it in mind for the whole task. Its **Instructions** are binding: follow them strictly in every step and every file, and re-read them at the start of each step (L1 to L8). Its **Confusions** settle what easily mixed-up terms mean; when a word is ambiguous, CORE.md decides. It also holds the base URLs and, for every exchange, the route it arrives on, the bundle, the callback that takes it in, the answer and the workflow id the answer travels under.
@@ -64,7 +64,7 @@ The specs this skill holds:
 - **APIs** (6): [A6](apis/A6-payment-notice.md), [A7](apis/A7-payment-enquiry-answer.md), [A11](apis/A11-txn-related.md), [A12](apis/A12-txn-fhir.md), [A14](apis/A14-disburse.md), [A15](apis/A15-case-exchange.md)
 - **Callbacks** (3): [C1](callbacks/C1-callback-door.md), [C10](callbacks/C10-payment-enquiry.md), [C11](callbacks/C11-payment-acknowledgement.md)
 - **FHIR** (12): [F1](fhir/F1-bundle.md), [F4](fhir/F4-task-insuranceplan.md), [F5](fhir/F5-insuranceplan.md), [F6](fhir/F6-questionnaire.md), [F9](fhir/F9-claimresponse.md), [F10](fhir/F10-task-claim-actions.md), [F13](fhir/F13-paymentnotice.md), [F14](fhir/F14-paymentreconciliation.md), [F15](fhir/F15-patient.md), [F16](fhir/F16-practitioner.md), [F17](fhir/F17-organization.md), [F18](fhir/F18-coverage.md)
-- **Database** (22): [D1](database/D1-payer.md), [D2](database/D2-staff.md), [D3](database/D3-document-type.md), [D4](database/D4-terminology-code.md), [D6](database/D6-subscription.md), [D10](database/D10-procedure-rule.md), [D11](database/D11-procedure-rule-doc.md), [D12](database/D12-policy.md), [D13](database/D13-policy-procedure.md), [D14](database/D14-policy-coverage-clause.md), [D15](database/D15-policy-clause-benefit.md), [D16](database/D16-policy-alias.md), [D17](database/D17-policy-exclusion.md), [D18](database/D18-policy-sub-limit.md), [D19](database/D19-case.md), [D25](database/D25-case-line-item.md), [D26](database/D26-case-timeline.md), [D27](database/D27-case-exchange-message.md), [D28](database/D28-nhcx-delivery.md), [D30](database/D30-payment.md), [D31](database/D31-audit-log.md), [D32](database/D32-id-sequence.md)
+- **Database** (23): [D1](database/D1-payer.md), [D2](database/D2-staff.md), [D3](database/D3-document-type.md), [D4](database/D4-terminology-code.md), [D6](database/D6-subscription.md), [D10](database/D10-procedure-rule.md), [D11](database/D11-procedure-rule-doc.md), [D12](database/D12-policy.md), [D13](database/D13-policy-procedure.md), [D14](database/D14-policy-coverage-clause.md), [D15](database/D15-policy-clause-benefit.md), [D16](database/D16-policy-alias.md), [D17](database/D17-policy-exclusion.md), [D18](database/D18-policy-sub-limit.md), [D19](database/D19-case.md), [D25](database/D25-case-line-item.md), [D26](database/D26-case-timeline.md), [D27](database/D27-case-exchange-message.md), [D28](database/D28-nhcx-delivery.md), [D30](database/D30-payment.md), [D31](database/D31-audit-log.md), [D32](database/D32-id-sequence.md), [D33](database/D33-participant.md)
 - **Gateway** (11): [G1](gateway/G1-embedding.md), [G2](gateway/G2-configuration.md), [G3](gateway/G3-session-token.md), [G4](gateway/G4-registry.md), [G5](gateway/G5-protocol-headers.md), [G6](gateway/G6-encryption.md), [G7](gateway/G7-send.md), [G8](gateway/G8-receive.md), [G9](gateway/G9-ledger.md), [G10](gateway/G10-beneficiary-registry.md), [G11](gateway/G11-startup-checks.md)
 - **Tests** (4): [T1](tests/T1-test-configuration.md), [T2](tests/T2-test-runners.md), [T15](tests/T15-payment-noticed.md), [T16](tests/T16-payment-enquiry-answered.md)
 
@@ -77,7 +77,7 @@ Other skills built from the same source:
 - **nhcx-communication/payer**: queries to the hospital and the replies to them.
 
 # VERSION
-This is nhcx-payer-payment version 1.0.1, built on 2026-10-16. Its protocol tables (workflow ids, statuses, base URLs) were checked against NHA's NHCX package 1.0.0 ([github.com/nha-in/nhcx-package](https://github.com/nha-in/nhcx-package)).
+This is nhcx-payer-payment version 1.1.0, built on 2026-10-16. Its protocol tables (workflow ids, statuses, base URLs) were checked against NHA's NHCX package 1.0.0 ([github.com/nha-in/nhcx-package](https://github.com/nha-in/nhcx-package)).
 
 - Record it when the work starts: `nhcx-plan/knowledge.json` and the `target` of `nhcx-plan/progress.json` carry `skill` and `skill_version`, and the header of `nhcx-plan/report.html` shows them.
 - If a later prompt runs with a different version of this skill than the one recorded, say so to the user before continuing, log it as a `corrected` entry naming both versions, and re-check the steps already done against the specs that changed.

@@ -17,6 +17,7 @@ Every table behind the desk, the registry, the products and the payments, in one
 | # | Table | What one row is | Screens | APIs | Callbacks | FHIR |
 |---|---|---|---|---|---|---|
 | [D6](../database/D6-subscription.md) | subscription | One enrolment of a member on a product: cover period, wallet balance, status, ABHA link state. | [S1](../screens/S1-overview.md), [S3](../screens/S3-case-desk.md) | none | [C1](../callbacks/C1-callback-door.md) | [F4](../fhir/F4-task-insuranceplan.md), [F5](../fhir/F5-insuranceplan.md), [F10](../fhir/F10-task-claim-actions.md), [F15](../fhir/F15-patient.md), [F18](../fhir/F18-coverage.md) |
+| [D33](../database/D33-participant.md) | participant | The participant master: every provider, payer and TPA on the exchange, government and private, pulled from the registry's participant list over a configured window (one year by default, ten in the sandbox) and refreshed daily. Primary key `code`. No parent table. | none | none | none | none |
 
 ## Products and procedures
 

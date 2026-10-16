@@ -173,4 +173,5 @@ target_url(base, path):
 #### G5U. USED BY
 - APIs: [A8. Payment Notice Acknowledgement](../apis/A8-paymentnotice-on-request.md)
 - FHIR: [F1. Bundle](../fhir/F1-bundle.md)
+- Database: [D32. participant](../database/D32-participant.md)
 - Gateway: [G2. Configuration and Participants](G2-configuration.md), [G4. Registry and Certificates](G4-registry.md), [G6. Encryption](G6-encryption.md), [G7. Send](G7-send.md), [G8. Receive](G8-receive.md), [G9. Ledger](G9-ledger.md)

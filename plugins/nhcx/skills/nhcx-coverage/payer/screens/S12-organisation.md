@@ -8,6 +8,8 @@
 | `GET payer` | The insurer's record |
 | `PATCH payer` | Save it |
 | `GET participants/lookup?codes=a,b` | Name participant codes through the registry ([A17. Participant Lookup](../apis/A17-participant-lookup.md)) |
+| `GET participants?role=&kind=&search=` | The participant master ([D33. participant](../database/D33-participant.md)): counts, last refresh, rows |
+| `POST participants/refresh` | Pull the registry's participant list now |
 
 Not on the sidebar in the reference sandbox; reached by its route [REF](../references/PAYERS.md#markers). Breadcrumb: Organisation
 
@@ -34,6 +36,8 @@ The participant code is the `x-hcx-sender_code` of every answer and payer-starte
 
 **Name the codes** [REF](../references/PAYERS.md#markers): the reference names participant codes through the registry ([A17. Participant Lookup](../apis/A17-participant-lookup.md)) in its participants dialog and the case list header, `{items: [{code, name, roles, status, found}]}`; a code the registry does not know comes back with `found` false rather than an error. A target may show the registry's name beside each code here.
 
+**4. Participants on the exchange** ([D33. participant](../database/D33-participant.md)): the participant master, every provider, payer and TPA registered on NHCX in the last `<windowYears>` years (one by default, ten in the sandbox), government and private, pulled from the registry's list ([G4. Registry and Certificates](../gateway/G4-registry.md) `fetch_participants`) and refreshed daily. Three tiles (Providers, Payers, TPAs) with the active count and "<n> government · <n> private" under each, the line "Last refreshed <when>." (an amber "Older than a day" chip when stale), a Role dropdown and a Find box over a table (Name, Participant code, Kind as a chip "Government" or "Private", State), and a header action "Refresh now" (`POST participants/refresh`) that pulls every role for both kinds and toasts "Participant list refreshed: <n> providers, <n> payers, <n> TPAs."; a registry failure is shown red and changes nothing. The case list and the case desk name the hospital from this table first, and show the government chip beside a government hospital; [A17. Participant Lookup](../apis/A17-participant-lookup.md) is asked only for a code the list does not carry.
+
 **3. Contact & Address**: "Written as `telecom` and `address` on the Organization resource". Phone, Email ("Enter a valid email address"), Address, City, State, PIN Code, Country ("Enter the country", default India).
 
 "Save Organisation" saves the whole record; toast "Organisation details saved". A deployment without a payer row: "This deployment has no payer record".
@@ -41,6 +45,8 @@ The participant code is the `x-hcx-sender_code` of every answer and payer-starte
 API: [A17. Participant Lookup](../apis/A17-participant-lookup.md)
 
 Data: [D1. payer](../database/D1-payer.md)
+
+Data: [D33. participant](../database/D33-participant.md)
 
 #### S12L. LAYOUT
 The arrangement below is the reference desk's [REF](../references/PAYERS.md#markers): follow the target payer system's own screen conventions. What is required is in DESCRIPTION and ACTIONS: the fields, the two participant codes and their rule.

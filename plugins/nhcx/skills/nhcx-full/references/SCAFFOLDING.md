@@ -124,9 +124,9 @@ Called only by G8 (inbound) and by `services/polling` (a reply found in the ledg
 | `communication` | C9 | Files a query, notification or note; triggers the notification acknowledgement (A7). |
 | `payment` | C10 | Records the notice and its breakdown, updates a repeat, triggers the acknowledgement (A8). |
 
-### 3.5 `nhcx/models/` and `nhcx/migrations/` (D1 to D30)
+### 3.5 `nhcx/models/` and `nhcx/migrations/` (D1 to D32)
 
-- Models for D9 to D30, one per table, with the status values from each DnD as named constants rather than bare strings.
+- Models for D9 to D32, one per table, with the status values from each DnD as named constants rather than bare strings. D32 (the participant master) comes with a `services/participants` module: refresh (two list calls per role, upsert, retire), the picker search, the counts, and the name lookup the payer adapters read first.
 - D1 to D8 are the HMIS's own tables. Add only the missing columns that `nhcx-plan/mapping.json` lists (for example `patient.abha_number`, `practitioner` HPR id, `organization.participant_code`), in their own modules' models.
 - One migration per plan phase, created with the target's migration tool, never by editing a schema file by hand. Each migration creates the phase's tables with the keys and indexes in DnK.
 
@@ -222,6 +222,9 @@ Forbidden: screens to gateway, screens to fhir, fhir to models, fhir to gateway,
 
 - Token refresh, every minute (G1, G3).
 - Ledger pruning, hourly (G1, G9).
+- Participant master refresh ([D32. participant](../database/D32-participant.md)), daily: `fetch_participants` for every role, government and private, over the configured window (`participant.windowYears`, 1 in production, 10 in the sandbox), upserted into the master; also run on demand from S19 and by the payer picker when the master is empty or older than a day. Expose it as a management command or scheduled task of the target so the first desk of the morning does not wait on the registry.
+- Pre-authorisation auto-cancel ([S9. Pre-authorisation](../screens/S9-preauthorisation.md)), hourly, only when the integration decision `preauth.autoCancelHours` is above 0: an approved pre-authorisation whose case has no admission linked within that many hours is withdrawn with an A6 cancel Task.
+- Insurance plan refresh ([S7. Insurance Plan](../screens/S7-insurance-plan.md)), only when `plan.refresh` is automatic: refetch masters older than the chosen period.
 - No polling job: polling runs when a claim is opened (S6) or its state is read (A17). A target that wants background polling adds a job that calls `services/polling` per waiting case; it must use the same handlers.
 
 ## 8. Errors and logging

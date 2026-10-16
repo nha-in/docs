@@ -21,6 +21,7 @@ Every table behind the desk, the registry, the products and the payments, in one
 | [D7](../database/D7-subscription-family-member.md) | subscription_family_member | A dependant on a family floater. | [S5](../screens/S5-subscriptions.md) | none | none | none |
 | [D8](../database/D8-wallet-entry.md) | wallet_entry | One movement of an enrolment's wallet with the balance after it. | [S3](../screens/S3-case-desk.md), [S5](../screens/S5-subscriptions.md) | none | none | none |
 | [D9](../database/D9-abha-link-event.md) | abha_link_event | One link or delink attempt at ABDM, whatever it did. | [S5](../screens/S5-subscriptions.md) | [A16](../apis/A16-abha-policy-link.md) | none | none |
+| [D33](../database/D33-participant.md) | participant | The participant master: every provider, payer and TPA on the exchange, government and private, pulled from the registry's participant list over a configured window (one year by default, ten in the sandbox) and refreshed daily. Primary key `code`. No parent table. | [S12](../screens/S12-organisation.md) | none | none | none |
 
 ## Products and procedures
 
