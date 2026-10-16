@@ -30,8 +30,8 @@ Which card shows depends on the case:
 | Case state | Card shown |
 |---|---|
 | Eligibility status is not `eligible` and no admission is linked | "Pre-authorisation": "The pre-authorisation opens once the payer has confirmed the policy is **eligible**. Run the coverage eligibility check on the Eligibility tab first." |
-| Eligible, but the policy carries no ABHA number | "Link the admitted patient": "This policy carries no ABHA number, so it cannot be matched to an admission. Re-run the eligibility check - the payer's reply usually carries the beneficiary's ABHA." |
-| Eligible with an ABHA number, not yet linked | "Link the admitted patient" with the matching admissions table |
+| Eligible, but the policy carries no ABHA number | "Link the admitted patient": "This policy carries no ABHA number, so it cannot be matched to an admission. Re-run the eligibility check - the payer's reply usually carries the beneficiary's ABHA." Then the draft form: the link is optional before the pre-authorisation |
+| Eligible with an ABHA number, not yet linked | "Link the admitted patient" with the matching admissions table and the note "Optional before the pre-authorisation; the claim needs the stay.", then the draft form |
 | Linked | "Linked admission" summary, then the draft form |
 
 Matching admissions are the current (not yet finished) IPD stays of patients whose ABHA number equals the **chosen beneficiary's** ABHA number (S3. Policy Discovery (in nhcx-coverage)), compared on digits only (the payer writes `91-7034-...`, the front desk may store it without dashes). Newest admission first. While the eligibility reply offers several members and none is chosen, the card reads "Choose which member of the policy is the patient on the Eligibility tab first." with a button to S3, and no table is shown.
