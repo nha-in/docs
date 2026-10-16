@@ -311,8 +311,13 @@ for (const [id, atom] of atoms) {
     const term = title.split(",")[0].trim();
     // The glossary first, then reference and getting started, because header
     // terms like X-CM-ID are defined where they are used, not in the list.
+    // Only the atom's own gateway: "M2" is a word in the UHI onboarding page
+    // too, and a shared term cited to another gateway's page sends a reader
+    // somewhere that has nothing to do with the question. Shared atoms are
+    // the HIE-CM site's.
+    const home = `/docs/${/^(nhcx|uhi)\./.test(id) ? id.split(".")[0] : "hiecm"}/`;
     const candidates = [glossaryPage, ...pages.filter((p) => /\/reference\/|\/getting-started\//.test(p.route))]
-      .filter(Boolean);
+      .filter((p) => p && p.route.startsWith(home));
     // A glossary term must anchor on its own heading, never on the first
     // place the string appears: "M2" occurs inside the ECDH definition, and
     // a citation that lands a reader on the wrong term is worse than one

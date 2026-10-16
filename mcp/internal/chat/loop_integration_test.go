@@ -83,7 +83,7 @@ func TestLoopToolCallThenAnswer(t *testing.T) {
 	svc := &chat.Service{Model: fm, Tools: tools, MaxTokens: 100, TraceTools: true}
 	emit, evs := collectEvents()
 	err := svc.Respond(context.Background(),
-		[]chat.Turn{{Role: "user", Text: "what is the timestamp format?"}}, nil, emit)
+		[]chat.Turn{{Role: "user", Text: "why is my timestamp rejected?"}}, nil, emit)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -129,7 +129,7 @@ func TestLoopToolResultAbsentWithoutTraceTools(t *testing.T) {
 	svc := &chat.Service{Model: fm, Tools: tools, MaxTokens: 100}
 	emit, evs := collectEvents()
 	if err := svc.Respond(context.Background(),
-		[]chat.Turn{{Role: "user", Text: "what is the timestamp format?"}}, nil, emit); err != nil {
+		[]chat.Turn{{Role: "user", Text: "why is my timestamp rejected?"}}, nil, emit); err != nil {
 		t.Fatal(err)
 	}
 	names := []string{}
@@ -160,7 +160,7 @@ func TestLoopToolResultGuardsATruncatedToolInput(t *testing.T) {
 	svc := &chat.Service{Model: fm, Tools: tools, MaxTokens: 100, TraceTools: true}
 	emit, evs := collectEvents()
 	if err := svc.Respond(context.Background(),
-		[]chat.Turn{{Role: "user", Text: "what is the timestamp format?"}}, nil, emit); err != nil {
+		[]chat.Turn{{Role: "user", Text: "why is my timestamp rejected?"}}, nil, emit); err != nil {
 		t.Fatalf("a truncated tool input aborted the round: %v", err)
 	}
 	var resultEvt *event
@@ -205,5 +205,21 @@ func TestLoopBudgetExhausted(t *testing.T) {
 	}
 	if got.Role != "user" || got.Text != "Tool budget exhausted. Answer now from what you have." {
 		t.Fatalf("final message = %+v, want the budget-exhausted user notice", got)
+	}
+}
+
+func TestLoopLeavesErrorAtomsOutOfCitationsForOtherQuestions(t *testing.T) {
+	fm, tools := toolCallThenAnswer(t)
+	svc := &chat.Service{Model: fm, Tools: tools, MaxTokens: 100}
+	emit, evs := collectEvents()
+	err := svc.Respond(context.Background(),
+		[]chat.Turn{{Role: "user", Text: "what is the timestamp format?"}}, nil, emit)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, e := range *evs {
+		if e.name == "sources" {
+			t.Fatalf("a question that is not about an error cited an error atom: %v", e.data)
+		}
 	}
 }
