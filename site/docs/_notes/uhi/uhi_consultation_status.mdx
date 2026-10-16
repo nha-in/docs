@@ -1,0 +1,13 @@
+## Request the order status {/* #consultation-status */}
+
+The [EUA](/docs/uhi/v1/getting-started/glossary#eua) asks the [HSPA](/docs/uhi/v1/getting-started/glossary#hspa) for the full current order, [directly](/docs/uhi/v1/getting-started/glossary#direct-call-p2p) at its [`provider_uri`](/docs/uhi/v1/getting-started/glossary#provider-uri). Call it only when an expected `on_update` never arrives: the HSPA pushes every state change without being asked. The body names the order by the `order.id` from `on_init`. The HSPA replies with an `ACK`, then sends `on_status`.
+
+Sign every request with a fresh `Authorization` header. See [Signing](/docs/uhi/v1/concepts/signing).
+
+<AgentOnly>
+**Before you start.** A confirmed order, and its `order.id` and `transaction_id`.
+
+**How you know it worked.** An HTTP 200 carrying `ACK`, then an `on_status` at your `consumer_uri` carrying the order and its current state.
+
+**When it goes wrong.** A 401 means the signature was built over a different body, was reused, or has expired. Do not poll `status` on a timer in place of handling `on_update`.
+</AgentOnly>

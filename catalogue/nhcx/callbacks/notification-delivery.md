@@ -38,7 +38,7 @@ related:
   - shared.glossary.abha
   - shared.glossary.abha-address
   - shared.glossary.abdm
-  - shared.glossary.m1
+  - hiecm.glossary.m1
   - nhcx.glossary.jwe
 ---
 
@@ -52,7 +52,7 @@ A patient app can follow a patient's claims on [NHCX](../../shared/glossary/nhcx
 
 **Who receives it:** the patient app, registered in NHCX as a beneficiary service provider. **Who sends it:** NHCX.
 
-- Your app has completed [ABHA](../../shared/glossary/abha.md) integration, milestone [M1](../../shared/glossary/m1.md) of [ABDM](../../shared/glossary/abdm.md).
+- Your app has completed [ABHA](../../shared/glossary/abha.md) integration, milestone [M1](../../hiecm/glossary/m1.md) of [ABDM](../../shared/glossary/abdm.md).
 - Your app is registered in NHCX as a beneficiary service provider: sandbox testing, sandbox certification, then onboarding to the production registry.
 - Your notification endpoint is an HTTPS address with TLS 1.2 or newer.
 - When the patient logs in and consents, your app calls [`/v1/notification/subscribe`](../endpoints/notification-subscribe.md). The call names the patient's [ABHA address](../../shared/glossary/abha-address.md) in `subscriber.id` and your endpoint in `on_notification_url`. See [subscribe a patient app to notifications](../flows/notification-subscribe.md).

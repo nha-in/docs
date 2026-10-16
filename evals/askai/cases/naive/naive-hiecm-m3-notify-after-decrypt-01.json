@@ -1,0 +1,37 @@
+{
+  "id": "naive-hiecm-m3-notify-after-decrypt-01",
+  "slice": "naive",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "ok i decrypted all the bundles that came to my push url. am i done or do i have to tell abdm something"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "Report receipt by calling /api/hiecm/data-flow/v3/health-information/notify with notifier.type set to HIU.",
+    "Set sessionStatus to RECEIVED, or to FAILED when data was not sent or was invalid.",
+    "Give each care context a hiStatus of OK or ERRORED."
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.endpoint.m3-hiu-data-flow-notify",
+    "hiecm.flow.m3-fetch-records"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-hiecm-consent-management-data-flow-yaml",
+  "catalogue_version": "2026.09.16",
+  "notes": "The last step of M3 is easy to skip. TRANSFERRED is the HIP's status on the same path, so an answer that tells the HIU to send it has mixed up the roles. Source lines: catalogue/hiecm/endpoints/m3-hiu-data-flow-notify.md, 'After the records reach your `dataPushUrl`, call this to report receipt. Set `notifier.type` to `HIU`. Set `sessionStatus` to `RECEIVED`, or to `FAILED` when data was not sent or was invalid. Give each care context a `hiStatus` of `OK` or `ERRORED`.' and 'The HIP uses the same path and reports `TRANSFERRED` and `DELIVERED` instead.'; catalogue/hiecm/flows/m3-fetch-records.md, 'POST /api/hiecm/data-flow/v3/health-information/notify'. Review: must_not_contain 'sessionStatus to TRANSFERRED' removed: a correct contrast with the HIP's TRANSFERRED matched it."
+}

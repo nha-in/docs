@@ -134,26 +134,6 @@ export function clearCurrentId(): void {
   } catch {}
 }
 
-/**
- * The conversation the reader chose to carry on past the window with, so the
- * offer to start a new one is made once, and not again after a reload.
- */
-const CONTINUED_KEY = 'abdm-ask-ai-continued';
-
-export function continuedId(): string | null {
-  try {
-    return sessionStorage.getItem(CONTINUED_KEY);
-  } catch {
-    return null;
-  }
-}
-
-export function setContinuedId(id: string): void {
-  try {
-    sessionStorage.setItem(CONTINUED_KEY, id);
-  } catch {}
-}
-
 /** The conversation to put back on screen, if this tab was in one. */
 export function resumable<T extends Said>(list: Session<T>[], id: string | null): Session<T> | null {
   return (id && list.find((session) => session.id === id)) || null;
@@ -168,4 +148,20 @@ export function whenSaid(at: number, now = Date.now()): string {
   if (hours < 24) return `${hours}h ago`;
   const days = Math.floor(hours / 24);
   return days < 7 ? `${days}d ago` : new Date(at).toLocaleDateString();
+}
+
+/**
+ * When a question was asked, in words, for the line under it: "just now",
+ * "1 minute ago", "3 hours ago". Spelt out rather than shortened the way the
+ * history list does it, because here it sits on its own under one message.
+ */
+export function askedAgo(at: number, now = Date.now()): string {
+  const mins = Math.floor((now - at) / 60000);
+  if (mins < 1) return 'just now';
+  const say = (n: number, unit: string) => `${n} ${unit}${n === 1 ? '' : 's'} ago`;
+  if (mins < 60) return say(mins, 'minute');
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return say(hours, 'hour');
+  const days = Math.floor(hours / 24);
+  return days < 7 ? say(days, 'day') : new Date(at).toLocaleDateString();
 }

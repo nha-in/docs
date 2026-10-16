@@ -1,0 +1,506 @@
+{
+  "case_id": "naive-hiecm-m2-send-records-to-hiu-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "how do i send the patient's records to the hiu after consent is given"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01WRfi7PnQahxJHi5YatctTP",
+            "Name": "search",
+            "Input": {
+              "query": "send records to HIU after consent",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "send records to HIU after consent",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/03-m2-post-data-flow-v3-health-information-notify#m2-hip-data-flow-notify",
+                "id": "hiecm.endpoint.m2-hip-data-flow-notify",
+                "summary": "After pushing the records, the HIP reports the transfer with a session status and a status per care context.",
+                "title": "Notify the gateway that a data transfer finished",
+                "type": "endpoint"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_011gDSJURt25V2uZJCAfREJS",
+            "Name": "search",
+            "Input": {
+              "query": "HIP consent management record push transfer HIU",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "HIP consent management record push transfer HIU",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_014NLaXctuZy598LpTkaAm7t",
+            "Name": "get",
+            "Input": {
+              "id": "hiecm.endpoint.m2-hip-data-flow-notify"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "hiecm.endpoint.m2-hip-data-flow-notify"
+          },
+          "output": {
+            "body": "# Notify the gateway that a data transfer finished\n\n## In plain words\n\nAfter you push the encrypted records to the `dataPushUrl`, call this to report the transfer. Set `notifier.type` to `HIP`. Set `sessionStatus` to `TRANSFERRED` or `FAILED`. Give each care context a `hiStatus` of `DELIVERED` or `ERRORED`.\n\n## Before you start\n\nA gateway session token, and the `transactionId` and consent artefact id of the request. Send the `REQUEST-ID`, `TIMESTAMP` and `X-CM-ID` headers.\n\n## What happens\n\n`doneAt` is a UTC date time. `hipId` is your HIP id. The call returns 202 Accepted.\n\n## When it goes wrong\n\n`ABDM-1031` (Invalid request): check the body. A `hiStatus` of `OK` is the HIU's value, not the HIP's. `ABDM-2402` (Invalid Timestamp): check `TIMESTAMP` against your clock. `ABDM-2404` (Invalid Request Id): send a fresh UUID in `REQUEST-ID`. `ABDM-2500` (Authorization header is missing): send the session token. `ABDM-9999` (Unknown exception) gives no cause.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/03-m2-post-data-flow-v3-health-information-notify#m2-hip-data-flow-notify",
+            "gateway": "hiecm",
+            "id": "hiecm.endpoint.m2-hip-data-flow-notify",
+            "milestone": "M2",
+            "operation": "m2_post_data_flow_v3_health_information_notify",
+            "summary": "After pushing the records, the HIP reports the transfer with a session status and a status per care context.",
+            "title": "Notify the gateway that a data transfer finished",
+            "type": "endpoint"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01LojhCv62SCUx9NXyVDdqup",
+            "Name": "search",
+            "Input": {
+              "query": "M2 HIP data flow consent approval push records",
+              "type": "flow",
+              "milestone": "M2"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "M2 HIP data flow consent approval push records",
+            "type": "flow",
+            "milestone": "M2"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01CiZ4JVzxcqFxx76CLrnNnz",
+            "Name": "search",
+            "Input": {
+              "query": "dataPushUrl encrypted records",
+              "kind": "atom"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "dataPushUrl encrypted records",
+            "kind": "atom"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/10-m2-post-health-information-transfer#m2-on-data-notification",
+                "id": "hiecm.callback.m2-on-data-notification",
+                "summary": "The HIP posts the encrypted records straight to the HIU's data push URL, outside the gateway.",
+                "title": "The provider pushes encrypted health information to the URL named in the request",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m3#m3-fetch-records",
+                "id": "hiecm.flow.m3-fetch-records",
+                "summary": "Fetch a granted consent artefact, request the records it covers, and decrypt what the HIP pushes to your data push URL.",
+                "title": "Fetch the records a granted consent artefact covers",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/09-m2-post-v3-hip-health-information-request#m2-on-health-information-request",
+                "id": "hiecm.callback.m2-on-health-information-request",
+                "summary": "ABDM posts an HIU's data request to the HIP, with the consent artefact id, date range, push URL and key material.",
+                "title": "A request for the records a consent covers",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/03-m2-post-data-flow-v3-health-information-notify#m2-hip-data-flow-notify",
+                "id": "hiecm.endpoint.m2-hip-data-flow-notify",
+                "summary": "After pushing the records, the HIP reports the transfer with a session status and a status per care context.",
+                "title": "Notify the gateway that a data transfer finished",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.document-bundles",
+                "summary": "Every ABDM health record travels as one FHIR document Bundle: a Composition first, eight possible NRCES profiles, and a two tier validation story. This atom ...",
+                "title": "FHIR document bundles, the eight ABDM record types",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/05-m3-post-data-flow-v3-health-information-request#m3-hiu-health-information-request",
+                "id": "hiecm.endpoint.m3-hiu-health-information-request",
+                "summary": "The HIU asks for the records a consent artefact covers, with its ECDH key material and the URL to push them to.",
+                "title": "Request a patient's health information",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/02-m2-post-data-flow-v3-health-information-hip-on-request#m2-hip-health-information-on-request",
+                "id": "hiecm.endpoint.m2-hip-health-information-on-request",
+                "summary": "The HIP acknowledges a health information request, then encrypts the records and pushes them to the requester.",
+                "title": "Acknowledge a health information data request",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/05-m3-post-v3-hiu-health-information-on-request#m3-on-health-information-request",
+                "id": "hiecm.callback.m3-on-health-information-request",
+                "summary": "ABDM acknowledges an HIU's data request with its transaction id and status; the records come separately.",
+                "title": "Acknowledgement of a health information request",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/06-m3-post-data-flow-v3-health-information-notify#m3-hiu-data-flow-notify",
+                "id": "hiecm.endpoint.m3-hiu-data-flow-notify",
+                "summary": "After the records arrive, the HIU reports receipt with a session status and a status per care context.",
+                "title": "Notify the gateway that data was received",
+                "type": "endpoint"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_018CTU3h7CYN3UmjCUxL6PbJ",
+            "Name": "get",
+            "Input": {
+              "id": "hiecm.callback.m2-on-health-information-request"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "hiecm.callback.m2-on-health-information-request"
+          },
+          "output": {
+            "body": "# A request for the records a consent covers\n\n## In plain words\n\nWhen an [HIU](/docs/hiecm/v3/getting-started/glossary#hiu) asks for data under a consent, ABDM posts the request to your [HIP](/docs/hiecm/v3/getting-started/glossary#hip) bridge at `/api/v3/hip/health-information/request`. It carries the consent artefact id, the date range, the `dataPushUrl` and the requester's `keyMaterial`. Acknowledge it through [health information on-request](/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/02-m2-post-data-flow-v3-health-information-hip-on-request). Then push the encrypted records to `dataPushUrl`.\n\n## Before you start\n\nA callback URL registered for your bridge, and the consent artefacts you received on `/api/v3/consent/request/hip/notify`.\n\n## What happens\n\nABDM posts with the `REQUEST-ID`, `TIMESTAMP` and `X-HIP-ID` headers, and expects 200 OK. `transactionId` is the context for the data you send.\n\n## When it goes wrong\n\nNever send data for a consent artefact that has expired or been revoked. Share only records inside the requested `dateRange`.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/09-m2-post-v3-hip-health-information-request#m2-on-health-information-request",
+            "gateway": "hiecm",
+            "id": "hiecm.callback.m2-on-health-information-request",
+            "milestone": "M2",
+            "operation": "m2_post_v3_hip_health_information_request",
+            "summary": "ABDM posts an HIU's data request to the HIP, with the consent artefact id, date range, push URL and key material.",
+            "title": "A request for the records a consent covers",
+            "type": "callback"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01GM6jy53BdWMMHQGh42xeVc",
+            "Name": "get",
+            "Input": {
+              "id": "hiecm.endpoint.m2-hip-health-information-on-request"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "hiecm.endpoint.m2-hip-health-information-on-request"
+          },
+          "output": {
+            "body": "# Acknowledge a health information data request\n\n## In plain words\n\nCall this when a [health information request](/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/09-m2-post-v3-hip-health-information-request) reaches your bridge. Return its `transactionId` with `sessionStatus` of `ACKNOWLEDGED`, and its request id in `response.requestId`. Then encrypt the records and push them to the `dataPushUrl`.\n\nThe requester's `keyMaterial` uses [ECDH](/docs/hiecm/v3/getting-started/glossary#ecdh) on `Curve25519`, with a public key and a 32 byte nonce. Generate your own key pair and nonce for the transaction. Derive the shared key, combine the two nonces, and encrypt each entry with AES-GCM. Send your public key and nonce with the data.\n\n## Before you start\n\nA gateway session token and the health information request. Send the `REQUEST-ID`, `TIMESTAMP` and `X-CM-ID` headers.\n\n## What happens\n\nThe call returns 202 Accepted. The push goes to the `dataPushUrl` directly, not through the gateway. `/health-information/transfer` documents that push.\n\n## When it goes wrong\n\n`ABDM-1031` (Invalid request): check the body. Never push data for a consent artefact that has expired or been revoked. `ABDM-2402` (Invalid Timestamp): check `TIMESTAMP` against your clock. `ABDM-2404` (Invalid Request Id): send a fresh UUID in `REQUEST-ID`. `ABDM-2500` (Authorization header is missing): send the session token. `ABDM-9999` (Unknown exception) gives no cause.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/02-m2-post-data-flow-v3-health-information-hip-on-request#m2-hip-health-information-on-request",
+            "gateway": "hiecm",
+            "id": "hiecm.endpoint.m2-hip-health-information-on-request",
+            "milestone": "M2",
+            "operation": "m2_post_data_flow_v3_health_information_hip_on_request",
+            "summary": "The HIP acknowledges a health information request, then encrypts the records and pushes them to the requester.",
+            "title": "Acknowledge a health information data request",
+            "type": "endpoint"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01PJUZ6GX973KzMnuuZNaQsp",
+            "Name": "search",
+            "Input": {
+              "query": "M2 consent approval flow HIP",
+              "type": "flow",
+              "milestone": "M2",
+              "side": "provider"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "M2 consent approval flow HIP",
+            "type": "flow",
+            "milestone": "M2",
+            "side": "provider"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01R95cRoDo1urMK9cHS3xHwG",
+            "Name": "search",
+            "Input": {
+              "query": "consent data transfer flow",
+              "type": "flow"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "consent data transfer flow",
+            "type": "flow"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m3#m3-fetch-records",
+                "id": "hiecm.flow.m3-fetch-records",
+                "summary": "Fetch a granted consent artefact, request the records it covers, and decrypt what the HIP pushes to your data push URL.",
+                "title": "Fetch the records a granted consent artefact covers",
+                "type": "flow"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "Here's how to send patient records to the HIU after consent is given:\n\n## The Flow (HIP's Perspective)\n\n**1. Receive the data request** — The gateway posts a callback to your HIP bridge at `/api/v3/hip/health-information/request` containing:\n   - `consentArtefactId` (the granted consent)\n   - `dateRange` (what period to share)\n   - `dataPushUrl` (where the HIU wants the records)\n   - `keyMaterial` (HIU's public key for encryption)\n   - `transactionId` (for tracking this request)\n\n**2. Acknowledge the request** — Call the [Acknowledge a health information data request](https://developer.nha.gov.in/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/02-m2-post-data-flow-v3-health-information-hip-on-request) endpoint with the `transactionId` and `sessionStatus: ACKNOWLEDGED`. Return the request id in your response.\n\n**3. Encrypt and push the records** — \n   - Generate an ECDH key pair (Curve25519) and nonce\n   - Derive the shared key using ECDH with the HIU's public key\n   - Encrypt each record with AES-GCM\n   - POST the encrypted records directly to `dataPushUrl` (out-of-band from the gateway) with your public key and nonce\n   - Records must be within the requested date range and cover only the consented contexts\n\n**4. Notify completion** — Call the [Notify the gateway that a data transfer finished](https://developer.nha.gov.in/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/03-m2-post-data-flow-v3-health-information-notify) endpoint with `sessionStatus: TRANSFERRED` (or `FAILED` if it failed) and a `hiStatus` for each care context (`DELIVERED` or `ERRORED`).\n\nKey points from the portal:\n- Never share data for expired or revoked consents\n- Only share records in the requested date range\n- The actual record push happens directly to the HIU, not through the gateway",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "Here's how to send patient records to the HIU after consent is given:\n\n## The Flow (HIP's Perspective)\n\n**1. Receive the data request** — The gateway posts a callback to your HIP bridge at `/api/v3/hip/health-information/request` containing:\n   - `consentArtefactId` (the granted consent)\n   - `dateRange` (what period to share)\n   - `dataPushUrl` (where the HIU wants the records)\n   - `keyMaterial` (HIU's public key for encryption)\n   - `transactionId` (for tracking this request)\n\n**2. Acknowledge the request** — Call the [Acknowledge a health information data request](https://developer.nha.gov.in/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/02-m2-post-data-flow-v3-health-information-hip-on-request) endpoint with the `transactionId` and `sessionStatus: ACKNOWLEDGED`. Return the request id in your response.\n\n**3. Encrypt and push the records** — \n   - Generate an ECDH key pair (Curve25519) and nonce\n   - Derive the shared key using ECDH with the HIU's public key\n   - Encrypt each record with AES-GCM\n   - POST the encrypted records directly to `dataPushUrl` (out-of-band from the gateway) with your public key and nonce\n   - Records must be within the requested date range and cover only the consented contexts\n\n**4. Notify completion** — Call the [Notify the gateway that a data transfer finished](https://developer.nha.gov.in/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/03-m2-post-data-flow-v3-health-information-notify) endpoint with `sessionStatus: TRANSFERRED` (or `FAILED` if it failed) and a `hiStatus` for each care context (`DELIVERED` or `ERRORED`).\n\nKey points from the portal:\n- Never share data for expired or revoked consents\n- Only share records in the requested date range\n- The actual record push happens directly to the HIU, not through the gateway",
+  "sources": [
+    {
+      "id": "hiecm.endpoint.m2-hip-data-flow-notify",
+      "title": "Notify the gateway that a data transfer finished",
+      "url": "/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/03-m2-post-data-flow-v3-health-information-notify#m2-hip-data-flow-notify"
+    },
+    {
+      "id": "hiecm.callback.m2-on-health-information-request",
+      "title": "A request for the records a consent covers",
+      "url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/09-m2-post-v3-hip-health-information-request#m2-on-health-information-request"
+    },
+    {
+      "id": "hiecm.endpoint.m2-hip-health-information-on-request",
+      "title": "Acknowledge a health information data request",
+      "url": "/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/02-m2-post-data-flow-v3-health-information-hip-on-request#m2-hip-health-information-on-request"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/03-m2-post-data-flow-v3-health-information-notify#m2-hip-data-flow-notify\",\"id\":\"hiecm.endpoint.m2-hip-data-flow-notify\",\"summary\":\"After pushing the records, the HIP reports the transfer with a session status and a status per care context.\",\"title\":\"Notify the gateway that a data transfer finished\",\"type\":\"endpoint\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"body\":\"# Notify the gateway that a data transfer finished\\n\\n## In plain words\\n\\nAfter you push the encrypted records to the `dataPushUrl`, call this to report the transfer. Set `notifier.type` to `HIP`. Set `sessionStatus` to `TRANSFERRED` or `FAILED`. Give each care context a `hiStatus` of `DELIVERED` or `ERRORED`.\\n\\n## Before you start\\n\\nA gateway session token, and the `transactionId` and consent artefact id of the request. Send the `REQUEST-ID`, `TIMESTAMP` and `X-CM-ID` headers.\\n\\n## What happens\\n\\n`doneAt` is a UTC date time. `hipId` is your HIP id. The call returns 202 Accepted.\\n\\n## When it goes wrong\\n\\n`ABDM-1031` (Invalid request): check the body. A `hiStatus` of `OK` is the HIU's value, not the HIP's. `ABDM-2402` (Invalid Timestamp): check `TIMESTAMP` against your clock. `ABDM-2404` (Invalid Request Id): send a fresh UUID in `REQUEST-ID`. `ABDM-2500` (Authorization header is missing): send the session token. `ABDM-9999` (Unknown exception) gives no cause.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/03-m2-post-data-flow-v3-health-information-notify#m2-hip-data-flow-notify\",\"gateway\":\"hiecm\",\"id\":\"hiecm.endpoint.m2-hip-data-flow-notify\",\"milestone\":\"M2\",\"operation\":\"m2_post_data_flow_v3_health_information_notify\",\"summary\":\"After pushing the records, the HIP reports the transfer with a session status and a status per care context.\",\"title\":\"Notify the gateway that a data transfer finished\",\"type\":\"endpoint\"}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/10-m2-post-health-information-transfer#m2-on-data-notification\",\"id\":\"hiecm.callback.m2-on-data-notification\",\"summary\":\"The HIP posts the encrypted records straight to the HIU's data push URL, outside the gateway.\",\"title\":\"The provider pushes encrypted health information to the URL named in the request\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m3#m3-fetch-records\",\"id\":\"hiecm.flow.m3-fetch-records\",\"summary\":\"Fetch a granted consent artefact, request the records it covers, and decrypt what the HIP pushes to your data push URL.\",\"title\":\"Fetch the records a granted consent artefact covers\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/09-m2-post-v3-hip-health-information-request#m2-on-health-information-request\",\"id\":\"hiecm.callback.m2-on-health-information-request\",\"summary\":\"ABDM posts an HIU's data request to the HIP, with the consent artefact id, date range, push URL and key material.\",\"title\":\"A request for the records a consent covers\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/03-m2-post-data-flow-v3-health-information-notify#m2-hip-data-flow-notify\",\"id\":\"hiecm.endpoint.m2-hip-data-flow-notify\",\"summary\":\"After pushing the records, the HIP reports the transfer with a session status and a status per care context.\",\"title\":\"Notify the gateway that a data transfer finished\",\"type\":\"endpoint\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.document-bundles\",\"summary\":\"Every ABDM health record travels as one FHIR document Bundle: a Composition first, eight possible NRCES profiles, and a two tier validation story. This atom ...\",\"title\":\"FHIR document bundles, the eight ABDM record types\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/05-m3-post-data-flow-v3-health-information-request#m3-hiu-health-information-request\",\"id\":\"hiecm.endpoint.m3-hiu-health-information-request\",\"summary\":\"The HIU asks for the records a consent artefact covers, with its ECDH key material and the URL to push them to.\",\"title\":\"Request a patient's health information\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/02-m2-post-data-flow-v3-health-information-hip-on-request#m2-hip-health-information-on-request\",\"id\":\"hiecm.endpoint.m2-hip-health-information-on-request\",\"summary\":\"The HIP acknowledges a health information request, then encrypts the records and pushes them to the requester.\",\"title\":\"Acknowledge a health information data request\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/05-m3-post-v3-hiu-health-information-on-request#m3-on-health-information-request\",\"id\":\"hiecm.callback.m3-on-health-information-request\",\"summary\":\"ABDM acknowledges an HIU's data request with its transaction id and status; the records come separately.\",\"title\":\"Acknowledgement of a health information request\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/06-m3-post-data-flow-v3-health-information-notify#m3-hiu-data-flow-notify\",\"id\":\"hiecm.endpoint.m3-hiu-data-flow-notify\",\"summary\":\"After the records arrive, the HIU reports receipt with a session status and a status per care context.\",\"title\":\"Notify the gateway that data was received\",\"type\":\"endpoint\"}]}\n{\"body\":\"# A request for the records a consent covers\\n\\n## In plain words\\n\\nWhen an [HIU](/docs/hiecm/v3/getting-started/glossary#hiu) asks for data under a consent, ABDM posts the request to your [HIP](/docs/hiecm/v3/getting-started/glossary#hip) bridge at `/api/v3/hip/health-information/request`. It carries the consent artefact id, the date range, the `dataPushUrl` and the requester's `keyMaterial`. Acknowledge it through [health information on-request](/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/02-m2-post-data-flow-v3-health-information-hip-on-request). Then push the encrypted records to `dataPushUrl`.\\n\\n## Before you start\\n\\nA callback URL registered for your bridge, and the consent artefacts you received on `/api/v3/consent/request/hip/notify`.\\n\\n## What happens\\n\\nABDM posts with the `REQUEST-ID`, `TIMESTAMP` and `X-HIP-ID` headers, and expects 200 OK. `transactionId` is the context for the data you send.\\n\\n## When it goes wrong\\n\\nNever send data for a consent artefact that has expired or been revoked. Share only records inside the requested `dateRange`.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/09-m2-post-v3-hip-health-information-request#m2-on-health-information-request\",\"gateway\":\"hiecm\",\"id\":\"hiecm.callback.m2-on-health-information-request\",\"milestone\":\"M2\",\"operation\":\"m2_post_v3_hip_health_information_request\",\"summary\":\"ABDM posts an HIU's data request to the HIP, with the consent artefact id, date range, push URL and key material.\",\"title\":\"A request for the records a consent covers\",\"type\":\"callback\"}\n{\"body\":\"# Acknowledge a health information data request\\n\\n## In plain words\\n\\nCall this when a [health information request](/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/09-m2-post-v3-hip-health-information-request) reaches your bridge. Return its `transactionId` with `sessionStatus` of `ACKNOWLEDGED`, and its request id in `response.requestId`. Then encrypt the records and push them to the `dataPushUrl`.\\n\\nThe requester's `keyMaterial` uses [ECDH](/docs/hiecm/v3/getting-started/glossary#ecdh) on `Curve25519`, with a public key and a 32 byte nonce. Generate your own key pair and nonce for the transaction. Derive the shared key, combine the two nonces, and encrypt each entry with AES-GCM. Send your public key and nonce with the data.\\n\\n## Before you start\\n\\nA gateway session token and the health information request. Send the `REQUEST-ID`, `TIMESTAMP` and `X-CM-ID` headers.\\n\\n## What happens\\n\\nThe call returns 202 Accepted. The push goes to the `dataPushUrl` directly, not through the gateway. `/health-information/transfer` documents that push.\\n\\n## When it goes wrong\\n\\n`ABDM-1031` (Invalid request): check the body. Never push data for a consent artefact that has expired or been revoked. `ABDM-2402` (Invalid Timestamp): check `TIMESTAMP` against your clock. `ABDM-2404` (Invalid Request Id): send a fresh UUID in `REQUEST-ID`. `ABDM-2500` (Authorization header is missing): send the session token. `ABDM-9999` (Unknown exception) gives no cause.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/02-m2-post-data-flow-v3-health-information-hip-on-request#m2-hip-health-information-on-request\",\"gateway\":\"hiecm\",\"id\":\"hiecm.endpoint.m2-hip-health-information-on-request\",\"milestone\":\"M2\",\"operation\":\"m2_post_data_flow_v3_health_information_hip_on_request\",\"summary\":\"The HIP acknowledges a health information request, then encrypts the records and pushes them to the requester.\",\"title\":\"Acknowledge a health information data request\",\"type\":\"endpoint\"}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/milestones/m3#m3-fetch-records\",\"id\":\"hiecm.flow.m3-fetch-records\",\"summary\":\"Fetch a granted consent artefact, request the records it covers, and decrypt what the HIP pushes to your data push URL.\",\"title\":\"Fetch the records a granted consent artefact covers\",\"type\":\"flow\"}]}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T12:08:07.775Z",
+  "usage": {
+    "input_tokens": 60,
+    "output_tokens": 1857,
+    "cache_read_input_tokens": 69628,
+    "cache_creation_input_tokens": 9985,
+    "num_turns": 10,
+    "duration_ms": 24666,
+    "cost_usd_equivalent": 0.0362778
+  }
+}

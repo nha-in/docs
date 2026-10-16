@@ -63,6 +63,13 @@ export const Copy = () => (
   </svg>
 );
 
+export const RotateCcw = () => (
+  <svg {...base} width="14" height="14">
+    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+    <path d="M3 3v5h5" />
+  </svg>
+);
+
 export const X = () => (
   <svg {...base} width="16" height="16">
     <path d="M18 6 6 18" />
@@ -81,6 +88,12 @@ export const Plus = () => (
   <svg {...base} width="16" height="16">
     <path d="M5 12h14" />
     <path d="M12 5v14" />
+  </svg>
+);
+
+export const ChevronDown = () => (
+  <svg {...base} width="16" height="16">
+    <path d="m6 9 6 6 6-6" />
   </svg>
 );
 

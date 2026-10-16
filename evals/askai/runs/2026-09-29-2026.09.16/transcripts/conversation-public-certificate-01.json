@@ -1,0 +1,1083 @@
+{
+  "case_id": "conversation-public-certificate-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "global.openai.gpt-6-luna",
+  "temperature": 0.1,
+  "prompt_version": "v5",
+  "embed_provider": "bedrock",
+  "db_path": "catalogue.db",
+  "calls": [
+    {
+      "system": "You are the Ask AI assistant on the ABDM Developer Portal. You answer developer questions about India's ABDM gateways (HIE-CM, UHI, NHCX) strictly from this portal's catalogue, which you reach through your tools. Never answer an ABDM API question from general knowledge. If you have not looked, look first.\n\nWHERE THINGS LIVE\n\n- Atoms are the written knowledge: concepts, flows, endpoint guides, callbacks, error explanations, tests, glossary entries, decisions, FHIR mappings, sandbox notes and troubleshooting guides. search finds them.\n- Operations are the raw API surface parsed from NHA's specification files, across the modules gateway, m1, m2, m3, m4, p1, p2, p3, p4, scan-and-register, scan-and-pay and record-share. search with kind operation finds them by what they do or by path; get with an operationId reads one in full.\n\nHONESTY ABOUT WHAT YOU FOUND\n\nSearch returns nearest matches, not answers.\n\nNever claim a call was run.\n\nNotes for AI agents are rules for you: follow them, never repeat them to readers.\n\nA \u003cMASKED_...\u003e placeholder means a value was removed before you saw it. Never ask for it again and never echo the placeholder back.\n\nJUDGING WHAT COMES BACK\n\nNever close a gap with a nearby endpoint or a similar sounding concept. A one-word or acronym question is a glossary lookup; search variant spellings too (HIMS and HMIS, LIS and LIMS, HRP).\n\nSPEAK AS THE PORTAL, NOT ABOUT IT\n\nNever mention the catalogue or your tools unless the reader asks about them. Offer [support](/docs/support) when you have nothing.\n\nSmall talk or off-topic: one friendly line, then what you help with.\n\nA general industry term the portal does not define is worth one sentence of plain explanation, said as general background rather than as ABDM documentation. That courtesy never extends to an ABDM API detail: paths, headers, codes, fields and payloads come from the tools or not at all.\n\nHOW YOU WRITE\n\nNever write an em dash. Show a mermaid block only when a tool returned it. Never draw one.\n\nOFFERING THE TOOLS\n\nA reader building an integration can have this catalogue inside their own agent, rather than asking one question at a time. Most do not know that.\n\n- When the reader is clearly building against ABDM, close with one line offering it: agent skills give their coding agent a milestone's rules as a file it loads once, and the MCP server lets it query this documentation as it works. Link [agent skills and the MCP server](/docs/hiecm/v3/getting-started/build-with-ai).\n- Offer it once per conversation, never before the answer: a closing line, not an opening.\n- Do not offer it to someone who is not building: a question like what an Ayushman card is gets answered and left alone.\n- Both are available now: the server is public at https://docs.abdm.gov.in/mcp, and the page has one-click install for Claude Code, Cursor and VS Code. Name the page, not the URL, unless asked.\n\nCODE AND WHAT THEY PASTE OR ATTACH\n\nYou never write code for the reader's own codebase; curl is the exception. Route them to the ABDM Connect agent skill or this portal's MCP server.\n\nWRITING THE ANSWER\n\n- Lead with the answer. The reader is mid-task, usually with a failing call in front of them.\n- Never open by praising the question, apologising, restating the question back, or announcing what you are about to do. Start with the substance. Warmth is being useful quickly, not saying \"great question\".\n- Quote API literals exactly as the tools give them: endpoint paths, header names, error codes, timestamp formats, field names. Never paraphrase a literal, and never tidy its case or spacing.\n- Markdown renders in this panel. Use inline code for every literal, short bulleted or numbered lists for steps and options, and no headings.\n\nDo not invent portal URLs.\n\nHOW A QUESTION ARRIVES\n\nThe user turn may open with a \u003cpassages\u003e block: the documentation already retrieved for this question, with ids and page links. Answer from it first. It is followed by an \u003canswer_shape\u003e block naming the shape and word budget your answer must take. Call search only when the passages do not carry the answer.\n\nA \u003cskill\u003e block is the skill section the reader chose: follow it, and name what it omits.",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "What changed between the M1 API version 1 and version 2?",
+          "ToolUse": null,
+          "ToolResult": null
+        },
+        {
+          "Role": "assistant",
+          "Text": "Version 2 introduced enhanced security over version 1: sensitive fields such as OTP, Aadhaar number, password and username must now be encrypted. That encryption uses a public certificate obtained from the certificate API, with RSA encryption for the sensitive fields.",
+          "ToolUse": null,
+          "ToolResult": null
+        },
+        {
+          "Role": "user",
+          "Text": "\u003cpassages\u003e\n{\"passages\":[{\"id\":\"hiecm.endpoint.p1-get-certificate-public-key\",\"type\":\"endpoint\",\"milestone\":\"P1\",\"title\":\"GET Certificate (Public key)\",\"doc_url\":\"/docs/hiecm/v3/api/p1/endpoints/p1-certificate-and-session/01-p1-get-v3-phr-app-login-public-certificate#p1-get-certificate-public-key\",\"body\":\"# GET Certificate (Public key)\\n\\n## In plain words\\n\\nReturns the public certificate a [PHR](/docs/hiecm/v3/getting-started/glossary#phr) app encrypts sensitive values with before it sends them. Fetch it before registration or login. The call takes no request body, only the `REQUEST-ID` and `TIMESTAMP` headers with your access token.\\n\\n## Before you start\\n\\nAn access token for the `Authorization` header, a fresh UUID for `REQUEST-ID`, and the current time in UTC for `TIMESTAMP`.\\n\\n## What happens\\n\\nYou fetch the certificate once and encrypt with it every value the registration, login and profile calls take encrypted.\"},{\"id\":\"hiecm.concept.encrypted-identifiers\",\"type\":\"concept\",\"milestone\":\"M1\",\"title\":\"Why identifiers are encrypted, and where to do it\",\"doc_url\":\"/docs/hiecm/v3/concepts/encryption#encrypted-identifiers\",\"body\":\"# Why identifiers are encrypted, and where to do it\\n\\n## In plain words\\n\\nWe publish the public half of a key pair. You encrypt with it. Only our private half can decrypt. Your system never holds a secret to do this, only the current certificate.\\n\\n```mermaid\\nsequenceDiagram\\n    autonumber\\n    participant S as Your system\\n    participant A as ABHA service\\n    S-\\u003e\\u003eA: GET /abha/api/v3/profile/public/certificate\\n    A--\\u003e\\u003eS: publicKey, encryptionAlgorithm\\n    S-\\u003e\\u003eS: RSA encrypt the Aadhaar number, mobile number,\\u003cbr/\\u003eOTP or password with that public key\\n    S-\\u003e\\u003eA: The Base64 result as the field value,\\u003cbr/\\u003efor example loginId or otp.otpValue\\n    A-\\u003e\\u003eA: Decrypts with its private key\\n```\\n\\nThere is nothing ABDM specific in the mechanics. Your platform's standard RSA library does the work. Both keys use `RSA/ECB/OAEPWithSHA-1AndMGF1Padding`. The one thing to confirm is which key you are using.\\n\\nRead `encryptionAlgorithm` from the certificate response and encrypt with what it names. Code that reads the field survives a change of algorithm. Code that cannot recognise what the field names should refuse to encrypt rather than fall back to a default.\\n\\n## Before you start\\n\\nThe certificate from `GET /abha/api/v3/profile/public/certificate`, which carries `publicKey` and `encryptionAlgorithm`.\\n\\n## What happens\\n\\nPut the plaintext in the shape the service validates after it decrypts, from the table above: an ABHA number keeps its dashes. Encrypt with the algorithm the response names and send the base64 result as the field value, for example `loginId`.\\n\\n## How you know it worked\\n\\nThe raw Aadhaar or mobile number exists only inside your own process, for the length of the call, and never reaches a log. A call carrying your ciphertext passes validation.\\n\\n## When it goes wrong\\n\\n`400 {\\\"loginId\\\": \\\"LoginId is invalid\\\"}` means the value decrypted and the plaintext failed a format rule, usually an ABHA number sent without its dashes. Logging the plain value before encryption is the same leak, moved into your log store.\"},{\"id\":\"hiecm.endpoint.m1-send-email-verification-link\",\"type\":\"endpoint\",\"milestone\":\"M1\",\"title\":\"Send email verification link\",\"doc_url\":\"/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-number-aadhaar-otp/05-p1-post-v3-profile-account-request-emailverificationlink#m1-send-email-verification-link\",\"body\":\"# Send email verification link\\n\\n## In plain words\\n\\nSends a verification link to an email address on the signed in person's [ABHA](/docs/hiecm/v3/getting-started/glossary#abha). The person verifies the address by opening the link. Send `scope` as `[\\\"abha-profile\\\",\\\"email-link-verify\\\"]`, `loginHint` as `email`, the encrypted address in `loginId`, and `otpSystem` as `abdm`. The response body is not yet published.\\n\\n## Before you start\\n\\nThe person's `X-token`, sent as `Bearer \\u003ctoken\\u003e`, and the email address encrypted with the public certificate key.\\n\\n## How you know it worked\\n\\nThe profile call shows the email as verified after the person opens the link.\"},{\"id\":\"hiecm.endpoint.m1-get-public-certificate\",\"type\":\"endpoint\",\"milestone\":\"M1\",\"title\":\"Get the public certificate\",\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-access-tokens-encryption/02-m1-get-v3-profile-public-certificate#m1-get-public-certificate\",\"body\":\"Returns the public key and the encryption algorithm for every encrypted ABHA field.\"},{\"id\":\"hiecm.glossary.bridge\",\"type\":\"glossary\",\"milestone\":\"n/a\",\"title\":\"Bridge, your callback endpoints\",\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#bridge\",\"body\":\"The set of callback URLs NHA posts to when it answers one of your calls.\"}],\"related\":[{\"id\":\"hiecm.concept.gateway-session\",\"title\":\"The gateway session, the first call in every integration\",\"type\":\"concept\"},{\"id\":\"hiecm.endpoint.m1-get-public-certificate\",\"title\":\"Get the public certificate\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p1-encrypt-data-aadhaar-mobile-otp-password\",\"title\":\"Encrypt data (Aadhaar/Mobile/OTP/Password)\",\"type\":\"endpoint\"},{\"id\":\"hiecm.concept.input-encryption\",\"title\":\"Encrypting sensitive inputs, Aadhaar, mobile, OTP and passwords\",\"type\":\"concept\"},{\"id\":\"hiecm.concept.m1-journey-design\",\"title\":\"A suggested ABHA journey, and what holds if you design your own\",\"type\":\"concept\"},{\"id\":\"hiecm.decision.encrypt-locally\",\"title\":\"Encrypting identifiers locally rather than through a hosted helper\",\"type\":\"decision\"},{\"id\":\"hiecm.endpoint.m1-login-request-otp\",\"title\":\"Send a login OTP\",\"type\":\"endpoint\"},{\"id\":\"hiecm.flow.m1-create-abha-aadhaar-otp\",\"title\":\"Create an ABHA using an Aadhaar OTP\",\"type\":\"flow\"},{\"id\":\"hiecm.flow.m1-find-abha\",\"title\":\"Find somebody's ABHA when they do not know it\",\"type\":\"flow\"},{\"id\":\"hiecm.test.m1-encryption-padding\",\"title\":\"Prove your encryption padding before you build anything else\",\"type\":\"test\"},{\"id\":\"hiecm.error.abdm-2402\",\"title\":\"ABDM-2402, the timestamp is not valid\",\"type\":\"error\"},{\"id\":\"hiecm.error.abdm-2404\",\"title\":\"ABDM-2404, the REQUEST-ID is not valid\",\"type\":\"error\"},{\"id\":\"hiecm.error.abdm-2500\",\"title\":\"ABDM-2500, no Authorization header, or no matching request\",\"type\":\"error\"},{\"id\":\"hiecm.error.abdm-9999\",\"title\":\"ABDM-9999, a catch-all, so read the message\",\"type\":\"error\"}]}\n\u003c/passages\u003e\n\n\u003creader_context\u003eThe question reads as a HIE-CM question. Answer for HIE-CM unless they ask about another gateway, and do not bring in another gateway's calls or fields.\u003c/reader_context\u003e\n\n\u003canswer_shape name=\"how-do-i\" budget=\"200 words\"\u003e\nFirst sentence: the direct answer. Then every route that exists, one line each, naming what each produces. Expand only the route asked about, as a short numbered list of calls. End with the next step.\nExample:\nYes, and there are three creation routes: Aadhaar OTP, which is mandatory; Aadhaar face authentication, for someone who cannot receive the OTP; and an identity document, which produces an account restricted until Aadhaar KYC. For Aadhaar OTP:\n1. Request an OTP against the encrypted Aadhaar number.\n2. Verify it with the enrolment call, which issues the ABHA number.\n3. Get address suggestions and claim one.\nConfirm by reading the profile back and checking the chosen address is marked preferred.\n\u003c/answer_shape\u003e\nIf the passages and your tools do not cover the question, drop this shape and decline in two sentences that name the nearest /docs/ page and the support route.\n\nIs that certificate endpoint verified?",
+          "ToolUse": null,
+          "ToolResult": null
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "call_86ab04b085a65afd8ed79f17ac1aeb4b",
+            "Name": "search",
+            "Input": {
+              "query": "Is the M1 certificate endpoint verified? M1 API version 1 versus version 2 certificate endpoint path and verification",
+              "milestone": "M1"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "Is the M1 certificate endpoint verified? M1 API version 1 versus version 2 certificate endpoint path and verification",
+            "milestone": "M1"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "passages": [
+              {
+                "id": "hiecm.test.m1-encryption-padding",
+                "type": "test",
+                "milestone": "M1",
+                "title": "Prove your encryption padding before you build anything else",
+                "doc_url": "/docs/hiecm/v3/concepts/encryption#m1-encryption-padding",
+                "body": "# Prove your encryption padding before you build anything else\n\n## In plain words\n\nEvery M1 journey begins with a call that carries an encrypted value, so a wrong padding stops you on your first request. Prove it once, before you build a flow, so that every later failure is about the flow rather than the padding.\n\nEncrypt a 10 digit mobile number that you hold and that is registered against an ABHA, then send it to the login OTP request:\n\n```bash\ncurl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/request/otp' \\\n  -H 'Authorization: Bearer \u003cACCESS_TOKEN_FROM_SESSIONS_CALL\u003e' \\\n  -H 'REQUEST-ID: \u003cFRESH_UUID\u003e' \\\n  -H 'TIMESTAMP: \u003cUTC_ISO_8601_WITH_MILLISECONDS_AND_Z\u003e' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n  \"scope\": [\"abha-login\", \"mobile-verify\"],\n  \"loginHint\": \"mobile\",\n  \"loginId\": \"\u003cMOBILE_ENCRYPTED_WITH_THE_CERTIFICATE\u003e\",\n  \"otpSystem\": \"abdm\"\n}'\n```\n\nYou receive 200 with a `txnId` and a message naming the last four digits of the mobile, and an OTP arrives on that phone. The padding and the certificate are right. Build the rest of M1 on that code path.\n\n## Before you start\n\nA gateway access token, the M1 certificate with PEM armour added, and a mobile number that is both in your hands and registered against an ABHA. A number nobody has registered cannot tell a right padding from a wrong one.\n\n## What happens\n\nEncrypt the mobile number with OAEP and SHA-1 for both the digest and the mask generation function, base64 the ciphertext, and send it as `loginId` with `loginHint` set to `mobile`. The test needs the 200, not the OTP.\n\n## How you know it worked\n\n200 with a `txnId`, and a message naming the masked mobile.\n\n## When it goes wrong\n\nA refusal for a number you know is registered points at the padding first: PKCS#1 v1.5 and OAEP with SHA-256 are both wrong for M1. The same refusal with OAEP and SHA-1 means the wrong key: use the M1 certificate, not the PHR one. A library that will not load the key needs the PEM armour."
+              },
+              {
+                "id": "hiecm.concept.gateway-session",
+                "type": "concept",
+                "milestone": "M1",
+                "title": "The gateway session, the first call in every integration",
+                "doc_url": "/docs/hiecm/v3/concepts/gateway#gateway-session",
+                "body": "# The gateway session, the first call in every integration\n\n## In plain words\n\nOne endpoint issues the token every other call carries. It is the call [M1](/docs/hiecm/v3/getting-started/glossary#m1) uses. [M4](/docs/hiecm/v3/getting-started/glossary#m4) calls carry their own bearer token instead.\n\n**POST** `/api/hiecm/gateway/v3/sessions`\n\nHeaders:\n\n| Header | Example value | What it is |\n|---|---|---|\n| `REQUEST-ID` | `18235d89-cb13-479d-ad71-7a57d5f669a8` | A fresh UUID for this call |\n| `TIMESTAMP` | `2022-10-06T15:10:00.587Z` | The time you made the call, ISO 8601 |\n| `X-CM-ID` | `sbx` | The consent manager. Use `sbx` for sandbox |\n| `Content-Type` | `application/json` | |\n\nNo `Authorization` header on this call. It is the one call with no token yet.\n\nBody:\n\n```json\n{\n  \"clientId\": \"\u003cCLIENT_ID_FROM_SANDBOX_SIGNUP\u003e\",\n  \"clientSecret\": \"\u003cCLIENT_SECRET_FROM_SANDBOX_SIGNUP\u003e\",\n  \"grantType\": \"client_credentials\"\n}\n```\n\nSend the client id you were issued.\n\nResponse shape:\n\n```json\n{\n  \"accessToken\": \"\u003cJWT\u003e\",\n  \"expiresIn\": 1200,\n  \"refreshExpiresIn\": 1800,\n  \"refreshToken\": \"\u003cJWT\u003e\",\n  \"tokenType\": \"bearer\"\n}\n```\n\nThe response carries the token in `accessToken`.\n\nSend the token back as `Authorization: Bearer \u003cACCESS_TOKEN_FROM_SESSIONS_CALL\u003e` on every other call. Headers per call, and the second token M1 login issues, are on [authentication](/docs/hiecm/v3/reference/authentication). Interactive: [gateway API reference](/reference/hiecm-gateway).\n\nThe session token says which application is calling, not which person. [M1](/docs/hiecm/v3/milestones/m1) profile calls also carry a user token in `X-token`, which login returns.\n\n## Before you start\n\nA client id and client secret from sandbox registration, held on your server. Never ship the secret in a mobile or browser build.\n\n## What happens\n\nCall the session endpoint with `clientId`, `clientSecret` and `grantType` set to `client_credentials`. Send the `accessToken` it returns as `Authorization: Bearer \u003cACCESS_TOKEN_FROM_SESSIONS_CALL\u003e` on every other gateway call. Renew before `expiresIn` runs out rather than on a fixed timer.\n\n## How you know it worked\n\nThe response carries `accessToken` and `expiresIn`, and the next gateway call with that token is not refused as unauthorised.\n\n## When it goes wrong\n\nEvery call returns 401: see [everything returns 401](/docs/hiecm/v3/troubleshooting/everything-returns-401). A profile call is refused while the session token is fresh: the `X-token` is missing, or it holds the short lived token from login verify, which the verify user call exchanges for the user token. `ABDM-1094` reads X-token expired, and the token sent is often the wrong kind rather than an old one."
+              },
+              {
+                "id": "hiecm.concept.input-encryption",
+                "type": "concept",
+                "milestone": "M1",
+                "title": "Encrypting sensitive inputs, Aadhaar, mobile, OTP and passwords",
+                "doc_url": "/docs/hiecm/v3/concepts/encryption#input-encryption",
+                "body": "# Encrypting sensitive inputs, Aadhaar, mobile, OTP and passwords\n\n## In plain words\n\nSix kinds of value never travel raw in an M1 request body.\n\n| Value | Where it appears |\n| --- | --- |\n| Aadhaar number | Enrolment and login by Aadhaar |\n| ABHA number | Login and search by ABHA number |\n| Mobile number | Login, search and mobile update |\n| Email address | Email verification |\n| One time password ([OTP](/docs/hiecm/v3/getting-started/glossary#otp)) value | Every call that verifies a challenge |\n| Password | Password based login |\n\nEach is encrypted with RSA using the ABDM public certificate, and the base64 of the ciphertext goes in the field.\n\nThe padding belongs to the certificate. M1 and PHR calls use RSA OAEP with SHA-1 for both the digest and the mask generation function, which the certificate names as `RSA/ECB/OAEPWithSHA-1AndMGF1Padding`. The [M4](/docs/hiecm/v3/milestones/m4) registries use `RSA/ECB/PKCS1Padding` under a certificate of their own. An integration that calls both holds both keys and never crosses them.\n\n## Before you start\n\nA gateway access token, and the current certificate for the family you are calling: `GET /abha/api/v3/profile/public/certificate` for M1.\n\n## What happens\n\nEncrypt each value in the table in your own process and send the standard base64 of the ciphertext. In most libraries OAEP defaults to SHA-256, so pass SHA-1 explicitly: in Node, the OAEP padding constant with the OAEP hash set to sha1; in Java, the transformation the certificate names. The certificate arrives as base64 DER with no PEM armour, so add the armour before your library loads it. Cache the certificate with a validity window, not forever.\n\n## How you know it worked\n\nA value your code encrypted is accepted by a real M1 call: the OTP request returns a `txnId` instead of a validation refusal.\n\n## When it goes wrong\n\nA wrong padding or digest does not fail when you encrypt. It fails at the API as a validation refusal that names the business field, which reads as a wrong Aadhaar or mobile number. Check the padding, the digest and the key before you doubt the plaintext. A stale cached certificate fails every encrypted call at once."
+              },
+              {
+                "id": "hiecm.error.900900",
+                "type": "error",
+                "milestone": "M1",
+                "title": "900900, authentication failed without a reason",
+                "doc_url": "/docs/hiecm/v3/api/m1/errors#900900",
+                "body": "The ABHA service refused the call as an unclassified authentication failure, so check both the access token and the person's token."
+              },
+              {
+                "id": "hiecm.concept.m1-the-whole-surface",
+                "type": "concept",
+                "milestone": "M1",
+                "title": "The surface is more than a registration form",
+                "doc_url": "",
+                "body": "M1 supports several placements beyond registering a patient, and a design that accounts for them from the start avoids meeting each one later as a change request."
+              }
+            ],
+            "related": [
+              {
+                "id": "hiecm.concept.encrypted-identifiers",
+                "title": "Why identifiers are encrypted, and where to do it",
+                "type": "concept"
+              },
+              {
+                "id": "hiecm.concept.input-encryption",
+                "title": "Encrypting sensitive inputs, Aadhaar, mobile, OTP and passwords",
+                "type": "concept"
+              },
+              {
+                "id": "hiecm.endpoint.m1-get-public-certificate",
+                "title": "Get the public certificate",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-login-request-otp",
+                "title": "Send a login OTP",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.error.abdm-2402",
+                "title": "ABDM-2402, the timestamp is not valid",
+                "type": "error"
+              },
+              {
+                "id": "hiecm.error.abdm-2404",
+                "title": "ABDM-2404, the REQUEST-ID is not valid",
+                "type": "error"
+              },
+              {
+                "id": "hiecm.error.abdm-2500",
+                "title": "ABDM-2500, no Authorization header, or no matching request",
+                "type": "error"
+              },
+              {
+                "id": "hiecm.callback.m2-call-back-api-for-notify-care-context-update",
+                "title": "Call back API for notify care context update",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.m2-callback-api-for-sms-notification-to-patients",
+                "title": "Callback API for SMS Notification to patients",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.m2-link-token-generation-call-back",
+                "title": "Link token generation – Call Back API",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.m2-linking-care-context-call-back",
+                "title": "Linking care context Call back API",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.p2-callback-for-health-record-confirmation",
+                "title": "Link confirm request to the HIP",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.p2-callback-on-health-record-discover",
+                "title": "Discovery result callback",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.p2-callback-on-health-record-link-init",
+                "title": "Link init request to the HIP",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.p2-callback-to-hip-discovery",
+                "title": "Discovery request to the HIP",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.p2-profile-on-share-callback",
+                "title": "Profile share result callback",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.p2-profile-share-callback",
+                "title": "Profile share callback",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.p2-response-on-health-record-link",
+                "title": "Link init result callback",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.p2-response-on-health-record-on-confirm",
+                "title": "Link confirm result callback",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.p3-approve-subscription-request-call-back",
+                "title": "Subscription approved callback",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.p3-call-back-to-hiu",
+                "title": "Health information request acknowledgement",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.p3-consent-request-on-status-callback",
+                "title": "Consent request status callback",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.p3-deny-subscription-call-back",
+                "title": "Subscription denied callback",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.p3-subscription-hiu-notify",
+                "title": "New record notification callback",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.p3-user-subscription-request-initiate-call-back",
+                "title": "Subscription request result callback",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.concept.callback-authenticity",
+                "title": "Proving a callback really came from ABDM",
+                "type": "concept"
+              },
+              {
+                "id": "hiecm.endpoint.gateway-get-bridge-service-by-id",
+                "title": "Find a bridge service by its service id",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.gateway-list-bridge-services",
+                "title": "List the services registered on your bridge",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.gateway-register-bridge-services",
+                "title": "Register or update bridge services for an HIU",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.gateway-sessions",
+                "title": "Create a session and get an access token",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.gateway-update-bridge-url",
+                "title": "Update the bridge callback URL",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-auth-token",
+                "title": "Auth token API",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-benefit-get-by-abha",
+                "title": "Get the benefit record for an ABHA number",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-benefit-link-or-delink",
+                "title": "Link or unlink a benefit record from an ABHA",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-benefit-search",
+                "title": "Search benefit records for a person",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-download-phr-card",
+                "title": "Download PHR card",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-download-phr-qr-code",
+                "title": "Download PHR QR code",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-enrolment-address-suggestions",
+                "title": "Get suggested ABHA addresses for a new account",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-enrolment-by-aadhaar",
+                "title": "Create an ABHA from a verified Aadhaar OTP",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-enrolment-capture-pid",
+                "title": "Track face authentication status",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-enrolment-claim-abha-address",
+                "title": "Claim a chosen ABHA address",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-enrolment-face-auth-init",
+                "title": "Start face authentication and get a transaction id",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-enrolment-list-children",
+                "title": "List the child ABHA accounts linked to this account",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-enrolment-request-otp",
+                "title": "Send an OTP to begin or continue an enrolment",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-enrolment-verify-abdm-otp",
+                "title": "Verify an OTP that ABDM sent, during enrolment",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-find-abha-search",
+                "title": "Find an ABHA for somebody who does not know theirs",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-get-phr-profile",
+                "title": "Get PHR profile",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-login-select-account",
+                "title": "Choose which ABHA to sign in to",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-login-verify",
+                "title": "Verify a login OTP",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-login-verify-v31",
+                "title": "Sign in with a biometric, v3.1",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-on-share-acknowledgement",
+                "title": "Send share acknowledgement",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-phr-request-otp",
+                "title": "Send an OTP for ABHA address login",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-phr-search-abha-address",
+                "title": "Search an ABHA address and get its sign in methods",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-phr-verify",
+                "title": "Verify OTP or biometric for ABHA address login",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-profile-download-abha-card",
+                "title": "Download the ABHA card as a file",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-profile-get-abha-card",
+                "title": "Get the ABHA card",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-profile-get-account",
+                "title": "Read the signed in person's ABHA profile",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-profile-get-qr-code",
+                "title": "Get the ABHA QR code",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-profile-request-otp",
+                "title": "Send an OTP to change something on the profile",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-profile-update-account",
+                "title": "Update fields on an ABHA profile",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-profile-verify-otp",
+                "title": "Verify the OTP for a profile change",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-receive-patient-share",
+                "title": "Receive a patient's shared profile",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-register-hrp-services",
+                "title": "Register or update HIP and HIU services for a facility",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-send-email-verification-link",
+                "title": "Send email verification link",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-token-refresh",
+                "title": "Get a new user token from a refresh token",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m2-consent-hip-on-notify",
+                "title": "Acknowledge a consent notification",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m2-generate-link-token",
+                "title": "Generate Link Token",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m2-hip-data-flow-notify",
+                "title": "Notify the gateway that a data transfer finished",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m2-hip-health-information-on-request",
+                "title": "Acknowledge a health information data request",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m2-hip-link-care-context",
+                "title": "Link care contexts to an ABHA address",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m2-link-care-context-notify",
+                "title": "Notify an update to a linked care context",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m2-on-discover-care-contexts",
+                "title": "On Discovery, HIP responds with found care contexts",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m2-on-link-confirm",
+                "title": "Link On-Confirm, HIP confirms linked care contexts",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m2-on-link-init",
+                "title": "Link On-Init, HIP responds with OTP communication details",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m2-sms-deep-link-notify",
+                "title": "Send an SMS telling the patient a care context is linked",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m3-consent-fetch",
+                "title": "Fetch the full consent artefact",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m3-consent-hiu-on-notify",
+                "title": "Acknowledge a consent notification",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m3-consent-request-init",
+                "title": "Initiate a consent request",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m3-consent-request-status",
+                "title": "Check the status of a consent request",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m3-hiu-data-flow-notify",
+                "title": "Notify the gateway that data was received",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m3-hiu-health-information-request",
+                "title": "Request a patient's health information",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m4-hfr-search-facility",
+                "title": "Search the facility registry before creating anything",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m4-hpr-create-hprid",
+                "title": "Create the HPID",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m4-hpr-demographic-auth-mobile",
+                "title": "Check whether the mobile number is the one on the Aadhaar record",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m4-hpr-fetch-documents-list",
+                "title": "List the documents this professional must upload",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m4-hpr-fetch-professional-info",
+                "title": "Read a professional's profile",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m4-hpr-register-professional",
+                "title": "Register the professional's profile",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m4-hpr-upload-document",
+                "title": "Upload one of the professional's documents",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p1-encrypt-data-aadhaar-mobile-otp-password",
+                "title": "Encrypt data (Aadhaar/Mobile/OTP/Password)",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p1-enrollment-address-exists",
+                "title": "Check whether an address is taken",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p1-enrollment-address-suggestion",
+                "title": "Ask for address suggestions",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p1-enrollment-enrol",
+                "title": "Create the health address",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p1-enrollment-request-otp",
+                "title": "Send the OTP that starts a registration",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p1-enrollment-verify-otp",
+                "title": "Verify the registration OTP",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p1-generate-refresh-token",
+                "title": "Generate Refresh Token",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p1-get-certificate-public-key",
+                "title": "GET Certificate (Public key)",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p1-get-user-phr-card",
+                "title": "Get User PHR Card",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p1-get-user-profile",
+                "title": "Get User Profile",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p1-get-user-qr-code",
+                "title": "Get User QR Code",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p1-link-abha-number-via-aadhaar-request-otp",
+                "title": "Link ABHA number via AADHAAR-Request OTP",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p1-link-abha-number-via-aadhaar-verify-otp",
+                "title": "Link ABHA number via AADHAAR-Verify OTP",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p1-link-abha-number-via-mobile-request-otp",
+                "title": "Link ABHA number via Mobile-Request OTP",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p1-link-abha-number-via-mobile-verify-otp",
+                "title": "Link ABHA number via Mobile-Verify OTP",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p1-login-request-otp",
+                "title": "Send the OTP that starts a login",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p1-login-using-password-search-user",
+                "title": "Login using Password Search user",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p1-login-verify-otp",
+                "title": "Verify the login OTP",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p1-login-verify-user",
+                "title": "Say which address is signing in",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p1-logout-user",
+                "title": "Logout User",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p1-process-link-request-via-aadhaar-number",
+                "title": "Process Link Request via Aadhaar OTP",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p1-process-link-request-via-abha-number",
+                "title": "Process Link Request via ABHA OTP",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p1-switch-profile-request",
+                "title": "Switch Profile Request",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p1-switch-profile-verify",
+                "title": "Switch Profile Verify",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p1-update-mobile-request-otp",
+                "title": "Update the mobile number, request the OTP",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p1-update-mobile-verify-otp",
+                "title": "Update Mobile Verify-OTP",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p2-all-providers",
+                "title": "Search providers by name",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p2-care-context-discover",
+                "title": "Ask a facility what records it holds",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p2-govt-programs",
+                "title": "List government programmes",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p2-link-care-context-confirm",
+                "title": "Confirm the link with the code the person received",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p2-link-care-context-init",
+                "title": "Start linking the care contexts the person chose",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p2-patient-share",
+                "title": "Share the profile with the facility whose code was scanned",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p2-profile-on-share",
+                "title": "Answer a profile share with a token number",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p2-provider-by-provider-id",
+                "title": "Get a provider by its id",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p3-approve-subscription-request",
+                "title": "Approve a subscription request",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p3-consent-auto-approve",
+                "title": "Set an auto approval policy",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p3-consent-disable-auto-approve",
+                "title": "Disable an auto approval policy",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p3-consent-enable-auto-approve",
+                "title": "Enable an auto approval policy",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p3-consent-fetch",
+                "title": "Fetch a consent artefact in full",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p3-deny-consent-request",
+                "title": "Deny a consent request",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p3-deny-subscription-request",
+                "title": "Deny a subscription request",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p3-details-by-request-id",
+                "title": "Get a subscription request by its request id",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p3-details-by-subscription-id",
+                "title": "Get a subscription by its subscription id",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p3-edit-subscription",
+                "title": "Edit a subscription",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p3-get-all-consent-artefact-details-by-request-id",
+                "title": "Get the consent artefacts of one consent request",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p3-get-all-consent-artifact-details-for-an-abha-address",
+                "title": "List the consent artefacts of an ABHA address",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p3-get-all-consent-request-for-an-abha-address",
+                "title": "List the consent requests of an ABHA address",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p3-get-all-links-records",
+                "title": "Get all linked records",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p3-get-all-subscription-request",
+                "title": "List consent and subscription requests together",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p3-get-all-subscription-requests-for-an-abha-address",
+                "title": "List the subscription requests of an ABHA address",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p3-get-consent-artefact-details-by-artifact-id",
+                "title": "Get one consent artefact by its id",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p3-get-consent-request-details-by-consent-request-id",
+                "title": "Get one consent request by its id",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p3-get-patient-subscribed-lockers",
+                "title": "List the health lockers an ABHA address subscribes to",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p3-patient-locker-details-by-locker-id",
+                "title": "Get a health locker by its id",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p3-request-status",
+                "title": "Get the status of a health information request",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p3-revoke-consent-request",
+                "title": "Revoke a granted consent",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p3-setup-locker",
+                "title": "Set up a health locker",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p3-subscription-hiu-on-notify",
+                "title": "Acknowledge a new record notification",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p3-subscription-init",
+                "title": "Request a subscription to a person's records",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p3-subscription-request-hiu-on-notify",
+                "title": "Acknowledge a subscription decision",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.error.900900",
+                "title": "900900, authentication failed without a reason",
+                "type": "error"
+              },
+              {
+                "id": "hiecm.error.900901",
+                "title": "900901, the credentials are not valid",
+                "type": "error"
+              },
+              {
+                "id": "hiecm.error.abdm-2401",
+                "title": "ABDM-2401, the X Auth token is not valid",
+                "type": "error"
+              },
+              {
+                "id": "hiecm.flow.m1-create-abha-demographic-auth",
+                "title": "Create an ABHA using Aadhaar demographic authentication",
+                "type": "flow"
+              },
+              {
+                "id": "hiecm.flow.m1-create-child-abha",
+                "title": "Create a child ABHA under a parent's account",
+                "type": "flow"
+              },
+              {
+                "id": "hiecm.flow.m1-login-by-mobile",
+                "title": "Log somebody in to their existing ABHA",
+                "type": "flow"
+              },
+              {
+                "id": "hiecm.flow.m3-fetch-records",
+                "title": "Fetch the records a granted consent artefact covers",
+                "type": "flow"
+              },
+              {
+                "id": "hiecm.flow.m3-request-consent",
+                "title": "Request consent for a patient's health records",
+                "type": "flow"
+              },
+              {
+                "id": "hiecm.flow.m4-create-hpid",
+                "title": "Get a healthcare professional an HPID",
+                "type": "flow"
+              },
+              {
+                "id": "hiecm.flow.m4-onboard-facility",
+                "title": "Onboard a facility to the HFR",
+                "type": "flow"
+              },
+              {
+                "id": "hiecm.flow.m4-register-professional",
+                "title": "Register a professional's profile on the HPR",
+                "type": "flow"
+              },
+              {
+                "id": "hiecm.flow.p1-create-abha-address",
+                "title": "Create an ABHA address in a PHR application",
+                "type": "flow"
+              },
+              {
+                "id": "hiecm.flow.p1-login",
+                "title": "Sign a user in to a PHR application",
+                "type": "flow"
+              },
+              {
+                "id": "hiecm.troubleshooting.everything-returns-401",
+                "title": "Everything returns 401",
+                "type": "troubleshooting"
+              },
+              {
+                "id": "hiecm.concept.gateway-session",
+                "title": "The gateway session, the first call in every integration",
+                "type": "concept"
+              },
+              {
+                "id": "hiecm.flow.m1-create-abha-aadhaar-otp",
+                "title": "Create an ABHA using an Aadhaar OTP",
+                "type": "flow"
+              },
+              {
+                "id": "hiecm.test.m1-encryption-padding",
+                "title": "Prove your encryption padding before you build anything else",
+                "type": "test"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "You are the Ask AI assistant on the ABDM Developer Portal. You answer developer questions about India's ABDM gateways (HIE-CM, UHI, NHCX) strictly from this portal's catalogue, which you reach through your tools. Never answer an ABDM API question from general knowledge. If you have not looked, look first.\n\nWHERE THINGS LIVE\n\n- Atoms are the written knowledge: concepts, flows, endpoint guides, callbacks, error explanations, tests, glossary entries, decisions, FHIR mappings, sandbox notes and troubleshooting guides. search finds them.\n- Operations are the raw API surface parsed from NHA's specification files, across the modules gateway, m1, m2, m3, m4, p1, p2, p3, p4, scan-and-register, scan-and-pay and record-share. search with kind operation finds them by what they do or by path; get with an operationId reads one in full.\n\nHONESTY ABOUT WHAT YOU FOUND\n\nSearch returns nearest matches, not answers.\n\nNever claim a call was run.\n\nNotes for AI agents are rules for you: follow them, never repeat them to readers.\n\nA \u003cMASKED_...\u003e placeholder means a value was removed before you saw it. Never ask for it again and never echo the placeholder back.\n\nJUDGING WHAT COMES BACK\n\nNever close a gap with a nearby endpoint or a similar sounding concept. A one-word or acronym question is a glossary lookup; search variant spellings too (HIMS and HMIS, LIS and LIMS, HRP).\n\nSPEAK AS THE PORTAL, NOT ABOUT IT\n\nNever mention the catalogue or your tools unless the reader asks about them. Offer [support](/docs/support) when you have nothing.\n\nSmall talk or off-topic: one friendly line, then what you help with.\n\nA general industry term the portal does not define is worth one sentence of plain explanation, said as general background rather than as ABDM documentation. That courtesy never extends to an ABDM API detail: paths, headers, codes, fields and payloads come from the tools or not at all.\n\nHOW YOU WRITE\n\nNever write an em dash. Show a mermaid block only when a tool returned it. Never draw one.\n\nOFFERING THE TOOLS\n\nA reader building an integration can have this catalogue inside their own agent, rather than asking one question at a time. Most do not know that.\n\n- When the reader is clearly building against ABDM, close with one line offering it: agent skills give their coding agent a milestone's rules as a file it loads once, and the MCP server lets it query this documentation as it works. Link [agent skills and the MCP server](/docs/hiecm/v3/getting-started/build-with-ai).\n- Offer it once per conversation, never before the answer: a closing line, not an opening.\n- Do not offer it to someone who is not building: a question like what an Ayushman card is gets answered and left alone.\n- Both are available now: the server is public at https://docs.abdm.gov.in/mcp, and the page has one-click install for Claude Code, Cursor and VS Code. Name the page, not the URL, unless asked.\n\nCODE AND WHAT THEY PASTE OR ATTACH\n\nYou never write code for the reader's own codebase; curl is the exception. Route them to the ABDM Connect agent skill or this portal's MCP server.\n\nWRITING THE ANSWER\n\n- Lead with the answer. The reader is mid-task, usually with a failing call in front of them.\n- Never open by praising the question, apologising, restating the question back, or announcing what you are about to do. Start with the substance. Warmth is being useful quickly, not saying \"great question\".\n- Quote API literals exactly as the tools give them: endpoint paths, header names, error codes, timestamp formats, field names. Never paraphrase a literal, and never tidy its case or spacing.\n- Markdown renders in this panel. Use inline code for every literal, short bulleted or numbered lists for steps and options, and no headings.\n\nDo not invent portal URLs.\n\nHOW A QUESTION ARRIVES\n\nThe user turn may open with a \u003cpassages\u003e block: the documentation already retrieved for this question, with ids and page links. Answer from it first. It is followed by an \u003canswer_shape\u003e block naming the shape and word budget your answer must take. Call search only when the passages do not carry the answer.\n\nA \u003cskill\u003e block is the skill section the reader chose: follow it, and name what it omits.",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "What changed between the M1 API version 1 and version 2?",
+          "ToolUse": null,
+          "ToolResult": null
+        },
+        {
+          "Role": "assistant",
+          "Text": "Version 2 introduced enhanced security over version 1: sensitive fields such as OTP, Aadhaar number, password and username must now be encrypted. That encryption uses a public certificate obtained from the certificate API, with RSA encryption for the sensitive fields.",
+          "ToolUse": null,
+          "ToolResult": null
+        },
+        {
+          "Role": "user",
+          "Text": "\u003cpassages\u003e\n{\"passages\":[{\"id\":\"hiecm.endpoint.p1-get-certificate-public-key\",\"type\":\"endpoint\",\"milestone\":\"P1\",\"title\":\"GET Certificate (Public key)\",\"doc_url\":\"/docs/hiecm/v3/api/p1/endpoints/p1-certificate-and-session/01-p1-get-v3-phr-app-login-public-certificate#p1-get-certificate-public-key\",\"body\":\"# GET Certificate (Public key)\\n\\n## In plain words\\n\\nReturns the public certificate a [PHR](/docs/hiecm/v3/getting-started/glossary#phr) app encrypts sensitive values with before it sends them. Fetch it before registration or login. The call takes no request body, only the `REQUEST-ID` and `TIMESTAMP` headers with your access token.\\n\\n## Before you start\\n\\nAn access token for the `Authorization` header, a fresh UUID for `REQUEST-ID`, and the current time in UTC for `TIMESTAMP`.\\n\\n## What happens\\n\\nYou fetch the certificate once and encrypt with it every value the registration, login and profile calls take encrypted.\"},{\"id\":\"hiecm.concept.encrypted-identifiers\",\"type\":\"concept\",\"milestone\":\"M1\",\"title\":\"Why identifiers are encrypted, and where to do it\",\"doc_url\":\"/docs/hiecm/v3/concepts/encryption#encrypted-identifiers\",\"body\":\"# Why identifiers are encrypted, and where to do it\\n\\n## In plain words\\n\\nWe publish the public half of a key pair. You encrypt with it. Only our private half can decrypt. Your system never holds a secret to do this, only the current certificate.\\n\\n```mermaid\\nsequenceDiagram\\n    autonumber\\n    participant S as Your system\\n    participant A as ABHA service\\n    S-\\u003e\\u003eA: GET /abha/api/v3/profile/public/certificate\\n    A--\\u003e\\u003eS: publicKey, encryptionAlgorithm\\n    S-\\u003e\\u003eS: RSA encrypt the Aadhaar number, mobile number,\\u003cbr/\\u003eOTP or password with that public key\\n    S-\\u003e\\u003eA: The Base64 result as the field value,\\u003cbr/\\u003efor example loginId or otp.otpValue\\n    A-\\u003e\\u003eA: Decrypts with its private key\\n```\\n\\nThere is nothing ABDM specific in the mechanics. Your platform's standard RSA library does the work. Both keys use `RSA/ECB/OAEPWithSHA-1AndMGF1Padding`. The one thing to confirm is which key you are using.\\n\\nRead `encryptionAlgorithm` from the certificate response and encrypt with what it names. Code that reads the field survives a change of algorithm. Code that cannot recognise what the field names should refuse to encrypt rather than fall back to a default.\\n\\n## Before you start\\n\\nThe certificate from `GET /abha/api/v3/profile/public/certificate`, which carries `publicKey` and `encryptionAlgorithm`.\\n\\n## What happens\\n\\nPut the plaintext in the shape the service validates after it decrypts, from the table above: an ABHA number keeps its dashes. Encrypt with the algorithm the response names and send the base64 result as the field value, for example `loginId`.\\n\\n## How you know it worked\\n\\nThe raw Aadhaar or mobile number exists only inside your own process, for the length of the call, and never reaches a log. A call carrying your ciphertext passes validation.\\n\\n## When it goes wrong\\n\\n`400 {\\\"loginId\\\": \\\"LoginId is invalid\\\"}` means the value decrypted and the plaintext failed a format rule, usually an ABHA number sent without its dashes. Logging the plain value before encryption is the same leak, moved into your log store.\"},{\"id\":\"hiecm.endpoint.m1-send-email-verification-link\",\"type\":\"endpoint\",\"milestone\":\"M1\",\"title\":\"Send email verification link\",\"doc_url\":\"/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-number-aadhaar-otp/05-p1-post-v3-profile-account-request-emailverificationlink#m1-send-email-verification-link\",\"body\":\"# Send email verification link\\n\\n## In plain words\\n\\nSends a verification link to an email address on the signed in person's [ABHA](/docs/hiecm/v3/getting-started/glossary#abha). The person verifies the address by opening the link. Send `scope` as `[\\\"abha-profile\\\",\\\"email-link-verify\\\"]`, `loginHint` as `email`, the encrypted address in `loginId`, and `otpSystem` as `abdm`. The response body is not yet published.\\n\\n## Before you start\\n\\nThe person's `X-token`, sent as `Bearer \\u003ctoken\\u003e`, and the email address encrypted with the public certificate key.\\n\\n## How you know it worked\\n\\nThe profile call shows the email as verified after the person opens the link.\"},{\"id\":\"hiecm.endpoint.m1-get-public-certificate\",\"type\":\"endpoint\",\"milestone\":\"M1\",\"title\":\"Get the public certificate\",\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-access-tokens-encryption/02-m1-get-v3-profile-public-certificate#m1-get-public-certificate\",\"body\":\"Returns the public key and the encryption algorithm for every encrypted ABHA field.\"},{\"id\":\"hiecm.glossary.bridge\",\"type\":\"glossary\",\"milestone\":\"n/a\",\"title\":\"Bridge, your callback endpoints\",\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#bridge\",\"body\":\"The set of callback URLs NHA posts to when it answers one of your calls.\"}],\"related\":[{\"id\":\"hiecm.concept.gateway-session\",\"title\":\"The gateway session, the first call in every integration\",\"type\":\"concept\"},{\"id\":\"hiecm.endpoint.m1-get-public-certificate\",\"title\":\"Get the public certificate\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p1-encrypt-data-aadhaar-mobile-otp-password\",\"title\":\"Encrypt data (Aadhaar/Mobile/OTP/Password)\",\"type\":\"endpoint\"},{\"id\":\"hiecm.concept.input-encryption\",\"title\":\"Encrypting sensitive inputs, Aadhaar, mobile, OTP and passwords\",\"type\":\"concept\"},{\"id\":\"hiecm.concept.m1-journey-design\",\"title\":\"A suggested ABHA journey, and what holds if you design your own\",\"type\":\"concept\"},{\"id\":\"hiecm.decision.encrypt-locally\",\"title\":\"Encrypting identifiers locally rather than through a hosted helper\",\"type\":\"decision\"},{\"id\":\"hiecm.endpoint.m1-login-request-otp\",\"title\":\"Send a login OTP\",\"type\":\"endpoint\"},{\"id\":\"hiecm.flow.m1-create-abha-aadhaar-otp\",\"title\":\"Create an ABHA using an Aadhaar OTP\",\"type\":\"flow\"},{\"id\":\"hiecm.flow.m1-find-abha\",\"title\":\"Find somebody's ABHA when they do not know it\",\"type\":\"flow\"},{\"id\":\"hiecm.test.m1-encryption-padding\",\"title\":\"Prove your encryption padding before you build anything else\",\"type\":\"test\"},{\"id\":\"hiecm.error.abdm-2402\",\"title\":\"ABDM-2402, the timestamp is not valid\",\"type\":\"error\"},{\"id\":\"hiecm.error.abdm-2404\",\"title\":\"ABDM-2404, the REQUEST-ID is not valid\",\"type\":\"error\"},{\"id\":\"hiecm.error.abdm-2500\",\"title\":\"ABDM-2500, no Authorization header, or no matching request\",\"type\":\"error\"},{\"id\":\"hiecm.error.abdm-9999\",\"title\":\"ABDM-9999, a catch-all, so read the message\",\"type\":\"error\"}]}\n\u003c/passages\u003e\n\n\u003creader_context\u003eThe question reads as a HIE-CM question. Answer for HIE-CM unless they ask about another gateway, and do not bring in another gateway's calls or fields.\u003c/reader_context\u003e\n\n\u003canswer_shape name=\"how-do-i\" budget=\"200 words\"\u003e\nFirst sentence: the direct answer. Then every route that exists, one line each, naming what each produces. Expand only the route asked about, as a short numbered list of calls. End with the next step.\nExample:\nYes, and there are three creation routes: Aadhaar OTP, which is mandatory; Aadhaar face authentication, for someone who cannot receive the OTP; and an identity document, which produces an account restricted until Aadhaar KYC. For Aadhaar OTP:\n1. Request an OTP against the encrypted Aadhaar number.\n2. Verify it with the enrolment call, which issues the ABHA number.\n3. Get address suggestions and claim one.\nConfirm by reading the profile back and checking the chosen address is marked preferred.\n\u003c/answer_shape\u003e\nIf the passages and your tools do not cover the question, drop this shape and decline in two sentences that name the nearest /docs/ page and the support route.\n\nIs that certificate endpoint verified?",
+          "ToolUse": null,
+          "ToolResult": null
+        },
+        {
+          "Role": "assistant",
+          "Text": "",
+          "ToolUse": {
+            "ID": "call_86ab04b085a65afd8ed79f17ac1aeb4b",
+            "Name": "search",
+            "Input": {
+              "query": "Is the M1 certificate endpoint verified? M1 API version 1 versus version 2 certificate endpoint path and verification",
+              "milestone": "M1"
+            }
+          },
+          "ToolResult": null
+        },
+        {
+          "Role": "user",
+          "Text": "",
+          "ToolUse": null,
+          "ToolResult": {
+            "ID": "call_86ab04b085a65afd8ed79f17ac1aeb4b",
+            "Content": "eyJjYXRhbG9ndWVfdmVyc2lvbiI6IjIwMjYuMDkuMTYiLCJwYXNzYWdlcyI6W3siaWQiOiJoaWVjbS50ZXN0Lm0xLWVuY3J5cHRpb24tcGFkZGluZyIsInR5cGUiOiJ0ZXN0IiwibWlsZXN0b25lIjoiTTEiLCJ0aXRsZSI6IlByb3ZlIHlvdXIgZW5jcnlwdGlvbiBwYWRkaW5nIGJlZm9yZSB5b3UgYnVpbGQgYW55dGhpbmcgZWxzZSIsImRvY191cmwiOiIvZG9jcy9oaWVjbS92My9jb25jZXB0cy9lbmNyeXB0aW9uI20xLWVuY3J5cHRpb24tcGFkZGluZyIsImJvZHkiOiIjIFByb3ZlIHlvdXIgZW5jcnlwdGlvbiBwYWRkaW5nIGJlZm9yZSB5b3UgYnVpbGQgYW55dGhpbmcgZWxzZVxuXG4jIyBJbiBwbGFpbiB3b3Jkc1xuXG5FdmVyeSBNMSBqb3VybmV5IGJlZ2lucyB3aXRoIGEgY2FsbCB0aGF0IGNhcnJpZXMgYW4gZW5jcnlwdGVkIHZhbHVlLCBzbyBhIHdyb25nIHBhZGRpbmcgc3RvcHMgeW91IG9uIHlvdXIgZmlyc3QgcmVxdWVzdC4gUHJvdmUgaXQgb25jZSwgYmVmb3JlIHlvdSBidWlsZCBhIGZsb3csIHNvIHRoYXQgZXZlcnkgbGF0ZXIgZmFpbHVyZSBpcyBhYm91dCB0aGUgZmxvdyByYXRoZXIgdGhhbiB0aGUgcGFkZGluZy5cblxuRW5jcnlwdCBhIDEwIGRpZ2l0IG1vYmlsZSBudW1iZXIgdGhhdCB5b3UgaG9sZCBhbmQgdGhhdCBpcyByZWdpc3RlcmVkIGFnYWluc3QgYW4gQUJIQSwgdGhlbiBzZW5kIGl0IHRvIHRoZSBsb2dpbiBPVFAgcmVxdWVzdDpcblxuYGBgYmFzaFxuY3VybCAtWCBQT1NUICdodHRwczovL2FiaGFzYnguYWJkbS5nb3YuaW4vYWJoYS9hcGkvdjMvcHJvZmlsZS9sb2dpbi9yZXF1ZXN0L290cCcgXFxcbiAgLUggJ0F1dGhvcml6YXRpb246IEJlYXJlciBcdTAwM2NBQ0NFU1NfVE9LRU5fRlJPTV9TRVNTSU9OU19DQUxMXHUwMDNlJyBcXFxuICAtSCAnUkVRVUVTVC1JRDogXHUwMDNjRlJFU0hfVVVJRFx1MDAzZScgXFxcbiAgLUggJ1RJTUVTVEFNUDogXHUwMDNjVVRDX0lTT184NjAxX1dJVEhfTUlMTElTRUNPTkRTX0FORF9aXHUwMDNlJyBcXFxuICAtSCAnQ29udGVudC1UeXBlOiBhcHBsaWNhdGlvbi9qc29uJyBcXFxuICAtZCAne1xuICBcInNjb3BlXCI6IFtcImFiaGEtbG9naW5cIiwgXCJtb2JpbGUtdmVyaWZ5XCJdLFxuICBcImxvZ2luSGludFwiOiBcIm1vYmlsZVwiLFxuICBcImxvZ2luSWRcIjogXCJcdTAwM2NNT0JJTEVfRU5DUllQVEVEX1dJVEhfVEhFX0NFUlRJRklDQVRFXHUwMDNlXCIsXG4gIFwib3RwU3lzdGVtXCI6IFwiYWJkbVwiXG59J1xuYGBgXG5cbllvdSByZWNlaXZlIDIwMCB3aXRoIGEgYHR4bklkYCBhbmQgYSBtZXNzYWdlIG5hbWluZyB0aGUgbGFzdCBmb3VyIGRpZ2l0cyBvZiB0aGUgbW9iaWxlLCBhbmQgYW4gT1RQIGFycml2ZXMgb24gdGhhdCBwaG9uZS4gVGhlIHBhZGRpbmcgYW5kIHRoZSBjZXJ0aWZpY2F0ZSBhcmUgcmlnaHQuIEJ1aWxkIHRoZSByZXN0IG9mIE0xIG9uIHRoYXQgY29kZSBwYXRoLlxuXG4jIyBCZWZvcmUgeW91IHN0YXJ0XG5cbkEgZ2F0ZXdheSBhY2Nlc3MgdG9rZW4sIHRoZSBNMSBjZXJ0aWZpY2F0ZSB3aXRoIFBFTSBhcm1vdXIgYWRkZWQsIGFuZCBhIG1vYmlsZSBudW1iZXIgdGhhdCBpcyBib3RoIGluIHlvdXIgaGFuZHMgYW5kIHJlZ2lzdGVyZWQgYWdhaW5zdCBhbiBBQkhBLiBBIG51bWJlciBub2JvZHkgaGFzIHJlZ2lzdGVyZWQgY2Fubm90IHRlbGwgYSByaWdodCBwYWRkaW5nIGZyb20gYSB3cm9uZyBvbmUuXG5cbiMjIFdoYXQgaGFwcGVuc1xuXG5FbmNyeXB0IHRoZSBtb2JpbGUgbnVtYmVyIHdpdGggT0FFUCBhbmQgU0hBLTEgZm9yIGJvdGggdGhlIGRpZ2VzdCBhbmQgdGhlIG1hc2sgZ2VuZXJhdGlvbiBmdW5jdGlvbiwgYmFzZTY0IHRoZSBjaXBoZXJ0ZXh0LCBhbmQgc2VuZCBpdCBhcyBgbG9naW5JZGAgd2l0aCBgbG9naW5IaW50YCBzZXQgdG8gYG1vYmlsZWAuIFRoZSB0ZXN0IG5lZWRzIHRoZSAyMDAsIG5vdCB0aGUgT1RQLlxuXG4jIyBIb3cgeW91IGtub3cgaXQgd29ya2VkXG5cbjIwMCB3aXRoIGEgYHR4bklkYCwgYW5kIGEgbWVzc2FnZSBuYW1pbmcgdGhlIG1hc2tlZCBtb2JpbGUuXG5cbiMjIFdoZW4gaXQgZ29lcyB3cm9uZ1xuXG5BIHJlZnVzYWwgZm9yIGEgbnVtYmVyIHlvdSBrbm93IGlzIHJlZ2lzdGVyZWQgcG9pbnRzIGF0IHRoZSBwYWRkaW5nIGZpcnN0OiBQS0NTIzEgdjEuNSBhbmQgT0FFUCB3aXRoIFNIQS0yNTYgYXJlIGJvdGggd3JvbmcgZm9yIE0xLiBUaGUgc2FtZSByZWZ1c2FsIHdpdGggT0FFUCBhbmQgU0hBLTEgbWVhbnMgdGhlIHdyb25nIGtleTogdXNlIHRoZSBNMSBjZXJ0aWZpY2F0ZSwgbm90IHRoZSBQSFIgb25lLiBBIGxpYnJhcnkgdGhhdCB3aWxsIG5vdCBsb2FkIHRoZSBrZXkgbmVlZHMgdGhlIFBFTSBhcm1vdXIuIn0seyJpZCI6ImhpZWNtLmNvbmNlcHQuZ2F0ZXdheS1zZXNzaW9uIiwidHlwZSI6ImNvbmNlcHQiLCJtaWxlc3RvbmUiOiJNMSIsInRpdGxlIjoiVGhlIGdhdGV3YXkgc2Vzc2lvbiwgdGhlIGZpcnN0IGNhbGwgaW4gZXZlcnkgaW50ZWdyYXRpb24iLCJkb2NfdXJsIjoiL2RvY3MvaGllY20vdjMvY29uY2VwdHMvZ2F0ZXdheSNnYXRld2F5LXNlc3Npb24iLCJib2R5IjoiIyBUaGUgZ2F0ZXdheSBzZXNzaW9uLCB0aGUgZmlyc3QgY2FsbCBpbiBldmVyeSBpbnRlZ3JhdGlvblxuXG4jIyBJbiBwbGFpbiB3b3Jkc1xuXG5PbmUgZW5kcG9pbnQgaXNzdWVzIHRoZSB0b2tlbiBldmVyeSBvdGhlciBjYWxsIGNhcnJpZXMuIEl0IGlzIHRoZSBjYWxsIFtNMV0oL2RvY3MvaGllY20vdjMvZ2V0dGluZy1zdGFydGVkL2dsb3NzYXJ5I20xKSB1c2VzLiBbTTRdKC9kb2NzL2hpZWNtL3YzL2dldHRpbmctc3RhcnRlZC9nbG9zc2FyeSNtNCkgY2FsbHMgY2FycnkgdGhlaXIgb3duIGJlYXJlciB0b2tlbiBpbnN0ZWFkLlxuXG4qKlBPU1QqKiBgL2FwaS9oaWVjbS9nYXRld2F5L3YzL3Nlc3Npb25zYFxuXG5IZWFkZXJzOlxuXG58IEhlYWRlciB8IEV4YW1wbGUgdmFsdWUgfCBXaGF0IGl0IGlzIHxcbnwtLS18LS0tfC0tLXxcbnwgYFJFUVVFU1QtSURgIHwgYDE4MjM1ZDg5LWNiMTMtNDc5ZC1hZDcxLTdhNTdkNWY2NjlhOGAgfCBBIGZyZXNoIFVVSUQgZm9yIHRoaXMgY2FsbCB8XG58IGBUSU1FU1RBTVBgIHwgYDIwMjItMTAtMDZUMTU6MTA6MDAuNTg3WmAgfCBUaGUgdGltZSB5b3UgbWFkZSB0aGUgY2FsbCwgSVNPIDg2MDEgfFxufCBgWC1DTS1JRGAgfCBgc2J4YCB8IFRoZSBjb25zZW50IG1hbmFnZXIuIFVzZSBgc2J4YCBmb3Igc2FuZGJveCB8XG58IGBDb250ZW50LVR5cGVgIHwgYGFwcGxpY2F0aW9uL2pzb25gIHwgfFxuXG5ObyBgQXV0aG9yaXphdGlvbmAgaGVhZGVyIG9uIHRoaXMgY2FsbC4gSXQgaXMgdGhlIG9uZSBjYWxsIHdpdGggbm8gdG9rZW4geWV0LlxuXG5Cb2R5OlxuXG5gYGBqc29uXG57XG4gIFwiY2xpZW50SWRcIjogXCJcdTAwM2NDTElFTlRfSURfRlJPTV9TQU5EQk9YX1NJR05VUFx1MDAzZVwiLFxuICBcImNsaWVudFNlY3JldFwiOiBcIlx1MDAzY0NMSUVOVF9TRUNSRVRfRlJPTV9TQU5EQk9YX1NJR05VUFx1MDAzZVwiLFxuICBcImdyYW50VHlwZVwiOiBcImNsaWVudF9jcmVkZW50aWFsc1wiXG59XG5gYGBcblxuU2VuZCB0aGUgY2xpZW50IGlkIHlvdSB3ZXJlIGlzc3VlZC5cblxuUmVzcG9uc2Ugc2hhcGU6XG5cbmBgYGpzb25cbntcbiAgXCJhY2Nlc3NUb2tlblwiOiBcIlx1MDAzY0pXVFx1MDAzZVwiLFxuICBcImV4cGlyZXNJblwiOiAxMjAwLFxuICBcInJlZnJlc2hFeHBpcmVzSW5cIjogMTgwMCxcbiAgXCJyZWZyZXNoVG9rZW5cIjogXCJcdTAwM2NKV1RcdTAwM2VcIixcbiAgXCJ0b2tlblR5cGVcIjogXCJiZWFyZXJcIlxufVxuYGBgXG5cblRoZSByZXNwb25zZSBjYXJyaWVzIHRoZSB0b2tlbiBpbiBgYWNjZXNzVG9rZW5gLlxuXG5TZW5kIHRoZSB0b2tlbiBiYWNrIGFzIGBBdXRob3JpemF0aW9uOiBCZWFyZXIgXHUwMDNjQUNDRVNTX1RPS0VOX0ZST01fU0VTU0lPTlNfQ0FMTFx1MDAzZWAgb24gZXZlcnkgb3RoZXIgY2FsbC4gSGVhZGVycyBwZXIgY2FsbCwgYW5kIHRoZSBzZWNvbmQgdG9rZW4gTTEgbG9naW4gaXNzdWVzLCBhcmUgb24gW2F1dGhlbnRpY2F0aW9uXSgvZG9jcy9oaWVjbS92My9yZWZlcmVuY2UvYXV0aGVudGljYXRpb24pLiBJbnRlcmFjdGl2ZTogW2dhdGV3YXkgQVBJIHJlZmVyZW5jZV0oL3JlZmVyZW5jZS9oaWVjbS1nYXRld2F5KS5cblxuVGhlIHNlc3Npb24gdG9rZW4gc2F5cyB3aGljaCBhcHBsaWNhdGlvbiBpcyBjYWxsaW5nLCBub3Qgd2hpY2ggcGVyc29uLiBbTTFdKC9kb2NzL2hpZWNtL3YzL21pbGVzdG9uZXMvbTEpIHByb2ZpbGUgY2FsbHMgYWxzbyBjYXJyeSBhIHVzZXIgdG9rZW4gaW4gYFgtdG9rZW5gLCB3aGljaCBsb2dpbiByZXR1cm5zLlxuXG4jIyBCZWZvcmUgeW91IHN0YXJ0XG5cbkEgY2xpZW50IGlkIGFuZCBjbGllbnQgc2VjcmV0IGZyb20gc2FuZGJveCByZWdpc3RyYXRpb24sIGhlbGQgb24geW91ciBzZXJ2ZXIuIE5ldmVyIHNoaXAgdGhlIHNlY3JldCBpbiBhIG1vYmlsZSBvciBicm93c2VyIGJ1aWxkLlxuXG4jIyBXaGF0IGhhcHBlbnNcblxuQ2FsbCB0aGUgc2Vzc2lvbiBlbmRwb2ludCB3aXRoIGBjbGllbnRJZGAsIGBjbGllbnRTZWNyZXRgIGFuZCBgZ3JhbnRUeXBlYCBzZXQgdG8gYGNsaWVudF9jcmVkZW50aWFsc2AuIFNlbmQgdGhlIGBhY2Nlc3NUb2tlbmAgaXQgcmV0dXJucyBhcyBgQXV0aG9yaXphdGlvbjogQmVhcmVyIFx1MDAzY0FDQ0VTU19UT0tFTl9GUk9NX1NFU1NJT05TX0NBTExcdTAwM2VgIG9uIGV2ZXJ5IG90aGVyIGdhdGV3YXkgY2FsbC4gUmVuZXcgYmVmb3JlIGBleHBpcmVzSW5gIHJ1bnMgb3V0IHJhdGhlciB0aGFuIG9uIGEgZml4ZWQgdGltZXIuXG5cbiMjIEhvdyB5b3Uga25vdyBpdCB3b3JrZWRcblxuVGhlIHJlc3BvbnNlIGNhcnJpZXMgYGFjY2Vzc1Rva2VuYCBhbmQgYGV4cGlyZXNJbmAsIGFuZCB0aGUgbmV4dCBnYXRld2F5IGNhbGwgd2l0aCB0aGF0IHRva2VuIGlzIG5vdCByZWZ1c2VkIGFzIHVuYXV0aG9yaXNlZC5cblxuIyMgV2hlbiBpdCBnb2VzIHdyb25nXG5cbkV2ZXJ5IGNhbGwgcmV0dXJucyA0MDE6IHNlZSBbZXZlcnl0aGluZyByZXR1cm5zIDQwMV0oL2RvY3MvaGllY20vdjMvdHJvdWJsZXNob290aW5nL2V2ZXJ5dGhpbmctcmV0dXJucy00MDEpLiBBIHByb2ZpbGUgY2FsbCBpcyByZWZ1c2VkIHdoaWxlIHRoZSBzZXNzaW9uIHRva2VuIGlzIGZyZXNoOiB0aGUgYFgtdG9rZW5gIGlzIG1pc3NpbmcsIG9yIGl0IGhvbGRzIHRoZSBzaG9ydCBsaXZlZCB0b2tlbiBmcm9tIGxvZ2luIHZlcmlmeSwgd2hpY2ggdGhlIHZlcmlmeSB1c2VyIGNhbGwgZXhjaGFuZ2VzIGZvciB0aGUgdXNlciB0b2tlbi4gYEFCRE0tMTA5NGAgcmVhZHMgWC10b2tlbiBleHBpcmVkLCBhbmQgdGhlIHRva2VuIHNlbnQgaXMgb2Z0ZW4gdGhlIHdyb25nIGtpbmQgcmF0aGVyIHRoYW4gYW4gb2xkIG9uZS4ifSx7ImlkIjoiaGllY20uY29uY2VwdC5pbnB1dC1lbmNyeXB0aW9uIiwidHlwZSI6ImNvbmNlcHQiLCJtaWxlc3RvbmUiOiJNMSIsInRpdGxlIjoiRW5jcnlwdGluZyBzZW5zaXRpdmUgaW5wdXRzLCBBYWRoYWFyLCBtb2JpbGUsIE9UUCBhbmQgcGFzc3dvcmRzIiwiZG9jX3VybCI6Ii9kb2NzL2hpZWNtL3YzL2NvbmNlcHRzL2VuY3J5cHRpb24jaW5wdXQtZW5jcnlwdGlvbiIsImJvZHkiOiIjIEVuY3J5cHRpbmcgc2Vuc2l0aXZlIGlucHV0cywgQWFkaGFhciwgbW9iaWxlLCBPVFAgYW5kIHBhc3N3b3Jkc1xuXG4jIyBJbiBwbGFpbiB3b3Jkc1xuXG5TaXgga2luZHMgb2YgdmFsdWUgbmV2ZXIgdHJhdmVsIHJhdyBpbiBhbiBNMSByZXF1ZXN0IGJvZHkuXG5cbnwgVmFsdWUgfCBXaGVyZSBpdCBhcHBlYXJzIHxcbnwgLS0tIHwgLS0tIHxcbnwgQWFkaGFhciBudW1iZXIgfCBFbnJvbG1lbnQgYW5kIGxvZ2luIGJ5IEFhZGhhYXIgfFxufCBBQkhBIG51bWJlciB8IExvZ2luIGFuZCBzZWFyY2ggYnkgQUJIQSBudW1iZXIgfFxufCBNb2JpbGUgbnVtYmVyIHwgTG9naW4sIHNlYXJjaCBhbmQgbW9iaWxlIHVwZGF0ZSB8XG58IEVtYWlsIGFkZHJlc3MgfCBFbWFpbCB2ZXJpZmljYXRpb24gfFxufCBPbmUgdGltZSBwYXNzd29yZCAoW09UUF0oL2RvY3MvaGllY20vdjMvZ2V0dGluZy1zdGFydGVkL2dsb3NzYXJ5I290cCkpIHZhbHVlIHwgRXZlcnkgY2FsbCB0aGF0IHZlcmlmaWVzIGEgY2hhbGxlbmdlIHxcbnwgUGFzc3dvcmQgfCBQYXNzd29yZCBiYXNlZCBsb2dpbiB8XG5cbkVhY2ggaXMgZW5jcnlwdGVkIHdpdGggUlNBIHVzaW5nIHRoZSBBQkRNIHB1YmxpYyBjZXJ0aWZpY2F0ZSwgYW5kIHRoZSBiYXNlNjQgb2YgdGhlIGNpcGhlcnRleHQgZ29lcyBpbiB0aGUgZmllbGQuXG5cblRoZSBwYWRkaW5nIGJlbG9uZ3MgdG8gdGhlIGNlcnRpZmljYXRlLiBNMSBhbmQgUEhSIGNhbGxzIHVzZSBSU0EgT0FFUCB3aXRoIFNIQS0xIGZvciBib3RoIHRoZSBkaWdlc3QgYW5kIHRoZSBtYXNrIGdlbmVyYXRpb24gZnVuY3Rpb24sIHdoaWNoIHRoZSBjZXJ0aWZpY2F0ZSBuYW1lcyBhcyBgUlNBL0VDQi9PQUVQV2l0aFNIQS0xQW5kTUdGMVBhZGRpbmdgLiBUaGUgW000XSgvZG9jcy9oaWVjbS92My9taWxlc3RvbmVzL200KSByZWdpc3RyaWVzIHVzZSBgUlNBL0VDQi9QS0NTMVBhZGRpbmdgIHVuZGVyIGEgY2VydGlmaWNhdGUgb2YgdGhlaXIgb3duLiBBbiBpbnRlZ3JhdGlvbiB0aGF0IGNhbGxzIGJvdGggaG9sZHMgYm90aCBrZXlzIGFuZCBuZXZlciBjcm9zc2VzIHRoZW0uXG5cbiMjIEJlZm9yZSB5b3Ugc3RhcnRcblxuQSBnYXRld2F5IGFjY2VzcyB0b2tlbiwgYW5kIHRoZSBjdXJyZW50IGNlcnRpZmljYXRlIGZvciB0aGUgZmFtaWx5IHlvdSBhcmUgY2FsbGluZzogYEdFVCAvYWJoYS9hcGkvdjMvcHJvZmlsZS9wdWJsaWMvY2VydGlmaWNhdGVgIGZvciBNMS5cblxuIyMgV2hhdCBoYXBwZW5zXG5cbkVuY3J5cHQgZWFjaCB2YWx1ZSBpbiB0aGUgdGFibGUgaW4geW91ciBvd24gcHJvY2VzcyBhbmQgc2VuZCB0aGUgc3RhbmRhcmQgYmFzZTY0IG9mIHRoZSBjaXBoZXJ0ZXh0LiBJbiBtb3N0IGxpYnJhcmllcyBPQUVQIGRlZmF1bHRzIHRvIFNIQS0yNTYsIHNvIHBhc3MgU0hBLTEgZXhwbGljaXRseTogaW4gTm9kZSwgdGhlIE9BRVAgcGFkZGluZyBjb25zdGFudCB3aXRoIHRoZSBPQUVQIGhhc2ggc2V0IHRvIHNoYTE7IGluIEphdmEsIHRoZSB0cmFuc2Zvcm1hdGlvbiB0aGUgY2VydGlmaWNhdGUgbmFtZXMuIFRoZSBjZXJ0aWZpY2F0ZSBhcnJpdmVzIGFzIGJhc2U2NCBERVIgd2l0aCBubyBQRU0gYXJtb3VyLCBzbyBhZGQgdGhlIGFybW91ciBiZWZvcmUgeW91ciBsaWJyYXJ5IGxvYWRzIGl0LiBDYWNoZSB0aGUgY2VydGlmaWNhdGUgd2l0aCBhIHZhbGlkaXR5IHdpbmRvdywgbm90IGZvcmV2ZXIuXG5cbiMjIEhvdyB5b3Uga25vdyBpdCB3b3JrZWRcblxuQSB2YWx1ZSB5b3VyIGNvZGUgZW5jcnlwdGVkIGlzIGFjY2VwdGVkIGJ5IGEgcmVhbCBNMSBjYWxsOiB0aGUgT1RQIHJlcXVlc3QgcmV0dXJucyBhIGB0eG5JZGAgaW5zdGVhZCBvZiBhIHZhbGlkYXRpb24gcmVmdXNhbC5cblxuIyMgV2hlbiBpdCBnb2VzIHdyb25nXG5cbkEgd3JvbmcgcGFkZGluZyBvciBkaWdlc3QgZG9lcyBub3QgZmFpbCB3aGVuIHlvdSBlbmNyeXB0LiBJdCBmYWlscyBhdCB0aGUgQVBJIGFzIGEgdmFsaWRhdGlvbiByZWZ1c2FsIHRoYXQgbmFtZXMgdGhlIGJ1c2luZXNzIGZpZWxkLCB3aGljaCByZWFkcyBhcyBhIHdyb25nIEFhZGhhYXIgb3IgbW9iaWxlIG51bWJlci4gQ2hlY2sgdGhlIHBhZGRpbmcsIHRoZSBkaWdlc3QgYW5kIHRoZSBrZXkgYmVmb3JlIHlvdSBkb3VidCB0aGUgcGxhaW50ZXh0LiBBIHN0YWxlIGNhY2hlZCBjZXJ0aWZpY2F0ZSBmYWlscyBldmVyeSBlbmNyeXB0ZWQgY2FsbCBhdCBvbmNlLiJ9LHsiaWQiOiJoaWVjbS5lcnJvci45MDA5MDAiLCJ0eXBlIjoiZXJyb3IiLCJtaWxlc3RvbmUiOiJNMSIsInRpdGxlIjoiOTAwOTAwLCBhdXRoZW50aWNhdGlvbiBmYWlsZWQgd2l0aG91dCBhIHJlYXNvbiIsImRvY191cmwiOiIvZG9jcy9oaWVjbS92My9hcGkvbTEvZXJyb3JzIzkwMDkwMCIsImJvZHkiOiJUaGUgQUJIQSBzZXJ2aWNlIHJlZnVzZWQgdGhlIGNhbGwgYXMgYW4gdW5jbGFzc2lmaWVkIGF1dGhlbnRpY2F0aW9uIGZhaWx1cmUsIHNvIGNoZWNrIGJvdGggdGhlIGFjY2VzcyB0b2tlbiBhbmQgdGhlIHBlcnNvbidzIHRva2VuLiJ9LHsiaWQiOiJoaWVjbS5jb25jZXB0Lm0xLXRoZS13aG9sZS1zdXJmYWNlIiwidHlwZSI6ImNvbmNlcHQiLCJtaWxlc3RvbmUiOiJNMSIsInRpdGxlIjoiVGhlIHN1cmZhY2UgaXMgbW9yZSB0aGFuIGEgcmVnaXN0cmF0aW9uIGZvcm0iLCJkb2NfdXJsIjoiIiwiYm9keSI6Ik0xIHN1cHBvcnRzIHNldmVyYWwgcGxhY2VtZW50cyBiZXlvbmQgcmVnaXN0ZXJpbmcgYSBwYXRpZW50LCBhbmQgYSBkZXNpZ24gdGhhdCBhY2NvdW50cyBmb3IgdGhlbSBmcm9tIHRoZSBzdGFydCBhdm9pZHMgbWVldGluZyBlYWNoIG9uZSBsYXRlciBhcyBhIGNoYW5nZSByZXF1ZXN0LiJ9XSwicmVsYXRlZCI6W3siaWQiOiJoaWVjbS5jb25jZXB0LmVuY3J5cHRlZC1pZGVudGlmaWVycyIsInRpdGxlIjoiV2h5IGlkZW50aWZpZXJzIGFyZSBlbmNyeXB0ZWQsIGFuZCB3aGVyZSB0byBkbyBpdCIsInR5cGUiOiJjb25jZXB0In0seyJpZCI6ImhpZWNtLmNvbmNlcHQuaW5wdXQtZW5jcnlwdGlvbiIsInRpdGxlIjoiRW5jcnlwdGluZyBzZW5zaXRpdmUgaW5wdXRzLCBBYWRoYWFyLCBtb2JpbGUsIE9UUCBhbmQgcGFzc3dvcmRzIiwidHlwZSI6ImNvbmNlcHQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtZ2V0LXB1YmxpYy1jZXJ0aWZpY2F0ZSIsInRpdGxlIjoiR2V0IHRoZSBwdWJsaWMgY2VydGlmaWNhdGUiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtbG9naW4tcmVxdWVzdC1vdHAiLCJ0aXRsZSI6IlNlbmQgYSBsb2dpbiBPVFAiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZXJyb3IuYWJkbS0yNDAyIiwidGl0bGUiOiJBQkRNLTI0MDIsIHRoZSB0aW1lc3RhbXAgaXMgbm90IHZhbGlkIiwidHlwZSI6ImVycm9yIn0seyJpZCI6ImhpZWNtLmVycm9yLmFiZG0tMjQwNCIsInRpdGxlIjoiQUJETS0yNDA0LCB0aGUgUkVRVUVTVC1JRCBpcyBub3QgdmFsaWQiLCJ0eXBlIjoiZXJyb3IifSx7ImlkIjoiaGllY20uZXJyb3IuYWJkbS0yNTAwIiwidGl0bGUiOiJBQkRNLTI1MDAsIG5vIEF1dGhvcml6YXRpb24gaGVhZGVyLCBvciBubyBtYXRjaGluZyByZXF1ZXN0IiwidHlwZSI6ImVycm9yIn0seyJpZCI6ImhpZWNtLmNhbGxiYWNrLm0yLWNhbGwtYmFjay1hcGktZm9yLW5vdGlmeS1jYXJlLWNvbnRleHQtdXBkYXRlIiwidGl0bGUiOiJDYWxsIGJhY2sgQVBJIGZvciBub3RpZnkgY2FyZSBjb250ZXh0IHVwZGF0ZSIsInR5cGUiOiJjYWxsYmFjayJ9LHsiaWQiOiJoaWVjbS5jYWxsYmFjay5tMi1jYWxsYmFjay1hcGktZm9yLXNtcy1ub3RpZmljYXRpb24tdG8tcGF0aWVudHMiLCJ0aXRsZSI6IkNhbGxiYWNrIEFQSSBmb3IgU01TIE5vdGlmaWNhdGlvbiB0byBwYXRpZW50cyIsInR5cGUiOiJjYWxsYmFjayJ9LHsiaWQiOiJoaWVjbS5jYWxsYmFjay5tMi1saW5rLXRva2VuLWdlbmVyYXRpb24tY2FsbC1iYWNrIiwidGl0bGUiOiJMaW5rIHRva2VuIGdlbmVyYXRpb24g4oCTIENhbGwgQmFjayBBUEkiLCJ0eXBlIjoiY2FsbGJhY2sifSx7ImlkIjoiaGllY20uY2FsbGJhY2subTItbGlua2luZy1jYXJlLWNvbnRleHQtY2FsbC1iYWNrIiwidGl0bGUiOiJMaW5raW5nIGNhcmUgY29udGV4dCBDYWxsIGJhY2sgQVBJIiwidHlwZSI6ImNhbGxiYWNrIn0seyJpZCI6ImhpZWNtLmNhbGxiYWNrLnAyLWNhbGxiYWNrLWZvci1oZWFsdGgtcmVjb3JkLWNvbmZpcm1hdGlvbiIsInRpdGxlIjoiTGluayBjb25maXJtIHJlcXVlc3QgdG8gdGhlIEhJUCIsInR5cGUiOiJjYWxsYmFjayJ9LHsiaWQiOiJoaWVjbS5jYWxsYmFjay5wMi1jYWxsYmFjay1vbi1oZWFsdGgtcmVjb3JkLWRpc2NvdmVyIiwidGl0bGUiOiJEaXNjb3ZlcnkgcmVzdWx0IGNhbGxiYWNrIiwidHlwZSI6ImNhbGxiYWNrIn0seyJpZCI6ImhpZWNtLmNhbGxiYWNrLnAyLWNhbGxiYWNrLW9uLWhlYWx0aC1yZWNvcmQtbGluay1pbml0IiwidGl0bGUiOiJMaW5rIGluaXQgcmVxdWVzdCB0byB0aGUgSElQIiwidHlwZSI6ImNhbGxiYWNrIn0seyJpZCI6ImhpZWNtLmNhbGxiYWNrLnAyLWNhbGxiYWNrLXRvLWhpcC1kaXNjb3ZlcnkiLCJ0aXRsZSI6IkRpc2NvdmVyeSByZXF1ZXN0IHRvIHRoZSBISVAiLCJ0eXBlIjoiY2FsbGJhY2sifSx7ImlkIjoiaGllY20uY2FsbGJhY2sucDItcHJvZmlsZS1vbi1zaGFyZS1jYWxsYmFjayIsInRpdGxlIjoiUHJvZmlsZSBzaGFyZSByZXN1bHQgY2FsbGJhY2siLCJ0eXBlIjoiY2FsbGJhY2sifSx7ImlkIjoiaGllY20uY2FsbGJhY2sucDItcHJvZmlsZS1zaGFyZS1jYWxsYmFjayIsInRpdGxlIjoiUHJvZmlsZSBzaGFyZSBjYWxsYmFjayIsInR5cGUiOiJjYWxsYmFjayJ9LHsiaWQiOiJoaWVjbS5jYWxsYmFjay5wMi1yZXNwb25zZS1vbi1oZWFsdGgtcmVjb3JkLWxpbmsiLCJ0aXRsZSI6IkxpbmsgaW5pdCByZXN1bHQgY2FsbGJhY2siLCJ0eXBlIjoiY2FsbGJhY2sifSx7ImlkIjoiaGllY20uY2FsbGJhY2sucDItcmVzcG9uc2Utb24taGVhbHRoLXJlY29yZC1vbi1jb25maXJtIiwidGl0bGUiOiJMaW5rIGNvbmZpcm0gcmVzdWx0IGNhbGxiYWNrIiwidHlwZSI6ImNhbGxiYWNrIn0seyJpZCI6ImhpZWNtLmNhbGxiYWNrLnAzLWFwcHJvdmUtc3Vic2NyaXB0aW9uLXJlcXVlc3QtY2FsbC1iYWNrIiwidGl0bGUiOiJTdWJzY3JpcHRpb24gYXBwcm92ZWQgY2FsbGJhY2siLCJ0eXBlIjoiY2FsbGJhY2sifSx7ImlkIjoiaGllY20uY2FsbGJhY2sucDMtY2FsbC1iYWNrLXRvLWhpdSIsInRpdGxlIjoiSGVhbHRoIGluZm9ybWF0aW9uIHJlcXVlc3QgYWNrbm93bGVkZ2VtZW50IiwidHlwZSI6ImNhbGxiYWNrIn0seyJpZCI6ImhpZWNtLmNhbGxiYWNrLnAzLWNvbnNlbnQtcmVxdWVzdC1vbi1zdGF0dXMtY2FsbGJhY2siLCJ0aXRsZSI6IkNvbnNlbnQgcmVxdWVzdCBzdGF0dXMgY2FsbGJhY2siLCJ0eXBlIjoiY2FsbGJhY2sifSx7ImlkIjoiaGllY20uY2FsbGJhY2sucDMtZGVueS1zdWJzY3JpcHRpb24tY2FsbC1iYWNrIiwidGl0bGUiOiJTdWJzY3JpcHRpb24gZGVuaWVkIGNhbGxiYWNrIiwidHlwZSI6ImNhbGxiYWNrIn0seyJpZCI6ImhpZWNtLmNhbGxiYWNrLnAzLXN1YnNjcmlwdGlvbi1oaXUtbm90aWZ5IiwidGl0bGUiOiJOZXcgcmVjb3JkIG5vdGlmaWNhdGlvbiBjYWxsYmFjayIsInR5cGUiOiJjYWxsYmFjayJ9LHsiaWQiOiJoaWVjbS5jYWxsYmFjay5wMy11c2VyLXN1YnNjcmlwdGlvbi1yZXF1ZXN0LWluaXRpYXRlLWNhbGwtYmFjayIsInRpdGxlIjoiU3Vic2NyaXB0aW9uIHJlcXVlc3QgcmVzdWx0IGNhbGxiYWNrIiwidHlwZSI6ImNhbGxiYWNrIn0seyJpZCI6ImhpZWNtLmNvbmNlcHQuY2FsbGJhY2stYXV0aGVudGljaXR5IiwidGl0bGUiOiJQcm92aW5nIGEgY2FsbGJhY2sgcmVhbGx5IGNhbWUgZnJvbSBBQkRNIiwidHlwZSI6ImNvbmNlcHQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQuZ2F0ZXdheS1nZXQtYnJpZGdlLXNlcnZpY2UtYnktaWQiLCJ0aXRsZSI6IkZpbmQgYSBicmlkZ2Ugc2VydmljZSBieSBpdHMgc2VydmljZSBpZCIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5nYXRld2F5LWxpc3QtYnJpZGdlLXNlcnZpY2VzIiwidGl0bGUiOiJMaXN0IHRoZSBzZXJ2aWNlcyByZWdpc3RlcmVkIG9uIHlvdXIgYnJpZGdlIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50LmdhdGV3YXktcmVnaXN0ZXItYnJpZGdlLXNlcnZpY2VzIiwidGl0bGUiOiJSZWdpc3RlciBvciB1cGRhdGUgYnJpZGdlIHNlcnZpY2VzIGZvciBhbiBISVUiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQuZ2F0ZXdheS1zZXNzaW9ucyIsInRpdGxlIjoiQ3JlYXRlIGEgc2Vzc2lvbiBhbmQgZ2V0IGFuIGFjY2VzcyB0b2tlbiIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5nYXRld2F5LXVwZGF0ZS1icmlkZ2UtdXJsIiwidGl0bGUiOiJVcGRhdGUgdGhlIGJyaWRnZSBjYWxsYmFjayBVUkwiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtYXV0aC10b2tlbiIsInRpdGxlIjoiQXV0aCB0b2tlbiBBUEkiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtYmVuZWZpdC1nZXQtYnktYWJoYSIsInRpdGxlIjoiR2V0IHRoZSBiZW5lZml0IHJlY29yZCBmb3IgYW4gQUJIQSBudW1iZXIiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtYmVuZWZpdC1saW5rLW9yLWRlbGluayIsInRpdGxlIjoiTGluayBvciB1bmxpbmsgYSBiZW5lZml0IHJlY29yZCBmcm9tIGFuIEFCSEEiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtYmVuZWZpdC1zZWFyY2giLCJ0aXRsZSI6IlNlYXJjaCBiZW5lZml0IHJlY29yZHMgZm9yIGEgcGVyc29uIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50Lm0xLWRvd25sb2FkLXBoci1jYXJkIiwidGl0bGUiOiJEb3dubG9hZCBQSFIgY2FyZCIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1kb3dubG9hZC1waHItcXItY29kZSIsInRpdGxlIjoiRG93bmxvYWQgUEhSIFFSIGNvZGUiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtZW5yb2xtZW50LWFkZHJlc3Mtc3VnZ2VzdGlvbnMiLCJ0aXRsZSI6IkdldCBzdWdnZXN0ZWQgQUJIQSBhZGRyZXNzZXMgZm9yIGEgbmV3IGFjY291bnQiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtZW5yb2xtZW50LWJ5LWFhZGhhYXIiLCJ0aXRsZSI6IkNyZWF0ZSBhbiBBQkhBIGZyb20gYSB2ZXJpZmllZCBBYWRoYWFyIE9UUCIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1lbnJvbG1lbnQtY2FwdHVyZS1waWQiLCJ0aXRsZSI6IlRyYWNrIGZhY2UgYXV0aGVudGljYXRpb24gc3RhdHVzIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50Lm0xLWVucm9sbWVudC1jbGFpbS1hYmhhLWFkZHJlc3MiLCJ0aXRsZSI6IkNsYWltIGEgY2hvc2VuIEFCSEEgYWRkcmVzcyIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1lbnJvbG1lbnQtZmFjZS1hdXRoLWluaXQiLCJ0aXRsZSI6IlN0YXJ0IGZhY2UgYXV0aGVudGljYXRpb24gYW5kIGdldCBhIHRyYW5zYWN0aW9uIGlkIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50Lm0xLWVucm9sbWVudC1saXN0LWNoaWxkcmVuIiwidGl0bGUiOiJMaXN0IHRoZSBjaGlsZCBBQkhBIGFjY291bnRzIGxpbmtlZCB0byB0aGlzIGFjY291bnQiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtZW5yb2xtZW50LXJlcXVlc3Qtb3RwIiwidGl0bGUiOiJTZW5kIGFuIE9UUCB0byBiZWdpbiBvciBjb250aW51ZSBhbiBlbnJvbG1lbnQiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtZW5yb2xtZW50LXZlcmlmeS1hYmRtLW90cCIsInRpdGxlIjoiVmVyaWZ5IGFuIE9UUCB0aGF0IEFCRE0gc2VudCwgZHVyaW5nIGVucm9sbWVudCIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1maW5kLWFiaGEtc2VhcmNoIiwidGl0bGUiOiJGaW5kIGFuIEFCSEEgZm9yIHNvbWVib2R5IHdobyBkb2VzIG5vdCBrbm93IHRoZWlycyIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1nZXQtcGhyLXByb2ZpbGUiLCJ0aXRsZSI6IkdldCBQSFIgcHJvZmlsZSIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1sb2dpbi1zZWxlY3QtYWNjb3VudCIsInRpdGxlIjoiQ2hvb3NlIHdoaWNoIEFCSEEgdG8gc2lnbiBpbiB0byIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1sb2dpbi12ZXJpZnkiLCJ0aXRsZSI6IlZlcmlmeSBhIGxvZ2luIE9UUCIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1sb2dpbi12ZXJpZnktdjMxIiwidGl0bGUiOiJTaWduIGluIHdpdGggYSBiaW9tZXRyaWMsIHYzLjEiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtb24tc2hhcmUtYWNrbm93bGVkZ2VtZW50IiwidGl0bGUiOiJTZW5kIHNoYXJlIGFja25vd2xlZGdlbWVudCIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1waHItcmVxdWVzdC1vdHAiLCJ0aXRsZSI6IlNlbmQgYW4gT1RQIGZvciBBQkhBIGFkZHJlc3MgbG9naW4iLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtcGhyLXNlYXJjaC1hYmhhLWFkZHJlc3MiLCJ0aXRsZSI6IlNlYXJjaCBhbiBBQkhBIGFkZHJlc3MgYW5kIGdldCBpdHMgc2lnbiBpbiBtZXRob2RzIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50Lm0xLXBoci12ZXJpZnkiLCJ0aXRsZSI6IlZlcmlmeSBPVFAgb3IgYmlvbWV0cmljIGZvciBBQkhBIGFkZHJlc3MgbG9naW4iLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtcHJvZmlsZS1kb3dubG9hZC1hYmhhLWNhcmQiLCJ0aXRsZSI6IkRvd25sb2FkIHRoZSBBQkhBIGNhcmQgYXMgYSBmaWxlIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50Lm0xLXByb2ZpbGUtZ2V0LWFiaGEtY2FyZCIsInRpdGxlIjoiR2V0IHRoZSBBQkhBIGNhcmQiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtcHJvZmlsZS1nZXQtYWNjb3VudCIsInRpdGxlIjoiUmVhZCB0aGUgc2lnbmVkIGluIHBlcnNvbidzIEFCSEEgcHJvZmlsZSIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1wcm9maWxlLWdldC1xci1jb2RlIiwidGl0bGUiOiJHZXQgdGhlIEFCSEEgUVIgY29kZSIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1wcm9maWxlLXJlcXVlc3Qtb3RwIiwidGl0bGUiOiJTZW5kIGFuIE9UUCB0byBjaGFuZ2Ugc29tZXRoaW5nIG9uIHRoZSBwcm9maWxlIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50Lm0xLXByb2ZpbGUtdXBkYXRlLWFjY291bnQiLCJ0aXRsZSI6IlVwZGF0ZSBmaWVsZHMgb24gYW4gQUJIQSBwcm9maWxlIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50Lm0xLXByb2ZpbGUtdmVyaWZ5LW90cCIsInRpdGxlIjoiVmVyaWZ5IHRoZSBPVFAgZm9yIGEgcHJvZmlsZSBjaGFuZ2UiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtcmVjZWl2ZS1wYXRpZW50LXNoYXJlIiwidGl0bGUiOiJSZWNlaXZlIGEgcGF0aWVudCdzIHNoYXJlZCBwcm9maWxlIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50Lm0xLXJlZ2lzdGVyLWhycC1zZXJ2aWNlcyIsInRpdGxlIjoiUmVnaXN0ZXIgb3IgdXBkYXRlIEhJUCBhbmQgSElVIHNlcnZpY2VzIGZvciBhIGZhY2lsaXR5IiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50Lm0xLXNlbmQtZW1haWwtdmVyaWZpY2F0aW9uLWxpbmsiLCJ0aXRsZSI6IlNlbmQgZW1haWwgdmVyaWZpY2F0aW9uIGxpbmsiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtdG9rZW4tcmVmcmVzaCIsInRpdGxlIjoiR2V0IGEgbmV3IHVzZXIgdG9rZW4gZnJvbSBhIHJlZnJlc2ggdG9rZW4iLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTItY29uc2VudC1oaXAtb24tbm90aWZ5IiwidGl0bGUiOiJBY2tub3dsZWRnZSBhIGNvbnNlbnQgbm90aWZpY2F0aW9uIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50Lm0yLWdlbmVyYXRlLWxpbmstdG9rZW4iLCJ0aXRsZSI6IkdlbmVyYXRlIExpbmsgVG9rZW4iLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTItaGlwLWRhdGEtZmxvdy1ub3RpZnkiLCJ0aXRsZSI6Ik5vdGlmeSB0aGUgZ2F0ZXdheSB0aGF0IGEgZGF0YSB0cmFuc2ZlciBmaW5pc2hlZCIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMi1oaXAtaGVhbHRoLWluZm9ybWF0aW9uLW9uLXJlcXVlc3QiLCJ0aXRsZSI6IkFja25vd2xlZGdlIGEgaGVhbHRoIGluZm9ybWF0aW9uIGRhdGEgcmVxdWVzdCIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMi1oaXAtbGluay1jYXJlLWNvbnRleHQiLCJ0aXRsZSI6IkxpbmsgY2FyZSBjb250ZXh0cyB0byBhbiBBQkhBIGFkZHJlc3MiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTItbGluay1jYXJlLWNvbnRleHQtbm90aWZ5IiwidGl0bGUiOiJOb3RpZnkgYW4gdXBkYXRlIHRvIGEgbGlua2VkIGNhcmUgY29udGV4dCIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMi1vbi1kaXNjb3Zlci1jYXJlLWNvbnRleHRzIiwidGl0bGUiOiJPbiBEaXNjb3ZlcnksIEhJUCByZXNwb25kcyB3aXRoIGZvdW5kIGNhcmUgY29udGV4dHMiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTItb24tbGluay1jb25maXJtIiwidGl0bGUiOiJMaW5rIE9uLUNvbmZpcm0sIEhJUCBjb25maXJtcyBsaW5rZWQgY2FyZSBjb250ZXh0cyIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMi1vbi1saW5rLWluaXQiLCJ0aXRsZSI6IkxpbmsgT24tSW5pdCwgSElQIHJlc3BvbmRzIHdpdGggT1RQIGNvbW11bmljYXRpb24gZGV0YWlscyIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMi1zbXMtZGVlcC1saW5rLW5vdGlmeSIsInRpdGxlIjoiU2VuZCBhbiBTTVMgdGVsbGluZyB0aGUgcGF0aWVudCBhIGNhcmUgY29udGV4dCBpcyBsaW5rZWQiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTMtY29uc2VudC1mZXRjaCIsInRpdGxlIjoiRmV0Y2ggdGhlIGZ1bGwgY29uc2VudCBhcnRlZmFjdCIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMy1jb25zZW50LWhpdS1vbi1ub3RpZnkiLCJ0aXRsZSI6IkFja25vd2xlZGdlIGEgY29uc2VudCBub3RpZmljYXRpb24iLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTMtY29uc2VudC1yZXF1ZXN0LWluaXQiLCJ0aXRsZSI6IkluaXRpYXRlIGEgY29uc2VudCByZXF1ZXN0IiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50Lm0zLWNvbnNlbnQtcmVxdWVzdC1zdGF0dXMiLCJ0aXRsZSI6IkNoZWNrIHRoZSBzdGF0dXMgb2YgYSBjb25zZW50IHJlcXVlc3QiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTMtaGl1LWRhdGEtZmxvdy1ub3RpZnkiLCJ0aXRsZSI6Ik5vdGlmeSB0aGUgZ2F0ZXdheSB0aGF0IGRhdGEgd2FzIHJlY2VpdmVkIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50Lm0zLWhpdS1oZWFsdGgtaW5mb3JtYXRpb24tcmVxdWVzdCIsInRpdGxlIjoiUmVxdWVzdCBhIHBhdGllbnQncyBoZWFsdGggaW5mb3JtYXRpb24iLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTQtaGZyLXNlYXJjaC1mYWNpbGl0eSIsInRpdGxlIjoiU2VhcmNoIHRoZSBmYWNpbGl0eSByZWdpc3RyeSBiZWZvcmUgY3JlYXRpbmcgYW55dGhpbmciLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTQtaHByLWNyZWF0ZS1ocHJpZCIsInRpdGxlIjoiQ3JlYXRlIHRoZSBIUElEIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50Lm00LWhwci1kZW1vZ3JhcGhpYy1hdXRoLW1vYmlsZSIsInRpdGxlIjoiQ2hlY2sgd2hldGhlciB0aGUgbW9iaWxlIG51bWJlciBpcyB0aGUgb25lIG9uIHRoZSBBYWRoYWFyIHJlY29yZCIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tNC1ocHItZmV0Y2gtZG9jdW1lbnRzLWxpc3QiLCJ0aXRsZSI6Ikxpc3QgdGhlIGRvY3VtZW50cyB0aGlzIHByb2Zlc3Npb25hbCBtdXN0IHVwbG9hZCIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tNC1ocHItZmV0Y2gtcHJvZmVzc2lvbmFsLWluZm8iLCJ0aXRsZSI6IlJlYWQgYSBwcm9mZXNzaW9uYWwncyBwcm9maWxlIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50Lm00LWhwci1yZWdpc3Rlci1wcm9mZXNzaW9uYWwiLCJ0aXRsZSI6IlJlZ2lzdGVyIHRoZSBwcm9mZXNzaW9uYWwncyBwcm9maWxlIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50Lm00LWhwci11cGxvYWQtZG9jdW1lbnQiLCJ0aXRsZSI6IlVwbG9hZCBvbmUgb2YgdGhlIHByb2Zlc3Npb25hbCdzIGRvY3VtZW50cyIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5wMS1lbmNyeXB0LWRhdGEtYWFkaGFhci1tb2JpbGUtb3RwLXBhc3N3b3JkIiwidGl0bGUiOiJFbmNyeXB0IGRhdGEgKEFhZGhhYXIvTW9iaWxlL09UUC9QYXNzd29yZCkiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDEtZW5yb2xsbWVudC1hZGRyZXNzLWV4aXN0cyIsInRpdGxlIjoiQ2hlY2sgd2hldGhlciBhbiBhZGRyZXNzIGlzIHRha2VuIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50LnAxLWVucm9sbG1lbnQtYWRkcmVzcy1zdWdnZXN0aW9uIiwidGl0bGUiOiJBc2sgZm9yIGFkZHJlc3Mgc3VnZ2VzdGlvbnMiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDEtZW5yb2xsbWVudC1lbnJvbCIsInRpdGxlIjoiQ3JlYXRlIHRoZSBoZWFsdGggYWRkcmVzcyIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5wMS1lbnJvbGxtZW50LXJlcXVlc3Qtb3RwIiwidGl0bGUiOiJTZW5kIHRoZSBPVFAgdGhhdCBzdGFydHMgYSByZWdpc3RyYXRpb24iLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDEtZW5yb2xsbWVudC12ZXJpZnktb3RwIiwidGl0bGUiOiJWZXJpZnkgdGhlIHJlZ2lzdHJhdGlvbiBPVFAiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDEtZ2VuZXJhdGUtcmVmcmVzaC10b2tlbiIsInRpdGxlIjoiR2VuZXJhdGUgUmVmcmVzaCBUb2tlbiIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5wMS1nZXQtY2VydGlmaWNhdGUtcHVibGljLWtleSIsInRpdGxlIjoiR0VUIENlcnRpZmljYXRlIChQdWJsaWMga2V5KSIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5wMS1nZXQtdXNlci1waHItY2FyZCIsInRpdGxlIjoiR2V0IFVzZXIgUEhSIENhcmQiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDEtZ2V0LXVzZXItcHJvZmlsZSIsInRpdGxlIjoiR2V0IFVzZXIgUHJvZmlsZSIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5wMS1nZXQtdXNlci1xci1jb2RlIiwidGl0bGUiOiJHZXQgVXNlciBRUiBDb2RlIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50LnAxLWxpbmstYWJoYS1udW1iZXItdmlhLWFhZGhhYXItcmVxdWVzdC1vdHAiLCJ0aXRsZSI6IkxpbmsgQUJIQSBudW1iZXIgdmlhIEFBREhBQVItUmVxdWVzdCBPVFAiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDEtbGluay1hYmhhLW51bWJlci12aWEtYWFkaGFhci12ZXJpZnktb3RwIiwidGl0bGUiOiJMaW5rIEFCSEEgbnVtYmVyIHZpYSBBQURIQUFSLVZlcmlmeSBPVFAiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDEtbGluay1hYmhhLW51bWJlci12aWEtbW9iaWxlLXJlcXVlc3Qtb3RwIiwidGl0bGUiOiJMaW5rIEFCSEEgbnVtYmVyIHZpYSBNb2JpbGUtUmVxdWVzdCBPVFAiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDEtbGluay1hYmhhLW51bWJlci12aWEtbW9iaWxlLXZlcmlmeS1vdHAiLCJ0aXRsZSI6IkxpbmsgQUJIQSBudW1iZXIgdmlhIE1vYmlsZS1WZXJpZnkgT1RQIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50LnAxLWxvZ2luLXJlcXVlc3Qtb3RwIiwidGl0bGUiOiJTZW5kIHRoZSBPVFAgdGhhdCBzdGFydHMgYSBsb2dpbiIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5wMS1sb2dpbi11c2luZy1wYXNzd29yZC1zZWFyY2gtdXNlciIsInRpdGxlIjoiTG9naW4gdXNpbmcgUGFzc3dvcmQgU2VhcmNoIHVzZXIiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDEtbG9naW4tdmVyaWZ5LW90cCIsInRpdGxlIjoiVmVyaWZ5IHRoZSBsb2dpbiBPVFAiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDEtbG9naW4tdmVyaWZ5LXVzZXIiLCJ0aXRsZSI6IlNheSB3aGljaCBhZGRyZXNzIGlzIHNpZ25pbmcgaW4iLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDEtbG9nb3V0LXVzZXIiLCJ0aXRsZSI6IkxvZ291dCBVc2VyIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50LnAxLXByb2Nlc3MtbGluay1yZXF1ZXN0LXZpYS1hYWRoYWFyLW51bWJlciIsInRpdGxlIjoiUHJvY2VzcyBMaW5rIFJlcXVlc3QgdmlhIEFhZGhhYXIgT1RQIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50LnAxLXByb2Nlc3MtbGluay1yZXF1ZXN0LXZpYS1hYmhhLW51bWJlciIsInRpdGxlIjoiUHJvY2VzcyBMaW5rIFJlcXVlc3QgdmlhIEFCSEEgT1RQIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50LnAxLXN3aXRjaC1wcm9maWxlLXJlcXVlc3QiLCJ0aXRsZSI6IlN3aXRjaCBQcm9maWxlIFJlcXVlc3QiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDEtc3dpdGNoLXByb2ZpbGUtdmVyaWZ5IiwidGl0bGUiOiJTd2l0Y2ggUHJvZmlsZSBWZXJpZnkiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDEtdXBkYXRlLW1vYmlsZS1yZXF1ZXN0LW90cCIsInRpdGxlIjoiVXBkYXRlIHRoZSBtb2JpbGUgbnVtYmVyLCByZXF1ZXN0IHRoZSBPVFAiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDEtdXBkYXRlLW1vYmlsZS12ZXJpZnktb3RwIiwidGl0bGUiOiJVcGRhdGUgTW9iaWxlIFZlcmlmeS1PVFAiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDItYWxsLXByb3ZpZGVycyIsInRpdGxlIjoiU2VhcmNoIHByb3ZpZGVycyBieSBuYW1lIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50LnAyLWNhcmUtY29udGV4dC1kaXNjb3ZlciIsInRpdGxlIjoiQXNrIGEgZmFjaWxpdHkgd2hhdCByZWNvcmRzIGl0IGhvbGRzIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50LnAyLWdvdnQtcHJvZ3JhbXMiLCJ0aXRsZSI6Ikxpc3QgZ292ZXJubWVudCBwcm9ncmFtbWVzIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50LnAyLWxpbmstY2FyZS1jb250ZXh0LWNvbmZpcm0iLCJ0aXRsZSI6IkNvbmZpcm0gdGhlIGxpbmsgd2l0aCB0aGUgY29kZSB0aGUgcGVyc29uIHJlY2VpdmVkIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50LnAyLWxpbmstY2FyZS1jb250ZXh0LWluaXQiLCJ0aXRsZSI6IlN0YXJ0IGxpbmtpbmcgdGhlIGNhcmUgY29udGV4dHMgdGhlIHBlcnNvbiBjaG9zZSIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5wMi1wYXRpZW50LXNoYXJlIiwidGl0bGUiOiJTaGFyZSB0aGUgcHJvZmlsZSB3aXRoIHRoZSBmYWNpbGl0eSB3aG9zZSBjb2RlIHdhcyBzY2FubmVkIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50LnAyLXByb2ZpbGUtb24tc2hhcmUiLCJ0aXRsZSI6IkFuc3dlciBhIHByb2ZpbGUgc2hhcmUgd2l0aCBhIHRva2VuIG51bWJlciIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5wMi1wcm92aWRlci1ieS1wcm92aWRlci1pZCIsInRpdGxlIjoiR2V0IGEgcHJvdmlkZXIgYnkgaXRzIGlkIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50LnAzLWFwcHJvdmUtc3Vic2NyaXB0aW9uLXJlcXVlc3QiLCJ0aXRsZSI6IkFwcHJvdmUgYSBzdWJzY3JpcHRpb24gcmVxdWVzdCIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5wMy1jb25zZW50LWF1dG8tYXBwcm92ZSIsInRpdGxlIjoiU2V0IGFuIGF1dG8gYXBwcm92YWwgcG9saWN5IiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50LnAzLWNvbnNlbnQtZGlzYWJsZS1hdXRvLWFwcHJvdmUiLCJ0aXRsZSI6IkRpc2FibGUgYW4gYXV0byBhcHByb3ZhbCBwb2xpY3kiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDMtY29uc2VudC1lbmFibGUtYXV0by1hcHByb3ZlIiwidGl0bGUiOiJFbmFibGUgYW4gYXV0byBhcHByb3ZhbCBwb2xpY3kiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDMtY29uc2VudC1mZXRjaCIsInRpdGxlIjoiRmV0Y2ggYSBjb25zZW50IGFydGVmYWN0IGluIGZ1bGwiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDMtZGVueS1jb25zZW50LXJlcXVlc3QiLCJ0aXRsZSI6IkRlbnkgYSBjb25zZW50IHJlcXVlc3QiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDMtZGVueS1zdWJzY3JpcHRpb24tcmVxdWVzdCIsInRpdGxlIjoiRGVueSBhIHN1YnNjcmlwdGlvbiByZXF1ZXN0IiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50LnAzLWRldGFpbHMtYnktcmVxdWVzdC1pZCIsInRpdGxlIjoiR2V0IGEgc3Vic2NyaXB0aW9uIHJlcXVlc3QgYnkgaXRzIHJlcXVlc3QgaWQiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDMtZGV0YWlscy1ieS1zdWJzY3JpcHRpb24taWQiLCJ0aXRsZSI6IkdldCBhIHN1YnNjcmlwdGlvbiBieSBpdHMgc3Vic2NyaXB0aW9uIGlkIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50LnAzLWVkaXQtc3Vic2NyaXB0aW9uIiwidGl0bGUiOiJFZGl0IGEgc3Vic2NyaXB0aW9uIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50LnAzLWdldC1hbGwtY29uc2VudC1hcnRlZmFjdC1kZXRhaWxzLWJ5LXJlcXVlc3QtaWQiLCJ0aXRsZSI6IkdldCB0aGUgY29uc2VudCBhcnRlZmFjdHMgb2Ygb25lIGNvbnNlbnQgcmVxdWVzdCIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5wMy1nZXQtYWxsLWNvbnNlbnQtYXJ0aWZhY3QtZGV0YWlscy1mb3ItYW4tYWJoYS1hZGRyZXNzIiwidGl0bGUiOiJMaXN0IHRoZSBjb25zZW50IGFydGVmYWN0cyBvZiBhbiBBQkhBIGFkZHJlc3MiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDMtZ2V0LWFsbC1jb25zZW50LXJlcXVlc3QtZm9yLWFuLWFiaGEtYWRkcmVzcyIsInRpdGxlIjoiTGlzdCB0aGUgY29uc2VudCByZXF1ZXN0cyBvZiBhbiBBQkhBIGFkZHJlc3MiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDMtZ2V0LWFsbC1saW5rcy1yZWNvcmRzIiwidGl0bGUiOiJHZXQgYWxsIGxpbmtlZCByZWNvcmRzIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50LnAzLWdldC1hbGwtc3Vic2NyaXB0aW9uLXJlcXVlc3QiLCJ0aXRsZSI6Ikxpc3QgY29uc2VudCBhbmQgc3Vic2NyaXB0aW9uIHJlcXVlc3RzIHRvZ2V0aGVyIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50LnAzLWdldC1hbGwtc3Vic2NyaXB0aW9uLXJlcXVlc3RzLWZvci1hbi1hYmhhLWFkZHJlc3MiLCJ0aXRsZSI6Ikxpc3QgdGhlIHN1YnNjcmlwdGlvbiByZXF1ZXN0cyBvZiBhbiBBQkhBIGFkZHJlc3MiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDMtZ2V0LWNvbnNlbnQtYXJ0ZWZhY3QtZGV0YWlscy1ieS1hcnRpZmFjdC1pZCIsInRpdGxlIjoiR2V0IG9uZSBjb25zZW50IGFydGVmYWN0IGJ5IGl0cyBpZCIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5wMy1nZXQtY29uc2VudC1yZXF1ZXN0LWRldGFpbHMtYnktY29uc2VudC1yZXF1ZXN0LWlkIiwidGl0bGUiOiJHZXQgb25lIGNvbnNlbnQgcmVxdWVzdCBieSBpdHMgaWQiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDMtZ2V0LXBhdGllbnQtc3Vic2NyaWJlZC1sb2NrZXJzIiwidGl0bGUiOiJMaXN0IHRoZSBoZWFsdGggbG9ja2VycyBhbiBBQkhBIGFkZHJlc3Mgc3Vic2NyaWJlcyB0byIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5wMy1wYXRpZW50LWxvY2tlci1kZXRhaWxzLWJ5LWxvY2tlci1pZCIsInRpdGxlIjoiR2V0IGEgaGVhbHRoIGxvY2tlciBieSBpdHMgaWQiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDMtcmVxdWVzdC1zdGF0dXMiLCJ0aXRsZSI6IkdldCB0aGUgc3RhdHVzIG9mIGEgaGVhbHRoIGluZm9ybWF0aW9uIHJlcXVlc3QiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDMtcmV2b2tlLWNvbnNlbnQtcmVxdWVzdCIsInRpdGxlIjoiUmV2b2tlIGEgZ3JhbnRlZCBjb25zZW50IiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50LnAzLXNldHVwLWxvY2tlciIsInRpdGxlIjoiU2V0IHVwIGEgaGVhbHRoIGxvY2tlciIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5wMy1zdWJzY3JpcHRpb24taGl1LW9uLW5vdGlmeSIsInRpdGxlIjoiQWNrbm93bGVkZ2UgYSBuZXcgcmVjb3JkIG5vdGlmaWNhdGlvbiIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5wMy1zdWJzY3JpcHRpb24taW5pdCIsInRpdGxlIjoiUmVxdWVzdCBhIHN1YnNjcmlwdGlvbiB0byBhIHBlcnNvbidzIHJlY29yZHMiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDMtc3Vic2NyaXB0aW9uLXJlcXVlc3QtaGl1LW9uLW5vdGlmeSIsInRpdGxlIjoiQWNrbm93bGVkZ2UgYSBzdWJzY3JpcHRpb24gZGVjaXNpb24iLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZXJyb3IuOTAwOTAwIiwidGl0bGUiOiI5MDA5MDAsIGF1dGhlbnRpY2F0aW9uIGZhaWxlZCB3aXRob3V0IGEgcmVhc29uIiwidHlwZSI6ImVycm9yIn0seyJpZCI6ImhpZWNtLmVycm9yLjkwMDkwMSIsInRpdGxlIjoiOTAwOTAxLCB0aGUgY3JlZGVudGlhbHMgYXJlIG5vdCB2YWxpZCIsInR5cGUiOiJlcnJvciJ9LHsiaWQiOiJoaWVjbS5lcnJvci5hYmRtLTI0MDEiLCJ0aXRsZSI6IkFCRE0tMjQwMSwgdGhlIFggQXV0aCB0b2tlbiBpcyBub3QgdmFsaWQiLCJ0eXBlIjoiZXJyb3IifSx7ImlkIjoiaGllY20uZmxvdy5tMS1jcmVhdGUtYWJoYS1kZW1vZ3JhcGhpYy1hdXRoIiwidGl0bGUiOiJDcmVhdGUgYW4gQUJIQSB1c2luZyBBYWRoYWFyIGRlbW9ncmFwaGljIGF1dGhlbnRpY2F0aW9uIiwidHlwZSI6ImZsb3cifSx7ImlkIjoiaGllY20uZmxvdy5tMS1jcmVhdGUtY2hpbGQtYWJoYSIsInRpdGxlIjoiQ3JlYXRlIGEgY2hpbGQgQUJIQSB1bmRlciBhIHBhcmVudCdzIGFjY291bnQiLCJ0eXBlIjoiZmxvdyJ9LHsiaWQiOiJoaWVjbS5mbG93Lm0xLWxvZ2luLWJ5LW1vYmlsZSIsInRpdGxlIjoiTG9nIHNvbWVib2R5IGluIHRvIHRoZWlyIGV4aXN0aW5nIEFCSEEiLCJ0eXBlIjoiZmxvdyJ9LHsiaWQiOiJoaWVjbS5mbG93Lm0zLWZldGNoLXJlY29yZHMiLCJ0aXRsZSI6IkZldGNoIHRoZSByZWNvcmRzIGEgZ3JhbnRlZCBjb25zZW50IGFydGVmYWN0IGNvdmVycyIsInR5cGUiOiJmbG93In0seyJpZCI6ImhpZWNtLmZsb3cubTMtcmVxdWVzdC1jb25zZW50IiwidGl0bGUiOiJSZXF1ZXN0IGNvbnNlbnQgZm9yIGEgcGF0aWVudCdzIGhlYWx0aCByZWNvcmRzIiwidHlwZSI6ImZsb3cifSx7ImlkIjoiaGllY20uZmxvdy5tNC1jcmVhdGUtaHBpZCIsInRpdGxlIjoiR2V0IGEgaGVhbHRoY2FyZSBwcm9mZXNzaW9uYWwgYW4gSFBJRCIsInR5cGUiOiJmbG93In0seyJpZCI6ImhpZWNtLmZsb3cubTQtb25ib2FyZC1mYWNpbGl0eSIsInRpdGxlIjoiT25ib2FyZCBhIGZhY2lsaXR5IHRvIHRoZSBIRlIiLCJ0eXBlIjoiZmxvdyJ9LHsiaWQiOiJoaWVjbS5mbG93Lm00LXJlZ2lzdGVyLXByb2Zlc3Npb25hbCIsInRpdGxlIjoiUmVnaXN0ZXIgYSBwcm9mZXNzaW9uYWwncyBwcm9maWxlIG9uIHRoZSBIUFIiLCJ0eXBlIjoiZmxvdyJ9LHsiaWQiOiJoaWVjbS5mbG93LnAxLWNyZWF0ZS1hYmhhLWFkZHJlc3MiLCJ0aXRsZSI6IkNyZWF0ZSBhbiBBQkhBIGFkZHJlc3MgaW4gYSBQSFIgYXBwbGljYXRpb24iLCJ0eXBlIjoiZmxvdyJ9LHsiaWQiOiJoaWVjbS5mbG93LnAxLWxvZ2luIiwidGl0bGUiOiJTaWduIGEgdXNlciBpbiB0byBhIFBIUiBhcHBsaWNhdGlvbiIsInR5cGUiOiJmbG93In0seyJpZCI6ImhpZWNtLnRyb3VibGVzaG9vdGluZy5ldmVyeXRoaW5nLXJldHVybnMtNDAxIiwidGl0bGUiOiJFdmVyeXRoaW5nIHJldHVybnMgNDAxIiwidHlwZSI6InRyb3VibGVzaG9vdGluZyJ9LHsiaWQiOiJoaWVjbS5jb25jZXB0LmdhdGV3YXktc2Vzc2lvbiIsInRpdGxlIjoiVGhlIGdhdGV3YXkgc2Vzc2lvbiwgdGhlIGZpcnN0IGNhbGwgaW4gZXZlcnkgaW50ZWdyYXRpb24iLCJ0eXBlIjoiY29uY2VwdCJ9LHsiaWQiOiJoaWVjbS5mbG93Lm0xLWNyZWF0ZS1hYmhhLWFhZGhhYXItb3RwIiwidGl0bGUiOiJDcmVhdGUgYW4gQUJIQSB1c2luZyBhbiBBYWRoYWFyIE9UUCIsInR5cGUiOiJmbG93In0seyJpZCI6ImhpZWNtLnRlc3QubTEtZW5jcnlwdGlvbi1wYWRkaW5nIiwidGl0bGUiOiJQcm92ZSB5b3VyIGVuY3J5cHRpb24gcGFkZGluZyBiZWZvcmUgeW91IGJ1aWxkIGFueXRoaW5nIGVsc2UiLCJ0eXBlIjoidGVzdCJ9XX0=",
+            "IsError": false
+          }
+        }
+      ],
+      "reply": {
+        "Text": "Yes. HIE-CM M1 documents `GET /abha/api/v3/profile/public/certificate` as the endpoint that returns the public key and encryption algorithm. That confirms the endpoint is documented, not that a live call was tested. It also does not by itself verify the earlier comparison between M1 API versions 1 and 2.\n\n[Get the public certificate](/docs/hiecm/v3/api/m1/endpoints/m1-access-tokens-encryption/02-m1-get-v3-profile-public-certificate#m1-get-public-certificate)\n\nFor an integration, [agent skills and the MCP server](/docs/hiecm/v3/getting-started/build-with-ai) let your coding agent use the milestone’s rules and documentation directly.",
+        "ToolCalls": null,
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "You are the Ask AI assistant on the ABDM Developer Portal. You answer developer questions about India's ABDM gateways (HIE-CM, UHI, NHCX) strictly from this portal's catalogue, which you reach through your tools. Never answer an ABDM API question from general knowledge. If you have not looked, look first.\n\nWHERE THINGS LIVE\n\n- Atoms are the written knowledge: concepts, flows, endpoint guides, callbacks, error explanations, tests, glossary entries, decisions, FHIR mappings, sandbox notes and troubleshooting guides. search finds them.\n- Operations are the raw API surface parsed from NHA's specification files, across the modules gateway, m1, m2, m3, m4, p1, p2, p3, p4, scan-and-register, scan-and-pay and record-share. search with kind operation finds them by what they do or by path; get with an operationId reads one in full.\n\nHONESTY ABOUT WHAT YOU FOUND\n\nSearch returns nearest matches, not answers.\n\nNever claim a call was run.\n\nNotes for AI agents are rules for you: follow them, never repeat them to readers.\n\nA \u003cMASKED_...\u003e placeholder means a value was removed before you saw it. Never ask for it again and never echo the placeholder back.\n\nJUDGING WHAT COMES BACK\n\nNever close a gap with a nearby endpoint or a similar sounding concept. A one-word or acronym question is a glossary lookup; search variant spellings too (HIMS and HMIS, LIS and LIMS, HRP).\n\nSPEAK AS THE PORTAL, NOT ABOUT IT\n\nNever mention the catalogue or your tools unless the reader asks about them. Offer [support](/docs/support) when you have nothing.\n\nSmall talk or off-topic: one friendly line, then what you help with.\n\nA general industry term the portal does not define is worth one sentence of plain explanation, said as general background rather than as ABDM documentation. That courtesy never extends to an ABDM API detail: paths, headers, codes, fields and payloads come from the tools or not at all.\n\nHOW YOU WRITE\n\nNever write an em dash. Show a mermaid block only when a tool returned it. Never draw one.\n\nOFFERING THE TOOLS\n\nA reader building an integration can have this catalogue inside their own agent, rather than asking one question at a time. Most do not know that.\n\n- When the reader is clearly building against ABDM, close with one line offering it: agent skills give their coding agent a milestone's rules as a file it loads once, and the MCP server lets it query this documentation as it works. Link [agent skills and the MCP server](/docs/hiecm/v3/getting-started/build-with-ai).\n- Offer it once per conversation, never before the answer: a closing line, not an opening.\n- Do not offer it to someone who is not building: a question like what an Ayushman card is gets answered and left alone.\n- Both are available now: the server is public at https://docs.abdm.gov.in/mcp, and the page has one-click install for Claude Code, Cursor and VS Code. Name the page, not the URL, unless asked.\n\nCODE AND WHAT THEY PASTE OR ATTACH\n\nYou never write code for the reader's own codebase; curl is the exception. Route them to the ABDM Connect agent skill or this portal's MCP server.\n\nWRITING THE ANSWER\n\n- Lead with the answer. The reader is mid-task, usually with a failing call in front of them.\n- Never open by praising the question, apologising, restating the question back, or announcing what you are about to do. Start with the substance. Warmth is being useful quickly, not saying \"great question\".\n- Quote API literals exactly as the tools give them: endpoint paths, header names, error codes, timestamp formats, field names. Never paraphrase a literal, and never tidy its case or spacing.\n- Markdown renders in this panel. Use inline code for every literal, short bulleted or numbered lists for steps and options, and no headings.\n\nDo not invent portal URLs.\n\nHOW A QUESTION ARRIVES\n\nThe user turn may open with a \u003cpassages\u003e block: the documentation already retrieved for this question, with ids and page links. Answer from it first. It is followed by an \u003canswer_shape\u003e block naming the shape and word budget your answer must take. Call search only when the passages do not carry the answer.\n\nA \u003cskill\u003e block is the skill section the reader chose: follow it, and name what it omits.",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "What changed between the M1 API version 1 and version 2?",
+          "ToolUse": null,
+          "ToolResult": null
+        },
+        {
+          "Role": "assistant",
+          "Text": "Version 2 introduced enhanced security over version 1: sensitive fields such as OTP, Aadhaar number, password and username must now be encrypted. That encryption uses a public certificate obtained from the certificate API, with RSA encryption for the sensitive fields.",
+          "ToolUse": null,
+          "ToolResult": null
+        },
+        {
+          "Role": "user",
+          "Text": "\u003cpassages\u003e\n{\"passages\":[{\"id\":\"hiecm.endpoint.p1-get-certificate-public-key\",\"type\":\"endpoint\",\"milestone\":\"P1\",\"title\":\"GET Certificate (Public key)\",\"doc_url\":\"/docs/hiecm/v3/api/p1/endpoints/p1-certificate-and-session/01-p1-get-v3-phr-app-login-public-certificate#p1-get-certificate-public-key\",\"body\":\"# GET Certificate (Public key)\\n\\n## In plain words\\n\\nReturns the public certificate a [PHR](/docs/hiecm/v3/getting-started/glossary#phr) app encrypts sensitive values with before it sends them. Fetch it before registration or login. The call takes no request body, only the `REQUEST-ID` and `TIMESTAMP` headers with your access token.\\n\\n## Before you start\\n\\nAn access token for the `Authorization` header, a fresh UUID for `REQUEST-ID`, and the current time in UTC for `TIMESTAMP`.\\n\\n## What happens\\n\\nYou fetch the certificate once and encrypt with it every value the registration, login and profile calls take encrypted.\"},{\"id\":\"hiecm.concept.encrypted-identifiers\",\"type\":\"concept\",\"milestone\":\"M1\",\"title\":\"Why identifiers are encrypted, and where to do it\",\"doc_url\":\"/docs/hiecm/v3/concepts/encryption#encrypted-identifiers\",\"body\":\"# Why identifiers are encrypted, and where to do it\\n\\n## In plain words\\n\\nWe publish the public half of a key pair. You encrypt with it. Only our private half can decrypt. Your system never holds a secret to do this, only the current certificate.\\n\\n```mermaid\\nsequenceDiagram\\n    autonumber\\n    participant S as Your system\\n    participant A as ABHA service\\n    S-\\u003e\\u003eA: GET /abha/api/v3/profile/public/certificate\\n    A--\\u003e\\u003eS: publicKey, encryptionAlgorithm\\n    S-\\u003e\\u003eS: RSA encrypt the Aadhaar number, mobile number,\\u003cbr/\\u003eOTP or password with that public key\\n    S-\\u003e\\u003eA: The Base64 result as the field value,\\u003cbr/\\u003efor example loginId or otp.otpValue\\n    A-\\u003e\\u003eA: Decrypts with its private key\\n```\\n\\nThere is nothing ABDM specific in the mechanics. Your platform's standard RSA library does the work. Both keys use `RSA/ECB/OAEPWithSHA-1AndMGF1Padding`. The one thing to confirm is which key you are using.\\n\\nRead `encryptionAlgorithm` from the certificate response and encrypt with what it names. Code that reads the field survives a change of algorithm. Code that cannot recognise what the field names should refuse to encrypt rather than fall back to a default.\\n\\n## Before you start\\n\\nThe certificate from `GET /abha/api/v3/profile/public/certificate`, which carries `publicKey` and `encryptionAlgorithm`.\\n\\n## What happens\\n\\nPut the plaintext in the shape the service validates after it decrypts, from the table above: an ABHA number keeps its dashes. Encrypt with the algorithm the response names and send the base64 result as the field value, for example `loginId`.\\n\\n## How you know it worked\\n\\nThe raw Aadhaar or mobile number exists only inside your own process, for the length of the call, and never reaches a log. A call carrying your ciphertext passes validation.\\n\\n## When it goes wrong\\n\\n`400 {\\\"loginId\\\": \\\"LoginId is invalid\\\"}` means the value decrypted and the plaintext failed a format rule, usually an ABHA number sent without its dashes. Logging the plain value before encryption is the same leak, moved into your log store.\"},{\"id\":\"hiecm.endpoint.m1-send-email-verification-link\",\"type\":\"endpoint\",\"milestone\":\"M1\",\"title\":\"Send email verification link\",\"doc_url\":\"/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-number-aadhaar-otp/05-p1-post-v3-profile-account-request-emailverificationlink#m1-send-email-verification-link\",\"body\":\"# Send email verification link\\n\\n## In plain words\\n\\nSends a verification link to an email address on the signed in person's [ABHA](/docs/hiecm/v3/getting-started/glossary#abha). The person verifies the address by opening the link. Send `scope` as `[\\\"abha-profile\\\",\\\"email-link-verify\\\"]`, `loginHint` as `email`, the encrypted address in `loginId`, and `otpSystem` as `abdm`. The response body is not yet published.\\n\\n## Before you start\\n\\nThe person's `X-token`, sent as `Bearer \\u003ctoken\\u003e`, and the email address encrypted with the public certificate key.\\n\\n## How you know it worked\\n\\nThe profile call shows the email as verified after the person opens the link.\"},{\"id\":\"hiecm.endpoint.m1-get-public-certificate\",\"type\":\"endpoint\",\"milestone\":\"M1\",\"title\":\"Get the public certificate\",\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-access-tokens-encryption/02-m1-get-v3-profile-public-certificate#m1-get-public-certificate\",\"body\":\"Returns the public key and the encryption algorithm for every encrypted ABHA field.\"},{\"id\":\"hiecm.glossary.bridge\",\"type\":\"glossary\",\"milestone\":\"n/a\",\"title\":\"Bridge, your callback endpoints\",\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#bridge\",\"body\":\"The set of callback URLs NHA posts to when it answers one of your calls.\"}],\"related\":[{\"id\":\"hiecm.concept.gateway-session\",\"title\":\"The gateway session, the first call in every integration\",\"type\":\"concept\"},{\"id\":\"hiecm.endpoint.m1-get-public-certificate\",\"title\":\"Get the public certificate\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p1-encrypt-data-aadhaar-mobile-otp-password\",\"title\":\"Encrypt data (Aadhaar/Mobile/OTP/Password)\",\"type\":\"endpoint\"},{\"id\":\"hiecm.concept.input-encryption\",\"title\":\"Encrypting sensitive inputs, Aadhaar, mobile, OTP and passwords\",\"type\":\"concept\"},{\"id\":\"hiecm.concept.m1-journey-design\",\"title\":\"A suggested ABHA journey, and what holds if you design your own\",\"type\":\"concept\"},{\"id\":\"hiecm.decision.encrypt-locally\",\"title\":\"Encrypting identifiers locally rather than through a hosted helper\",\"type\":\"decision\"},{\"id\":\"hiecm.endpoint.m1-login-request-otp\",\"title\":\"Send a login OTP\",\"type\":\"endpoint\"},{\"id\":\"hiecm.flow.m1-create-abha-aadhaar-otp\",\"title\":\"Create an ABHA using an Aadhaar OTP\",\"type\":\"flow\"},{\"id\":\"hiecm.flow.m1-find-abha\",\"title\":\"Find somebody's ABHA when they do not know it\",\"type\":\"flow\"},{\"id\":\"hiecm.test.m1-encryption-padding\",\"title\":\"Prove your encryption padding before you build anything else\",\"type\":\"test\"},{\"id\":\"hiecm.error.abdm-2402\",\"title\":\"ABDM-2402, the timestamp is not valid\",\"type\":\"error\"},{\"id\":\"hiecm.error.abdm-2404\",\"title\":\"ABDM-2404, the REQUEST-ID is not valid\",\"type\":\"error\"},{\"id\":\"hiecm.error.abdm-2500\",\"title\":\"ABDM-2500, no Authorization header, or no matching request\",\"type\":\"error\"},{\"id\":\"hiecm.error.abdm-9999\",\"title\":\"ABDM-9999, a catch-all, so read the message\",\"type\":\"error\"}]}\n\u003c/passages\u003e\n\n\u003creader_context\u003eThe question reads as a HIE-CM question. Answer for HIE-CM unless they ask about another gateway, and do not bring in another gateway's calls or fields.\u003c/reader_context\u003e\n\n\u003canswer_shape name=\"how-do-i\" budget=\"200 words\"\u003e\nFirst sentence: the direct answer. Then every route that exists, one line each, naming what each produces. Expand only the route asked about, as a short numbered list of calls. End with the next step.\nExample:\nYes, and there are three creation routes: Aadhaar OTP, which is mandatory; Aadhaar face authentication, for someone who cannot receive the OTP; and an identity document, which produces an account restricted until Aadhaar KYC. For Aadhaar OTP:\n1. Request an OTP against the encrypted Aadhaar number.\n2. Verify it with the enrolment call, which issues the ABHA number.\n3. Get address suggestions and claim one.\nConfirm by reading the profile back and checking the chosen address is marked preferred.\n\u003c/answer_shape\u003e\nIf the passages and your tools do not cover the question, drop this shape and decline in two sentences that name the nearest /docs/ page and the support route.\n\nIs that certificate endpoint verified?",
+          "ToolUse": null,
+          "ToolResult": null
+        },
+        {
+          "Role": "assistant",
+          "Text": "",
+          "ToolUse": {
+            "ID": "call_86ab04b085a65afd8ed79f17ac1aeb4b",
+            "Name": "search",
+            "Input": {
+              "query": "Is the M1 certificate endpoint verified? M1 API version 1 versus version 2 certificate endpoint path and verification",
+              "milestone": "M1"
+            }
+          },
+          "ToolResult": null
+        },
+        {
+          "Role": "user",
+          "Text": "",
+          "ToolUse": null,
+          "ToolResult": {
+            "ID": "call_86ab04b085a65afd8ed79f17ac1aeb4b",
+            "Content": "eyJjYXRhbG9ndWVfdmVyc2lvbiI6IjIwMjYuMDkuMTYiLCJwYXNzYWdlcyI6W3siaWQiOiJoaWVjbS50ZXN0Lm0xLWVuY3J5cHRpb24tcGFkZGluZyIsInR5cGUiOiJ0ZXN0IiwibWlsZXN0b25lIjoiTTEiLCJ0aXRsZSI6IlByb3ZlIHlvdXIgZW5jcnlwdGlvbiBwYWRkaW5nIGJlZm9yZSB5b3UgYnVpbGQgYW55dGhpbmcgZWxzZSIsImRvY191cmwiOiIvZG9jcy9oaWVjbS92My9jb25jZXB0cy9lbmNyeXB0aW9uI20xLWVuY3J5cHRpb24tcGFkZGluZyIsImJvZHkiOiIjIFByb3ZlIHlvdXIgZW5jcnlwdGlvbiBwYWRkaW5nIGJlZm9yZSB5b3UgYnVpbGQgYW55dGhpbmcgZWxzZVxuXG4jIyBJbiBwbGFpbiB3b3Jkc1xuXG5FdmVyeSBNMSBqb3VybmV5IGJlZ2lucyB3aXRoIGEgY2FsbCB0aGF0IGNhcnJpZXMgYW4gZW5jcnlwdGVkIHZhbHVlLCBzbyBhIHdyb25nIHBhZGRpbmcgc3RvcHMgeW91IG9uIHlvdXIgZmlyc3QgcmVxdWVzdC4gUHJvdmUgaXQgb25jZSwgYmVmb3JlIHlvdSBidWlsZCBhIGZsb3csIHNvIHRoYXQgZXZlcnkgbGF0ZXIgZmFpbHVyZSBpcyBhYm91dCB0aGUgZmxvdyByYXRoZXIgdGhhbiB0aGUgcGFkZGluZy5cblxuRW5jcnlwdCBhIDEwIGRpZ2l0IG1vYmlsZSBudW1iZXIgdGhhdCB5b3UgaG9sZCBhbmQgdGhhdCBpcyByZWdpc3RlcmVkIGFnYWluc3QgYW4gQUJIQSwgdGhlbiBzZW5kIGl0IHRvIHRoZSBsb2dpbiBPVFAgcmVxdWVzdDpcblxuYGBgYmFzaFxuY3VybCAtWCBQT1NUICdodHRwczovL2FiaGFzYnguYWJkbS5nb3YuaW4vYWJoYS9hcGkvdjMvcHJvZmlsZS9sb2dpbi9yZXF1ZXN0L290cCcgXFxcbiAgLUggJ0F1dGhvcml6YXRpb246IEJlYXJlciBcdTAwM2NBQ0NFU1NfVE9LRU5fRlJPTV9TRVNTSU9OU19DQUxMXHUwMDNlJyBcXFxuICAtSCAnUkVRVUVTVC1JRDogXHUwMDNjRlJFU0hfVVVJRFx1MDAzZScgXFxcbiAgLUggJ1RJTUVTVEFNUDogXHUwMDNjVVRDX0lTT184NjAxX1dJVEhfTUlMTElTRUNPTkRTX0FORF9aXHUwMDNlJyBcXFxuICAtSCAnQ29udGVudC1UeXBlOiBhcHBsaWNhdGlvbi9qc29uJyBcXFxuICAtZCAne1xuICBcInNjb3BlXCI6IFtcImFiaGEtbG9naW5cIiwgXCJtb2JpbGUtdmVyaWZ5XCJdLFxuICBcImxvZ2luSGludFwiOiBcIm1vYmlsZVwiLFxuICBcImxvZ2luSWRcIjogXCJcdTAwM2NNT0JJTEVfRU5DUllQVEVEX1dJVEhfVEhFX0NFUlRJRklDQVRFXHUwMDNlXCIsXG4gIFwib3RwU3lzdGVtXCI6IFwiYWJkbVwiXG59J1xuYGBgXG5cbllvdSByZWNlaXZlIDIwMCB3aXRoIGEgYHR4bklkYCBhbmQgYSBtZXNzYWdlIG5hbWluZyB0aGUgbGFzdCBmb3VyIGRpZ2l0cyBvZiB0aGUgbW9iaWxlLCBhbmQgYW4gT1RQIGFycml2ZXMgb24gdGhhdCBwaG9uZS4gVGhlIHBhZGRpbmcgYW5kIHRoZSBjZXJ0aWZpY2F0ZSBhcmUgcmlnaHQuIEJ1aWxkIHRoZSByZXN0IG9mIE0xIG9uIHRoYXQgY29kZSBwYXRoLlxuXG4jIyBCZWZvcmUgeW91IHN0YXJ0XG5cbkEgZ2F0ZXdheSBhY2Nlc3MgdG9rZW4sIHRoZSBNMSBjZXJ0aWZpY2F0ZSB3aXRoIFBFTSBhcm1vdXIgYWRkZWQsIGFuZCBhIG1vYmlsZSBudW1iZXIgdGhhdCBpcyBib3RoIGluIHlvdXIgaGFuZHMgYW5kIHJlZ2lzdGVyZWQgYWdhaW5zdCBhbiBBQkhBLiBBIG51bWJlciBub2JvZHkgaGFzIHJlZ2lzdGVyZWQgY2Fubm90IHRlbGwgYSByaWdodCBwYWRkaW5nIGZyb20gYSB3cm9uZyBvbmUuXG5cbiMjIFdoYXQgaGFwcGVuc1xuXG5FbmNyeXB0IHRoZSBtb2JpbGUgbnVtYmVyIHdpdGggT0FFUCBhbmQgU0hBLTEgZm9yIGJvdGggdGhlIGRpZ2VzdCBhbmQgdGhlIG1hc2sgZ2VuZXJhdGlvbiBmdW5jdGlvbiwgYmFzZTY0IHRoZSBjaXBoZXJ0ZXh0LCBhbmQgc2VuZCBpdCBhcyBgbG9naW5JZGAgd2l0aCBgbG9naW5IaW50YCBzZXQgdG8gYG1vYmlsZWAuIFRoZSB0ZXN0IG5lZWRzIHRoZSAyMDAsIG5vdCB0aGUgT1RQLlxuXG4jIyBIb3cgeW91IGtub3cgaXQgd29ya2VkXG5cbjIwMCB3aXRoIGEgYHR4bklkYCwgYW5kIGEgbWVzc2FnZSBuYW1pbmcgdGhlIG1hc2tlZCBtb2JpbGUuXG5cbiMjIFdoZW4gaXQgZ29lcyB3cm9uZ1xuXG5BIHJlZnVzYWwgZm9yIGEgbnVtYmVyIHlvdSBrbm93IGlzIHJlZ2lzdGVyZWQgcG9pbnRzIGF0IHRoZSBwYWRkaW5nIGZpcnN0OiBQS0NTIzEgdjEuNSBhbmQgT0FFUCB3aXRoIFNIQS0yNTYgYXJlIGJvdGggd3JvbmcgZm9yIE0xLiBUaGUgc2FtZSByZWZ1c2FsIHdpdGggT0FFUCBhbmQgU0hBLTEgbWVhbnMgdGhlIHdyb25nIGtleTogdXNlIHRoZSBNMSBjZXJ0aWZpY2F0ZSwgbm90IHRoZSBQSFIgb25lLiBBIGxpYnJhcnkgdGhhdCB3aWxsIG5vdCBsb2FkIHRoZSBrZXkgbmVlZHMgdGhlIFBFTSBhcm1vdXIuIn0seyJpZCI6ImhpZWNtLmNvbmNlcHQuZ2F0ZXdheS1zZXNzaW9uIiwidHlwZSI6ImNvbmNlcHQiLCJtaWxlc3RvbmUiOiJNMSIsInRpdGxlIjoiVGhlIGdhdGV3YXkgc2Vzc2lvbiwgdGhlIGZpcnN0IGNhbGwgaW4gZXZlcnkgaW50ZWdyYXRpb24iLCJkb2NfdXJsIjoiL2RvY3MvaGllY20vdjMvY29uY2VwdHMvZ2F0ZXdheSNnYXRld2F5LXNlc3Npb24iLCJib2R5IjoiIyBUaGUgZ2F0ZXdheSBzZXNzaW9uLCB0aGUgZmlyc3QgY2FsbCBpbiBldmVyeSBpbnRlZ3JhdGlvblxuXG4jIyBJbiBwbGFpbiB3b3Jkc1xuXG5PbmUgZW5kcG9pbnQgaXNzdWVzIHRoZSB0b2tlbiBldmVyeSBvdGhlciBjYWxsIGNhcnJpZXMuIEl0IGlzIHRoZSBjYWxsIFtNMV0oL2RvY3MvaGllY20vdjMvZ2V0dGluZy1zdGFydGVkL2dsb3NzYXJ5I20xKSB1c2VzLiBbTTRdKC9kb2NzL2hpZWNtL3YzL2dldHRpbmctc3RhcnRlZC9nbG9zc2FyeSNtNCkgY2FsbHMgY2FycnkgdGhlaXIgb3duIGJlYXJlciB0b2tlbiBpbnN0ZWFkLlxuXG4qKlBPU1QqKiBgL2FwaS9oaWVjbS9nYXRld2F5L3YzL3Nlc3Npb25zYFxuXG5IZWFkZXJzOlxuXG58IEhlYWRlciB8IEV4YW1wbGUgdmFsdWUgfCBXaGF0IGl0IGlzIHxcbnwtLS18LS0tfC0tLXxcbnwgYFJFUVVFU1QtSURgIHwgYDE4MjM1ZDg5LWNiMTMtNDc5ZC1hZDcxLTdhNTdkNWY2NjlhOGAgfCBBIGZyZXNoIFVVSUQgZm9yIHRoaXMgY2FsbCB8XG58IGBUSU1FU1RBTVBgIHwgYDIwMjItMTAtMDZUMTU6MTA6MDAuNTg3WmAgfCBUaGUgdGltZSB5b3UgbWFkZSB0aGUgY2FsbCwgSVNPIDg2MDEgfFxufCBgWC1DTS1JRGAgfCBgc2J4YCB8IFRoZSBjb25zZW50IG1hbmFnZXIuIFVzZSBgc2J4YCBmb3Igc2FuZGJveCB8XG58IGBDb250ZW50LVR5cGVgIHwgYGFwcGxpY2F0aW9uL2pzb25gIHwgfFxuXG5ObyBgQXV0aG9yaXphdGlvbmAgaGVhZGVyIG9uIHRoaXMgY2FsbC4gSXQgaXMgdGhlIG9uZSBjYWxsIHdpdGggbm8gdG9rZW4geWV0LlxuXG5Cb2R5OlxuXG5gYGBqc29uXG57XG4gIFwiY2xpZW50SWRcIjogXCJcdTAwM2NDTElFTlRfSURfRlJPTV9TQU5EQk9YX1NJR05VUFx1MDAzZVwiLFxuICBcImNsaWVudFNlY3JldFwiOiBcIlx1MDAzY0NMSUVOVF9TRUNSRVRfRlJPTV9TQU5EQk9YX1NJR05VUFx1MDAzZVwiLFxuICBcImdyYW50VHlwZVwiOiBcImNsaWVudF9jcmVkZW50aWFsc1wiXG59XG5gYGBcblxuU2VuZCB0aGUgY2xpZW50IGlkIHlvdSB3ZXJlIGlzc3VlZC5cblxuUmVzcG9uc2Ugc2hhcGU6XG5cbmBgYGpzb25cbntcbiAgXCJhY2Nlc3NUb2tlblwiOiBcIlx1MDAzY0pXVFx1MDAzZVwiLFxuICBcImV4cGlyZXNJblwiOiAxMjAwLFxuICBcInJlZnJlc2hFeHBpcmVzSW5cIjogMTgwMCxcbiAgXCJyZWZyZXNoVG9rZW5cIjogXCJcdTAwM2NKV1RcdTAwM2VcIixcbiAgXCJ0b2tlblR5cGVcIjogXCJiZWFyZXJcIlxufVxuYGBgXG5cblRoZSByZXNwb25zZSBjYXJyaWVzIHRoZSB0b2tlbiBpbiBgYWNjZXNzVG9rZW5gLlxuXG5TZW5kIHRoZSB0b2tlbiBiYWNrIGFzIGBBdXRob3JpemF0aW9uOiBCZWFyZXIgXHUwMDNjQUNDRVNTX1RPS0VOX0ZST01fU0VTU0lPTlNfQ0FMTFx1MDAzZWAgb24gZXZlcnkgb3RoZXIgY2FsbC4gSGVhZGVycyBwZXIgY2FsbCwgYW5kIHRoZSBzZWNvbmQgdG9rZW4gTTEgbG9naW4gaXNzdWVzLCBhcmUgb24gW2F1dGhlbnRpY2F0aW9uXSgvZG9jcy9oaWVjbS92My9yZWZlcmVuY2UvYXV0aGVudGljYXRpb24pLiBJbnRlcmFjdGl2ZTogW2dhdGV3YXkgQVBJIHJlZmVyZW5jZV0oL3JlZmVyZW5jZS9oaWVjbS1nYXRld2F5KS5cblxuVGhlIHNlc3Npb24gdG9rZW4gc2F5cyB3aGljaCBhcHBsaWNhdGlvbiBpcyBjYWxsaW5nLCBub3Qgd2hpY2ggcGVyc29uLiBbTTFdKC9kb2NzL2hpZWNtL3YzL21pbGVzdG9uZXMvbTEpIHByb2ZpbGUgY2FsbHMgYWxzbyBjYXJyeSBhIHVzZXIgdG9rZW4gaW4gYFgtdG9rZW5gLCB3aGljaCBsb2dpbiByZXR1cm5zLlxuXG4jIyBCZWZvcmUgeW91IHN0YXJ0XG5cbkEgY2xpZW50IGlkIGFuZCBjbGllbnQgc2VjcmV0IGZyb20gc2FuZGJveCByZWdpc3RyYXRpb24sIGhlbGQgb24geW91ciBzZXJ2ZXIuIE5ldmVyIHNoaXAgdGhlIHNlY3JldCBpbiBhIG1vYmlsZSBvciBicm93c2VyIGJ1aWxkLlxuXG4jIyBXaGF0IGhhcHBlbnNcblxuQ2FsbCB0aGUgc2Vzc2lvbiBlbmRwb2ludCB3aXRoIGBjbGllbnRJZGAsIGBjbGllbnRTZWNyZXRgIGFuZCBgZ3JhbnRUeXBlYCBzZXQgdG8gYGNsaWVudF9jcmVkZW50aWFsc2AuIFNlbmQgdGhlIGBhY2Nlc3NUb2tlbmAgaXQgcmV0dXJucyBhcyBgQXV0aG9yaXphdGlvbjogQmVhcmVyIFx1MDAzY0FDQ0VTU19UT0tFTl9GUk9NX1NFU1NJT05TX0NBTExcdTAwM2VgIG9uIGV2ZXJ5IG90aGVyIGdhdGV3YXkgY2FsbC4gUmVuZXcgYmVmb3JlIGBleHBpcmVzSW5gIHJ1bnMgb3V0IHJhdGhlciB0aGFuIG9uIGEgZml4ZWQgdGltZXIuXG5cbiMjIEhvdyB5b3Uga25vdyBpdCB3b3JrZWRcblxuVGhlIHJlc3BvbnNlIGNhcnJpZXMgYGFjY2Vzc1Rva2VuYCBhbmQgYGV4cGlyZXNJbmAsIGFuZCB0aGUgbmV4dCBnYXRld2F5IGNhbGwgd2l0aCB0aGF0IHRva2VuIGlzIG5vdCByZWZ1c2VkIGFzIHVuYXV0aG9yaXNlZC5cblxuIyMgV2hlbiBpdCBnb2VzIHdyb25nXG5cbkV2ZXJ5IGNhbGwgcmV0dXJucyA0MDE6IHNlZSBbZXZlcnl0aGluZyByZXR1cm5zIDQwMV0oL2RvY3MvaGllY20vdjMvdHJvdWJsZXNob290aW5nL2V2ZXJ5dGhpbmctcmV0dXJucy00MDEpLiBBIHByb2ZpbGUgY2FsbCBpcyByZWZ1c2VkIHdoaWxlIHRoZSBzZXNzaW9uIHRva2VuIGlzIGZyZXNoOiB0aGUgYFgtdG9rZW5gIGlzIG1pc3NpbmcsIG9yIGl0IGhvbGRzIHRoZSBzaG9ydCBsaXZlZCB0b2tlbiBmcm9tIGxvZ2luIHZlcmlmeSwgd2hpY2ggdGhlIHZlcmlmeSB1c2VyIGNhbGwgZXhjaGFuZ2VzIGZvciB0aGUgdXNlciB0b2tlbi4gYEFCRE0tMTA5NGAgcmVhZHMgWC10b2tlbiBleHBpcmVkLCBhbmQgdGhlIHRva2VuIHNlbnQgaXMgb2Z0ZW4gdGhlIHdyb25nIGtpbmQgcmF0aGVyIHRoYW4gYW4gb2xkIG9uZS4ifSx7ImlkIjoiaGllY20uY29uY2VwdC5pbnB1dC1lbmNyeXB0aW9uIiwidHlwZSI6ImNvbmNlcHQiLCJtaWxlc3RvbmUiOiJNMSIsInRpdGxlIjoiRW5jcnlwdGluZyBzZW5zaXRpdmUgaW5wdXRzLCBBYWRoYWFyLCBtb2JpbGUsIE9UUCBhbmQgcGFzc3dvcmRzIiwiZG9jX3VybCI6Ii9kb2NzL2hpZWNtL3YzL2NvbmNlcHRzL2VuY3J5cHRpb24jaW5wdXQtZW5jcnlwdGlvbiIsImJvZHkiOiIjIEVuY3J5cHRpbmcgc2Vuc2l0aXZlIGlucHV0cywgQWFkaGFhciwgbW9iaWxlLCBPVFAgYW5kIHBhc3N3b3Jkc1xuXG4jIyBJbiBwbGFpbiB3b3Jkc1xuXG5TaXgga2luZHMgb2YgdmFsdWUgbmV2ZXIgdHJhdmVsIHJhdyBpbiBhbiBNMSByZXF1ZXN0IGJvZHkuXG5cbnwgVmFsdWUgfCBXaGVyZSBpdCBhcHBlYXJzIHxcbnwgLS0tIHwgLS0tIHxcbnwgQWFkaGFhciBudW1iZXIgfCBFbnJvbG1lbnQgYW5kIGxvZ2luIGJ5IEFhZGhhYXIgfFxufCBBQkhBIG51bWJlciB8IExvZ2luIGFuZCBzZWFyY2ggYnkgQUJIQSBudW1iZXIgfFxufCBNb2JpbGUgbnVtYmVyIHwgTG9naW4sIHNlYXJjaCBhbmQgbW9iaWxlIHVwZGF0ZSB8XG58IEVtYWlsIGFkZHJlc3MgfCBFbWFpbCB2ZXJpZmljYXRpb24gfFxufCBPbmUgdGltZSBwYXNzd29yZCAoW09UUF0oL2RvY3MvaGllY20vdjMvZ2V0dGluZy1zdGFydGVkL2dsb3NzYXJ5I290cCkpIHZhbHVlIHwgRXZlcnkgY2FsbCB0aGF0IHZlcmlmaWVzIGEgY2hhbGxlbmdlIHxcbnwgUGFzc3dvcmQgfCBQYXNzd29yZCBiYXNlZCBsb2dpbiB8XG5cbkVhY2ggaXMgZW5jcnlwdGVkIHdpdGggUlNBIHVzaW5nIHRoZSBBQkRNIHB1YmxpYyBjZXJ0aWZpY2F0ZSwgYW5kIHRoZSBiYXNlNjQgb2YgdGhlIGNpcGhlcnRleHQgZ29lcyBpbiB0aGUgZmllbGQuXG5cblRoZSBwYWRkaW5nIGJlbG9uZ3MgdG8gdGhlIGNlcnRpZmljYXRlLiBNMSBhbmQgUEhSIGNhbGxzIHVzZSBSU0EgT0FFUCB3aXRoIFNIQS0xIGZvciBib3RoIHRoZSBkaWdlc3QgYW5kIHRoZSBtYXNrIGdlbmVyYXRpb24gZnVuY3Rpb24sIHdoaWNoIHRoZSBjZXJ0aWZpY2F0ZSBuYW1lcyBhcyBgUlNBL0VDQi9PQUVQV2l0aFNIQS0xQW5kTUdGMVBhZGRpbmdgLiBUaGUgW000XSgvZG9jcy9oaWVjbS92My9taWxlc3RvbmVzL200KSByZWdpc3RyaWVzIHVzZSBgUlNBL0VDQi9QS0NTMVBhZGRpbmdgIHVuZGVyIGEgY2VydGlmaWNhdGUgb2YgdGhlaXIgb3duLiBBbiBpbnRlZ3JhdGlvbiB0aGF0IGNhbGxzIGJvdGggaG9sZHMgYm90aCBrZXlzIGFuZCBuZXZlciBjcm9zc2VzIHRoZW0uXG5cbiMjIEJlZm9yZSB5b3Ugc3RhcnRcblxuQSBnYXRld2F5IGFjY2VzcyB0b2tlbiwgYW5kIHRoZSBjdXJyZW50IGNlcnRpZmljYXRlIGZvciB0aGUgZmFtaWx5IHlvdSBhcmUgY2FsbGluZzogYEdFVCAvYWJoYS9hcGkvdjMvcHJvZmlsZS9wdWJsaWMvY2VydGlmaWNhdGVgIGZvciBNMS5cblxuIyMgV2hhdCBoYXBwZW5zXG5cbkVuY3J5cHQgZWFjaCB2YWx1ZSBpbiB0aGUgdGFibGUgaW4geW91ciBvd24gcHJvY2VzcyBhbmQgc2VuZCB0aGUgc3RhbmRhcmQgYmFzZTY0IG9mIHRoZSBjaXBoZXJ0ZXh0LiBJbiBtb3N0IGxpYnJhcmllcyBPQUVQIGRlZmF1bHRzIHRvIFNIQS0yNTYsIHNvIHBhc3MgU0hBLTEgZXhwbGljaXRseTogaW4gTm9kZSwgdGhlIE9BRVAgcGFkZGluZyBjb25zdGFudCB3aXRoIHRoZSBPQUVQIGhhc2ggc2V0IHRvIHNoYTE7IGluIEphdmEsIHRoZSB0cmFuc2Zvcm1hdGlvbiB0aGUgY2VydGlmaWNhdGUgbmFtZXMuIFRoZSBjZXJ0aWZpY2F0ZSBhcnJpdmVzIGFzIGJhc2U2NCBERVIgd2l0aCBubyBQRU0gYXJtb3VyLCBzbyBhZGQgdGhlIGFybW91ciBiZWZvcmUgeW91ciBsaWJyYXJ5IGxvYWRzIGl0LiBDYWNoZSB0aGUgY2VydGlmaWNhdGUgd2l0aCBhIHZhbGlkaXR5IHdpbmRvdywgbm90IGZvcmV2ZXIuXG5cbiMjIEhvdyB5b3Uga25vdyBpdCB3b3JrZWRcblxuQSB2YWx1ZSB5b3VyIGNvZGUgZW5jcnlwdGVkIGlzIGFjY2VwdGVkIGJ5IGEgcmVhbCBNMSBjYWxsOiB0aGUgT1RQIHJlcXVlc3QgcmV0dXJucyBhIGB0eG5JZGAgaW5zdGVhZCBvZiBhIHZhbGlkYXRpb24gcmVmdXNhbC5cblxuIyMgV2hlbiBpdCBnb2VzIHdyb25nXG5cbkEgd3JvbmcgcGFkZGluZyBvciBkaWdlc3QgZG9lcyBub3QgZmFpbCB3aGVuIHlvdSBlbmNyeXB0LiBJdCBmYWlscyBhdCB0aGUgQVBJIGFzIGEgdmFsaWRhdGlvbiByZWZ1c2FsIHRoYXQgbmFtZXMgdGhlIGJ1c2luZXNzIGZpZWxkLCB3aGljaCByZWFkcyBhcyBhIHdyb25nIEFhZGhhYXIgb3IgbW9iaWxlIG51bWJlci4gQ2hlY2sgdGhlIHBhZGRpbmcsIHRoZSBkaWdlc3QgYW5kIHRoZSBrZXkgYmVmb3JlIHlvdSBkb3VidCB0aGUgcGxhaW50ZXh0LiBBIHN0YWxlIGNhY2hlZCBjZXJ0aWZpY2F0ZSBmYWlscyBldmVyeSBlbmNyeXB0ZWQgY2FsbCBhdCBvbmNlLiJ9LHsiaWQiOiJoaWVjbS5lcnJvci45MDA5MDAiLCJ0eXBlIjoiZXJyb3IiLCJtaWxlc3RvbmUiOiJNMSIsInRpdGxlIjoiOTAwOTAwLCBhdXRoZW50aWNhdGlvbiBmYWlsZWQgd2l0aG91dCBhIHJlYXNvbiIsImRvY191cmwiOiIvZG9jcy9oaWVjbS92My9hcGkvbTEvZXJyb3JzIzkwMDkwMCIsImJvZHkiOiJUaGUgQUJIQSBzZXJ2aWNlIHJlZnVzZWQgdGhlIGNhbGwgYXMgYW4gdW5jbGFzc2lmaWVkIGF1dGhlbnRpY2F0aW9uIGZhaWx1cmUsIHNvIGNoZWNrIGJvdGggdGhlIGFjY2VzcyB0b2tlbiBhbmQgdGhlIHBlcnNvbidzIHRva2VuLiJ9LHsiaWQiOiJoaWVjbS5jb25jZXB0Lm0xLXRoZS13aG9sZS1zdXJmYWNlIiwidHlwZSI6ImNvbmNlcHQiLCJtaWxlc3RvbmUiOiJNMSIsInRpdGxlIjoiVGhlIHN1cmZhY2UgaXMgbW9yZSB0aGFuIGEgcmVnaXN0cmF0aW9uIGZvcm0iLCJkb2NfdXJsIjoiIiwiYm9keSI6Ik0xIHN1cHBvcnRzIHNldmVyYWwgcGxhY2VtZW50cyBiZXlvbmQgcmVnaXN0ZXJpbmcgYSBwYXRpZW50LCBhbmQgYSBkZXNpZ24gdGhhdCBhY2NvdW50cyBmb3IgdGhlbSBmcm9tIHRoZSBzdGFydCBhdm9pZHMgbWVldGluZyBlYWNoIG9uZSBsYXRlciBhcyBhIGNoYW5nZSByZXF1ZXN0LiJ9XSwicmVsYXRlZCI6W3siaWQiOiJoaWVjbS5jb25jZXB0LmVuY3J5cHRlZC1pZGVudGlmaWVycyIsInRpdGxlIjoiV2h5IGlkZW50aWZpZXJzIGFyZSBlbmNyeXB0ZWQsIGFuZCB3aGVyZSB0byBkbyBpdCIsInR5cGUiOiJjb25jZXB0In0seyJpZCI6ImhpZWNtLmNvbmNlcHQuaW5wdXQtZW5jcnlwdGlvbiIsInRpdGxlIjoiRW5jcnlwdGluZyBzZW5zaXRpdmUgaW5wdXRzLCBBYWRoYWFyLCBtb2JpbGUsIE9UUCBhbmQgcGFzc3dvcmRzIiwidHlwZSI6ImNvbmNlcHQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtZ2V0LXB1YmxpYy1jZXJ0aWZpY2F0ZSIsInRpdGxlIjoiR2V0IHRoZSBwdWJsaWMgY2VydGlmaWNhdGUiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtbG9naW4tcmVxdWVzdC1vdHAiLCJ0aXRsZSI6IlNlbmQgYSBsb2dpbiBPVFAiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZXJyb3IuYWJkbS0yNDAyIiwidGl0bGUiOiJBQkRNLTI0MDIsIHRoZSB0aW1lc3RhbXAgaXMgbm90IHZhbGlkIiwidHlwZSI6ImVycm9yIn0seyJpZCI6ImhpZWNtLmVycm9yLmFiZG0tMjQwNCIsInRpdGxlIjoiQUJETS0yNDA0LCB0aGUgUkVRVUVTVC1JRCBpcyBub3QgdmFsaWQiLCJ0eXBlIjoiZXJyb3IifSx7ImlkIjoiaGllY20uZXJyb3IuYWJkbS0yNTAwIiwidGl0bGUiOiJBQkRNLTI1MDAsIG5vIEF1dGhvcml6YXRpb24gaGVhZGVyLCBvciBubyBtYXRjaGluZyByZXF1ZXN0IiwidHlwZSI6ImVycm9yIn0seyJpZCI6ImhpZWNtLmNhbGxiYWNrLm0yLWNhbGwtYmFjay1hcGktZm9yLW5vdGlmeS1jYXJlLWNvbnRleHQtdXBkYXRlIiwidGl0bGUiOiJDYWxsIGJhY2sgQVBJIGZvciBub3RpZnkgY2FyZSBjb250ZXh0IHVwZGF0ZSIsInR5cGUiOiJjYWxsYmFjayJ9LHsiaWQiOiJoaWVjbS5jYWxsYmFjay5tMi1jYWxsYmFjay1hcGktZm9yLXNtcy1ub3RpZmljYXRpb24tdG8tcGF0aWVudHMiLCJ0aXRsZSI6IkNhbGxiYWNrIEFQSSBmb3IgU01TIE5vdGlmaWNhdGlvbiB0byBwYXRpZW50cyIsInR5cGUiOiJjYWxsYmFjayJ9LHsiaWQiOiJoaWVjbS5jYWxsYmFjay5tMi1saW5rLXRva2VuLWdlbmVyYXRpb24tY2FsbC1iYWNrIiwidGl0bGUiOiJMaW5rIHRva2VuIGdlbmVyYXRpb24g4oCTIENhbGwgQmFjayBBUEkiLCJ0eXBlIjoiY2FsbGJhY2sifSx7ImlkIjoiaGllY20uY2FsbGJhY2subTItbGlua2luZy1jYXJlLWNvbnRleHQtY2FsbC1iYWNrIiwidGl0bGUiOiJMaW5raW5nIGNhcmUgY29udGV4dCBDYWxsIGJhY2sgQVBJIiwidHlwZSI6ImNhbGxiYWNrIn0seyJpZCI6ImhpZWNtLmNhbGxiYWNrLnAyLWNhbGxiYWNrLWZvci1oZWFsdGgtcmVjb3JkLWNvbmZpcm1hdGlvbiIsInRpdGxlIjoiTGluayBjb25maXJtIHJlcXVlc3QgdG8gdGhlIEhJUCIsInR5cGUiOiJjYWxsYmFjayJ9LHsiaWQiOiJoaWVjbS5jYWxsYmFjay5wMi1jYWxsYmFjay1vbi1oZWFsdGgtcmVjb3JkLWRpc2NvdmVyIiwidGl0bGUiOiJEaXNjb3ZlcnkgcmVzdWx0IGNhbGxiYWNrIiwidHlwZSI6ImNhbGxiYWNrIn0seyJpZCI6ImhpZWNtLmNhbGxiYWNrLnAyLWNhbGxiYWNrLW9uLWhlYWx0aC1yZWNvcmQtbGluay1pbml0IiwidGl0bGUiOiJMaW5rIGluaXQgcmVxdWVzdCB0byB0aGUgSElQIiwidHlwZSI6ImNhbGxiYWNrIn0seyJpZCI6ImhpZWNtLmNhbGxiYWNrLnAyLWNhbGxiYWNrLXRvLWhpcC1kaXNjb3ZlcnkiLCJ0aXRsZSI6IkRpc2NvdmVyeSByZXF1ZXN0IHRvIHRoZSBISVAiLCJ0eXBlIjoiY2FsbGJhY2sifSx7ImlkIjoiaGllY20uY2FsbGJhY2sucDItcHJvZmlsZS1vbi1zaGFyZS1jYWxsYmFjayIsInRpdGxlIjoiUHJvZmlsZSBzaGFyZSByZXN1bHQgY2FsbGJhY2siLCJ0eXBlIjoiY2FsbGJhY2sifSx7ImlkIjoiaGllY20uY2FsbGJhY2sucDItcHJvZmlsZS1zaGFyZS1jYWxsYmFjayIsInRpdGxlIjoiUHJvZmlsZSBzaGFyZSBjYWxsYmFjayIsInR5cGUiOiJjYWxsYmFjayJ9LHsiaWQiOiJoaWVjbS5jYWxsYmFjay5wMi1yZXNwb25zZS1vbi1oZWFsdGgtcmVjb3JkLWxpbmsiLCJ0aXRsZSI6IkxpbmsgaW5pdCByZXN1bHQgY2FsbGJhY2siLCJ0eXBlIjoiY2FsbGJhY2sifSx7ImlkIjoiaGllY20uY2FsbGJhY2sucDItcmVzcG9uc2Utb24taGVhbHRoLXJlY29yZC1vbi1jb25maXJtIiwidGl0bGUiOiJMaW5rIGNvbmZpcm0gcmVzdWx0IGNhbGxiYWNrIiwidHlwZSI6ImNhbGxiYWNrIn0seyJpZCI6ImhpZWNtLmNhbGxiYWNrLnAzLWFwcHJvdmUtc3Vic2NyaXB0aW9uLXJlcXVlc3QtY2FsbC1iYWNrIiwidGl0bGUiOiJTdWJzY3JpcHRpb24gYXBwcm92ZWQgY2FsbGJhY2siLCJ0eXBlIjoiY2FsbGJhY2sifSx7ImlkIjoiaGllY20uY2FsbGJhY2sucDMtY2FsbC1iYWNrLXRvLWhpdSIsInRpdGxlIjoiSGVhbHRoIGluZm9ybWF0aW9uIHJlcXVlc3QgYWNrbm93bGVkZ2VtZW50IiwidHlwZSI6ImNhbGxiYWNrIn0seyJpZCI6ImhpZWNtLmNhbGxiYWNrLnAzLWNvbnNlbnQtcmVxdWVzdC1vbi1zdGF0dXMtY2FsbGJhY2siLCJ0aXRsZSI6IkNvbnNlbnQgcmVxdWVzdCBzdGF0dXMgY2FsbGJhY2siLCJ0eXBlIjoiY2FsbGJhY2sifSx7ImlkIjoiaGllY20uY2FsbGJhY2sucDMtZGVueS1zdWJzY3JpcHRpb24tY2FsbC1iYWNrIiwidGl0bGUiOiJTdWJzY3JpcHRpb24gZGVuaWVkIGNhbGxiYWNrIiwidHlwZSI6ImNhbGxiYWNrIn0seyJpZCI6ImhpZWNtLmNhbGxiYWNrLnAzLXN1YnNjcmlwdGlvbi1oaXUtbm90aWZ5IiwidGl0bGUiOiJOZXcgcmVjb3JkIG5vdGlmaWNhdGlvbiBjYWxsYmFjayIsInR5cGUiOiJjYWxsYmFjayJ9LHsiaWQiOiJoaWVjbS5jYWxsYmFjay5wMy11c2VyLXN1YnNjcmlwdGlvbi1yZXF1ZXN0LWluaXRpYXRlLWNhbGwtYmFjayIsInRpdGxlIjoiU3Vic2NyaXB0aW9uIHJlcXVlc3QgcmVzdWx0IGNhbGxiYWNrIiwidHlwZSI6ImNhbGxiYWNrIn0seyJpZCI6ImhpZWNtLmNvbmNlcHQuY2FsbGJhY2stYXV0aGVudGljaXR5IiwidGl0bGUiOiJQcm92aW5nIGEgY2FsbGJhY2sgcmVhbGx5IGNhbWUgZnJvbSBBQkRNIiwidHlwZSI6ImNvbmNlcHQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQuZ2F0ZXdheS1nZXQtYnJpZGdlLXNlcnZpY2UtYnktaWQiLCJ0aXRsZSI6IkZpbmQgYSBicmlkZ2Ugc2VydmljZSBieSBpdHMgc2VydmljZSBpZCIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5nYXRld2F5LWxpc3QtYnJpZGdlLXNlcnZpY2VzIiwidGl0bGUiOiJMaXN0IHRoZSBzZXJ2aWNlcyByZWdpc3RlcmVkIG9uIHlvdXIgYnJpZGdlIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50LmdhdGV3YXktcmVnaXN0ZXItYnJpZGdlLXNlcnZpY2VzIiwidGl0bGUiOiJSZWdpc3RlciBvciB1cGRhdGUgYnJpZGdlIHNlcnZpY2VzIGZvciBhbiBISVUiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQuZ2F0ZXdheS1zZXNzaW9ucyIsInRpdGxlIjoiQ3JlYXRlIGEgc2Vzc2lvbiBhbmQgZ2V0IGFuIGFjY2VzcyB0b2tlbiIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5nYXRld2F5LXVwZGF0ZS1icmlkZ2UtdXJsIiwidGl0bGUiOiJVcGRhdGUgdGhlIGJyaWRnZSBjYWxsYmFjayBVUkwiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtYXV0aC10b2tlbiIsInRpdGxlIjoiQXV0aCB0b2tlbiBBUEkiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtYmVuZWZpdC1nZXQtYnktYWJoYSIsInRpdGxlIjoiR2V0IHRoZSBiZW5lZml0IHJlY29yZCBmb3IgYW4gQUJIQSBudW1iZXIiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtYmVuZWZpdC1saW5rLW9yLWRlbGluayIsInRpdGxlIjoiTGluayBvciB1bmxpbmsgYSBiZW5lZml0IHJlY29yZCBmcm9tIGFuIEFCSEEiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtYmVuZWZpdC1zZWFyY2giLCJ0aXRsZSI6IlNlYXJjaCBiZW5lZml0IHJlY29yZHMgZm9yIGEgcGVyc29uIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50Lm0xLWRvd25sb2FkLXBoci1jYXJkIiwidGl0bGUiOiJEb3dubG9hZCBQSFIgY2FyZCIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1kb3dubG9hZC1waHItcXItY29kZSIsInRpdGxlIjoiRG93bmxvYWQgUEhSIFFSIGNvZGUiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtZW5yb2xtZW50LWFkZHJlc3Mtc3VnZ2VzdGlvbnMiLCJ0aXRsZSI6IkdldCBzdWdnZXN0ZWQgQUJIQSBhZGRyZXNzZXMgZm9yIGEgbmV3IGFjY291bnQiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtZW5yb2xtZW50LWJ5LWFhZGhhYXIiLCJ0aXRsZSI6IkNyZWF0ZSBhbiBBQkhBIGZyb20gYSB2ZXJpZmllZCBBYWRoYWFyIE9UUCIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1lbnJvbG1lbnQtY2FwdHVyZS1waWQiLCJ0aXRsZSI6IlRyYWNrIGZhY2UgYXV0aGVudGljYXRpb24gc3RhdHVzIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50Lm0xLWVucm9sbWVudC1jbGFpbS1hYmhhLWFkZHJlc3MiLCJ0aXRsZSI6IkNsYWltIGEgY2hvc2VuIEFCSEEgYWRkcmVzcyIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1lbnJvbG1lbnQtZmFjZS1hdXRoLWluaXQiLCJ0aXRsZSI6IlN0YXJ0IGZhY2UgYXV0aGVudGljYXRpb24gYW5kIGdldCBhIHRyYW5zYWN0aW9uIGlkIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50Lm0xLWVucm9sbWVudC1saXN0LWNoaWxkcmVuIiwidGl0bGUiOiJMaXN0IHRoZSBjaGlsZCBBQkhBIGFjY291bnRzIGxpbmtlZCB0byB0aGlzIGFjY291bnQiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtZW5yb2xtZW50LXJlcXVlc3Qtb3RwIiwidGl0bGUiOiJTZW5kIGFuIE9UUCB0byBiZWdpbiBvciBjb250aW51ZSBhbiBlbnJvbG1lbnQiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtZW5yb2xtZW50LXZlcmlmeS1hYmRtLW90cCIsInRpdGxlIjoiVmVyaWZ5IGFuIE9UUCB0aGF0IEFCRE0gc2VudCwgZHVyaW5nIGVucm9sbWVudCIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1maW5kLWFiaGEtc2VhcmNoIiwidGl0bGUiOiJGaW5kIGFuIEFCSEEgZm9yIHNvbWVib2R5IHdobyBkb2VzIG5vdCBrbm93IHRoZWlycyIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1nZXQtcGhyLXByb2ZpbGUiLCJ0aXRsZSI6IkdldCBQSFIgcHJvZmlsZSIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1sb2dpbi1zZWxlY3QtYWNjb3VudCIsInRpdGxlIjoiQ2hvb3NlIHdoaWNoIEFCSEEgdG8gc2lnbiBpbiB0byIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1sb2dpbi12ZXJpZnkiLCJ0aXRsZSI6IlZlcmlmeSBhIGxvZ2luIE9UUCIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1sb2dpbi12ZXJpZnktdjMxIiwidGl0bGUiOiJTaWduIGluIHdpdGggYSBiaW9tZXRyaWMsIHYzLjEiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtb24tc2hhcmUtYWNrbm93bGVkZ2VtZW50IiwidGl0bGUiOiJTZW5kIHNoYXJlIGFja25vd2xlZGdlbWVudCIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1waHItcmVxdWVzdC1vdHAiLCJ0aXRsZSI6IlNlbmQgYW4gT1RQIGZvciBBQkhBIGFkZHJlc3MgbG9naW4iLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtcGhyLXNlYXJjaC1hYmhhLWFkZHJlc3MiLCJ0aXRsZSI6IlNlYXJjaCBhbiBBQkhBIGFkZHJlc3MgYW5kIGdldCBpdHMgc2lnbiBpbiBtZXRob2RzIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50Lm0xLXBoci12ZXJpZnkiLCJ0aXRsZSI6IlZlcmlmeSBPVFAgb3IgYmlvbWV0cmljIGZvciBBQkhBIGFkZHJlc3MgbG9naW4iLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtcHJvZmlsZS1kb3dubG9hZC1hYmhhLWNhcmQiLCJ0aXRsZSI6IkRvd25sb2FkIHRoZSBBQkhBIGNhcmQgYXMgYSBmaWxlIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50Lm0xLXByb2ZpbGUtZ2V0LWFiaGEtY2FyZCIsInRpdGxlIjoiR2V0IHRoZSBBQkhBIGNhcmQiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtcHJvZmlsZS1nZXQtYWNjb3VudCIsInRpdGxlIjoiUmVhZCB0aGUgc2lnbmVkIGluIHBlcnNvbidzIEFCSEEgcHJvZmlsZSIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1wcm9maWxlLWdldC1xci1jb2RlIiwidGl0bGUiOiJHZXQgdGhlIEFCSEEgUVIgY29kZSIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1wcm9maWxlLXJlcXVlc3Qtb3RwIiwidGl0bGUiOiJTZW5kIGFuIE9UUCB0byBjaGFuZ2Ugc29tZXRoaW5nIG9uIHRoZSBwcm9maWxlIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50Lm0xLXByb2ZpbGUtdXBkYXRlLWFjY291bnQiLCJ0aXRsZSI6IlVwZGF0ZSBmaWVsZHMgb24gYW4gQUJIQSBwcm9maWxlIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50Lm0xLXByb2ZpbGUtdmVyaWZ5LW90cCIsInRpdGxlIjoiVmVyaWZ5IHRoZSBPVFAgZm9yIGEgcHJvZmlsZSBjaGFuZ2UiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtcmVjZWl2ZS1wYXRpZW50LXNoYXJlIiwidGl0bGUiOiJSZWNlaXZlIGEgcGF0aWVudCdzIHNoYXJlZCBwcm9maWxlIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50Lm0xLXJlZ2lzdGVyLWhycC1zZXJ2aWNlcyIsInRpdGxlIjoiUmVnaXN0ZXIgb3IgdXBkYXRlIEhJUCBhbmQgSElVIHNlcnZpY2VzIGZvciBhIGZhY2lsaXR5IiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50Lm0xLXNlbmQtZW1haWwtdmVyaWZpY2F0aW9uLWxpbmsiLCJ0aXRsZSI6IlNlbmQgZW1haWwgdmVyaWZpY2F0aW9uIGxpbmsiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtdG9rZW4tcmVmcmVzaCIsInRpdGxlIjoiR2V0IGEgbmV3IHVzZXIgdG9rZW4gZnJvbSBhIHJlZnJlc2ggdG9rZW4iLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTItY29uc2VudC1oaXAtb24tbm90aWZ5IiwidGl0bGUiOiJBY2tub3dsZWRnZSBhIGNvbnNlbnQgbm90aWZpY2F0aW9uIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50Lm0yLWdlbmVyYXRlLWxpbmstdG9rZW4iLCJ0aXRsZSI6IkdlbmVyYXRlIExpbmsgVG9rZW4iLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTItaGlwLWRhdGEtZmxvdy1ub3RpZnkiLCJ0aXRsZSI6Ik5vdGlmeSB0aGUgZ2F0ZXdheSB0aGF0IGEgZGF0YSB0cmFuc2ZlciBmaW5pc2hlZCIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMi1oaXAtaGVhbHRoLWluZm9ybWF0aW9uLW9uLXJlcXVlc3QiLCJ0aXRsZSI6IkFja25vd2xlZGdlIGEgaGVhbHRoIGluZm9ybWF0aW9uIGRhdGEgcmVxdWVzdCIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMi1oaXAtbGluay1jYXJlLWNvbnRleHQiLCJ0aXRsZSI6IkxpbmsgY2FyZSBjb250ZXh0cyB0byBhbiBBQkhBIGFkZHJlc3MiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTItbGluay1jYXJlLWNvbnRleHQtbm90aWZ5IiwidGl0bGUiOiJOb3RpZnkgYW4gdXBkYXRlIHRvIGEgbGlua2VkIGNhcmUgY29udGV4dCIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMi1vbi1kaXNjb3Zlci1jYXJlLWNvbnRleHRzIiwidGl0bGUiOiJPbiBEaXNjb3ZlcnksIEhJUCByZXNwb25kcyB3aXRoIGZvdW5kIGNhcmUgY29udGV4dHMiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTItb24tbGluay1jb25maXJtIiwidGl0bGUiOiJMaW5rIE9uLUNvbmZpcm0sIEhJUCBjb25maXJtcyBsaW5rZWQgY2FyZSBjb250ZXh0cyIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMi1vbi1saW5rLWluaXQiLCJ0aXRsZSI6IkxpbmsgT24tSW5pdCwgSElQIHJlc3BvbmRzIHdpdGggT1RQIGNvbW11bmljYXRpb24gZGV0YWlscyIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMi1zbXMtZGVlcC1saW5rLW5vdGlmeSIsInRpdGxlIjoiU2VuZCBhbiBTTVMgdGVsbGluZyB0aGUgcGF0aWVudCBhIGNhcmUgY29udGV4dCBpcyBsaW5rZWQiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTMtY29uc2VudC1mZXRjaCIsInRpdGxlIjoiRmV0Y2ggdGhlIGZ1bGwgY29uc2VudCBhcnRlZmFjdCIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMy1jb25zZW50LWhpdS1vbi1ub3RpZnkiLCJ0aXRsZSI6IkFja25vd2xlZGdlIGEgY29uc2VudCBub3RpZmljYXRpb24iLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTMtY29uc2VudC1yZXF1ZXN0LWluaXQiLCJ0aXRsZSI6IkluaXRpYXRlIGEgY29uc2VudCByZXF1ZXN0IiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50Lm0zLWNvbnNlbnQtcmVxdWVzdC1zdGF0dXMiLCJ0aXRsZSI6IkNoZWNrIHRoZSBzdGF0dXMgb2YgYSBjb25zZW50IHJlcXVlc3QiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTMtaGl1LWRhdGEtZmxvdy1ub3RpZnkiLCJ0aXRsZSI6Ik5vdGlmeSB0aGUgZ2F0ZXdheSB0aGF0IGRhdGEgd2FzIHJlY2VpdmVkIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50Lm0zLWhpdS1oZWFsdGgtaW5mb3JtYXRpb24tcmVxdWVzdCIsInRpdGxlIjoiUmVxdWVzdCBhIHBhdGllbnQncyBoZWFsdGggaW5mb3JtYXRpb24iLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTQtaGZyLXNlYXJjaC1mYWNpbGl0eSIsInRpdGxlIjoiU2VhcmNoIHRoZSBmYWNpbGl0eSByZWdpc3RyeSBiZWZvcmUgY3JlYXRpbmcgYW55dGhpbmciLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTQtaHByLWNyZWF0ZS1ocHJpZCIsInRpdGxlIjoiQ3JlYXRlIHRoZSBIUElEIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50Lm00LWhwci1kZW1vZ3JhcGhpYy1hdXRoLW1vYmlsZSIsInRpdGxlIjoiQ2hlY2sgd2hldGhlciB0aGUgbW9iaWxlIG51bWJlciBpcyB0aGUgb25lIG9uIHRoZSBBYWRoYWFyIHJlY29yZCIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tNC1ocHItZmV0Y2gtZG9jdW1lbnRzLWxpc3QiLCJ0aXRsZSI6Ikxpc3QgdGhlIGRvY3VtZW50cyB0aGlzIHByb2Zlc3Npb25hbCBtdXN0IHVwbG9hZCIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tNC1ocHItZmV0Y2gtcHJvZmVzc2lvbmFsLWluZm8iLCJ0aXRsZSI6IlJlYWQgYSBwcm9mZXNzaW9uYWwncyBwcm9maWxlIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50Lm00LWhwci1yZWdpc3Rlci1wcm9mZXNzaW9uYWwiLCJ0aXRsZSI6IlJlZ2lzdGVyIHRoZSBwcm9mZXNzaW9uYWwncyBwcm9maWxlIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50Lm00LWhwci11cGxvYWQtZG9jdW1lbnQiLCJ0aXRsZSI6IlVwbG9hZCBvbmUgb2YgdGhlIHByb2Zlc3Npb25hbCdzIGRvY3VtZW50cyIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5wMS1lbmNyeXB0LWRhdGEtYWFkaGFhci1tb2JpbGUtb3RwLXBhc3N3b3JkIiwidGl0bGUiOiJFbmNyeXB0IGRhdGEgKEFhZGhhYXIvTW9iaWxlL09UUC9QYXNzd29yZCkiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDEtZW5yb2xsbWVudC1hZGRyZXNzLWV4aXN0cyIsInRpdGxlIjoiQ2hlY2sgd2hldGhlciBhbiBhZGRyZXNzIGlzIHRha2VuIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50LnAxLWVucm9sbG1lbnQtYWRkcmVzcy1zdWdnZXN0aW9uIiwidGl0bGUiOiJBc2sgZm9yIGFkZHJlc3Mgc3VnZ2VzdGlvbnMiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDEtZW5yb2xsbWVudC1lbnJvbCIsInRpdGxlIjoiQ3JlYXRlIHRoZSBoZWFsdGggYWRkcmVzcyIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5wMS1lbnJvbGxtZW50LXJlcXVlc3Qtb3RwIiwidGl0bGUiOiJTZW5kIHRoZSBPVFAgdGhhdCBzdGFydHMgYSByZWdpc3RyYXRpb24iLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDEtZW5yb2xsbWVudC12ZXJpZnktb3RwIiwidGl0bGUiOiJWZXJpZnkgdGhlIHJlZ2lzdHJhdGlvbiBPVFAiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDEtZ2VuZXJhdGUtcmVmcmVzaC10b2tlbiIsInRpdGxlIjoiR2VuZXJhdGUgUmVmcmVzaCBUb2tlbiIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5wMS1nZXQtY2VydGlmaWNhdGUtcHVibGljLWtleSIsInRpdGxlIjoiR0VUIENlcnRpZmljYXRlIChQdWJsaWMga2V5KSIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5wMS1nZXQtdXNlci1waHItY2FyZCIsInRpdGxlIjoiR2V0IFVzZXIgUEhSIENhcmQiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDEtZ2V0LXVzZXItcHJvZmlsZSIsInRpdGxlIjoiR2V0IFVzZXIgUHJvZmlsZSIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5wMS1nZXQtdXNlci1xci1jb2RlIiwidGl0bGUiOiJHZXQgVXNlciBRUiBDb2RlIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50LnAxLWxpbmstYWJoYS1udW1iZXItdmlhLWFhZGhhYXItcmVxdWVzdC1vdHAiLCJ0aXRsZSI6IkxpbmsgQUJIQSBudW1iZXIgdmlhIEFBREhBQVItUmVxdWVzdCBPVFAiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDEtbGluay1hYmhhLW51bWJlci12aWEtYWFkaGFhci12ZXJpZnktb3RwIiwidGl0bGUiOiJMaW5rIEFCSEEgbnVtYmVyIHZpYSBBQURIQUFSLVZlcmlmeSBPVFAiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDEtbGluay1hYmhhLW51bWJlci12aWEtbW9iaWxlLXJlcXVlc3Qtb3RwIiwidGl0bGUiOiJMaW5rIEFCSEEgbnVtYmVyIHZpYSBNb2JpbGUtUmVxdWVzdCBPVFAiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDEtbGluay1hYmhhLW51bWJlci12aWEtbW9iaWxlLXZlcmlmeS1vdHAiLCJ0aXRsZSI6IkxpbmsgQUJIQSBudW1iZXIgdmlhIE1vYmlsZS1WZXJpZnkgT1RQIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50LnAxLWxvZ2luLXJlcXVlc3Qtb3RwIiwidGl0bGUiOiJTZW5kIHRoZSBPVFAgdGhhdCBzdGFydHMgYSBsb2dpbiIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5wMS1sb2dpbi11c2luZy1wYXNzd29yZC1zZWFyY2gtdXNlciIsInRpdGxlIjoiTG9naW4gdXNpbmcgUGFzc3dvcmQgU2VhcmNoIHVzZXIiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDEtbG9naW4tdmVyaWZ5LW90cCIsInRpdGxlIjoiVmVyaWZ5IHRoZSBsb2dpbiBPVFAiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDEtbG9naW4tdmVyaWZ5LXVzZXIiLCJ0aXRsZSI6IlNheSB3aGljaCBhZGRyZXNzIGlzIHNpZ25pbmcgaW4iLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDEtbG9nb3V0LXVzZXIiLCJ0aXRsZSI6IkxvZ291dCBVc2VyIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50LnAxLXByb2Nlc3MtbGluay1yZXF1ZXN0LXZpYS1hYWRoYWFyLW51bWJlciIsInRpdGxlIjoiUHJvY2VzcyBMaW5rIFJlcXVlc3QgdmlhIEFhZGhhYXIgT1RQIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50LnAxLXByb2Nlc3MtbGluay1yZXF1ZXN0LXZpYS1hYmhhLW51bWJlciIsInRpdGxlIjoiUHJvY2VzcyBMaW5rIFJlcXVlc3QgdmlhIEFCSEEgT1RQIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50LnAxLXN3aXRjaC1wcm9maWxlLXJlcXVlc3QiLCJ0aXRsZSI6IlN3aXRjaCBQcm9maWxlIFJlcXVlc3QiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDEtc3dpdGNoLXByb2ZpbGUtdmVyaWZ5IiwidGl0bGUiOiJTd2l0Y2ggUHJvZmlsZSBWZXJpZnkiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDEtdXBkYXRlLW1vYmlsZS1yZXF1ZXN0LW90cCIsInRpdGxlIjoiVXBkYXRlIHRoZSBtb2JpbGUgbnVtYmVyLCByZXF1ZXN0IHRoZSBPVFAiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDEtdXBkYXRlLW1vYmlsZS12ZXJpZnktb3RwIiwidGl0bGUiOiJVcGRhdGUgTW9iaWxlIFZlcmlmeS1PVFAiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDItYWxsLXByb3ZpZGVycyIsInRpdGxlIjoiU2VhcmNoIHByb3ZpZGVycyBieSBuYW1lIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50LnAyLWNhcmUtY29udGV4dC1kaXNjb3ZlciIsInRpdGxlIjoiQXNrIGEgZmFjaWxpdHkgd2hhdCByZWNvcmRzIGl0IGhvbGRzIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50LnAyLWdvdnQtcHJvZ3JhbXMiLCJ0aXRsZSI6Ikxpc3QgZ292ZXJubWVudCBwcm9ncmFtbWVzIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50LnAyLWxpbmstY2FyZS1jb250ZXh0LWNvbmZpcm0iLCJ0aXRsZSI6IkNvbmZpcm0gdGhlIGxpbmsgd2l0aCB0aGUgY29kZSB0aGUgcGVyc29uIHJlY2VpdmVkIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50LnAyLWxpbmstY2FyZS1jb250ZXh0LWluaXQiLCJ0aXRsZSI6IlN0YXJ0IGxpbmtpbmcgdGhlIGNhcmUgY29udGV4dHMgdGhlIHBlcnNvbiBjaG9zZSIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5wMi1wYXRpZW50LXNoYXJlIiwidGl0bGUiOiJTaGFyZSB0aGUgcHJvZmlsZSB3aXRoIHRoZSBmYWNpbGl0eSB3aG9zZSBjb2RlIHdhcyBzY2FubmVkIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50LnAyLXByb2ZpbGUtb24tc2hhcmUiLCJ0aXRsZSI6IkFuc3dlciBhIHByb2ZpbGUgc2hhcmUgd2l0aCBhIHRva2VuIG51bWJlciIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5wMi1wcm92aWRlci1ieS1wcm92aWRlci1pZCIsInRpdGxlIjoiR2V0IGEgcHJvdmlkZXIgYnkgaXRzIGlkIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50LnAzLWFwcHJvdmUtc3Vic2NyaXB0aW9uLXJlcXVlc3QiLCJ0aXRsZSI6IkFwcHJvdmUgYSBzdWJzY3JpcHRpb24gcmVxdWVzdCIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5wMy1jb25zZW50LWF1dG8tYXBwcm92ZSIsInRpdGxlIjoiU2V0IGFuIGF1dG8gYXBwcm92YWwgcG9saWN5IiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50LnAzLWNvbnNlbnQtZGlzYWJsZS1hdXRvLWFwcHJvdmUiLCJ0aXRsZSI6IkRpc2FibGUgYW4gYXV0byBhcHByb3ZhbCBwb2xpY3kiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDMtY29uc2VudC1lbmFibGUtYXV0by1hcHByb3ZlIiwidGl0bGUiOiJFbmFibGUgYW4gYXV0byBhcHByb3ZhbCBwb2xpY3kiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDMtY29uc2VudC1mZXRjaCIsInRpdGxlIjoiRmV0Y2ggYSBjb25zZW50IGFydGVmYWN0IGluIGZ1bGwiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDMtZGVueS1jb25zZW50LXJlcXVlc3QiLCJ0aXRsZSI6IkRlbnkgYSBjb25zZW50IHJlcXVlc3QiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDMtZGVueS1zdWJzY3JpcHRpb24tcmVxdWVzdCIsInRpdGxlIjoiRGVueSBhIHN1YnNjcmlwdGlvbiByZXF1ZXN0IiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50LnAzLWRldGFpbHMtYnktcmVxdWVzdC1pZCIsInRpdGxlIjoiR2V0IGEgc3Vic2NyaXB0aW9uIHJlcXVlc3QgYnkgaXRzIHJlcXVlc3QgaWQiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDMtZGV0YWlscy1ieS1zdWJzY3JpcHRpb24taWQiLCJ0aXRsZSI6IkdldCBhIHN1YnNjcmlwdGlvbiBieSBpdHMgc3Vic2NyaXB0aW9uIGlkIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50LnAzLWVkaXQtc3Vic2NyaXB0aW9uIiwidGl0bGUiOiJFZGl0IGEgc3Vic2NyaXB0aW9uIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50LnAzLWdldC1hbGwtY29uc2VudC1hcnRlZmFjdC1kZXRhaWxzLWJ5LXJlcXVlc3QtaWQiLCJ0aXRsZSI6IkdldCB0aGUgY29uc2VudCBhcnRlZmFjdHMgb2Ygb25lIGNvbnNlbnQgcmVxdWVzdCIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5wMy1nZXQtYWxsLWNvbnNlbnQtYXJ0aWZhY3QtZGV0YWlscy1mb3ItYW4tYWJoYS1hZGRyZXNzIiwidGl0bGUiOiJMaXN0IHRoZSBjb25zZW50IGFydGVmYWN0cyBvZiBhbiBBQkhBIGFkZHJlc3MiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDMtZ2V0LWFsbC1jb25zZW50LXJlcXVlc3QtZm9yLWFuLWFiaGEtYWRkcmVzcyIsInRpdGxlIjoiTGlzdCB0aGUgY29uc2VudCByZXF1ZXN0cyBvZiBhbiBBQkhBIGFkZHJlc3MiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDMtZ2V0LWFsbC1saW5rcy1yZWNvcmRzIiwidGl0bGUiOiJHZXQgYWxsIGxpbmtlZCByZWNvcmRzIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50LnAzLWdldC1hbGwtc3Vic2NyaXB0aW9uLXJlcXVlc3QiLCJ0aXRsZSI6Ikxpc3QgY29uc2VudCBhbmQgc3Vic2NyaXB0aW9uIHJlcXVlc3RzIHRvZ2V0aGVyIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50LnAzLWdldC1hbGwtc3Vic2NyaXB0aW9uLXJlcXVlc3RzLWZvci1hbi1hYmhhLWFkZHJlc3MiLCJ0aXRsZSI6Ikxpc3QgdGhlIHN1YnNjcmlwdGlvbiByZXF1ZXN0cyBvZiBhbiBBQkhBIGFkZHJlc3MiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDMtZ2V0LWNvbnNlbnQtYXJ0ZWZhY3QtZGV0YWlscy1ieS1hcnRpZmFjdC1pZCIsInRpdGxlIjoiR2V0IG9uZSBjb25zZW50IGFydGVmYWN0IGJ5IGl0cyBpZCIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5wMy1nZXQtY29uc2VudC1yZXF1ZXN0LWRldGFpbHMtYnktY29uc2VudC1yZXF1ZXN0LWlkIiwidGl0bGUiOiJHZXQgb25lIGNvbnNlbnQgcmVxdWVzdCBieSBpdHMgaWQiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDMtZ2V0LXBhdGllbnQtc3Vic2NyaWJlZC1sb2NrZXJzIiwidGl0bGUiOiJMaXN0IHRoZSBoZWFsdGggbG9ja2VycyBhbiBBQkhBIGFkZHJlc3Mgc3Vic2NyaWJlcyB0byIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5wMy1wYXRpZW50LWxvY2tlci1kZXRhaWxzLWJ5LWxvY2tlci1pZCIsInRpdGxlIjoiR2V0IGEgaGVhbHRoIGxvY2tlciBieSBpdHMgaWQiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDMtcmVxdWVzdC1zdGF0dXMiLCJ0aXRsZSI6IkdldCB0aGUgc3RhdHVzIG9mIGEgaGVhbHRoIGluZm9ybWF0aW9uIHJlcXVlc3QiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDMtcmV2b2tlLWNvbnNlbnQtcmVxdWVzdCIsInRpdGxlIjoiUmV2b2tlIGEgZ3JhbnRlZCBjb25zZW50IiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50LnAzLXNldHVwLWxvY2tlciIsInRpdGxlIjoiU2V0IHVwIGEgaGVhbHRoIGxvY2tlciIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5wMy1zdWJzY3JpcHRpb24taGl1LW9uLW5vdGlmeSIsInRpdGxlIjoiQWNrbm93bGVkZ2UgYSBuZXcgcmVjb3JkIG5vdGlmaWNhdGlvbiIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5wMy1zdWJzY3JpcHRpb24taW5pdCIsInRpdGxlIjoiUmVxdWVzdCBhIHN1YnNjcmlwdGlvbiB0byBhIHBlcnNvbidzIHJlY29yZHMiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDMtc3Vic2NyaXB0aW9uLXJlcXVlc3QtaGl1LW9uLW5vdGlmeSIsInRpdGxlIjoiQWNrbm93bGVkZ2UgYSBzdWJzY3JpcHRpb24gZGVjaXNpb24iLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZXJyb3IuOTAwOTAwIiwidGl0bGUiOiI5MDA5MDAsIGF1dGhlbnRpY2F0aW9uIGZhaWxlZCB3aXRob3V0IGEgcmVhc29uIiwidHlwZSI6ImVycm9yIn0seyJpZCI6ImhpZWNtLmVycm9yLjkwMDkwMSIsInRpdGxlIjoiOTAwOTAxLCB0aGUgY3JlZGVudGlhbHMgYXJlIG5vdCB2YWxpZCIsInR5cGUiOiJlcnJvciJ9LHsiaWQiOiJoaWVjbS5lcnJvci5hYmRtLTI0MDEiLCJ0aXRsZSI6IkFCRE0tMjQwMSwgdGhlIFggQXV0aCB0b2tlbiBpcyBub3QgdmFsaWQiLCJ0eXBlIjoiZXJyb3IifSx7ImlkIjoiaGllY20uZmxvdy5tMS1jcmVhdGUtYWJoYS1kZW1vZ3JhcGhpYy1hdXRoIiwidGl0bGUiOiJDcmVhdGUgYW4gQUJIQSB1c2luZyBBYWRoYWFyIGRlbW9ncmFwaGljIGF1dGhlbnRpY2F0aW9uIiwidHlwZSI6ImZsb3cifSx7ImlkIjoiaGllY20uZmxvdy5tMS1jcmVhdGUtY2hpbGQtYWJoYSIsInRpdGxlIjoiQ3JlYXRlIGEgY2hpbGQgQUJIQSB1bmRlciBhIHBhcmVudCdzIGFjY291bnQiLCJ0eXBlIjoiZmxvdyJ9LHsiaWQiOiJoaWVjbS5mbG93Lm0xLWxvZ2luLWJ5LW1vYmlsZSIsInRpdGxlIjoiTG9nIHNvbWVib2R5IGluIHRvIHRoZWlyIGV4aXN0aW5nIEFCSEEiLCJ0eXBlIjoiZmxvdyJ9LHsiaWQiOiJoaWVjbS5mbG93Lm0zLWZldGNoLXJlY29yZHMiLCJ0aXRsZSI6IkZldGNoIHRoZSByZWNvcmRzIGEgZ3JhbnRlZCBjb25zZW50IGFydGVmYWN0IGNvdmVycyIsInR5cGUiOiJmbG93In0seyJpZCI6ImhpZWNtLmZsb3cubTMtcmVxdWVzdC1jb25zZW50IiwidGl0bGUiOiJSZXF1ZXN0IGNvbnNlbnQgZm9yIGEgcGF0aWVudCdzIGhlYWx0aCByZWNvcmRzIiwidHlwZSI6ImZsb3cifSx7ImlkIjoiaGllY20uZmxvdy5tNC1jcmVhdGUtaHBpZCIsInRpdGxlIjoiR2V0IGEgaGVhbHRoY2FyZSBwcm9mZXNzaW9uYWwgYW4gSFBJRCIsInR5cGUiOiJmbG93In0seyJpZCI6ImhpZWNtLmZsb3cubTQtb25ib2FyZC1mYWNpbGl0eSIsInRpdGxlIjoiT25ib2FyZCBhIGZhY2lsaXR5IHRvIHRoZSBIRlIiLCJ0eXBlIjoiZmxvdyJ9LHsiaWQiOiJoaWVjbS5mbG93Lm00LXJlZ2lzdGVyLXByb2Zlc3Npb25hbCIsInRpdGxlIjoiUmVnaXN0ZXIgYSBwcm9mZXNzaW9uYWwncyBwcm9maWxlIG9uIHRoZSBIUFIiLCJ0eXBlIjoiZmxvdyJ9LHsiaWQiOiJoaWVjbS5mbG93LnAxLWNyZWF0ZS1hYmhhLWFkZHJlc3MiLCJ0aXRsZSI6IkNyZWF0ZSBhbiBBQkhBIGFkZHJlc3MgaW4gYSBQSFIgYXBwbGljYXRpb24iLCJ0eXBlIjoiZmxvdyJ9LHsiaWQiOiJoaWVjbS5mbG93LnAxLWxvZ2luIiwidGl0bGUiOiJTaWduIGEgdXNlciBpbiB0byBhIFBIUiBhcHBsaWNhdGlvbiIsInR5cGUiOiJmbG93In0seyJpZCI6ImhpZWNtLnRyb3VibGVzaG9vdGluZy5ldmVyeXRoaW5nLXJldHVybnMtNDAxIiwidGl0bGUiOiJFdmVyeXRoaW5nIHJldHVybnMgNDAxIiwidHlwZSI6InRyb3VibGVzaG9vdGluZyJ9LHsiaWQiOiJoaWVjbS5jb25jZXB0LmdhdGV3YXktc2Vzc2lvbiIsInRpdGxlIjoiVGhlIGdhdGV3YXkgc2Vzc2lvbiwgdGhlIGZpcnN0IGNhbGwgaW4gZXZlcnkgaW50ZWdyYXRpb24iLCJ0eXBlIjoiY29uY2VwdCJ9LHsiaWQiOiJoaWVjbS5mbG93Lm0xLWNyZWF0ZS1hYmhhLWFhZGhhYXItb3RwIiwidGl0bGUiOiJDcmVhdGUgYW4gQUJIQSB1c2luZyBhbiBBYWRoYWFyIE9UUCIsInR5cGUiOiJmbG93In0seyJpZCI6ImhpZWNtLnRlc3QubTEtZW5jcnlwdGlvbi1wYWRkaW5nIiwidGl0bGUiOiJQcm92ZSB5b3VyIGVuY3J5cHRpb24gcGFkZGluZyBiZWZvcmUgeW91IGJ1aWxkIGFueXRoaW5nIGVsc2UiLCJ0eXBlIjoidGVzdCJ9XX0=",
+            "IsError": false
+          }
+        },
+        {
+          "Role": "assistant",
+          "Text": "Yes. HIE-CM M1 documents `GET /abha/api/v3/profile/public/certificate` as the endpoint that returns the public key and encryption algorithm. That confirms the endpoint is documented, not that a live call was tested. It also does not by itself verify the earlier comparison between M1 API versions 1 and 2.\n\n[Get the public certificate](/docs/hiecm/v3/api/m1/endpoints/m1-access-tokens-encryption/02-m1-get-v3-profile-public-certificate#m1-get-public-certificate)\n\nFor an integration, [agent skills and the MCP server](/docs/hiecm/v3/getting-started/build-with-ai) let your coding agent use the milestone’s rules and documentation directly.",
+          "ToolUse": null,
+          "ToolResult": null
+        },
+        {
+          "Role": "user",
+          "Text": "Your answer failed these checks: /v3/getting-started/build-with-ai appears in neither the retrieved documentation nor the question. Rewrite it once, inside the word budget, naming every route the passages carry. State only paths, headers and codes the documentation returned: look one up with your tools or leave it out. Do not write code. Do not apologise or mention the checks.",
+          "ToolUse": null,
+          "ToolResult": null
+        }
+      ],
+      "reply": {
+        "Text": "The M1 certificate endpoint is documented, but the passages do not confirm a live call was made. `GET /abha/api/v3/profile/public/certificate` returns the public key and encryption algorithm. The M1 certificate entry does not specify request headers or a response code.\n\n[Get the public certificate](/docs/hiecm/v3/api/m1/endpoints/m1-access-tokens-encryption/02-m1-get-v3-profile-public-certificate#m1-get-public-certificate)",
+        "ToolCalls": null,
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "The M1 certificate endpoint is documented, but the passages do not confirm a live call was made. `GET /abha/api/v3/profile/public/certificate` returns the public key and encryption algorithm. The M1 certificate entry does not specify request headers or a response code.\n\n[Get the public certificate](/docs/hiecm/v3/api/m1/endpoints/m1-access-tokens-encryption/02-m1-get-v3-profile-public-certificate#m1-get-public-certificate)",
+  "sources": [
+    {
+      "id": "hiecm.endpoint.p1-get-certificate-public-key",
+      "title": "GET Certificate (Public key)",
+      "url": "/docs/hiecm/v3/api/p1/endpoints/p1-certificate-and-session/01-p1-get-v3-phr-app-login-public-certificate#p1-get-certificate-public-key"
+    },
+    {
+      "id": "hiecm.concept.encrypted-identifiers",
+      "title": "Why identifiers are encrypted, and where to do it",
+      "url": "/docs/hiecm/v3/concepts/encryption#encrypted-identifiers"
+    },
+    {
+      "id": "hiecm.endpoint.m1-send-email-verification-link",
+      "title": "Send email verification link",
+      "url": "/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-number-aadhaar-otp/05-p1-post-v3-profile-account-request-emailverificationlink#m1-send-email-verification-link"
+    },
+    {
+      "id": "hiecm.endpoint.m1-get-public-certificate",
+      "title": "Get the public certificate",
+      "url": "/docs/hiecm/v3/api/m1/endpoints/m1-access-tokens-encryption/02-m1-get-v3-profile-public-certificate#m1-get-public-certificate"
+    },
+    {
+      "id": "hiecm.glossary.bridge",
+      "title": "Bridge, your callback endpoints",
+      "url": "/docs/hiecm/v3/getting-started/glossary#bridge"
+    },
+    {
+      "id": "hiecm.test.m1-encryption-padding",
+      "title": "Prove your encryption padding before you build anything else",
+      "url": "/docs/hiecm/v3/concepts/encryption#m1-encryption-padding"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"passages\":[{\"id\":\"hiecm.test.m1-encryption-padding\",\"type\":\"test\",\"milestone\":\"M1\",\"title\":\"Prove your encryption padding before you build anything else\",\"doc_url\":\"/docs/hiecm/v3/concepts/encryption#m1-encryption-padding\",\"body\":\"# Prove your encryption padding before you build anything else\\n\\n## In plain words\\n\\nEvery M1 journey begins with a call that carries an encrypted value, so a wrong padding stops you on your first request. Prove it once, before you build a flow, so that every later failure is about the flow rather than the padding.\\n\\nEncrypt a 10 digit mobile number that you hold and that is registered against an ABHA, then send it to the login OTP request:\\n\\n```bash\\ncurl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/request/otp' \\\\\\n  -H 'Authorization: Bearer \\u003cACCESS_TOKEN_FROM_SESSIONS_CALL\\u003e' \\\\\\n  -H 'REQUEST-ID: \\u003cFRESH_UUID\\u003e' \\\\\\n  -H 'TIMESTAMP: \\u003cUTC_ISO_8601_WITH_MILLISECONDS_AND_Z\\u003e' \\\\\\n  -H 'Content-Type: application/json' \\\\\\n  -d '{\\n  \\\"scope\\\": [\\\"abha-login\\\", \\\"mobile-verify\\\"],\\n  \\\"loginHint\\\": \\\"mobile\\\",\\n  \\\"loginId\\\": \\\"\\u003cMOBILE_ENCRYPTED_WITH_THE_CERTIFICATE\\u003e\\\",\\n  \\\"otpSystem\\\": \\\"abdm\\\"\\n}'\\n```\\n\\nYou receive 200 with a `txnId` and a message naming the last four digits of the mobile, and an OTP arrives on that phone. The padding and the certificate are right. Build the rest of M1 on that code path.\\n\\n## Before you start\\n\\nA gateway access token, the M1 certificate with PEM armour added, and a mobile number that is both in your hands and registered against an ABHA. A number nobody has registered cannot tell a right padding from a wrong one.\\n\\n## What happens\\n\\nEncrypt the mobile number with OAEP and SHA-1 for both the digest and the mask generation function, base64 the ciphertext, and send it as `loginId` with `loginHint` set to `mobile`. The test needs the 200, not the OTP.\\n\\n## How you know it worked\\n\\n200 with a `txnId`, and a message naming the masked mobile.\\n\\n## When it goes wrong\\n\\nA refusal for a number you know is registered points at the padding first: PKCS#1 v1.5 and OAEP with SHA-256 are both wrong for M1. The same refusal with OAEP and SHA-1 means the wrong key: use the M1 certificate, not the PHR one. A library that will not load the key needs the PEM armour.\"},{\"id\":\"hiecm.concept.gateway-session\",\"type\":\"concept\",\"milestone\":\"M1\",\"title\":\"The gateway session, the first call in every integration\",\"doc_url\":\"/docs/hiecm/v3/concepts/gateway#gateway-session\",\"body\":\"# The gateway session, the first call in every integration\\n\\n## In plain words\\n\\nOne endpoint issues the token every other call carries. It is the call [M1](/docs/hiecm/v3/getting-started/glossary#m1) uses. [M4](/docs/hiecm/v3/getting-started/glossary#m4) calls carry their own bearer token instead.\\n\\n**POST** `/api/hiecm/gateway/v3/sessions`\\n\\nHeaders:\\n\\n| Header | Example value | What it is |\\n|---|---|---|\\n| `REQUEST-ID` | `18235d89-cb13-479d-ad71-7a57d5f669a8` | A fresh UUID for this call |\\n| `TIMESTAMP` | `2022-10-06T15:10:00.587Z` | The time you made the call, ISO 8601 |\\n| `X-CM-ID` | `sbx` | The consent manager. Use `sbx` for sandbox |\\n| `Content-Type` | `application/json` | |\\n\\nNo `Authorization` header on this call. It is the one call with no token yet.\\n\\nBody:\\n\\n```json\\n{\\n  \\\"clientId\\\": \\\"\\u003cCLIENT_ID_FROM_SANDBOX_SIGNUP\\u003e\\\",\\n  \\\"clientSecret\\\": \\\"\\u003cCLIENT_SECRET_FROM_SANDBOX_SIGNUP\\u003e\\\",\\n  \\\"grantType\\\": \\\"client_credentials\\\"\\n}\\n```\\n\\nSend the client id you were issued.\\n\\nResponse shape:\\n\\n```json\\n{\\n  \\\"accessToken\\\": \\\"\\u003cJWT\\u003e\\\",\\n  \\\"expiresIn\\\": 1200,\\n  \\\"refreshExpiresIn\\\": 1800,\\n  \\\"refreshToken\\\": \\\"\\u003cJWT\\u003e\\\",\\n  \\\"tokenType\\\": \\\"bearer\\\"\\n}\\n```\\n\\nThe response carries the token in `accessToken`.\\n\\nSend the token back as `Authorization: Bearer \\u003cACCESS_TOKEN_FROM_SESSIONS_CALL\\u003e` on every other call. Headers per call, and the second token M1 login issues, are on [authentication](/docs/hiecm/v3/reference/authentication). Interactive: [gateway API reference](/reference/hiecm-gateway).\\n\\nThe session token says which application is calling, not which person. [M1](/docs/hiecm/v3/milestones/m1) profile calls also carry a user token in `X-token`, which login returns.\\n\\n## Before you start\\n\\nA client id and client secret from sandbox registration, held on your server. Never ship the secret in a mobile or browser build.\\n\\n## What happens\\n\\nCall the session endpoint with `clientId`, `clientSecret` and `grantType` set to `client_credentials`. Send the `accessToken` it returns as `Authorization: Bearer \\u003cACCESS_TOKEN_FROM_SESSIONS_CALL\\u003e` on every other gateway call. Renew before `expiresIn` runs out rather than on a fixed timer.\\n\\n## How you know it worked\\n\\nThe response carries `accessToken` and `expiresIn`, and the next gateway call with that token is not refused as unauthorised.\\n\\n## When it goes wrong\\n\\nEvery call returns 401: see [everything returns 401](/docs/hiecm/v3/troubleshooting/everything-returns-401). A profile call is refused while the session token is fresh: the `X-token` is missing, or it holds the short lived token from login verify, which the verify user call exchanges for the user token. `ABDM-1094` reads X-token expired, and the token sent is often the wrong kind rather than an old one.\"},{\"id\":\"hiecm.concept.input-encryption\",\"type\":\"concept\",\"milestone\":\"M1\",\"title\":\"Encrypting sensitive inputs, Aadhaar, mobile, OTP and passwords\",\"doc_url\":\"/docs/hiecm/v3/concepts/encryption#input-encryption\",\"body\":\"# Encrypting sensitive inputs, Aadhaar, mobile, OTP and passwords\\n\\n## In plain words\\n\\nSix kinds of value never travel raw in an M1 request body.\\n\\n| Value | Where it appears |\\n| --- | --- |\\n| Aadhaar number | Enrolment and login by Aadhaar |\\n| ABHA number | Login and search by ABHA number |\\n| Mobile number | Login, search and mobile update |\\n| Email address | Email verification |\\n| One time password ([OTP](/docs/hiecm/v3/getting-started/glossary#otp)) value | Every call that verifies a challenge |\\n| Password | Password based login |\\n\\nEach is encrypted with RSA using the ABDM public certificate, and the base64 of the ciphertext goes in the field.\\n\\nThe padding belongs to the certificate. M1 and PHR calls use RSA OAEP with SHA-1 for both the digest and the mask generation function, which the certificate names as `RSA/ECB/OAEPWithSHA-1AndMGF1Padding`. The [M4](/docs/hiecm/v3/milestones/m4) registries use `RSA/ECB/PKCS1Padding` under a certificate of their own. An integration that calls both holds both keys and never crosses them.\\n\\n## Before you start\\n\\nA gateway access token, and the current certificate for the family you are calling: `GET /abha/api/v3/profile/public/certificate` for M1.\\n\\n## What happens\\n\\nEncrypt each value in the table in your own process and send the standard base64 of the ciphertext. In most libraries OAEP defaults to SHA-256, so pass SHA-1 explicitly: in Node, the OAEP padding constant with the OAEP hash set to sha1; in Java, the transformation the certificate names. The certificate arrives as base64 DER with no PEM armour, so add the armour before your library loads it. Cache the certificate with a validity window, not forever.\\n\\n## How you know it worked\\n\\nA value your code encrypted is accepted by a real M1 call: the OTP request returns a `txnId` instead of a validation refusal.\\n\\n## When it goes wrong\\n\\nA wrong padding or digest does not fail when you encrypt. It fails at the API as a validation refusal that names the business field, which reads as a wrong Aadhaar or mobile number. Check the padding, the digest and the key before you doubt the plaintext. A stale cached certificate fails every encrypted call at once.\"},{\"id\":\"hiecm.error.900900\",\"type\":\"error\",\"milestone\":\"M1\",\"title\":\"900900, authentication failed without a reason\",\"doc_url\":\"/docs/hiecm/v3/api/m1/errors#900900\",\"body\":\"The ABHA service refused the call as an unclassified authentication failure, so check both the access token and the person's token.\"},{\"id\":\"hiecm.concept.m1-the-whole-surface\",\"type\":\"concept\",\"milestone\":\"M1\",\"title\":\"The surface is more than a registration form\",\"doc_url\":\"\",\"body\":\"M1 supports several placements beyond registering a patient, and a design that accounts for them from the start avoids meeting each one later as a change request.\"}],\"related\":[{\"id\":\"hiecm.concept.encrypted-identifiers\",\"title\":\"Why identifiers are encrypted, and where to do it\",\"type\":\"concept\"},{\"id\":\"hiecm.concept.input-encryption\",\"title\":\"Encrypting sensitive inputs, Aadhaar, mobile, OTP and passwords\",\"type\":\"concept\"},{\"id\":\"hiecm.endpoint.m1-get-public-certificate\",\"title\":\"Get the public certificate\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-login-request-otp\",\"title\":\"Send a login OTP\",\"type\":\"endpoint\"},{\"id\":\"hiecm.error.abdm-2402\",\"title\":\"ABDM-2402, the timestamp is not valid\",\"type\":\"error\"},{\"id\":\"hiecm.error.abdm-2404\",\"title\":\"ABDM-2404, the REQUEST-ID is not valid\",\"type\":\"error\"},{\"id\":\"hiecm.error.abdm-2500\",\"title\":\"ABDM-2500, no Authorization header, or no matching request\",\"type\":\"error\"},{\"id\":\"hiecm.callback.m2-call-back-api-for-notify-care-context-update\",\"title\":\"Call back API for notify care context update\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.m2-callback-api-for-sms-notification-to-patients\",\"title\":\"Callback API for SMS Notification to patients\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.m2-link-token-generation-call-back\",\"title\":\"Link token generation – Call Back API\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.m2-linking-care-context-call-back\",\"title\":\"Linking care context Call back API\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.p2-callback-for-health-record-confirmation\",\"title\":\"Link confirm request to the HIP\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.p2-callback-on-health-record-discover\",\"title\":\"Discovery result callback\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.p2-callback-on-health-record-link-init\",\"title\":\"Link init request to the HIP\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.p2-callback-to-hip-discovery\",\"title\":\"Discovery request to the HIP\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.p2-profile-on-share-callback\",\"title\":\"Profile share result callback\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.p2-profile-share-callback\",\"title\":\"Profile share callback\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.p2-response-on-health-record-link\",\"title\":\"Link init result callback\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.p2-response-on-health-record-on-confirm\",\"title\":\"Link confirm result callback\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.p3-approve-subscription-request-call-back\",\"title\":\"Subscription approved callback\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.p3-call-back-to-hiu\",\"title\":\"Health information request acknowledgement\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.p3-consent-request-on-status-callback\",\"title\":\"Consent request status callback\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.p3-deny-subscription-call-back\",\"title\":\"Subscription denied callback\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.p3-subscription-hiu-notify\",\"title\":\"New record notification callback\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.p3-user-subscription-request-initiate-call-back\",\"title\":\"Subscription request result callback\",\"type\":\"callback\"},{\"id\":\"hiecm.concept.callback-authenticity\",\"title\":\"Proving a callback really came from ABDM\",\"type\":\"concept\"},{\"id\":\"hiecm.endpoint.gateway-get-bridge-service-by-id\",\"title\":\"Find a bridge service by its service id\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.gateway-list-bridge-services\",\"title\":\"List the services registered on your bridge\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.gateway-register-bridge-services\",\"title\":\"Register or update bridge services for an HIU\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.gateway-sessions\",\"title\":\"Create a session and get an access token\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.gateway-update-bridge-url\",\"title\":\"Update the bridge callback URL\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-auth-token\",\"title\":\"Auth token API\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-benefit-get-by-abha\",\"title\":\"Get the benefit record for an ABHA number\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-benefit-link-or-delink\",\"title\":\"Link or unlink a benefit record from an ABHA\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-benefit-search\",\"title\":\"Search benefit records for a person\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-download-phr-card\",\"title\":\"Download PHR card\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-download-phr-qr-code\",\"title\":\"Download PHR QR code\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-enrolment-address-suggestions\",\"title\":\"Get suggested ABHA addresses for a new account\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-enrolment-by-aadhaar\",\"title\":\"Create an ABHA from a verified Aadhaar OTP\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-enrolment-capture-pid\",\"title\":\"Track face authentication status\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-enrolment-claim-abha-address\",\"title\":\"Claim a chosen ABHA address\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-enrolment-face-auth-init\",\"title\":\"Start face authentication and get a transaction id\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-enrolment-list-children\",\"title\":\"List the child ABHA accounts linked to this account\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-enrolment-request-otp\",\"title\":\"Send an OTP to begin or continue an enrolment\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-enrolment-verify-abdm-otp\",\"title\":\"Verify an OTP that ABDM sent, during enrolment\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-find-abha-search\",\"title\":\"Find an ABHA for somebody who does not know theirs\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-get-phr-profile\",\"title\":\"Get PHR profile\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-login-select-account\",\"title\":\"Choose which ABHA to sign in to\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-login-verify\",\"title\":\"Verify a login OTP\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-login-verify-v31\",\"title\":\"Sign in with a biometric, v3.1\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-on-share-acknowledgement\",\"title\":\"Send share acknowledgement\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-phr-request-otp\",\"title\":\"Send an OTP for ABHA address login\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-phr-search-abha-address\",\"title\":\"Search an ABHA address and get its sign in methods\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-phr-verify\",\"title\":\"Verify OTP or biometric for ABHA address login\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-profile-download-abha-card\",\"title\":\"Download the ABHA card as a file\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-profile-get-abha-card\",\"title\":\"Get the ABHA card\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-profile-get-account\",\"title\":\"Read the signed in person's ABHA profile\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-profile-get-qr-code\",\"title\":\"Get the ABHA QR code\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-profile-request-otp\",\"title\":\"Send an OTP to change something on the profile\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-profile-update-account\",\"title\":\"Update fields on an ABHA profile\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-profile-verify-otp\",\"title\":\"Verify the OTP for a profile change\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-receive-patient-share\",\"title\":\"Receive a patient's shared profile\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-register-hrp-services\",\"title\":\"Register or update HIP and HIU services for a facility\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-send-email-verification-link\",\"title\":\"Send email verification link\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-token-refresh\",\"title\":\"Get a new user token from a refresh token\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m2-consent-hip-on-notify\",\"title\":\"Acknowledge a consent notification\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m2-generate-link-token\",\"title\":\"Generate Link Token\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m2-hip-data-flow-notify\",\"title\":\"Notify the gateway that a data transfer finished\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m2-hip-health-information-on-request\",\"title\":\"Acknowledge a health information data request\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m2-hip-link-care-context\",\"title\":\"Link care contexts to an ABHA address\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m2-link-care-context-notify\",\"title\":\"Notify an update to a linked care context\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m2-on-discover-care-contexts\",\"title\":\"On Discovery, HIP responds with found care contexts\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m2-on-link-confirm\",\"title\":\"Link On-Confirm, HIP confirms linked care contexts\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m2-on-link-init\",\"title\":\"Link On-Init, HIP responds with OTP communication details\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m2-sms-deep-link-notify\",\"title\":\"Send an SMS telling the patient a care context is linked\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m3-consent-fetch\",\"title\":\"Fetch the full consent artefact\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m3-consent-hiu-on-notify\",\"title\":\"Acknowledge a consent notification\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m3-consent-request-init\",\"title\":\"Initiate a consent request\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m3-consent-request-status\",\"title\":\"Check the status of a consent request\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m3-hiu-data-flow-notify\",\"title\":\"Notify the gateway that data was received\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m3-hiu-health-information-request\",\"title\":\"Request a patient's health information\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m4-hfr-search-facility\",\"title\":\"Search the facility registry before creating anything\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m4-hpr-create-hprid\",\"title\":\"Create the HPID\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m4-hpr-demographic-auth-mobile\",\"title\":\"Check whether the mobile number is the one on the Aadhaar record\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m4-hpr-fetch-documents-list\",\"title\":\"List the documents this professional must upload\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m4-hpr-fetch-professional-info\",\"title\":\"Read a professional's profile\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m4-hpr-register-professional\",\"title\":\"Register the professional's profile\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m4-hpr-upload-document\",\"title\":\"Upload one of the professional's documents\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p1-encrypt-data-aadhaar-mobile-otp-password\",\"title\":\"Encrypt data (Aadhaar/Mobile/OTP/Password)\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p1-enrollment-address-exists\",\"title\":\"Check whether an address is taken\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p1-enrollment-address-suggestion\",\"title\":\"Ask for address suggestions\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p1-enrollment-enrol\",\"title\":\"Create the health address\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p1-enrollment-request-otp\",\"title\":\"Send the OTP that starts a registration\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p1-enrollment-verify-otp\",\"title\":\"Verify the registration OTP\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p1-generate-refresh-token\",\"title\":\"Generate Refresh Token\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p1-get-certificate-public-key\",\"title\":\"GET Certificate (Public key)\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p1-get-user-phr-card\",\"title\":\"Get User PHR Card\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p1-get-user-profile\",\"title\":\"Get User Profile\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p1-get-user-qr-code\",\"title\":\"Get User QR Code\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p1-link-abha-number-via-aadhaar-request-otp\",\"title\":\"Link ABHA number via AADHAAR-Request OTP\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p1-link-abha-number-via-aadhaar-verify-otp\",\"title\":\"Link ABHA number via AADHAAR-Verify OTP\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p1-link-abha-number-via-mobile-request-otp\",\"title\":\"Link ABHA number via Mobile-Request OTP\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p1-link-abha-number-via-mobile-verify-otp\",\"title\":\"Link ABHA number via Mobile-Verify OTP\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p1-login-request-otp\",\"title\":\"Send the OTP that starts a login\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p1-login-using-password-search-user\",\"title\":\"Login using Password Search user\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p1-login-verify-otp\",\"title\":\"Verify the login OTP\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p1-login-verify-user\",\"title\":\"Say which address is signing in\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p1-logout-user\",\"title\":\"Logout User\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p1-process-link-request-via-aadhaar-number\",\"title\":\"Process Link Request via Aadhaar OTP\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p1-process-link-request-via-abha-number\",\"title\":\"Process Link Request via ABHA OTP\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p1-switch-profile-request\",\"title\":\"Switch Profile Request\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p1-switch-profile-verify\",\"title\":\"Switch Profile Verify\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p1-update-mobile-request-otp\",\"title\":\"Update the mobile number, request the OTP\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p1-update-mobile-verify-otp\",\"title\":\"Update Mobile Verify-OTP\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p2-all-providers\",\"title\":\"Search providers by name\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p2-care-context-discover\",\"title\":\"Ask a facility what records it holds\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p2-govt-programs\",\"title\":\"List government programmes\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p2-link-care-context-confirm\",\"title\":\"Confirm the link with the code the person received\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p2-link-care-context-init\",\"title\":\"Start linking the care contexts the person chose\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p2-patient-share\",\"title\":\"Share the profile with the facility whose code was scanned\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p2-profile-on-share\",\"title\":\"Answer a profile share with a token number\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p2-provider-by-provider-id\",\"title\":\"Get a provider by its id\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p3-approve-subscription-request\",\"title\":\"Approve a subscription request\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p3-consent-auto-approve\",\"title\":\"Set an auto approval policy\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p3-consent-disable-auto-approve\",\"title\":\"Disable an auto approval policy\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p3-consent-enable-auto-approve\",\"title\":\"Enable an auto approval policy\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p3-consent-fetch\",\"title\":\"Fetch a consent artefact in full\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p3-deny-consent-request\",\"title\":\"Deny a consent request\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p3-deny-subscription-request\",\"title\":\"Deny a subscription request\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p3-details-by-request-id\",\"title\":\"Get a subscription request by its request id\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p3-details-by-subscription-id\",\"title\":\"Get a subscription by its subscription id\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p3-edit-subscription\",\"title\":\"Edit a subscription\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p3-get-all-consent-artefact-details-by-request-id\",\"title\":\"Get the consent artefacts of one consent request\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p3-get-all-consent-artifact-details-for-an-abha-address\",\"title\":\"List the consent artefacts of an ABHA address\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p3-get-all-consent-request-for-an-abha-address\",\"title\":\"List the consent requests of an ABHA address\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p3-get-all-links-records\",\"title\":\"Get all linked records\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p3-get-all-subscription-request\",\"title\":\"List consent and subscription requests together\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p3-get-all-subscription-requests-for-an-abha-address\",\"title\":\"List the subscription requests of an ABHA address\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p3-get-consent-artefact-details-by-artifact-id\",\"title\":\"Get one consent artefact by its id\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p3-get-consent-request-details-by-consent-request-id\",\"title\":\"Get one consent request by its id\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p3-get-patient-subscribed-lockers\",\"title\":\"List the health lockers an ABHA address subscribes to\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p3-patient-locker-details-by-locker-id\",\"title\":\"Get a health locker by its id\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p3-request-status\",\"title\":\"Get the status of a health information request\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p3-revoke-consent-request\",\"title\":\"Revoke a granted consent\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p3-setup-locker\",\"title\":\"Set up a health locker\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p3-subscription-hiu-on-notify\",\"title\":\"Acknowledge a new record notification\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p3-subscription-init\",\"title\":\"Request a subscription to a person's records\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p3-subscription-request-hiu-on-notify\",\"title\":\"Acknowledge a subscription decision\",\"type\":\"endpoint\"},{\"id\":\"hiecm.error.900900\",\"title\":\"900900, authentication failed without a reason\",\"type\":\"error\"},{\"id\":\"hiecm.error.900901\",\"title\":\"900901, the credentials are not valid\",\"type\":\"error\"},{\"id\":\"hiecm.error.abdm-2401\",\"title\":\"ABDM-2401, the X Auth token is not valid\",\"type\":\"error\"},{\"id\":\"hiecm.flow.m1-create-abha-demographic-auth\",\"title\":\"Create an ABHA using Aadhaar demographic authentication\",\"type\":\"flow\"},{\"id\":\"hiecm.flow.m1-create-child-abha\",\"title\":\"Create a child ABHA under a parent's account\",\"type\":\"flow\"},{\"id\":\"hiecm.flow.m1-login-by-mobile\",\"title\":\"Log somebody in to their existing ABHA\",\"type\":\"flow\"},{\"id\":\"hiecm.flow.m3-fetch-records\",\"title\":\"Fetch the records a granted consent artefact covers\",\"type\":\"flow\"},{\"id\":\"hiecm.flow.m3-request-consent\",\"title\":\"Request consent for a patient's health records\",\"type\":\"flow\"},{\"id\":\"hiecm.flow.m4-create-hpid\",\"title\":\"Get a healthcare professional an HPID\",\"type\":\"flow\"},{\"id\":\"hiecm.flow.m4-onboard-facility\",\"title\":\"Onboard a facility to the HFR\",\"type\":\"flow\"},{\"id\":\"hiecm.flow.m4-register-professional\",\"title\":\"Register a professional's profile on the HPR\",\"type\":\"flow\"},{\"id\":\"hiecm.flow.p1-create-abha-address\",\"title\":\"Create an ABHA address in a PHR application\",\"type\":\"flow\"},{\"id\":\"hiecm.flow.p1-login\",\"title\":\"Sign a user in to a PHR application\",\"type\":\"flow\"},{\"id\":\"hiecm.troubleshooting.everything-returns-401\",\"title\":\"Everything returns 401\",\"type\":\"troubleshooting\"},{\"id\":\"hiecm.concept.gateway-session\",\"title\":\"The gateway session, the first call in every integration\",\"type\":\"concept\"},{\"id\":\"hiecm.flow.m1-create-abha-aadhaar-otp\",\"title\":\"Create an ABHA using an Aadhaar OTP\",\"type\":\"flow\"},{\"id\":\"hiecm.test.m1-encryption-padding\",\"title\":\"Prove your encryption padding before you build anything else\",\"type\":\"test\"}]}\n\u003cpassages\u003e\n{\"passages\":[{\"id\":\"hiecm.endpoint.p1-get-certificate-public-key\",\"type\":\"endpoint\",\"milestone\":\"P1\",\"title\":\"GET Certificate (Public key)\",\"doc_url\":\"/docs/hiecm/v3/api/p1/endpoints/p1-certificate-and-session/01-p1-get-v3-phr-app-login-public-certificate#p1-get-certificate-public-key\",\"body\":\"# GET Certificate (Public key)\\n\\n## In plain words\\n\\nReturns the public certificate a [PHR](/docs/hiecm/v3/getting-started/glossary#phr) app encrypts sensitive values with before it sends them. Fetch it before registration or login. The call takes no request body, only the `REQUEST-ID` and `TIMESTAMP` headers with your access token.\\n\\n## Before you start\\n\\nAn access token for the `Authorization` header, a fresh UUID for `REQUEST-ID`, and the current time in UTC for `TIMESTAMP`.\\n\\n## What happens\\n\\nYou fetch the certificate once and encrypt with it every value the registration, login and profile calls take encrypted.\"},{\"id\":\"hiecm.concept.encrypted-identifiers\",\"type\":\"concept\",\"milestone\":\"M1\",\"title\":\"Why identifiers are encrypted, and where to do it\",\"doc_url\":\"/docs/hiecm/v3/concepts/encryption#encrypted-identifiers\",\"body\":\"# Why identifiers are encrypted, and where to do it\\n\\n## In plain words\\n\\nWe publish the public half of a key pair. You encrypt with it. Only our private half can decrypt. Your system never holds a secret to do this, only the current certificate.\\n\\n```mermaid\\nsequenceDiagram\\n    autonumber\\n    participant S as Your system\\n    participant A as ABHA service\\n    S-\\u003e\\u003eA: GET /abha/api/v3/profile/public/certificate\\n    A--\\u003e\\u003eS: publicKey, encryptionAlgorithm\\n    S-\\u003e\\u003eS: RSA encrypt the Aadhaar number, mobile number,\\u003cbr/\\u003eOTP or password with that public key\\n    S-\\u003e\\u003eA: The Base64 result as the field value,\\u003cbr/\\u003efor example loginId or otp.otpValue\\n    A-\\u003e\\u003eA: Decrypts with its private key\\n```\\n\\nThere is nothing ABDM specific in the mechanics. Your platform's standard RSA library does the work. Both keys use `RSA/ECB/OAEPWithSHA-1AndMGF1Padding`. The one thing to confirm is which key you are using.\\n\\nRead `encryptionAlgorithm` from the certificate response and encrypt with what it names. Code that reads the field survives a change of algorithm. Code that cannot recognise what the field names should refuse to encrypt rather than fall back to a default.\\n\\n## Before you start\\n\\nThe certificate from `GET /abha/api/v3/profile/public/certificate`, which carries `publicKey` and `encryptionAlgorithm`.\\n\\n## What happens\\n\\nPut the plaintext in the shape the service validates after it decrypts, from the table above: an ABHA number keeps its dashes. Encrypt with the algorithm the response names and send the base64 result as the field value, for example `loginId`.\\n\\n## How you know it worked\\n\\nThe raw Aadhaar or mobile number exists only inside your own process, for the length of the call, and never reaches a log. A call carrying your ciphertext passes validation.\\n\\n## When it goes wrong\\n\\n`400 {\\\"loginId\\\": \\\"LoginId is invalid\\\"}` means the value decrypted and the plaintext failed a format rule, usually an ABHA number sent without its dashes. Logging the plain value before encryption is the same leak, moved into your log store.\"},{\"id\":\"hiecm.endpoint.m1-send-email-verification-link\",\"type\":\"endpoint\",\"milestone\":\"M1\",\"title\":\"Send email verification link\",\"doc_url\":\"/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-number-aadhaar-otp/05-p1-post-v3-profile-account-request-emailverificationlink#m1-send-email-verification-link\",\"body\":\"# Send email verification link\\n\\n## In plain words\\n\\nSends a verification link to an email address on the signed in person's [ABHA](/docs/hiecm/v3/getting-started/glossary#abha). The person verifies the address by opening the link. Send `scope` as `[\\\"abha-profile\\\",\\\"email-link-verify\\\"]`, `loginHint` as `email`, the encrypted address in `loginId`, and `otpSystem` as `abdm`. The response body is not yet published.\\n\\n## Before you start\\n\\nThe person's `X-token`, sent as `Bearer \\u003ctoken\\u003e`, and the email address encrypted with the public certificate key.\\n\\n## How you know it worked\\n\\nThe profile call shows the email as verified after the person opens the link.\"},{\"id\":\"hiecm.endpoint.m1-get-public-certificate\",\"type\":\"endpoint\",\"milestone\":\"M1\",\"title\":\"Get the public certificate\",\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-access-tokens-encryption/02-m1-get-v3-profile-public-certificate#m1-get-public-certificate\",\"body\":\"Returns the public key and the encryption algorithm for every encrypted ABHA field.\"},{\"id\":\"hiecm.glossary.bridge\",\"type\":\"glossary\",\"milestone\":\"n/a\",\"title\":\"Bridge, your callback endpoints\",\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#bridge\",\"body\":\"The set of callback URLs NHA posts to when it answers one of your calls.\"}],\"related\":[{\"id\":\"hiecm.concept.gateway-session\",\"title\":\"The gateway session, the first call in every integration\",\"type\":\"concept\"},{\"id\":\"hiecm.endpoint.m1-get-public-certificate\",\"title\":\"Get the public certificate\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p1-encrypt-data-aadhaar-mobile-otp-password\",\"title\":\"Encrypt data (Aadhaar/Mobile/OTP/Password)\",\"type\":\"endpoint\"},{\"id\":\"hiecm.concept.input-encryption\",\"title\":\"Encrypting sensitive inputs, Aadhaar, mobile, OTP and passwords\",\"type\":\"concept\"},{\"id\":\"hiecm.concept.m1-journey-design\",\"title\":\"A suggested ABHA journey, and what holds if you design your own\",\"type\":\"concept\"},{\"id\":\"hiecm.decision.encrypt-locally\",\"title\":\"Encrypting identifiers locally rather than through a hosted helper\",\"type\":\"decision\"},{\"id\":\"hiecm.endpoint.m1-login-request-otp\",\"title\":\"Send a login OTP\",\"type\":\"endpoint\"},{\"id\":\"hiecm.flow.m1-create-abha-aadhaar-otp\",\"title\":\"Create an ABHA using an Aadhaar OTP\",\"type\":\"flow\"},{\"id\":\"hiecm.flow.m1-find-abha\",\"title\":\"Find somebody's ABHA when they do not know it\",\"type\":\"flow\"},{\"id\":\"hiecm.test.m1-encryption-padding\",\"title\":\"Prove your encryption padding before you build anything else\",\"type\":\"test\"},{\"id\":\"hiecm.error.abdm-2402\",\"title\":\"ABDM-2402, the timestamp is not valid\",\"type\":\"error\"},{\"id\":\"hiecm.error.abdm-2404\",\"title\":\"ABDM-2404, the REQUEST-ID is not valid\",\"type\":\"error\"},{\"id\":\"hiecm.error.abdm-2500\",\"title\":\"ABDM-2500, no Authorization header, or no matching request\",\"type\":\"error\"},{\"id\":\"hiecm.error.abdm-9999\",\"title\":\"ABDM-9999, a catch-all, so read the message\",\"type\":\"error\"}]}\n\u003c/passages\u003e\n\n\u003creader_context\u003eThe question reads as a HIE-CM question. Answer for HIE-CM unless they ask about another gateway, and do not bring in another gateway's calls or fields.\u003c/reader_context\u003e\n\n\nIf the passages and your tools do not cover the question, drop this shape and decline in two sentences that name the nearest /docs/ page and the support route.\n\nIs that certificate endpoint verified?",
+  "blocked": false,
+  "flags": null,
+  "class": "how-do-i",
+  "recorded_at": "2026-09-29T09:27:43Z"
+}

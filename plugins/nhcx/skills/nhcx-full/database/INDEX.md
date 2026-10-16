@@ -65,6 +65,7 @@ The tables behind the claim, patient and practitioner screens. Screens (S), APIs
 | [D27](D27-claim-item.md) | claim_item | Charge-master item on a non-package pre-authorisation draft: a fixed-price item and the quantity chosen. Primary key `id`. Parent table: `claim` (D9). | [D27-claim-item.md](D27-claim-item.md) |
 | [D28](D28-claim-document.md) | claim_document | Supporting file (PDF or image) attached to a claim for one leg, stored inline with the payer requirement it answers. Primary key `id`. Parent table: `claim` (D9). | [D28-claim-document.md](D28-claim-document.md) |
 | [D29](D29-claim-enquiry.md) | claim_enquiry | Small Task exchange a claim starts beside its main legs: a status enquiry, a reprocess request or a balance release request. Primary key `id`. Parent table: `claim` (D9), many rows per claim. | [D29-claim-enquiry.md](D29-claim-enquiry.md) |
+| [D31](D31-biometric-auth.md) | biometric_auth | One biometric authentication of a beneficiary against their ABHA (fingerprint, iris or face), for one payer at one stage of the case, holding the user token that rides on the exchange and the refresh token that renews it. Primary key `id`. Parent tables: `patient` (D3), `claim` (D9, optional). | [D31-biometric-auth.md](D31-biometric-auth.md) |
 
 ## Numbering
 

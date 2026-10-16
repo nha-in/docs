@@ -1,5 +1,13 @@
 {
-  "corrections": {},
+  "corrections": {
+    "/docs/hiecm/v3/milestones/m2": [
+      {
+        "date": "2026-10-04",
+        "now": "The field is hiType, one value such as OPConsultation. A body with hiTypes gets no answer from the gateway, not a 400.",
+        "was": "the HIP initiated linking request, POST /api/hiecm/hip/v3/link/carecontext, names each patient entry's health information type hiTypes"
+      }
+    ]
+  },
   "mcpTools": [
     "catalogue_info",
     "decode_error",
@@ -16,9 +24,10 @@
     "validate_request"
   ],
   "plugins": {
-    "abdm-contributors-assistant": "0.3.4",
-    "abdm-integrators-assistant": "0.9.2",
-    "nhcx": "1.0.1"
+    "abdm-contributors-assistant": "0.4.4",
+    "abdm-integrators-assistant": "0.10.4",
+    "nhcx": "1.0.8",
+    "uhi-integrators-assistant": "0.1.3"
   },
   "procedures": {},
   "skills": [
@@ -27,16 +36,24 @@
     "hiecm-gateway-build",
     "hiecm-m1-build",
     "hiecm-m1-debug",
+    "hiecm-m1-test",
     "hiecm-m2-build",
     "hiecm-m2-debug",
+    "hiecm-m2-test",
     "hiecm-m3-build",
+    "hiecm-m3-test",
     "hiecm-m4-build",
+    "hiecm-m4-test",
     "hiecm-p1-build",
     "hiecm-p1-debug",
+    "hiecm-p1-test",
     "hiecm-p2-build",
     "hiecm-p2-debug",
+    "hiecm-p2-test",
     "hiecm-p3-build",
+    "hiecm-p3-test",
     "hiecm-p4-build",
+    "hiecm-p4-test",
     "hiecm-record-share-build",
     "hiecm-scan-and-pay-build",
     "hiecm-scan-and-register-build",
@@ -46,6 +63,18 @@
     "nhcx-full",
     "nhcx-payment",
     "nhcx-preauth",
-    "nhcx-reprocess"
+    "nhcx-reprocess",
+    "uhi-ambulance-build",
+    "uhi-ambulance-debug",
+    "uhi-blood-bank-build",
+    "uhi-blood-bank-debug",
+    "uhi-consultation-build",
+    "uhi-consultation-debug",
+    "uhi-jan-aushadhi-build",
+    "uhi-jan-aushadhi-debug",
+    "uhi-notto-build",
+    "uhi-notto-debug",
+    "uhi-pmjay-hem-build",
+    "uhi-pmjay-hem-debug"
   ]
 }

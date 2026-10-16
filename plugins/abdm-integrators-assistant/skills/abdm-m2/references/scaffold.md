@@ -150,7 +150,9 @@ curl --request POST \
 
 **Exit condition (Observe until this is true)**
 
-A 202 response. The specification gives no body for it, so read what comes back.
+Each call you made in this journey answered by its callback, with `response.requestId` equal to the `REQUEST-ID` you sent on that call. The 202 on a call is receipt, not the outcome: the outcome is in the callback's body.
+
+- `POST /api/hiecm/v3/token/generate-token` is answered by `POST /api/v3/hip/token/on-generate-token` on your bridge.
 
 ### HIP initiated linking (`m2-abdm-hip-initiated-linking-hip`)
 
@@ -181,7 +183,7 @@ curl --request POST \
           "display": "display 1"
         }
       ],
-      "hiTypes": "DiagnosticReport",
+      "hiType": "DiagnosticReport",
       "count": 1
     }
   ]
@@ -242,7 +244,11 @@ curl --request POST \
 
 **Exit condition (Observe until this is true)**
 
-A 202 response. The specification gives no body for it, so read what comes back.
+Each call you made in this journey answered by its callback, with `response.requestId` equal to the `REQUEST-ID` you sent on that call. The 202 on a call is receipt, not the outcome: the outcome is in the callback's body.
+
+- `POST /api/hiecm/hip/v3/link/carecontext` is answered by `POST /api/v3/link/on_carecontext` on your bridge.
+- `POST /api/hiecm/hip/v3/link/context/notify` is answered by `POST /api/v3/links/context/on-notify` on your bridge.
+- `POST /api/hiecm/hip/v3/link/patient/links/sms/notify2` is answered by `POST /api/v3/patients/sms/on-notify` on your bridge.
 
 ### User initiated linking (`m2-abdm-user-initiated-linking-hip`)
 
@@ -344,7 +350,7 @@ curl --request POST \
 
 **Exit condition (Observe until this is true)**
 
-A 202 response. The specification gives no body for it, so read what comes back.
+A 202 on this reply, sent with `response.requestId` set to the `REQUEST-ID` of the `POST /api/v3/hip/link/care-context/confirm` request it answers. A reply without that id answers nothing.
 
 ### Consent and data flow (`m2-consent-management-data-flow-hip`)
 

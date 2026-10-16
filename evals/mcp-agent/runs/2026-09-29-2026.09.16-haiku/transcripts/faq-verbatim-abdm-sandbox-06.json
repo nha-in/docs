@@ -1,0 +1,482 @@
+{
+  "case_id": "faq-verbatim-abdm-sandbox-06",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "How do I participate in ABDM Sandbox?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01Wz5tiHGqUsg3P5upWgLzwf",
+            "Name": "search",
+            "Input": {
+              "query": "ABDM sandbox participation how to get started",
+              "type": "sandbox",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "ABDM sandbox participation how to get started",
+            "type": "sandbox",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_016sQHu9h8vkKc59MEC9rcnY",
+            "Name": "search",
+            "Input": {
+              "query": "sandbox ABDM integration getting started",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "sandbox ABDM integration getting started",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#abdm",
+                "id": "shared.glossary.abdm",
+                "summary": "India's national programme for connecting health records, identities and facilities across providers.",
+                "title": "ABDM, Ayushman Bharat Digital Mission",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/going-live#3-switch-to-production",
+                "id": "uhi.sandbox.production-switch",
+                "summary": "Change your IDs and callback URL to production values and point your calls at the production UHI Gateway.",
+                "title": "Switch your UHI integration to production",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/gateway#gateway-session",
+                "id": "hiecm.concept.gateway-session",
+                "summary": "Every gateway call carries a short lived bearer token from one session endpoint, which identifies your application, not a person.",
+                "title": "The gateway session, the first call in every integration",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#sandbox",
+                "id": "shared.glossary.sandbox",
+                "summary": "NHA's test environment, with its own base URLs and credentials, separate from production.",
+                "title": "Sandbox, the test environment",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/services/consultation#go-live-checklist",
+                "id": "uhi.test.consultation-go-live-checklist",
+                "summary": "The twenty items to complete before requesting production sign-off for Physical Consultation, from M2 and signing to promotion.",
+                "title": "Physical Consultation go-live checklist",
+                "type": "test"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/first-fifteen-minutes",
+                "id": "shared.sandbox.first-fifteen-minutes",
+                "summary": "Everything you can do before NHA approves your sandbox registration: read one real gateway session exchange and assemble your own first call, ready to paste ...",
+                "title": "Your first fifteen minutes with ABDM",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.fhir.validation",
+                "summary": "How to check a claims bundle against the national profiles on your own machine, what the check covers, and the bundle review that precedes sandbox sign-off.",
+                "title": "Validating an NHCX bundle before you send it",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/fhir/payment-notice-and-acknowledgement",
+                "id": "nhcx.fhir.payment-notice",
+                "summary": "The bundle a payer sends to tell a hospital a claim has been paid, with the amount and bank reference, and the short task the hospital sends back to acknowle...",
+                "title": "PaymentNotice bundle and its acknowledgement",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/error-codes#payr",
+                "id": "nhcx.error.payr-1083",
+                "summary": "The payer rejected your preauthorisation or claim because a practitioner in the bundle carries no professional registry id.",
+                "title": "PAYR-1083: a practitioner has no HPR id",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/error-codes#payr",
+                "id": "nhcx.error.payr-1080",
+                "summary": "The payer rejected your preauthorisation or claim because a practitioner in the bundle carries a professional registry id it does not accept.",
+                "title": "PAYR-1080: a practitioner's HPR id is not valid",
+                "type": "error"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01EsVMfbdxFaD7HWKNUNGNN4",
+            "Name": "get",
+            "Input": {
+              "id": "shared.sandbox.first-fifteen-minutes"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "shared.sandbox.first-fifteen-minutes"
+          },
+          "output": {
+            "body": "# Your first fifteen minutes with ABDM\n\n## In plain words\n\nYou cannot run a live [ABDM](shared.glossary.abdm) call until\n[NHA](shared.glossary.nha) approves your sandbox registration. NHA's FAQ publishes a maximum\nfor that review: applications are processed within 5 working days. This page gives you a\ngenuine fifteen minutes of your own while that runs: with nothing but a browser, read one\ncomplete transcribed exchange of the\n[gateway session](/docs/hiecm/v3/concepts/gateway) call and leave with your own first\ncall already written. Applying for sandbox access is a separate step, worth doing first since\nit starts NHA's review clock.\n\n## Before you start\n\nNothing but a browser. No editor, no terminal, no credentials. That is the point of this page:\neverything below runs while you are still waiting on NHA.\n\n## What happens\n\nApply first, then spend fifteen minutes of your own on the two steps below.\n\n1. **Register in the sandbox app, about 10 minutes.** NHA's FAQ gives this estimate for the\n   application itself, and a maximum of 5 working days for it to be processed. This starts\n   NHA's review clock, so do it before anything else. See\n   [sandbox access](/docs/hiecm/v3/getting-started/sandbox).\n2. **Read one transcribed exchange, about 5 minutes.** Below is the gateway session call, the\n   one every other ABDM call depends on. The header and body values shown are example values\n   from the specification rather than a recorded response, so read the shape and expect your\n   own values to differ.\n3. **Assemble your own first call, about 10 minutes.** A filled in curl with placeholders named\n   for where each value comes from, so the moment your credentials arrive, pasting them in is\n   the only step left.\n\n### The transcribed exchange\n\nMethod and path: `POST /api/hiecm/gateway/v3/sessions`, sandbox host\n`https://dev.abdm.gov.in`.\n\n| Header | Example value in the specification |\n| --- | --- |\n| `REQUEST-ID` | `5f7a4a1e-59ba-4c0c-9e0c-8e6b3b6e2f11` |\n| `TIMESTAMP` | `2026-08-25T15:51:15.339Z` |\n| `X-CM-ID` | `sbx` |\n| `Content-Type` | `application/json` |\n\n```bash\ncurl --request POST \\\n  --url https://dev.abdm.gov.in/api/hiecm/gateway/v3/sessions \\\n  --header 'REQUEST-ID: 5f7a4a1e-59ba-4c0c-9e0c-8e6b3b6e2f11' \\\n  --header 'TIMESTAMP: 2026-08-25T15:51:15.339Z' \\\n  --header 'X-CM-ID: sbx' \\\n  --header 'Content-Type: application/json' \\\n  --data '{\n  \"clientId\": \"<CLIENT_ID>\",\n  \"clientSecret\": \"<CLIENT_SECRET>\",\n  \"grantType\": \"client_credentials\"\n}'\n```\n\nA successful call answers `202 Accepted`, with a session created and a bearer token issued.\nThe response carries `accessToken`, `expiresIn`, `refreshExpiresIn`, `refreshToken` and\n`tokenType`. See\n[the endpoint page](/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/01-gateway-post-gateway-v3-sessions)\nfor what each field means.\n\n### Your own first call\n\nThe same request, with the credential placeholders named for where they come from and a fresh\n`X-CM-ID` for the sandbox:\n\n```bash\ncurl --request POST \\\n  --url https://dev.abdm.gov.in/api/hiecm/gateway/v3/sessions \\\n  --header 'REQUEST-ID: <A_FRESH_UUID_YOU_GENERATE>' \\\n  --header 'TIMESTAMP: <CURRENT_ISO_8601_UTC_TIMESTAMP>' \\\n  --header 'X-CM-ID: sbx' \\\n  --header 'Content-Type: application/json' \\\n  --data '{\n  \"clientId\": \"<CLIENT_ID_FROM_SANDBOX_REGISTRATION>\",\n  \"clientSecret\": \"<CLIENT_SECRET_FROM_SANDBOX_REGISTRATION>\",\n  \"grantType\": \"client_credentials\"\n}'\n```\n\nSave it. Once your access is approved, your client id and client secret are issued inside the\nsandbox application, and this is the one paste away from your first real call.\n\n### What you test M1 with\n\nEverything in the sandbox is test data, and no test identities are published\nwith it. There is no fixture Aadhaar number and no fixed OTP: an OTP goes to\nwhichever handset the identifier is registered against, and a real one\nreceives it.\n\nSo plan for this before you reach your first OTP call:\n\n- **A mobile you can read an SMS on.** This unlocks the whole login journey,\n  and it is the cheapest thing to arrange. Your own is fine.\n- **An Aadhaar whose linked mobile you hold**, if you intend to build ABHA\n  creation or anything that ends in a KYC verified ABHA number. Without one\n  you can build and read the creation calls but never complete them.\n\nTwo consequences worth designing around. Never point an OTP call at a number\nnobody on your team answers, because a real person receives that message. And\nattempts are counted against the transaction rather than against you, so a\nretry loop against one number spends the transaction rather than trying again.\n\n## How you know it worked\n\nFor the transcribed exchange, you can now say what the session endpoint returns and where the\ntoken goes on every later call: a `202` carrying `accessToken`, sent afterwards as\n`Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>` on every other gateway call.\n\nFor your own first call, this is `Not yet observed`. It stays that way until you run it, and\nrunning it needs the credentials NHA has not issued yet.\n\n## When it goes wrong\n\nRegistration is processed within 5 working days. If you are past that\nwith no word, raise it on the\n[support ticketing platform](https://sandboxsupport.abdm.gov.in/) or at\n`integration.support@nha.gov.in`. See [Support](/docs/support) for the\nreport format.\n\nIf your first real call fails with a 401, that is a different problem from registration: see\n[Everything returns 401](/docs/hiecm/v3/troubleshooting/everything-returns-401).\n\nWhile NHA reviews your registration, use the wait. See\n[sandbox access](/docs/hiecm/v3/getting-started/sandbox) for what to read next, then\n[the milestones page](/docs/hiecm/v3/milestones) to pick your role and your milestones.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/getting-started/first-fifteen-minutes",
+            "gateway": "shared",
+            "id": "shared.sandbox.first-fifteen-minutes",
+            "milestone": "n/a",
+            "summary": "Everything you can do before NHA approves your sandbox registration: read one real gateway session exchange and assemble your own first call, ready to paste the moment credentials arrive.",
+            "title": "Your first fifteen minutes with ABDM",
+            "type": "sandbox"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01KLPd7GEYUT7jNn7i86NyzV",
+            "Name": "search",
+            "Input": {
+              "query": "sandbox access registration",
+              "type": "sandbox",
+              "limit": 5
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "sandbox access registration",
+            "type": "sandbox",
+            "limit": 5
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/first-fifteen-minutes",
+                "id": "shared.sandbox.first-fifteen-minutes",
+                "summary": "Everything you can do before NHA approves your sandbox registration: read one real gateway session exchange and assemble your own first call, ready to paste ...",
+                "title": "Your first fifteen minutes with ABDM",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/get-your-sandbox-credentials",
+                "id": "nhcx.sandbox.prerequisites",
+                "summary": "The checklist to complete before your system can register on the claims exchange sandbox: a facility registration, sandbox credentials, basic health ID featu...",
+                "title": "What you need before you register on the NHCX sandbox",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/sandbox#3-submit-the-sandbox-registration-form",
+                "id": "uhi.sandbox.registration-form",
+                "summary": "The sandbox registration form takes your role, callback URL and public key, and returns a subscriber ID, a public key ID and sandbox access.",
+                "title": "Register in the UHI sandbox",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/base-urls",
+                "id": "nhcx.sandbox.environments-and-base-urls",
+                "summary": "The two environments, the web portals, and the two base addresses every call is built on, for testing and for live claims.",
+                "title": "NHCX environments, hosts and base URLs",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/sandbox#from-sandbox-to-production",
+                "id": "uhi.sandbox.sandbox-to-production",
+                "summary": "UHI onboarding runs in six steps, from expressing intent and registering in the sandbox to sign-off and the switch to production.",
+                "title": "The six onboarding steps from sandbox to production",
+                "type": "sandbox"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_014btY2QUA3L1tjawtxNRr1q",
+            "Name": "get",
+            "Input": {
+              "id": "hiecm.sandbox.access"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "hiecm.sandbox.access"
+          },
+          "output": "hiecm.sandbox.access not found; closest: nhcx.sandbox.sandbox-exit, shared.sandbox.wasa, uhi.sandbox.key-pair, uhi.sandbox.express-intent, uhi.sandbox.base-urls. Use search to find valid ids, then get with an id from its results."
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01TCpfrLpazBE6w9BHmybwv8",
+            "Name": "search",
+            "Input": {
+              "query": "HIE-CM sandbox access registration how to",
+              "module": "gateway",
+              "type": "sandbox"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "HIE-CM sandbox access registration how to",
+            "module": "gateway",
+            "type": "sandbox"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/first-fifteen-minutes",
+                "id": "shared.sandbox.first-fifteen-minutes",
+                "summary": "Everything you can do before NHA approves your sandbox registration: read one real gateway session exchange and assemble your own first call, ready to paste ...",
+                "title": "Your first fifteen minutes with ABDM",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/going-live",
+                "id": "shared.sandbox.going-live",
+                "summary": "How an integration leaves the sandbox for production: functional testing and the security audit, the Health Tech Committee demonstration, then production cre...",
+                "title": "Going live, the sandbox exit process",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/get-your-sandbox-credentials",
+                "id": "nhcx.sandbox.prerequisites",
+                "summary": "The checklist to complete before your system can register on the claims exchange sandbox: a facility registration, sandbox credentials, basic health ID featu...",
+                "title": "What you need before you register on the NHCX sandbox",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/sandbox#4-note-the-base-urls",
+                "id": "uhi.sandbox.base-urls",
+                "summary": "The UHI Gateway base URL for the sandbox and for production, and the reference EUA and HSPA apps in the sandbox.",
+                "title": "UHI Gateway base URLs for sandbox and production",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/base-urls",
+                "id": "nhcx.sandbox.environments-and-base-urls",
+                "summary": "The two environments, the web portals, and the two base addresses every call is built on, for testing and for live claims.",
+                "title": "NHCX environments, hosts and base URLs",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/going-live#3-switch-to-production",
+                "id": "uhi.sandbox.production-switch",
+                "summary": "Change your IDs and callback URL to production values and point your calls at the production UHI Gateway.",
+                "title": "Switch your UHI integration to production",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/get-your-sandbox-credentials",
+                "id": "nhcx.sandbox.dummy-payer",
+                "summary": "The built-in test insurer in the sandbox, which use cases it answers, and the two test calls that make it approve, reject, query or send a payment notice.",
+                "title": "The dummy payer and what it answers",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/get-your-sandbox-credentials",
+                "id": "nhcx.sandbox.support-contacts",
+                "summary": "Which address to write to for each kind of question, what to put in the message, and what to do while you wait for an answer.",
+                "title": "Where to get help with NHCX",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/go-live",
+                "id": "nhcx.sandbox.going-live",
+                "summary": "What happens after sandbox sign-off: the production role, registering and confirming your participant with a passcode, adding your certificate and callback a...",
+                "title": "Going live on NHCX production",
+                "type": "sandbox"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "Based on the ABDM developer portal, here's how to participate in the ABDM Sandbox:\n\n## Quick Start: Three Steps\n\n**1. Register in the Sandbox (first)**\nApply for sandbox access through NHA's sandbox registration application. This starts their review clock immediately — applications are processed within a maximum of 5 working days. Registration is a separate step you must complete before you can get credentials.\n\n**2. While You Wait: Learn the Gateway Session**\nThe first call every ABDM integration makes is the gateway session — this creates a token for all subsequent calls. The **\"Your first fifteen minutes with ABDM\"** page on the portal walks you through a real example and helps you assemble your first call (ready to paste once credentials arrive).\n\n**3. Once Approved: Use Your Credentials**\nNHA sends you a `clientId` and `clientSecret`. Paste these into your gateway session call:\n```bash\nPOST https://dev.abdm.gov.in/api/hiecm/gateway/v3/sessions\n```\nWith headers: `REQUEST-ID`, `TIMESTAMP`, `X-CM-ID: sbx`, `Content-Type: application/json`\n\n## What Else You Need to Know\n\n- **Real test data required**: There are no published test fixtures (no demo Aadhaar number or OTP). You'll need:\n  - A mobile number you can receive SMS on (for OTP verification)\n  - An Aadhaar linked to that mobile (if building ABHA creation or KYC flows)\n\n- **If registration stalls**: Support is at `integration.support@nha.gov.in` or the [sandbox support platform](https://sandboxsupport.abdm.gov.in/)\n\n- **Next steps after registration**: The portal's [milestones page](/docs/hiecm/v3/milestones) helps you pick your role (provider, payer, HIP, HIU) and the integration flows you need.\n\nSee the portal pages: **\"Your first fifteen minutes with ABDM\"** and **\"Going live, the sandbox exit process\"** for the full workflow.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "Based on the ABDM developer portal, here's how to participate in the ABDM Sandbox:\n\n## Quick Start: Three Steps\n\n**1. Register in the Sandbox (first)**\nApply for sandbox access through NHA's sandbox registration application. This starts their review clock immediately — applications are processed within a maximum of 5 working days. Registration is a separate step you must complete before you can get credentials.\n\n**2. While You Wait: Learn the Gateway Session**\nThe first call every ABDM integration makes is the gateway session — this creates a token for all subsequent calls. The **\"Your first fifteen minutes with ABDM\"** page on the portal walks you through a real example and helps you assemble your first call (ready to paste once credentials arrive).\n\n**3. Once Approved: Use Your Credentials**\nNHA sends you a `clientId` and `clientSecret`. Paste these into your gateway session call:\n```bash\nPOST https://dev.abdm.gov.in/api/hiecm/gateway/v3/sessions\n```\nWith headers: `REQUEST-ID`, `TIMESTAMP`, `X-CM-ID: sbx`, `Content-Type: application/json`\n\n## What Else You Need to Know\n\n- **Real test data required**: There are no published test fixtures (no demo Aadhaar number or OTP). You'll need:\n  - A mobile number you can receive SMS on (for OTP verification)\n  - An Aadhaar linked to that mobile (if building ABHA creation or KYC flows)\n\n- **If registration stalls**: Support is at `integration.support@nha.gov.in` or the [sandbox support platform](https://sandboxsupport.abdm.gov.in/)\n\n- **Next steps after registration**: The portal's [milestones page](/docs/hiecm/v3/milestones) helps you pick your role (provider, payer, HIP, HIU) and the integration flows you need.\n\nSee the portal pages: **\"Your first fifteen minutes with ABDM\"** and **\"Going live, the sandbox exit process\"** for the full workflow.",
+  "sources": [
+    {
+      "id": "shared.sandbox.first-fifteen-minutes",
+      "title": "Your first fifteen minutes with ABDM",
+      "url": "/docs/hiecm/v3/getting-started/first-fifteen-minutes"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#abdm\",\"id\":\"shared.glossary.abdm\",\"summary\":\"India's national programme for connecting health records, identities and facilities across providers.\",\"title\":\"ABDM, Ayushman Bharat Digital Mission\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/uhi/v1/getting-started/going-live#3-switch-to-production\",\"id\":\"uhi.sandbox.production-switch\",\"summary\":\"Change your IDs and callback URL to production values and point your calls at the production UHI Gateway.\",\"title\":\"Switch your UHI integration to production\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/gateway#gateway-session\",\"id\":\"hiecm.concept.gateway-session\",\"summary\":\"Every gateway call carries a short lived bearer token from one session endpoint, which identifies your application, not a person.\",\"title\":\"The gateway session, the first call in every integration\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#sandbox\",\"id\":\"shared.glossary.sandbox\",\"summary\":\"NHA's test environment, with its own base URLs and credentials, separate from production.\",\"title\":\"Sandbox, the test environment\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/uhi/v1/services/consultation#go-live-checklist\",\"id\":\"uhi.test.consultation-go-live-checklist\",\"summary\":\"The twenty items to complete before requesting production sign-off for Physical Consultation, from M2 and signing to promotion.\",\"title\":\"Physical Consultation go-live checklist\",\"type\":\"test\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/first-fifteen-minutes\",\"id\":\"shared.sandbox.first-fifteen-minutes\",\"summary\":\"Everything you can do before NHA approves your sandbox registration: read one real gateway session exchange and assemble your own first call, ready to paste ...\",\"title\":\"Your first fifteen minutes with ABDM\",\"type\":\"sandbox\"},{\"doc_url\":\"\",\"id\":\"nhcx.fhir.validation\",\"summary\":\"How to check a claims bundle against the national profiles on your own machine, what the check covers, and the bundle review that precedes sandbox sign-off.\",\"title\":\"Validating an NHCX bundle before you send it\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/nhcx/v1/reference/fhir/payment-notice-and-acknowledgement\",\"id\":\"nhcx.fhir.payment-notice\",\"summary\":\"The bundle a payer sends to tell a hospital a claim has been paid, with the amount and bank reference, and the short task the hospital sends back to acknowle...\",\"title\":\"PaymentNotice bundle and its acknowledgement\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/nhcx/v1/reference/error-codes#payr\",\"id\":\"nhcx.error.payr-1083\",\"summary\":\"The payer rejected your preauthorisation or claim because a practitioner in the bundle carries no professional registry id.\",\"title\":\"PAYR-1083: a practitioner has no HPR id\",\"type\":\"error\"},{\"doc_url\":\"/docs/nhcx/v1/reference/error-codes#payr\",\"id\":\"nhcx.error.payr-1080\",\"summary\":\"The payer rejected your preauthorisation or claim because a practitioner in the bundle carries a professional registry id it does not accept.\",\"title\":\"PAYR-1080: a practitioner's HPR id is not valid\",\"type\":\"error\"}]}\n{\"body\":\"# Your first fifteen minutes with ABDM\\n\\n## In plain words\\n\\nYou cannot run a live [ABDM](shared.glossary.abdm) call until\\n[NHA](shared.glossary.nha) approves your sandbox registration. NHA's FAQ publishes a maximum\\nfor that review: applications are processed within 5 working days. This page gives you a\\ngenuine fifteen minutes of your own while that runs: with nothing but a browser, read one\\ncomplete transcribed exchange of the\\n[gateway session](/docs/hiecm/v3/concepts/gateway) call and leave with your own first\\ncall already written. Applying for sandbox access is a separate step, worth doing first since\\nit starts NHA's review clock.\\n\\n## Before you start\\n\\nNothing but a browser. No editor, no terminal, no credentials. That is the point of this page:\\neverything below runs while you are still waiting on NHA.\\n\\n## What happens\\n\\nApply first, then spend fifteen minutes of your own on the two steps below.\\n\\n1. **Register in the sandbox app, about 10 minutes.** NHA's FAQ gives this estimate for the\\n   application itself, and a maximum of 5 working days for it to be processed. This starts\\n   NHA's review clock, so do it before anything else. See\\n   [sandbox access](/docs/hiecm/v3/getting-started/sandbox).\\n2. **Read one transcribed exchange, about 5 minutes.** Below is the gateway session call, the\\n   one every other ABDM call depends on. The header and body values shown are example values\\n   from the specification rather than a recorded response, so read the shape and expect your\\n   own values to differ.\\n3. **Assemble your own first call, about 10 minutes.** A filled in curl with placeholders named\\n   for where each value comes from, so the moment your credentials arrive, pasting them in is\\n   the only step left.\\n\\n### The transcribed exchange\\n\\nMethod and path: `POST /api/hiecm/gateway/v3/sessions`, sandbox host\\n`https://dev.abdm.gov.in`.\\n\\n| Header | Example value in the specification |\\n| --- | --- |\\n| `REQUEST-ID` | `5f7a4a1e-59ba-4c0c-9e0c-8e6b3b6e2f11` |\\n| `TIMESTAMP` | `2026-08-25T15:51:15.339Z` |\\n| `X-CM-ID` | `sbx` |\\n| `Content-Type` | `application/json` |\\n\\n```bash\\ncurl --request POST \\\\\\n  --url https://dev.abdm.gov.in/api/hiecm/gateway/v3/sessions \\\\\\n  --header 'REQUEST-ID: 5f7a4a1e-59ba-4c0c-9e0c-8e6b3b6e2f11' \\\\\\n  --header 'TIMESTAMP: 2026-08-25T15:51:15.339Z' \\\\\\n  --header 'X-CM-ID: sbx' \\\\\\n  --header 'Content-Type: application/json' \\\\\\n  --data '{\\n  \\\"clientId\\\": \\\"<CLIENT_ID>\\\",\\n  \\\"clientSecret\\\": \\\"<CLIENT_SECRET>\\\",\\n  \\\"grantType\\\": \\\"client_credentials\\\"\\n}'\\n```\\n\\nA successful call answers `202 Accepted`, with a session created and a bearer token issued.\\nThe response carries `accessToken`, `expiresIn`, `refreshExpiresIn`, `refreshToken` and\\n`tokenType`. See\\n[the endpoint page](/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/01-gateway-post-gateway-v3-sessions)\\nfor what each field means.\\n\\n### Your own first call\\n\\nThe same request, with the credential placeholders named for where they come from and a fresh\\n`X-CM-ID` for the sandbox:\\n\\n```bash\\ncurl --request POST \\\\\\n  --url https://dev.abdm.gov.in/api/hiecm/gateway/v3/sessions \\\\\\n  --header 'REQUEST-ID: <A_FRESH_UUID_YOU_GENERATE>' \\\\\\n  --header 'TIMESTAMP: <CURRENT_ISO_8601_UTC_TIMESTAMP>' \\\\\\n  --header 'X-CM-ID: sbx' \\\\\\n  --header 'Content-Type: application/json' \\\\\\n  --data '{\\n  \\\"clientId\\\": \\\"<CLIENT_ID_FROM_SANDBOX_REGISTRATION>\\\",\\n  \\\"clientSecret\\\": \\\"<CLIENT_SECRET_FROM_SANDBOX_REGISTRATION>\\\",\\n  \\\"grantType\\\": \\\"client_credentials\\\"\\n}'\\n```\\n\\nSave it. Once your access is approved, your client id and client secret are issued inside the\\nsandbox application, and this is the one paste away from your first real call.\\n\\n### What you test M1 with\\n\\nEverything in the sandbox is test data, and no test identities are published\\nwith it. There is no fixture Aadhaar number and no fixed OTP: an OTP goes to\\nwhichever handset the identifier is registered against, and a real one\\nreceives it.\\n\\nSo plan for this before you reach your first OTP call:\\n\\n- **A mobile you can read an SMS on.** This unlocks the whole login journey,\\n  and it is the cheapest thing to arrange. Your own is fine.\\n- **An Aadhaar whose linked mobile you hold**, if you intend to build ABHA\\n  creation or anything that ends in a KYC verified ABHA number. Without one\\n  you can build and read the creation calls but never complete them.\\n\\nTwo consequences worth designing around. Never point an OTP call at a number\\nnobody on your team answers, because a real person receives that message. And\\nattempts are counted against the transaction rather than against you, so a\\nretry loop against one number spends the transaction rather than trying again.\\n\\n## How you know it worked\\n\\nFor the transcribed exchange, you can now say what the session endpoint returns and where the\\ntoken goes on every later call: a `202` carrying `accessToken`, sent afterwards as\\n`Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>` on every other gateway call.\\n\\nFor your own first call, this is `Not yet observed`. It stays that way until you run it, and\\nrunning it needs the credentials NHA has not issued yet.\\n\\n## When it goes wrong\\n\\nRegistration is processed within 5 working days. If you are past that\\nwith no word, raise it on the\\n[support ticketing platform](https://sandboxsupport.abdm.gov.in/) or at\\n`integration.support@nha.gov.in`. See [Support](/docs/support) for the\\nreport format.\\n\\nIf your first real call fails with a 401, that is a different problem from registration: see\\n[Everything returns 401](/docs/hiecm/v3/troubleshooting/everything-returns-401).\\n\\nWhile NHA reviews your registration, use the wait. See\\n[sandbox access](/docs/hiecm/v3/getting-started/sandbox) for what to read next, then\\n[the milestones page](/docs/hiecm/v3/milestones) to pick your role and your milestones.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/getting-started/first-fifteen-minutes\",\"gateway\":\"shared\",\"id\":\"shared.sandbox.first-fifteen-minutes\",\"milestone\":\"n/a\",\"summary\":\"Everything you can do before NHA approves your sandbox registration: read one real gateway session exchange and assemble your own first call, ready to paste the moment credentials arrive.\",\"title\":\"Your first fifteen minutes with ABDM\",\"type\":\"sandbox\"}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/first-fifteen-minutes\",\"id\":\"shared.sandbox.first-fifteen-minutes\",\"summary\":\"Everything you can do before NHA approves your sandbox registration: read one real gateway session exchange and assemble your own first call, ready to paste ...\",\"title\":\"Your first fifteen minutes with ABDM\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/get-your-sandbox-credentials\",\"id\":\"nhcx.sandbox.prerequisites\",\"summary\":\"The checklist to complete before your system can register on the claims exchange sandbox: a facility registration, sandbox credentials, basic health ID featu...\",\"title\":\"What you need before you register on the NHCX sandbox\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/uhi/v1/getting-started/sandbox#3-submit-the-sandbox-registration-form\",\"id\":\"uhi.sandbox.registration-form\",\"summary\":\"The sandbox registration form takes your role, callback URL and public key, and returns a subscriber ID, a public key ID and sandbox access.\",\"title\":\"Register in the UHI sandbox\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/base-urls\",\"id\":\"nhcx.sandbox.environments-and-base-urls\",\"summary\":\"The two environments, the web portals, and the two base addresses every call is built on, for testing and for live claims.\",\"title\":\"NHCX environments, hosts and base URLs\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/uhi/v1/getting-started/sandbox#from-sandbox-to-production\",\"id\":\"uhi.sandbox.sandbox-to-production\",\"summary\":\"UHI onboarding runs in six steps, from expressing intent and registering in the sandbox to sign-off and the switch to production.\",\"title\":\"The six onboarding steps from sandbox to production\",\"type\":\"sandbox\"}]}\nhiecm.sandbox.access not found; closest: nhcx.sandbox.sandbox-exit, shared.sandbox.wasa, uhi.sandbox.key-pair, uhi.sandbox.express-intent, uhi.sandbox.base-urls. Use search to find valid ids, then get with an id from its results.\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/first-fifteen-minutes\",\"id\":\"shared.sandbox.first-fifteen-minutes\",\"summary\":\"Everything you can do before NHA approves your sandbox registration: read one real gateway session exchange and assemble your own first call, ready to paste ...\",\"title\":\"Your first fifteen minutes with ABDM\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/going-live\",\"id\":\"shared.sandbox.going-live\",\"summary\":\"How an integration leaves the sandbox for production: functional testing and the security audit, the Health Tech Committee demonstration, then production cre...\",\"title\":\"Going live, the sandbox exit process\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/get-your-sandbox-credentials\",\"id\":\"nhcx.sandbox.prerequisites\",\"summary\":\"The checklist to complete before your system can register on the claims exchange sandbox: a facility registration, sandbox credentials, basic health ID featu...\",\"title\":\"What you need before you register on the NHCX sandbox\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/uhi/v1/getting-started/sandbox#4-note-the-base-urls\",\"id\":\"uhi.sandbox.base-urls\",\"summary\":\"The UHI Gateway base URL for the sandbox and for production, and the reference EUA and HSPA apps in the sandbox.\",\"title\":\"UHI Gateway base URLs for sandbox and production\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/base-urls\",\"id\":\"nhcx.sandbox.environments-and-base-urls\",\"summary\":\"The two environments, the web portals, and the two base addresses every call is built on, for testing and for live claims.\",\"title\":\"NHCX environments, hosts and base URLs\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/uhi/v1/getting-started/going-live#3-switch-to-production\",\"id\":\"uhi.sandbox.production-switch\",\"summary\":\"Change your IDs and callback URL to production values and point your calls at the production UHI Gateway.\",\"title\":\"Switch your UHI integration to production\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/get-your-sandbox-credentials\",\"id\":\"nhcx.sandbox.dummy-payer\",\"summary\":\"The built-in test insurer in the sandbox, which use cases it answers, and the two test calls that make it approve, reject, query or send a payment notice.\",\"title\":\"The dummy payer and what it answers\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/get-your-sandbox-credentials\",\"id\":\"nhcx.sandbox.support-contacts\",\"summary\":\"Which address to write to for each kind of question, what to put in the message, and what to do while you wait for an answer.\",\"title\":\"Where to get help with NHCX\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/nhcx/v1/go-live\",\"id\":\"nhcx.sandbox.going-live\",\"summary\":\"What happens after sandbox sign-off: the production role, registering and confirming your participant with a passcode, adding your certificate and callback a...\",\"title\":\"Going live on NHCX production\",\"type\":\"sandbox\"}]}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T12:03:34.440Z",
+  "usage": {
+    "input_tokens": 68,
+    "output_tokens": 1418,
+    "cache_read_input_tokens": 85900,
+    "cache_creation_input_tokens": 10888,
+    "num_turns": 7,
+    "duration_ms": 22541,
+    "cost_usd_equivalent": 0.037524
+  }
+}

@@ -14,6 +14,7 @@
 // that needs both snapshots: what moved, what was republished, what was
 // corrected, and how to fold a hundred field changes into one entry.
 import {createHash} from 'node:crypto';
+import {sourceKey} from './changelog-facts.mjs';
 
 /** Contract fields compared for a change, in the order the entry lists them. */
 export const CONTRACT_FIELDS = ['server', 'security', 'params', 'required', 'properties', 'encrypted', 'responses'];
@@ -40,11 +41,12 @@ function moduleLink(m) {
  * calls moving to P2 added the gateway's upstream file to P2's sources
  * without NHA publishing anything.
  */
-function republish(prevModule, nextModule, prevAll) {
-  const before = prevModule?.sources ?? {};
-  const citedBefore = new Set(Object.values(prevAll).flatMap((m) => Object.keys(m.sources ?? {})));
+export function republish(prevModule, nextModule, prevAll) {
+  const keyed = (sources) => Object.fromEntries(Object.entries(sources ?? {}).map(([file, v]) => [sourceKey(file), v]));
+  const before = keyed(prevModule?.sources);
+  const citedBefore = new Set(Object.values(prevAll).flatMap((m) => Object.keys(keyed(m.sources))));
   const changed = [];
-  for (const [file, {hash, fetched}] of Object.entries(nextModule.sources ?? {})) {
+  for (const [file, {hash, fetched}] of Object.entries(keyed(nextModule.sources))) {
     if (before[file]) {
       if (before[file].hash !== hash) changed.push({file, fetched});
     } else if (!citedBefore.has(file)) {

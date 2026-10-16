@@ -35,6 +35,6 @@
   "expected_behaviour": "answer",
   "derived_from": null,
   "source_row": "annexure#sandbox-faq-m1",
-  "catalogue_version": "2026.08.24",
+  "catalogue_version": "2026.09.16",
   "notes": "Source lines: catalogue/hiecm/endpoints/gateway-sessions.md:37, 'The token is short lived. Read expiresIn from the response rather than assuming a duration, and refresh before it runs out instead of waiting for a 401.'; catalogue/hiecm/concepts/gateway-session.md:72, 'Hardcoding a token lifetime. NHA has changed it, so read expiresIn rather than assuming.' This is an M1 endpoint fact, the category the brief pairs with annexure#m1-abha-collection; that row does not exist on this branch (it lives on an unmerged branch), so annexure#sandbox-faq-m1 is used per project ruling."
 }

@@ -1,0 +1,40 @@
+{
+  "id": "nha-review-linking-user-vs-hip-01",
+  "slice": "nha-review",
+  "class": "compare",
+  "turns": [
+    {
+      "role": "user",
+      "text": "What is the difference between User Initiated Linking and HIP Initiated Linking?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "gateway": "hiecm",
+  "must_contain": [
+    "HIP initiated linking is started by the facility, applies when the patient shared their ABHA address with the facility, and the patient is confirmed by a link token",
+    "User initiated linking is started by the patient from their app, applies when the record was created earlier without an ABHA address, and the patient is confirmed by a one time password the facility sends",
+    "In HIP initiated linking the facility asks for a link token with POST /api/hiecm/v3/token/generate-token, receives it on /api/v3/hip/token/on-generate-token, and the result of the link arrives on /api/v3/link/on_carecontext",
+    "User initiated linking is three exchanges in order: discover, init, confirm"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom",
+    "common mistake"
+  ],
+  "expected_sources": [
+    "hiecm.flow.journey-hip-initiated-linking",
+    "hiecm.flow.journey-user-initiated-linking"
+  ],
+  "expected_shape": "define",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#nha-review-2026-09-30",
+  "catalogue_version": "2026.09.16",
+  "notes": "NHA QA sample, 30 September 2026: 'Generic understanding is correct, however, not explaining the flows in detail.' Verdict group: wrong shape for the question. The rejected answer was one paragraph ending in a common mistake; the case asks for both flows. It does not assert whether /api/hiecm/hip/v3/link/carecontext is a call or a callback, which is in dispute with NHA. The router gives this question the define shape today because 'What is' is matched before 'difference'."
+}

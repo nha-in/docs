@@ -1,0 +1,184 @@
+{
+  "case_id": "faq-verbatim-sandbox-m2-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "What is milestone-M2?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_015ECsUa4M8ejJS436grt4Ts",
+            "Name": "search",
+            "Input": {
+              "query": "M2 milestone",
+              "kind": "atom",
+              "limit": 5
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "M2 milestone",
+            "kind": "atom",
+            "limit": 5
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "",
+                "id": "hiecm.glossary.m2",
+                "summary": "The milestone covering care context linking, discovery and sending records.",
+                "title": "M2 Health Information Provider: Create and link records",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#lims",
+                "id": "hiecm.glossary.lims",
+                "summary": "The system a diagnostic laboratory uses to manage samples, tests and results.",
+                "title": "LIMS, laboratory information management system, also written LMIS",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/build-it-well#checked-for-every-service",
+                "id": "uhi.test.every-service-checks",
+                "summary": "Eight items every UHI go-live checklist carries, from Milestone 2 and key registration to signing, async handling and passed test cases.",
+                "title": "Go-live checks every UHI service carries",
+                "type": "test"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#hip",
+                "id": "hiecm.glossary.hip",
+                "summary": "The role held by a system that holds a patient's records and shares them when a consent allows it.",
+                "title": "HIP, health information provider",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/services/consultation#go-live-checklist",
+                "id": "uhi.test.consultation-go-live-checklist",
+                "summary": "The twenty items to complete before requesting production sign-off for Physical Consultation, from M2 and signing to promotion.",
+                "title": "Physical Consultation go-live checklist",
+                "type": "test"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01N1e3L7dLQuQq4Xaiaa7rH9",
+            "Name": "get",
+            "Input": {
+              "id": "hiecm.glossary.m2"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "hiecm.glossary.m2"
+          },
+          "output": {
+            "body": "# M2 Health Information Provider: Create and link records\n\n## In plain words\n\nMilestone 2, sharing records as a [HIP](hip.md): turning your records\ninto [FHIR](fhir.md) bundles, grouping them into\n[care contexts](/docs/hiecm/v3/concepts/care-context), linking those to a patient's\n[ABHA address](abha-address.md), answering [discovery](discovery.md), and\nencrypting and pushing data when consent allows. See\n[M2](/docs/hiecm/v3/api/m2).\n\n## Before you start\n\nNothing. A glossary entry assumes no prior reading.\n\n## What happens\n\nNothing happens here. This entry defines a term, it does not describe a call.\n\n## How you know it worked\n\nYou have understood this when you can say whether your system holds records that other systems should be able to find.\n\n## When it goes wrong\n\nAssuming M2 alone makes records visible. Nothing you hold is\ndiscoverable until a care context is linked.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "",
+            "gateway": "hiecm",
+            "id": "hiecm.glossary.m2",
+            "milestone": "n/a",
+            "summary": "The milestone covering care context linking, discovery and sending records.",
+            "title": "M2 Health Information Provider: Create and link records",
+            "type": "glossary"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "**Milestone 2 (M2)** is the ABDM phase for Health Information Providers (HIPs) covering:\n\n- **Converting records to FHIR bundles** — transforming your records into the standardized health data format\n- **Organizing into care contexts** — grouping records by patient encounter or episode\n- **Linking to ABHA addresses** — associating care contexts with patient identifiers so records are discoverable\n- **Handling discovery requests** — responding when other systems search for a patient's records\n- **Sending encrypted data** — pushing records to authorized requesters when consent permits\n\nThe key point: M2 is about making your records **discoverable and shareable** through ABDM's HIE-CM gateway. Records you hold won't show up in discovery until you've completed the M2 workflow and linked them to a patient's ABHA address.\n\nSee the [M2 API documentation](/docs/hiecm/v3/api/m2) on the developer portal for implementation details.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "**Milestone 2 (M2)** is the ABDM phase for Health Information Providers (HIPs) covering:\n\n- **Converting records to FHIR bundles** — transforming your records into the standardized health data format\n- **Organizing into care contexts** — grouping records by patient encounter or episode\n- **Linking to ABHA addresses** — associating care contexts with patient identifiers so records are discoverable\n- **Handling discovery requests** — responding when other systems search for a patient's records\n- **Sending encrypted data** — pushing records to authorized requesters when consent permits\n\nThe key point: M2 is about making your records **discoverable and shareable** through ABDM's HIE-CM gateway. Records you hold won't show up in discovery until you've completed the M2 workflow and linked them to a patient's ABHA address.\n\nSee the [M2 API documentation](/docs/hiecm/v3/api/m2) on the developer portal for implementation details.",
+  "sources": [
+    {
+      "id": "hiecm.glossary.m2",
+      "title": "M2 Health Information Provider: Create and link records",
+      "url": ""
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"\",\"id\":\"hiecm.glossary.m2\",\"summary\":\"The milestone covering care context linking, discovery and sending records.\",\"title\":\"M2 Health Information Provider: Create and link records\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#lims\",\"id\":\"hiecm.glossary.lims\",\"summary\":\"The system a diagnostic laboratory uses to manage samples, tests and results.\",\"title\":\"LIMS, laboratory information management system, also written LMIS\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/uhi/v1/getting-started/build-it-well#checked-for-every-service\",\"id\":\"uhi.test.every-service-checks\",\"summary\":\"Eight items every UHI go-live checklist carries, from Milestone 2 and key registration to signing, async handling and passed test cases.\",\"title\":\"Go-live checks every UHI service carries\",\"type\":\"test\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hip\",\"id\":\"hiecm.glossary.hip\",\"summary\":\"The role held by a system that holds a patient's records and shares them when a consent allows it.\",\"title\":\"HIP, health information provider\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/uhi/v1/services/consultation#go-live-checklist\",\"id\":\"uhi.test.consultation-go-live-checklist\",\"summary\":\"The twenty items to complete before requesting production sign-off for Physical Consultation, from M2 and signing to promotion.\",\"title\":\"Physical Consultation go-live checklist\",\"type\":\"test\"}]}\n{\"body\":\"# M2 Health Information Provider: Create and link records\\n\\n## In plain words\\n\\nMilestone 2, sharing records as a [HIP](hip.md): turning your records\\ninto [FHIR](fhir.md) bundles, grouping them into\\n[care contexts](/docs/hiecm/v3/concepts/care-context), linking those to a patient's\\n[ABHA address](abha-address.md), answering [discovery](discovery.md), and\\nencrypting and pushing data when consent allows. See\\n[M2](/docs/hiecm/v3/api/m2).\\n\\n## Before you start\\n\\nNothing. A glossary entry assumes no prior reading.\\n\\n## What happens\\n\\nNothing happens here. This entry defines a term, it does not describe a call.\\n\\n## How you know it worked\\n\\nYou have understood this when you can say whether your system holds records that other systems should be able to find.\\n\\n## When it goes wrong\\n\\nAssuming M2 alone makes records visible. Nothing you hold is\\ndiscoverable until a care context is linked.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"\",\"gateway\":\"hiecm\",\"id\":\"hiecm.glossary.m2\",\"milestone\":\"n/a\",\"summary\":\"The milestone covering care context linking, discovery and sending records.\",\"title\":\"M2 Health Information Provider: Create and link records\",\"type\":\"glossary\"}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T12:05:18.997Z",
+  "usage": {
+    "input_tokens": 30,
+    "output_tokens": 542,
+    "cache_read_input_tokens": 28388,
+    "cache_creation_input_tokens": 6265,
+    "num_turns": 3,
+    "duration_ms": 9502,
+    "cost_usd_equivalent": 0.0181088
+  }
+}

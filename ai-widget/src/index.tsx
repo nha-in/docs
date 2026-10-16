@@ -1,8 +1,8 @@
 import {Fragment, render} from 'preact';
 import {useEffect, useRef, useState} from 'preact/hooks';
 import ChatMarkdown, {CopyButton, absolute, headings} from './markdown';
-import {ArrowUp, ChevronRight, FileText, Paperclip, Plus, Sparkles, X} from './icons';
-import {readStream, UNREACHABLE, type Source} from './sse';
+import {ArrowUp, ChevronRight, FileText, Paperclip, PenLine, Plus, RotateCcw, Sparkles, X, ChevronDown} from './icons';
+import {readStream, UNREACHABLE, type Source, type Link, type Suggestion, failureMessage} from './sse';
 import {
   AGENTS,
   TOOLS,
@@ -17,7 +17,6 @@ import {
 import {revealStep} from './pacing';
 import {
   clearCurrentId,
-  continuedId,
   currentId,
   forget,
   forgetOne,
@@ -25,9 +24,9 @@ import {
   remember,
   resumable,
   save as saveHistory,
-  setContinuedId,
   setCurrentId,
   titleOf,
+  askedAgo,
   type Session,
 } from './history';
 import {ABOUT, isAboutQuestion} from './about';
@@ -52,8 +51,15 @@ type Turn = {
   from: 'you' | 'assistant';
   text: string;
   sources?: Source[];
+  /** Endpoint paths the answer may quote, each with its reference page. */
+  links?: Link[];
+  /** Next questions offered as pills under this answer. */
+  suggestions?: Suggestion[];
   /** The file that went with this question, kept so a follow-up still has it. */
   file?: Attached;
+  /** When the reader asked it, in epoch milliseconds. Absent on turns saved
+      before the panel recorded it, which then show no time. */
+  at?: number;
   /**
    * Where the install flow had got to when this turn was written. Present
    * only on the panel's own scripted turns, which is also what marks them as
@@ -195,10 +201,13 @@ function offerIndex(turns: Turn[]): number {
 }
 
 /** Attaches the citation chips to the last turn in the thread. */
-function attachSources(setTurns: Setter, sources: Source[]) {
+function attachSources(setTurns: Setter, sources: Source[], links?: Link[], suggestions?: Suggestion[]) {
   setTurns((prior) => {
     const last = prior[prior.length - 1];
-    return [...prior.slice(0, -1), {...last, sources}];
+    return [
+      ...prior.slice(0, -1),
+      {...last, sources, links: links ?? last.links, suggestions: suggestions ?? last.suggestions},
+    ];
   });
 }
 
@@ -215,7 +224,7 @@ type PanelProps = {
   starters: Starter[];
   /** False where the host asked not to keep conversations in its origin. */
   keepHistory: boolean;
-  /** The gateway of the page the panel is on, hiecm or nhcx, or empty. */
+  /** The gateway of the page the panel is on, hiecm, nhcx or uhi, or empty. */
   gateway: string;
   supportUrl: string;
   page: PageAttachment | null;
@@ -377,6 +386,20 @@ function Panel({
   // because only the newest step is ever interactive.
   const [naming, setNaming] = useState('');
   const [asking, setAsking] = useState(false);
+  // The question being rewritten in place, by its index in the thread, and
+  // the words in its field. Sending it drops everything after that question,
+  // the way an edit does in Claude: the old answer was to a different one.
+  const [editing, setEditing] = useState<number | null>(null);
+  const [edited, setEdited] = useState('');
+  // What "now" is for the time under each question. It moves on a minute at
+  // a time while the panel is open, so "just now" does not stay just now.
+  const [now, setNow] = useState(Date.now());
+  useEffect(() => {
+    if (!open) return;
+    setNow(Date.now());
+    const id = window.setInterval(() => setNow(Date.now()), 30000);
+    return () => window.clearInterval(id);
+  }, [open]);
   // Past conversations, read from this browser once the panel is built, and
   // the list of them that the head can drop down.
   const [history, setHistory] = useState<Session<Turn>[]>([]);
@@ -388,9 +411,6 @@ function Panel({
   const [menu, setMenu] = useState<Menu>('closed');
   const [attaching, setAttaching] = useState<string | null>(null);
   const conversation = useRef(newId());
-  // The conversation the reader chose to carry on past the window with, so
-  // the offer to start a new one is made once per conversation.
-  const [continued, setContinued] = useState<string | null>(continuedId);
   const autoAsked = useRef<string | null>(null);
   const dialog = useRef<HTMLDialogElement>(null);
   const thread = useRef<HTMLDivElement>(null);
@@ -404,6 +424,11 @@ function Panel({
   const attached = page !== null && page.markdown !== '';
   const memory = memoryOf(turns);
   const cut = sentFrom(turns);
+  // The next questions on offer: the latest answer's, once nothing is in
+  // flight. The composer shows the first in the empty box and the rest when
+  // the box has focus.
+  const latest = turns[turns.length - 1];
+  const next = !busy && latest?.from === 'assistant' ? (latest.suggestions ?? []) : [];
 
   // Text that has arrived but has not been shown yet, and the frame loop that
   // shows it. Both are refs: the loop runs from a callback the browser holds,
@@ -416,6 +441,8 @@ function Panel({
   const atOnce = useRef(false);
   const frame = useRef(0);
   const heldSources = useRef<Source[] | null>(null);
+  const heldLinks = useRef<Link[] | null>(null);
+  const heldSuggestions = useRef<Suggestion[] | null>(null);
 
   const drain = () => {
     frame.current = requestAnimationFrame(drain);
@@ -426,9 +453,16 @@ function Panel({
       cancelAnimationFrame(frame.current);
       frame.current = 0;
       revealing.current = false;
-      if (heldSources.current) {
-        attachSources(setTurns, heldSources.current);
+      if (heldSources.current || heldLinks.current || heldSuggestions.current) {
+        attachSources(
+          setTurns,
+          heldSources.current ?? [],
+          heldLinks.current ?? undefined,
+          heldSuggestions.current ?? undefined,
+        );
         heldSources.current = null;
+        heldLinks.current = null;
+        heldSuggestions.current = null;
       }
       setPhase('idle');
       return;
@@ -460,6 +494,12 @@ function Panel({
   const queueSources = (sources: Source[]) => {
     heldSources.current = sources;
   };
+  const queueLinks = (links: Link[]) => {
+    heldLinks.current = links;
+  };
+  const queueSuggestions = (suggestions: Suggestion[]) => {
+    heldSuggestions.current = suggestions;
+  };
 
   const stopDrain = () => {
     if (frame.current) cancelAnimationFrame(frame.current);
@@ -467,6 +507,8 @@ function Panel({
     revealing.current = false;
     pending.current = '';
     heldSources.current = null;
+    heldLinks.current = null;
+    heldSuggestions.current = null;
     netDone.current = true;
   };
 
@@ -537,10 +579,19 @@ function Panel({
   // following stops for good. A scroll listener sees the difference, since
   // pinning to the bottom lands at a gap of zero and leaves the flag set.
   const stick = useRef(true);
+  // Shown as a way back down once the reader is away from the end.
+  const [away, setAway] = useState(false);
   const onThreadScroll = () => {
     const el = thread.current;
     if (!el) return;
     stick.current = el.scrollHeight - el.scrollTop - el.clientHeight < 40;
+    setAway(!stick.current);
+  };
+  const toEnd = () => {
+    const el = thread.current;
+    if (!el) return;
+    stick.current = true;
+    el.scrollTo({top: el.scrollHeight, behavior: 'smooth'});
   };
 
   useEffect(() => {
@@ -629,6 +680,7 @@ function Panel({
     stick.current = true;
     conversation.current = session.id;
     setTurns(session.turns);
+    setEditing(null);
     setView('chat');
     setDraft('');
     setChosen(null);
@@ -644,6 +696,7 @@ function Panel({
     keep(turns);
     conversation.current = newId();
     clearCurrentId();
+    setEditing(null);
     setView('chat');
     setMenu('closed');
     abort.current?.abort();
@@ -782,7 +835,7 @@ function Panel({
     if (!file && !command && isAboutQuestion(asked)) {
       setTurns([
         ...base,
-        {from: 'you', text: asked},
+        {from: 'you', text: asked, at: Date.now()},
         {from: 'assistant', text: ABOUT, local: true},
       ]);
       return;
@@ -798,7 +851,7 @@ function Panel({
     ]);
     setTurns((prior) => [
       ...(opts.base ?? prior),
-      {from: 'you', text: asked, file: file ?? undefined},
+      {from: 'you', text: asked, file: file ?? undefined, at: Date.now()},
       {from: 'assistant', text: ''},
     ]);
 
@@ -868,13 +921,23 @@ function Panel({
           ...(gateway ? {gateway} : {}),
         }),
       });
-      if (!res.ok || !res.body) throw new Error(`status ${res.status}`);
+      if (!res.ok) {
+        // A refusal the server explained (a rate limit) is shown as what it
+        // is; every other failure is the assistant being unreachable.
+        const body = await res.json().catch(() => null);
+        emit(failureMessage(res.status, body));
+        return;
+      }
+      if (!res.body) throw new Error(`status ${res.status}`);
       await readStream(res.body, {
         onText: emit,
         onTool: (detail) => setActivity(detail),
         // Citations belong to the answer, so they wait for it: attaching them
         // while the text is still revealing would sit them under half a reply.
         onSources: (sources) => queueSources(sources),
+        // Same timing as the citations: a link lands with the finished answer.
+        onLinks: (links) => queueLinks(links),
+        onSuggestions: (suggestions) => queueSuggestions(suggestions),
         onError: emit,
         // Before any text: which section the answer draws on. When the
         // server could not tell which module the question is about, it asks
@@ -908,6 +971,23 @@ function Panel({
     const question = turns[at];
     if (!question || question.from !== 'you') return;
     void ask(question.text, {module, base: turns.slice(0, at), file: question.file ?? null});
+  };
+
+  /** Asks the question at `index` again, in place of it and its answer. */
+  const retry = (index: number) => {
+    const question = turns[index];
+    if (!question || question.from !== 'you') return;
+    void ask(question.text, {base: turns.slice(0, index), file: question.file ?? null});
+  };
+
+  /** Sends the question at `editing` as rewritten, in place of the original. */
+  const resend = () => {
+    if (editing === null) return;
+    const at = editing;
+    const asked = edited.trim();
+    setEditing(null);
+    if (!asked) return;
+    void ask(asked, {base: turns.slice(0, at), file: turns[at].file ?? null});
   };
 
   /** Attaches a page found in the page search, the same way the host would. */
@@ -1029,6 +1109,7 @@ function Panel({
           {/* An answer with nothing in it yet is not a bubble. The thinking
               indicator below stands in its place until the first word. */}
           {turn.from === 'assistant' && turn.text === '' ? null : (
+          <div class={`ask-ai__unit ask-ai__unit--${turn.from}`}>
           <div
             class={`ask-ai__turn ask-ai__turn--${turn.from}${
               phase === 'streaming' && index === turns.length - 1
@@ -1050,7 +1131,41 @@ function Panel({
               </p>
             )}
             {turn.from === 'assistant' ? (
-              <ChatMarkdown text={turn.text} docsOrigin={docsOrigin} />
+              <ChatMarkdown text={turn.text} docsOrigin={docsOrigin} links={turn.links} />
+            ) : editing === index ? (
+              <form
+                class="ask-ai__edit"
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  resend();
+                }}>
+                <textarea
+                  class="ask-ai__edit-field"
+                  value={edited}
+                  autoFocus
+                  rows={Math.min(6, edited.split('\n').length + 1)}
+                  aria-label="Edit your question"
+                  onInput={(event) => setEdited((event.target as HTMLTextAreaElement).value)}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Escape') {
+                      event.preventDefault();
+                      event.stopPropagation();
+                      setEditing(null);
+                    } else if (event.key === 'Enter' && !event.shiftKey && !event.isComposing) {
+                      event.preventDefault();
+                      resend();
+                    }
+                  }}
+                />
+                <span class="ask-ai__edit-actions">
+                  <button type="button" class="ask-ai__edit-cancel" onClick={() => setEditing(null)}>
+                    Cancel
+                  </button>
+                  <button type="submit" class="ask-ai__edit-send" disabled={edited.trim() === ''}>
+                    Send
+                  </button>
+                </span>
+              </form>
             ) : (
               turn.text
             )}
@@ -1255,6 +1370,49 @@ function Panel({
               </button>
             )}
           </div>
+          {/* Under the reader's own question, on hover, as Claude's chat has
+              it: when it was asked, then retry, edit and copy. Retry is on the
+              newest question only, because asking an older one again would
+              fork the thread rather than replace one answer. The install
+              flow's chosen chips are the reader's turns too, but they answered
+              the panel rather than asked anything, so they carry none of this. */}
+          {turn.from === 'you' &&
+            editing !== index &&
+            !turns[index + 1]?.install &&
+            !turns[index + 1]?.local && (
+              <div class="ask-ai__ask-actions">
+                {turn.at ? (
+                  <time class="ask-ai__ask-time" dateTime={new Date(turn.at).toISOString()}>
+                    {askedAgo(turn.at, now)}
+                  </time>
+                ) : null}
+                {!busy && editing === null && index === turns.length - 2 && (
+                  <button
+                    type="button"
+                    class="ask-ai__ask-action"
+                    aria-label="Retry"
+                    title="Retry"
+                    onClick={() => retry(index)}>
+                    <RotateCcw />
+                  </button>
+                )}
+                {!busy && (
+                  <button
+                    type="button"
+                    class="ask-ai__ask-action"
+                    aria-label="Edit question"
+                    title="Edit"
+                    onClick={() => {
+                      setEdited(turn.text);
+                      setEditing(index);
+                    }}>
+                    <PenLine />
+                  </button>
+                )}
+                <CopyButton text={turn.text} label="Copy question" className="ask-ai__ask-action" />
+              </div>
+            )}
+          </div>
           )}
           </Fragment>
         ))}
@@ -1265,30 +1423,15 @@ function Panel({
           </p>
         )}
 
-        {/* Once the conversation fills what a question carries, the reader
-            is asked, once, whether to go on here or start afresh. Going on
-            is fine: the oldest exchanges simply stop being sent. */}
-        {memory.full && !busy && continued !== conversation.current && (
-          <div class="ask-ai__window-offer" role="status">
-            <p>Context window full. Earlier turns are no longer sent.</p>
-            <div class="ask-ai__window-offer-actions">
-              <button type="button" class="ask-ai__window-offer-new" onClick={reset}>
-                Start a new chat
-              </button>
-              <button
-                type="button"
-                class="ask-ai__window-offer-stay"
-                onClick={() => {
-                  setContinued(conversation.current);
-                  setContinuedId(conversation.current);
-                }}>
-                Continue here
-              </button>
-            </div>
-          </div>
-        )}
-
       </div>
+
+      {away && (
+        <div class="ask-ai__to-end-wrap">
+          <button type="button" class="ask-ai__to-end" aria-label="Scroll to the latest" onClick={toEnd}>
+            <ChevronDown />
+          </button>
+        </div>
+      )}
 
       <Composer
         draft={draft}
@@ -1313,6 +1456,7 @@ function Panel({
         command={command}
         onCommand={setCommand}
         memory={memory}
+        suggestions={next}
       />
       </>
       )}
@@ -1434,7 +1578,7 @@ function Widget({
  *                and not to this element, so a host whose origin should not
  *                hold what readers type turns the list off here. Off also
  *                means a reload starts a fresh conversation
- *   gateway      the gateway the page belongs to, "hiecm" or "nhcx", so the
+ *   gateway      the gateway the page belongs to, "hiecm", "nhcx" or "uhi", so the
  *                answers stay in its documentation unless the reader names
  *                another; absent on a page that belongs to no gateway
  *

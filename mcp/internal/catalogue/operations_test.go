@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"slices"
 	"strings"
 	"testing"
 
@@ -13,7 +14,7 @@ import (
 )
 
 func TestParseOperations(t *testing.T) {
-	ops, err := ParseOperations(filepath.Join("testdata", "catalogue", "openapi", "hiecm", "v3", "hiecm-v3.yaml"))
+	ops, err := ParseOperations(filepath.Join("testdata", "catalogue", "hiecm", "openapi", "v3", "hiecm-v3.yaml"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -54,7 +55,7 @@ func TestParseOperations(t *testing.T) {
 }
 
 func TestParseSpecReadsModuleAndErrorCodes(t *testing.T) {
-	data, err := ParseSpec(filepath.Join("testdata", "catalogue", "openapi", "hiecm", "v3", "hiecm-v3.yaml"))
+	data, err := ParseSpec(filepath.Join("testdata", "catalogue", "hiecm", "openapi", "v3", "hiecm-v3.yaml"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -349,7 +350,7 @@ components:
 // errors page (site/docs/hiecm/v3/api/m1/errors.md) shows. A sorted walk
 // named different operations for these three codes.
 func TestSpecErrorCodesFollowDocumentOrder(t *testing.T) {
-	data, err := ParseSpec(filepath.Join(repoRoot, "catalogue", "openapi", "hiecm", "v3", "hiecm-m1.yaml"))
+	data, err := ParseSpec(filepath.Join(repoRoot, "catalogue", "hiecm", "openapi", "v3", "hiecm-m1.yaml"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -379,7 +380,7 @@ func TestSpecErrorCodesMatchNode(t *testing.T) {
 		t.Skip("node_modules/yaml not installed")
 	}
 	root, _ := filepath.Abs(repoRoot)
-	specs, _ := filepath.Glob(filepath.Join(root, "catalogue", "openapi", "hiecm", "v3", "hiecm-*.yaml"))
+	specs, _ := filepath.Glob(filepath.Join(root, "catalogue", "hiecm", "openapi", "v3", "hiecm-*.yaml"))
 	if len(specs) == 0 {
 		t.Fatal("no specs found")
 	}
@@ -444,9 +445,20 @@ func TestChunkOperationIsFlatAndNamesErrors(t *testing.T) {
 // The real M1 specification yields operations with their gateway, parameter
 // names, response codes and the error codes their examples return.
 func TestParsedOperationsCarryWhatTheirChunkNeeds(t *testing.T) {
-	data, err := ParseSpec("../../../catalogue/openapi/hiecm/v3/hiecm-m1.yaml")
+	data, err := ParseSpec("../../../catalogue/hiecm/openapi/v3/hiecm-m1.yaml")
 	if err != nil {
 		t.Fatal(err)
+	}
+	// NHCX's specifications have not moved into catalogue/nhcx/ and still
+	// name their gateway.
+	nhcx, err := ParseSpec("../../../catalogue/openapi/nhcx/v1/nhcx-claim.yaml")
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, op := range nhcx.Operations {
+		if op.Gateway != "nhcx" {
+			t.Fatalf("%s: gateway %q, want nhcx", op.OperationID, op.Gateway)
+		}
 	}
 	withParams, withResponses, withErrors := 0, 0, 0
 	for _, op := range data.Operations {
@@ -487,10 +499,15 @@ func TestActualPath(t *testing.T) {
 // refers to itself, as NHA's UHI Ack does, must not send the indexer round
 // the cycle until the stack overflows.
 func TestParseSpecEveryCatalogueSpec(t *testing.T) {
-	specs, err := filepath.Glob(filepath.Join("..", "..", "..", "catalogue", "openapi", "*", "*", "*.yaml"))
+	specs, err := filepath.Glob(filepath.Join("..", "..", "..", "catalogue", "*", "openapi", "*", "*.yaml"))
 	if err != nil {
 		t.Fatal(err)
 	}
+	nhcx, err := filepath.Glob(filepath.Join("..", "..", "..", "catalogue", "openapi", "*", "*", "*.yaml"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	specs = append(specs, nhcx...)
 	n := 0
 	for _, spec := range specs {
 		if strings.Contains(spec, string(filepath.Separator)+".raw"+string(filepath.Separator)) {
@@ -503,5 +520,45 @@ func TestParseSpecEveryCatalogueSpec(t *testing.T) {
 	}
 	if n < 20 {
 		t.Fatalf("parsed only %d specs; the glob is wrong", n)
+	}
+}
+
+// A callback lives under webhooks in a module spec (OpenAPI 3.1). It is an
+// operation like any other to an integrator who has to receive it, so the
+// index must carry it: before this, every M2 callback was unreachable
+// through search and get.
+func TestParseSpecIndexesWebhooks(t *testing.T) {
+	data, err := ParseSpec(filepath.Join("testdata", "webhooks.yaml"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	byID := map[string]Operation{}
+	for _, op := range data.Operations {
+		byID[op.OperationID] = op
+	}
+	if len(byID) != 2 {
+		t.Fatalf("operations = %v, want the path and the webhook", byID)
+	}
+	cb, ok := byID["m2_post_v3_link_on_carecontext"]
+	if !ok {
+		t.Fatal("the webhook operation is missing")
+	}
+	if cb.Method != "POST" || cb.Path != "/api/v3/link/on_carecontext" || cb.Module != "m2" {
+		t.Errorf("webhook = %s %s module %s", cb.Method, cb.Path, cb.Module)
+	}
+	if !cb.Callback {
+		t.Error("the webhook is not marked as a callback")
+	}
+	if byID["m2_post_hip_v3_link_carecontext"].Callback {
+		t.Error("a paths operation is marked as a callback")
+	}
+	if len(cb.RequestSchemaJSON) == 0 || !strings.Contains(string(cb.RequestSchemaJSON), "abhaAddress") {
+		t.Errorf("webhook request schema = %s", cb.RequestSchemaJSON)
+	}
+	if !slices.Contains(cb.ErrorCodes, "ABDM-1006") {
+		t.Errorf("webhook error codes = %v", cb.ErrorCodes)
+	}
+	if !slices.Contains(cb.RequiredParams, "REQUEST-ID (header)") {
+		t.Errorf("webhook required params = %v", cb.RequiredParams)
 	}
 }

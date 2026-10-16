@@ -1,7 +1,7 @@
 # D11. claim_plan_benefit
 
 #### D11T. TABLE
-One row is one package (or covered benefit) in a claim's package master; primary key `id`; parent table D10. claim_plan (in nhcx-preauth).
+One row is one package (or covered benefit) in a claim's package master; primary key `id`; parent table D10. claim_plan (in nhcx-coverage).
 
 #### D11D. DESCRIPTION
 The InsurancePlan comes in one of two shapes, and both flatten to this table:
@@ -42,7 +42,7 @@ Reads:
 | column | type | null/default | meaning (and allowed values) |
 |---|---|---|---|
 | id | INTEGER | primary key | row id |
-| plan_id | INTEGER | NOT NULL | the package master (D10 (in nhcx-preauth)) |
+| plan_id | INTEGER | NOT NULL | the package master (D10 (in nhcx-coverage)) |
 | seq | INTEGER | NOT NULL, default `1` | order in the plan |
 | category_code | TEXT | null | speciality or coverage type code |
 | category_display | TEXT | null | its display |
@@ -59,7 +59,7 @@ Reads:
 
 #### D11K. KEYS AND INDEXES
 - Primary key `id` (integer).
-- `plan_id` references D10. claim_plan (in nhcx-preauth) `id`, `ON DELETE CASCADE`.
+- `plan_id` references D10. claim_plan (in nhcx-coverage) `id`, `ON DELETE CASCADE`.
 - No unique constraint. The parser keeps `code` unique per plan.
 - Index: `ix_claim_plan_benefit (plan_id, seq)`.
 - `supporting_info[].form` names a [D12. claim_plan_form](D12-claim-plan-form.md) `url` (no foreign key).

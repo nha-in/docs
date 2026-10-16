@@ -33,12 +33,12 @@
     "atom"
   ],
   "expected_sources": [
-    "shared.glossary.link-token"
+    "hiecm.glossary.link-token"
   ],
   "expected_shape": "define",
   "expected_behaviour": "answer",
   "derived_from": null,
   "source_row": "annexure#glossary",
-  "catalogue_version": "2026.08.24",
+  "catalogue_version": "2026.09.16",
   "notes": "pronoun follow-up refers back to the link token; the second answer is the same glossary atom's own expiry and revalidation guidance, so it stays consistent with the first answer."
 }

@@ -24,13 +24,13 @@
     "atom"
   ],
   "expected_sources": [
-    "shared.glossary.hi-type",
+    "hiecm.glossary.hi-type",
     "shared.fhir.document-bundle"
   ],
   "expected_shape": "how-do-i",
   "expected_behaviour": "answer",
   "derived_from": "faq-verbatim-sandbox-m3-03",
   "source_row": "annexure#sandbox-faq-m3",
-  "catalogue_version": "2026.08.24",
+  "catalogue_version": "2026.09.16",
   "notes": "variant c of faq-verbatim-sandbox-m3-03, the same question reduced to the noun it is asking about"
 }

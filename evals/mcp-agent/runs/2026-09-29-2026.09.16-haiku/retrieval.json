@@ -1,0 +1,1106 @@
+[
+  {
+    "case_id": "abstain-abdm-pricing-01",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "abstain-hpr-bulk-data-01",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "abstain-m3-postman-collection-01",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "abstain-nha-phone-support-01",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "abstain-pune-hospitals-01",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "abstain-python-sdk-01",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "abstain-sandbox-sla-01",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "abstain-uhi-booking-integration-01",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "abstain-write-my-m2-code-01",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "confusable-hiecm-m1-abha-number-vs-address-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "confusable-hiecm-m1-t-token-vs-x-token-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "confusable-hiecm-m2-hip-vs-hiu-consent-ack-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "confusable-hiecm-m2-otp-vs-link-token-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "confusable-hiecm-m3-request-id-vs-artefact-id-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "confusable-hiecm-m3-request-window-vs-validity-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "confusable-hip-vs-hiu-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "confusable-link-vs-access-token-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "confusable-sandbox-vs-prod-host-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "confusable-session-vs-user-token-01",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "confusable-txnid-vs-requestid-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0.14285714285714285
+  },
+  {
+    "case_id": "conversation-abha-document-route-01",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "conversation-gateway-session-01",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "conversation-hip-vs-hiu-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "conversation-link-token-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "conversation-m1-vs-m2-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "conversation-production-timeline-01",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "conversation-public-certificate-01",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "conversation-wasa-recert-01",
+    "scored": true,
+    "recall_at_3": 1,
+    "reciprocal_rank": 1
+  },
+  {
+    "case_id": "decline-aarogya-setu-feature-01",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "decline-foreign-health-network-01",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "decline-future-release-date-01",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "decline-hfr-approval-duration-01",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "decline-injection-attachment-01",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "decline-injection-trailing-instruction-01",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "decline-metformin-dose-01",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "decline-nha-fee-01",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "decline-nhcx-claim-adjudication-01",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "decline-nonsense-emoji-01",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "decline-nonsense-question-marks-01",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "decline-nonsense-string-01",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "decline-production-cert-timeline-01",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "decline-uhi-booking-payload-01",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "decline-vendor-approved-01",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "define-abha-id-01",
+    "scored": true,
+    "recall_at_3": 1,
+    "reciprocal_rank": 1
+  },
+  {
+    "case_id": "define-ask-ai-capabilities-01",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "define-discovery-01",
+    "scored": true,
+    "recall_at_3": 1,
+    "reciprocal_rank": 0.3333333333333333
+  },
+  {
+    "case_id": "define-dsc-01",
+    "scored": true,
+    "recall_at_3": 1,
+    "reciprocal_rank": 1
+  },
+  {
+    "case_id": "define-elliptic-curve-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "define-gateway-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "define-health-professional-id-01",
+    "scored": true,
+    "recall_at_3": 1,
+    "reciprocal_rank": 0.5
+  },
+  {
+    "case_id": "define-health-records-provider-01",
+    "scored": true,
+    "recall_at_3": 1,
+    "reciprocal_rank": 1
+  },
+  {
+    "case_id": "define-hiecm-m1-abha-address-rules-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "define-hiecm-m3-consent-artefact-contents-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "define-himis-01",
+    "scored": true,
+    "recall_at_3": 1,
+    "reciprocal_rank": 0.5
+  },
+  {
+    "case_id": "define-hip-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "define-hiu-01",
+    "scored": true,
+    "recall_at_3": 1,
+    "reciprocal_rank": 1
+  },
+  {
+    "case_id": "define-link-token-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "define-lis-01",
+    "scored": true,
+    "recall_at_3": 1,
+    "reciprocal_rank": 1
+  },
+  {
+    "case_id": "diagnose-hiecm-m1-900900-01",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "diagnose-hiecm-m1-900901-01",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "diagnose-hiecm-m1-abdm-1016-01",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "diagnose-hiecm-m1-abdm-1094-01",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "diagnose-hiecm-m2-abdm-1056-01",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "diagnose-hiecm-m2-abdm-2406-01",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "diagnose-hiecm-m2-duplicate-link-token-01",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "diagnose-hiecm-m2-on-generate-token-never-arrives-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "diagnose-hiecm-m3-abdm-1040-01",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "diagnose-hiecm-m3-abdm-1112-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "diagnose-hiecm-m3-notify-keeps-arriving-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-rephrased-abdm-sandbox-02-a",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0.2
+  },
+  {
+    "case_id": "faq-rephrased-abdm-sandbox-02-b",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0.2
+  },
+  {
+    "case_id": "faq-rephrased-abdm-sandbox-02-c",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-rephrased-abdm-sandbox-06-a",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-rephrased-abdm-sandbox-06-b",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-rephrased-abdm-sandbox-06-c",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-rephrased-abdm-sandbox-10-a",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-rephrased-abdm-sandbox-10-b",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-rephrased-abdm-sandbox-10-c",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-general-01-a",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-general-01-b",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-general-01-c",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-general-02-a",
+    "scored": true,
+    "recall_at_3": 1,
+    "reciprocal_rank": 1
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-general-02-b",
+    "scored": true,
+    "recall_at_3": 1,
+    "reciprocal_rank": 1
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-general-02-c",
+    "scored": true,
+    "recall_at_3": 1,
+    "reciprocal_rank": 1
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-general-03-a",
+    "scored": true,
+    "recall_at_3": 1,
+    "reciprocal_rank": 1
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-general-03-b",
+    "scored": true,
+    "recall_at_3": 1,
+    "reciprocal_rank": 1
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-general-03-c",
+    "scored": true,
+    "recall_at_3": 1,
+    "reciprocal_rank": 1
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m1-03-a",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m1-03-b",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m1-03-c",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m1-04-a",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m1-04-b",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m1-04-c",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m1-05-a",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m1-05-b",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m1-05-c",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m2-01-a",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0.25
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m2-01-b",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0.16666666666666666
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m2-01-c",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m2-02-a",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m2-02-b",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m2-02-c",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m2-07-a",
+    "scored": true,
+    "recall_at_3": 1,
+    "reciprocal_rank": 1
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m2-07-b",
+    "scored": true,
+    "recall_at_3": 1,
+    "reciprocal_rank": 1
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m2-07-c",
+    "scored": true,
+    "recall_at_3": 1,
+    "reciprocal_rank": 1
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m3-02-a",
+    "scored": true,
+    "recall_at_3": 1,
+    "reciprocal_rank": 1
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m3-02-b",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m3-02-c",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m3-03-a",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m3-03-b",
+    "scored": true,
+    "recall_at_3": 1,
+    "reciprocal_rank": 1
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m3-03-c",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m3-07-a",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m3-07-b",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m3-07-c",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-verbatim-abdm-sandbox-01",
+    "scored": true,
+    "recall_at_3": 1,
+    "reciprocal_rank": 1
+  },
+  {
+    "case_id": "faq-verbatim-abdm-sandbox-02",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0.2
+  },
+  {
+    "case_id": "faq-verbatim-abdm-sandbox-03",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0.25
+  },
+  {
+    "case_id": "faq-verbatim-abdm-sandbox-04",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-verbatim-abdm-sandbox-05",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0.25
+  },
+  {
+    "case_id": "faq-verbatim-abdm-sandbox-06",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-verbatim-abdm-sandbox-07",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-verbatim-abdm-sandbox-08",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-verbatim-abdm-sandbox-09",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-verbatim-abdm-sandbox-10",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-verbatim-abdm-sandbox-11",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-verbatim-abdm-sandbox-12",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-verbatim-abdm-sandbox-13",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-verbatim-abdm-sandbox-14",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-verbatim-abdm-sandbox-15",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-verbatim-abdm-sandbox-16",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-general-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-general-02",
+    "scored": true,
+    "recall_at_3": 1,
+    "reciprocal_rank": 1
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-general-03",
+    "scored": true,
+    "recall_at_3": 1,
+    "reciprocal_rank": 1
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-general-04",
+    "scored": true,
+    "recall_at_3": 1,
+    "reciprocal_rank": 1
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-general-05",
+    "scored": true,
+    "recall_at_3": 1,
+    "reciprocal_rank": 1
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-general-06",
+    "scored": true,
+    "recall_at_3": 1,
+    "reciprocal_rank": 1
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m1-01",
+    "scored": true,
+    "recall_at_3": 1,
+    "reciprocal_rank": 1
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m1-02",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m1-03",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m1-04",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m1-05",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m1-06",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m1-07",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m1-08",
+    "scored": true,
+    "recall_at_3": 1,
+    "reciprocal_rank": 1
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m2-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0.25
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m2-02",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m2-03",
+    "scored": true,
+    "recall_at_3": 1,
+    "reciprocal_rank": 1
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m2-04",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m2-05",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m2-06",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m2-07",
+    "scored": true,
+    "recall_at_3": 1,
+    "reciprocal_rank": 1
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m2-08",
+    "scored": true,
+    "recall_at_3": 1,
+    "reciprocal_rank": 0.3333333333333333
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m3-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0.2
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m3-02",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m3-03",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m3-04",
+    "scored": true,
+    "recall_at_3": 1,
+    "reciprocal_rank": 1
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m3-05",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m3-06",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0.2
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m3-07",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "followup-hiecm-m1-choose-address-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "followup-hiecm-m1-token-refresh-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "followup-hiecm-m2-match-link-token-callback-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "followup-hiecm-m2-several-care-contexts-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "followup-hiecm-m3-multiple-artefacts-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "followup-session-token-lifetime-01",
+    "scored": false,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "naive-hiecm-m1-create-abha-aadhaar-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "naive-hiecm-m1-encrypt-aadhaar-01",
+    "scored": true,
+    "recall_at_3": 1,
+    "reciprocal_rank": 0.3333333333333333
+  },
+  {
+    "case_id": "naive-hiecm-m1-face-auth-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0.25
+  },
+  {
+    "case_id": "naive-hiecm-m1-find-abha-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "naive-hiecm-m1-login-mobile-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "naive-hiecm-m1-update-mobile-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "naive-hiecm-m2-202-is-linked-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "naive-hiecm-m2-after-data-push-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "naive-hiecm-m2-discovery-request-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "naive-hiecm-m2-link-record-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0.25
+  },
+  {
+    "case_id": "naive-hiecm-m2-link-record-token-generation-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "naive-hiecm-m2-send-records-to-hiu-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "naive-hiecm-m2-token-generation-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "naive-hiecm-m2-update-linked-care-context-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "naive-hiecm-m3-consent-request-id-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "naive-hiecm-m3-key-material-01",
+    "scored": true,
+    "recall_at_3": 1,
+    "reciprocal_rank": 0.3333333333333333
+  },
+  {
+    "case_id": "naive-hiecm-m3-notify-after-decrypt-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  },
+  {
+    "case_id": "naive-hiecm-m3-where-records-arrive-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0.2
+  },
+  {
+    "case_id": "naive-nhcx-claim-endpoint-01",
+    "scored": true,
+    "recall_at_3": 0,
+    "reciprocal_rank": 0
+  }
+]

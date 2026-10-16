@@ -3,16 +3,16 @@ import Link from '@docusaurus/Link';
 import {useRole} from '@site/src/config/roles';
 
 /**
- * "Who are you?" on the Get started page.
+ * "Select your role" on the Get started page.
  *
  * The site already has a role model: `useRole('hiecm')` holds 'ims' or 'phr',
  * shares the choice across the page and remembers it, and the sidebar is
  * scoped by the same value. This block is a friendlier front door to it, so a
  * reader who does not yet know the word HIP can still pick a side.
  *
- * Two of the four choices set the same role, so the role alone cannot say
- * which card to light up after a reload. The card id is kept beside it, and
- * the role stays the thing everything else reads.
+ * "Not sure yet" and no choice at all both leave the role empty, so the role
+ * alone cannot say whether to light that card up after a reload. The card id
+ * is kept beside it, and the role stays the thing everything else reads.
  */
 
 type Choice = {
@@ -25,12 +25,6 @@ type Choice = {
 };
 
 const CHOICES: Choice[] = [
-  {
-    id: 'facility',
-    role: 'ims',
-    label: 'Healthcare Facility',
-    what: 'Healthcare providers and facilities (hospital, clinic, lab or pharmacy) that create, maintain and exchange digital health records.',
-  },
   {
     id: 'vendor',
     role: 'ims',
@@ -55,22 +49,22 @@ type Step = {label: string; detail: string; to: string};
 
 const IMS_JOURNEY: Step[] = [
   {
-    label: 'Create',
+    label: 'M1 Identity',
     detail: 'Create and verify an ABHA, the identity every record hangs off.',
     to: '/docs/hiecm/v3/milestones/m1',
   },
   {
-    label: 'Attach',
+    label: 'M2 Health Information Provider',
     detail: 'Attach records to that ABHA as care contexts, so they can be found.',
     to: '/docs/hiecm/v3/milestones/m2',
   },
   {
-    label: 'Retrieve',
+    label: 'M3 Health Information User',
     detail: 'Retrieve records from other systems under a consent you requested.',
     to: '/docs/hiecm/v3/milestones/m3',
   },
   {
-    label: 'Enrol',
+    label: 'M4 Registry Integration',
     detail: 'Enrol your facility and its professionals in the national registries.',
     to: '/docs/hiecm/v3/milestones/m4',
   },
@@ -99,7 +93,7 @@ const PHR_JOURNEY: Step[] = [
   },
 ];
 
-/** Remembers which card was pressed, since two of them set the same role. */
+/** Remembers which card was pressed, so "Not sure yet" survives a reload. */
 const CHOICE_KEY = 'abdm-portal.audience.hiecm';
 
 export default function RoleSelector(): React.ReactNode {
@@ -110,9 +104,9 @@ export default function RoleSelector(): React.ReactNode {
     setStored(window.localStorage.getItem(CHOICE_KEY));
   }, []);
 
-  // The role wins. The remembered card only breaks the tie between the two
-  // choices that both mean 'ims', and is ignored once it disagrees with the
-  // role something else on the page set.
+  // The role wins. The remembered card only tells "Not sure yet" apart from
+  // no choice, and is ignored once it disagrees with the role something else
+  // on the page set.
   const remembered = CHOICES.find((c) => c.id === stored);
   const selected =
     remembered && remembered.role === role
@@ -132,12 +126,13 @@ export default function RoleSelector(): React.ReactNode {
   return (
     <section className="role-selector" aria-labelledby="who-are-you">
       <h2 id="who-are-you" className="role-selector__title">
-        Who are you?
+        Select your role
       </h2>
       <p className="role-selector__lede">
-        This is where you choose your path. Pick the one that fits and the rest of
-        the documentation follows it, in the sidebar and on every page. You can
-        change it whenever you like from the filter at the top of the sidebar.
+        Select your role to view documentation tailored to your integration path.
+        The sidebar and page content will automatically update based on your
+        selection. You can change this selection at any time using the filter at
+        the top of the sidebar.
       </p>
 
       <div className="role-selector__choices">
@@ -153,15 +148,6 @@ export default function RoleSelector(): React.ReactNode {
           </button>
         ))}
       </div>
-
-      {selected?.id === 'facility' && (
-        <p className="role-selector__note">
-          You do not have to build this yourself. A facility can adopt a certified
-          information management system instead, and the vendor carries the
-          integration.{' '}
-          <Link to="https://abdm.gov.in/our-partners/HMIS">See the certified partners</Link>.
-        </p>
-      )}
 
       {journey && (
         <ol className="role-journey">

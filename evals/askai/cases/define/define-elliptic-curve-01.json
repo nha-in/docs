@@ -25,12 +25,12 @@
     "atom"
   ],
   "expected_sources": [
-    "shared.glossary.ecdh"
+    "hiecm.glossary.ecdh"
   ],
   "expected_shape": "define",
   "expected_behaviour": "answer",
   "derived_from": null,
   "source_row": "annexure#glossary",
-  "catalogue_version": "2026.08.24",
+  "catalogue_version": "2026.09.16",
   "notes": "reader shortened ECDH to 'elliptic curve'; catalogue spells out Elliptic Curve Diffie-Hellman (ECDH)."
 }

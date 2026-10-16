@@ -1,0 +1,428 @@
+{
+  "case_id": "faq-verbatim-sandbox-m3-06",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "Where can I find some reference to health standards (FHIR formats/SNOMED CT) as specified for implementation of ABDM?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "I'll search the ABDM documentation for references to FHIR and SNOMED CT standards.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01L6QRkJyhub5M9nw2YrCU62",
+            "Name": "search",
+            "Input": {
+              "query": "FHIR standards implementation SNOMED CT",
+              "kind": "atom",
+              "limit": 25
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "FHIR standards implementation SNOMED CT",
+            "kind": "atom",
+            "limit": 25
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#fhir",
+                "id": "shared.glossary.fhir",
+                "summary": "The standard ABDM uses for the health records themselves, in the R4 version with India specific profiles.",
+                "title": "FHIR, Fast Healthcare Interoperability Resources",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/glossary#organisations-and-programmes",
+                "id": "shared.glossary.snomed-ct",
+                "summary": "The clinical terminology ABDM codes records with. It is free to use in India and it still requires a licence, which is the question NHA is asked most often a...",
+                "title": "SNOMED CT, and the licence you need in India",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#hi-type",
+                "id": "hiecm.glossary.hi-type",
+                "summary": "The category of record being asked for or sent, such as a prescription or a diagnostic report. A SNOMED CT code decides which, and NHA requires all of them t...",
+                "title": "HI type, the kind of health information",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.fhir.terminologies",
+                "summary": "The code systems every claims bundle draws on, where each one is used, and how strictly each binding applies.",
+                "title": "Code systems and value sets used in NHCX bundles",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.document-bundle",
+                "summary": "The FHIR R4 bundle ABDM wraps records in, profiled by NRCeS, with a Composition naming the record type and a SNOMED CT code deciding what it is.",
+                "title": "DocumentBundle, the envelope every health record travels in",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.profile-and-example-together",
+                "summary": "A NRCeS profile gives the cardinalities and a NRCeS example gives the shape, and a generator written from either one alone is wrong in a different way.",
+                "title": "Read the profile and the example together, because each omits what the other carries",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/error-codes#payr",
+                "id": "nhcx.error.payr-1333",
+                "summary": "The claim says in-patient or out-patient in a way the payer does not accept.",
+                "title": "PAYR-1333: the claim type is not valid",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/fhir/coverage-eligibility-response",
+                "id": "nhcx.fhir.coverage-eligibility-response",
+                "summary": "The payer's answer to an eligibility check: whether the policy is in force, how much cover is left, and whether the treatment needs prior approval.",
+                "title": "CoverageEligibilityResponse bundle",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/roles/provider/preauthorisation",
+                "id": "nhcx.flow.preauth-submit",
+                "summary": "Ask the payer to approve a planned treatment before it starts, then read the decision when it arrives.",
+                "title": "Submit a preauthorisation",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/fhir/preauthorisation-request",
+                "id": "nhcx.fhir.preauth-request",
+                "summary": "The bundle a hospital sends to ask a payer to approve a planned treatment before it happens, with the package, the diagnosis and the required documents.",
+                "title": "Preauthorisation request bundle, a Claim with use preauthorization",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.hl7-validator-recipe",
+                "summary": "The agent-executable recipe for tier 2: download the pinned HL7 validator_cli.jar, run it against the same NRCES IG version the catalogue pins, and read what...",
+                "title": "Running the official HL7 validator, the tier 2 full conformance check",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/fhir/claim-response",
+                "id": "nhcx.fhir.claim-response",
+                "summary": "The payer's decision on a claim: approved, partly approved, queried or rejected, with the approved amount and any deductions.",
+                "title": "Claim response bundle",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/fhir/preauthorisation-response",
+                "id": "nhcx.fhir.preauth-response",
+                "summary": "The payer's decision on a preauthorisation: approved, partly approved, queried or rejected, with the amounts it will cover.",
+                "title": "Preauthorisation response bundle, a ClaimResponse",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/fhir/claim-request",
+                "id": "nhcx.fhir.claim-request",
+                "summary": "The bundle a hospital sends after discharge to claim payment, with the final amounts, the discharge details and the documents the policy requires.",
+                "title": "Claim request bundle",
+                "type": "fhir"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01Sosiecosya6X7yTkRQRY1C",
+            "Name": "search",
+            "Input": {
+              "query": "health standards terminology coding systems",
+              "kind": "atom",
+              "limit": 25
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "health standards terminology coding systems",
+            "kind": "atom",
+            "limit": 25
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "Let me get the detailed pages on FHIR, SNOMED CT, and code systems.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01P5cQg5EbA9Q7F6bG1vuLNk",
+            "Name": "get",
+            "Input": {
+              "id": "shared.glossary.fhir"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "shared.glossary.fhir"
+          },
+          "output": {
+            "body": "# FHIR, Fast Healthcare Interoperability Resources\n\n## In plain words\n\nFHIR is the format health records travel in. ABDM uses FHIR R4, with\nprofiles published and maintained by NRCeS for the Indian context.\n\nRecords go one of two ways: a simple bundle wrapping a PDF or image, or\na structured bundle with coded clinical information.\n\nEvery bundle is a DocumentBundle, which is the envelope, and the kind of\nrecord it carries is named by a health information type. NHA's list is\nPrescription, DiagnosticReport, OPConsultation, DischargeSummary,\nImmunizationRecord, WellnessRecord and HealthDocumentRecord, with\nInvoiceRecord for billing. Each carries a SNOMED CT code in the bundle,\nso the code decides the type, not the display string.\n\nNHA states that implementing all of the health information types is\nmandatory. Integrators regularly build two or three and meet this at\ncertification rather than at design time.\n\n## Before you start\n\nNothing. A glossary entry assumes no prior reading.\n\n## What happens\n\nNothing happens here. This entry defines a term, it does not describe a call.\n\n## How you know it worked\n\nYou have understood this when you can say what FHIR is without using the acronym itself.\n\n## When it goes wrong\n\nUsing generic FHIR R4 rather than the NRCeS profiles. A bundle that validates against base FHIR can still be rejected by ABDM.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/getting-started/glossary#fhir",
+            "gateway": "shared",
+            "id": "shared.glossary.fhir",
+            "milestone": "n/a",
+            "summary": "The standard ABDM uses for the health records themselves, in the R4 version with India specific profiles.",
+            "title": "FHIR, Fast Healthcare Interoperability Resources",
+            "type": "glossary"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01EmL2W6EuvVJyu1eaQo6mmJ",
+            "Name": "get",
+            "Input": {
+              "id": "shared.glossary.snomed-ct"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "shared.glossary.snomed-ct"
+          },
+          "output": {
+            "body": "# SNOMED CT, and the licence you need in India\n\n## In plain words\n\nSNOMED CT is the clinical terminology ABDM uses to say what a record\nmeans. FHIR gives the record its shape, and SNOMED CT gives its content a\ncode, which is why the two turn up together in every conversation about\nbundles.\n\n## Before you start\n\nYou need to know that ABDM records are FHIR bundles, because SNOMED CT\ncodes sit inside them rather than alongside them.\n\n## What happens\n\nThe licence question has an answer that sounds like a contradiction and\nis not. NHA states both halves plainly:\n\n> \"Yes, an Affiliate License is required for use of SNOMED CT in India.\n> The Ministry of Health and Family Welfare (MoH&FW), Government of India\n> has made SNOMED CT freely available for all use within India.\"\n\nSo it costs nothing and you still have to hold a licence. NHA is asked\nthis twice in its own FAQ, in both directions, and answers the same way:\nSNOMED CT is the intellectual property of SNOMED International, and the\nAffiliate License Agreement carries terms that apply whether or not money\nchanges hands.\n\nWhere things live:\n\n| What | Where |\n|---|---|\n| The licence | Member Licensing and Distribution Service, mlds.ihtsdotools.org |\n| Release files | The same service, once the licence is approved |\n| India extensions | NRCeS national releases, nrces.in/services/national-releases |\n| Common Drug Codes for India, CDCI | The same NRCeS national releases page |\n| Browsing content | browser.ihtsdotools.org, or C-DAC's CSNOFinder |\n| Integration tooling | C-DAC's SNOMED CT Toolkit, CSNOtk |\n\nTwo answers worth carrying, because they come up in design rather than\nin setup. Mapping ICD to SNOMED CT is one to many, and the SNOMED CT to\nICD-10 map refset shipped with the International Edition is what resolves\nit. And SNOMED CT gives a drug's dosage form and route but not its daily\ndose limit or frequency: NHA's position is that those are decision\nsupport, to be built in the application on top of the attributes SNOMED\nCT does define.\n\n## How you know it worked\n\nYou hold an Affiliate License, you can download the release files, and\nyou know which codes came from the International Edition and which from\nthe India extension.\n\n## When it goes wrong\n\nReading \"free in India\" as \"no licence needed\" and skipping the\nregistration. That is the single most common misreading, and NHA answers\nit as a separate FAQ entry precisely because it keeps happening.\n\nExpecting SNOMED CT to carry prescribing intelligence. It carries the\nattributes; the advice is yours to build.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/nhcx/v1/getting-started/glossary#organisations-and-programmes",
+            "gateway": "shared",
+            "id": "shared.glossary.snomed-ct",
+            "milestone": "n/a",
+            "summary": "The clinical terminology ABDM codes records with. It is free to use in India and it still requires a licence, which is the question NHA is asked most often about it.",
+            "title": "SNOMED CT, and the licence you need in India",
+            "type": "glossary"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_014Q4gD4VtGTNEpsM6cxXC54",
+            "Name": "get",
+            "Input": {
+              "id": "nhcx.fhir.terminologies"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "nhcx.fhir.terminologies"
+          },
+          "output": {
+            "body": "# Code systems and value sets used in NHCX bundles\n\n## In plain words\n\nA code system is a published list of codes, such as diagnoses or document types. Claims bundles use international systems like [SNOMED CT](../../shared/glossary/snomed-ct.md), LOINC and ICD-10, and Indian systems published by [NRCeS](../../shared/glossary/nrces.md).\n\nPayers match codes by exact system URL and code. A code under the wrong system URL fails, even when the code itself is right.\n\n## Before you start\n\n- You know which bundle you are building. See [the collection bundle](collection-bundle.md).\n- For PMJAY package, specialty, stratification and document codes, you have the payer's insurance plan. See [the PMJAY InsurancePlan](pmjay-insurance-plan.md).\n\n## What happens\n\n### Clinical terminologies\n\n| Terminology | System URL | Used for |\n|---|---|---|\n| SNOMED CT | `http://snomed.info/sct` | Procedures, clinical findings, `Claim.type` (`737481003` Inpatient care management) |\n| LOINC | `http://loinc.org` | Laboratory and clinical observations |\n| ICD-10 | `http://hl7.org/fhir/sid/icd-10` | `Claim.diagnosis` |\n\nIn India, SNOMED CT is free to use. ICD codes classify diseases. Laboratories use LOINC.\n\n### NRCeS code systems\n\n| System URL | Carries | Example codes |\n|---|---|---|\n| `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-identifier-type-code` | Identifier types | `PMJAY`, `ABHA`, `HPID`, `HPIN`, `CLN` (claim number), `UTR` |\n| `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-supportinginfo-category` | `Claim.supportingInfo.category` | `INV`, `DIA`, `DIS`, `ONS`, `OTH`, `NMI`, `INF`, `POI`, `DOB` |\n| `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-supportinginfo-code` | `Claim.supportingInfo.code` | `DTH`, `DTM`, `LAMA`, `DAMA`, `ADDD`, `DSDE`, `PSP`, `EDT`, `CQD`, `BCF`, `DCB` |\n| `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-reason-code` | `Task.reasonCode` | `treatmentplanchanged`, `claimrejected`, `partialpayment` |\n| `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-task-input-type-code` | `Task.input.type` | `policyNumber`, `providerId`, `claimNumber`, `intimationNumber` |\n| `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-task-output-type` | `Task.output.type` | `status`, `include` |\n| `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-task-output-value` | `Task.output.value` | `paymentack` |\n| `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-task-codes` | `Task.code` for payment notices | `deliver` |\n\n### HL7 code systems\n\n| System URL | Used for |\n|---|---|\n| `http://terminology.hl7.org/CodeSystem/v2-0203` | Identifier types `NPI` (facility HFR ID), `NIIP` (payer), `NH` (policy), `XV` (plan), `JHN`, `SNO`, `MR` |\n| `http://terminology.hl7.org/CodeSystem/financialtaskcode` | `Task.code` `poll`, `cancel`, `reprocess`, `status` |\n| `http://terminology.hl7.org/CodeSystem/processpriority` | `priority` `normal` |\n| `http://terminology.hl7.org/CodeSystem/organization-type` | `prov`, `pay` |\n| `http://terminology.hl7.org/CodeSystem/paymentstatus` | `paid` |\n| `http://terminology.hl7.org/CodeSystem/v3-ObservationValue` | The `SUBSETTED` tag on payer-built resources |\n\n### PMJAY master codes\n\nPMJAY specialty, package, stratification and mandatory-document codes come from the payer's InsurancePlan. Examples are `MG` (General Medicine), `MG004A` (a package), `STRAT006b` (HDU, a high dependency unit) and `MAND0409` (a document). Copy each coding, system and code, exactly as the InsurancePlan gives it.\n\n### Binding strength\n\nA binding says how strictly an element must use its value set:\n\n- `required`: use a code from the value set.\n- `preferred` or `extensible`: draw from the value set unless the domain has agreed otherwise.\n- `example`: the domain must agree and define the value set.\n\nProposed bindings for NHCX elements:\n\n| Element | Terminology | Binding |\n|---|---|---|\n| `CoverageEligibilityRequest.insurer` | Insurance company owners | Preferred |\n| `Claim.procedure.type` | Procedure type | Example |\n| `Claim.procedure.procedureCode` | Procedure code | Example |\n| `ClaimResponse.item.adjudication.reason` | Denial codes | Preferred |\n| `Claim.item.modifier` | Procedure modifiers | Example |\n| `Claim.item.category` | Service categories | Example |\n| `Claim.item.productOrService` | Service codes | Preferred |\n| `PractitionerRole.speciality` | Medical speciality type | Preferred |\n| `Claim.careTeam.role` | Health service provider role | Example |\n\n## How you know it worked\n\nRun the validator recipe ([shared.fhir.hl7-validator-recipe](../../shared/fhir/hl7-validator-recipe.md)) online, without `-tx n/a`, so codes are checked:\n\n```bash\njava -jar validator_cli.jar bundle.json -version 4.0.1 -ig ndhm.in#6.5.0 -profile <BUNDLE_PROFILE_CANONICAL_URL>\n```\n\nIt exits with code 0 and reports no binding errors.\n\nYou have understood the codes when you can answer:\n\n1. Which system carries the facility's HFR ID type code `NPI`?\n2. Where do you take a package code from before you put it in `Claim.item.productOrService`?\n\n## When it goes wrong\n\n- **A SNOMED code under the wrong URL.** Use `http://snomed.info/sct` exactly. Variants such as `https://snomed.info/sct` or `http://snomed.info/sct0` do not match.\n- **An NRCeS URL spelled another way.** Use `https://nrces.in/ndhm/fhir/r4/CodeSystem/<name>`. A `www.` host or a `CodeSystem-<name>` page URL is a web page, not the system.\n- **[PAYR-1020](../errors/payr-1020.md) or [PAYR-1021](../errors/payr-1021.md).** A `supportingInfo` category or code is invalid. Take it from the InsurancePlan requirement or the tables above.\n- **[PAYR-1010](../errors/payr-1010.md).** An identifier carries no `type`. Add the type coding from `ndhm-identifier-type-code` or `v2-0203`.\n- **A PMJAY code typed by hand.** Codes have trailing spaces and case rules. Copy them from the InsurancePlan bundle.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "",
+            "gateway": "nhcx",
+            "id": "nhcx.fhir.terminologies",
+            "milestone": "n/a",
+            "summary": "The code systems every claims bundle draws on, where each one is used, and how strictly each binding applies.",
+            "title": "Code systems and value sets used in NHCX bundles",
+            "type": "fhir"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01TDtX1SKCE4UDEy3Fb3c2ix",
+            "Name": "get",
+            "Input": {
+              "id": "shared.fhir.document-bundle"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "shared.fhir.document-bundle"
+          },
+          "output": {
+            "body": "# DocumentBundle, the envelope every health record travels in\n\n## In plain words\n\nEvery record ABDM moves is a FHIR R4 Bundle, profiled for India by\nNRCeS. The profile is DocumentBundle, and NRCeS describes it as setting\nthe minimum expectations for a bundle that carries all its resources in\na single instance. NHA's own packaging page calls it the main envelope.\n\nInside it, a Composition says what the document is. Everything else, the\nPatient, the Practitioner, the Observations, hangs off that.\n\n## Before you start\n\nDecide which health information type you are sending, because the type\npicks the Composition profile and the SNOMED CT code that goes with it.\n\n## What happens\n\nNRCeS defines one Composition profile per type: PrescriptionRecord,\nDiagnosticReportRecord, OPConsultRecord, DischargeSummaryRecord,\nImmunizationRecord, WellnessRecord, HealthDocumentRecord, and\nInvoiceRecord for billing.\n\nTwo levels of conformance are allowed. A simple bundle wraps a PDF or an\nimage as an attachment, which is where most integrators start. A\nstructured bundle carries coded clinical resources, and NHA's stated\nexpectation is that integrators move to it within a couple of years of\nbecoming compliant.\n\nThe core resource profiles NRCeS publishes cover the material a real\nrecord needs: Patient, Practitioner, PractitionerRole, Organization,\nEncounter, Condition, Procedure, Medication, MedicationRequest,\nMedicationStatement, AllergyIntolerance, Immunization, CarePlan,\nServiceRequest, Specimen, ImagingStudy, the two DiagnosticReport variants\nfor lab and imaging, and Observation in six flavours including vital\nsigns and body measurement.\n\nNHA does not publish bundle samples of its own. When integrators ask, it\npoints at the NRCeS guide, at the HL7 pages for Bundle and Attachment,\nand at a recorded workshop.\n\nValidate before you send. The NRCeS profile is the specification a\nrejection was measured against, and the FHIR validator run locally is far\ncheaper than reading an error afterwards.\n\n## How you know it worked\n\nA bundle validates against the NRCeS profile rather than base FHIR, and\nthe receiving system identifies its type from the Composition code\nwithout being told separately.\n\n## When it goes wrong\n\nValidating against base FHIR R4. A bundle can pass that and still be\nrejected, because the Indian profiles constrain more than the base\nstandard does.\n\nSending several bundles that share an identifier. Only one then shows in\nthe patient's app, and the others appear to have vanished.\n\nSerialising the bundle carelessly before encrypting it. The bundle is\nstringified and then encrypted, and a serialisation that reorders or\nreformats produces something the receiver cannot parse.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "",
+            "gateway": "shared",
+            "id": "shared.fhir.document-bundle",
+            "milestone": "n/a",
+            "summary": "The FHIR R4 bundle ABDM wraps records in, profiled by NRCeS, with a Composition naming the record type and a SNOMED CT code deciding what it is.",
+            "title": "DocumentBundle, the envelope every health record travels in",
+            "type": "fhir"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "Based on the ABDM documentation, here are the key references for health standards:\n\n## FHIR Standards\n\n**FHIR Glossary** — `/docs/hiecm/v3/getting-started/glossary#fhir`\n- Explains that ABDM uses **FHIR R4** with profiles published by NRCeS for the Indian context\n- Covers the two record shapes: simple bundles wrapping PDFs/images, and structured bundles with coded clinical information\n- Lists the mandatory health information types: Prescription, DiagnosticReport, OPConsultation, DischargeSummary, ImmunizationRecord, WellnessRecord, HealthDocumentRecord, and InvoiceRecord\n\n**DocumentBundle** — Reference page on the FHIR R4 bundle structure\n- Explains the envelope that carries all ABDM records, profiled by NRCeS\n- Describes the core resource profiles: Patient, Practitioner, Organization, Encounter, Condition, Procedure, Medication, Observation (6 variants), and more\n- Important: bundles must validate against NRCeS profiles, not just base FHIR R4\n\n## SNOMED CT Standards\n\n**SNOMED CT Glossary** — `/docs/nhcx/v1/getting-started/glossary#organisations-and-programmes`\n- Explains SNOMED CT is the clinical terminology ABDM uses\n- **Critical licensing info**: Free to use in India but still requires an Affiliate License (through MLDS at mlds.ihtsdotools.org)\n- References India extensions and Common Drug Codes (CDCI) at nrces.in/services/national-releases\n\n## Code Systems Reference\n\n**Code Systems and Value Sets (NHCX bundles)** — Detailed reference on all terminologies\n- Clinical terminologies: SNOMED CT (`http://snomed.info/sct`), LOINC, ICD-10\n- NRCeS code systems (identifier types, supporting info categories, reason codes, etc.)\n- HL7 code systems (v2-0203, financialtaskcode, processpriority, organization-type, etc.)\n- PMJAY master codes (specialty, package, stratification)\n- Binding strengths (required, preferred, extensible, example)\n\nAll these pages are in the official ABDM developer portal and contain the normative standards for implementation.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "Based on the ABDM documentation, here are the key references for health standards:\n\n## FHIR Standards\n\n**FHIR Glossary** — `/docs/hiecm/v3/getting-started/glossary#fhir`\n- Explains that ABDM uses **FHIR R4** with profiles published by NRCeS for the Indian context\n- Covers the two record shapes: simple bundles wrapping PDFs/images, and structured bundles with coded clinical information\n- Lists the mandatory health information types: Prescription, DiagnosticReport, OPConsultation, DischargeSummary, ImmunizationRecord, WellnessRecord, HealthDocumentRecord, and InvoiceRecord\n\n**DocumentBundle** — Reference page on the FHIR R4 bundle structure\n- Explains the envelope that carries all ABDM records, profiled by NRCeS\n- Describes the core resource profiles: Patient, Practitioner, Organization, Encounter, Condition, Procedure, Medication, Observation (6 variants), and more\n- Important: bundles must validate against NRCeS profiles, not just base FHIR R4\n\n## SNOMED CT Standards\n\n**SNOMED CT Glossary** — `/docs/nhcx/v1/getting-started/glossary#organisations-and-programmes`\n- Explains SNOMED CT is the clinical terminology ABDM uses\n- **Critical licensing info**: Free to use in India but still requires an Affiliate License (through MLDS at mlds.ihtsdotools.org)\n- References India extensions and Common Drug Codes (CDCI) at nrces.in/services/national-releases\n\n## Code Systems Reference\n\n**Code Systems and Value Sets (NHCX bundles)** — Detailed reference on all terminologies\n- Clinical terminologies: SNOMED CT (`http://snomed.info/sct`), LOINC, ICD-10\n- NRCeS code systems (identifier types, supporting info categories, reason codes, etc.)\n- HL7 code systems (v2-0203, financialtaskcode, processpriority, organization-type, etc.)\n- PMJAY master codes (specialty, package, stratification)\n- Binding strengths (required, preferred, extensible, example)\n\nAll these pages are in the official ABDM developer portal and contain the normative standards for implementation.",
+  "sources": [
+    {
+      "id": "shared.glossary.fhir",
+      "title": "FHIR, Fast Healthcare Interoperability Resources",
+      "url": "/docs/hiecm/v3/getting-started/glossary#fhir"
+    },
+    {
+      "id": "shared.glossary.snomed-ct",
+      "title": "SNOMED CT, and the licence you need in India",
+      "url": "/docs/nhcx/v1/getting-started/glossary#organisations-and-programmes"
+    },
+    {
+      "id": "nhcx.fhir.terminologies",
+      "title": "Code systems and value sets used in NHCX bundles",
+      "url": ""
+    },
+    {
+      "id": "shared.fhir.document-bundle",
+      "title": "DocumentBundle, the envelope every health record travels in",
+      "url": ""
+    },
+    {
+      "id": "hiecm.glossary.hi-type",
+      "title": "HI type, the kind of health information",
+      "url": "/docs/hiecm/v3/getting-started/glossary#hi-type"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#fhir\",\"id\":\"shared.glossary.fhir\",\"summary\":\"The standard ABDM uses for the health records themselves, in the R4 version with India specific profiles.\",\"title\":\"FHIR, Fast Healthcare Interoperability Resources\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/glossary#organisations-and-programmes\",\"id\":\"shared.glossary.snomed-ct\",\"summary\":\"The clinical terminology ABDM codes records with. It is free to use in India and it still requires a licence, which is the question NHA is asked most often a...\",\"title\":\"SNOMED CT, and the licence you need in India\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hi-type\",\"id\":\"hiecm.glossary.hi-type\",\"summary\":\"The category of record being asked for or sent, such as a prescription or a diagnostic report. A SNOMED CT code decides which, and NHA requires all of them t...\",\"title\":\"HI type, the kind of health information\",\"type\":\"glossary\"},{\"doc_url\":\"\",\"id\":\"nhcx.fhir.terminologies\",\"summary\":\"The code systems every claims bundle draws on, where each one is used, and how strictly each binding applies.\",\"title\":\"Code systems and value sets used in NHCX bundles\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.document-bundle\",\"summary\":\"The FHIR R4 bundle ABDM wraps records in, profiled by NRCeS, with a Composition naming the record type and a SNOMED CT code deciding what it is.\",\"title\":\"DocumentBundle, the envelope every health record travels in\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.profile-and-example-together\",\"summary\":\"A NRCeS profile gives the cardinalities and a NRCeS example gives the shape, and a generator written from either one alone is wrong in a different way.\",\"title\":\"Read the profile and the example together, because each omits what the other carries\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/nhcx/v1/reference/error-codes#payr\",\"id\":\"nhcx.error.payr-1333\",\"summary\":\"The claim says in-patient or out-patient in a way the payer does not accept.\",\"title\":\"PAYR-1333: the claim type is not valid\",\"type\":\"error\"},{\"doc_url\":\"/docs/nhcx/v1/reference/fhir/coverage-eligibility-response\",\"id\":\"nhcx.fhir.coverage-eligibility-response\",\"summary\":\"The payer's answer to an eligibility check: whether the policy is in force, how much cover is left, and whether the treatment needs prior approval.\",\"title\":\"CoverageEligibilityResponse bundle\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/nhcx/v1/roles/provider/preauthorisation\",\"id\":\"nhcx.flow.preauth-submit\",\"summary\":\"Ask the payer to approve a planned treatment before it starts, then read the decision when it arrives.\",\"title\":\"Submit a preauthorisation\",\"type\":\"flow\"},{\"doc_url\":\"/docs/nhcx/v1/reference/fhir/preauthorisation-request\",\"id\":\"nhcx.fhir.preauth-request\",\"summary\":\"The bundle a hospital sends to ask a payer to approve a planned treatment before it happens, with the package, the diagnosis and the required documents.\",\"title\":\"Preauthorisation request bundle, a Claim with use preauthorization\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.hl7-validator-recipe\",\"summary\":\"The agent-executable recipe for tier 2: download the pinned HL7 validator_cli.jar, run it against the same NRCES IG version the catalogue pins, and read what...\",\"title\":\"Running the official HL7 validator, the tier 2 full conformance check\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/nhcx/v1/reference/fhir/claim-response\",\"id\":\"nhcx.fhir.claim-response\",\"summary\":\"The payer's decision on a claim: approved, partly approved, queried or rejected, with the approved amount and any deductions.\",\"title\":\"Claim response bundle\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/nhcx/v1/reference/fhir/preauthorisation-response\",\"id\":\"nhcx.fhir.preauth-response\",\"summary\":\"The payer's decision on a preauthorisation: approved, partly approved, queried or rejected, with the amounts it will cover.\",\"title\":\"Preauthorisation response bundle, a ClaimResponse\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/nhcx/v1/reference/fhir/claim-request\",\"id\":\"nhcx.fhir.claim-request\",\"summary\":\"The bundle a hospital sends after discharge to claim payment, with the final amounts, the discharge details and the documents the policy requires.\",\"title\":\"Claim request bundle\",\"type\":\"fhir\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"body\":\"# FHIR, Fast Healthcare Interoperability Resources\\n\\n## In plain words\\n\\nFHIR is the format health records travel in. ABDM uses FHIR R4, with\\nprofiles published and maintained by NRCeS for the Indian context.\\n\\nRecords go one of two ways: a simple bundle wrapping a PDF or image, or\\na structured bundle with coded clinical information.\\n\\nEvery bundle is a DocumentBundle, which is the envelope, and the kind of\\nrecord it carries is named by a health information type. NHA's list is\\nPrescription, DiagnosticReport, OPConsultation, DischargeSummary,\\nImmunizationRecord, WellnessRecord and HealthDocumentRecord, with\\nInvoiceRecord for billing. Each carries a SNOMED CT code in the bundle,\\nso the code decides the type, not the display string.\\n\\nNHA states that implementing all of the health information types is\\nmandatory. Integrators regularly build two or three and meet this at\\ncertification rather than at design time.\\n\\n## Before you start\\n\\nNothing. A glossary entry assumes no prior reading.\\n\\n## What happens\\n\\nNothing happens here. This entry defines a term, it does not describe a call.\\n\\n## How you know it worked\\n\\nYou have understood this when you can say what FHIR is without using the acronym itself.\\n\\n## When it goes wrong\\n\\nUsing generic FHIR R4 rather than the NRCeS profiles. A bundle that validates against base FHIR can still be rejected by ABDM.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#fhir\",\"gateway\":\"shared\",\"id\":\"shared.glossary.fhir\",\"milestone\":\"n/a\",\"summary\":\"The standard ABDM uses for the health records themselves, in the R4 version with India specific profiles.\",\"title\":\"FHIR, Fast Healthcare Interoperability Resources\",\"type\":\"glossary\"}\n{\"body\":\"# SNOMED CT, and the licence you need in India\\n\\n## In plain words\\n\\nSNOMED CT is the clinical terminology ABDM uses to say what a record\\nmeans. FHIR gives the record its shape, and SNOMED CT gives its content a\\ncode, which is why the two turn up together in every conversation about\\nbundles.\\n\\n## Before you start\\n\\nYou need to know that ABDM records are FHIR bundles, because SNOMED CT\\ncodes sit inside them rather than alongside them.\\n\\n## What happens\\n\\nThe licence question has an answer that sounds like a contradiction and\\nis not. NHA states both halves plainly:\\n\\n> \\\"Yes, an Affiliate License is required for use of SNOMED CT in India.\\n> The Ministry of Health and Family Welfare (MoH&FW), Government of India\\n> has made SNOMED CT freely available for all use within India.\\\"\\n\\nSo it costs nothing and you still have to hold a licence. NHA is asked\\nthis twice in its own FAQ, in both directions, and answers the same way:\\nSNOMED CT is the intellectual property of SNOMED International, and the\\nAffiliate License Agreement carries terms that apply whether or not money\\nchanges hands.\\n\\nWhere things live:\\n\\n| What | Where |\\n|---|---|\\n| The licence | Member Licensing and Distribution Service, mlds.ihtsdotools.org |\\n| Release files | The same service, once the licence is approved |\\n| India extensions | NRCeS national releases, nrces.in/services/national-releases |\\n| Common Drug Codes for India, CDCI | The same NRCeS national releases page |\\n| Browsing content | browser.ihtsdotools.org, or C-DAC's CSNOFinder |\\n| Integration tooling | C-DAC's SNOMED CT Toolkit, CSNOtk |\\n\\nTwo answers worth carrying, because they come up in design rather than\\nin setup. Mapping ICD to SNOMED CT is one to many, and the SNOMED CT to\\nICD-10 map refset shipped with the International Edition is what resolves\\nit. And SNOMED CT gives a drug's dosage form and route but not its daily\\ndose limit or frequency: NHA's position is that those are decision\\nsupport, to be built in the application on top of the attributes SNOMED\\nCT does define.\\n\\n## How you know it worked\\n\\nYou hold an Affiliate License, you can download the release files, and\\nyou know which codes came from the International Edition and which from\\nthe India extension.\\n\\n## When it goes wrong\\n\\nReading \\\"free in India\\\" as \\\"no licence needed\\\" and skipping the\\nregistration. That is the single most common misreading, and NHA answers\\nit as a separate FAQ entry precisely because it keeps happening.\\n\\nExpecting SNOMED CT to carry prescribing intelligence. It carries the\\nattributes; the advice is yours to build.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/nhcx/v1/getting-started/glossary#organisations-and-programmes\",\"gateway\":\"shared\",\"id\":\"shared.glossary.snomed-ct\",\"milestone\":\"n/a\",\"summary\":\"The clinical terminology ABDM codes records with. It is free to use in India and it still requires a licence, which is the question NHA is asked most often about it.\",\"title\":\"SNOMED CT, and the licence you need in India\",\"type\":\"glossary\"}\n{\"body\":\"# Code systems and value sets used in NHCX bundles\\n\\n## In plain words\\n\\nA code system is a published list of codes, such as diagnoses or document types. Claims bundles use international systems like [SNOMED CT](../../shared/glossary/snomed-ct.md), LOINC and ICD-10, and Indian systems published by [NRCeS](../../shared/glossary/nrces.md).\\n\\nPayers match codes by exact system URL and code. A code under the wrong system URL fails, even when the code itself is right.\\n\\n## Before you start\\n\\n- You know which bundle you are building. See [the collection bundle](collection-bundle.md).\\n- For PMJAY package, specialty, stratification and document codes, you have the payer's insurance plan. See [the PMJAY InsurancePlan](pmjay-insurance-plan.md).\\n\\n## What happens\\n\\n### Clinical terminologies\\n\\n| Terminology | System URL | Used for |\\n|---|---|---|\\n| SNOMED CT | `http://snomed.info/sct` | Procedures, clinical findings, `Claim.type` (`737481003` Inpatient care management) |\\n| LOINC | `http://loinc.org` | Laboratory and clinical observations |\\n| ICD-10 | `http://hl7.org/fhir/sid/icd-10` | `Claim.diagnosis` |\\n\\nIn India, SNOMED CT is free to use. ICD codes classify diseases. Laboratories use LOINC.\\n\\n### NRCeS code systems\\n\\n| System URL | Carries | Example codes |\\n|---|---|---|\\n| `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-identifier-type-code` | Identifier types | `PMJAY`, `ABHA`, `HPID`, `HPIN`, `CLN` (claim number), `UTR` |\\n| `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-supportinginfo-category` | `Claim.supportingInfo.category` | `INV`, `DIA`, `DIS`, `ONS`, `OTH`, `NMI`, `INF`, `POI`, `DOB` |\\n| `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-supportinginfo-code` | `Claim.supportingInfo.code` | `DTH`, `DTM`, `LAMA`, `DAMA`, `ADDD`, `DSDE`, `PSP`, `EDT`, `CQD`, `BCF`, `DCB` |\\n| `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-reason-code` | `Task.reasonCode` | `treatmentplanchanged`, `claimrejected`, `partialpayment` |\\n| `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-task-input-type-code` | `Task.input.type` | `policyNumber`, `providerId`, `claimNumber`, `intimationNumber` |\\n| `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-task-output-type` | `Task.output.type` | `status`, `include` |\\n| `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-task-output-value` | `Task.output.value` | `paymentack` |\\n| `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-task-codes` | `Task.code` for payment notices | `deliver` |\\n\\n### HL7 code systems\\n\\n| System URL | Used for |\\n|---|---|\\n| `http://terminology.hl7.org/CodeSystem/v2-0203` | Identifier types `NPI` (facility HFR ID), `NIIP` (payer), `NH` (policy), `XV` (plan), `JHN`, `SNO`, `MR` |\\n| `http://terminology.hl7.org/CodeSystem/financialtaskcode` | `Task.code` `poll`, `cancel`, `reprocess`, `status` |\\n| `http://terminology.hl7.org/CodeSystem/processpriority` | `priority` `normal` |\\n| `http://terminology.hl7.org/CodeSystem/organization-type` | `prov`, `pay` |\\n| `http://terminology.hl7.org/CodeSystem/paymentstatus` | `paid` |\\n| `http://terminology.hl7.org/CodeSystem/v3-ObservationValue` | The `SUBSETTED` tag on payer-built resources |\\n\\n### PMJAY master codes\\n\\nPMJAY specialty, package, stratification and mandatory-document codes come from the payer's InsurancePlan. Examples are `MG` (General Medicine), `MG004A` (a package), `STRAT006b` (HDU, a high dependency unit) and `MAND0409` (a document). Copy each coding, system and code, exactly as the InsurancePlan gives it.\\n\\n### Binding strength\\n\\nA binding says how strictly an element must use its value set:\\n\\n- `required`: use a code from the value set.\\n- `preferred` or `extensible`: draw from the value set unless the domain has agreed otherwise.\\n- `example`: the domain must agree and define the value set.\\n\\nProposed bindings for NHCX elements:\\n\\n| Element | Terminology | Binding |\\n|---|---|---|\\n| `CoverageEligibilityRequest.insurer` | Insurance company owners | Preferred |\\n| `Claim.procedure.type` | Procedure type | Example |\\n| `Claim.procedure.procedureCode` | Procedure code | Example |\\n| `ClaimResponse.item.adjudication.reason` | Denial codes | Preferred |\\n| `Claim.item.modifier` | Procedure modifiers | Example |\\n| `Claim.item.category` | Service categories | Example |\\n| `Claim.item.productOrService` | Service codes | Preferred |\\n| `PractitionerRole.speciality` | Medical speciality type | Preferred |\\n| `Claim.careTeam.role` | Health service provider role | Example |\\n\\n## How you know it worked\\n\\nRun the validator recipe ([shared.fhir.hl7-validator-recipe](../../shared/fhir/hl7-validator-recipe.md)) online, without `-tx n/a`, so codes are checked:\\n\\n```bash\\njava -jar validator_cli.jar bundle.json -version 4.0.1 -ig ndhm.in#6.5.0 -profile <BUNDLE_PROFILE_CANONICAL_URL>\\n```\\n\\nIt exits with code 0 and reports no binding errors.\\n\\nYou have understood the codes when you can answer:\\n\\n1. Which system carries the facility's HFR ID type code `NPI`?\\n2. Where do you take a package code from before you put it in `Claim.item.productOrService`?\\n\\n## When it goes wrong\\n\\n- **A SNOMED code under the wrong URL.** Use `http://snomed.info/sct` exactly. Variants such as `https://snomed.info/sct` or `http://snomed.info/sct0` do not match.\\n- **An NRCeS URL spelled another way.** Use `https://nrces.in/ndhm/fhir/r4/CodeSystem/<name>`. A `www.` host or a `CodeSystem-<name>` page URL is a web page, not the system.\\n- **[PAYR-1020](../errors/payr-1020.md) or [PAYR-1021](../errors/payr-1021.md).** A `supportingInfo` category or code is invalid. Take it from the InsurancePlan requirement or the tables above.\\n- **[PAYR-1010](../errors/payr-1010.md).** An identifier carries no `type`. Add the type coding from `ndhm-identifier-type-code` or `v2-0203`.\\n- **A PMJAY code typed by hand.** Codes have trailing spaces and case rules. Copy them from the InsurancePlan bundle.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"\",\"gateway\":\"nhcx\",\"id\":\"nhcx.fhir.terminologies\",\"milestone\":\"n/a\",\"summary\":\"The code systems every claims bundle draws on, where each one is used, and how strictly each binding applies.\",\"title\":\"Code systems and value sets used in NHCX bundles\",\"type\":\"fhir\"}\n{\"body\":\"# DocumentBundle, the envelope every health record travels in\\n\\n## In plain words\\n\\nEvery record ABDM moves is a FHIR R4 Bundle, profiled for India by\\nNRCeS. The profile is DocumentBundle, and NRCeS describes it as setting\\nthe minimum expectations for a bundle that carries all its resources in\\na single instance. NHA's own packaging page calls it the main envelope.\\n\\nInside it, a Composition says what the document is. Everything else, the\\nPatient, the Practitioner, the Observations, hangs off that.\\n\\n## Before you start\\n\\nDecide which health information type you are sending, because the type\\npicks the Composition profile and the SNOMED CT code that goes with it.\\n\\n## What happens\\n\\nNRCeS defines one Composition profile per type: PrescriptionRecord,\\nDiagnosticReportRecord, OPConsultRecord, DischargeSummaryRecord,\\nImmunizationRecord, WellnessRecord, HealthDocumentRecord, and\\nInvoiceRecord for billing.\\n\\nTwo levels of conformance are allowed. A simple bundle wraps a PDF or an\\nimage as an attachment, which is where most integrators start. A\\nstructured bundle carries coded clinical resources, and NHA's stated\\nexpectation is that integrators move to it within a couple of years of\\nbecoming compliant.\\n\\nThe core resource profiles NRCeS publishes cover the material a real\\nrecord needs: Patient, Practitioner, PractitionerRole, Organization,\\nEncounter, Condition, Procedure, Medication, MedicationRequest,\\nMedicationStatement, AllergyIntolerance, Immunization, CarePlan,\\nServiceRequest, Specimen, ImagingStudy, the two DiagnosticReport variants\\nfor lab and imaging, and Observation in six flavours including vital\\nsigns and body measurement.\\n\\nNHA does not publish bundle samples of its own. When integrators ask, it\\npoints at the NRCeS guide, at the HL7 pages for Bundle and Attachment,\\nand at a recorded workshop.\\n\\nValidate before you send. The NRCeS profile is the specification a\\nrejection was measured against, and the FHIR validator run locally is far\\ncheaper than reading an error afterwards.\\n\\n## How you know it worked\\n\\nA bundle validates against the NRCeS profile rather than base FHIR, and\\nthe receiving system identifies its type from the Composition code\\nwithout being told separately.\\n\\n## When it goes wrong\\n\\nValidating against base FHIR R4. A bundle can pass that and still be\\nrejected, because the Indian profiles constrain more than the base\\nstandard does.\\n\\nSending several bundles that share an identifier. Only one then shows in\\nthe patient's app, and the others appear to have vanished.\\n\\nSerialising the bundle carelessly before encrypting it. The bundle is\\nstringified and then encrypted, and a serialisation that reorders or\\nreformats produces something the receiver cannot parse.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"\",\"gateway\":\"shared\",\"id\":\"shared.fhir.document-bundle\",\"milestone\":\"n/a\",\"summary\":\"The FHIR R4 bundle ABDM wraps records in, profiled by NRCeS, with a Composition naming the record type and a SNOMED CT code deciding what it is.\",\"title\":\"DocumentBundle, the envelope every health record travels in\",\"type\":\"fhir\"}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T12:06:30.042Z",
+  "usage": {
+    "input_tokens": 30,
+    "output_tokens": 1355,
+    "cache_read_input_tokens": 29680,
+    "cache_creation_input_tokens": 12150,
+    "num_turns": 7,
+    "duration_ms": 20723,
+    "cost_usd_equivalent": 0.03407299999999999
+  }
+}

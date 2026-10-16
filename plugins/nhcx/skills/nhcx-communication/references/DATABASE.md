@@ -9,6 +9,7 @@ Every table behind the claim, patient and practitioner flows, in one list. Each 
 | [D1](../database/D1-organization.md) | organization | The healthcare facility this installation represents. | none | [A12](../apis/A12-txn-fhir.md) | none | [F17](../fhir/F17-organization.md) |
 | [D2](../database/D2-practitioner.md) | practitioner | Doctor or staff member of the facility. | none | none | none | [F8](../fhir/F8-claim.md), [F16](../fhir/F16-practitioner.md) |
 | [D3](../database/D3-patient.md) | patient | Registered patient. | none | none | none | [F15](../fhir/F15-patient.md) |
+| [D8](../database/D8-terminology.md) | terminology | Concept in one code list (a picker), for example one ICD-10/SNOMED diagnosis, one department or one payer adapter mapping. | none | none | none | none |
 
 ## Claim
 
@@ -39,3 +40,19 @@ Every table behind the claim, patient and practitioner flows, in one list. Each 
 | # | Table | What one row is | Screens | APIs | Callbacks | FHIR |
 |---|---|---|---|---|---|---|
 | [D30](../database/D30-counter.md) | counter | Named number series and the last value handed out from it. Primary key `name`. No parent table. | none | none | none | none |
+
+## Column types on a typed ORM
+
+The DnC tables give SQLite-style types (`TEXT`, `REAL`, `INTEGER`, `BLOB`). On a typed database or ORM map them once, the same way everywhere:
+
+| DnC type | Becomes | Notes |
+|---|---|---|
+| `TEXT` holding an ISO instant the application writes (`created_at`, `submitted_at`, `settled_at`, `checked_at`, `requested_at`, `fetched_at`, `answered_at`, `received_at`, `acknowledged_at`, `*_at`) | an aware timestamp | stored in UTC, shown in the facility's zone |
+| `TEXT` holding a **payer-supplied FHIR date** (D9 `plan_period_start`, `plan_period_end`, `patient_dob`; D20 `discharge_date`, `surgery_date`, `death_date`; D21 `payment_date`; D22 `date`) | **text, as received** | a FHIR date may be partial (`2026`, `2026-09`) or carry a time; parsing it to a date column loses or refuses values |
+| `REAL` money | `DECIMAL(14, 2)` | never a float |
+| `INTEGER` used as 0/1 (`inforce`, `auth_required`, `required`, `at_preauth`) | boolean | |
+| `TEXT` named `*_json` | a JSON column | indexed only where a DnK says so |
+| `BLOB` (D28 `data`) | the database's binary type, or file storage with the path in the column | |
+| `TEXT` status columns | text with the DnD values as named constants | not an enum type: payers add statuses |
+
+Index and constraint names are given in the DnK sections; a database or ORM that limits name length (30 characters is a common limit) shortens them as D19 does.

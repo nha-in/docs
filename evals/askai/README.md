@@ -4,7 +4,7 @@ The instrument that scores the assistant's answers. Read the design in
 `docs/superpowers/specs/2026-09-03-askai-excellence-design.md` first.
 
 - `corpus/` is NHA's own words, harvested verbatim. Never edited.
-- `cases/` is the golden set: one JSON file per case, nine slices.
+- `cases/` is the golden set: one JSON file per case, one folder per slice.
 - `calibration/owner-grades.json` is the owner's hand grading of 30 cases,
   which the judge must agree with before it grades anything.
 - `runs/` is written by the harness. `runs/latest` names the run CI replays.
@@ -41,6 +41,9 @@ were already known, per case, not just which cases were failing, so a case
 already in the baseline cannot acquire a new kind of failure for free.
 Shrinking the baseline is a deliberate act in a pull request, when a case is
 actually fixed, not something the tooling does on its own.
+A case the recorded run never answered, because it was added after the run,
+is reported as unmeasured: it neither fails the gate nor enters the baseline,
+and the next recorded run is what brings it under the gate.
 
 The judge is not trusted until it agrees with the owner's hand grading on at
 least 85 percent of the 30 cases in `calibration/owner-grades.json`;
@@ -48,7 +51,7 @@ least 85 percent of the 30 cases in `calibration/owner-grades.json`;
 still empty, which is the state today.
 
 Pull requests labelled `eval`, and every night against `main`, get the full
-judged run instead: all 150 cases, answered, checked, calibrated and graded
+judged run instead: every case, answered, checked, calibrated and graded
 by the judge. A run that did not finish answering or grading every case
 fails the gate outright, before any of the numbers below are trusted.
 Otherwise merge is blocked when overall factuality or uncertainty falls, or

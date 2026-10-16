@@ -1,0 +1,442 @@
+{
+  "case_id": "confusable-hiecm-m1-t-token-vs-x-token-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "what's the difference between T-token and X-token in abha login?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_018pVf7LjHnScRipD7LJzXAo",
+            "Name": "search",
+            "Input": {
+              "query": "T-token X-token ABHA login difference",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "T-token X-token ABHA login difference",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#abha",
+                "id": "shared.glossary.abha",
+                "summary": "The patient's identity in ABDM, in two forms that look alike and are not: a 14 digit ABHA number and a readable ABHA address.",
+                "title": "ABHA",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.abha-identifiers",
+                "summary": "NRCeS tells you apart the two health identifiers a person has by the identifier type code, not by a namespace URI, and it publishes no namespace URI for eith...",
+                "title": "Carrying an ABHA number and an ABHA address on a FHIR Patient",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-link-de-link/01-m1-post-v3-profile-benefit-linkanddelink-x-token#m1-benefit-link-or-delink",
+                "id": "hiecm.endpoint.m1-benefit-link-or-delink",
+                "summary": "Links or unlinks the programme named in the BENEFIT_NAME header for an ABHA.",
+                "title": "Link or unlink a benefit record from an ABHA",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/errors#abdm-1094",
+                "id": "hiecm.error.abdm-1094",
+                "summary": "Your client or the person's token is not allowed to do what the call tried, and the message says which of three cases applies.",
+                "title": "ABDM-1094, access to this feature is refused",
+                "type": "error"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.profile-and-example-together",
+                "summary": "A NRCeS profile gives the cardinalities and a NRCeS example gives the shape, and a generator written from either one alone is wrong in a different way.",
+                "title": "Read the profile and the example together, because each omits what the other carries",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/07-m3-get-data-flow-v3-health-information-request-status-tra-550104#p3-request-status",
+                "id": "hiecm.endpoint.p3-request-status",
+                "summary": "Check how far a health information request has got, by its transaction id.",
+                "title": "Get the status of a health information request",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p4/endpoints/p4-locker/03-p4-get-subscription-requests-v3-patients-lockers-lockerid#p3-patient-locker-details-by-locker-id",
+                "id": "hiecm.endpoint.p3-patient-locker-details-by-locker-id",
+                "summary": "Fetch one health locker's settings for the logged-in person.",
+                "title": "Get a health locker by its id",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p4/endpoints/p4-locker/01-p4-post-subscription-requests-v3-setup-locker#p3-setup-locker",
+                "id": "hiecm.endpoint.p3-setup-locker",
+                "summary": "Set up a health locker for the logged-in person.",
+                "title": "Set up a health locker",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/02-m2-post-data-flow-v3-health-information-hip-on-request#m2-hip-health-information-on-request",
+                "id": "hiecm.endpoint.m2-hip-health-information-on-request",
+                "summary": "The HIP acknowledges a health information request, then encrypts the records and pushes them to the requester.",
+                "title": "Acknowledge a health information data request",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/05-m3-post-v3-hiu-health-information-on-request#m3-on-health-information-request",
+                "id": "hiecm.callback.m3-on-health-information-request",
+                "summary": "ABDM acknowledges an HIU's data request with its transaction id and status; the records come separately.",
+                "title": "Acknowledgement of a health information request",
+                "type": "callback"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01QV8tzH44bGVWoNHtbWvdLL",
+            "Name": "search",
+            "Input": {
+              "query": "T-token temporary token ABHA",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "T-token temporary token ABHA",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#abha",
+                "id": "shared.glossary.abha",
+                "summary": "The patient's identity in ABDM, in two forms that look alike and are not: a 14 digit ABHA number and a readable ABHA address.",
+                "title": "ABHA",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.abha-identifiers",
+                "summary": "NRCeS tells you apart the two health identifiers a person has by the identifier type code, not by a namespace URI, and it publishes no namespace URI for eith...",
+                "title": "Carrying an ABHA number and an ABHA address on a FHIR Patient",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-link-de-link/01-m1-post-v3-profile-benefit-linkanddelink-x-token#m1-benefit-link-or-delink",
+                "id": "hiecm.endpoint.m1-benefit-link-or-delink",
+                "summary": "Links or unlinks the programme named in the BENEFIT_NAME header for an ABHA.",
+                "title": "Link or unlink a benefit record from an ABHA",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/errors#abdm-1094",
+                "id": "hiecm.error.abdm-1094",
+                "summary": "Your client or the person's token is not allowed to do what the call tried, and the message says which of three cases applies.",
+                "title": "ABDM-1094, access to this feature is refused",
+                "type": "error"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.profile-and-example-together",
+                "summary": "A NRCeS profile gives the cardinalities and a NRCeS example gives the shape, and a generator written from either one alone is wrong in a different way.",
+                "title": "Read the profile and the example together, because each omits what the other carries",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/07-m3-get-data-flow-v3-health-information-request-status-tra-550104#p3-request-status",
+                "id": "hiecm.endpoint.p3-request-status",
+                "summary": "Check how far a health information request has got, by its transaction id.",
+                "title": "Get the status of a health information request",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p4/endpoints/p4-locker/03-p4-get-subscription-requests-v3-patients-lockers-lockerid#p3-patient-locker-details-by-locker-id",
+                "id": "hiecm.endpoint.p3-patient-locker-details-by-locker-id",
+                "summary": "Fetch one health locker's settings for the logged-in person.",
+                "title": "Get a health locker by its id",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p4/endpoints/p4-locker/01-p4-post-subscription-requests-v3-setup-locker#p3-setup-locker",
+                "id": "hiecm.endpoint.p3-setup-locker",
+                "summary": "Set up a health locker for the logged-in person.",
+                "title": "Set up a health locker",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/02-m2-post-data-flow-v3-health-information-hip-on-request#m2-hip-health-information-on-request",
+                "id": "hiecm.endpoint.m2-hip-health-information-on-request",
+                "summary": "The HIP acknowledges a health information request, then encrypts the records and pushes them to the requester.",
+                "title": "Acknowledge a health information data request",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/05-m3-post-v3-hiu-health-information-on-request#m3-on-health-information-request",
+                "id": "hiecm.callback.m3-on-health-information-request",
+                "summary": "ABDM acknowledges an HIU's data request with its transaction id and status; the records come separately.",
+                "title": "Acknowledgement of a health information request",
+                "type": "callback"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01J9ZYD5RQkSJd5kZxmjKfVT",
+            "Name": "search",
+            "Input": {
+              "query": "X-token ABHA login authentication",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "X-token ABHA login authentication",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#abha",
+                "id": "shared.glossary.abha",
+                "summary": "The patient's identity in ABDM, in two forms that look alike and are not: a 14 digit ABHA number and a readable ABHA address.",
+                "title": "ABHA",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.abha-identifiers",
+                "summary": "NRCeS tells you apart the two health identifiers a person has by the identifier type code, not by a namespace URI, and it publishes no namespace URI for eith...",
+                "title": "Carrying an ABHA number and an ABHA address on a FHIR Patient",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m1#m1-login-by-mobile",
+                "id": "hiecm.flow.m1-login-by-mobile",
+                "summary": "Send an OTP to a mobile number, verify it, choose the account, and get the user token that profile calls need.",
+                "title": "Log somebody in to their existing ABHA",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m1#m1-update-mobile",
+                "id": "hiecm.flow.m1-update-mobile",
+                "summary": "Change the mobile number on an ABHA profile with an OTP sent to the new number.",
+                "title": "Change the mobile number on an ABHA profile",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m1#m1-find-abha",
+                "id": "hiecm.flow.m1-find-abha",
+                "summary": "Search for a forgotten ABHA by mobile number, then confirm with an OTP so the person proves the account is theirs.",
+                "title": "Find somebody's ABHA when they do not know it",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-link-de-link/01-m1-post-v3-profile-benefit-linkanddelink-x-token#m1-benefit-link-or-delink",
+                "id": "hiecm.endpoint.m1-benefit-link-or-delink",
+                "summary": "Links or unlinks the programme named in the BENEFIT_NAME header for an ABHA.",
+                "title": "Link or unlink a benefit record from an ABHA",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/errors#abdm-1094",
+                "id": "hiecm.error.abdm-1094",
+                "summary": "Your client or the person's token is not allowed to do what the call tried, and the message says which of three cases applies.",
+                "title": "ABDM-1094, access to this feature is refused",
+                "type": "error"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.profile-and-example-together",
+                "summary": "A NRCeS profile gives the cardinalities and a NRCeS example gives the shape, and a generator written from either one alone is wrong in a different way.",
+                "title": "Read the profile and the example together, because each omits what the other carries",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/07-m3-get-data-flow-v3-health-information-request-status-tra-550104#p3-request-status",
+                "id": "hiecm.endpoint.p3-request-status",
+                "summary": "Check how far a health information request has got, by its transaction id.",
+                "title": "Get the status of a health information request",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p4/endpoints/p4-locker/03-p4-get-subscription-requests-v3-patients-lockers-lockerid#p3-patient-locker-details-by-locker-id",
+                "id": "hiecm.endpoint.p3-patient-locker-details-by-locker-id",
+                "summary": "Fetch one health locker's settings for the logged-in person.",
+                "title": "Get a health locker by its id",
+                "type": "endpoint"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_019j9TzVUWimpUc4SvACmFHV",
+            "Name": "get",
+            "Input": {
+              "id": "hiecm.flow.m1-login-by-mobile"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "hiecm.flow.m1-login-by-mobile"
+          },
+          "output": {
+            "body": "# Log somebody in to their existing ABHA\n\n## In plain words\n\nABHA login using a registered mobile number enables individuals to securely\naccess their ABHA-linked profile and services through a mobile OTP-based\nauthentication process. Since a single mobile number may be associated with\nmultiple ABHA accounts, the user may be required to select the appropriate ABHA\naccount after successful verification. Upon completion of the authentication\nprocess, authorized access is granted to the individual's ABHA profile and\nassociated services in accordance with ABDM guidelines.\n\n```mermaid\nsequenceDiagram\n    autonumber\n    actor P as Person\n    participant S as Your system\n    participant A as ABHA service\n    P->>S: Mobile number\n    S->>A: POST /abha/api/v3/profile/login/request/otp<br/>scope [abha-login, mobile-verify], loginHint mobile,<br/>loginId (encrypted mobile), otpSystem abdm\n    A-->>S: txnId\n    A-)P: OTP by SMS\n    P->>S: OTP\n    S->>A: POST /abha/api/v3/profile/login/verify<br/>scope [abha-login, mobile-verify],<br/>authData.authMethods [otp], otp {txnId,<br/>otpValue (encrypted)}\n    A-->>S: authResult success, token (T-token),<br/>accounts [ABHANumber, name, preferredAbhaAddress]\n    P->>S: Picks the account to use\n    S->>A: POST /abha/api/v3/profile/login/verify/user<br/>header T-token, ABHANumber, txnId\n    A-->>S: token (X-token), expiresIn, refreshToken,<br/>refreshExpiresIn\n```\n\n## Before you start\n\nA gateway access token, the mobile number encrypted with the M1 certificate, and the person present to read the OTP.\n\n## What happens\n\nRequest the OTP with scope `abha-login` and `mobile-verify` and `loginHint` set to `mobile`. Verify it: the response carries a short lived token and `accounts`. Always call `/abha/api/v3/profile/login/verify/user` with the chosen `ABHANumber`, the same `txnId` and that token in the `T-token` header, even when `accounts` holds one entry. It returns the `X-token` profile calls need.\n\n## How you know it worked\n\nA profile read with the `X-token` returns the account the person expected. With several accounts on one mobile, the account read back is the check, not the presence of a token.\n\n## When it goes wrong\n\nSeveral accounts are normal on a shared family phone, so show a chooser. A profile call refused with `ABDM-1094`, X-token expired, on a new token usually means the token from login verify was sent instead of the one from verify user. Never send the gateway session token in `X-token`.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/milestones/m1#m1-login-by-mobile",
+            "gateway": "hiecm",
+            "id": "hiecm.flow.m1-login-by-mobile",
+            "milestone": "M1",
+            "summary": "Send an OTP to a mobile number, verify it, choose the account, and get the user token that profile calls need.",
+            "title": "Log somebody in to their existing ABHA",
+            "type": "flow"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "Based on the ABHA login flow documentation, here's the difference:\n\n**T-token** (Temporary token):\n- Returned after OTP verification (`POST /abha/api/v3/profile/login/verify`)\n- Short-lived and used as a header in the next step\n- Carries the result of successful OTP validation\n\n**X-token** (User token):\n- Returned after account selection (`POST /abha/api/v3/profile/login/verify/user`)\n- This is the actual token you use for profile API calls\n- Has a longer expiry and typically includes a refresh token\n\n**The flow:**\n1. Request OTP → get `txnId`\n2. Verify OTP → get `T-token` + list of accounts\n3. User picks which ABHA to use\n4. Call `verify/user` with the `T-token` header (+ ABHANumber + txnId) → get `X-token`\n5. Use `X-token` for all profile operations\n\n**Key point from the docs:** Always call `/abha/api/v3/profile/login/verify/user` with the T-token, even if there's only one account. A common mistake is sending the T-token in X-token header for profile calls, which causes `ABDM-1094` errors.\n\nSource: [Log somebody in to their existing ABHA](https://abdm.gov.in/docs/hiecm/v3/milestones/m1#m1-login-by-mobile) — ABDM HIE-CM portal",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "Based on the ABHA login flow documentation, here's the difference:\n\n**T-token** (Temporary token):\n- Returned after OTP verification (`POST /abha/api/v3/profile/login/verify`)\n- Short-lived and used as a header in the next step\n- Carries the result of successful OTP validation\n\n**X-token** (User token):\n- Returned after account selection (`POST /abha/api/v3/profile/login/verify/user`)\n- This is the actual token you use for profile API calls\n- Has a longer expiry and typically includes a refresh token\n\n**The flow:**\n1. Request OTP → get `txnId`\n2. Verify OTP → get `T-token` + list of accounts\n3. User picks which ABHA to use\n4. Call `verify/user` with the `T-token` header (+ ABHANumber + txnId) → get `X-token`\n5. Use `X-token` for all profile operations\n\n**Key point from the docs:** Always call `/abha/api/v3/profile/login/verify/user` with the T-token, even if there's only one account. A common mistake is sending the T-token in X-token header for profile calls, which causes `ABDM-1094` errors.\n\nSource: [Log somebody in to their existing ABHA](https://abdm.gov.in/docs/hiecm/v3/milestones/m1#m1-login-by-mobile) — ABDM HIE-CM portal",
+  "sources": [
+    {
+      "id": "hiecm.flow.m1-login-by-mobile",
+      "title": "Log somebody in to their existing ABHA",
+      "url": "/docs/hiecm/v3/milestones/m1#m1-login-by-mobile"
+    },
+    {
+      "id": "hiecm.flow.m1-find-abha",
+      "title": "Find somebody's ABHA when they do not know it",
+      "url": "/docs/hiecm/v3/milestones/m1#m1-find-abha"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#abha\",\"id\":\"shared.glossary.abha\",\"summary\":\"The patient's identity in ABDM, in two forms that look alike and are not: a 14 digit ABHA number and a readable ABHA address.\",\"title\":\"ABHA\",\"type\":\"glossary\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.abha-identifiers\",\"summary\":\"NRCeS tells you apart the two health identifiers a person has by the identifier type code, not by a namespace URI, and it publishes no namespace URI for eith...\",\"title\":\"Carrying an ABHA number and an ABHA address on a FHIR Patient\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-benefit-link-de-link/01-m1-post-v3-profile-benefit-linkanddelink-x-token#m1-benefit-link-or-delink\",\"id\":\"hiecm.endpoint.m1-benefit-link-or-delink\",\"summary\":\"Links or unlinks the programme named in the BENEFIT_NAME header for an ABHA.\",\"title\":\"Link or unlink a benefit record from an ABHA\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/errors#abdm-1094\",\"id\":\"hiecm.error.abdm-1094\",\"summary\":\"Your client or the person's token is not allowed to do what the call tried, and the message says which of three cases applies.\",\"title\":\"ABDM-1094, access to this feature is refused\",\"type\":\"error\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.profile-and-example-together\",\"summary\":\"A NRCeS profile gives the cardinalities and a NRCeS example gives the shape, and a generator written from either one alone is wrong in a different way.\",\"title\":\"Read the profile and the example together, because each omits what the other carries\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/07-m3-get-data-flow-v3-health-information-request-status-tra-550104#p3-request-status\",\"id\":\"hiecm.endpoint.p3-request-status\",\"summary\":\"Check how far a health information request has got, by its transaction id.\",\"title\":\"Get the status of a health information request\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p4/endpoints/p4-locker/03-p4-get-subscription-requests-v3-patients-lockers-lockerid#p3-patient-locker-details-by-locker-id\",\"id\":\"hiecm.endpoint.p3-patient-locker-details-by-locker-id\",\"summary\":\"Fetch one health locker's settings for the logged-in person.\",\"title\":\"Get a health locker by its id\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p4/endpoints/p4-locker/01-p4-post-subscription-requests-v3-setup-locker#p3-setup-locker\",\"id\":\"hiecm.endpoint.p3-setup-locker\",\"summary\":\"Set up a health locker for the logged-in person.\",\"title\":\"Set up a health locker\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/02-m2-post-data-flow-v3-health-information-hip-on-request#m2-hip-health-information-on-request\",\"id\":\"hiecm.endpoint.m2-hip-health-information-on-request\",\"summary\":\"The HIP acknowledges a health information request, then encrypts the records and pushes them to the requester.\",\"title\":\"Acknowledge a health information data request\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/05-m3-post-v3-hiu-health-information-on-request#m3-on-health-information-request\",\"id\":\"hiecm.callback.m3-on-health-information-request\",\"summary\":\"ABDM acknowledges an HIU's data request with its transaction id and status; the records come separately.\",\"title\":\"Acknowledgement of a health information request\",\"type\":\"callback\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#abha\",\"id\":\"shared.glossary.abha\",\"summary\":\"The patient's identity in ABDM, in two forms that look alike and are not: a 14 digit ABHA number and a readable ABHA address.\",\"title\":\"ABHA\",\"type\":\"glossary\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.abha-identifiers\",\"summary\":\"NRCeS tells you apart the two health identifiers a person has by the identifier type code, not by a namespace URI, and it publishes no namespace URI for eith...\",\"title\":\"Carrying an ABHA number and an ABHA address on a FHIR Patient\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-benefit-link-de-link/01-m1-post-v3-profile-benefit-linkanddelink-x-token#m1-benefit-link-or-delink\",\"id\":\"hiecm.endpoint.m1-benefit-link-or-delink\",\"summary\":\"Links or unlinks the programme named in the BENEFIT_NAME header for an ABHA.\",\"title\":\"Link or unlink a benefit record from an ABHA\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/errors#abdm-1094\",\"id\":\"hiecm.error.abdm-1094\",\"summary\":\"Your client or the person's token is not allowed to do what the call tried, and the message says which of three cases applies.\",\"title\":\"ABDM-1094, access to this feature is refused\",\"type\":\"error\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.profile-and-example-together\",\"summary\":\"A NRCeS profile gives the cardinalities and a NRCeS example gives the shape, and a generator written from either one alone is wrong in a different way.\",\"title\":\"Read the profile and the example together, because each omits what the other carries\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/07-m3-get-data-flow-v3-health-information-request-status-tra-550104#p3-request-status\",\"id\":\"hiecm.endpoint.p3-request-status\",\"summary\":\"Check how far a health information request has got, by its transaction id.\",\"title\":\"Get the status of a health information request\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p4/endpoints/p4-locker/03-p4-get-subscription-requests-v3-patients-lockers-lockerid#p3-patient-locker-details-by-locker-id\",\"id\":\"hiecm.endpoint.p3-patient-locker-details-by-locker-id\",\"summary\":\"Fetch one health locker's settings for the logged-in person.\",\"title\":\"Get a health locker by its id\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p4/endpoints/p4-locker/01-p4-post-subscription-requests-v3-setup-locker#p3-setup-locker\",\"id\":\"hiecm.endpoint.p3-setup-locker\",\"summary\":\"Set up a health locker for the logged-in person.\",\"title\":\"Set up a health locker\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/02-m2-post-data-flow-v3-health-information-hip-on-request#m2-hip-health-information-on-request\",\"id\":\"hiecm.endpoint.m2-hip-health-information-on-request\",\"summary\":\"The HIP acknowledges a health information request, then encrypts the records and pushes them to the requester.\",\"title\":\"Acknowledge a health information data request\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/05-m3-post-v3-hiu-health-information-on-request#m3-on-health-information-request\",\"id\":\"hiecm.callback.m3-on-health-information-request\",\"summary\":\"ABDM acknowledges an HIU's data request with its transaction id and status; the records come separately.\",\"title\":\"Acknowledgement of a health information request\",\"type\":\"callback\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#abha\",\"id\":\"shared.glossary.abha\",\"summary\":\"The patient's identity in ABDM, in two forms that look alike and are not: a 14 digit ABHA number and a readable ABHA address.\",\"title\":\"ABHA\",\"type\":\"glossary\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.abha-identifiers\",\"summary\":\"NRCeS tells you apart the two health identifiers a person has by the identifier type code, not by a namespace URI, and it publishes no namespace URI for eith...\",\"title\":\"Carrying an ABHA number and an ABHA address on a FHIR Patient\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m1#m1-login-by-mobile\",\"id\":\"hiecm.flow.m1-login-by-mobile\",\"summary\":\"Send an OTP to a mobile number, verify it, choose the account, and get the user token that profile calls need.\",\"title\":\"Log somebody in to their existing ABHA\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m1#m1-update-mobile\",\"id\":\"hiecm.flow.m1-update-mobile\",\"summary\":\"Change the mobile number on an ABHA profile with an OTP sent to the new number.\",\"title\":\"Change the mobile number on an ABHA profile\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m1#m1-find-abha\",\"id\":\"hiecm.flow.m1-find-abha\",\"summary\":\"Search for a forgotten ABHA by mobile number, then confirm with an OTP so the person proves the account is theirs.\",\"title\":\"Find somebody's ABHA when they do not know it\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-benefit-link-de-link/01-m1-post-v3-profile-benefit-linkanddelink-x-token#m1-benefit-link-or-delink\",\"id\":\"hiecm.endpoint.m1-benefit-link-or-delink\",\"summary\":\"Links or unlinks the programme named in the BENEFIT_NAME header for an ABHA.\",\"title\":\"Link or unlink a benefit record from an ABHA\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/errors#abdm-1094\",\"id\":\"hiecm.error.abdm-1094\",\"summary\":\"Your client or the person's token is not allowed to do what the call tried, and the message says which of three cases applies.\",\"title\":\"ABDM-1094, access to this feature is refused\",\"type\":\"error\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.profile-and-example-together\",\"summary\":\"A NRCeS profile gives the cardinalities and a NRCeS example gives the shape, and a generator written from either one alone is wrong in a different way.\",\"title\":\"Read the profile and the example together, because each omits what the other carries\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/07-m3-get-data-flow-v3-health-information-request-status-tra-550104#p3-request-status\",\"id\":\"hiecm.endpoint.p3-request-status\",\"summary\":\"Check how far a health information request has got, by its transaction id.\",\"title\":\"Get the status of a health information request\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p4/endpoints/p4-locker/03-p4-get-subscription-requests-v3-patients-lockers-lockerid#p3-patient-locker-details-by-locker-id\",\"id\":\"hiecm.endpoint.p3-patient-locker-details-by-locker-id\",\"summary\":\"Fetch one health locker's settings for the logged-in person.\",\"title\":\"Get a health locker by its id\",\"type\":\"endpoint\"}]}\n{\"body\":\"# Log somebody in to their existing ABHA\\n\\n## In plain words\\n\\nABHA login using a registered mobile number enables individuals to securely\\naccess their ABHA-linked profile and services through a mobile OTP-based\\nauthentication process. Since a single mobile number may be associated with\\nmultiple ABHA accounts, the user may be required to select the appropriate ABHA\\naccount after successful verification. Upon completion of the authentication\\nprocess, authorized access is granted to the individual's ABHA profile and\\nassociated services in accordance with ABDM guidelines.\\n\\n```mermaid\\nsequenceDiagram\\n    autonumber\\n    actor P as Person\\n    participant S as Your system\\n    participant A as ABHA service\\n    P->>S: Mobile number\\n    S->>A: POST /abha/api/v3/profile/login/request/otp<br/>scope [abha-login, mobile-verify], loginHint mobile,<br/>loginId (encrypted mobile), otpSystem abdm\\n    A-->>S: txnId\\n    A-)P: OTP by SMS\\n    P->>S: OTP\\n    S->>A: POST /abha/api/v3/profile/login/verify<br/>scope [abha-login, mobile-verify],<br/>authData.authMethods [otp], otp {txnId,<br/>otpValue (encrypted)}\\n    A-->>S: authResult success, token (T-token),<br/>accounts [ABHANumber, name, preferredAbhaAddress]\\n    P->>S: Picks the account to use\\n    S->>A: POST /abha/api/v3/profile/login/verify/user<br/>header T-token, ABHANumber, txnId\\n    A-->>S: token (X-token), expiresIn, refreshToken,<br/>refreshExpiresIn\\n```\\n\\n## Before you start\\n\\nA gateway access token, the mobile number encrypted with the M1 certificate, and the person present to read the OTP.\\n\\n## What happens\\n\\nRequest the OTP with scope `abha-login` and `mobile-verify` and `loginHint` set to `mobile`. Verify it: the response carries a short lived token and `accounts`. Always call `/abha/api/v3/profile/login/verify/user` with the chosen `ABHANumber`, the same `txnId` and that token in the `T-token` header, even when `accounts` holds one entry. It returns the `X-token` profile calls need.\\n\\n## How you know it worked\\n\\nA profile read with the `X-token` returns the account the person expected. With several accounts on one mobile, the account read back is the check, not the presence of a token.\\n\\n## When it goes wrong\\n\\nSeveral accounts are normal on a shared family phone, so show a chooser. A profile call refused with `ABDM-1094`, X-token expired, on a new token usually means the token from login verify was sent instead of the one from verify user. Never send the gateway session token in `X-token`.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/milestones/m1#m1-login-by-mobile\",\"gateway\":\"hiecm\",\"id\":\"hiecm.flow.m1-login-by-mobile\",\"milestone\":\"M1\",\"summary\":\"Send an OTP to a mobile number, verify it, choose the account, and get the user token that profile calls need.\",\"title\":\"Log somebody in to their existing ABHA\",\"type\":\"flow\"}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T11:56:01.425Z",
+  "usage": {
+    "input_tokens": 40,
+    "output_tokens": 1106,
+    "cache_read_input_tokens": 44625,
+    "cache_creation_input_tokens": 10693,
+    "num_turns": 5,
+    "duration_ms": 15044,
+    "cost_usd_equivalent": 0.0314185
+  }
+}

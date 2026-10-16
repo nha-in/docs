@@ -2,7 +2,7 @@
 title: Registries
 sidebar_label: Registries
 description: What an ABDM registry is, why there are two, and where ABHA, HPR and HFR sit.
-source: catalogue/openapi/hiecm/v3/hiecm-m1.yaml, catalogue/openapi/hiecm/v3/hiecm-m4.yaml
+source: catalogue/hiecm/openapi/v3/hiecm-m1.yaml, catalogue/hiecm/openapi/v3/hiecm-m4.yaml
 ---
 
 # Registries

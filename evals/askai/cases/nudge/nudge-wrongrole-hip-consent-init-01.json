@@ -1,0 +1,37 @@
+{
+  "id": "nudge-wrongrole-hip-consent-init-01",
+  "slice": "nudge",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "We are a HIP. How do we call consent request init so the patient approves us sharing their records?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "HIU",
+    "The consent request is raised by the HIU, the side that wants records it does not hold",
+    "As the HIP you do not raise it: ABDM calls your callback URL to tell you a consent covering your records was granted, revoked or expired, and you acknowledge it"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.glossary.hiu",
+    "hiecm.glossary.hip"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#glossary",
+  "catalogue_version": "2026.09.16",
+  "notes": "Nudge group, wrong role: the reader asks for the HIU's consent init as a HIP, and the case catches an answer that walks a HIP through raising consent instead of naming the HIU as the documented role and pointing at the HIP notify callback."
+}

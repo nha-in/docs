@@ -7,7 +7,7 @@ Outbound, application to the payer side. Asks which role is holding a case in th
 | Transport | Call | Chosen when |
 |---|---|---|
 | Payer service | `POST https://apisbx.abdm.gov.in/pmjay/sbxhcx/nhcxpayerservice/v1/get/user-role` (the URL can be overridden per deployment), with a bearer token (a configured payer service token, else the [G3. Session Token](../gateway/G3-session-token.md) through A16) | The desk is `nhcx-payer-service`. |
-| IRDAI payer desk | `POST {desk}/api/auth/login`, then `GET {desk}/api/cases?search=<case number>` (desk URL set per deployment, default `http://localhost:8082` [REF](../references/PAYERS.md#markers)) | The desk is `irdai-payer`. |
+| IRDAI payer desk | Token login, `POST https://nhcxai.abdm.gov.in/api/payer/auth/token/login`, then `GET https://nhcxai.abdm.gov.in/api/payer/cases?search=<case number>`. The desk is fixed, not a setting: its screens are at `https://nhcxai.abdm.gov.in/uat/`, its API at `/api/payer` on the same origin [SANDBOX](../references/PAYERS.md#markers) | The desk is `irdai-payer`. |
 
 A payer whose adapter has no desk is refused before any call with "`<payer name>` has no adjudication desk this EMR can drive; the decision is taken on the payer's own console." A blank case number is refused with "A case number is needed to read who is holding it."
 
@@ -18,7 +18,7 @@ On PMJAY the decision on a pre-authorisation or a claim is taken in the NHCX Pay
 The case number sent is the number the payer knows the leg by:
 
 - For the `nhcx-payer-service` desk: the last `/`-separated segment of the pre-authorisation's payer reference (for example the 16 digits at the end of `PMJAY/HP/S/2024/R2/<16 digits>`), or the whole reference when it has no `/` [PAYER](../references/PAYERS.md#markers). The claim leg uses the same number, since the scheme keeps one case per episode [PAYER](../references/PAYERS.md#markers).
-- Otherwise: the claim number that leg went out under (`claim_ref`), else the claim's current number.
+- For the `irdai-payer` desk: the payer's own reference for the case, which comes back on the payer's first reply to the leg (the case number in the ClaimResponse, kept as the leg's payer reference, for example `CL/26/0T00000VS`) [SANDBOX](../references/PAYERS.md#markers). Until the first reply has arrived there is no payer reference yet, and the claim number the leg went out under (`claim_ref`, else the claim's current number) is sent instead; the desk lists a freshly filed case under that number until it answers.
 
 The payer code is the payer's participant code with everything from `@` removed (the numeric part of `<payer code>`) [PAYER](../references/PAYERS.md#markers).
 
@@ -35,7 +35,7 @@ The payer code is the payer's participant code with everything from `@` removed 
 {"caseid": "1234567890123456", "payerid": "<payer code without @hcx>"}
 ```
 
-**IRDAI payer desk.** Sign in with `POST /api/auth/login` `{"username", "password"}` (the desk's configured adjudicator account). The `token` in the reply is kept for later calls. Then `GET /api/cases?search=<case number>` with `Authorization: Bearer <token>`. The case is the row whose `claim_no` equals the case number.
+**IRDAI payer desk.** Token login only: no username, no password, no desk account to configure. Sign in with `POST https://nhcxai.abdm.gov.in/api/payer/auth/token/login` `{"token": "<ABDM session token>"}`, the facility's own session token ([G3. Session Token](../gateway/G3-session-token.md) through A16). The desk opens an account for the token's client id and answers `{"token", "user"}`; its `token` is kept for later calls. Then say which payer this account works, so the desk shows that payer's cases: `PUT https://nhcxai.abdm.gov.in/api/payer/auth/participants` `{"participant_codes": ["<payer code>"]}`, once per sign-in (a client id sees no case until it names the participant it works) [SANDBOX](../references/PAYERS.md#markers). Then `GET https://nhcxai.abdm.gov.in/api/payer/cases?search=<case number>` with `Authorization: Bearer <token>`. The case is the row whose `claim_no` equals the case number.
 
 #### A14S. RESPONSE
 
@@ -149,12 +149,17 @@ EXTRACT_ERROR(payload, failed):
   first non-blank string value found, trimmed; else ""
 
 IRDAI_ROLE(case_number):
-  token = kept desk token, else POST {desk}/api/auth/login {"username", "password"}
-      status >= 300 or no token: fail "The IRDAI payer desk refused the sign-in (HTTP <status>): <error or first 200 characters>"
+  DESK = "https://nhcxai.abdm.gov.in/api/payer"      // fixed, not a setting
+  token = kept desk token, else:
+      session = gateway.token()                           // G3, the facility's ABDM session token
+      POST DESK/auth/token/login {"token": session}
+      status >= 300 or no token: fail "The IRDAI payer desk refused the token sign-in (HTTP <status>): <error or first 200 characters>"
       keep token
-  status, data = GET {desk}/api/cases?search=<case_number> with Authorization: Bearer token
+      PUT DESK/auth/participants {"participant_codes": [payer code]} with Authorization: Bearer token
+      status >= 300: fail "The IRDAI payer desk would not show <payer code>'s cases (HTTP <status>): <first 200 characters>"
+  status, data = GET DESK/cases?search=<case_number> with Authorization: Bearer token
   if status >= 300: drop kept token; fail "The IRDAI payer desk could not list cases (HTTP <status>): <first 200 characters>"
-  rows = data.cases, or data when it is a list
+  rows = data.items (the desk answers {"items": [...], "total": n}), or data when it is a list
   found = first row with claim_no == case_number
           else fail "The IRDAI payer holds no case under <case_number>."
   return {caseNumber, status: 200, transport: "irdai-payer", role: "Adjudicator",
@@ -168,3 +173,4 @@ Screen: any failure above is shown as the lookup's error; the legal actions offe
 #### A14U. USED BY
 - APIs: [A15. Adjudicator Process Case](A15-adjudicator-process-case.md), [A16. Gateway Token](A16-gateway-token.md), [A17. Claim State](A17-claim-state.md)
 - Database: [D24. claim_adjudication](../database/D24-claim-adjudication.md)
+- Tests: [T1. Test Configuration](../tests/T1-test-configuration.md), [T2. Test Runners](../tests/T2-test-runners.md), [T5. IRDAI Pre-authorisation Approved](../tests/T5-irdai-preauth-approved.md), [T6. IRDAI Pre-authorisation Rejected and Sent Again](../tests/T6-irdai-preauth-rejected.md), [T7. IRDAI Query Answered](../tests/T7-irdai-query-answered.md), [T8. IRDAI Enhancement](../tests/T8-irdai-enhancement.md), [T9. IRDAI Status Enquiry and Cancel](../tests/T9-irdai-cancel-and-status.md), [T14. PMJAY Pre-authorisation Through the Payer Service](../tests/T14-pmjay-preauth-adjudicated.md), [T15. PMJAY Query Answered by Resubmission](../tests/T15-pmjay-query-by-resubmission.md), [T16. PMJAY Rejection and Enhancement](../tests/T16-pmjay-rejection-and-enhancement.md)

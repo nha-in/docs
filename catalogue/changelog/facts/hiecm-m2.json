@@ -828,19 +828,19 @@
     "his"
   ],
   "sources": {
-    "catalogue/openapi/.raw/nha-2026-09-16/hiecm/consent-management-data-flow.yaml": {
+    "nha-2026-09-16/hiecm/consent-management-data-flow.yaml": {
       "fetched": "2026-09-16",
       "hash": "sha256:4b0af51af2e2b5bfbf08f5e8745a940f59c550f8a1e4600c970c526f27bc8718"
     },
-    "catalogue/openapi/.raw/nha-2026-09-16/hiecm/hip-initiated-linking.yaml": {
+    "nha-2026-09-16/hiecm/hip-initiated-linking.yaml": {
       "fetched": "2026-09-16",
       "hash": "sha256:8c4036b49028e243d0687d5ddcde6fa025d21d63fdaf90826eb8159f8485382b"
     },
-    "catalogue/openapi/.raw/nha-2026-09-16/hiecm/link-token.yaml": {
+    "nha-2026-09-16/hiecm/link-token.yaml": {
       "fetched": "2026-09-16",
       "hash": "sha256:2e9cdca38bd2b2230ffcc70b53ae68b99aad68b9a526c96beeda4bf11dcb4273"
     },
-    "catalogue/openapi/.raw/nha-2026-09-16/hiecm/user-initiated-linking.yaml": {
+    "nha-2026-09-16/hiecm/user-initiated-linking.yaml": {
       "fetched": "2026-09-16",
       "hash": "sha256:848439c9e1fd123e706b7d42b7cc1db365a7d779ff65d298301dfb5fbf7a3e66"
     }

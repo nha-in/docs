@@ -42,6 +42,26 @@ the Ask AI panel posts to the site's own origin.
 Rolling back the site is one sync from `<version>/` to `main/`. Rolling back
 docs-mcp is setting the earlier tag in `sandbox-tofu` and applying it.
 
+## Releasing the site only
+
+When only pages changed, publish the site without rebuilding or pushing
+docs-mcp:
+
+```sh
+bash deploy/nha/deploy-site.sh v1.0.11            # production, from .env
+bash deploy/nha/deploy-site.sh v1.0.11 staging    # staging, from .env.staging
+```
+
+It runs the same build and the same four sync passes as `deploy.sh`, keeps the
+copy under `<version>/`, and stops there. The site keeps pointing at whichever
+docs-mcp is already live on `SITE_URL`. Each environment file needs only
+`ACCOUNT_ID`, `REGION`, `SITE_BUCKET` and `SITE_URL`, and may set `AWS_PROFILE`
+to pick the credentials for that account. Staging has no environment file
+yet: its bucket is `ohn-staging-abdm-docs` in the staging account if the
+`abdm_docs_*` infrastructure has been applied there, and its hostname is not
+configured anywhere, so both have to be settled before `.env.staging` can be
+written.
+
 ## What failure looks like, on purpose
 
 docs-mcp refuses to start rather than serve degraded answers. A missing

@@ -1,0 +1,47 @@
+{
+  "id": "followup-hiecm-m3-multiple-artefacts-01",
+  "slice": "followup",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "patient approved my consent request, what next"
+    },
+    {
+      "role": "assistant",
+      "text": "The notify callback on your HIU bridge carries consentArtefacts with the artefact ids. Fetch the artefact with /api/hiecm/consent/v3/fetch and then request the health information."
+    },
+    {
+      "role": "user",
+      "text": "there were two ids in it, do i need both"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "A consent request produces one artefact per HIP, so a request that spans facilities returns several.",
+    "Store and fetch every artefact id the notification listed, not only the first.",
+    "Taking only the first artefact silently drops records, and nothing reports an error."
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom",
+    "only need the first"
+  ],
+  "expected_sources": [
+    "hiecm.concept.m3-plural-artefacts-and-codes",
+    "hiecm.callback.m3-on-consent-request-notify-hiu",
+    "hiecm.endpoint.m3-consent-fetch"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-hiecm-consent-management-data-flow-yaml",
+  "catalogue_version": "2026.09.16",
+  "notes": "The under-specified follow-up is about plural artefacts, the silent M3 bug. Source lines: catalogue/hiecm/concepts/m3-plural-artefacts-and-codes.md, 'A consent request produces one artefact per HIP, so a request that spans facilities returns several. Taking the first element is the bug that silently drops half a fetch.' and 'the failure is silent: half the records simply never arrive, and nothing reports an error.'; catalogue/hiecm/endpoints/m3-consent-fetch.md, 'Fetch every artefact id the notification listed, not only the first.'; catalogue/hiecm/callbacks/m3-on-consent-request-notify-hiu.md, 'Storing only the first artefact id loses the rest.'"
+}

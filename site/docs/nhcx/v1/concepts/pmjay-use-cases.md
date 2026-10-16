@@ -330,7 +330,7 @@ flowchart TD
 - **Nullification**: Submitting a LAMA/DAMA claim before or during surgery immediately **nullifies all prior approved surgical pre-authorisation packages**.
 - **Item Code `LM100`**: The claim replaces all surgical line items with a single item: procedure code `LM100` (Conservative / Per Diem Inpatient Care).
 - **Daily Quantity Multiplier & `LengthOfStay` Bound**: The quantity on `LM100` is set to the exact number of days the patient was admitted (`Discharge Date - Admission Date`). This quantity is strictly bounded by the `LengthOfStay` (Maximum Length of Stay) attribute declared in the scheme package master (`InsurancePlan`). Admitted days billed cannot exceed `LengthOfStay` without prior clinical justification; stays extending beyond standard procedure limits in ordinary admissions require an approved pre-authorisation enhancement request (workflow 13).
-- **Stratification Tariffs**: Procedure `LM100` is stratified by bed tier in the PMJAY master: Routine Ward (₹1,800/day, `STRAT006a`), High Dependency Unit HDU (₹2,700/day, `STRAT006b`), ICU Without Ventilator (₹3,600/day, `STRAT006c`), and ICU With Ventilator (₹4,500/day, `STRAT006d`).
+- **Stratification Tariffs**: Procedure `LM100` is stratified by bed tier in the PMJAY master: Routine Ward (`STRATXXa`), High Dependency Unit HDU (`STRATXXb`), ICU Without Ventilator (`STRATXXc`), and ICU With Ventilator (`STRATXXd`).
 - **Error Safeguard**: Submitting a surgical package code alongside LAMA/DAMA before or during surgery triggers automated rejection with error `PAYR-1362`.
 - **Pre-Auth Prohibition**: `LM100` is strictly a claim-time adjudication code. Submitting `LM100` in a pre-authorisation request triggers error `PAYR-1270`.
 

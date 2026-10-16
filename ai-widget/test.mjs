@@ -8,16 +8,17 @@ import {build} from 'esbuild';
 const out = join(tmpdir(), `abdm-widget-test-${process.pid}.mjs`);
 await build({
   stdin: {
-    contents: `export {toBlocks, absolute, headings} from './src/markdown';
-               export {readStream} from './src/sse';
+    contents: `export {toBlocks, absolute, headings, linkFor} from './src/markdown';
+               export {readStream, failureMessage, UNREACHABLE} from './src/sse';
                export {revealStep, THINKING_HOLD, THINKING_BURST} from './src/pacing';
                export {say, answer, wantsTools, needsAgent, TOOLS, AGENTS} from './src/install';
-               export {titleOf, remember, whenSaid, forgetOne, resumable} from './src/history';
+               export {titleOf, remember, whenSaid, askedAgo, forgetOne, resumable} from './src/history';
                export {ABOUT, isAboutQuestion} from './src/about';
                export {startersFrom, DEFAULT_STARTERS} from './src/starters';
                export {forModel, memoryOf, sentFrom} from './src/transcript';
                export {parseLlms, searchPages, pageUrl, markdownUrl, isHtmlDocument} from './src/pages';
-               export {moduleLabel, skillNote, COMMANDS} from './src/commands';`,
+               export {moduleLabel, skillNote, COMMANDS, slashMatches} from './src/commands';
+               export {CLOSED, offering, related, shownOf, trayKey} from './src/next';`,
     resolveDir: import.meta.dirname,
     loader: 'ts',
   },
@@ -36,11 +37,11 @@ await build({
   outfile: out,
 });
 const {
-  toBlocks, absolute, headings, readStream, revealStep, THINKING_HOLD, THINKING_BURST,
+  toBlocks, absolute, headings, linkFor, readStream, failureMessage, UNREACHABLE, revealStep, THINKING_HOLD, THINKING_BURST,
   say, answer, wantsTools, needsAgent, TOOLS, AGENTS,
-  titleOf, remember, whenSaid, forgetOne, resumable, ABOUT, isAboutQuestion, memoryOf, sentFrom,
+  titleOf, remember, whenSaid, askedAgo, forgetOne, resumable, ABOUT, isAboutQuestion, memoryOf, sentFrom,
   startersFrom, DEFAULT_STARTERS, forModel, parseLlms, searchPages, pageUrl, markdownUrl, isHtmlDocument,
-  moduleLabel, skillNote, COMMANDS,
+  moduleLabel, skillNote, COMMANDS, slashMatches, CLOSED, offering, related, shownOf, trayKey,
 } = await import(out);
 
 // History: one conversation comes out, the rest stay in order.
@@ -132,6 +133,11 @@ assert.ok(!isHtmlDocument('<details> in markdown'));
 
 // Commands: four of them, and the lines the panel shows for a skill event.
 assert.deepEqual(COMMANDS.map((c) => c.id), ['scaffold', 'design', 'integrate', 'debug']);
+assert.equal(slashMatches('/').length, 4, 'a bare slash offers every skill');
+assert.deepEqual(slashMatches('/d').map((c) => c.id), ['design', 'debug']);
+assert.deepEqual(slashMatches('/Deb').map((c) => c.id), ['debug']);
+assert.deepEqual(slashMatches('/debug why'), [], 'a space makes it a question');
+assert.deepEqual(slashMatches('a/b'), []);
 assert.equal(moduleLabel('abdm-m2'), 'M2');
 assert.equal(moduleLabel('abdm-scan-and-pay'), 'Scan and pay');
 assert.equal(skillNote({module: 'abdm-m2', section: 'debug', status: 'used'}), 'Using M2 · Debug');
@@ -151,6 +157,11 @@ assert.equal(remember([one], {id: 'b', at: 2, title: 'b', turns: []})[0].id, 'b'
 const many = Array.from({length: 60}, (_, i) => ({id: String(i), at: i, title: String(i), turns: []}));
 assert.equal(many.reduce((list, s) => remember(list, s), []).length, 50, 'capped');
 assert.equal(whenSaid(0, 30_000), 'just now');
+assert.equal(askedAgo(0, 30_000), 'just now');
+assert.equal(askedAgo(0, 60_000), '1 minute ago');
+assert.equal(askedAgo(0, 7 * 60_000), '7 minutes ago');
+assert.equal(askedAgo(0, 3600_000), '1 hour ago');
+assert.equal(askedAgo(0, 2 * 86_400_000), '2 days ago');
 assert.equal(whenSaid(0, 7 * 60_000), '7m ago');
 assert.equal(whenSaid(0, 3 * 3600_000), '3h ago');
 assert.equal(whenSaid(0, 2 * 86400_000), '2d ago');
@@ -198,7 +209,7 @@ assert.equal(absolute('javascript:alert(1)', 'https://d.example'), null);
 // The stream: events split on blank lines, deltas concatenated, a payload
 // that arrives in two chunks mid-event still parses.
 const chunks = [
-  'event: tool\ndata: {"name":"search","detail":"Consulting the catalogue"}\n\n',
+  'event: tool\ndata: {"name":"search_docs","detail":"UHI create ABHA with Aadhaar OTP: request OTP"}\n\n',
   'event: text\ndata: {"delta":"Hel',
   'lo"}\n\nevent: text\ndata: {"delta":" there"}\n\n',
   'event: sources\ndata: [{"id":"a","title":"A","status":"verified","url":"/docs/a"}]\n\n',
@@ -221,7 +232,9 @@ await readStream(stream, {
   onError: () => assert.fail('no error expected'),
 });
 assert.equal(text, 'Hello there');
-assert.equal(tool, 'Consulting the catalogue');
+// The activity line names what the assistant is doing, never the query it
+// wrote: that read as the reader's own question repeated back.
+assert.equal(tool, 'Searching the docs');
 assert.deepEqual(sources, [
   {id: 'a', title: 'A', status: 'verified', url: '/docs/a'},
 ]);
@@ -301,3 +314,101 @@ assert.match(say({at: 'tools'}, ctx), /Skills/);
 assert.match(say({at: 'agents', tool: 'mcp'}, ctx), /Which agent are you working in\?/);
 
 console.log('ok');
+
+// A links event arrives once before sources and is handed over as sent;
+// linkFor turns an exact literal into an absolute page and nothing else.
+{
+  const enc = new TextEncoder();
+  const stream = new ReadableStream({
+    start(c) {
+      c.enqueue(enc.encode('event: links\ndata: [{"literal":"/api/hiecm/v3/token/generate-token","url":"/docs/hiecm/v3/api/m2/generate-token"}]\n\n'));
+      c.enqueue(enc.encode('event: done\ndata: {}\n\n'));
+      c.close();
+    },
+  });
+  let links = null;
+  await readStream(stream, {
+    onText: () => {},
+    onTool: () => {},
+    onSources: () => {},
+    onLinks: (l) => (links = l),
+    onError: () => assert.fail('no error expected'),
+  });
+  assert.deepEqual(links, [{literal: '/api/hiecm/v3/token/generate-token', url: '/docs/hiecm/v3/api/m2/generate-token'}]);
+  assert.equal(linkFor('/api/hiecm/v3/token/generate-token', links, 'https://docs.example'), 'https://docs.example/docs/hiecm/v3/api/m2/generate-token');
+  assert.equal(linkFor('/api/hiecm/v3/token/generate-token?x=1', links, 'https://docs.example'), null);
+  assert.equal(linkFor('POST /api/hiecm/v3/token/generate-token', links, 'https://docs.example'), 'https://docs.example/docs/hiecm/v3/api/m2/generate-token');
+  assert.equal(linkFor('X-LINK-TOKEN', undefined, 'https://docs.example'), null);
+}
+
+// Suggestions arrive on their own event and are handed over as sent.
+{
+  const enc = new TextEncoder();
+  const stream = new ReadableStream({
+    start(c) {
+      c.enqueue(enc.encode('event: suggestions\ndata: [{"id":"b","title":"Link a care context","prompt":"Link a care context"}]\n\n'));
+      c.enqueue(enc.encode('event: done\ndata: {}\n\n'));
+      c.close();
+    },
+  });
+  let got = null;
+  await readStream(stream, {
+    onText: () => {},
+    onTool: () => {},
+    onSources: () => {},
+    onSuggestions: (s) => (got = s),
+    onError: () => assert.fail('no error expected'),
+  });
+  assert.deepEqual(got, [{id: 'b', title: 'Link a care context', prompt: 'Link a care context'}]);
+}
+
+// A refused request is not an unreachable assistant. The server's 429 says
+// which limit and how long; the panel says that, and keeps "unreachable" for
+// a failure it cannot name. NHA's testers, asking back to back, saw
+// "unreachable" for every rate limit.
+assert.equal(
+  failureMessage(429, {error: 'x', limit: 'minute', retry_after_seconds: 40}),
+  'Too many questions in the last minute. Wait about 40 seconds and ask again.',
+);
+assert.equal(
+  failureMessage(429, {error: 'x', limit: 'minute', retry_after_seconds: 1}),
+  'Too many questions in the last minute. Wait a moment and ask again.',
+);
+assert.equal(
+  failureMessage(429, {error: 'x', limit: 'day', retry_after_seconds: 3600}),
+  "This connection has used today's questions. The limit resets at midnight UTC.",
+);
+assert.equal(failureMessage(429, null), 'Too many questions in a short time. Wait a minute and ask again.');
+assert.equal(failureMessage(500, {error: 'boom'}), UNREACHABLE);
+assert.equal(failureMessage(502, null), UNREACHABLE);
+
+// What the composer offers: the next step takes the box and Tab; a related
+// question takes it only once the reader moves to it; Escape puts both away,
+// and Shift and Tab is never held.
+{
+  const step = {id: 's', title: 'S', prompt: 'What is the next step?', kind: 'step'};
+  const rel = [
+    {id: 'a', title: 'A', prompt: 'How do I link records as a HIP?'},
+    {id: 'b', title: 'B', prompt: 'How do I fetch records with consent?'},
+  ];
+  const s = [step, ...rel];
+  assert.equal(offering('', s, CLOSED, false), true);
+  assert.equal(offering('typed', s, CLOSED, false), false);
+  assert.equal(offering('', s, CLOSED, true), false);
+  assert.equal(offering('', [], CLOSED, false), false);
+  assert.equal(offering('', s, {active: -1, dismissed: true}, false), false);
+  assert.deepEqual(related(s), rel);
+  assert.equal(shownOf(s, CLOSED), step, 'the box shows the next step');
+  assert.equal(shownOf(rel, CLOSED), null, 'a related question never takes the box unasked');
+  assert.deepEqual(trayKey('Tab', false, s, CLOSED), {kind: 'fill', text: step.prompt});
+  assert.deepEqual(trayKey('Tab', false, rel, CLOSED), {kind: 'none'}, 'Tab is left alone with no step');
+  assert.deepEqual(trayKey('Tab', true, s, CLOSED), {kind: 'none'});
+  assert.deepEqual(trayKey('ArrowDown', false, s, CLOSED), {kind: 'move', tray: {active: 0, dismissed: false}});
+  assert.deepEqual(trayKey('ArrowDown', false, s, {active: 1, dismissed: false}), {kind: 'move', tray: {active: 1, dismissed: false}});
+  assert.deepEqual(trayKey('ArrowUp', false, s, {active: 0, dismissed: false}), {kind: 'move', tray: {active: -1, dismissed: false}});
+  assert.deepEqual(trayKey('Tab', false, s, {active: 1, dismissed: false}), {kind: 'fill', text: rel[1].prompt});
+  assert.deepEqual(trayKey('Escape', false, s, CLOSED), {kind: 'dismiss', tray: {active: -1, dismissed: true}});
+  assert.deepEqual(trayKey('ArrowDown', false, [step], CLOSED), {kind: 'none'});
+  assert.deepEqual(trayKey('a', false, s, CLOSED), {kind: 'none'});
+  assert.deepEqual(trayKey('Tab', false, [], CLOSED), {kind: 'none'});
+}

@@ -99,3 +99,4 @@ legs that have one; the predetermination and cancellation legs keep waiting.
 - APIs: [A2. Coverage Eligibility Check](A2-coverage-eligibility-check.md), [A3. Insurance Plan Request](A3-insurance-plan-request.md), [A4. Pre-auth Submit](A4-preauth-submit.md), [A5. Claim Submit](A5-claim-submit.md), [A6. Task Submit (cancel, status, reprocess, release)](A6-task-submit.md), [A10. Transaction Related](A10-txn-related.md), [A11. Transaction Dispatch](A11-txn-dispatch.md), [A12. Transaction FHIR](A12-txn-fhir.md), [A17. Claim State](A17-claim-state.md)
 - Callbacks: [C1. Callback Door](../callbacks/C1-callback-door.md)
 - Gateway: [G1. Embedding](../gateway/G1-embedding.md), [G9. Ledger](../gateway/G9-ledger.md)
+- Tests: [T1. Test Configuration](../tests/T1-test-configuration.md), [T2. Test Runners](../tests/T2-test-runners.md)

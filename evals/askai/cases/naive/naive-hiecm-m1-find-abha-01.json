@@ -1,0 +1,37 @@
+{
+  "id": "naive-hiecm-m1-find-abha-01",
+  "slice": "naive",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "patient doesnt remember his abha number, only knows mobile. how to find it"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "Search with POST /abha/api/v3/profile/account/abha/search, scope search-abha and the encrypted mobile number, which returns a txnId and the accounts on that mobile, each with an index, a masked ABHA number, name and gender.",
+    "After the person picks an account, request the OTP with loginHint set to index, the encrypted index as loginId and the same txnId, then verify it.",
+    "Never skip the OTP because the search already returned an account, since the search alone is a lookup of somebody's identity."
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.flow.m1-find-abha",
+    "hiecm.endpoint.m1-find-abha-search"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-abha-m1-abha-collection-json",
+  "catalogue_version": "2026.09.16",
+  "notes": "Find ABHA is a separate journey from login and people try to stop after the search. Source lines: catalogue/hiecm/flows/m1-find-abha.md, 'POST /abha/api/v3/profile/account/abha/search<br/>scope [search-abha], mobile (encrypted)'; 'The response carries a `txnId` and the accounts on that mobile, each with an `index`, a masked ABHA number, name and gender'; 'Request the OTP with `loginHint` set to `index`, the encrypted index as `loginId` and the same `txnId`, then verify it'; 'Never skip the OTP because the search already returned an account: search alone is a lookup of somebody's identity.' catalogue/hiecm/endpoints/m1-find-abha-search.md, 'Send the person's encrypted mobile number with `scope` set to `[\"search-abha\"]`.'"
+}

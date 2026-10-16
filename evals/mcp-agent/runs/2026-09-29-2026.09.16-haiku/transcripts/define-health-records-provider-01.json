@@ -1,0 +1,184 @@
+{
+  "case_id": "define-health-records-provider-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "What is a health records provider in ABDM?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01RqeBJzBBgsw8o8v7HHDbbW",
+            "Name": "search",
+            "Input": {
+              "query": "health records provider",
+              "kind": "atom",
+              "limit": 5
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "health records provider",
+            "kind": "atom",
+            "limit": 5
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#hrp",
+                "id": "hiecm.glossary.hrp",
+                "summary": "Whoever holds the records. It describes custody, which is why it is neither a position nor a direction.",
+                "title": "HRP, health repository provider",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.decision.role-model-two-axes",
+                "summary": "HIP, HIU, HRP and the health locker read as one list of four roles. This catalogue separates the entity that holds the role from what that entity is doing, b...",
+                "title": "Roles belong to the entity, and split into two axes, position and direction",
+                "type": "decision"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/care-context#care-context",
+                "id": "hiecm.concept.care-context",
+                "summary": "A care context is the unit a provider links to a patient's ABHA address, carrying a reference number and a display name and nothing clinical.",
+                "title": "Care contexts, how records are grouped so they can be found",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/how-it-fits#roles",
+                "id": "hiecm.concept.roles",
+                "summary": "Your role, IMS or PHR, is fixed by the entity your software acts for, while HIP and HIU change with the direction each record moves.",
+                "title": "Roles, which entity your software acts for and which way the record moves",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.glossary.m2",
+                "summary": "The milestone covering care context linking, discovery and sending records.",
+                "title": "M2 Health Information Provider: Create and link records",
+                "type": "glossary"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01UqQE313PznSd6YBvZHE8M5",
+            "Name": "get",
+            "Input": {
+              "id": "hiecm.glossary.hrp"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "hiecm.glossary.hrp"
+          },
+          "output": {
+            "body": "# HRP, health repository provider\n\n## In plain words\n\nHealth Repository Provider. HRP is whoever holds the records. That is\nthe facility in most integrations, and its repository software is how the\nfacility holds them. Where a facility's records sit with another\norganisation, that organisation is the HRP. HRP and HIP are written\ntogether as \"HRP/HIP\" because the entity holding the records is usually\nthe entity publishing them. If you run an [HMIS](hmis.md) or a\n[LIMS](lims.md) for a facility integrating M2, that facility is the HRP.\n\nThe general form is any entity that manages, stores and transacts health\nrecords. That is a statement about custody: it says who holds the data,\nnot which side of a gateway they sit on and not what they are doing in a\ngiven call.\n\n## Before you start\n\nIt helps to know that ABDM keeps no central store of health records. If\nit did, this term would not need to exist.\n\n## What happens\n\nHRP, HIP, HIU and the health locker get listed together as though the\nfour were one set of roles to choose from. They are not comparable:\n\n| Term | What kind of thing it is |\n|---|---|\n| PHR app, HMIS, LIMS | Position, which of the two entities the software acts for |\n| HIP, HIU | Direction, which way a record is moving in one interaction |\n| HRP | Custody, who holds the records |\n| DSC | Vendor, the company that builds the software |\n\nOne integration is usually several of these at once. A hospital system\nacts for a facility by position, that facility is the HIP or the HIU\ndepending on the call, the facility is the HRP because it holds the\nrecords, and the software is sold by a DSC.\n\nIn practice the term shows up when software is registered: the bridge you\nregister with the gateway is how custody is declared, and it is where you\nname which facilities you act for.\n\n## How you know it worked\n\nYou have understood this when you can say why a facility might hold no records itself and still answer discovery.\n\n## When it goes wrong\n\nAssuming the facility named on a record is the system that holds it. A\nrepository provider can hold records for many facilities.\n\nTreating HRP as an alternative to HIP or HIU and trying to pick one.\nThey answer different questions: HRP is custody and the other two are\ndirection, so all three apply at once.\n\nReading a different term into it. HRP is written Health Records Provider\nin places, and has been misprinted as Health Professional Registry, which\nis a different thing entirely. All of them mean the repository, not the\nregistry.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/getting-started/glossary#hrp",
+            "gateway": "hiecm",
+            "id": "hiecm.glossary.hrp",
+            "milestone": "n/a",
+            "summary": "Whoever holds the records. It describes custody, which is why it is neither a position nor a direction.",
+            "title": "HRP, health repository provider",
+            "type": "glossary"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "A **Health Repository Provider (HRP)** in ABDM is whoever holds and manages health records. It describes the custody of records—who physically stores and manages the data.\n\nKey points from the ABDM documentation:\n\n- **In practice**: Usually a facility's repository software or the organization that stores records on behalf of a facility\n- **It's about custody, not direction**: HRP is different from HIP (Health Information Provider) and HIU (Health Information User), which describe the *direction* a record is moving. HRP describes *who holds* the records\n- **One entity can be multiple roles**: A hospital system might act as the position (facility), be an HIP/HIU depending on the call direction, and be the HRP because it holds the records\n- **Not centralized**: ABDM keeps no central store—each HRP holds its own records\n\nCommon confusion to avoid: Don't assume the facility named on a record is the system holding it—a repository provider can hold records for many facilities.\n\nSee [HRP glossary entry](https://developer.ndhm.gov.in/docs/hiecm/v3/getting-started/glossary#hrp) on the ABDM portal.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "A **Health Repository Provider (HRP)** in ABDM is whoever holds and manages health records. It describes the custody of records—who physically stores and manages the data.\n\nKey points from the ABDM documentation:\n\n- **In practice**: Usually a facility's repository software or the organization that stores records on behalf of a facility\n- **It's about custody, not direction**: HRP is different from HIP (Health Information Provider) and HIU (Health Information User), which describe the *direction* a record is moving. HRP describes *who holds* the records\n- **One entity can be multiple roles**: A hospital system might act as the position (facility), be an HIP/HIU depending on the call direction, and be the HRP because it holds the records\n- **Not centralized**: ABDM keeps no central store—each HRP holds its own records\n\nCommon confusion to avoid: Don't assume the facility named on a record is the system holding it—a repository provider can hold records for many facilities.\n\nSee [HRP glossary entry](https://developer.ndhm.gov.in/docs/hiecm/v3/getting-started/glossary#hrp) on the ABDM portal.",
+  "sources": [
+    {
+      "id": "hiecm.glossary.hrp",
+      "title": "HRP, health repository provider",
+      "url": "/docs/hiecm/v3/getting-started/glossary#hrp"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hrp\",\"id\":\"hiecm.glossary.hrp\",\"summary\":\"Whoever holds the records. It describes custody, which is why it is neither a position nor a direction.\",\"title\":\"HRP, health repository provider\",\"type\":\"glossary\"},{\"doc_url\":\"\",\"id\":\"shared.decision.role-model-two-axes\",\"summary\":\"HIP, HIU, HRP and the health locker read as one list of four roles. This catalogue separates the entity that holds the role from what that entity is doing, b...\",\"title\":\"Roles belong to the entity, and split into two axes, position and direction\",\"type\":\"decision\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/care-context#care-context\",\"id\":\"hiecm.concept.care-context\",\"summary\":\"A care context is the unit a provider links to a patient's ABHA address, carrying a reference number and a display name and nothing clinical.\",\"title\":\"Care contexts, how records are grouped so they can be found\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/how-it-fits#roles\",\"id\":\"hiecm.concept.roles\",\"summary\":\"Your role, IMS or PHR, is fixed by the entity your software acts for, while HIP and HIU change with the direction each record moves.\",\"title\":\"Roles, which entity your software acts for and which way the record moves\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.glossary.m2\",\"summary\":\"The milestone covering care context linking, discovery and sending records.\",\"title\":\"M2 Health Information Provider: Create and link records\",\"type\":\"glossary\"}]}\n{\"body\":\"# HRP, health repository provider\\n\\n## In plain words\\n\\nHealth Repository Provider. HRP is whoever holds the records. That is\\nthe facility in most integrations, and its repository software is how the\\nfacility holds them. Where a facility's records sit with another\\norganisation, that organisation is the HRP. HRP and HIP are written\\ntogether as \\\"HRP/HIP\\\" because the entity holding the records is usually\\nthe entity publishing them. If you run an [HMIS](hmis.md) or a\\n[LIMS](lims.md) for a facility integrating M2, that facility is the HRP.\\n\\nThe general form is any entity that manages, stores and transacts health\\nrecords. That is a statement about custody: it says who holds the data,\\nnot which side of a gateway they sit on and not what they are doing in a\\ngiven call.\\n\\n## Before you start\\n\\nIt helps to know that ABDM keeps no central store of health records. If\\nit did, this term would not need to exist.\\n\\n## What happens\\n\\nHRP, HIP, HIU and the health locker get listed together as though the\\nfour were one set of roles to choose from. They are not comparable:\\n\\n| Term | What kind of thing it is |\\n|---|---|\\n| PHR app, HMIS, LIMS | Position, which of the two entities the software acts for |\\n| HIP, HIU | Direction, which way a record is moving in one interaction |\\n| HRP | Custody, who holds the records |\\n| DSC | Vendor, the company that builds the software |\\n\\nOne integration is usually several of these at once. A hospital system\\nacts for a facility by position, that facility is the HIP or the HIU\\ndepending on the call, the facility is the HRP because it holds the\\nrecords, and the software is sold by a DSC.\\n\\nIn practice the term shows up when software is registered: the bridge you\\nregister with the gateway is how custody is declared, and it is where you\\nname which facilities you act for.\\n\\n## How you know it worked\\n\\nYou have understood this when you can say why a facility might hold no records itself and still answer discovery.\\n\\n## When it goes wrong\\n\\nAssuming the facility named on a record is the system that holds it. A\\nrepository provider can hold records for many facilities.\\n\\nTreating HRP as an alternative to HIP or HIU and trying to pick one.\\nThey answer different questions: HRP is custody and the other two are\\ndirection, so all three apply at once.\\n\\nReading a different term into it. HRP is written Health Records Provider\\nin places, and has been misprinted as Health Professional Registry, which\\nis a different thing entirely. All of them mean the repository, not the\\nregistry.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hrp\",\"gateway\":\"hiecm\",\"id\":\"hiecm.glossary.hrp\",\"milestone\":\"n/a\",\"summary\":\"Whoever holds the records. It describes custody, which is why it is neither a position nor a direction.\",\"title\":\"HRP, health repository provider\",\"type\":\"glossary\"}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T11:58:40.093Z",
+  "usage": {
+    "input_tokens": 30,
+    "output_tokens": 562,
+    "cache_read_input_tokens": 28406,
+    "cache_creation_input_tokens": 6708,
+    "num_turns": 3,
+    "duration_ms": 10139,
+    "cost_usd_equivalent": 0.0190966
+  }
+}

@@ -25,7 +25,7 @@ Run the target's build, lint and type-check for the changed files. Fix until cle
 Add or update the file's entry: status, the spec ids it implements, and for each function or component its line range and the spec part it implements (for example `A4P step "pre-send checks"`, `F8:item[]`, `D18.status`).
 
 ### L5.5 Commit per batch
-When a batch from code-plan.json is fully written and builds, commit it with code.json. Then continue with L5.1.
+When a batch from code-plan.json is fully written and builds, commit it with code.json. Then continue with L5.1. A batch may be a plan phase or a layer (L4.4); with batches by layer the phase's `done_when` is checked in L7 and L8.
 
 #### L5O. OUTPUT
 `nhcx-plan/code.json`:

@@ -170,3 +170,4 @@ CANCEL POLL (claim_preauth row, cancel_txn_id):
 - FHIR: [F1. Bundle](../fhir/F1-bundle.md)
 - Database: [D18. claim_preauth](../database/D18-claim-preauth.md), [D19. claim_predetermination](../database/D19-claim-predetermination.md)
 - Gateway: [G1. Embedding](../gateway/G1-embedding.md), [G7. Send](../gateway/G7-send.md), [G9. Ledger](../gateway/G9-ledger.md)
+- Tests: [T1. Test Configuration](../tests/T1-test-configuration.md), [T2. Test Runners](../tests/T2-test-runners.md)

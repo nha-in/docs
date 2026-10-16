@@ -37,6 +37,7 @@ Contact & ABHA (two columns):
 | Email | Email input | `email` | Optional |
 | ABHA number | Text | `abha_number` | Optional. Help text: "Exported as Patient.identifier with type ABHA." |
 | ABHA address | Text | `abha_address` | Optional |
+| Verify or create an ABHA | Button (secondary) | | Opens the ABHA dialog ([A19. ABHA Create and Verify (ABDM M1)](../apis/A19-abha-m1.md)): verify an existing ABHA by its number or the mobile it is registered against (OTP, with an account chooser when one mobile holds several), or create one from an Aadhaar OTP with the person's consent recorded and an address chosen. On success the ABHA number and address are filled in, and name, gender, date of birth and mobile where the form still has them blank; a typed value is kept. The dialog's description reads: "Verify the person's ABHA with an OTP, or create one from their Aadhaar. What the ABHA service confirms is written onto the file." Opened from S13 "Register with ABHA", the whole form is filled from the profile and its description reads "Filled from ABHA <number>. Confirm the details; a UHID is issued on save." |
 
 Demographics (two columns):
 
@@ -116,3 +117,5 @@ The arrangement below is the reference implementation's [REF](../references/PAYE
 3. Cancel: go to the Patient List S13 without saving (in both modes).
 4. Breadcrumb "Patients": go to S13. In edit mode, the patient name crumb goes to S15.
 5. Expand or collapse a section: show or hide its fields. Values in a collapsed section are still submitted.
+6. Verify or create an ABHA: run the ABHA dialog (A19) and fill the form from its profile; the form is not saved until Register patient or Save changes.
+7. Under PMJAY, the beneficiary is verified biometrically before registration where the scheme asks for it; the verification lives on the case's Verification tab ([S18. Beneficiary Verification](S18-beneficiary-verification.md), [A18. Biometric Authentication](../apis/A18-biometric-authentication.md), stage Preauth) and is recorded against the patient and read by the sends.

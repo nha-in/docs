@@ -21,8 +21,10 @@ test('uhi samples are signed and point at a real host', () => {
   }
 });
 
-test('uhi pages offer no try-it console', () => {
-  for (const op of uhiPages()) assert.equal(op.tryIt, false, op.id);
+// Try it signs a UHI request in the browser (site/src/components/api/uhi-sign.ts),
+// so UHI pages offer it like every other gateway's.
+test('uhi pages offer the try-it console, and sign in the browser', () => {
+  for (const op of uhiPages()) assert.notEqual(op.tryIt, false, op.id);
   assert.equal(page('m2-post-v3-link-on-carecontext').tryIt, undefined);
 });
 

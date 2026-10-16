@@ -3,7 +3,7 @@ title: Hospital, lab and pharmacy systems
 sidebar_label: Information Management Systems
 sidebar_position: 2
 description: What a facility does as a health information provider in ABDM, and how care context linking fits into a clinical workflow.
-source: catalogue/openapi/hiecm/v3/hiecm-m2.yaml, catalogue/openapi/hiecm/v3/hiecm-m1.yaml
+source: catalogue/hiecm/openapi/v3/hiecm-m2.yaml, catalogue/hiecm/openapi/v3/hiecm-m1.yaml
 sidebar_class_name: sidebar-icon sidebar-icon--server
 ---
 
@@ -55,7 +55,7 @@ government integrators.
 Face authentication runs through the ABHA app and the Aadhaar RD service: your portal generates a QR
 code, the patient scans it in the ABHA app, and you poll for the result. Biometric creation needs an
 Aadhaar registered device, and UIDAI publishes the device list at
-<https://uidai.gov.in/en/ecosystem/authentication-devices-documents/biometric-devices.html>.
+<https://uidai.gov.in/hi/biometric-devices>.
 
 Implement two validation algorithms locally before you spend an API call: Luhn for an ABHA number,
 Verhoeff for an Aadhaar number.
@@ -67,8 +67,8 @@ Five things have to work.
 1. **Health records in the right format.** A [FHIR](/docs/hiecm/v3/getting-started/glossary#fhir) R4 bundle following
    the NRCES profiles at <https://nrces.in/ndhm/fhir/r4/index.html>, either simple with a PDF or
    image attachment or structured with coded information. There are eight record types, all
-   mandatory for an HMIS. See [FHIR and health record
-   formats](/docs/hiecm/v3/concepts/fhir).
+   mandatory for an HMIS. See [FHIR health
+   records](/docs/hiecm/v3/resources/standards/fhir).
 2. **Care contexts.** The unit that attaches to an ABHA address. The
    [HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm) is data blind and holds two fields per care context: your
    internal reference ID, and a display name with nothing clinical in it. Use one per

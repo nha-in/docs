@@ -1,5 +1,5 @@
 // scripts/ingest-nha.mjs
-// NHA's final set (catalogue/openapi/.raw/nha-2026-09-16) to the eleven module
+// NHA's final set (catalogue/hiecm/openapi/.raw/nha-2026-09-16) to the eleven module
 // specs. Deterministic. Only the edits listed in the design spec, each one
 // appended to the correction log this script writes.
 //   node scripts/ingest-nha.mjs          write the specs and the log
@@ -11,16 +11,16 @@ import {createHash} from 'node:crypto';
 import {parse, stringify, Document, visit} from 'yaml';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-const RAW = join(root, 'catalogue', 'openapi', '.raw', 'nha-2026-09-16');
-const OUT = join(root, 'catalogue', 'openapi', 'hiecm', 'v3');
-const LOG = join(root, 'catalogue', 'openapi', 'corrections', '2026-09-16-final-set.md');
+const RAW = join(root, 'catalogue', 'hiecm', 'openapi', '.raw', 'nha-2026-09-16');
+const OUT = join(root, 'catalogue', 'hiecm', 'openapi', 'v3');
+const LOG = join(root, 'catalogue', 'hiecm', 'openapi', 'corrections', '2026-09-16-final-set.md');
 const check = process.argv.includes('--check');
 const journeysMode = process.argv.includes('--journeys');
 const METHODS = ['get', 'post', 'put', 'patch', 'delete'];
 
 const MODULES = {
   gateway: {label: 'Gateway session', position: 1, icon: 'key-round', roles: ['his', 'phr'], title: 'ABDM gateway, sessions and bridges', summary: 'The access token every call carries, and the bridge registry.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 4},
-  m1: {label: 'M1 Identity', position: 2, icon: 'id-card', roles: ['his'], title: 'ABDM M1, create and verify ABHA', summary: 'Create, find, log into and manage an ABHA.', servers: [{url: 'https://abhasbx.abdm.gov.in', description: 'ABHA service, sandbox'}], expected: 121},
+  m1: {label: 'M1 Identity', position: 2, icon: 'id-card', roles: ['his'], title: 'ABDM M1, create and verify ABHA', summary: 'Create, find, log into and manage an ABHA.', servers: [{url: 'https://abhasbx.abdm.gov.in', description: 'ABHA service, sandbox'}], expected: 119},
   m2: {label: 'M2 Health Information Provider', position: 3, icon: 'link', roles: ['his'], title: 'ABDM M2, create and link records', summary: 'Link care contexts to an ABHA address and share records when consent arrives.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 20},
   m3: {label: 'M3 Health Information User', position: 4, icon: 'file-check', roles: ['his'], title: 'ABDM M3, fetch data with consent', summary: 'Raise a consent request, fetch its artefacts, and receive records.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 12},
   m4: {label: 'M4 Registry Integration', position: 5, icon: 'building-2', roles: ['his'], title: 'ABDM M4, register facilities and professionals', summary: 'Register healthcare professionals and facilities on the NHPR.', servers: [{url: 'https://apihspsbx.abdm.gov.in/v4/int', description: 'NHPR, sandbox'}], expected: 87},
@@ -197,6 +197,26 @@ const slug = (s) => s.toLowerCase().replace(/\{([^}]+)\}/g, '$1').replace(/[^a-z
 const log = [];
 const note = (module, op, what) => log.push(`| ${module} | \`${op}\` | ${what} |`);
 
+// NHA's M1 sandbox observations of 28 September 2026. Operations NHA asked
+// to leave out, and value corrections NHA gave for one use case each. Every
+// entry is a string edit on the operation as parsed, recorded in the log.
+const M1_OBS = "NHA's M1 sandbox observations of 28 September 2026";
+const M1_LEFT_OUT = new Map([
+  ['PATCH /abha/api/v3/profile/account#profile-photo', M1_OBS],
+  // The benefit Child ABHA flow opens with the same demographic authentication
+  // call the benefit Demo Auth flow already lists; NHA asked for it once.
+  ['POST /abha/api/v3/enrollment/enrol/byAadhaar#demo-auth--benefit-child-abha', "NHA's M1 observations of 2 October 2026"],
+]);
+const OTP_TO_AADHAAR = [['"abdm"', '"aadhaar"'], ['`\\"abdm\\"` | yes', '`\\"aadhaar\\"` | yes'], ['otpSystem: abdm', 'otpSystem: aadhaar']];
+const M1_VALUES = {
+  'POST /abha/api/v3/profile/login/request/otp#biometric-fingerprint': {what: 'otpSystem `abdm` corrected to `aadhaar`', edits: OTP_TO_AADHAAR},
+  'POST /abha/api/v3/profile/login/request/otp#biometric-iris': {what: 'otpSystem `abdm` corrected to `aadhaar`', edits: OTP_TO_AADHAAR},
+  'POST /abha/api/v3/profile/login/request/otp#find-abha-face': {
+    what: 'scope `aadhaar-face-verify` corrected to `face-auth`, and the note asking to confirm it removed',
+    edits: [[/\n\n> \*\*Note:\*\* The Postman collection sends scope[^\n]*confirm with NHA\./g, ''], ['aadhaar-face-verify', 'face-auth']],
+  },
+};
+
 const specs = Object.fromEntries(Object.entries(MODULES).map(([id, m]) => [id, {
   openapi: '3.1.1',
   info: {
@@ -236,6 +256,11 @@ for (const {file, place, set = 'nha-2026-09-16', fetched = '2026-09-16', titlesF
       // one file may declare several use cases of one path.
       const key = `${method.toUpperCase()} ${path.replace(/#.*$/, '').replace(/^\/(abha\/api|api\/hiecm)/, '').replace(/\{[^}]+\}/g, '{}')}`;
       if (seenPath.has(key) && seenPath.get(key).file !== file) { const first = seenPath.get(key); note(first.module, key, `dropped from ${file}: already declared by ${first.file} in the ${first.module} module`); continue; }
+      if (module === 'm1' && M1_LEFT_OUT.has(`${method.toUpperCase()} ${path}`)) {
+        seenPath.set(key, {file, module});
+        note('m1', `${method.toUpperCase()} ${path}`, `left out of the reference, as ${M1_LEFT_OUT.get(`${method.toUpperCase()} ${path}`)} ask`);
+        continue;
+      }
       if (module === null) {
         seenPath.set(key, {file, module: 'gateway'});
         note('gateway', key, 'left out of the reference, as NHA\'s sandbox observations of 23 September 2026 ask');
@@ -275,6 +300,13 @@ for (const {file, place, set = 'nha-2026-09-16', fetched = '2026-09-16', titlesF
         if (method === 'patch' && path.endsWith('/profile/account') && !(copy.parameters ?? []).some((p) => p.name === 'X-token')) {
           copy.parameters = [{name: 'X-token', in: 'header', required: true, schema: {type: 'string'}, description: 'The user token from a login or enrolment response.'}, ...(copy.parameters ?? [])];
           note(module, id, 'X-token header added; the call updates the signed-in profile and NHA declared no user token on it');
+        }
+        const fix = M1_VALUES[`${method.toUpperCase()} ${path}`];
+        if (fix) {
+          let text = JSON.stringify(copy);
+          for (const [from, to] of fix.edits) text = typeof from === 'string' ? text.split(from).join(to) : text.replace(from, to);
+          Object.assign(copy, JSON.parse(text));
+          note(module, id, `${fix.what}, as ${M1_OBS} give`);
         }
         // 9. authMethods: type array, no sibling items; NHA gave only an example.
         const authMethods = copy.responses?.['200']?.content?.['application/json']?.schema?.items?.properties?.ABHA?.items?.properties?.authMethods;
@@ -320,14 +352,14 @@ for (const {file, place, set = 'nha-2026-09-16', fetched = '2026-09-16', titlesF
         specs[module].components[kind][name] = def;
       }
     }
-    specs[module]['x-abdm-sources'].push({file: `catalogue/openapi/.raw/${set}/${file}`, role: 'upstream', hash: sha(full), fetched});
+    specs[module]['x-abdm-sources'].push({file: `catalogue/hiecm/openapi/.raw/${set}/${file}`, role: 'upstream', hash: sha(full), fetched});
   }
 }
 
 // 8. The M1 info.description is not published (wrong cipher, wrong certificate path, third-party tool).
 specs.m1.info.description = 'Encrypt Aadhaar numbers, mobile numbers, OTP values and passwords under the certificate from GET /abha/api/v3/profile/public/certificate. See /docs/hiecm/v3/concepts/encryption.';
 note('m1', 'info', 'description replaced: NHA\'s text names RSA/ECB/PKCS1Padding, /v3/auth/cert and a third-party encryption site; the original is in the raw file');
-specs.m1['x-abdm-sources'].push({file: 'catalogue/openapi/.raw/nha-2026-09-16/abha/M1 ABHA Collection.json', role: 'upstream', hash: sha(join(RAW, 'abha/M1 ABHA Collection.json')), fetched: '2026-09-15', note: 'Used for the order of M1 calls only. See journeys/m1.yaml.'});
+specs.m1['x-abdm-sources'].push({file: 'catalogue/hiecm/openapi/.raw/nha-2026-09-16/abha/M1 ABHA Collection.json', role: 'upstream', hash: sha(join(RAW, 'abha/M1 ABHA Collection.json')), fetched: '2026-09-15', note: 'Used for the order of M1 calls only. See journeys/m1.yaml.'});
 
 // 9. NHA's review of the M3 API pages, 15 September 2026. On consent request
 // init the HIP block is optional and neither the HIP nor the HIU name is
@@ -809,6 +841,103 @@ specs.m1['x-abdm-sources'].push({file: 'catalogue/openapi/.raw/nha-2026-09-16/ab
   note('p2, p3, p4', 'servers', 'https://dev.abdm.gov.in only, the base URL NHA gave for P2, P3 and P4 on 23 September 2026; the PHR swagger declares https://abhasbx.abdm.gov.in, and P2 had rendered its gateway calls on it');
 }
 
+// 14. NHA's Health Facility Registry APIs document, version 2.0 of 22 June
+// 2026, cited in NHA's review of 2 October 2026 as the reference for M4 field
+// documentation. NHA's swagger carries the HFR request schemas with almost no
+// field descriptions and few required lists; the document gives every field
+// its description, whether it is required, its data type and its format. The
+// tables are transcribed in corrections/fields/2026-10-03-hfr.yaml. This
+// only adds: a description or required list the swagger already has stays,
+// and a data type that disagrees is logged, not changed.
+{
+  const FIELDS = parse(readFileSync(join(root, 'catalogue', 'hiecm', 'openapi', 'corrections', 'fields', '2026-10-03-hfr.yaml'), 'utf8'));
+  const resolve = (node) => { while (node?.$ref) node = node.$ref.split('/').slice(1).reduce((t, k) => t?.[k], specs.m4); return node; };
+  const into = (node) => { node = resolve(node); return node?.type === 'array' && node.items ? resolve(node.items) : node; };
+  const sentence = (t) => (t && !/\.$/.test(t) ? `${t}.` : t);
+  const TYPES = {string: 'string', integer: 'integer', number: 'number', boolean: 'boolean', list: 'array', array: 'array', object: 'object'};
+  specs.m4['x-abdm-sources'].push({url: FIELDS.source.url, role: 'field-reference', hash: `sha256:${FIELDS.source.sha256}`, fetched: '2026-10-03', note: `${FIELDS.source.title}. Request field descriptions, required fields and formats; see corrections/fields/2026-10-03-hfr.yaml.`});
+  for (const [key, entry] of Object.entries(FIELDS.operations)) {
+    const [method, path] = key.split(' ');
+    const op = specs.m4.paths[path]?.[method.toLowerCase()];
+    if (!op) throw new Error(`corrections/fields/2026-10-03-hfr.yaml: ${key} is not an M4 operation`);
+    const body = op.requestBody?.content?.['application/json']?.schema;
+    let described = 0, required = 0;
+    const conflicts = [];
+    for (const [field, f] of Object.entries(entry.fields)) {
+      let node, parent, name;
+      if (field.startsWith('query:')) {
+        node = (op.parameters ?? []).find((x) => x.name === field.slice(6));
+      } else {
+        const segments = field.split('.');
+        name = segments.pop();
+        parent = into(body);
+        for (const s of segments) parent = into(parent?.properties?.[s]);
+        node = resolve(parent?.properties?.[name]);
+      }
+      if (!node) throw new Error(`corrections/fields/2026-10-03-hfr.yaml: ${key} has no field ${field}`);
+      const req = (f.required ?? '').replace(/\s+\.$/, '').trim();
+      const always = /^yes$/i.test(req);
+      const when = !always && /^yes\b/i.test(req) ? req.replace(/^yes[\s,]*/i, '').replace(/^\((.*)\)$/, '$1').trim() : '';
+      const text = [sentence(f.description), sentence(f.format), when ? sentence(`Required ${/^(if|when|based|only)\b/i.test(when) ? '' : 'when '}${when}`.replace(/\s+/g, ' ')) : '']
+        .filter(Boolean).join(' ');
+      const schema = field.startsWith('query:') ? (node.schema ?? {}) : node;
+      if (text && !node.description) { node.description = text; described++; }
+      if (always) {
+        if (field.startsWith('query:')) { if (!node.required) { node.required = true; required++; } }
+        else if (!(parent.required ?? []).includes(name)) { parent.required = [...(parent.required ?? []), name]; required++; }
+      }
+      const docType = TYPES[(f.type ?? '').toLowerCase()];
+      if (docType && schema.type && schema.type !== docType) conflicts.push(`\`${field}\` as ${f.type}, the swagger as ${schema.type}`);
+    }
+    note('m4', op.operationId, `from the HFR APIs document 2.0, section ${entry.section}: ${described} field description(s) and ${required} required field(s) added${conflicts.length ? `; the document types ${conflicts.join(', ')}, and the swagger's type stands` : ''}`);
+  }
+  for (const gap of FIELDS.gaps) note('m4', 'HFR APIs document 2.0', `${gap}; nothing added`);
+}
+
+// 15. NHA's M1 observations of 2 October 2026: the consent block on ABHA
+// enrolment is static, so Try it must not let it be edited. Its two fields
+// carry their one value only in prose ("Use `abha-enrollment`"); each gets
+// that value as a one value enum, which locks it in Try it.
+{
+  let locked = 0;
+  const walk = (node, opId) => {
+    if (!node || typeof node !== 'object') return;
+    const consent = node.properties?.consent;
+    for (const key of ['code', 'version']) {
+      const field = consent?.properties?.[key];
+      const value = field?.description?.match(/Use `([^`]+)`/)?.[1];
+      if (value && !field.enum) { field.enum = [value]; locked++; note('m1', opId, `consent.${key} is fixed at \`${value}\`, as its description says; NHA's M1 observations of 2 October 2026 ask that the consent block not be editable`); }
+    }
+    for (const v of Object.values(node.properties ?? {})) walk(v, opId);
+    for (const k of ['oneOf', 'anyOf', 'allOf']) for (const v of node[k] ?? []) walk(v, opId);
+    if (node.items) walk(node.items, opId);
+  };
+  for (const item of Object.values(specs.m1.paths)) {
+    for (const method of METHODS) {
+      const op = item[method];
+      if (op) walk(op.requestBody?.content?.['application/json']?.schema, op.operationId);
+    }
+  }
+  if (!locked) throw new Error('correction 15: no consent block found to lock');
+}
+
+// 16. HIP initiated linking: the health information type on each patient
+// entry is `hiType`. NHA's swagger names it `hiTypes`, but NHA's own M2 flow
+// diagram (M2 Sandbox 2.0 Update, 22 September 2026) sends `hiType`, and an
+// integrator's controlled sandbox run of 4 October 2026 showed the gateway
+// answering `hiType` with a 202 and an on_carecontext success while a body
+// with `hiTypes` got no answer at all. The field is renamed; its type, enum
+// and place in the required list do not change.
+{
+  const op = specs.m2.paths['/api/hiecm/hip/v3/link/carecontext']?.post;
+  const resolve = (node) => { while (node?.$ref) node = node.$ref.split('/').slice(1).reduce((t, k) => t?.[k], specs.m2); return node; };
+  const entry = resolve(resolve(resolve(op?.requestBody?.content?.['application/json']?.schema)?.properties?.patient)?.items);
+  if (!entry?.properties?.hiTypes) throw new Error('correction 16: link/carecontext patient entry has no hiTypes');
+  entry.properties = Object.fromEntries(Object.entries(entry.properties).map(([k, v]) => [k === 'hiTypes' ? 'hiType' : k, v]));
+  entry.required = (entry.required ?? []).map((k) => (k === 'hiTypes' ? 'hiType' : k));
+  note('m2', op.operationId, "patient[].hiTypes renamed hiType: NHA's M2 flow diagram of 22 September 2026 sends hiType, and on the sandbox a body with hiTypes gets no answer while hiType is linked (integrator run, 4 October 2026)");
+}
+
 for (const [id, m] of Object.entries(MODULES)) {
   const count = Object.values(specs[id].paths).reduce((n, i) => n + METHODS.filter((x) => i[x]).length, 0) + Object.values(specs[id].webhooks).reduce((n, i) => n + METHODS.filter((x) => i[x]).length, 0);
   if (count !== m.expected) throw new Error(`${id}: ${count} operations, expected ${m.expected}: ${Object.keys(specs[id].paths).join(' ')}`);
@@ -816,7 +945,7 @@ for (const [id, m] of Object.entries(MODULES)) {
 }
 
 if (journeysMode) {
-  const JOURNEYS = join(root, 'catalogue', 'openapi', 'hiecm', 'v3', 'journeys');
+  const JOURNEYS = join(root, 'catalogue', 'hiecm', 'openapi', 'v3', 'journeys');
   const journeySlug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
   let written = 0;
   for (const module of Object.keys(MODULES)) {

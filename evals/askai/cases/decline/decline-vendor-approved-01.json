@@ -28,6 +28,6 @@
   "expected_behaviour": "decline",
   "derived_from": null,
   "source_row": "annexure#sandbox-faq-general",
-  "catalogue_version": "2026.08.24",
+  "catalogue_version": "2026.09.16",
   "notes": "no vendor approval list is in the catalogue; do not confirm or deny a specific vendor's status. Dropped 'is approved' and 'is certified' from must_not_contain: both fire as substrings of the honest decline 'the catalogue does not record which software is approved by NHA', and this question has no duration to build a digit-bearing form from, so no fabricated-specific substitute is workable."
 }

@@ -19,6 +19,7 @@ Follow these strictly, in every step and every file. When a spec seems to say ot
 9. **No secrets in the repository.** Client secret, private key and payer desk credentials come from configuration or the environment.
 10. **Treat markers as defined.** [REF](PAYERS.md#markers) may be chosen differently (record it); [PAYER](PAYERS.md#markers) values come from the payer adapter; [SANDBOX](PAYERS.md#markers) behaviour is not relied on in production.
 11. **Work the steps in order and log them.** L1 to L8, one plan file each, every sub-step and file change in `nhcx-plan/progress.json` ([LOG.md](../steps/LOG.md)). Re-read this page at the start of each step.
+12. **End every prompt by rebuilding the report.** The last action of every prompt, whatever it did, is to run the report builder (`nhcx-plan/report.py` or the target language's equivalent), which rewrites `nhcx-plan/report.html` from the plan files: every plan file on its own tab, errors first, with a refresh button; `make-report.sh` and `make-report.bat` rebuild it every 10 seconds for anyone watching ([LOG.md](../steps/LOG.md#logh-reporthtml)).
 
 ## Confusions
 
@@ -48,6 +49,8 @@ Terms and behaviours that are easy to mix up, with the reading this skill uses.
 | Predetermination and status routes | NHA lists `v1/predetermination/submit` and `v1/status`; the reference implementation sends predetermination on the pre-auth route and status as a Task [REF](PAYERS.md#markers). Check which the payer accepts. |
 | Step ids, section letters, log ids | `L1` to `L8` are steps; `S1L` is the LAYOUT section of S1; `LOG-0042` is a progress log entry; `X1` to `X10` are the end-to-end exchanges of L8. |
 | A9 | There is no A9: the inbound door it once described became the callbacks, C1 to C10. |
+| Session token, user token, X-token, T-token | The **session token** is the application's own, minted from its client id ([G3. Session Token](../gateway/G3-session-token.md)) and sent as `Authorization: Bearer` on every ABDM call and as `bearer_auth` on the exchange. The **user token** is the beneficiary's, from a biometric verification (A18. Biometric Authentication (in nhcx-coverage)), thirty minutes, carried on the request headers under PMJAY. The **X-token** and **T-token** are ABHA M1's (A19. ABHA Create and Verify (ABDM M1) (in nhcx-coverage)): the X-token opens the person's ABHA profile, the T-token only chooses the account after a mobile login. None of the three is ever sent in another's place. |
+| Biometric authentication and the consent questionnaire | A live capture (A18. Biometric Authentication (in nhcx-coverage), on the Verification tab S18. Beneficiary Verification (in nhcx-coverage)) is optional for any payer and its token rides on the sends whenever the desk holds one. Under PMJAY it is required, and where none is possible the scheme's Authentication Consent and Discharge Consent forms are answered in the bundle instead (F7. QuestionnaireResponse (in nhcx-coverage)): one or the other goes, never both, and a cyclic case takes only the capture. The stage is the stay's: Preauth while admitted, Discharge once discharged. |
 
 ## 1. Environments and base URLs
 
@@ -65,7 +68,7 @@ Terms and behaviours that are easy to mix up, with the reading this skill uses.
 | `X-CM-ID` on the session call | `sbx` | `abdm` |
 | This application's inbound route | the public URL registered as the participant's `endpoint_url`, routed to `/in/<path>` or `/v1/<path>` ([G8](../gateway/G8-receive.md)) | the same, on HTTPS (TLS 1.2 or newer), a domain name hosted in India, no IP address and no port; NHCX's source addresses allowed in ([OPERATIONS.md](OPERATIONS.md)) |
 
-The gateway's built-in production defaults ([G2. Configuration and Participants](../gateway/G2-configuration.md)) follow a host-swap guess (`apisbx` to `apis`, `dev` to `live`) that does not match the published production participant service or sessions host above. Set every production URL explicitly in configuration.
+The gateway's production table ([G2. Configuration and Participants](../gateway/G2-configuration.md)) is this table. A host swap of the sandbox names (`apisbx` to `apis`, `sbxhcx` to `hcx`, `dev` to `live`) is wrong and must not be used. Set every production URL explicitly in configuration from the onboarding letter; the NHCX exchange base has no published production address.
 
 ## 2. Calls that are not exchanges
 
@@ -78,6 +81,8 @@ Plain JSON with the session token: no JWE, no protocol headers, no ledger row.
 | nha:A1 | registry `/fetch/participants/list`, `/participant/search` | participant records | [G4](../gateway/G4-registry.md) |
 | nha:A2 | registry `/participant/get/policies` | a beneficiary's policies by member id, mobile or ABHA number | A1 (in nhcx-coverage), [G10](../gateway/G10-beneficiary-registry.md) |
 | nha:C1, nha:C2 | registry `/participant/link/abha/policy`, `/participant/delink/abha/policy` | link or unlink an ABHA number and a policy | [G10](../gateway/G10-beneficiary-registry.md) |
+| nha:D2 | ABDM biometric service: `auth/init`, `auth/verify`, `auth/refresh/token` on one host, `faceauth/init`, `capture/pid`, `v2/auth/verify` on another | the beneficiary's fingerprint, iris or face authentication against their ABHA; the user token that rides on the eligibility check, pre-authorisation and claim, optional for any payer and required by PMJAY | A18 (in nhcx-coverage), defined in full; the tab is S18 (in nhcx-coverage) |
+| ABDM M1 | ABHA service `/abha/api/v3/...` | create an ABHA from an Aadhaar OTP, or verify an existing one by OTP, and fill the patient file from the profile | A19 (in nhcx-coverage); the calls themselves are read from the MCP's M1 catalogue |
 
 ## 3. Protocol defaults
 
@@ -96,15 +101,15 @@ Plain JSON with the session token: no JWE, no protocol headers, no ledger row.
 
 | Exchange | NHA | Our API | Send route | Bundle sent | Workflow id | Reply route | Bundle back | Callback |
 |---|---|---|---|---|---|---|---|---|
-| Coverage eligibility (validation, benefits, discovery) | nha:B1, nha:D3 | A2 (in nhcx-coverage) | `v1/coverageeligibility/check` | F2 (in nhcx-coverage) with [F15](../fhir/F15-patient.md) to [F18](../fhir/F18-coverage.md) | none published; NHA's sample sends 11, the reference sends the case number [REF](PAYERS.md#markers) | `v1/coverageeligibility/on_check` | F3 (in nhcx-coverage) | C2 (in nhcx-coverage) |
-| Authorisation requirements on the chosen lines | nha:B1 | A2 (in nhcx-coverage) (purpose `auth-requirements`) | `v1/coverageeligibility/check` | F2 (in nhcx-coverage) with items | as eligibility: 11, or the case number [REF](PAYERS.md#markers) | `v1/coverageeligibility/on_check` | F3 (in nhcx-coverage) | C3 (in nhcx-preauth) |
+| Coverage eligibility (validation, benefits, discovery) | nha:B1, nha:D3 | A2 (in nhcx-coverage) | `v1/coverageeligibility/check` | F2 (in nhcx-coverage) with [F15](../fhir/F15-patient.md) to [F18](../fhir/F18-coverage.md) | 11 (NHA's sample) by default; a setting sends the case number instead [REF](PAYERS.md#markers) | `v1/coverageeligibility/on_check` | F3 (in nhcx-coverage) | C2 (in nhcx-coverage) |
+| Authorisation requirements on the chosen lines | nha:B1 | A2 (in nhcx-coverage) (purpose `auth-requirements`) | `v1/coverageeligibility/check` | F2 (in nhcx-coverage) with items | as eligibility: 11 by default, the case number under the setting [REF](PAYERS.md#markers) | `v1/coverageeligibility/on_check` | F3 (in nhcx-coverage) | C3 (in nhcx-preauth) |
 | Insurance plan (package master) | nha:B2, nha:D1 | A3 (in nhcx-preauth) | `v1/insuranceplan/request` | F4 (in nhcx-preauth) (Task only) | the case number [REF](PAYERS.md#markers) | `v1/insuranceplan/on_request` | F5 (in nhcx-preauth) with F6 (in nhcx-preauth) | C4 (in nhcx-preauth) |
 
 ### Pre-authorisation
 
 | Exchange | NHA | Our API | Send route | Bundle sent | Workflow id | Reply route | Bundle back | Callback |
 |---|---|---|---|---|---|---|---|---|
-| Pre-authorisation | nha:B3, nha:D4 | A4 (in nhcx-preauth) | `v1/preauth/submit` | F8 (in nhcx-preauth) (`use: preauthorization`) with F7 (in nhcx-preauth), [F15](../fhir/F15-patient.md) to F19 (in nhcx-coverage) | 12 | `v1/preauth/on_submit` | F9 (in nhcx-preauth) | C5 (in nhcx-preauth) |
+| Pre-authorisation | nha:B3, nha:D4 | A4 (in nhcx-preauth) | `v1/preauth/submit` | F8 (in nhcx-preauth) (`use: preauthorization`) with F7 (in nhcx-coverage), [F15](../fhir/F15-patient.md) to F19 (in nhcx-coverage) | 12 | `v1/preauth/on_submit` | F9 (in nhcx-preauth) | C5 (in nhcx-preauth) |
 | Pre-auth resubmitted after a rejection | nha:D5 | A4 (in nhcx-preauth) | `v1/preauth/submit` | F8 (in nhcx-preauth) | 121 (defined; the reference never sends it [REF](PAYERS.md#markers)) | `v1/preauth/on_submit` | F9 (in nhcx-preauth) | C5 (in nhcx-preauth) |
 | Pre-auth query answer | nha:D7 | A4 (in nhcx-preauth) (resubmit query mode) [PAYER](PAYERS.md#markers) | `v1/preauth/submit` | F8 (in nhcx-preauth) with the answer | 19, status `response.complete` | `v1/preauth/on_submit` | F9 (in nhcx-preauth) | C5 (in nhcx-preauth) |
 | Enhancement | nha:D6 | A4 (in nhcx-preauth) | `v1/preauth/submit` | F8 (in nhcx-preauth) with the added lines | 13 | `v1/preauth/on_submit` | F9 (in nhcx-preauth) | C5 (in nhcx-preauth) |
@@ -118,8 +123,8 @@ Payer workflow ids on pre-auth replies [PAYER](PAYERS.md#markers): 20 received, 
 
 | Exchange | NHA | Our API | Send route | Bundle sent | Workflow id | Reply route | Bundle back | Callback |
 |---|---|---|---|---|---|---|---|---|
-| Claim | nha:B5, nha:D9 | A5 (in nhcx-claim) | `v1/claim/submit` | F8 (in nhcx-preauth) (`use: claim`) with F7 (in nhcx-preauth), [F15](../fhir/F15-patient.md) to F19 (in nhcx-coverage) | 15 | `v1/claim/on_submit` | F9 (in nhcx-preauth) | C6 (in nhcx-claim) |
-| Claim query answer | nha:D10 | A5 (in nhcx-claim) | `v1/claim/submit` | F8 (in nhcx-preauth) with the answer | 161 [SANDBOX](PAYERS.md#markers); generic 151; status `response.complete` | `v1/claim/on_submit` | F9 (in nhcx-preauth) | C6 (in nhcx-claim) |
+| Claim | nha:B5, nha:D9 | A5 (in nhcx-claim) | `v1/claim/submit` | F8 (in nhcx-preauth) (`use: claim`) with F7 (in nhcx-coverage), [F15](../fhir/F15-patient.md) to F19 (in nhcx-coverage) | 15 | `v1/claim/on_submit` | F9 (in nhcx-preauth) | C6 (in nhcx-claim) |
+| Claim query answer | nha:D10 | A5 (in nhcx-claim) | `v1/claim/submit` | F8 (in nhcx-preauth) with the answer | 151 (published) for every adapter; the SHA sandbox takes only 161, set as a configuration override [SANDBOX](PAYERS.md#markers); status `response.complete` | `v1/claim/on_submit` | F9 (in nhcx-preauth) | C6 (in nhcx-claim) |
 | Claim resubmitted | | A5 (in nhcx-claim) | `v1/claim/submit` | F8 (in nhcx-preauth) | not offered for PMJAY [PAYER](PAYERS.md#markers); generic 16, which NHA's workflow list does not publish [REF](PAYERS.md#markers) | `v1/claim/on_submit` | F9 (in nhcx-preauth) | C6 (in nhcx-claim) |
 | Reprocess a decided claim | nha:D11 | [A6](../apis/A6-task-submit.md) (reprocess) | `v1/task/submit` | [F10](../fhir/F10-task-claim-actions.md) (Task) | 36 | `v1/task/on_submit` | [F10](../fhir/F10-task-claim-actions.md) | [C8](../callbacks/C8-enquiry-on-submit.md) |
 | Release the unpaid balance | nha:D12 | [A6](../apis/A6-task-submit.md) (release) | `v1/task/submit` | [F10](../fhir/F10-task-claim-actions.md) (Task) | 36 | `v1/task/on_submit` | [F10](../fhir/F10-task-claim-actions.md) | [C8](../callbacks/C8-enquiry-on-submit.md) |
@@ -141,7 +146,7 @@ Payer workflow ids on claim replies [PAYER](PAYERS.md#markers): 25 received, 26 
 | nha:A6 | `v1/error` (inbound) | delivered by [G8](../gateway/G8-receive.md) with type `error`, which [C1](../callbacks/C1-callback-door.md) ignores [REF](PAYERS.md#markers) |
 | nha:B6 | `v1/search/submit`, `v1/search/on_submit` | claim search: not specified here |
 | nha:E1 | `v1/notification/subscribe`, `v1/notification/on_subscribe` | notification subscription: not specified here |
-| nha:D2 | ABHA biometric authentication | not an NHCX exchange |
+| nha:D2 | ABHA biometric authentication | not an NHCX exchange, but built: A18 (in nhcx-coverage), section 2 |
 
 ## 5. Where the details are
 

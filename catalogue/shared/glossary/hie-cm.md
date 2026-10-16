@@ -10,7 +10,7 @@ summary: >
   address's records, and the consent that authorises sharing them. It is
   not the gateway.
 sources:
-  - file: catalogue/openapi/.raw/nha-2026-09-16/hiecm/gateway.yaml
+  - file: catalogue/hiecm/openapi/.raw/nha-2026-09-16/hiecm/gateway.yaml
     fetched: 2026-09-16
     hash: sha256:d3bc599054c2570a50818ca54906c44cf652ad6f813473e8ac243667da4e9300
 related:

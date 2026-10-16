@@ -1,0 +1,20 @@
+[
+  {
+    "id": "0f5d5e862231",
+    "date": "2026-10-05",
+    "kind": "plugin-version",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": null,
+    "count": 1,
+    "items": [
+      {
+        "name": "nhcx",
+        "from": "1.0.4",
+        "to": "1.0.5"
+      }
+    ]
+  }
+]

@@ -1,0 +1,38 @@
+{
+  "id": "naive-hiecm-consent-data-flow-walkthrough-01",
+  "slice": "naive",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "Explain the complete consent and data sharing flow from consent request creation until health records are received by the HIU."
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "gateway": "hiecm",
+  "must_contain": [
+    "The HIU raises the consent request, the person grants or denies it in their PHR app, and the HIU then fetches the consent artefact",
+    "The HIU sends the health information request carrying the artefact, its key material and the URL to push the records to",
+    "The HIP receives that request on its callback, encrypts the records and pushes them to the HIU's data push URL, then notifies the transfer status"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.flow.m3-fetch-records",
+    "hiecm.endpoint.m2-hip-health-information-on-request"
+  ],
+  "expected_shape": "walkthrough",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-hiecm-consent-management-data-flow-yaml",
+  "catalogue_version": "2026.09.16",
+  "notes": "NHA M2-M3 review, 30 September 2026: the answer covered the HIU side only; the HIP's callback, data push and notify were missing. A walkthrough must cover every party. Source lines: hiecm.flow.m3-request-consent, 'collect the consent artefact ids once they grant it'; hiecm.endpoint.m3-hiu-health-information-request, 'key material and the URL to push them to'; hiecm.callback.m2-on-health-information-request, 'id, date range, push URL and key material'; hiecm.endpoint.m2-hip-health-information-on-request, 'records and pushes them to the requester'; hiecm.endpoint.m2-hip-data-flow-notify, 'status and a status per care context'."
+}

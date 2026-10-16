@@ -12,12 +12,12 @@ specs from its OpenAPI files, and skills by `scripts/build-skills.mjs`
 npm install
 npm start          # dev server, live reload; syncs specs first
 npm run build      # production build, into build/
-npm run lint:specs # Spectral lint over catalogue/openapi
+npm run lint:specs # Spectral lint over every gateway's specs
 ```
 
 One interactive reference per module, served at `/reference/hiecm-m1`
 through `/reference/hiecm-m4` plus `/reference/hiecm-gateway`, each
-rendered by `@scalar/docusaurus` from its file in `catalogue/openapi/`.
+rendered by `@scalar/docusaurus` from its file in the gateway's `catalogue/<gateway>/openapi/` (NHCX: `catalogue/openapi/nhcx/`).
 
 ## Self-hosting
 

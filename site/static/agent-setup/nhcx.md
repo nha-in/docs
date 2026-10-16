@@ -4,15 +4,15 @@ Complete the steps yourself by running the commands directly. Ask the user only 
 
 ## 1. Establish scope
 
-There is one skill for the whole provider-side integration, `nhcx-full`, and one per NHCX use case. Ask the user which this project builds, and install only those:
+There is one skill for the whole integration, `nhcx-full`, and one per NHCX use case. Each carries both the hospital side and the payer side of its exchanges. Ask the user which this project builds, and install only those:
 
-- `nhcx-full`: NHCX, end to end. Build the whole provider-side NHCX integration into this hospital system.
-- `nhcx-coverage`: NHCX coverage. Add NHCX policy search and coverage eligibility to this hospital system.
-- `nhcx-preauth`: NHCX pre-authorisation. Add NHCX pre-authorisation, with the payer's plan and its authorisation requirements, to this system.
-- `nhcx-claim`: NHCX claim. File the NHCX claim at discharge from this system.
-- `nhcx-communication`: NHCX communication. Handle the payer's NHCX queries and notifications in this system.
-- `nhcx-payment`: NHCX payment. Record and acknowledge NHCX payment notices.
-- `nhcx-reprocess`: NHCX reprocess. Ask the payer to reprocess a rejected NHCX claim.
+- `nhcx-full`: NHCX, end to end. Build the whole NHCX integration into this system, on whichever side it sits.
+- `nhcx-coverage`: NHCX coverage. Add NHCX policy search and coverage eligibility to this system.
+- `nhcx-preauth`: NHCX pre-authorisation. Add NHCX pre-authorisation, with the insurance plan and its authorisation requirements, to this system.
+- `nhcx-claim`: NHCX claim. Add the NHCX claim at discharge, and its adjudication, to this system.
+- `nhcx-communication`: NHCX communication. Add NHCX queries, notifications and their acknowledgements to this system.
+- `nhcx-payment`: NHCX payment. Add NHCX payment notices, sent and acknowledged, to this system.
+- `nhcx-reprocess`: NHCX reprocess. Add the NHCX reprocess and shortfall Tasks, asked and answered, to this system.
 
 Each skill finds what the project already has and builds only what is missing, and each installs and runs alone. `nhcx-full` builds the whole integration; a system that needs one use case at a time usually starts with `nhcx-coverage`.
 
@@ -56,7 +56,7 @@ git clone --depth 1 --filter=blob:none --sparse https://github.com/nha-in/docs .
 - `nha-in/docs/plugins/nhcx/skills/nhcx-payment`
 - `nha-in/docs/plugins/nhcx/skills/nhcx-reprocess`
 
-`https://docs.abdm.gov.in/skills/nhcx-index.json` lists every NHCX skill, its archive and the exact files it is made of. A skill is 66 to 131 files across its folders, so take the archive rather than fetching files one at a time.
+`https://docs.abdm.gov.in/skills/nhcx-index.json` lists every NHCX skill, its archive and the exact files it is made of. A skill is 148 to 311 files across its folders, so take the archive rather than fetching files one at a time.
 
 ## 3. Connect the Docs MCP server
 
@@ -72,8 +72,25 @@ For Cursor, add `{ "mcpServers": { "nhcx-docs": { "url": "https://docs.abdm.gov.
 
 ## 4. Report back
 
-Tell the user what you installed and where you suggest starting. Two cautions to keep for the whole engagement:
+Tell the user what you installed and where you suggest starting. Offer three prompts from the **Try asking** section of the skills that fit, and ask what they are building. Two cautions to keep for the whole engagement:
 
 - The skills hold the bundles they send to the pinned samples in the NHCX package. Check response shapes against real sandbox calls before relying on them.
 - The skills are snapshots. The current documentation lives at https://docs.abdm.gov.in/docs/nhcx/v1; prefer it, and the MCP server when connected, over any downloaded copy that has aged.
+
+## 5. Plan before you build
+
+Integration work starts from a plan file and keeps it current. Before the first change to the codebase and the first sandbox call:
+
+1. Look for `INTEGRATION-PLAN.md` at the root of the repository. If it exists, read it, say in one line where the work stands, and resume from the first step that is not `done`.
+2. If it does not exist, scope the work first: the goal, the role, the modules and the skill that carries each, the routes the interview switched on, and what is out of scope. Write the file with every step `pending` and its exit condition, show it to the person, and start when they agree.
+3. After every step, update the file at once: its status, the evidence that proves its exit condition (a request id, a passing test, a file changed), the date, and the count and percentage of steps `done`.
+
+| Status | Means |
+|---|---|
+| `pending` | Not started |
+| `in progress` | The step being worked on now. One at a time |
+| `done` | Its exit condition was observed, and the evidence is in the file |
+| `blocked` | Waiting on something only the person can give. The file names it and asks one question |
+
+The last steps are the module's functional test cases. Their run log is its own file, linked from the plan. Never write a secret to the plan: no token, client secret, OTP, password or patient identifier.
 

@@ -31,6 +31,8 @@ Workflow 15 is the claim; 151 is an answer to your query. Under PMJAY there is n
 
 Acknowledge receipt with 25 and `response.partial`. A claim may receive several interim answers before the final one; each is `response.partial` on the same correlation ID, and only the final carries `response.complete`.
 
+Do not send a Claim Submitted `on_submit` of your own to echo receipt. The 25 acknowledgement is the receipt. The next message carries a decision or an interim state, 28 in process or 29 forwarded. A fake decision with a blank `outcome` is worse than a later true one.
+
 ## Validate before queueing
 
 - An approved preauthorisation exists for the case number; no claim already raised against it.
@@ -38,6 +40,8 @@ Acknowledge receipt with 25 and `response.partial`. A claim may receive several 
 - Registration, admission, surgery and discharge dates present and well-formed; a discharge stage present, from the allowed set.
 - Amount within the preauthorisation's approved amount and the wallet.
 - Under PMJAY, the discharge biometric token. For a LAMA or DAMA before surgery, only `LM100`, with a quantity equal to the stay. For a death, a death date. For a newborn, the parent's card and the child's documents.
+- Newborn resources on the claim are valid. An invalid newborn resource fails the submit.
+- A referral number, if present, is a `ServiceRequest` identifier of type `OIN`.
 
 ## What goes in the answer
 
@@ -77,6 +81,18 @@ Acknowledge with 37, then answer on `/v1/task/on_submit` with a `Task` whose `st
 
 Under PMJAY the payer enforces four rules. One appeal per claim. A shortfall claim only after payment 33 has been sent and acknowledged. The amount never above the difference. The Committee's decision final, with no shortfall claim allowed after it. A cancellation Task, code `cancel`, is answered with PC02 and refused once payment has begun.
 
+### Answering a Task
+
+A hospital's Task is a cancel, a reprocess of a rejected claim, a shortfall, or a release. Implement both cancel flavours, and reprocess for a rejected claim and for an erroneous one. Ignore `release` and `nullify`, but answer them with a coded refusal rather than leaving the Task hanging. If you do not support reopening a partially paid claim, return a coded refusal for that too.
+
+- `intimationNumber` is the preauthorisation's case number and `claimNumber` is the claim's. Do not swap them.
+- A cancel typically carries `treatmentplanchanged` or another `ndhm-reason-code`. `reasonCode` with both `code` and `display` is mandatory on cancel and on reprocess (`PAYR-1018`). A cancel may carry an optional `document` input, valid base64 with a content type.
+- Always set `ClaimResponse.outcome` on the Task answer. A Task answer without an outcome does not display on the hospital screen at all.
+- The hospital's mapper walks the `ClaimResponse`, not the `Task`. `outcome` `complete` takes the preauthorisation-cancelled path, anything else the claim path. A `disposition` starting "Erroneous claim is rejected" shows as Erroneous Rejected.
+- A cancelled preauthorisation releases any blocked sum insured immediately, so the next hospital can run eligibility for the member.
+
 ## Search
 
 Regulators, and the scheme sponsor, can search claims across payers with a `Task` of code `search` on `/v1/search/submit`. Answer on `/v1/search/on_submit` with the matching `ClaimResponse`s. A provider may only search its own cases; a regulator may search any.
+
+Search inputs typically include `memberId`, `claimNumber`, `familyId`, `policyNumber` and `payerId`. An unknown member returns an empty result or a coded miss, not a 500. Search the whole store: a search implemented against a partial store leaves historic cases invisible, and the sandbox demonstration catches that.

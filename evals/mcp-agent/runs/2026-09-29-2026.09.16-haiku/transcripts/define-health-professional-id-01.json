@@ -1,0 +1,263 @@
+{
+  "case_id": "define-health-professional-id-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "What is a health professional ID in ABDM?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01GvxTtmAeG1UMr8pvmNWV3c",
+            "Name": "search",
+            "Input": {
+              "query": "health professional ID",
+              "kind": "atom"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "health professional ID",
+            "kind": "atom"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#hpr",
+                "id": "shared.glossary.hpr",
+                "summary": "The registry of individual healthcare professionals across every system of medicine, which issues a Healthcare Professional ID.",
+                "title": "HPR, Healthcare Professionals Registry",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#hpid",
+                "id": "shared.glossary.hpid",
+                "summary": "A 14 digit number issued to a healthcare professional or a facility manager, created on the HPR.",
+                "title": "HPID, healthcare professional identifier",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m4#m4-create-hpid",
+                "id": "hiecm.flow.m4-create-hpid",
+                "summary": "Take a healthcare professional through Aadhaar authentication and mobile verification until the registry issues an HP-ID.",
+                "title": "Get a healthcare professional an HPID",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m4/endpoints/m4-enrollment/05-m4-post-v1-doctors-fetch-professional-info#m4-hpr-fetch-professional-info",
+                "id": "hiecm.endpoint.m4-hpr-fetch-professional-info",
+                "summary": "Returns what the registry holds for a healthcare professional, found by HPR ID or other details.",
+                "title": "Read a professional's profile",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m4/endpoints/m4-enrollment/04-m4-post-v1-uploads-upload-document#m4-hpr-upload-document",
+                "id": "hiecm.endpoint.m4-hpr-upload-document",
+                "summary": "Attaches a professional's certificates to their registration against the ids the document list returned.",
+                "title": "Upload one of the professional's documents",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#hfr",
+                "id": "shared.glossary.hfr",
+                "summary": "The registry of health facilities, which is where a facility is searched for, onboarded and linked to software.",
+                "title": "HFR, Health Facility Registry",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/error-codes#payr",
+                "id": "nhcx.error.payr-1080",
+                "summary": "The payer rejected your preauthorisation or claim because a practitioner in the bundle carries a professional registry id it does not accept.",
+                "title": "PAYR-1080: a practitioner's HPR id is not valid",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/error-codes#payr",
+                "id": "nhcx.error.payr-1083",
+                "summary": "The payer rejected your preauthorisation or claim because a practitioner in the bundle carries no professional registry id.",
+                "title": "PAYR-1083: a practitioner has no HPR id",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m4/endpoints/m4-registration-api-s-collection-via-aadhaar/09-m4-post-v2-registration-aadhaar-createhpridwithpreverified#m4-hpr-create-hprid",
+                "id": "hiecm.endpoint.m4-hpr-create-hprid",
+                "summary": "Issues the healthcare professional's HPID and the token that stands for them on later calls.",
+                "title": "Create the HPID",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m4/endpoints/m4-enrollment/01-m4-post-v1-doctors-register-professional-new#m4-hpr-register-professional",
+                "id": "hiecm.endpoint.m4-hpr-register-professional",
+                "summary": "Adds qualifications, council registration and current work to an HPID that already exists.",
+                "title": "Register the professional's profile",
+                "type": "endpoint"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01FGfVRZUiyQRRZEuUpQpowk",
+            "Name": "get",
+            "Input": {
+              "id": "shared.glossary.hpid"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "shared.glossary.hpid"
+          },
+          "output": {
+            "body": "# HPID, healthcare professional identifier\n\n## In plain words\n\nHealthcare Professional ID: a 14 digit number issued to a healthcare\nprofessional or a facility manager after Aadhaar authentication. It is\nthe professional's digital identity across ABDM, and it is created on\nthe [HPR](hpr.md). See [M4](/docs/hiecm/v3/getting-started/glossary#m4).\n\n## Before you start\n\nNothing. A glossary entry assumes no prior reading.\n\n## What happens\n\nNothing happens here. This entry defines a term, it does not describe a call.\n\n## How you know it worked\n\nYou have understood this when you can say who an HPID is issued to and where it is created.\n\n## When it goes wrong\n\nExpecting the number before Aadhaar authentication. NHA issues it after\nthat step, so anything needing an HPID cannot run first.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/getting-started/glossary#hpid",
+            "gateway": "shared",
+            "id": "shared.glossary.hpid",
+            "milestone": "n/a",
+            "summary": "A 14 digit number issued to a healthcare professional or a facility manager, created on the HPR.",
+            "title": "HPID, healthcare professional identifier",
+            "type": "glossary"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01WPsWEu4CHWmGPyXBQWUUVJ",
+            "Name": "get",
+            "Input": {
+              "id": "shared.glossary.hpr"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "shared.glossary.hpr"
+          },
+          "output": {
+            "body": "# HPR, Healthcare Professionals Registry\n\n## In plain words\n\nHPR holds verified healthcare professionals: doctors from every system\nof medicine, meaning modern medicine, dentistry, Ayurveda, Unani,\nSiddha, Sowa-Rigpa and homeopathy, along with nurses and pharmacists.\nRegistration issues a Healthcare Professional ID, which acts as the\nprofessional's identity across ABDM.\n\nEnrolment is voluntary and free. It does not replace the registration a\nprofessional already holds with their council. The councils remain the\nauthority, and HPR verifies against them.\n\nHPR and the Health Facility Registry together make up the National\nHealthcare Professionals and Facilities Registry, NHPR, which is\nmilestone M4. Both\n`hpr.abdm.gov.in` and `facility.abdm.gov.in` now redirect to\n`nhpr.abdm.gov.in`.\n\n## Before you start\n\nNothing. A glossary entry assumes no prior reading.\n\n## What happens\n\nNothing happens here. This entry defines a term, it does not describe a call.\n\n## How you know it worked\n\nYou have understood this when you can say what HPR is without using the acronym itself.\n\n## When it goes wrong\n\nHPR runs on a different host and a different API version from M1 to M3, so credentials and base URLs do not carry across.\n\nThe identifier is spelled three ways across NHA's own pages: Healthcare\nProfessional ID, HPR ID and HPID. They are the same thing.\n\nA facility manager is not an HPR category. It is the person who\nregisters a facility in the Health Facility Registry, and they use a\nHealthcare Professional ID to do it. An earlier version of this entry\nlisted facility managers as if HPR held them, and it does not.\n\nAn earlier version also called the Healthcare Professional ID a\nfourteen digit identifier. No fetched NHA page states its length, so\nthe claim is removed rather than repeated.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/getting-started/glossary#hpr",
+            "gateway": "shared",
+            "id": "shared.glossary.hpr",
+            "milestone": "n/a",
+            "summary": "The registry of individual healthcare professionals across every system of medicine, which issues a Healthcare Professional ID.",
+            "title": "HPR, Healthcare Professionals Registry",
+            "type": "glossary"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "A **health professional ID (HPID)** is a 14-digit digital identifier issued to healthcare professionals in India's ABDM ecosystem. Here are the key points:\n\n**What it is:**\n- A unique identifier for a healthcare professional's digital identity across ABDM\n- Issued by the Healthcare Professionals Registry (HPR) after Aadhaar authentication\n\n**Who gets one:**\n- Doctors from any system of medicine (modern medicine, dentistry, Ayurveda, Unani, Siddha, Sowa-Rigpa, homeopathy)\n- Nurses and pharmacists\n- Also used by facility managers registering facilities in the Health Facility Registry\n\n**Key details:**\n- Registration is voluntary and free\n- It does not replace the professional's existing registration with their medical council—the councils remain the authority\n- HPR verifies professionals against their respective councils\n- The identifier is sometimes also called \"HPR ID\" or \"Healthcare Professional ID\" interchangeably\n\n**When you need it:**\n- You cannot use an HPID before the professional has completed Aadhaar authentication with HPR\n- It's required for any subsequent ABDM operations by that professional\n\nSee the [ABDM glossary](/docs/hiecm/v3/getting-started/glossary#hpid) for details.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "A **health professional ID (HPID)** is a 14-digit digital identifier issued to healthcare professionals in India's ABDM ecosystem. Here are the key points:\n\n**What it is:**\n- A unique identifier for a healthcare professional's digital identity across ABDM\n- Issued by the Healthcare Professionals Registry (HPR) after Aadhaar authentication\n\n**Who gets one:**\n- Doctors from any system of medicine (modern medicine, dentistry, Ayurveda, Unani, Siddha, Sowa-Rigpa, homeopathy)\n- Nurses and pharmacists\n- Also used by facility managers registering facilities in the Health Facility Registry\n\n**Key details:**\n- Registration is voluntary and free\n- It does not replace the professional's existing registration with their medical council—the councils remain the authority\n- HPR verifies professionals against their respective councils\n- The identifier is sometimes also called \"HPR ID\" or \"Healthcare Professional ID\" interchangeably\n\n**When you need it:**\n- You cannot use an HPID before the professional has completed Aadhaar authentication with HPR\n- It's required for any subsequent ABDM operations by that professional\n\nSee the [ABDM glossary](/docs/hiecm/v3/getting-started/glossary#hpid) for details.",
+  "sources": [
+    {
+      "id": "shared.glossary.hpid",
+      "title": "HPID, healthcare professional identifier",
+      "url": "/docs/hiecm/v3/getting-started/glossary#hpid"
+    },
+    {
+      "id": "shared.glossary.hpr",
+      "title": "HPR, Healthcare Professionals Registry",
+      "url": "/docs/hiecm/v3/getting-started/glossary#hpr"
+    },
+    {
+      "id": "shared.glossary.hfr",
+      "title": "HFR, Health Facility Registry",
+      "url": "/docs/hiecm/v3/getting-started/glossary#hfr"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hpr\",\"id\":\"shared.glossary.hpr\",\"summary\":\"The registry of individual healthcare professionals across every system of medicine, which issues a Healthcare Professional ID.\",\"title\":\"HPR, Healthcare Professionals Registry\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hpid\",\"id\":\"shared.glossary.hpid\",\"summary\":\"A 14 digit number issued to a healthcare professional or a facility manager, created on the HPR.\",\"title\":\"HPID, healthcare professional identifier\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m4#m4-create-hpid\",\"id\":\"hiecm.flow.m4-create-hpid\",\"summary\":\"Take a healthcare professional through Aadhaar authentication and mobile verification until the registry issues an HP-ID.\",\"title\":\"Get a healthcare professional an HPID\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/api/m4/endpoints/m4-enrollment/05-m4-post-v1-doctors-fetch-professional-info#m4-hpr-fetch-professional-info\",\"id\":\"hiecm.endpoint.m4-hpr-fetch-professional-info\",\"summary\":\"Returns what the registry holds for a healthcare professional, found by HPR ID or other details.\",\"title\":\"Read a professional's profile\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m4/endpoints/m4-enrollment/04-m4-post-v1-uploads-upload-document#m4-hpr-upload-document\",\"id\":\"hiecm.endpoint.m4-hpr-upload-document\",\"summary\":\"Attaches a professional's certificates to their registration against the ids the document list returned.\",\"title\":\"Upload one of the professional's documents\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hfr\",\"id\":\"shared.glossary.hfr\",\"summary\":\"The registry of health facilities, which is where a facility is searched for, onboarded and linked to software.\",\"title\":\"HFR, Health Facility Registry\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/nhcx/v1/reference/error-codes#payr\",\"id\":\"nhcx.error.payr-1080\",\"summary\":\"The payer rejected your preauthorisation or claim because a practitioner in the bundle carries a professional registry id it does not accept.\",\"title\":\"PAYR-1080: a practitioner's HPR id is not valid\",\"type\":\"error\"},{\"doc_url\":\"/docs/nhcx/v1/reference/error-codes#payr\",\"id\":\"nhcx.error.payr-1083\",\"summary\":\"The payer rejected your preauthorisation or claim because a practitioner in the bundle carries no professional registry id.\",\"title\":\"PAYR-1083: a practitioner has no HPR id\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m4/endpoints/m4-registration-api-s-collection-via-aadhaar/09-m4-post-v2-registration-aadhaar-createhpridwithpreverified#m4-hpr-create-hprid\",\"id\":\"hiecm.endpoint.m4-hpr-create-hprid\",\"summary\":\"Issues the healthcare professional's HPID and the token that stands for them on later calls.\",\"title\":\"Create the HPID\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m4/endpoints/m4-enrollment/01-m4-post-v1-doctors-register-professional-new#m4-hpr-register-professional\",\"id\":\"hiecm.endpoint.m4-hpr-register-professional\",\"summary\":\"Adds qualifications, council registration and current work to an HPID that already exists.\",\"title\":\"Register the professional's profile\",\"type\":\"endpoint\"}]}\n{\"body\":\"# HPID, healthcare professional identifier\\n\\n## In plain words\\n\\nHealthcare Professional ID: a 14 digit number issued to a healthcare\\nprofessional or a facility manager after Aadhaar authentication. It is\\nthe professional's digital identity across ABDM, and it is created on\\nthe [HPR](hpr.md). See [M4](/docs/hiecm/v3/getting-started/glossary#m4).\\n\\n## Before you start\\n\\nNothing. A glossary entry assumes no prior reading.\\n\\n## What happens\\n\\nNothing happens here. This entry defines a term, it does not describe a call.\\n\\n## How you know it worked\\n\\nYou have understood this when you can say who an HPID is issued to and where it is created.\\n\\n## When it goes wrong\\n\\nExpecting the number before Aadhaar authentication. NHA issues it after\\nthat step, so anything needing an HPID cannot run first.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hpid\",\"gateway\":\"shared\",\"id\":\"shared.glossary.hpid\",\"milestone\":\"n/a\",\"summary\":\"A 14 digit number issued to a healthcare professional or a facility manager, created on the HPR.\",\"title\":\"HPID, healthcare professional identifier\",\"type\":\"glossary\"}\n{\"body\":\"# HPR, Healthcare Professionals Registry\\n\\n## In plain words\\n\\nHPR holds verified healthcare professionals: doctors from every system\\nof medicine, meaning modern medicine, dentistry, Ayurveda, Unani,\\nSiddha, Sowa-Rigpa and homeopathy, along with nurses and pharmacists.\\nRegistration issues a Healthcare Professional ID, which acts as the\\nprofessional's identity across ABDM.\\n\\nEnrolment is voluntary and free. It does not replace the registration a\\nprofessional already holds with their council. The councils remain the\\nauthority, and HPR verifies against them.\\n\\nHPR and the Health Facility Registry together make up the National\\nHealthcare Professionals and Facilities Registry, NHPR, which is\\nmilestone M4. Both\\n`hpr.abdm.gov.in` and `facility.abdm.gov.in` now redirect to\\n`nhpr.abdm.gov.in`.\\n\\n## Before you start\\n\\nNothing. A glossary entry assumes no prior reading.\\n\\n## What happens\\n\\nNothing happens here. This entry defines a term, it does not describe a call.\\n\\n## How you know it worked\\n\\nYou have understood this when you can say what HPR is without using the acronym itself.\\n\\n## When it goes wrong\\n\\nHPR runs on a different host and a different API version from M1 to M3, so credentials and base URLs do not carry across.\\n\\nThe identifier is spelled three ways across NHA's own pages: Healthcare\\nProfessional ID, HPR ID and HPID. They are the same thing.\\n\\nA facility manager is not an HPR category. It is the person who\\nregisters a facility in the Health Facility Registry, and they use a\\nHealthcare Professional ID to do it. An earlier version of this entry\\nlisted facility managers as if HPR held them, and it does not.\\n\\nAn earlier version also called the Healthcare Professional ID a\\nfourteen digit identifier. No fetched NHA page states its length, so\\nthe claim is removed rather than repeated.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hpr\",\"gateway\":\"shared\",\"id\":\"shared.glossary.hpr\",\"milestone\":\"n/a\",\"summary\":\"The registry of individual healthcare professionals across every system of medicine, which issues a Healthcare Professional ID.\",\"title\":\"HPR, Healthcare Professionals Registry\",\"type\":\"glossary\"}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T11:58:39.386Z",
+  "usage": {
+    "input_tokens": 30,
+    "output_tokens": 623,
+    "cache_read_input_tokens": 29053,
+    "cache_creation_input_tokens": 7661,
+    "num_turns": 4,
+    "duration_ms": 9780,
+    "cost_usd_equivalent": 0.0213723
+  }
+}

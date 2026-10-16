@@ -26,12 +26,12 @@
     "atom"
   ],
   "expected_sources": [
-    "shared.glossary.hrp"
+    "hiecm.glossary.hrp"
   ],
   "expected_shape": "define",
   "expected_behaviour": "answer",
   "derived_from": null,
   "source_row": "annexure#glossary",
-  "catalogue_version": "2026.08.24",
+  "catalogue_version": "2026.09.16",
   "notes": "reader used the common variant 'health records provider'; the catalogue's term is health repository provider (HRP), though the atom itself notes NHA's own material is inconsistent here."
 }

@@ -23,15 +23,17 @@ FHIR: [F1. Bundle](../fhir/F1-bundle.md) (the bundle id and Claim anchor of each
 
 **Workflow ids (`x-hcx-workflow_id`)**, from the payer adapter (see [PAYERS.md](../references/PAYERS.md)) [PAYER](../references/PAYERS.md#markers), overridable per environment (a JSON object of kind to workflow id):
 
-| Kind | `pmjay` | `xyz` (Sandbox Payer) | `generic` |
+| Kind | `pmjay` | `kyrocare` (Sandbox Payer) | `generic` |
 |---|---|---|---|
 | `claim` | 15 | 15 | 15 |
-| `claim_query_response` | 161 | 151 | 151 |
+| `claim_query_response` | 151 (adapter default; 161 as a sandbox configuration override [SANDBOX](../references/PAYERS.md#markers)) | 151 | 151 |
 | `claim_resubmit` | none (not offered) | 16 [REF](../references/PAYERS.md#markers) | 16 [REF](../references/PAYERS.md#markers) |
 
 16 (claim resubmitted) is not in NHA's published workflow list; the reference implementation used it for the non-PMJAY adapters [REF](../references/PAYERS.md#markers). Confirm with the payer before offering a resubmission.
 
-PMJAY refuses 16, 151 and 19 on a claim with PAYR-1321 "Invalid workflow id" and takes 161 for a query answer [SANDBOX](../references/PAYERS.md#markers), so a decided PMJAY claim goes back only as a reprocess Task (A6) [PAYER](../references/PAYERS.md#markers).
+The SHA sandbox refuses 16, 151 and 19 on a claim with PAYR-1321 "Invalid workflow id" and takes 161 for a query answer [SANDBOX](../references/PAYERS.md#markers). The adapter's value stays the published 151; a sandbox run sets 161 through the per-environment override, so the sandbox quirk never becomes the adapter's default. A decided PMJAY claim goes back only as a reprocess Task (A6) [PAYER](../references/PAYERS.md#markers).
+
+**Use case (`x-hcx-use_case`).** Every claim send carries it, to every payer, whether or not the payer reads it: `New` for `claim`, `Resubmit` for `claim_query_response` and `claim_resubmit` (see [PAYERS.md](../references/PAYERS.md)).
 
 **Headers set by the application** (G7 generates the rest, [G5. Protocol Headers](../gateway/G5-protocol-headers.md)): `x-hcx-sender_code` = facility participant code; `x-hcx-recipient_code` = the case's processing id (D9 `processing_id`), else the case's processing id, else the claim's payer id, else the configured default payer code; `x-hcx-workflow_id` as above.
 
@@ -53,7 +55,7 @@ The arguments passed to G7 Send:
 
 | Field | Type | Notes |
 |---|---|---|
-| `jwe_headers` | object | The three headers above |
+| `jwe_headers` | object | The three headers above, plus the beneficiary's discharge user token under the configured header and `x-hcx-ben-abha-id` when [A18. Biometric Authentication](A18-biometric-authentication.md) holds a current stage-Discharge authentication (then the Discharge Consent form is left out of the bundle) |
 | `fhir` | Bundle | The Claim bundle |
 
 The resources are those of the pre-authorisation bundle (A4 REQUEST), with the claim leg's differences: `use` claim, the pre-auth reference, the discharge, the claim lines (a LAMA or DAMA discharge before or during surgery collapses them to the single procedure `LM100` [PAYER](../references/PAYERS.md#markers)), the Procedure completed, and only the claim-stage documents and forms.
@@ -71,7 +73,7 @@ Envelope (PMJAY first claim):
 }
 ```
 
-A PMJAY query answer goes under workflow `161` [PAYER](../references/PAYERS.md#markers) with the reply text riding on the Claim as the "Claim query detail" entry (F8), for example "Final bill and discharge summary attached again; the ward stay was two days as billed.".
+A PMJAY query answer goes under the adapter's claim query-response workflow id (151; 161 under the sandbox override [SANDBOX](../references/PAYERS.md#markers)) [PAYER](../references/PAYERS.md#markers) with the reply text riding on the Claim as the "Claim query detail" entry (F8), for example "Final bill and discharge summary attached again; the ward stay was two days as billed.".
 
 #### A5S. RESPONSE
 
@@ -123,7 +125,8 @@ function submit_claim(case_id, reply):
     if granted missing or granted.status not in {approved, queried}:
         refuse "A claim goes in against an approved pre-authorisation."
     lines = claim lines: the claim_line rows, or, for a LAMA / DAMA discharge before or
-            during surgery, the single procedure LM100 at its claim_plan_benefit rate [PAYER](../references/PAYERS.md#markers)
+            during surgery, the single procedure LM100 at its claim_plan_benefit rate, quantity =
+            days admitted (admission to discharge, at least 1) [PAYER](../references/PAYERS.md#markers)
             (display "LAMA / DAMA procedure", rate 0 when the plan has no such package [REF](../references/PAYERS.md#markers))
     same organization, encounter, admission date, claim_diagnosis, claim_care_team and
         line refusals as A4 (checks 5 to 10), reading organization, patient, practitioner,
@@ -132,7 +135,9 @@ function submit_claim(case_id, reply):
                 or plan names for a "discharge summary", else the claim_document coded HDS [PAYER](../references/PAYERS.md#markers)
     documents = claim-stage claim_document rows (minus form-answer files), excluding
                 HDS and the summary
-    forms     = claim-stage forms with answers from claim_form_answer
+    forms     = claim-stage forms (D12 rule: the ruling's claim forms, plus the quoted packages'
+                own STG forms, plus the policy-wide forms, plus the Discharge Consent when no
+                stage-Discharge token is held) with answers from claim_form_answer
     total     = sum of the claim lines
 
     // build
@@ -149,7 +154,8 @@ function submit_claim(case_id, reply):
         jwe_headers: {x-hcx-sender_code: org.participant_code,
                       x-hcx-recipient_code: case.processing_id or case.payer_id or default payer code,
                       x-hcx-workflow_id: workflow,
-                      x-hcx-status: status_for(adapter, kind)},   // response.complete for a query answer (151, 161), else request.initiated
+                      x-hcx-use_case: use_case_for(kind),      // New, or Resubmit for a query answer or a resubmission
+                      x-hcx-status: status_for(adapter, kind)},   // response.complete for a query answer (151; 161 under the sandbox override), else request.initiated
         fhir: bundle}, case)
 
     // write
@@ -185,8 +191,10 @@ function claim_send_kind(case_id):
 ```
 
 #### A5U. USED BY
-- Screens: [S11. Claim Submission](../screens/S11-claim-submission.md), [S14. Patient Registration Form](../screens/S14-patient-registration-form.md), [S15. Patient Detail](../screens/S15-patient-detail.md), [S16. Practitioner Master](../screens/S16-practitioner-master.md)
-- APIs: [A7. Communication Reply](A7-communication-on-request.md), [A10. Transaction Related](A10-txn-related.md), [A11. Transaction Dispatch](A11-txn-dispatch.md), [A13. Transaction List](A13-txn-list.md)
+- Screens: [S11. Claim Submission](../screens/S11-claim-submission.md), [S14. Patient Registration Form](../screens/S14-patient-registration-form.md), [S15. Patient Detail](../screens/S15-patient-detail.md), [S16. Practitioner Master](../screens/S16-practitioner-master.md), [S18. Beneficiary Verification](../screens/S18-beneficiary-verification.md)
+- APIs: [A7. Communication Reply](A7-communication-on-request.md), [A10. Transaction Related](A10-txn-related.md), [A11. Transaction Dispatch](A11-txn-dispatch.md), [A13. Transaction List](A13-txn-list.md), [A17. Claim State](A17-claim-state.md), [A18. Biometric Authentication](A18-biometric-authentication.md)
 - Callbacks: [C6. Claim Reply](../callbacks/C6-claim-on-submit.md)
 - FHIR: [F8. Claim](../fhir/F8-claim.md), [F9. ClaimResponse](../fhir/F9-claimresponse.md), [F12. Communication](../fhir/F12-communication.md), [F15. Patient](../fhir/F15-patient.md), [F17. Organization](../fhir/F17-organization.md), [F18. Coverage](../fhir/F18-coverage.md)
+- Database: [D12. claim_plan_form](../database/D12-claim-plan-form.md), [D31. biometric_auth](../database/D31-biometric-auth.md)
 - Gateway: [G5. Protocol Headers](../gateway/G5-protocol-headers.md)
+- Tests: [T10. IRDAI Claim Approved, Part-approved and Rejected](../tests/T10-irdai-claim.md), [T17. PMJAY Claim Through the Role Walk](../tests/T17-pmjay-claim-adjudicated.md), [T19. PMJAY Beneficiary Verification and ABHA](../tests/T19-pmjay-biometric-and-abha.md)

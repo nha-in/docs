@@ -4,6 +4,7 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"slices"
 	"testing"
 )
 
@@ -148,5 +149,61 @@ func TestFrontmatterCarriesContractV2Fields(t *testing.T) {
 	}
 	if plain.Status != "current" {
 		t.Errorf("an atom with no status is current, got %q", plain.Status)
+	}
+}
+
+// The gateway's numeric codes were read only as a JSON "code" value, so a
+// reader writing "code 900901" in prose got no code extracted, and nothing
+// pinned the error atom that explains it.
+func TestExtractErrorCodesReadsAGatewayCodeInProse(t *testing.T) {
+	for q, want := range map[string][]string{
+		"abha enrolment call returns 401 with code 900901 Invalid Credentials": {"900901"},
+		"getting error 900902 on the session call":                             {"900902"},
+		"error code: 900900 when I fetch the profile":                          {"900900"},
+		"enter the OTP 912345 the patient received":                            nil,
+		"it failed at 900901 ms":                                               nil,
+	} {
+		if got := ExtractErrorCodes(q); !reflect.DeepEqual(got, want) {
+			t.Errorf("ExtractErrorCodes(%q) = %v, want %v", q, got, want)
+		}
+	}
+}
+
+// An error atom for a numeric gateway code states its code in its title and
+// id, never as a JSON value, so its own code went unindexed and
+// decode_error could not reach it.
+func TestParseAtomIndexesAnErrorAtomsOwnGatewayCode(t *testing.T) {
+	content := []byte("---\nid: hiecm.error.900901\ntype: error\ngateway: hiecm\nmilestone: M1\n" +
+		"title: 900901, the credentials are not valid\nsummary: s\n---\n\n# 900901\n\nThe ABHA service rejected the token.\n")
+	a, err := ParseAtom("hiecm/errors/900901.md", content)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want := []string{"900901"}; !reflect.DeepEqual(a.ErrorCodes, want) {
+		t.Errorf("ErrorCodes = %v, want %v", a.ErrorCodes, want)
+	}
+}
+
+// The gateway's endpoint suspension, 303001, is a gateway code like 900901,
+// in its own six digit family. It arrives as a JSON code after a run of
+// timeouts, and an error atom explains it.
+func TestExtractErrorCodesReadsTheEndpointSuspension(t *testing.T) {
+	for _, in := range []string{
+		`{"code":"303001","type":"Status report","message":"Runtime Error","description":"Address endpoint suspended"}`,
+		"the gateway returned error 303001",
+	} {
+		if got := ExtractErrorCodes(in); len(got) != 1 || got[0] != "303001" {
+			t.Errorf("ExtractErrorCodes(%q) = %v, want [303001]", in, got)
+		}
+	}
+	if got := ExtractErrorCodes("token 303001 issued"); len(got) != 0 {
+		t.Errorf("a bare number outside a code field is not a code, got %v", got)
+	}
+	a, err := ParseAtom("errors/303001.md", []byte("---\nid: hiecm.error.303001\ntype: error\ngateway: hiecm\nmilestone: M2\nversion: abdm-v3\ntitle: 303001, the gateway suspended the endpoint\nsummary: s\nsources:\n  - url: https://x\n    status: page\n---\n\n# t\n\n## In plain words\n\nx\n\n## Before you start\n\nx\n\n## What happens\n\nx\n\n## How you know it worked\n\nx\n\n## When it goes wrong\n\nx\n"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !slices.Contains(a.ErrorCodes, "303001") {
+		t.Errorf("the 303001 atom carries codes %v", a.ErrorCodes)
 	}
 }

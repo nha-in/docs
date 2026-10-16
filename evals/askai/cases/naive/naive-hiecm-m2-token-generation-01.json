@@ -1,0 +1,35 @@
+{
+  "id": "naive-hiecm-m2-token-generation-01",
+  "slice": "naive",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "Token generation"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "In M2 the token an HIP generates is the link token, asked for one patient at a time with abhaAddress, name, gender and yearOfBirth, adding abhaNumber when the patient has one.",
+    "Generating a link token needs a gateway session token first, and the call carries your HIP id in the X-HIP-ID header."
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.endpoint.m2-generate-link-token"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-hiecm-link-token-yaml",
+  "catalogue_version": "2026.09.16",
+  "notes": "A real question from the live Ask AI panel that failed there, kept in the reader's exact words. Two words with no module: a reader on M2 means the link token, and the answer should also make plain that the gateway session token comes first, since that is the other token a first-day developer confuses it with. Source lines: catalogue/hiecm/endpoints/m2-generate-link-token.md, 'Ask for a link token for one patient'; 'Send `abhaAddress`, `name`, `gender` and `yearOfBirth` as you hold them for the patient. Add `abhaNumber` when the patient has one linked to the address.'; Before you start, 'A gateway session token and your HIP id. Send the `REQUEST-ID`, `TIMESTAMP`, `X-CM-ID` and `X-HIP-ID` headers.'"
+}

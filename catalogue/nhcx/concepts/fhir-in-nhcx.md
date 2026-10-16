@@ -61,7 +61,7 @@ related:
   glossary:
   - shared.glossary.fhir
   - shared.glossary.nrces
-  - shared.glossary.hi-type
+  - hiecm.glossary.hi-type
   - shared.glossary.snomed-ct
   errors:
   - nhcx.error.payr-1004
@@ -121,7 +121,7 @@ graph TD
 
 ### Clinical records inside a claim
 
-Under PMJAY, clinical records travel as structured ABDM [health information types](../../shared/glossary/hi-type.md). Each record is a FHIR bundle, Base64 encoded into a `DocumentReference`, and referenced from `Claim.supportingInfo` with category `DIA`, `HDS`, `CD` or `INF`. Each document may be up to 2 MB and the whole bundle up to 20 MB.
+Under PMJAY, clinical records travel as structured ABDM [health information types](../../hiecm/glossary/hi-type.md). Each record is a FHIR bundle, Base64 encoded into a `DocumentReference`, and referenced from `Claim.supportingInfo` with category `DIA`, `HDS`, `CD` or `INF`. Each document may be up to 2 MB and the whole bundle up to 20 MB.
 
 ### Validate before you seal
 

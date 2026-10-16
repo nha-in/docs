@@ -141,4 +141,6 @@ client.post_registry(path, body):
 ```
 
 #### G4U. USED BY
+- FHIR: [F17. Organization](../fhir/F17-organization.md)
+- Database: [D9. claim](../database/D9-claim.md)
 - Gateway: [G1. Embedding](G1-embedding.md), [G2. Configuration and Participants](G2-configuration.md), [G3. Session Token](G3-session-token.md), [G6. Encryption](G6-encryption.md), [G7. Send](G7-send.md), [G11. Startup Checks and Health](G11-startup-checks.md)

@@ -325,7 +325,9 @@ curl --request POST \
 
 **Exit condition (Observe until this is true)**
 
-A 202 response. The specification gives no body for it, so read what comes back.
+Each call you made in this journey answered by its callback, with `response.requestId` equal to the `REQUEST-ID` you sent on that call. The 202 on a call is receipt, not the outcome: the outcome is in the callback's body.
+
+- `POST /api/hiecm/scan-gateway/v3/patient/scan-pay/notify` is answered by `POST /v3/patient/scan-pay/on-notify` on your bridge.
 
 ### Scan and pay, PHR side (`scan-and-pay-abdm-hiecm-scan-pay-phr`)
 
@@ -489,7 +491,11 @@ Inbound to your bridge at `/v3/patient/scan-pay/on-order-status`. Acknowledge it
 
 **Exit condition (Observe until this is true)**
 
-A 200 response. The specification gives no body for it, so read what comes back.
+Each call you made in this journey answered by its callback, with `response.requestId` equal to the `REQUEST-ID` you sent on that call. The 202 on a call is receipt, not the outcome: the outcome is in the callback's body.
+
+- `POST /api/hiecm/scan-gateway/v3/patient/share/open-order` is answered by `POST /v3/patient/on-share/open-order` on your bridge.
+- `POST /api/hiecm/scan-gateway/v3/patient/selection` is answered by `POST /v3/patient/on-selection` on your bridge.
+- `POST /api/hiecm/scan-gateway/v3/patient/scan-pay/order-status` is answered by `POST /v3/patient/scan-pay/on-order-status` on your bridge.
 
 ### Scan and pay details and version update (`scan-and-pay-utility`)
 

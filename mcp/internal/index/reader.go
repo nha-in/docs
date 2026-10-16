@@ -14,6 +14,12 @@ import (
 )
 
 type Reader struct {
+	// VectorFloor drops a vector hit whose cosine similarity is below it.
+	// Zero, the default, keeps every hit. Set from VECTOR_FLOOR once the
+	// retrieval eval has shown where matches end and neighbours begin; a
+	// value picked without that measurement costs recall, which is already
+	// the weakest number on the scorecard.
+	VectorFloor   float32
 	db            *sql.DB
 	version       string
 	builtAt       string
@@ -21,6 +27,7 @@ type Reader struct {
 	fhirIGVersion string
 	hasVecs       bool
 	vocab         *Vocabulary
+	nextSteps     map[string]Step
 }
 
 func Open(dbPath string) (*Reader, error) {
@@ -54,6 +61,15 @@ func Open(dbPath string) (*Reader, error) {
 	}
 	r.hasVecs = n > 0 && r.embModel != ""
 
+	// The journey order is optional too: without it no answer offers a
+	// next step.
+	var steps string
+	if err := db.QueryRow(`SELECT value FROM meta WHERE key='next_steps'`).Scan(&steps); err == nil && steps != "" {
+		if err := json.Unmarshal([]byte(steps), &r.nextSteps); err != nil {
+			db.Close()
+			return nil, fmt.Errorf("meta next_steps: %w", err)
+		}
+	}
 	// The vocabulary is optional, and an index built before it existed has
 	// no such row. Either way search still works, so a miss here is not
 	// worth failing the open over.
@@ -214,6 +230,25 @@ func (r *Reader) AtomsByErrorCode(code string) ([]AtomRef, error) {
         ORDER BY id`, catalogue.NormalizeErrorCode(code))
 }
 
+// ErrorCodesOf returns the codes indexed for one atom, the same rows
+// AtomsByErrorCode reads in the other direction.
+func (r *Reader) ErrorCodesOf(id string) ([]string, error) {
+	rows, err := r.db.Query(`SELECT code FROM atom_error_codes WHERE atom_id = ? ORDER BY code`, id)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var codes []string
+	for rows.Next() {
+		var c string
+		if err := rows.Scan(&c); err != nil {
+			return nil, err
+		}
+		codes = append(codes, c)
+	}
+	return codes, rows.Err()
+}
+
 // RelatedGroup buckets related atoms by the related atom's own type
 // ("error", "flow", "endpoint", ...), never by the edge's relation name;
 // a reverse edge from a flow's "endpoints" list must file the flow under
@@ -285,6 +320,15 @@ type OperationSummary struct {
 	Module      string `json:"module"`
 }
 
+// OperationRoute returns the method and path of one operation, or ok false
+// when the id is unknown. An endpoint atom names its operation but its body
+// does not repeat the path, so the passage built from it carries the route
+// from here; without it the reader's real path cannot be grounded.
+func (r *Reader) OperationRoute(id string) (method, path string, ok bool) {
+	err := r.db.QueryRow(`SELECT method, path FROM operations WHERE operation_id = ?`, id).Scan(&method, &path)
+	return method, path, err == nil
+}
+
 // ListOperations filters by exact tag, exact module, and a free
 // case-insensitive substring q over operation_id, summary and path.
 // Empty filters match everything.
@@ -354,6 +398,17 @@ func (r *Reader) GetOperation(id string) (json.RawMessage, string, error) {
 type OperationValidation struct {
 	RequestSchemaJSON []byte
 	RequiredParams    []string
+}
+
+// IsCallback reports whether an operation is one ABDM makes to your bridge,
+// read from the spec's webhooks, rather than one you make. False for an
+// unknown id, and for an index built before the column existed.
+func (r *Reader) IsCallback(id string) bool {
+	var cb bool
+	if err := r.db.QueryRow(`SELECT callback FROM operations WHERE operation_id = ?`, id).Scan(&cb); err != nil {
+		return false
+	}
+	return cb
 }
 
 func (r *Reader) GetOperationValidation(id string) (OperationValidation, error) {
@@ -468,4 +523,72 @@ func (r *Reader) GetFHIRExample(recordType string) ([]byte, error) {
 		return nil, err
 	}
 	return []byte(bundle), nil
+}
+
+// hiecmModules are the modules whose generated endpoint pages live under
+// /docs/hiecm/v3/api/<module>/endpoints/, the route OperationDocPath builds.
+// UHI and NHCX operations are linked only through an endpoint atom's page,
+// because their reference pages follow another layout.
+var hiecmModules = map[string]bool{
+	"gateway": true, "m1": true, "m2": true, "m3": true, "m4": true,
+	"p1": true, "p2": true, "p3": true, "p4": true,
+	"scan-and-register": true, "scan-and-pay": true, "record-share": true,
+}
+
+// LinkForPath returns the reference page for an API path, or ok false when
+// the path is not an operation this index knows. An endpoint atom's own
+// page wins, since the site build assigned it; otherwise the generated
+// endpoint page of the operation's module. Callbacks are operations too,
+// so a webhook path resolves the same way.
+func (r *Reader) LinkForPath(path string) (url string, ok bool) {
+	var docURL, anchor string
+	err := r.db.QueryRow(`
+        SELECT a.doc_url, a.doc_anchor FROM operations o
+        JOIN atoms a ON a.operation = o.operation_id
+        WHERE o.path = ? AND a.doc_url != ''
+        ORDER BY a.id LIMIT 1`, path).Scan(&docURL, &anchor)
+	if err == nil {
+		return DocLink(docURL, anchor), true
+	}
+	var id, module string
+	if err := r.db.QueryRow(`SELECT operation_id, module FROM operations WHERE path = ? ORDER BY operation_id LIMIT 1`,
+		path).Scan(&id, &module); err != nil || !hiecmModules[module] {
+		return "", false
+	}
+	url = OperationDocPath(module, id)
+	return url, url != ""
+}
+
+// NextStep returns what follows an operation in its journey, and false
+// for the last step or an operation in none.
+func (r *Reader) NextStep(operationID string) (Step, bool) {
+	s, ok := r.nextSteps[operationID]
+	return s, ok
+}
+
+// RelatedOutbound returns only the atoms this atom's author named as
+// related, in the order they were written. RelatedAtoms also walks the
+// backlinks, which for a hub such as the ABHA glossary entry is every
+// atom in the catalogue that mentions ABHA; that is a fair hint to the
+// model that siblings exist and a wrong list to offer a reader as next
+// questions.
+func (r *Reader) RelatedOutbound(id string) ([]AtomRef, error) {
+	rows, err := r.db.Query(`SELECT to_id FROM related WHERE from_id = ? ORDER BY rowid`, id)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var out []AtomRef
+	for rows.Next() {
+		var to string
+		if err := rows.Scan(&to); err != nil {
+			return nil, err
+		}
+		a, err := r.GetAtom(to)
+		if err != nil {
+			continue // an id named before its atom exists is not a next question
+		}
+		out = append(out, AtomRef{a.ID, a.Type, a.Milestone, a.Title, a.DocURL, a.DocAnchor})
+	}
+	return out, rows.Err()
 }

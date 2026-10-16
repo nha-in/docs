@@ -24,12 +24,14 @@ Always read, whatever the task: [CORE.md](CORE.md) (addresses and the exchange t
 | [S14](../screens/S14-patient-registration-form.md) | Patient Registration Form | [D3](../database/D3-patient.md) |
 | [S15](../screens/S15-patient-detail.md) | Patient Detail | [D3](../database/D3-patient.md), [D4](../database/D4-encounter.md), [D5](../database/D5-condition.md), [D6](../database/D6-observation.md), [D7](../database/D7-allergy.md), [D8](../database/D8-terminology.md) |
 | [S16](../screens/S16-practitioner-master.md) | Practitioner Master | [F16](../fhir/F16-practitioner.md), [D2](../database/D2-practitioner.md), [D8](../database/D8-terminology.md), [D26](../database/D26-claim-care-team.md) |
+| [S17](../screens/S17-beneficiary-discovery.md) | Beneficiary Discovery | [F2](../fhir/F2-coverage-eligibility-request.md), [F15](../fhir/F15-patient.md), [D9](../database/D9-claim.md) |
+| [S18](../screens/S18-beneficiary-verification.md) | Beneficiary Verification | [D3](../database/D3-patient.md), [D31](../database/D31-biometric-auth.md) |
 
 ## APIs
 
 | To implement | What it is | Read with it |
 |---|---|---|
-| [A1](../apis/A1-policy-search.md) | Policy Search | [D9](../database/D9-claim.md), [G3](../gateway/G3-session-token.md), [G10](../gateway/G10-beneficiary-registry.md) |
+| [A1](../apis/A1-policy-search.md) | Policy Search | [D9](../database/D9-claim.md), [G3](../gateway/G3-session-token.md), [G4](../gateway/G4-registry.md), [G10](../gateway/G10-beneficiary-registry.md) |
 | [A2](../apis/A2-coverage-eligibility-check.md) | Coverage Eligibility Check | [F1](../fhir/F1-bundle.md), [F2](../fhir/F2-coverage-eligibility-request.md), [F15](../fhir/F15-patient.md), [F16](../fhir/F16-practitioner.md), [F17](../fhir/F17-organization.md), [F18](../fhir/F18-coverage.md), [F19](../fhir/F19-other-resources.md), [D9](../database/D9-claim.md), [D13](../database/D13-claim-auth.md), [D14](../database/D14-claim-auth-item.md), [D15](../database/D15-claim-auth-requirement.md), [G5](../gateway/G5-protocol-headers.md), [G7](../gateway/G7-send.md), [G8](../gateway/G8-receive.md), [G9](../gateway/G9-ledger.md) |
 | [A3](../apis/A3-insurance-plan-request.md) | Insurance Plan Request | [F1](../fhir/F1-bundle.md), [F4](../fhir/F4-task-insuranceplan.md), [D10](../database/D10-claim-plan.md), [D11](../database/D11-claim-plan-benefit.md), [D12](../database/D12-claim-plan-form.md), [G5](../gateway/G5-protocol-headers.md), [G7](../gateway/G7-send.md), [G8](../gateway/G8-receive.md), [G9](../gateway/G9-ledger.md) |
 | [A4](../apis/A4-preauth-submit.md) | Pre-auth Submit | [F1](../fhir/F1-bundle.md), [F7](../fhir/F7-questionnaireresponse.md), [F8](../fhir/F8-claim.md), [F15](../fhir/F15-patient.md), [F16](../fhir/F16-practitioner.md), [F17](../fhir/F17-organization.md), [F18](../fhir/F18-coverage.md), [F19](../fhir/F19-other-resources.md), [D18](../database/D18-claim-preauth.md), [D19](../database/D19-claim-predetermination.md), [G5](../gateway/G5-protocol-headers.md), [G7](../gateway/G7-send.md), [G8](../gateway/G8-receive.md), [G9](../gateway/G9-ledger.md) |
@@ -45,6 +47,8 @@ Always read, whatever the task: [CORE.md](CORE.md) (addresses and the exchange t
 | [A15](../apis/A15-adjudicator-process-case.md) | Adjudicator Process Case | [D1](../database/D1-organization.md), [D9](../database/D9-claim.md), [D18](../database/D18-claim-preauth.md), [D20](../database/D20-claim-submission.md), [D24](../database/D24-claim-adjudication.md), [G3](../gateway/G3-session-token.md) |
 | [A16](../apis/A16-gateway-token.md) | Gateway Token | [D1](../database/D1-organization.md), [G2](../gateway/G2-configuration.md), [G3](../gateway/G3-session-token.md) |
 | [A17](../apis/A17-claim-state.md) | Claim State | nothing else |
+| [A18](../apis/A18-biometric-authentication.md) | Biometric Authentication | [F7](../fhir/F7-questionnaireresponse.md), [D3](../database/D3-patient.md), [D9](../database/D9-claim.md), [D28](../database/D28-claim-document.md), [D31](../database/D31-biometric-auth.md), [G3](../gateway/G3-session-token.md) |
+| [A19](../apis/A19-abha-m1.md) | ABHA Create and Verify (ABDM M1) | [D3](../database/D3-patient.md), [G3](../gateway/G3-session-token.md) |
 
 ## Callbacks
 
@@ -54,8 +58,8 @@ Always read, whatever the task: [CORE.md](CORE.md) (addresses and the exchange t
 | [C2](../callbacks/C2-coverage-eligibility-on-check.md) | Coverage Eligibility Verdict | [G8](../gateway/G8-receive.md) |
 | [C3](../callbacks/C3-auth-requirements-on-check.md) | Authorisation Requirements Ruling | [G8](../gateway/G8-receive.md) |
 | [C4](../callbacks/C4-insuranceplan-on-request.md) | Insurance Plan Reply | [G8](../gateway/G8-receive.md) |
-| [C5](../callbacks/C5-preauth-on-submit.md) | Pre-auth Reply | [G8](../gateway/G8-receive.md), [G9](../gateway/G9-ledger.md) |
-| [C6](../callbacks/C6-claim-on-submit.md) | Claim Reply | [G8](../gateway/G8-receive.md), [G9](../gateway/G9-ledger.md) |
+| [C5](../callbacks/C5-preauth-on-submit.md) | Pre-auth Reply | [F9](../fhir/F9-claimresponse.md), [G8](../gateway/G8-receive.md), [G9](../gateway/G9-ledger.md) |
+| [C6](../callbacks/C6-claim-on-submit.md) | Claim Reply | [F9](../fhir/F9-claimresponse.md), [G8](../gateway/G8-receive.md), [G9](../gateway/G9-ledger.md) |
 | [C7](../callbacks/C7-cancel-on-submit.md) | Cancel Reply | [G8](../gateway/G8-receive.md) |
 | [C8](../callbacks/C8-enquiry-on-submit.md) | Enquiry Reply | [G8](../gateway/G8-receive.md) |
 | [C9](../callbacks/C9-communication-request.md) | Payer Communication | [G8](../gateway/G8-receive.md) |

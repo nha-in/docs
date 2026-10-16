@@ -1,0 +1,35 @@
+{
+  "id": "diagnose-hiecm-m2-abdm-1056-01",
+  "slice": "diagnose",
+  "class": "diagnose",
+  "turns": [
+    {
+      "role": "user",
+      "text": "getting ABDM-1056 when i link care context, what does it mean"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "With the message This care contexts has been already linked, ABDM-1056 means the care context is already linked, so confirm it and treat it as done rather than retrying the link.",
+    "The same code with the message Invalid Link Reference Number means the reference matches nothing issued in this link flow, so restart the link flow for a fresh reference."
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.error.abdm-1056"
+  ],
+  "expected_shape": "diagnose",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-hiecm-hip-initiated-linking-yaml",
+  "catalogue_version": "2026.09.16",
+  "notes": "One code, two messages; an answer that gives only one sends half the readers the wrong way. Source lines: catalogue/hiecm/errors/abdm-1056.md, 'The code carries two messages, and the message tells you which case you are in'; '\"This care contexts has been already linked\": the care context is already linked to this patient'; '\"Invalid Link Reference Number\": the link reference number you sent matches nothing issued in this link flow'; 'Already linked: treat it as done once you have confirmed the care context is linked, and do not retry the link. Invalid reference number: restart the link flow for a fresh reference'."
+}

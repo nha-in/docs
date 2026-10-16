@@ -1,0 +1,209 @@
+{
+  "case_id": "define-elliptic-curve-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "What is the elliptic curve step in ABDM's data flow?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "I'll search the ABDM documentation for information about elliptic curves and the data flow.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01JRqvYQFS2Uc7gAQoG87SX8",
+            "Name": "search",
+            "Input": {
+              "query": "elliptic curve data flow",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "elliptic curve data flow",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01KEvuEmmiPP8z5LYN42Cyws",
+            "Name": "search",
+            "Input": {
+              "query": "elliptic curve encryption cryptography",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "elliptic curve encryption cryptography",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/fetching-a-recipient-certificate#what-comes-back",
+                "id": "hiecm.glossary.key-material",
+                "summary": "The ECDH key pairs that encrypt health records in transit. A fresh pair per transfer, the HIU keeps its own, and the HIP returns its public half alongside th...",
+                "title": "Key material, who generates it and who keeps it",
+                "type": "glossary"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_019X6aCCJQtG2VLsrTQLd9Zc",
+            "Name": "get",
+            "Input": {
+              "id": "hiecm.glossary.key-material"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "hiecm.glossary.key-material"
+          },
+          "output": {
+            "body": "# Key material, who generates it and who keeps it\n\n## In plain words\n\nHealth records are encrypted between the provider and the requester, and\nneither the gateway nor the consent manager can read them. The scheme is\nElliptic curve Diffie Hellman, so both sides contribute key material and\neach derives the same shared secret without ever sending it.\n\n## Before you start\n\nYou need a consent artefact, because key material travels inside the data\nrequest that cites one.\n\n## What happens\n\nThe HIU generates a key pair and sends its public half, with a nonce, in\nthe request. The HIP derives the shared key from its own private half and\nthe HIU's public half, encrypts, and returns the data together with its\nown public key material and its nonce. The HIU then derives the same\nshared key and decrypts.\n\nThree answers NHA gives that decide how you build this:\n\n**A new pair every time.** Asked whether key generation is required on\nevery transfer, NHA answers yes. These are ephemeral keys, not an\nidentity, so a pair cached and reused is a defect rather than an\noptimisation.\n\n**The HIU stores its own pair.** It needs both halves to decrypt what\ncomes back. The window is short, between issuing the request and\ndecrypting the response, but the private half has to survive that window,\nwhich matters if the two events land on different instances.\n\n**The HIP returns its public half with the data.** NHA's phrasing is that\nthe HIP sends the sender public key and the receiver nonce along with the\nhealth document. A HIU that discards the response envelope and keeps only\nthe payload cannot decrypt it.\n\nNHA recommends the Fidelius CLI for the cryptography itself, with\nexamples for Node, Python, Ruby and PHP, rather than implementing the\ncurve arithmetic yourself.\n\n## How you know it worked\n\nA transfer succeeds with a pair generated for that transfer alone, and\nyour HIU can decrypt after a restart between request and response only\nbecause it deliberately persisted the private half.\n\n## When it goes wrong\n\nReusing a key pair across transfers. It appears to work, because the\nmaths does not object, and it is not what NHA specifies.\n\nLosing the private half between request and response. The data arrives\nand is undecryptable, which looks like an encryption bug and is a state\nmanagement one.\n\nConfusing this with M1 encryption. The RSA encryption of Aadhaar numbers,\nOTPs and passwords against NHA's public certificate is a different\nmechanism for a different purpose, and shares nothing with this one but\nthe word encryption.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/nhcx/v1/getting-started/fetching-a-recipient-certificate#what-comes-back",
+            "gateway": "hiecm",
+            "id": "hiecm.glossary.key-material",
+            "milestone": "n/a",
+            "summary": "The ECDH key pairs that encrypt health records in transit. A fresh pair per transfer, the HIU keeps its own, and the HIP returns its public half alongside the data.",
+            "title": "Key material, who generates it and who keeps it",
+            "type": "glossary"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "The elliptic curve step in ABDM's data flow is **Elliptic Curve Diffie-Hellman (ECDH)**, used to encrypt health records in transit between provider and requester. Here's how it works:\n\n**The flow:**\n1. **HIU generates** a fresh key pair and sends its **public key + nonce** in the data request\n2. **HIP derives** the shared secret using its private key + HIU's public key, encrypts the health records, and returns them along with its **own public key + nonce**\n3. **HIU derives** the same shared secret using its private key + HIP's public key, then decrypts the data\n\n**Key principles:**\n- **New pair every transfer** — don't reuse key pairs across requests (they're ephemeral, not identities)\n- **HIU persists its private key** — it needs both halves of the pair to decrypt the response, so store the private key between request and response\n- **HIP returns its public key with data** — the HIU needs this to derive the shared secret on its side\n\n**Why this matters:** Neither the gateway nor consent manager can read the encrypted health records—both sides independently derive the same shared secret without ever transmitting it.\n\nNHA recommends using the **Fidelius CLI** for the cryptography rather than implementing ECDH yourself, with examples for Node, Python, Ruby, and PHP.\n\nThis is from the NHCX gateway documentation: [Fetching a recipient certificate](https://abdm.dev/docs/nhcx/v1/getting-started/fetching-a-recipient-certificate#what-comes-back).",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "The elliptic curve step in ABDM's data flow is **Elliptic Curve Diffie-Hellman (ECDH)**, used to encrypt health records in transit between provider and requester. Here's how it works:\n\n**The flow:**\n1. **HIU generates** a fresh key pair and sends its **public key + nonce** in the data request\n2. **HIP derives** the shared secret using its private key + HIU's public key, encrypts the health records, and returns them along with its **own public key + nonce**\n3. **HIU derives** the same shared secret using its private key + HIP's public key, then decrypts the data\n\n**Key principles:**\n- **New pair every transfer** — don't reuse key pairs across requests (they're ephemeral, not identities)\n- **HIU persists its private key** — it needs both halves of the pair to decrypt the response, so store the private key between request and response\n- **HIP returns its public key with data** — the HIU needs this to derive the shared secret on its side\n\n**Why this matters:** Neither the gateway nor consent manager can read the encrypted health records—both sides independently derive the same shared secret without ever transmitting it.\n\nNHA recommends using the **Fidelius CLI** for the cryptography rather than implementing ECDH yourself, with examples for Node, Python, Ruby, and PHP.\n\nThis is from the NHCX gateway documentation: [Fetching a recipient certificate](https://abdm.dev/docs/nhcx/v1/getting-started/fetching-a-recipient-certificate#what-comes-back).",
+  "sources": [
+    {
+      "id": "hiecm.glossary.key-material",
+      "title": "Key material, who generates it and who keeps it",
+      "url": "/docs/nhcx/v1/getting-started/fetching-a-recipient-certificate#what-comes-back"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/nhcx/v1/getting-started/fetching-a-recipient-certificate#what-comes-back\",\"id\":\"hiecm.glossary.key-material\",\"summary\":\"The ECDH key pairs that encrypt health records in transit. A fresh pair per transfer, the HIU keeps its own, and the HIP returns its public half alongside th...\",\"title\":\"Key material, who generates it and who keeps it\",\"type\":\"glossary\"}]}\n{\"body\":\"# Key material, who generates it and who keeps it\\n\\n## In plain words\\n\\nHealth records are encrypted between the provider and the requester, and\\nneither the gateway nor the consent manager can read them. The scheme is\\nElliptic curve Diffie Hellman, so both sides contribute key material and\\neach derives the same shared secret without ever sending it.\\n\\n## Before you start\\n\\nYou need a consent artefact, because key material travels inside the data\\nrequest that cites one.\\n\\n## What happens\\n\\nThe HIU generates a key pair and sends its public half, with a nonce, in\\nthe request. The HIP derives the shared key from its own private half and\\nthe HIU's public half, encrypts, and returns the data together with its\\nown public key material and its nonce. The HIU then derives the same\\nshared key and decrypts.\\n\\nThree answers NHA gives that decide how you build this:\\n\\n**A new pair every time.** Asked whether key generation is required on\\nevery transfer, NHA answers yes. These are ephemeral keys, not an\\nidentity, so a pair cached and reused is a defect rather than an\\noptimisation.\\n\\n**The HIU stores its own pair.** It needs both halves to decrypt what\\ncomes back. The window is short, between issuing the request and\\ndecrypting the response, but the private half has to survive that window,\\nwhich matters if the two events land on different instances.\\n\\n**The HIP returns its public half with the data.** NHA's phrasing is that\\nthe HIP sends the sender public key and the receiver nonce along with the\\nhealth document. A HIU that discards the response envelope and keeps only\\nthe payload cannot decrypt it.\\n\\nNHA recommends the Fidelius CLI for the cryptography itself, with\\nexamples for Node, Python, Ruby and PHP, rather than implementing the\\ncurve arithmetic yourself.\\n\\n## How you know it worked\\n\\nA transfer succeeds with a pair generated for that transfer alone, and\\nyour HIU can decrypt after a restart between request and response only\\nbecause it deliberately persisted the private half.\\n\\n## When it goes wrong\\n\\nReusing a key pair across transfers. It appears to work, because the\\nmaths does not object, and it is not what NHA specifies.\\n\\nLosing the private half between request and response. The data arrives\\nand is undecryptable, which looks like an encryption bug and is a state\\nmanagement one.\\n\\nConfusing this with M1 encryption. The RSA encryption of Aadhaar numbers,\\nOTPs and passwords against NHA's public certificate is a different\\nmechanism for a different purpose, and shares nothing with this one but\\nthe word encryption.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/nhcx/v1/getting-started/fetching-a-recipient-certificate#what-comes-back\",\"gateway\":\"hiecm\",\"id\":\"hiecm.glossary.key-material\",\"milestone\":\"n/a\",\"summary\":\"The ECDH key pairs that encrypt health records in transit. A fresh pair per transfer, the HIU keeps its own, and the HIP returns its public half alongside the data.\",\"title\":\"Key material, who generates it and who keeps it\",\"type\":\"glossary\"}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T11:58:34.130Z",
+  "usage": {
+    "input_tokens": 40,
+    "output_tokens": 975,
+    "cache_read_input_tokens": 39477,
+    "cache_creation_input_tokens": 6648,
+    "num_turns": 4,
+    "duration_ms": 14058,
+    "cost_usd_equivalent": 0.022158699999999996
+  }
+}

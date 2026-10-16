@@ -243,7 +243,12 @@ curl --request GET \
 
 **Exit condition (Observe until this is true)**
 
-A 200 whose body matches:
+Each call you made in this journey answered by its callback, with `response.requestId` equal to the `REQUEST-ID` you sent on that call. The 202 on a call is receipt, not the outcome: the outcome is in the callback's body.
+
+- `POST /api/hiecm/patient-record/v3/share` is answered by `POST /api/v3/patient-record/share` on your bridge.
+- `POST /api/hiecm/patient-record/v3/notify` is answered by `POST /api/v3/patient-record/on-notify` on your bridge.
+
+Then `GET /api/hiecm/patient-record/v3/audit-history` returns a 200 whose body matches:
 
 ```json
 [
@@ -362,7 +367,11 @@ curl --request POST \
 
 **Exit condition (Observe until this is true)**
 
-A 202 response. The specification gives no body for it, so read what comes back.
+Each call you made in this journey answered by its callback, with `response.requestId` equal to the `REQUEST-ID` you sent on that call. The 202 on a call is receipt, not the outcome: the outcome is in the callback's body.
+
+- `POST /api/hiecm/patient-record/v3/on-share` is answered by `POST /api/v3/patient-record/on-share` on your bridge.
+- `POST /api/hiecm/patient-record/v3/on-share` is answered by `POST /health-information/transfer` on your bridge.
+- `POST /api/hiecm/patient-record/v3/notify` is answered by `POST /api/v3/patient-record/on-notify` on your bridge.
 
 ## Where the detail is
 

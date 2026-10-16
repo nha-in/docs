@@ -29,6 +29,6 @@
   "expected_behaviour": "answer",
   "derived_from": null,
   "source_row": "annexure#sandbox-faq-m2",
-  "catalogue_version": "2026.08.24",
+  "catalogue_version": "2026.09.16",
   "notes": "catalogue gap: the walk in patient registration flow without an existing ABHA address, and the resulting SMS notification, is not documented"
 }

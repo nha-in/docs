@@ -1,0 +1,520 @@
+{
+  "case_id": "faq-rephrased-sandbox-m2-02-c",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "hip eligibility"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_012pomp24jiftsQFAWGbKwwu",
+            "Name": "search",
+            "Input": {
+              "query": "HIP eligibility requirements",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "HIP eligibility requirements",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01QHUKsZbbQrkjToK3xsegy8",
+            "Name": "search",
+            "Input": {
+              "query": "HIP onboarding registration",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "HIP onboarding registration",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01FRi9hUnn6Uzyis3vfNPbkq",
+            "Name": "search",
+            "Input": {
+              "query": "Health Information Provider",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "Health Information Provider",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#hip",
+                "id": "hiecm.glossary.hip",
+                "summary": "The role held by a system that holds a patient's records and shares them when a consent allows it.",
+                "title": "HIP, health information provider",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/10-m2-post-health-information-transfer#m2-on-data-notification",
+                "id": "hiecm.callback.m2-on-data-notification",
+                "summary": "The HIP posts the encrypted records straight to the HIU's data push URL, outside the gateway.",
+                "title": "The provider pushes encrypted health information to the URL named in the request",
+                "type": "callback"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.glossary.m2",
+                "summary": "The milestone covering care context linking, discovery and sending records.",
+                "title": "M2 Health Information Provider: Create and link records",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-1035",
+                "id": "hiecm.error.abdm-1035",
+                "summary": "ABDM does not recognise the health information provider id on the call, which is a registration problem rather than a request problem.",
+                "title": "ABDM-1035, the HIP id is not recognised",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#hie-cm",
+                "id": "shared.glossary.hie-cm",
+                "summary": "The ABDM building block that holds ABHA addresses, the links to each address's records, and the consent that authorises sharing them. It is not the gateway.",
+                "title": "HIE-CM, Health Information Exchange and Consent Manager",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#ims",
+                "id": "hiecm.glossary.ims",
+                "summary": "The umbrella term for the software a health facility runs, whichever of HMIS, EMR, LIMS or PMS it happens to be.",
+                "title": "IMS, information management system",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.decision.role-model-two-axes",
+                "summary": "HIP, HIU, HRP and the health locker read as one list of four roles. This catalogue separates the entity that holds the role from what that entity is doing, b...",
+                "title": "Roles belong to the entity, and split into two axes, position and direction",
+                "type": "decision"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/care-context#care-context",
+                "id": "hiecm.concept.care-context",
+                "summary": "A care context is the unit a provider links to a patient's ABHA address, carrying a reference number and a display name and nothing clinical.",
+                "title": "Care contexts, how records are grouped so they can be found",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/03-p2-post-user-initiated-linking-v3-patient-care-context-discover#p2-care-context-discover",
+                "id": "hiecm.endpoint.p2-care-context-discover",
+                "summary": "Ask one facility whether it holds records for the logged-in person; the answer arrives on a callback.",
+                "title": "Ask a facility what records it holds",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#link-token",
+                "id": "hiecm.glossary.link-token",
+                "summary": "The token that authorises your system to link a care context to a patient's ABHA address.",
+                "title": "Link token, the token that authorises linking",
+                "type": "glossary"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01VAR7W9EPram5qcTN7LDBx8",
+            "Name": "search",
+            "Input": {
+              "query": "registration onboarding provider",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "registration onboarding provider",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/get-your-sandbox-credentials",
+                "id": "nhcx.sandbox.prerequisites",
+                "summary": "The checklist to complete before your system can register on the claims exchange sandbox: a facility registration, sandbox credentials, basic health ID featu...",
+                "title": "What you need before you register on the NHCX sandbox",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.test.provider-uc-01",
+                "summary": "Prove that your hospital system can fetch the registered participants of one role, such as every payer, from the claims exchange.",
+                "title": "Provider sandbox exit use case 1: Get participant list",
+                "type": "test"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/get-your-sandbox-credentials",
+                "id": "nhcx.flow.sandbox-onboarding",
+                "summary": "Register your system in the claims exchange test environment so it holds a participant code, a registered certificate and a callback address.",
+                "title": "Onboard as a participant in the NHCX sandbox",
+                "type": "flow"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.callback.notification-delivery",
+                "summary": "What a patient app receives when the claims exchange pushes a claim update for a patient who logged in to it, and how to handle it.",
+                "title": "Receiving a notification on a patient app",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/notifications-and-patient-apps#subscribing",
+                "id": "nhcx.flow.notification-subscribe",
+                "summary": "Have a patient's health record app receive plain-language updates on their pre-authorisations, claims and payments, by subscribing each time the patient logs...",
+                "title": "Subscribe a patient app to notifications",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/receiving-a-callback",
+                "id": "nhcx.sandbox.callback-url-requirements",
+                "summary": "What the web address that receives exchange messages must look like, the three addresses the exchange sends from, and how fast your server must answer.",
+                "title": "Callback URL rules and the egress addresses to allow",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/api/other/endpoints/other-v1-on-status",
+                "id": "nhcx.callback.on-status",
+                "summary": "What your system receives when the claims exchange answers your question about where one of your messages stands, and how to act on it.",
+                "title": "Receiving POST /v1/on_status",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/api/other/endpoints/other-v1-error",
+                "id": "nhcx.callback.error",
+                "summary": "What your system receives when the claims exchange gives up delivering a request you sent, and what to do with the report.",
+                "title": "Receiving POST /v1/error",
+                "type": "callback"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01TfqTYHqLj6Upywag425JUp",
+            "Name": "search",
+            "Input": {
+              "query": "HIE-CM registration requirements criteria",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "HIE-CM registration requirements criteria",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#hie-cm",
+                "id": "shared.glossary.hie-cm",
+                "summary": "The ABDM building block that holds ABHA addresses, the links to each address's records, and the consent that authorises sharing them. It is not the gateway.",
+                "title": "HIE-CM, Health Information Exchange and Consent Manager",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#gateway",
+                "id": "shared.glossary.gateway",
+                "summary": "The component that routes calls between participants so they never call each other directly. It is not the consent manager, and no health record passes throu...",
+                "title": "Gateway, the routing layer between participants",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/fetching-a-recipient-certificate#what-comes-back",
+                "id": "hiecm.glossary.key-material",
+                "summary": "The ECDH key pairs that encrypt health records in transit. A fresh pair per transfer, the HIU keeps its own, and the HIP returns its public half alongside th...",
+                "title": "Key material, who generates it and who keeps it",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/02-m3-post-v3-hiu-consent-request-on-status#m3-on-consent-request-status",
+                "id": "hiecm.callback.m3-on-consent-request-status",
+                "summary": "ABDM answers a consent status request on the HIU's bridge with the request's current state.",
+                "title": "The consent manager reports the state of a consent request you asked about",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/build-it-well#read-the-error-then-decide-error-codes",
+                "id": "hiecm.glossary.x-cm-id",
+                "summary": "The header naming which consent manager a request is meant for, carrying that consent manager's suffix.",
+                "title": "X-CM-ID, the consent manager header",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#consent-manager",
+                "id": "hiecm.glossary.consent-manager",
+                "summary": "The component that receives consent requests, shows them to the patient, and records the decision.",
+                "title": "Consent manager, the component that holds consent",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-2403",
+                "id": "hiecm.error.abdm-2403",
+                "summary": "The consent manager header does not match the environment you are calling.",
+                "title": "ABDM-2403, the X-CM-ID is not valid",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/how-it-fits#roles",
+                "id": "hiecm.concept.roles",
+                "summary": "Your role, IMS or PHR, is fixed by the entity your software acts for, while HIP and HIU change with the direction each record moves.",
+                "title": "Roles, which entity your software acts for and which way the record moves",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/consent#consent-in-a-phr-app",
+                "id": "hiecm.concept.consent-in-a-phr-app",
+                "summary": "A personal health record app must let a person see a consent request, change it, allow or refuse it, see what is allowed, and take it back.",
+                "title": "The five things a personal health record application must let a person do with consent",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.concept.beneficiary-consent",
+                "summary": "The patient's data stays sealed from the exchange, research sees only aggregates, individual data needs the patient's consent, and the patient must agree bef...",
+                "title": "Beneficiary consent and data rights",
+                "type": "concept"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "Let me check the HIE-CM getting started section for eligibility or setup requirements.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01R7ZaUXw8UFb2vvzJLYAffj",
+            "Name": "search",
+            "Input": {
+              "query": "getting started setup prerequisites HIP",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "getting started setup prerequisites HIP",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "The ABDM documentation I have access to doesn't contain specific pages about HIP eligibility criteria. Could you clarify what you're looking for?\n\nAre you asking about:\n- **What types of organizations can be HIPs?** (e.g., hospitals, clinics, labs)\n- **What regulatory/licensing requirements HIPs must meet?**\n- **What technical prerequisites a HIP needs?** (certificates, sandbox setup, etc.)\n- **What ABDM registration/onboarding steps a HIP must complete?**\n\nOnce I know what aspect of HIP eligibility you need, I can search the portal more effectively.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "The ABDM documentation I have access to doesn't contain specific pages about HIP eligibility criteria. Could you clarify what you're looking for?\n\nAre you asking about:\n- **What types of organizations can be HIPs?** (e.g., hospitals, clinics, labs)\n- **What regulatory/licensing requirements HIPs must meet?**\n- **What technical prerequisites a HIP needs?** (certificates, sandbox setup, etc.)\n- **What ABDM registration/onboarding steps a HIP must complete?**\n\nOnce I know what aspect of HIP eligibility you need, I can search the portal more effectively.",
+  "sources": [],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hip\",\"id\":\"hiecm.glossary.hip\",\"summary\":\"The role held by a system that holds a patient's records and shares them when a consent allows it.\",\"title\":\"HIP, health information provider\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/10-m2-post-health-information-transfer#m2-on-data-notification\",\"id\":\"hiecm.callback.m2-on-data-notification\",\"summary\":\"The HIP posts the encrypted records straight to the HIU's data push URL, outside the gateway.\",\"title\":\"The provider pushes encrypted health information to the URL named in the request\",\"type\":\"callback\"},{\"doc_url\":\"\",\"id\":\"hiecm.glossary.m2\",\"summary\":\"The milestone covering care context linking, discovery and sending records.\",\"title\":\"M2 Health Information Provider: Create and link records\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-1035\",\"id\":\"hiecm.error.abdm-1035\",\"summary\":\"ABDM does not recognise the health information provider id on the call, which is a registration problem rather than a request problem.\",\"title\":\"ABDM-1035, the HIP id is not recognised\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hie-cm\",\"id\":\"shared.glossary.hie-cm\",\"summary\":\"The ABDM building block that holds ABHA addresses, the links to each address's records, and the consent that authorises sharing them. It is not the gateway.\",\"title\":\"HIE-CM, Health Information Exchange and Consent Manager\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#ims\",\"id\":\"hiecm.glossary.ims\",\"summary\":\"The umbrella term for the software a health facility runs, whichever of HMIS, EMR, LIMS or PMS it happens to be.\",\"title\":\"IMS, information management system\",\"type\":\"glossary\"},{\"doc_url\":\"\",\"id\":\"shared.decision.role-model-two-axes\",\"summary\":\"HIP, HIU, HRP and the health locker read as one list of four roles. This catalogue separates the entity that holds the role from what that entity is doing, b...\",\"title\":\"Roles belong to the entity, and split into two axes, position and direction\",\"type\":\"decision\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/care-context#care-context\",\"id\":\"hiecm.concept.care-context\",\"summary\":\"A care context is the unit a provider links to a patient's ABHA address, carrying a reference number and a display name and nothing clinical.\",\"title\":\"Care contexts, how records are grouped so they can be found\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/03-p2-post-user-initiated-linking-v3-patient-care-context-discover#p2-care-context-discover\",\"id\":\"hiecm.endpoint.p2-care-context-discover\",\"summary\":\"Ask one facility whether it holds records for the logged-in person; the answer arrives on a callback.\",\"title\":\"Ask a facility what records it holds\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#link-token\",\"id\":\"hiecm.glossary.link-token\",\"summary\":\"The token that authorises your system to link a care context to a patient's ABHA address.\",\"title\":\"Link token, the token that authorises linking\",\"type\":\"glossary\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/nhcx/v1/getting-started/get-your-sandbox-credentials\",\"id\":\"nhcx.sandbox.prerequisites\",\"summary\":\"The checklist to complete before your system can register on the claims exchange sandbox: a facility registration, sandbox credentials, basic health ID featu...\",\"title\":\"What you need before you register on the NHCX sandbox\",\"type\":\"sandbox\"},{\"doc_url\":\"\",\"id\":\"nhcx.test.provider-uc-01\",\"summary\":\"Prove that your hospital system can fetch the registered participants of one role, such as every payer, from the claims exchange.\",\"title\":\"Provider sandbox exit use case 1: Get participant list\",\"type\":\"test\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/get-your-sandbox-credentials\",\"id\":\"nhcx.flow.sandbox-onboarding\",\"summary\":\"Register your system in the claims exchange test environment so it holds a participant code, a registered certificate and a callback address.\",\"title\":\"Onboard as a participant in the NHCX sandbox\",\"type\":\"flow\"},{\"doc_url\":\"\",\"id\":\"nhcx.callback.notification-delivery\",\"summary\":\"What a patient app receives when the claims exchange pushes a claim update for a patient who logged in to it, and how to handle it.\",\"title\":\"Receiving a notification on a patient app\",\"type\":\"callback\"},{\"doc_url\":\"/docs/nhcx/v1/reference/notifications-and-patient-apps#subscribing\",\"id\":\"nhcx.flow.notification-subscribe\",\"summary\":\"Have a patient's health record app receive plain-language updates on their pre-authorisations, claims and payments, by subscribing each time the patient logs...\",\"title\":\"Subscribe a patient app to notifications\",\"type\":\"flow\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/receiving-a-callback\",\"id\":\"nhcx.sandbox.callback-url-requirements\",\"summary\":\"What the web address that receives exchange messages must look like, the three addresses the exchange sends from, and how fast your server must answer.\",\"title\":\"Callback URL rules and the egress addresses to allow\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/nhcx/v1/api/other/endpoints/other-v1-on-status\",\"id\":\"nhcx.callback.on-status\",\"summary\":\"What your system receives when the claims exchange answers your question about where one of your messages stands, and how to act on it.\",\"title\":\"Receiving POST /v1/on_status\",\"type\":\"callback\"},{\"doc_url\":\"/docs/nhcx/v1/api/other/endpoints/other-v1-error\",\"id\":\"nhcx.callback.error\",\"summary\":\"What your system receives when the claims exchange gives up delivering a request you sent, and what to do with the report.\",\"title\":\"Receiving POST /v1/error\",\"type\":\"callback\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hie-cm\",\"id\":\"shared.glossary.hie-cm\",\"summary\":\"The ABDM building block that holds ABHA addresses, the links to each address's records, and the consent that authorises sharing them. It is not the gateway.\",\"title\":\"HIE-CM, Health Information Exchange and Consent Manager\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#gateway\",\"id\":\"shared.glossary.gateway\",\"summary\":\"The component that routes calls between participants so they never call each other directly. It is not the consent manager, and no health record passes throu...\",\"title\":\"Gateway, the routing layer between participants\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/fetching-a-recipient-certificate#what-comes-back\",\"id\":\"hiecm.glossary.key-material\",\"summary\":\"The ECDH key pairs that encrypt health records in transit. A fresh pair per transfer, the HIU keeps its own, and the HIP returns its public half alongside th...\",\"title\":\"Key material, who generates it and who keeps it\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/02-m3-post-v3-hiu-consent-request-on-status#m3-on-consent-request-status\",\"id\":\"hiecm.callback.m3-on-consent-request-status\",\"summary\":\"ABDM answers a consent status request on the HIU's bridge with the request's current state.\",\"title\":\"The consent manager reports the state of a consent request you asked about\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/build-it-well#read-the-error-then-decide-error-codes\",\"id\":\"hiecm.glossary.x-cm-id\",\"summary\":\"The header naming which consent manager a request is meant for, carrying that consent manager's suffix.\",\"title\":\"X-CM-ID, the consent manager header\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#consent-manager\",\"id\":\"hiecm.glossary.consent-manager\",\"summary\":\"The component that receives consent requests, shows them to the patient, and records the decision.\",\"title\":\"Consent manager, the component that holds consent\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-2403\",\"id\":\"hiecm.error.abdm-2403\",\"summary\":\"The consent manager header does not match the environment you are calling.\",\"title\":\"ABDM-2403, the X-CM-ID is not valid\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/how-it-fits#roles\",\"id\":\"hiecm.concept.roles\",\"summary\":\"Your role, IMS or PHR, is fixed by the entity your software acts for, while HIP and HIU change with the direction each record moves.\",\"title\":\"Roles, which entity your software acts for and which way the record moves\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/consent#consent-in-a-phr-app\",\"id\":\"hiecm.concept.consent-in-a-phr-app\",\"summary\":\"A personal health record app must let a person see a consent request, change it, allow or refuse it, see what is allowed, and take it back.\",\"title\":\"The five things a personal health record application must let a person do with consent\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"nhcx.concept.beneficiary-consent\",\"summary\":\"The patient's data stays sealed from the exchange, research sees only aggregates, individual data needs the patient's consent, and the patient must agree bef...\",\"title\":\"Beneficiary consent and data rights\",\"type\":\"concept\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T12:02:09.276Z",
+  "usage": {
+    "input_tokens": 70,
+    "output_tokens": 1124,
+    "cache_read_input_tokens": 80874,
+    "cache_creation_input_tokens": 9483,
+    "num_turns": 7,
+    "duration_ms": 18057,
+    "cost_usd_equivalent": 0.032743400000000006
+  }
+}

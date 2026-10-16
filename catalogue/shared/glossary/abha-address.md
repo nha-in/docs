@@ -9,7 +9,7 @@ summary: >
   The readable name, such as name@sbx, that ABDM uses to route a
   person's health records.
 sources:
-  - file: catalogue/openapi/.raw/nha-2026-09-16/abha/M1 ABHA Swagger 1.yaml
+  - file: catalogue/hiecm/openapi/.raw/nha-2026-09-16/abha/M1 ABHA Swagger 1.yaml
     fetched: 2026-09-16
     hash: sha256:6ab5cfe77c29032fac5fbf25c8e28529f22951e459374fa618f570f15e25551b
 related:
@@ -20,10 +20,12 @@ related:
 
 ## In plain words
 
-An ABHA address looks like an email address, for example `ajeet123@abdm`
-on production or `something@sbx` on the sandbox. It is the handle a
-person shares at a facility, and the identifier that care contexts are
-linked against.
+An ABHA address is the name a person goes by on ABDM, written like an
+email address: `ajeet123@abdm` on production or `something@sbx` on the
+sandbox. A person logs in to their PHR app with it and shares it at a
+facility so the facility can find them. Every record linked to the person
+is linked against it, and a request to see those records is addressed to
+it.
 
 NHA calls this the PHR address in much of its own documentation, and
 says outright that the two terms mean the same thing. Older material

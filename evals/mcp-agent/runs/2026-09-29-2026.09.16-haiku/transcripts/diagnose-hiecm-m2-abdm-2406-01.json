@@ -1,0 +1,139 @@
+{
+  "case_id": "diagnose-hiecm-m2-abdm-2406-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "ABDM-2406 Invalid API sequence flow, please follow logical flow"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "I'll decode this ABDM error for you.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_016g9yboCLFAenzTCwq7aRGo",
+            "Name": "decode_error",
+            "Input": {
+              "input": "ABDM-2406"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "decode_error",
+          "input": {
+            "input": "ABDM-2406"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "codes": [
+              "ABDM-2406"
+            ],
+            "matches": {
+              "ABDM-2406": {
+                "atoms": [
+                  {
+                    "body": "# ABDM-2406, the calls are out of order\n\n## In plain words\n\nThe gateway tracks where you are in a flow, and your call does not fit. The messages are:\n\n- \"Invalid API sequence flow, please follow logical flow\"\n- \"The status is invalid. Please follow the logical status flow or transition.\"\n\nA step you depend on has not happened yet, or the flow has moved past the state your call assumes.\n\n## What happens\n\nSkipping a step, replaying an earlier step after the flow has moved on, or sending the next step before the previous step's callback arrived all produce it.\n\n## When it goes wrong\n\nWork out which step the gateway believes you are on. Find your last confirmed callback and resume from the step after it. Do not retry the rejected call in place. If the flow has diverged, restart it from its first step.",
+                    "id": "hiecm.error.abdm-2406",
+                    "summary": "Your call does not fit where the gateway believes the flow has reached.",
+                    "title": "ABDM-2406, the calls are out of order"
+                  }
+                ],
+                "source": "specification response example",
+                "specification": [
+                  {
+                    "code": "ABDM-2406",
+                    "message": "Invalid API sequence flow, please follow logical flow",
+                    "http": "",
+                    "operation_id": "",
+                    "module": "m2"
+                  },
+                  {
+                    "code": "ABDM-2406",
+                    "message": "The status is invalid. Please follow the logical status flow or transition.",
+                    "http": "",
+                    "operation_id": "",
+                    "module": "m2"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "**ABDM-2406: Invalid API sequence flow**\n\nThis error means your calls are out of order with where the gateway thinks the flow should be. The gateway tracks your progress through a flow and rejects calls that don't match the current state.\n\n**What causes it:**\n- Skipping a step in the flow\n- Replaying an earlier step after the flow has moved on\n- Sending the next step before the previous step's callback arrived\n- Flow divergence or restarts\n\n**How to fix it:**\n1. Find your **last confirmed callback** from the gateway\n2. **Resume from the step after it** — don't retry the rejected call in place\n3. If the flow has completely diverged, restart it from its first step\n\nThis typically happens in M2 (the Consent flow). Make sure you're waiting for callback confirmations at each step before proceeding to the next one. Which step of your flow is returning this error?",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "**ABDM-2406: Invalid API sequence flow**\n\nThis error means your calls are out of order with where the gateway thinks the flow should be. The gateway tracks your progress through a flow and rejects calls that don't match the current state.\n\n**What causes it:**\n- Skipping a step in the flow\n- Replaying an earlier step after the flow has moved on\n- Sending the next step before the previous step's callback arrived\n- Flow divergence or restarts\n\n**How to fix it:**\n1. Find your **last confirmed callback** from the gateway\n2. **Resume from the step after it** — don't retry the rejected call in place\n3. If the flow has completely diverged, restart it from its first step\n\nThis typically happens in M2 (the Consent flow). Make sure you're waiting for callback confirmations at each step before proceeding to the next one. Which step of your flow is returning this error?",
+  "sources": [
+    {
+      "id": "hiecm.error.abdm-2406",
+      "title": "ABDM-2406, the calls are out of order",
+      "url": ""
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"codes\":[\"ABDM-2406\"],\"matches\":{\"ABDM-2406\":{\"atoms\":[{\"body\":\"# ABDM-2406, the calls are out of order\\n\\n## In plain words\\n\\nThe gateway tracks where you are in a flow, and your call does not fit. The messages are:\\n\\n- \\\"Invalid API sequence flow, please follow logical flow\\\"\\n- \\\"The status is invalid. Please follow the logical status flow or transition.\\\"\\n\\nA step you depend on has not happened yet, or the flow has moved past the state your call assumes.\\n\\n## What happens\\n\\nSkipping a step, replaying an earlier step after the flow has moved on, or sending the next step before the previous step's callback arrived all produce it.\\n\\n## When it goes wrong\\n\\nWork out which step the gateway believes you are on. Find your last confirmed callback and resume from the step after it. Do not retry the rejected call in place. If the flow has diverged, restart it from its first step.\",\"id\":\"hiecm.error.abdm-2406\",\"summary\":\"Your call does not fit where the gateway believes the flow has reached.\",\"title\":\"ABDM-2406, the calls are out of order\"}],\"source\":\"specification response example\",\"specification\":[{\"code\":\"ABDM-2406\",\"message\":\"Invalid API sequence flow, please follow logical flow\",\"http\":\"\",\"operation_id\":\"\",\"module\":\"m2\"},{\"code\":\"ABDM-2406\",\"message\":\"The status is invalid. Please follow the logical status flow or transition.\",\"http\":\"\",\"operation_id\":\"\",\"module\":\"m2\"}]}}}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T11:59:19.259Z",
+  "usage": {
+    "input_tokens": 20,
+    "output_tokens": 402,
+    "cache_read_input_tokens": 16782,
+    "cache_creation_input_tokens": 5683,
+    "num_turns": 2,
+    "duration_ms": 5781,
+    "cost_usd_equivalent": 0.0150742
+  }
+}

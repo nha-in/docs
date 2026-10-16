@@ -1,0 +1,413 @@
+{
+  "case_id": "confusable-link-vs-access-token-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "is the link token the access token?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01S6jSkZZ6V7mCM2stnLzaev",
+            "Name": "search",
+            "Input": {
+              "query": "link token access token difference",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "link token access token difference",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01EndDNo2BiDhsgJE8Bn5bwL",
+            "Name": "search",
+            "Input": {
+              "query": "link token",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "link token",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#link-token",
+                "id": "hiecm.glossary.link-token",
+                "summary": "The token that authorises your system to link a care context to a patient's ABHA address.",
+                "title": "Link token, the token that authorises linking",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-1026",
+                "id": "hiecm.error.abdm-1026",
+                "summary": "The link token you sent cannot authorise this link, so generate a new one rather than retrying.",
+                "title": "ABDM-1026, the link token is not valid",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token#m2-on-generate-token-result",
+                "id": "hiecm.callback.m2-on-generate-token-result",
+                "summary": "The link token arrives here; store it against the patient, because it is valid for six months.",
+                "title": "The link token you asked for, or why it was refused",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-link-token-hip/01-m2-post-v3-token-generate-token#m2-generate-link-token",
+                "id": "hiecm.endpoint.m2-generate-link-token",
+                "summary": "Ask for a link token for one patient; it arrives on your bridge and is valid for six months.",
+                "title": "Generate Link Token",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token#m2-link-token-generation-call-back",
+                "id": "hiecm.callback.m2-link-token-generation-call-back",
+                "summary": "ABDM answers a link token request on the HIP's bridge, with the token or an error.",
+                "title": "Link token generation – Call Back API",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/01-m2-post-hip-v3-link-carecontext#m2-hip-link-care-context",
+                "id": "hiecm.endpoint.m2-hip-link-care-context",
+                "summary": "The HIP links one or more care contexts to a patient's ABHA address, using the patient's link token.",
+                "title": "Link care contexts to an ABHA address",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m2#m2-link-care-context",
+                "id": "hiecm.flow.m2-link-care-context",
+                "summary": "Tell ABDM that this patient had a visit at your facility so their records can be found and fetched later.",
+                "title": "Link a care context to a patient's ABHA",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/07-m2-post-v3-hip-link-care-context-confirm#m2-on-link-confirm",
+                "id": "hiecm.callback.m2-on-link-confirm",
+                "summary": "ABDM posts the code the patient entered and the link reference number; the HIP checks them and answers on-confirm.",
+                "title": "Confirmation of a link, carrying the token the patient approved",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-1063",
+                "id": "hiecm.error.abdm-1063",
+                "summary": "In linking the provider id does not match the link token, and in a consent flow the date range is not valid.",
+                "title": "ABDM-1063, HIP id mismatch, or an invalid date range",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/api/registry/endpoints/registry-v2-participant-link-abha-policy",
+                "id": "nhcx.endpoint.v2-participant-link-abha-policy",
+                "summary": "The second path for linking a beneficiary to the products they hold; it takes the same body as the main link call.",
+                "title": "POST /v2/participant/link/abha/policy",
+                "type": "endpoint"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01LV3rMpFWaUEyPqFLKoSE8H",
+            "Name": "search",
+            "Input": {
+              "query": "access token",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "access token",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/01-gateway-post-gateway-v3-sessions#gateway-sessions",
+                "id": "hiecm.endpoint.gateway-sessions",
+                "summary": "Exchanges your client id and client secret for the access token every ABDM call carries.",
+                "title": "Create a session and get an access token",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/build-it-well#read-the-error-then-decide-error-codes",
+                "id": "hiecm.glossary.x-cm-id",
+                "summary": "The header naming which consent manager a request is meant for, carrying that consent manager's suffix.",
+                "title": "X-CM-ID, the consent manager header",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/errors#900900",
+                "id": "hiecm.error.900900",
+                "summary": "The ABHA service refused the call as an unclassified authentication failure, so check both the access token and the person's token.",
+                "title": "900900, authentication failed without a reason",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/build-it-well#validate-before-you-send",
+                "id": "shared.glossary.request-id",
+                "summary": "A UUID you generate for one request, carried in the REQUEST-ID header so the call and everything that follows from it can be traced.",
+                "title": "REQUEST-ID, the request correlation header",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-2401",
+                "id": "hiecm.error.abdm-2401",
+                "summary": "The token that identifies the patient was rejected, not your application's access token.",
+                "title": "ABDM-2401, the X Auth token is not valid",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/api/registry/endpoints/registry-get-session",
+                "id": "nhcx.endpoint.get-session",
+                "summary": "Trade your client id and client secret, sent as a form, for an access token to use on claims exchange calls.",
+                "title": "POST /get/session",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/01-gateway-post-gateway-v3-sessions#m1-auth-token",
+                "id": "hiecm.endpoint.m1-auth-token",
+                "summary": "The session call that gives a PHR app the access token for its ABHA calls.",
+                "title": "Auth token API",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-2500",
+                "id": "hiecm.error.abdm-2500",
+                "summary": "The call carried no access token, or a callback answered a request the gateway is not waiting on.",
+                "title": "ABDM-2500, no Authorization header, or no matching request",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/errors#abdm-1094",
+                "id": "hiecm.error.abdm-1094",
+                "summary": "Your client or the person's token is not allowed to do what the call tried, and the message says which of three cases applies.",
+                "title": "ABDM-1094, access to this feature is refused",
+                "type": "error"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.test.payer-uc-06",
+                "summary": "Prove that your insurance system can obtain, and keep fresh, the access token every call to the claims exchange must carry.",
+                "title": "Payer sandbox exit use case 6: Get the auth token",
+                "type": "test"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01TNmMDHAtbDAsQLsuPSDAqJ",
+            "Name": "get",
+            "Input": {
+              "id": "hiecm.glossary.link-token"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "hiecm.glossary.link-token"
+          },
+          "output": {
+            "body": "# Link token, the token that authorises linking\n\n## In plain words\n\nThe token that authorises a [Health Information Provider](/docs/hiecm/v3/getting-started/glossary#hip) to link [care contexts](/docs/hiecm/v3/getting-started/glossary#care-context) to a patient's [ABHA Address](/docs/hiecm/v3/getting-started/glossary#abha-address). It is generated through the link token API and is valid for six months.\n\n## How you know it worked\n\nYou can say how long a link token lasts and what to do when it has expired.\n\n## When it goes wrong\n\nA stored link token is used without checking that it is still valid. Validate it before every link. If it has expired, generate a new one through demographic authentication, then link.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/getting-started/glossary#link-token",
+            "gateway": "hiecm",
+            "id": "hiecm.glossary.link-token",
+            "milestone": "n/a",
+            "summary": "The token that authorises your system to link a care context to a patient's ABHA address.",
+            "title": "Link token, the token that authorises linking",
+            "type": "glossary"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01DjtLQgDPDSTdHMyXNhYb8t",
+            "Name": "get",
+            "Input": {
+              "id": "hiecm.endpoint.gateway-sessions"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "hiecm.endpoint.gateway-sessions"
+          },
+          "output": {
+            "body": "# Create a session and get an access token\n\n## In plain words\n\nEvery call to [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) carries an access token, and this call issues it. Send the `clientId` and `clientSecret` issued to you at registration, with `grantType` set to `client_credentials`. It is the one gateway call that needs no bearer token.\n\nThe response carries `accessToken`, its lifetime in `expiresIn`, and a `refreshToken`. Read the lifetime from the response rather than assuming one. Create a new session before the token runs out, instead of waiting for a 401.\n\n## Before you start\n\nThe client id and client secret for the environment you are calling. Send `REQUEST-ID`, `TIMESTAMP` and `X-CM-ID` on this call too.\n\n## How you know it worked\n\nA 202 whose body carries `accessToken` and `expiresIn`. Send the token as `Authorization: Bearer <gateway token>` on every later call.\n\n## When it goes wrong\n\nA 401 with `900901` means the client id or secret is wrong for this environment. A 400 with `ABDM-1015` means the body was refused: check that `grantType` is `client_credentials`.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/01-gateway-post-gateway-v3-sessions#gateway-sessions",
+            "gateway": "hiecm",
+            "id": "hiecm.endpoint.gateway-sessions",
+            "milestone": "M1",
+            "operation": "gateway_post_gateway_v3_sessions",
+            "summary": "Exchanges your client id and client secret for the access token every ABDM call carries.",
+            "title": "Create a session and get an access token",
+            "type": "endpoint"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "No, they are different tokens for different purposes:\n\n**Access token** — Authenticates your application to ABDM. You get it by trading your `clientId` and `clientSecret` at the gateway sessions endpoint, and send it as `Authorization: Bearer <token>` on every ABDM call. It's short-lived and should be refreshed before it expires.\n\n**Link token** — Authorizes a HIP to link care contexts to a patient's ABHA address during the linking flow. It's issued per-patient through the link token API, valid for six months, and is specific to the patient and your HIP.\n\nIn summary: the access token gets you to the API; the link token authorizes you to perform the link operation on a specific patient's records.\n\nSee [access token in gateway sessions](https://docs.abdm-integration.in/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/01-gateway-post-gateway-v3-sessions#gateway-sessions) and [link token definition](https://docs.abdm-integration.in/docs/hiecm/v3/getting-started/glossary#link-token).",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "No, they are different tokens for different purposes:\n\n**Access token** — Authenticates your application to ABDM. You get it by trading your `clientId` and `clientSecret` at the gateway sessions endpoint, and send it as `Authorization: Bearer <token>` on every ABDM call. It's short-lived and should be refreshed before it expires.\n\n**Link token** — Authorizes a HIP to link care contexts to a patient's ABHA address during the linking flow. It's issued per-patient through the link token API, valid for six months, and is specific to the patient and your HIP.\n\nIn summary: the access token gets you to the API; the link token authorizes you to perform the link operation on a specific patient's records.\n\nSee [access token in gateway sessions](https://docs.abdm-integration.in/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/01-gateway-post-gateway-v3-sessions#gateway-sessions) and [link token definition](https://docs.abdm-integration.in/docs/hiecm/v3/getting-started/glossary#link-token).",
+  "sources": [
+    {
+      "id": "hiecm.glossary.link-token",
+      "title": "Link token, the token that authorises linking",
+      "url": "/docs/hiecm/v3/getting-started/glossary#link-token"
+    },
+    {
+      "id": "hiecm.endpoint.gateway-sessions",
+      "title": "Create a session and get an access token",
+      "url": "/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/01-gateway-post-gateway-v3-sessions#gateway-sessions"
+    },
+    {
+      "id": "hiecm.endpoint.m1-auth-token",
+      "title": "Auth token API",
+      "url": "/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/01-gateway-post-gateway-v3-sessions#m1-auth-token"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#link-token\",\"id\":\"hiecm.glossary.link-token\",\"summary\":\"The token that authorises your system to link a care context to a patient's ABHA address.\",\"title\":\"Link token, the token that authorises linking\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-1026\",\"id\":\"hiecm.error.abdm-1026\",\"summary\":\"The link token you sent cannot authorise this link, so generate a new one rather than retrying.\",\"title\":\"ABDM-1026, the link token is not valid\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token#m2-on-generate-token-result\",\"id\":\"hiecm.callback.m2-on-generate-token-result\",\"summary\":\"The link token arrives here; store it against the patient, because it is valid for six months.\",\"title\":\"The link token you asked for, or why it was refused\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-abdm-link-token-hip/01-m2-post-v3-token-generate-token#m2-generate-link-token\",\"id\":\"hiecm.endpoint.m2-generate-link-token\",\"summary\":\"Ask for a link token for one patient; it arrives on your bridge and is valid for six months.\",\"title\":\"Generate Link Token\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token#m2-link-token-generation-call-back\",\"id\":\"hiecm.callback.m2-link-token-generation-call-back\",\"summary\":\"ABDM answers a link token request on the HIP's bridge, with the token or an error.\",\"title\":\"Link token generation – Call Back API\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/01-m2-post-hip-v3-link-carecontext#m2-hip-link-care-context\",\"id\":\"hiecm.endpoint.m2-hip-link-care-context\",\"summary\":\"The HIP links one or more care contexts to a patient's ABHA address, using the patient's link token.\",\"title\":\"Link care contexts to an ABHA address\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m2#m2-link-care-context\",\"id\":\"hiecm.flow.m2-link-care-context\",\"summary\":\"Tell ABDM that this patient had a visit at your facility so their records can be found and fetched later.\",\"title\":\"Link a care context to a patient's ABHA\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/07-m2-post-v3-hip-link-care-context-confirm#m2-on-link-confirm\",\"id\":\"hiecm.callback.m2-on-link-confirm\",\"summary\":\"ABDM posts the code the patient entered and the link reference number; the HIP checks them and answers on-confirm.\",\"title\":\"Confirmation of a link, carrying the token the patient approved\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-1063\",\"id\":\"hiecm.error.abdm-1063\",\"summary\":\"In linking the provider id does not match the link token, and in a consent flow the date range is not valid.\",\"title\":\"ABDM-1063, HIP id mismatch, or an invalid date range\",\"type\":\"error\"},{\"doc_url\":\"/docs/nhcx/v1/api/registry/endpoints/registry-v2-participant-link-abha-policy\",\"id\":\"nhcx.endpoint.v2-participant-link-abha-policy\",\"summary\":\"The second path for linking a beneficiary to the products they hold; it takes the same body as the main link call.\",\"title\":\"POST /v2/participant/link/abha/policy\",\"type\":\"endpoint\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/01-gateway-post-gateway-v3-sessions#gateway-sessions\",\"id\":\"hiecm.endpoint.gateway-sessions\",\"summary\":\"Exchanges your client id and client secret for the access token every ABDM call carries.\",\"title\":\"Create a session and get an access token\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/build-it-well#read-the-error-then-decide-error-codes\",\"id\":\"hiecm.glossary.x-cm-id\",\"summary\":\"The header naming which consent manager a request is meant for, carrying that consent manager's suffix.\",\"title\":\"X-CM-ID, the consent manager header\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/errors#900900\",\"id\":\"hiecm.error.900900\",\"summary\":\"The ABHA service refused the call as an unclassified authentication failure, so check both the access token and the person's token.\",\"title\":\"900900, authentication failed without a reason\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/build-it-well#validate-before-you-send\",\"id\":\"shared.glossary.request-id\",\"summary\":\"A UUID you generate for one request, carried in the REQUEST-ID header so the call and everything that follows from it can be traced.\",\"title\":\"REQUEST-ID, the request correlation header\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-2401\",\"id\":\"hiecm.error.abdm-2401\",\"summary\":\"The token that identifies the patient was rejected, not your application's access token.\",\"title\":\"ABDM-2401, the X Auth token is not valid\",\"type\":\"error\"},{\"doc_url\":\"/docs/nhcx/v1/api/registry/endpoints/registry-get-session\",\"id\":\"nhcx.endpoint.get-session\",\"summary\":\"Trade your client id and client secret, sent as a form, for an access token to use on claims exchange calls.\",\"title\":\"POST /get/session\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/01-gateway-post-gateway-v3-sessions#m1-auth-token\",\"id\":\"hiecm.endpoint.m1-auth-token\",\"summary\":\"The session call that gives a PHR app the access token for its ABHA calls.\",\"title\":\"Auth token API\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-2500\",\"id\":\"hiecm.error.abdm-2500\",\"summary\":\"The call carried no access token, or a callback answered a request the gateway is not waiting on.\",\"title\":\"ABDM-2500, no Authorization header, or no matching request\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/errors#abdm-1094\",\"id\":\"hiecm.error.abdm-1094\",\"summary\":\"Your client or the person's token is not allowed to do what the call tried, and the message says which of three cases applies.\",\"title\":\"ABDM-1094, access to this feature is refused\",\"type\":\"error\"},{\"doc_url\":\"\",\"id\":\"nhcx.test.payer-uc-06\",\"summary\":\"Prove that your insurance system can obtain, and keep fresh, the access token every call to the claims exchange must carry.\",\"title\":\"Payer sandbox exit use case 6: Get the auth token\",\"type\":\"test\"}]}\n{\"body\":\"# Link token, the token that authorises linking\\n\\n## In plain words\\n\\nThe token that authorises a [Health Information Provider](/docs/hiecm/v3/getting-started/glossary#hip) to link [care contexts](/docs/hiecm/v3/getting-started/glossary#care-context) to a patient's [ABHA Address](/docs/hiecm/v3/getting-started/glossary#abha-address). It is generated through the link token API and is valid for six months.\\n\\n## How you know it worked\\n\\nYou can say how long a link token lasts and what to do when it has expired.\\n\\n## When it goes wrong\\n\\nA stored link token is used without checking that it is still valid. Validate it before every link. If it has expired, generate a new one through demographic authentication, then link.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#link-token\",\"gateway\":\"hiecm\",\"id\":\"hiecm.glossary.link-token\",\"milestone\":\"n/a\",\"summary\":\"The token that authorises your system to link a care context to a patient's ABHA address.\",\"title\":\"Link token, the token that authorises linking\",\"type\":\"glossary\"}\n{\"body\":\"# Create a session and get an access token\\n\\n## In plain words\\n\\nEvery call to [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) carries an access token, and this call issues it. Send the `clientId` and `clientSecret` issued to you at registration, with `grantType` set to `client_credentials`. It is the one gateway call that needs no bearer token.\\n\\nThe response carries `accessToken`, its lifetime in `expiresIn`, and a `refreshToken`. Read the lifetime from the response rather than assuming one. Create a new session before the token runs out, instead of waiting for a 401.\\n\\n## Before you start\\n\\nThe client id and client secret for the environment you are calling. Send `REQUEST-ID`, `TIMESTAMP` and `X-CM-ID` on this call too.\\n\\n## How you know it worked\\n\\nA 202 whose body carries `accessToken` and `expiresIn`. Send the token as `Authorization: Bearer <gateway token>` on every later call.\\n\\n## When it goes wrong\\n\\nA 401 with `900901` means the client id or secret is wrong for this environment. A 400 with `ABDM-1015` means the body was refused: check that `grantType` is `client_credentials`.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/01-gateway-post-gateway-v3-sessions#gateway-sessions\",\"gateway\":\"hiecm\",\"id\":\"hiecm.endpoint.gateway-sessions\",\"milestone\":\"M1\",\"operation\":\"gateway_post_gateway_v3_sessions\",\"summary\":\"Exchanges your client id and client secret for the access token every ABDM call carries.\",\"title\":\"Create a session and get an access token\",\"type\":\"endpoint\"}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T11:56:24.986Z",
+  "usage": {
+    "input_tokens": 40,
+    "output_tokens": 926,
+    "cache_read_input_tokens": 41774,
+    "cache_creation_input_tokens": 9080,
+    "num_turns": 6,
+    "duration_ms": 12895,
+    "cost_usd_equivalent": 0.0270074
+  }
+}

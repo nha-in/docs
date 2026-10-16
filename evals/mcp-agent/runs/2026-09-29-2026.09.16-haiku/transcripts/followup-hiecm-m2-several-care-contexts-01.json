@@ -1,0 +1,441 @@
+{
+  "case_id": "followup-hiecm-m2-several-care-contexts-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "The conversation so far:\nDeveloper: how do I link care contexts once I have the link token\nYou: Call POST /api/hiecm/hip/v3/link/carecontext with the patient's care contexts, sending the link token in the X-LINK-TOKEN header.\n\nThe developer's new message:\ncan i send more than one visit"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "I'll check the care context linking endpoint specification to see if multiple visits can be sent in one request.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01VbpkoMamo92iThj9i6ws4a",
+            "Name": "search",
+            "Input": {
+              "query": "link care context endpoint multiple visits",
+              "kind": "operation"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "link care context endpoint multiple visits",
+            "kind": "operation"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-post-hip-v3-link-carecontext",
+                "id": "m2_post_hip_v3_link_carecontext",
+                "summary": "This API will be used to perform HIP initiated linking.",
+                "title": "POST /api/hiecm/hip/v3/link/carecontext",
+                "type": "operation"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01EKh8LtEkBU62SoSxjAS576",
+            "Name": "get",
+            "Input": {
+              "id": "m2_post_hip_v3_link_carecontext"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "m2_post_hip_v3_link_carecontext"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "doc_path": "/docs/hiecm/v3/api/m2/endpoints/m2-post-hip-v3-link-carecontext",
+            "operation_id": "m2_post_hip_v3_link_carecontext",
+            "spec": {
+              "description": " <p><b>Note: </b>While generating the link-token the user/patient is providing both abha_number and abha_address, then at the time of linking both must be mandatory. If not one should be mandatory either 'abha_number' or 'abha_address'.</p><br><p> This API endpoint is utilized by the Ayushman Bharat Digital Mission (ABDM) system to store care context or health record references. Upon successful validation of the ABHA (Ayushman Bharat Health Account) address and the associated link token, the system securely records the relevant care context information. This process ensures that health records are accurately linked and accessible, facilitating efficient and seamless health information exchange across the network. The API plays a critical role in maintaining the integrity and continuity of patient health records, thereby supporting comprehensive and coordinated care.",
+              "operationId": "m2_post_hip_v3_link_carecontext",
+              "parameters": [
+                {
+                  "description": "Unique UUID for track the end to end request transaction",
+                  "example": "18235d89-cb13-479d-ad71-7a57d5f669a8",
+                  "in": "header",
+                  "name": "REQUEST-ID",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "description": "Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds",
+                  "example": "2022-10-06T15:10:00.587Z",
+                  "in": "header",
+                  "name": "TIMESTAMP",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "description": "Suffix of the consent manager to which the request was intended",
+                  "example": "sbx",
+                  "in": "header",
+                  "name": "X-CM-ID",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "description": "Identifier of the health information provider to which the request was intended",
+                  "example": "IN2810014366",
+                  "in": "header",
+                  "name": "X-HIP-ID",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "description": "JWT Authentication token which was issued by ABDM after successful validation of username and password",
+                  "in": "header",
+                  "name": "X-LINK-TOKEN",
+                  "required": true,
+                  "schema": {
+                    "example": "<TOKEN>",
+                    "type": "string"
+                  }
+                }
+              ],
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "properties": {
+                        "abhaAddress": {
+                          "description": "The abha address of the patient. Should start with Alphanumeric . and  _  in the middle and must be ending with @abdm or @sbx also allows alpha numeric character and special characters like ^[a-zA-Z0-9][a-zA-Z0-9_.]+[a-zA-Z0-9]@(abdm|sbx)$",
+                          "example": "<ABHA_ADDRESS>",
+                          "type": "string"
+                        },
+                        "abhaNumber": {
+                          "description": "The abha number of the patient. Should be only 14 digit and it allows numeric character like ^\\\\d{14}$",
+                          "example": 12345678901234,
+                          "nullable": true,
+                          "type": "number"
+                        },
+                        "patient": {
+                          "items": {
+                            "properties": {
+                              "careContexts": {
+                                "description": "List of care contexts linked at the HIP end for the identified patient.",
+                                "items": {
+                                  "properties": {
+                                    "display": {
+                                      "description": "The display text for care context reference(regex:^[a-zA-Z0-9_\\-@,. \"':|()/]{0,255}$)",
+                                      "example": "display 1",
+                                      "type": "string"
+                                    },
+                                    "referenceNumber": {
+                                      "description": "An identifier of patient's care context created in HIP. A care context is a group of patient's health data (Not the actual health data) and it should be unique for each care-context.Allows alpha numeric character and special characters like ^[a-zA-Z0-9_\\-@,. ()/:\\\\]{0,255}$",
+                                      "example": "TMH-PUID-001",
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "referenceNumber",
+                                    "display"
+                                  ],
+                                  "type": "object"
+                                },
+                                "type": "array"
+                              },
+                              "count": {
+                                "description": "The count should match with the number of care contexts",
+                                "example": 1,
+                                "type": "number"
+                              },
+                              "display": {
+                                "description": "The display text for patient reference(regex:^[a-zA-Z0-9_\\-@,. \"':|()/]{0,255}$)",
+                                "example": "String",
+                                "type": "string"
+                              },
+                              "hiTypes": {
+                                "description": "Types of health information document.",
+                                "enum": [
+                                  "DiagnosticReport",
+                                  "DischargeSummary",
+                                  "HealthDocumentRecord",
+                                  "ImmunizationRecord",
+                                  "OPConsultation",
+                                  "Prescription",
+                                  "WellnessRecord",
+                                  "Invoice"
+                                ],
+                                "example": "DiagnosticReport",
+                                "type": "string"
+                              },
+                              "referenceNumber": {
+                                "description": "Patient identifier with which patient is registered in the facility/hospital or patient can also pass his abha_address in the reference number. Allows alpha numeric character and special characters like ^[a-zA-Z0-9_\\-@,. \"':|()/]{0,255}$",
+                                "example": "TMH-PUID-001",
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "referenceNumber",
+                              "display",
+                              "careContexts",
+                              "hiTypes",
+                              "count"
+                            ],
+                            "type": "object"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "required": [
+                        "abhaAddress",
+                        "patient"
+                      ],
+                      "type": "object"
+                    }
+                  }
+                },
+                "required": true
+              },
+              "responses": {
+                "202": {
+                  "description": "Accepted"
+                },
+                "400": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "properties": {
+                          "error": {
+                            "description": "The error code and message, if any occurred.",
+                            "properties": {
+                              "code": {
+                                "description": "ABDM-1006 - Bad Request, invalid request Body. May be returned either bare (`ABDM-1006`) or with a trailing \": \" separator (`ABDM-1006: `); match on the code itself and tolerate the separator.",
+                                "example": "ABDM-1006",
+                                "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                                "type": "string"
+                              },
+                              "message": {
+                                "example": "Bad Request, invalid request Body",
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "code",
+                              "message"
+                            ],
+                            "type": "object"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Bad Request"
+                },
+                "401": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "properties": {
+                          "code": {
+                            "description": "900902 - Unauthorized. May be returned either bare or with a trailing \": \" separator; match on the code itself and tolerate the separator.",
+                            "example": "900902",
+                            "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                            "type": "string"
+                          },
+                          "description": {
+                            "example": "Invalid Credentials. Make sure your API invocation call has a header: 'Authorization : Bearer ACCESS_TOKEN' or 'Authorization : Basic ACCESS_TOKEN' or 'apikey: API_KEY'",
+                            "type": "string"
+                          },
+                          "message": {
+                            "example": "Unauthorized",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Unauthorized"
+                },
+                "403": {
+                  "content": {
+                    "text/plain": {
+                      "schema": {
+                        "example": "Access Denied",
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "description": "Forbidden"
+                },
+                "404": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "properties": {
+                          "error": {
+                            "description": "The error code and message, if any occurred.",
+                            "properties": {
+                              "code": {
+                                "description": "ABDM-1001 - No data found. May be returned either bare (`ABDM-1001`) or with a trailing \": \" separator (`ABDM-1001: `); match on the code itself and tolerate the separator.",
+                                "example": "ABDM-1001",
+                                "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                                "type": "string"
+                              },
+                              "message": {
+                                "example": "No data found",
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "code",
+                              "message"
+                            ],
+                            "type": "object"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "server cannot find the requested resource"
+                },
+                "500": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "properties": {
+                          "code": {
+                            "description": "ABDM-9999 - Unknown exception. May be returned either bare (`ABDM-9999`) or with a trailing \": \" separator (`ABDM-9999: `); match on the code itself and tolerate the separator.",
+                            "example": "ABDM-9999",
+                            "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                            "type": "string"
+                          },
+                          "message": {
+                            "example": "Unknown exception",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Internal Server Error"
+                }
+              },
+              "security": [
+                {
+                  "bearerAuth": []
+                }
+              ],
+              "summary": "This API will be used to perform HIP initiated linking.",
+              "tags": [
+                "abdm-hip-initiated-linking-hip"
+              ],
+              "x-abdm-nha-operation-id": "abdm-hip-initiated-linking-hip 1"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "Yes, you can send multiple care contexts in a single request. The `careContexts` field in the request body is an array, so you can include multiple visits. The `count` field should match the number of care contexts you're sending.\n\nHere's the structure:\n\n```json\n{\n  \"abhaAddress\": \"<ABHA_ADDRESS>\",\n  \"patient\": [\n    {\n      \"referenceNumber\": \"TMH-PUID-001\",\n      \"display\": \"Patient Name\",\n      \"count\": 2,\n      \"hiTypes\": \"OPConsultation\",\n      \"careContexts\": [\n        {\n          \"referenceNumber\": \"visit-001\",\n          \"display\": \"Visit 1\"\n        },\n        {\n          \"referenceNumber\": \"visit-002\",\n          \"display\": \"Visit 2\"\n        }\n      ]\n    }\n  ]\n}\n```\n\nSee the [POST /api/hiecm/hip/v3/link/carecontext](https://developer.abdm.gov.in/docs/hiecm/v3/api/m2/endpoints/m2-post-hip-v3-link-carecontext) endpoint on the developer portal for the full specification.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "Yes, you can send multiple care contexts in a single request. The `careContexts` field in the request body is an array, so you can include multiple visits. The `count` field should match the number of care contexts you're sending.\n\nHere's the structure:\n\n```json\n{\n  \"abhaAddress\": \"<ABHA_ADDRESS>\",\n  \"patient\": [\n    {\n      \"referenceNumber\": \"TMH-PUID-001\",\n      \"display\": \"Patient Name\",\n      \"count\": 2,\n      \"hiTypes\": \"OPConsultation\",\n      \"careContexts\": [\n        {\n          \"referenceNumber\": \"visit-001\",\n          \"display\": \"Visit 1\"\n        },\n        {\n          \"referenceNumber\": \"visit-002\",\n          \"display\": \"Visit 2\"\n        }\n      ]\n    }\n  ]\n}\n```\n\nSee the [POST /api/hiecm/hip/v3/link/carecontext](https://developer.abdm.gov.in/docs/hiecm/v3/api/m2/endpoints/m2-post-hip-v3-link-carecontext) endpoint on the developer portal for the full specification.",
+  "sources": [],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-post-hip-v3-link-carecontext\",\"id\":\"m2_post_hip_v3_link_carecontext\",\"summary\":\"This API will be used to perform HIP initiated linking.\",\"title\":\"POST /api/hiecm/hip/v3/link/carecontext\",\"type\":\"operation\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"doc_path\":\"/docs/hiecm/v3/api/m2/endpoints/m2-post-hip-v3-link-carecontext\",\"operation_id\":\"m2_post_hip_v3_link_carecontext\",\"spec\":{\"description\":\" <p><b>Note: </b>While generating the link-token the user/patient is providing both abha_number and abha_address, then at the time of linking both must be mandatory. If not one should be mandatory either 'abha_number' or 'abha_address'.</p><br><p> This API endpoint is utilized by the Ayushman Bharat Digital Mission (ABDM) system to store care context or health record references. Upon successful validation of the ABHA (Ayushman Bharat Health Account) address and the associated link token, the system securely records the relevant care context information. This process ensures that health records are accurately linked and accessible, facilitating efficient and seamless health information exchange across the network. The API plays a critical role in maintaining the integrity and continuity of patient health records, thereby supporting comprehensive and coordinated care.\",\"operationId\":\"m2_post_hip_v3_link_carecontext\",\"parameters\":[{\"description\":\"Unique UUID for track the end to end request transaction\",\"example\":\"18235d89-cb13-479d-ad71-7a57d5f669a8\",\"in\":\"header\",\"name\":\"REQUEST-ID\",\"required\":true,\"schema\":{\"type\":\"string\"}},{\"description\":\"Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds\",\"example\":\"2022-10-06T15:10:00.587Z\",\"in\":\"header\",\"name\":\"TIMESTAMP\",\"required\":true,\"schema\":{\"type\":\"string\"}},{\"description\":\"Suffix of the consent manager to which the request was intended\",\"example\":\"sbx\",\"in\":\"header\",\"name\":\"X-CM-ID\",\"required\":true,\"schema\":{\"type\":\"string\"}},{\"description\":\"Identifier of the health information provider to which the request was intended\",\"example\":\"IN2810014366\",\"in\":\"header\",\"name\":\"X-HIP-ID\",\"required\":true,\"schema\":{\"type\":\"string\"}},{\"description\":\"JWT Authentication token which was issued by ABDM after successful validation of username and password\",\"in\":\"header\",\"name\":\"X-LINK-TOKEN\",\"required\":true,\"schema\":{\"example\":\"<TOKEN>\",\"type\":\"string\"}}],\"requestBody\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"abhaAddress\":{\"description\":\"The abha address of the patient. Should start with Alphanumeric . and  _  in the middle and must be ending with @abdm or @sbx also allows alpha numeric character and special characters like ^[a-zA-Z0-9][a-zA-Z0-9_.]+[a-zA-Z0-9]@(abdm|sbx)$\",\"example\":\"<ABHA_ADDRESS>\",\"type\":\"string\"},\"abhaNumber\":{\"description\":\"The abha number of the patient. Should be only 14 digit and it allows numeric character like ^\\\\\\\\d{14}$\",\"example\":12345678901234,\"nullable\":true,\"type\":\"number\"},\"patient\":{\"items\":{\"properties\":{\"careContexts\":{\"description\":\"List of care contexts linked at the HIP end for the identified patient.\",\"items\":{\"properties\":{\"display\":{\"description\":\"The display text for care context reference(regex:^[a-zA-Z0-9_\\\\-@,. \\\"':|()/]{0,255}$)\",\"example\":\"display 1\",\"type\":\"string\"},\"referenceNumber\":{\"description\":\"An identifier of patient's care context created in HIP. A care context is a group of patient's health data (Not the actual health data) and it should be unique for each care-context.Allows alpha numeric character and special characters like ^[a-zA-Z0-9_\\\\-@,. ()/:\\\\\\\\]{0,255}$\",\"example\":\"TMH-PUID-001\",\"type\":\"string\"}},\"required\":[\"referenceNumber\",\"display\"],\"type\":\"object\"},\"type\":\"array\"},\"count\":{\"description\":\"The count should match with the number of care contexts\",\"example\":1,\"type\":\"number\"},\"display\":{\"description\":\"The display text for patient reference(regex:^[a-zA-Z0-9_\\\\-@,. \\\"':|()/]{0,255}$)\",\"example\":\"String\",\"type\":\"string\"},\"hiTypes\":{\"description\":\"Types of health information document.\",\"enum\":[\"DiagnosticReport\",\"DischargeSummary\",\"HealthDocumentRecord\",\"ImmunizationRecord\",\"OPConsultation\",\"Prescription\",\"WellnessRecord\",\"Invoice\"],\"example\":\"DiagnosticReport\",\"type\":\"string\"},\"referenceNumber\":{\"description\":\"Patient identifier with which patient is registered in the facility/hospital or patient can also pass his abha_address in the reference number. Allows alpha numeric character and special characters like ^[a-zA-Z0-9_\\\\-@,. \\\"':|()/]{0,255}$\",\"example\":\"TMH-PUID-001\",\"type\":\"string\"}},\"required\":[\"referenceNumber\",\"display\",\"careContexts\",\"hiTypes\",\"count\"],\"type\":\"object\"},\"type\":\"array\"}},\"required\":[\"abhaAddress\",\"patient\"],\"type\":\"object\"}}},\"required\":true},\"responses\":{\"202\":{\"description\":\"Accepted\"},\"400\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"error\":{\"description\":\"The error code and message, if any occurred.\",\"properties\":{\"code\":{\"description\":\"ABDM-1006 - Bad Request, invalid request Body. May be returned either bare (`ABDM-1006`) or with a trailing \\\": \\\" separator (`ABDM-1006: `); match on the code itself and tolerate the separator.\",\"example\":\"ABDM-1006\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"message\":{\"example\":\"Bad Request, invalid request Body\",\"type\":\"string\"}},\"required\":[\"code\",\"message\"],\"type\":\"object\"}},\"type\":\"object\"}}},\"description\":\"Bad Request\"},\"401\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"code\":{\"description\":\"900902 - Unauthorized. May be returned either bare or with a trailing \\\": \\\" separator; match on the code itself and tolerate the separator.\",\"example\":\"900902\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"description\":{\"example\":\"Invalid Credentials. Make sure your API invocation call has a header: 'Authorization : Bearer ACCESS_TOKEN' or 'Authorization : Basic ACCESS_TOKEN' or 'apikey: API_KEY'\",\"type\":\"string\"},\"message\":{\"example\":\"Unauthorized\",\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"Unauthorized\"},\"403\":{\"content\":{\"text/plain\":{\"schema\":{\"example\":\"Access Denied\",\"type\":\"string\"}}},\"description\":\"Forbidden\"},\"404\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"error\":{\"description\":\"The error code and message, if any occurred.\",\"properties\":{\"code\":{\"description\":\"ABDM-1001 - No data found. May be returned either bare (`ABDM-1001`) or with a trailing \\\": \\\" separator (`ABDM-1001: `); match on the code itself and tolerate the separator.\",\"example\":\"ABDM-1001\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"message\":{\"example\":\"No data found\",\"type\":\"string\"}},\"required\":[\"code\",\"message\"],\"type\":\"object\"}},\"type\":\"object\"}}},\"description\":\"server cannot find the requested resource\"},\"500\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"code\":{\"description\":\"ABDM-9999 - Unknown exception. May be returned either bare (`ABDM-9999`) or with a trailing \\\": \\\" separator (`ABDM-9999: `); match on the code itself and tolerate the separator.\",\"example\":\"ABDM-9999\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"message\":{\"example\":\"Unknown exception\",\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"Internal Server Error\"}},\"security\":[{\"bearerAuth\":[]}],\"summary\":\"This API will be used to perform HIP initiated linking.\",\"tags\":[\"abdm-hip-initiated-linking-hip\"],\"x-abdm-nha-operation-id\":\"abdm-hip-initiated-linking-hip 1\"}}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T12:06:50.937Z",
+  "usage": {
+    "input_tokens": 30,
+    "output_tokens": 899,
+    "cache_read_input_tokens": 28155,
+    "cache_creation_input_tokens": 8699,
+    "num_turns": 3,
+    "duration_ms": 12555,
+    "cost_usd_equivalent": 0.024738499999999997
+  }
+}

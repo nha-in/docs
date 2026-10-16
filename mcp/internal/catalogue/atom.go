@@ -6,6 +6,7 @@ import (
 	"bytes"
 	"fmt"
 	"regexp"
+	"slices"
 	"sort"
 	"strings"
 
@@ -50,6 +51,9 @@ type Atom struct {
 	Status       string
 	SupersededBy string
 	Facts        []Fact
+	// Generated marks an atom scripts/build-sections.mjs wrote from its page
+	// section; it sits beside hand-written atoms in its type folder.
+	Generated bool
 }
 
 // Fact is one value an answer should quote exactly, with the index into the
@@ -74,6 +78,7 @@ type frontmatter struct {
 	Side         string `yaml:"side"`
 	Status       string `yaml:"status"`
 	SupersededBy string `yaml:"superseded_by"`
+	Generated    bool   `yaml:"generated"`
 	Facts        []struct {
 		Key    string `yaml:"key"`
 		Value  any    `yaml:"value"`
@@ -91,18 +96,30 @@ type frontmatter struct {
 // "no error codes found" for all 310 codes the catalogue holds for NHCX.
 var errCodeRe = regexp.MustCompile(`\b(?:(?:ABDM|GATEWAY|MIS|HIS|AS|NHCX|PAYR)-\d{3,5}|ERR-PYR-[A-Z]{2,5}-\d{3})\b`)
 
-// gatewayCodeRe matches the gateway's numeric authentication codes (900900,
-// 900901, 900902) only as a JSON "code" value, so a bare six-digit number
+// gatewayCodeRe matches the gateway's numeric codes, its authentication
+// failures (900900, 900901, 900902) and its endpoint suspension (303001),
+// only as a JSON "code" value, so a bare six-digit number
 // elsewhere in the input (an OTP, a timestamp) is not read as a code.
-var gatewayCodeRe = regexp.MustCompile(`"code"\s*:\s*"?(9\d{5})\b`)
+var gatewayCodeRe = regexp.MustCompile(`"code"\s*:\s*"?(9\d{5}|303\d{3})\b`)
+
+// proseGatewayCodeRe matches the same codes where a reader writes them in
+// words: "code 900901", "error 900902", "error code: 900900". The word
+// before the number is what separates a code from an OTP or a timing.
+var proseGatewayCodeRe = regexp.MustCompile(`(?i)\b(?:code|error|err)\b[\s:#"]*(9\d{5}|303\d{3})\b`)
+
+// ownGatewayCodeRe is the last segment of an error atom's id when that
+// atom explains a numeric gateway code, as hiecm.error.900901 does.
+var ownGatewayCodeRe = regexp.MustCompile(`\.(9\d{5}|303\d{3})$`)
 
 func ExtractErrorCodes(s string) []string {
 	set := map[string]bool{}
 	for _, c := range errCodeRe.FindAllString(s, -1) {
 		set[strings.ToUpper(c)] = true
 	}
-	for _, m := range gatewayCodeRe.FindAllStringSubmatch(s, -1) {
-		set[m[1]] = true
+	for _, re := range []*regexp.Regexp{gatewayCodeRe, proseGatewayCodeRe} {
+		for _, m := range re.FindAllStringSubmatch(s, -1) {
+			set[m[1]] = true
+		}
 	}
 	var out []string
 	for c := range set {
@@ -152,12 +169,28 @@ func ParseAtom(sourcePath string, content []byte) (Atom, error) {
 		Audience:     fm.Audience,
 		Body:         strings.TrimSpace(string(body)),
 		SourcePath:   sourcePath,
-		ErrorCodes:   ExtractErrorCodes(string(content)),
+		ErrorCodes:   atomErrorCodes(fm.ID, fm.Type, string(content)),
 		Related:      related,
 		Operation:    fm.Operation,
 		Side:         fm.Side,
 		Status:       status,
 		SupersededBy: fm.SupersededBy,
 		Facts:        facts,
+		Generated:    fm.Generated,
 	}, nil
+}
+
+// atomErrorCodes is every code an atom's text carries, plus, for an error
+// atom about a numeric gateway code, that code itself: those atoms name it in
+// their title and id and never as a JSON "code" value, so without this their
+// own code went unindexed and decode_error could not reach them.
+func atomErrorCodes(id, typ, content string) []string {
+	codes := ExtractErrorCodes(content)
+	m := ownGatewayCodeRe.FindStringSubmatch(id)
+	if typ != "error" || m == nil || slices.Contains(codes, m[1]) {
+		return codes
+	}
+	codes = append(codes, m[1])
+	sort.Strings(codes)
+	return codes
 }

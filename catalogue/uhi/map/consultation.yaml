@@ -1,0 +1,273 @@
+# UHI Physical Consultation: the direct order, fulfilment and post-fulfilment
+# calls and the audit copies. Words live in site/docs/_notes/uhi/<operationId>.mdx.
+uhi.endpoint.consultation-select:
+  type: endpoint
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Select items and build an order
+  summary: Physical Consultation does not use select. After the second on_search, the EUA goes straight to init.
+  page: site/docs/_notes/uhi/uhi_consultation_select.mdx
+  heading: consultation-select
+  url: /docs/uhi/v1/api/consultation/endpoints/uhi-consultation-select#consultation-select
+  operation: uhi_consultation_select
+  related:
+    endpoints: [uhi.endpoint.consultation-init]
+    callbacks: [uhi.callback.consultation-on-select]
+    flows: [uhi.flow.consultation-order]
+uhi.callback.consultation-on-select:
+  type: callback
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Send a quoted draft order
+  summary: Physical Consultation does not use on_select. The HSPA sends the quote in on_init, in answer to init.
+  page: site/docs/_notes/uhi/uhi_consultation_on_select.mdx
+  heading: consultation-on-select
+  url: /docs/uhi/v1/api/consultation/endpoints/uhi-consultation-on-select#consultation-on-select
+  operation: uhi_consultation_on_select
+  related:
+    endpoints: [uhi.endpoint.consultation-select]
+    callbacks: [uhi.callback.consultation-on-init]
+    flows: [uhi.flow.consultation-order]
+uhi.endpoint.consultation-init:
+  type: endpoint
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Initialise an order
+  summary: The EUA sends the patient and the chosen slot directly to the HSPA, which holds the slot for 15 minutes and answers with on_init.
+  page: site/docs/_notes/uhi/uhi_consultation_init.mdx
+  heading: consultation-init
+  url: /docs/uhi/v1/api/consultation/endpoints/uhi-consultation-order/01-uhi-consultation-init#consultation-init
+  operation: uhi_consultation_init
+  related:
+    callbacks: [uhi.callback.consultation-on-init]
+    concepts: [uhi.concept.direct-calls, uhi.concept.signing-headers, uhi.concept.registry-lookup]
+    flows: [uhi.flow.consultation-order]
+uhi.callback.consultation-on-init:
+  type: callback
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Send the order with its quote and terms
+  summary: The HSPA answers init with the order.id, the quote and five terms marked INITIATED, which the patient reads before the EUA confirms.
+  page: site/docs/_notes/uhi/uhi_consultation_on_init.mdx
+  heading: consultation-on-init
+  url: /docs/uhi/v1/api/consultation/endpoints/uhi-consultation-order/02-uhi-consultation-on-init#consultation-on-init
+  operation: uhi_consultation_on_init
+  related:
+    endpoints: [uhi.endpoint.consultation-init, uhi.endpoint.consultation-confirm]
+    concepts: [uhi.concept.direct-calls, uhi.concept.verifying-signatures, uhi.concept.consultation-terms]
+    flows: [uhi.flow.consultation-order]
+uhi.endpoint.consultation-confirm:
+  type: endpoint
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Confirm the order
+  summary: The EUA returns the order.id from on_init and all five terms marked AGREED; the HSPA answers with on_confirm and the PIN.
+  page: site/docs/_notes/uhi/uhi_consultation_confirm.mdx
+  heading: consultation-confirm
+  url: /docs/uhi/v1/api/consultation/endpoints/uhi-consultation-order/03-uhi-consultation-confirm#consultation-confirm
+  operation: uhi_consultation_confirm
+  related:
+    callbacks: [uhi.callback.consultation-on-confirm]
+    concepts: [uhi.concept.direct-calls, uhi.concept.signing-headers, uhi.concept.consultation-terms]
+    flows: [uhi.flow.consultation-order]
+uhi.callback.consultation-on-confirm:
+  type: callback
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Send the confirmed order and PIN
+  summary: The HSPA answers confirm with the order CONFIRMED and a 4-digit PIN for check-in, and sends an exact copy to on_confirm_audit.
+  page: site/docs/_notes/uhi/uhi_consultation_on_confirm.mdx
+  heading: consultation-on-confirm
+  url: /docs/uhi/v1/api/consultation/endpoints/uhi-consultation-order/04-uhi-consultation-on-confirm#consultation-on-confirm
+  operation: uhi_consultation_on_confirm
+  related:
+    endpoints: [uhi.endpoint.consultation-confirm, uhi.endpoint.consultation-on-confirm-audit]
+    concepts: [uhi.concept.direct-calls, uhi.concept.verifying-signatures, uhi.concept.audit-copies]
+    flows: [uhi.flow.consultation-order]
+uhi.endpoint.consultation-status:
+  type: endpoint
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Request the order status
+  summary: The EUA asks the HSPA for the full current order, only when an expected on_update never arrives; the HSPA answers with on_status.
+  page: site/docs/_notes/uhi/uhi_consultation_status.mdx
+  heading: consultation-status
+  url: /docs/uhi/v1/api/consultation/endpoints/uhi-consultation-fulfilment/01-uhi-consultation-status#consultation-status
+  operation: uhi_consultation_status
+  related:
+    callbacks: [uhi.callback.consultation-on-status, uhi.callback.consultation-on-update-to-eua]
+    concepts: [uhi.concept.direct-calls, uhi.concept.signing-headers]
+    flows: [uhi.flow.consultation-fulfilment]
+uhi.callback.consultation-on-status:
+  type: callback
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Send the order status
+  summary: The HSPA answers status with the full current order and its care context id, and sends an exact copy to on_status_audit.
+  page: site/docs/_notes/uhi/uhi_consultation_on_status.mdx
+  heading: consultation-on-status
+  url: /docs/uhi/v1/api/consultation/endpoints/uhi-consultation-fulfilment/02-uhi-consultation-on-status#consultation-on-status
+  operation: uhi_consultation_on_status
+  related:
+    endpoints: [uhi.endpoint.consultation-status, uhi.endpoint.consultation-on-status-audit]
+    concepts: [uhi.concept.direct-calls, uhi.concept.verifying-signatures, uhi.concept.audit-copies]
+    flows: [uhi.flow.consultation-fulfilment]
+uhi.endpoint.consultation-cancel:
+  type: endpoint
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Cancel the order
+  summary: The EUA cancels an appointment for the patient with cancelledby set to patient and a reason code; the HSPA answers with on_cancel.
+  page: site/docs/_notes/uhi/uhi_consultation_cancel.mdx
+  heading: consultation-cancel
+  url: /docs/uhi/v1/api/consultation/endpoints/uhi-consultation-post-fulfilment/01-uhi-consultation-cancel#consultation-cancel
+  operation: uhi_consultation_cancel
+  related:
+    callbacks: [uhi.callback.consultation-on-cancel]
+    concepts: [uhi.concept.direct-calls, uhi.concept.signing-headers, uhi.concept.consultation-reason-codes]
+    flows: [uhi.flow.consultation-post-fulfilment]
+uhi.callback.consultation-on-cancel:
+  type: callback
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Send the cancelled order
+  summary: The HSPA sends the cancelled order to the EUA, after a patient's cancel or when the doctor cancels, and copies it to on_cancel_audit.
+  page: site/docs/_notes/uhi/uhi_consultation_on_cancel.mdx
+  heading: consultation-on-cancel
+  url: /docs/uhi/v1/api/consultation/endpoints/uhi-consultation-post-fulfilment/02-uhi-consultation-on-cancel#consultation-on-cancel
+  operation: uhi_consultation_on_cancel
+  related:
+    endpoints: [uhi.endpoint.consultation-cancel, uhi.endpoint.consultation-on-cancel-audit]
+    concepts: [uhi.concept.direct-calls, uhi.concept.verifying-signatures, uhi.concept.audit-copies, uhi.concept.consultation-reason-codes]
+    flows: [uhi.flow.consultation-post-fulfilment]
+uhi.callback.consultation-on-update-to-eua:
+  type: callback
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Send an order update to the EUA
+  summary: The HSPA pushes each appointment state change, APPOINTMENT_STARTED, COMPLETED or NO_SHOW, to the EUA and copies it to on_update_audit.
+  page: site/docs/_notes/uhi/uhi_consultation_on_update_to_eua.mdx
+  heading: consultation-on-update-to-eua
+  url: /docs/uhi/v1/api/consultation/endpoints/uhi-consultation-fulfilment/05-uhi-consultation-on-update-to-eua#consultation-on-update-to-eua
+  operation: uhi_consultation_on_update_to_eua
+  related:
+    endpoints: [uhi.endpoint.consultation-status, uhi.endpoint.consultation-on-update-audit]
+    callbacks: [uhi.callback.consultation-on-update-to-hspa]
+    concepts: [uhi.concept.direct-calls, uhi.concept.verifying-signatures, uhi.concept.audit-copies]
+    flows: [uhi.flow.consultation-fulfilment]
+uhi.callback.consultation-on-update-to-hspa:
+  type: callback
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Send an order update to the HSPA
+  summary: The EUA tells the HSPA the doctor did not appear. DOCTOR_NO_SHOW is the only state the EUA sets.
+  page: site/docs/_notes/uhi/uhi_consultation_on_update_to_hspa.mdx
+  heading: consultation-on-update-to-hspa
+  url: /docs/uhi/v1/api/consultation/endpoints/uhi-consultation-fulfilment/04-uhi-consultation-on-update-to-hspa#consultation-on-update-to-hspa
+  operation: uhi_consultation_on_update_to_hspa
+  related:
+    callbacks: [uhi.callback.consultation-on-update-to-eua]
+    concepts: [uhi.concept.direct-calls, uhi.concept.signing-headers]
+    flows: [uhi.flow.consultation-fulfilment]
+uhi.callback.consultation-on-message-to-eua:
+  type: callback
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Send a message to the EUA
+  summary: The HSPA sends an in-app chat message to the EUA, which every EUA must accept at its /on_message endpoint.
+  page: site/docs/_notes/uhi/uhi_consultation_on_message_to_eua.mdx
+  heading: consultation-on-message-to-eua
+  url: /docs/uhi/v1/api/consultation/endpoints/uhi-consultation-post-fulfilment/05-uhi-consultation-on-message-to-eua#consultation-on-message-to-eua
+  operation: uhi_consultation_on_message_to_eua
+  related:
+    callbacks: [uhi.callback.consultation-on-message-to-hspa]
+    concepts: [uhi.concept.direct-calls, uhi.concept.verifying-signatures]
+    flows: [uhi.flow.consultation-post-fulfilment]
+uhi.callback.consultation-on-message-to-hspa:
+  type: callback
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Send a message to the HSPA
+  summary: The EUA sends an in-app chat message directly to the HSPA, for which this endpoint is optional.
+  page: site/docs/_notes/uhi/uhi_consultation_on_message_to_hspa.mdx
+  heading: consultation-on-message-to-hspa
+  url: /docs/uhi/v1/api/consultation/endpoints/uhi-consultation-post-fulfilment/04-uhi-consultation-on-message-to-hspa#consultation-on-message-to-hspa
+  operation: uhi_consultation_on_message_to_hspa
+  related:
+    callbacks: [uhi.callback.consultation-on-message-to-eua]
+    concepts: [uhi.concept.direct-calls, uhi.concept.signing-headers]
+    flows: [uhi.flow.consultation-post-fulfilment]
+uhi.endpoint.consultation-on-confirm-audit:
+  type: endpoint
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Copy on_confirm to the Gateway audit
+  summary: The HSPA sends the UHI Gateway an exact copy of each on_confirm it sends the EUA.
+  page: site/docs/_notes/uhi/uhi_consultation_on_confirm_audit.mdx
+  heading: consultation-on-confirm-audit
+  url: /docs/uhi/v1/api/consultation/endpoints/uhi-consultation-order/05-uhi-consultation-on-confirm-audit#consultation-on-confirm-audit
+  operation: uhi_consultation_on_confirm_audit
+  related:
+    callbacks: [uhi.callback.consultation-on-confirm]
+    concepts: [uhi.concept.audit-copies, uhi.concept.signing-headers]
+    flows: [uhi.flow.consultation-order]
+uhi.endpoint.consultation-on-status-audit:
+  type: endpoint
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Copy on_status to the Gateway audit
+  summary: The HSPA sends the UHI Gateway an exact copy of each on_status it sends the EUA, with the care context id.
+  page: site/docs/_notes/uhi/uhi_consultation_on_status_audit.mdx
+  heading: consultation-on-status-audit
+  url: /docs/uhi/v1/api/consultation/endpoints/uhi-consultation-fulfilment/03-uhi-consultation-on-status-audit#consultation-on-status-audit
+  operation: uhi_consultation_on_status_audit
+  related:
+    callbacks: [uhi.callback.consultation-on-status]
+    concepts: [uhi.concept.audit-copies, uhi.concept.signing-headers]
+    flows: [uhi.flow.consultation-fulfilment]
+uhi.endpoint.consultation-on-update-audit:
+  type: endpoint
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Copy on_update to the Gateway audit
+  summary: The HSPA sends the UHI Gateway an exact copy of each on_update it sends the EUA; this copy counts for the Digital Health Incentive Scheme.
+  page: site/docs/_notes/uhi/uhi_consultation_on_update_audit.mdx
+  heading: consultation-on-update-audit
+  url: /docs/uhi/v1/api/consultation/endpoints/uhi-consultation-fulfilment/06-uhi-consultation-on-update-audit#consultation-on-update-audit
+  operation: uhi_consultation_on_update_audit
+  related:
+    callbacks: [uhi.callback.consultation-on-update-to-eua]
+    concepts: [uhi.concept.audit-copies, uhi.concept.signing-headers]
+    flows: [uhi.flow.consultation-fulfilment]
+uhi.endpoint.consultation-on-cancel-audit:
+  type: endpoint
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Copy on_cancel to the Gateway audit
+  summary: The HSPA sends the UHI Gateway an exact copy of each on_cancel it sends the EUA.
+  page: site/docs/_notes/uhi/uhi_consultation_on_cancel_audit.mdx
+  heading: consultation-on-cancel-audit
+  url: /docs/uhi/v1/api/consultation/endpoints/uhi-consultation-post-fulfilment/03-uhi-consultation-on-cancel-audit#consultation-on-cancel-audit
+  operation: uhi_consultation_on_cancel_audit
+  related:
+    callbacks: [uhi.callback.consultation-on-cancel]
+    concepts: [uhi.concept.audit-copies, uhi.concept.signing-headers]
+    flows: [uhi.flow.consultation-post-fulfilment]

@@ -1,0 +1,36 @@
+{
+  "id": "nudge-noevidence-data-push-01",
+  "slice": "nudge",
+  "class": "diagnose",
+  "turns": [
+    {
+      "role": "user",
+      "text": "We sent the health information request for a granted consent and nothing has arrived from the HIP since."
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "The HIP posts the pages to your dataPushUrl directly, not through the gateway, so check the dataPushUrl you sent rather than your registered callback URL",
+    "A transfer that never arrives can be checked with the status call against its transactionId",
+    "transactionId"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.flow.m3-fetch-records"
+  ],
+  "expected_shape": "diagnose",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-hiecm-consent-management-data-flow-yaml",
+  "catalogue_version": "2026.09.16",
+  "notes": "Nudge group, debugging with no evidence: the answer comes from the fetch records flow and must end with exactly one question, whether the on-request callback arrived with a transactionId; it catches an answer that assumes the HIP is down or asks several questions before answering."
+}

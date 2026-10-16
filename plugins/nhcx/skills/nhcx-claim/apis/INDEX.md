@@ -10,6 +10,7 @@ Every call the application makes into the embedded NHCX gateway (G), the NHCX or
 - A failed send may still name the ids it went out under: a `SendError` raised after the headers were built carries `txn_id`, `correlation_id` and the minted `headers`, and a result with `ok` false always carries them. When it does, the leg is kept under those ids and marked failed, because the message may have reached NHCX anyway (a connection dropped after the request was written is reported as unreachable). When it names none (a path or payload G7 refused before minting ids), nothing went out.
 - Every message G sends or receives, accepted, refused or failed, is recorded in the [G9. Ledger](../gateway/G9-ledger.md). Polling reads it in-process (A10 to A13).
 - Every outbound FHIR payload and its acknowledgement is also archived beside the claim, so a bundle can be read back later.
+- A18 and A19 are ABDM calls beside the exchange, plain JSON with the session token and no ledger row: the beneficiary's biometric authentication, defined in full in A18, and the ABHA service (M1), whose calls A19 names on the MCP.
 - There is no A9: the inbound door it once described became the callbacks, C1 to C10. Inbound messages are the callbacks in [../callbacks/](../callbacks/INDEX.md), taken in by [G8. Receive](../gateway/G8-receive.md).
 
 ## Outbound to NHCX
@@ -37,6 +38,14 @@ Polling is the fallback when a callback is missed. Opening a claim runs these fo
 | [A14](A14-adjudicator-user-role.md) | Adjudicator User Role | payer service `get/user-role`, or the IRDAI desk | [A14-adjudicator-user-role.md](A14-adjudicator-user-role.md) |
 | [A15](A15-adjudicator-process-case.md) | Adjudicator Process Case | payer service `process/case`, or the IRDAI desk | [A15-adjudicator-process-case.md](A15-adjudicator-process-case.md) |
 | [A16](A16-gateway-token.md) | Gateway Token | `gateway.token(participant)` (G3) | [A16-gateway-token.md](A16-gateway-token.md) |
+
+## ABDM calls beside the exchange
+
+Plain JSON to ABDM with the session token: the beneficiary's biometric authentication and their ABHA. No JWE, no protocol headers, no ledger row.
+
+| # | API | Call | File |
+|---|---|---|---|
+| [A18](A18-biometric-authentication.md) | Biometric Authentication | `abdm.biometric.init / capture / verify / refresh` | [A18-biometric-authentication.md](A18-biometric-authentication.md) |
 
 ## Application
 

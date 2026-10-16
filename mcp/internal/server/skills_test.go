@@ -85,10 +85,19 @@ func TestSkillPromptListedWithItsDescription(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(res.Prompts) != 1 {
-		t.Fatalf("listed %d prompts, want 1", len(res.Prompts))
+	// The skill and the start prompt that introduces the server.
+	if len(res.Prompts) != 2 {
+		t.Fatalf("listed %d prompts, want 2", len(res.Prompts))
 	}
-	p := res.Prompts[0]
+	var p *mcp.Prompt
+	for _, got := range res.Prompts {
+		if got.Name == "abdm-m1" {
+			p = got
+		}
+	}
+	if p == nil {
+		t.Fatalf("no abdm-m1 prompt in %+v", res.Prompts)
+	}
 	if p.Name != "abdm-m1" || p.Description != "Use when building M1." {
 		t.Errorf("prompt = %+v", p)
 	}

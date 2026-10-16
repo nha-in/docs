@@ -1,0 +1,410 @@
+# UHI services: each service's identity, journeys, search variants and limits,
+# and the first-service decision. Words live in site/docs/uhi/v1/services/*.mdx.
+uhi.decision.first-service:
+  type: decision
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Which UHI service to build first
+  summary: Start with one signed PM-JAY HEM search and its callback, the smallest exchange on the network, then build the service for your role.
+  page: site/docs/uhi/v1/services/index.mdx
+  heading: which-service-to-build-first
+  url: /docs/uhi/v1/services#which-service-to-build-first
+  related:
+    decisions: [uhi.decision.choose-role]
+    flows: [uhi.flow.pmjay-hem-discovery]
+    concepts: [uhi.concept.pmjay-hem-service-identity, uhi.concept.service-reach]
+    glossary: [shared.glossary.uhi]
+
+uhi.concept.consultation-service-identity:
+  type: concept
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Physical Consultation service identity
+  summary: The fixed values every Physical Consultation call carries, including context.domain nic2004:85111 and the case-sensitive fulfillment type Physical.
+  page: site/docs/uhi/v1/services/consultation.mdx
+  heading: service-identity
+  url: /docs/uhi/v1/services/consultation#service-identity
+  related:
+    flows: [uhi.flow.consultation-discovery]
+    glossary: [uhi.glossary.context-domain, uhi.glossary.fulfillment-type]
+
+uhi.flow.consultation-discovery:
+  type: flow
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: "Physical Consultation discovery: broadcast search, then slots from the HSPA"
+  summary: A broadcast search through the Gateway returns doctors from every matching HSPA; a second search sent directly to the chosen HSPA returns slots.
+  page: site/docs/uhi/v1/services/consultation.mdx
+  heading: journey-1-discovery
+  url: /docs/uhi/v1/services/consultation#journey-1-discovery
+  related:
+    endpoints: [uhi.endpoint.network-gateway-search, uhi.endpoint.network-search, uhi.endpoint.network-registry-lookup]
+    callbacks: [uhi.callback.network-on-search, uhi.callback.network-gateway-on-search]
+    concepts: [uhi.concept.consultation-service-identity, uhi.concept.aggregate-answers, uhi.concept.direct-calls]
+    flows: [uhi.flow.consultation-order]
+
+uhi.flow.consultation-order:
+  type: flow
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: "Physical Consultation order: init to on_confirm"
+  summary: The EUA sends the patient and slot, the HSPA holds it and returns the order id and five terms, and confirm with every term AGREED returns the PIN.
+  page: site/docs/uhi/v1/services/consultation.mdx
+  heading: journey-2-order
+  url: /docs/uhi/v1/services/consultation#journey-2-order
+  related:
+    endpoints: [uhi.endpoint.consultation-init, uhi.endpoint.consultation-confirm, uhi.endpoint.consultation-on-confirm-audit]
+    callbacks: [uhi.callback.consultation-on-init, uhi.callback.consultation-on-confirm]
+    concepts: [uhi.concept.consultation-terms, uhi.concept.audit-copies]
+    flows: [uhi.flow.consultation-discovery, uhi.flow.consultation-fulfilment]
+
+uhi.flow.consultation-fulfilment:
+  type: flow
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: "Physical Consultation fulfilment: PIN check-in, on_update and status"
+  summary: The patient checks in with the PIN, the HSPA pushes each state change in on_update, and the EUA calls status only when an update never arrives.
+  page: site/docs/uhi/v1/services/consultation.mdx
+  heading: journey-3-fulfilment
+  url: /docs/uhi/v1/services/consultation#journey-3-fulfilment
+  related:
+    endpoints: [uhi.endpoint.consultation-status, uhi.endpoint.consultation-on-status-audit, uhi.endpoint.consultation-on-update-audit]
+    callbacks: [uhi.callback.consultation-on-status, uhi.callback.consultation-on-update-to-eua, uhi.callback.consultation-on-update-to-hspa]
+    concepts: [uhi.concept.consultation-reason-codes, uhi.concept.audit-copies]
+    flows: [uhi.flow.consultation-order]
+
+uhi.flow.consultation-post-fulfilment:
+  type: flow
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: "Physical Consultation post-fulfilment: cancel, on_cancel and on_message"
+  summary: The patient cancels through the EUA or the doctor through the HSPA, each with a reason code and who cancelled; either side can message the other.
+  page: site/docs/uhi/v1/services/consultation.mdx
+  heading: journey-4-post-fulfilment
+  url: /docs/uhi/v1/services/consultation#journey-4-post-fulfilment
+  related:
+    endpoints: [uhi.endpoint.consultation-cancel, uhi.endpoint.consultation-on-cancel-audit]
+    callbacks: [uhi.callback.consultation-on-cancel, uhi.callback.consultation-on-message-to-eua, uhi.callback.consultation-on-message-to-hspa]
+    concepts: [uhi.concept.consultation-reason-codes, uhi.concept.audit-copies]
+    flows: [uhi.flow.consultation-order]
+
+uhi.concept.consultation-terms:
+  type: concept
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Physical Consultation terms content
+  summary: What each of the five terms in on_init must say to the patient before confirm, with the clauses every EUA and HSPA keeps.
+  page: site/docs/uhi/v1/services/consultation.mdx
+  heading: terms-content
+  url: /docs/uhi/v1/services/consultation#terms-content
+  related:
+    flows: [uhi.flow.consultation-order]
+    callbacks: [uhi.callback.consultation-on-init]
+    endpoints: [uhi.endpoint.consultation-confirm]
+
+uhi.concept.consultation-reason-codes:
+  type: concept
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Physical Consultation cancellation and PIN override reason codes
+  summary: The fixed patient, doctor and override reason codes for cancel, on_cancel and PIN override, sent exactly as listed with labels of your own.
+  page: site/docs/uhi/v1/services/consultation.mdx
+  heading: cancellation-and-override-reason-codes
+  url: /docs/uhi/v1/services/consultation#cancellation-and-override-reason-codes
+  related:
+    flows: [uhi.flow.consultation-post-fulfilment, uhi.flow.consultation-fulfilment]
+    endpoints: [uhi.endpoint.consultation-cancel]
+    callbacks: [uhi.callback.consultation-on-cancel]
+
+uhi.test.consultation-go-live-checklist:
+  type: test
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Physical Consultation go-live checklist
+  summary: The twenty items to complete before requesting production sign-off for Physical Consultation, from M2 and signing to promotion.
+  page: site/docs/uhi/v1/services/consultation.mdx
+  heading: go-live-checklist
+  url: /docs/uhi/v1/services/consultation#go-live-checklist
+  related:
+    flows: [uhi.flow.consultation-discovery, uhi.flow.consultation-order, uhi.flow.consultation-fulfilment]
+    tests: [uhi.test.run-test-cases, uhi.test.every-service-checks]
+
+uhi.concept.ambulance-service-identity:
+  type: concept
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Ambulance Booking service identity
+  summary: The fixed values every Ambulance Booking call carries, including context.domain nic2008:86909, item code AMBULANCE and fulfillment type EMERGENCY.
+  page: site/docs/uhi/v1/services/ambulance.mdx
+  heading: service-identity
+  url: /docs/uhi/v1/services/ambulance#service-identity
+  related:
+    flows: [uhi.flow.ambulance-discovery]
+    glossary: [uhi.glossary.context-domain, uhi.glossary.fulfillment-type]
+
+uhi.flow.ambulance-discovery:
+  type: flow
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: "Ambulance Booking discovery: search to on_search through the Gateway"
+  summary: An emergency search with the pickup location reaches every ambulance HSPA; those serving the area answer with ambulances, arrival windows and prices.
+  page: site/docs/uhi/v1/services/ambulance.mdx
+  heading: journey-1-discovery
+  url: /docs/uhi/v1/services/ambulance#journey-1-discovery
+  related:
+    endpoints: [uhi.endpoint.network-gateway-search, uhi.endpoint.network-search]
+    callbacks: [uhi.callback.network-on-search, uhi.callback.network-gateway-on-search]
+    concepts: [uhi.concept.ambulance-service-identity, uhi.concept.aggregate-answers]
+    flows: [uhi.flow.ambulance-order]
+    tests: [uhi.test.ambulance-search-filters, uhi.test.ambulance-on-search]
+
+uhi.flow.ambulance-order:
+  type: flow
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: "Ambulance Booking order: init to on_init"
+  summary: The EUA sends the patient's details directly to the chosen HSPA, which returns a quote and five terms; the provider then calls to arrange dispatch.
+  page: site/docs/uhi/v1/services/ambulance.mdx
+  heading: journey-2-order
+  url: /docs/uhi/v1/services/ambulance#journey-2-order
+  related:
+    endpoints: [uhi.endpoint.ambulance-init]
+    callbacks: [uhi.callback.ambulance-on-init]
+    concepts: [uhi.concept.direct-calls]
+    flows: [uhi.flow.ambulance-discovery]
+    tests: [uhi.test.ambulance-init]
+
+uhi.concept.pmjay-hem-service-identity:
+  type: concept
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: PM-JAY HEM service identity
+  summary: The case-sensitive values every PM-JAY HEM search carries, including context.domain nic2004:85112, fulfillment type PMJAYHEM and item code PMJAY.
+  page: site/docs/uhi/v1/services/pmjay-hem.mdx
+  heading: service-identity
+  url: /docs/uhi/v1/services/pmjay-hem#service-identity
+  related:
+    flows: [uhi.flow.pmjay-hem-discovery]
+    glossary: [uhi.glossary.context-domain, uhi.glossary.fulfillment-type, uhi.glossary.pm-jay-hem]
+
+uhi.concept.pmjay-hem-search-variants:
+  type: concept
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: PM-JAY HEM search variants and speciality codes
+  summary: State alone or state plus one filter, or GPS with no state; numeric codes as numbers, and speciality codes from the PM-JAY speciality list API.
+  page: site/docs/uhi/v1/services/pmjay-hem.mdx
+  heading: search-variants
+  url: /docs/uhi/v1/services/pmjay-hem#search-variants
+  related:
+    flows: [uhi.flow.pmjay-hem-discovery]
+    endpoints: [uhi.endpoint.network-gateway-search]
+    tests: [uhi.test.pmjay-hem-search-filters]
+
+uhi.flow.pmjay-hem-discovery:
+  type: flow
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: "PM-JAY HEM discovery: search to on_search"
+  summary: A signed search through the Gateway reaches the single PM-JAY HEM HSPA, which returns empanelled hospitals in one on_search on your callback.
+  page: site/docs/uhi/v1/services/pmjay-hem.mdx
+  heading: journey
+  url: /docs/uhi/v1/services/pmjay-hem#journey
+  related:
+    endpoints: [uhi.endpoint.network-gateway-search]
+    callbacks: [uhi.callback.network-on-search]
+    concepts: [uhi.concept.pmjay-hem-search-variants, uhi.concept.pmjay-hem-service-identity, uhi.concept.pmjay-hem-limits]
+    tests: [uhi.test.pmjay-hem-on-search, uhi.test.pmjay-hem-edge-cases]
+    glossary: [uhi.glossary.pm-jay-hem]
+
+uhi.concept.pmjay-hem-limits:
+  type: concept
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: PM-JAY HEM limits to code against
+  summary: GPS gaps, an unreliable accreditation flag, no end signal, no pagination and a lagging procedure list, each with what your EUA does about it.
+  page: site/docs/uhi/v1/services/pmjay-hem.mdx
+  heading: limits-to-code-against
+  url: /docs/uhi/v1/services/pmjay-hem#limits-to-code-against
+  related:
+    flows: [uhi.flow.pmjay-hem-discovery]
+    concepts: [uhi.concept.render-as-results-arrive, uhi.concept.paginate-client-side]
+    tests: [uhi.test.pmjay-hem-edge-cases]
+
+uhi.concept.blood-bank-service-identity:
+  type: concept
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Blood Bank service identity
+  summary: The fixed values every Blood Bank search carries, context.domain nic2008:86906 and fulfillment type BloodStock, and the sandbox reference HSPA.
+  page: site/docs/uhi/v1/services/blood-bank.mdx
+  heading: service-identity
+  url: /docs/uhi/v1/services/blood-bank#service-identity
+  related:
+    flows: [uhi.flow.blood-bank-discovery]
+    glossary: [uhi.glossary.context-domain, uhi.glossary.fulfillment-type]
+
+uhi.concept.blood-bank-search-variants:
+  type: concept
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Blood Bank search modes, blood group and component codes
+  summary: GPS and radius or state and district, with the blood group in item and the component in category, and the code lists for both.
+  page: site/docs/uhi/v1/services/blood-bank.mdx
+  heading: search-variants
+  url: /docs/uhi/v1/services/blood-bank#search-variants
+  related:
+    flows: [uhi.flow.blood-bank-discovery]
+    endpoints: [uhi.endpoint.network-gateway-search]
+
+uhi.flow.blood-bank-discovery:
+  type: flow
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: "Blood Bank discovery: search to on_search from every Blood Bank HSPA"
+  summary: One search through the Gateway reaches every registered Blood Bank HSPA; aggregate their on_search answers by transaction_id within 10 to 15 seconds.
+  page: site/docs/uhi/v1/services/blood-bank.mdx
+  heading: journey
+  url: /docs/uhi/v1/services/blood-bank#journey
+  related:
+    endpoints: [uhi.endpoint.network-gateway-search, uhi.endpoint.network-search]
+    callbacks: [uhi.callback.network-on-search, uhi.callback.network-gateway-on-search]
+    concepts: [uhi.concept.blood-bank-search-variants, uhi.concept.blood-bank-service-identity, uhi.concept.blood-bank-limits, uhi.concept.aggregate-answers]
+
+uhi.concept.blood-bank-limits:
+  type: concept
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Blood Bank limits to code against
+  summary: GPS gaps, stock counts that update at different rates, no end signal, no pagination and no reservation, each with what your EUA does about it.
+  page: site/docs/uhi/v1/services/blood-bank.mdx
+  heading: limits-to-code-against
+  url: /docs/uhi/v1/services/blood-bank#limits-to-code-against
+  related:
+    flows: [uhi.flow.blood-bank-discovery]
+    concepts: [uhi.concept.render-as-results-arrive, uhi.concept.paginate-client-side]
+
+uhi.concept.jan-aushadhi-service-identity:
+  type: concept
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Jan Aushadhi service identity for flows A, B and C
+  summary: One domain, nic2008:47721, and three fulfillment types that select Kendras, medicines or stock, with the PMBI HSPA's id, URL and key id.
+  page: site/docs/uhi/v1/services/jan-aushadhi.mdx
+  heading: service-identity
+  url: /docs/uhi/v1/services/jan-aushadhi#service-identity
+  related:
+    flows: [uhi.flow.jan-aushadhi-find-kendra, uhi.flow.jan-aushadhi-find-medicine]
+    glossary: [uhi.glossary.context-domain, uhi.glossary.fulfillment-type, uhi.glossary.pmbi]
+
+uhi.concept.jan-aushadhi-search-variants:
+  type: concept
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Jan Aushadhi location filters, medicine name and ownership codes
+  summary: Kendra code, state and district, pincode or GPS for flows A and C, a medicine name for flow B, and the Kendra ownership codes.
+  page: site/docs/uhi/v1/services/jan-aushadhi.mdx
+  heading: search-variants
+  url: /docs/uhi/v1/services/jan-aushadhi#search-variants
+  related:
+    flows: [uhi.flow.jan-aushadhi-find-kendra, uhi.flow.jan-aushadhi-find-medicine]
+    endpoints: [uhi.endpoint.network-gateway-search]
+
+uhi.flow.jan-aushadhi-find-kendra:
+  type: flow
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: "Jan Aushadhi: find a Kendra"
+  summary: A search of type JANAUSHADHI through the Gateway reaches the PMBI HSPA, which returns Kendras by location or Kendra code in one on_search.
+  page: site/docs/uhi/v1/services/jan-aushadhi.mdx
+  heading: journey-1-find-a-kendra
+  url: /docs/uhi/v1/services/jan-aushadhi#journey-1-find-a-kendra
+  related:
+    endpoints: [uhi.endpoint.network-gateway-search]
+    callbacks: [uhi.callback.network-on-search]
+    concepts: [uhi.concept.jan-aushadhi-search-variants, uhi.concept.jan-aushadhi-service-identity]
+    glossary: [uhi.glossary.pmbi]
+
+uhi.flow.jan-aushadhi-find-medicine:
+  type: flow
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: "Jan Aushadhi: find a medicine, then the Kendras that stock it"
+  summary: A medicine search turns a name into a medicineId, and a second, separate search with that id returns the Kendras that stock it with a stock flag.
+  page: site/docs/uhi/v1/services/jan-aushadhi.mdx
+  heading: journey-2-find-a-medicine-then-a-kendra-that-stocks-it
+  url: /docs/uhi/v1/services/jan-aushadhi#journey-2-find-a-medicine-then-a-kendra-that-stocks-it
+  related:
+    endpoints: [uhi.endpoint.network-gateway-search]
+    callbacks: [uhi.callback.network-on-search]
+    concepts: [uhi.concept.jan-aushadhi-search-variants, uhi.concept.jan-aushadhi-service-identity]
+    flows: [uhi.flow.jan-aushadhi-find-kendra]
+    glossary: [uhi.glossary.pmbi]
+
+uhi.concept.notto-service-identity:
+  type: concept
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: NOTTO service identity
+  summary: The fixed values every NOTTO search carries, including context.domain nic2004:86100, fulfillment type NOTTO_HOSPITAL and the notto.hspa provider id.
+  page: site/docs/uhi/v1/services/notto.mdx
+  heading: service-identity
+  url: /docs/uhi/v1/services/notto#service-identity
+  related:
+    flows: [uhi.flow.notto-discovery]
+    glossary: [uhi.glossary.context-domain, uhi.glossary.fulfillment-type, uhi.glossary.notto]
+
+uhi.concept.notto-search-variants:
+  type: concept
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: NOTTO search filters and organ and tissue codes
+  summary: A mandatory organ or tissue code, an optional state with LGD codes, district only with state, no GPS yet, and the organ and tissue master list.
+  page: site/docs/uhi/v1/services/notto.mdx
+  heading: search-variants
+  url: /docs/uhi/v1/services/notto#search-variants
+  related:
+    flows: [uhi.flow.notto-discovery]
+    endpoints: [uhi.endpoint.network-gateway-search]
+
+uhi.flow.notto-discovery:
+  type: flow
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: "NOTTO discovery: search to on_search"
+  summary: A search by organ or tissue, nationally or in one state, reaches the NOTTO HSPA through the Gateway and returns hospitals with capabilities and contacts.
+  page: site/docs/uhi/v1/services/notto.mdx
+  heading: journey
+  url: /docs/uhi/v1/services/notto#journey
+  related:
+    endpoints: [uhi.endpoint.network-gateway-search]
+    callbacks: [uhi.callback.network-on-search]
+    concepts: [uhi.concept.notto-search-variants, uhi.concept.notto-service-identity]
+    glossary: [uhi.glossary.notto]

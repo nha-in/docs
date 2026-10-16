@@ -1,0 +1,15 @@
+## Search through the Gateway {/* #network-gateway-search */}
+
+The [EUA](/docs/uhi/v1/getting-started/glossary#eua) sends a patient's search to the [UHI Gateway](/docs/uhi/v1/getting-started/glossary#uhi-gateway). The Gateway checks the signature, replies at once with an `ACK`, and passes the search to every [HSPA](/docs/uhi/v1/getting-started/glossary#hspa) registered for the `context.domain` you send. Results never come back on this call. Each HSPA's catalog arrives later as an `on_search` at your `consumer_uri`.
+
+Sign every request with a fresh `Authorization` header. See [Signing](/docs/uhi/v1/concepts/signing).
+
+<AgentOnly>
+**Before you start.** A subscriber ID registered on the network, your key pair, and a `consumer_uri` reachable over HTTPS. The `context` block carries `domain`, `country`, `city`, `action`, `core_version`, `consumer_id`, `consumer_uri`, `message_id`, `transaction_id` and `timestamp`. `action` is `search`, and `domain` names the service.
+
+**What happens.** The Gateway adds its own `X-Gateway-Authorization` signature and forwards the search to the `/search` endpoint of each HSPA in the domain. Several HSPAs can answer one search, each with its own `on_search`.
+
+**How you know it worked.** An HTTP 200 carrying `ACK`, then one or more `on_search` calls at your `consumer_uri` carrying the `transaction_id` and `message_id` you sent.
+
+**When it goes wrong.** A 401 means the signature was built over a different body, was reused, or has expired: sign again for this exact body. An `ACK` followed by no `on_search` usually means your `consumer_uri` is not reachable over HTTPS, or your `on_search` endpoint did not return 200. A result that never matches your screen usually means you matched on a different `transaction_id`.
+</AgentOnly>

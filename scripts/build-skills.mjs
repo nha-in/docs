@@ -21,12 +21,15 @@ import {fileURLToPath} from 'node:url';
 import {parse} from 'yaml';
 import {cleanDescription} from './lib/titles.mjs';
 import {errorsFromSpec} from './lib/spec-errors.mjs';
-import {loadJourneys} from './lib/journeys.mjs';
+import {loadJourneys, stepDataName} from './lib/journeys.mjs';
+import {tryAsking, tryAskingSection, planSection, PLAN_RULE} from './lib/try-asking.mjs';
+import {NHCX, nhcxEntry} from './lib/nhcx-skills.mjs';
+import {UHI_SERVICES, skillFolder, uhiHostedBy} from './lib/uhi-skills.mjs';
 import {loadAtoms} from './lib/atoms.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const dataDir = join(root, 'site', 'src', 'data', 'api');
-const specDir = join(root, 'catalogue', 'openapi', 'hiecm', 'v3');
+const specDir = join(root, 'catalogue', 'hiecm', 'openapi', 'v3');
 const outDir = join(root, 'site', 'static', 'skills');
 
 // Provenance for the snapshot header. A downloaded skill is frozen while the
@@ -729,7 +732,11 @@ function withSurvey(scaffold) {
 const FOLD = Object.fromEntries(
   MODULES.map((module) => [
     module.slug,
-    {scaffold: `hiecm-${module.id}-build`, debug: `hiecm-${module.id}-debug`},
+    {
+      scaffold: `hiecm-${module.id}-build`,
+      debug: `hiecm-${module.id}-debug`,
+      test: `hiecm-${module.id}-test`,
+    },
   ]),
 );
 
@@ -852,6 +859,34 @@ for (const module of MODULES) {
     );
   }
 
+  // Test after debug: the functional test cases are what an integrator walks
+  // once the build runs, and each case names the evidence a reviewer can
+  // check against the gateway rather than a screenshot.
+  const test = fold.test ? guided(fold.test) : '';
+  if (test) {
+    files['references/test.md'] = test;
+    covers.push(
+      `- **Test.** The functional test cases, one loop each, with the evidence the sandbox can vouch for and the manifest that replaces a screenshot report. [references/test.md](references/test.md)`,
+    );
+  }
+
+  // The manifest row comes first, because the router's prompts are built from it.
+  const entry = {
+    module: module.title.split(',')[0],
+    title: module.title,
+    docs: module.docs,
+    example: module.example,
+    // A real code from this module, so the page's example question is one the
+    // skill can actually answer. An ABDM code first: the list sorts HTTP and
+    // gateway statuses such as 404 ahead of them, and nobody asks about a 404.
+    errorExample: (codes.find((c) => c.code.startsWith('ABDM-')) ?? codes[0])?.code ?? null,
+    operations: operationCount,
+    codes: codeCount,
+    sections: Object.keys(files)
+      .filter((path) => path.startsWith('references/'))
+      .map((path) => path.replace(/^references\/|\.md$/g, '')),
+  };
+
   const skillMd = (headText) =>
     [
       headText,
@@ -859,6 +894,7 @@ for (const module of MODULES) {
       ...(capabilities(module).length
         ? [`## What you can do with ${module.title.split(',')[0]}`, '', ...capabilities(module), '']
         : []),
+      ...tryAskingSection(entry),
       '## What is in this folder',
       '',
       // Five files and no clue which to open. Say what each one answers.
@@ -882,20 +918,7 @@ for (const module of MODULES) {
 
   emit(module.slug, files, pluginFiles);
 
-  manifest[module.slug] = {
-    module: module.title.split(',')[0],
-    title: module.title,
-    docs: module.docs,
-    example: module.example,
-    // A real code from this module, so the page's example question is one the
-    // skill can actually answer.
-    errorExample: codes[0]?.code ?? null,
-    operations: operationCount,
-    codes: codeCount,
-    sections: Object.keys(files)
-      .filter((path) => path.startsWith('references/'))
-      .map((path) => path.replace(/^references\/|\.md$/g, '')),
-  };
+  manifest[module.slug] = entry;
 
   const size = Object.values(files).reduce((total, body) => total + body.length, 0);
   console.log(
@@ -982,6 +1005,16 @@ function fhirDesignSection() {
   ].join('\n');
 }
 
+const FHIR_ENTRY = {
+  module: 'FHIR',
+  title: 'FHIR, generating and auditing bundles',
+  docs: '/docs/hiecm/v3/resources/standards/fhir',
+  example: 'Add ABDM compliant FHIR bundle generation to this codebase',
+  errorExample: null,
+  operations: 0,
+  codes: 0,
+  sections: FHIR_REFS.map(([section]) => section),
+};
 const fhirSkillMd = (url) =>
   [
     '---',
@@ -1002,6 +1035,7 @@ const fhirSkillMd = (url) =>
     '',
     'Open one when the work calls for it. This file is the map, not the material.',
     '',
+    ...tryAskingSection(FHIR_ENTRY),
     '## Before anything else',
     '',
     `- ${UNVERIFIED}`,
@@ -1019,16 +1053,7 @@ fhirCovers.unshift(
 fhirFiles['SKILL.md'] = fhirSkillMd(siteUrl);
 const fhirPluginFiles = {...fhirFiles, 'SKILL.md': fhirSkillMd(null)};
 emit('abdm-fhir', fhirFiles, fhirPluginFiles);
-manifest['abdm-fhir'] = {
-  module: 'FHIR',
-  title: 'FHIR, generating and auditing bundles',
-  docs: '/docs/hiecm/v3/concepts/fhir',
-  example: 'Add ABDM compliant FHIR bundle generation to this codebase',
-  errorExample: null,
-  operations: 0,
-  codes: 0,
-  sections: FHIR_REFS.map(([section]) => section),
-};
+manifest['abdm-fhir'] = FHIR_ENTRY;
 console.log(`Built abdm-fhir: ${Object.keys(fhirFiles).length - 1} reference(s), including the design rules.`);
 
 console.log(`Compiled ${MODULES.length + 1} skill(s) into site/static/skills and the plugin.`);
@@ -1043,71 +1068,6 @@ const abdmSlugs = Object.keys(manifest);
 // same /skills/<name>/ URLs, and each also ships as /skills/<name>.tar.gz,
 // because its SKILL.md points into stages, templates and scripts beside it and
 // a SKILL.md served alone would send an agent to files it cannot reach.
-const NHCX = {
-  'nhcx-full': {
-    title: 'NHCX, end to end',
-    example: 'Build the whole provider-side NHCX integration into this hospital system',
-  },
-  'nhcx-coverage': {
-    title: 'NHCX coverage',
-    example: 'Add NHCX policy search and coverage eligibility to this hospital system',
-  },
-  'nhcx-preauth': {
-    title: 'NHCX pre-authorisation',
-    example: "Add NHCX pre-authorisation, with the payer's plan and its authorisation requirements, to this system",
-  },
-  'nhcx-claim': {
-    title: 'NHCX claim',
-    example: 'File the NHCX claim at discharge from this system',
-  },
-  'nhcx-communication': {
-    title: 'NHCX communication',
-    example: "Handle the payer's NHCX queries and notifications in this system",
-  },
-  'nhcx-payment': {
-    title: 'NHCX payment',
-    example: 'Record and acknowledge NHCX payment notices',
-  },
-  'nhcx-reprocess': {
-    title: 'NHCX reprocess',
-    example: 'Ask the payer to reprocess a rejected NHCX claim',
-  },
-};
-
-const countFiles = (dir) =>
-  readdirSync(dir, {withFileTypes: true}).reduce(
-    (n, entry) => n + (entry.isDirectory() ? countFiles(join(dir, entry.name)) : 1),
-    0,
-  );
-
-// An NHCX skill is counted from its own files, so its install panel shows what
-// it holds the way a module skill's does. A skill holds one spec file per call
-// it builds, under apis/, and one per callback it hosts, under callbacks/;
-// its end-to-end tests are the rows of the table in steps/L8-e2e-tests.md.
-// The skills carry no error table of their own: codes come from the knowledge
-// source (the nhcx-docs MCP server's decode_error, or the NHCX package), so
-// the panel promises no Debug row for them.
-const specFiles = (dir) =>
-  existsSync(dir) ? readdirSync(dir).filter((f) => /^[A-Z]\d+-.+\.md$/.test(f)).length : 0;
-function useCaseCounts(dir) {
-  const e2e = join(dir, 'steps', 'L8-e2e-tests.md');
-  const tests = existsSync(e2e)
-    ? (readFileSync(e2e, 'utf8').match(/^\| X\d+ \|/gm) ?? []).length
-    : 0;
-  return {
-    operations: specFiles(join(dir, 'apis')) + specFiles(join(dir, 'callbacks')),
-    codes: 0,
-    tests,
-  };
-}
-
-/** The install panel's rows for an NHCX skill, and the file behind each. */
-const NHCX_SECTION_FILES = {
-  scaffold: 'references/SCAFFOLDING.md',
-  integrate: 'apis/INDEX.md',
-  test: 'steps/L8-e2e-tests.md',
-};
-
 const nhcxDir = join(root, 'plugins', 'nhcx', 'skills');
 const nhcxSlugs = [];
 for (const name of Object.keys(NHCX)) {
@@ -1120,24 +1080,7 @@ for (const name of Object.keys(NHCX)) {
   execFileSync('tar', ['-czf', join(outDir, `${name}.tar.gz`), '-C', nhcxDir, name], {
     env: {...process.env, COPYFILE_DISABLE: '1'},
   });
-  manifest[name] = {
-    gateway: 'nhcx',
-    module: 'NHCX',
-    title: NHCX[name].title,
-    docs: '/docs/nhcx/v1/getting-started/build-with-ai',
-    example: NHCX[name].example,
-    errorExample: null,
-    ...useCaseCounts(src),
-    // A row on the install panel, and the file in the folder that backs it.
-    // These used to be bare labels, which read as references/integrate.md and
-    // the like: names an ABDM skill has and an NHCX skill never did.
-    sections: Object.keys(NHCX_SECTION_FILES).filter((section) =>
-      existsSync(join(src, NHCX_SECTION_FILES[section])),
-    ),
-    sectionFiles: NHCX_SECTION_FILES,
-    folder: true,
-    files: countFiles(src),
-  };
+  manifest[name] = nhcxEntry(name, src);
   nhcxSlugs.push(name);
   console.log(`Copied ${name} from plugins/nhcx/skills.`);
 }
@@ -1165,6 +1108,63 @@ writeFileSync(
         archive: `${slug}.tar.gz`,
         files: filesUnder(join(nhcxDir, slug)),
       })),
+    },
+    null,
+    2,
+  )}\n`,
+);
+
+// UHI keeps its own integrators plugin, one skill per service, compiled here
+// from the UHI atoms, journeys and step data by scripts/lib/uhi-skills.mjs,
+// with the two loops compile-skills.mjs wrote into skills-src/. Each ships at
+// /skills/<name>/ and as /skills/<name>.tar.gz, as NHCX's do, and is set up
+// through its own prompt, so an ABDM integrator is never offered UHI skills.
+const uhiPluginDir = join(root, 'plugins', 'uhi-integrators-assistant', 'skills');
+rmSync(uhiPluginDir, {recursive: true, force: true});
+mkdirSync(uhiPluginDir, {recursive: true});
+const uhiCtx = {
+  journeys: loadJourneys({platform: 'uhi', version: 'v1'}),
+  // A journey step has its own data file; the registry lookup, named by no
+  // journey, is read from its operation's own.
+  stepData: (op, journeyId, i) => {
+    const name = journeyId ? stepDataName(op, journeyId, i) : op.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    const file = join(dataDir, `${name}.json`);
+    if (!existsSync(file)) throw new Error(`run build-api-reference first: ${file} missing`);
+    return JSON.parse(readFileSync(file, 'utf8'));
+  },
+  hostedBy: uhiHostedBy(join(root, 'catalogue', 'uhi', 'openapi', 'v1')),
+  atoms: loadAtoms().atoms,
+  // No practices: shared.concept.integration-practices is written for
+  // HIE-CM (certificates, REQUEST-ID, its TIMESTAMP), and a UHI integrator
+  // told another gateway's rule is worse off than one told nothing.
+  buildDate,
+  catalogueVersion,
+};
+const uhiSlugs = [];
+for (const service of UHI_SERVICES) {
+  const common = {...uhiCtx, scaffold: guided(`${service.slug}-build`), debug: guided(`${service.slug}-debug`)};
+  const {files, manifest: entry} = skillFolder(service, {...common, skillUrl: skillUrl(service.slug, siteUrl)});
+  const {files: pluginFiles} = skillFolder(service, {...common, skillUrl: skillUrl(service.slug, null)});
+  for (const [base, entries] of [[outDir, files], [uhiPluginDir, pluginFiles]]) {
+    mkdirSync(join(base, service.slug, 'references'), {recursive: true});
+    for (const [path, body] of Object.entries(entries)) writeFileSync(join(base, service.slug, path), body.endsWith('\n') ? body : `${body}\n`);
+  }
+  // Archived from the site's folder, so the archive and the folder beside it
+  // carry the same SKILL.md.
+  execFileSync('tar', ['-czf', join(outDir, `${service.slug}.tar.gz`), '-C', outDir, service.slug], {
+    env: {...process.env, COPYFILE_DISABLE: '1'},
+  });
+  manifest[service.slug] = {...entry, folder: true, files: Object.keys(files).length};
+  uhiSlugs.push(service.slug);
+  console.log(`Built ${service.slug}: ${files['SKILL.md'].split('\n').length} line router, ${Object.keys(files).length - 1} reference(s).`);
+}
+writeFileSync(
+  join(outDir, 'uhi-index.json'),
+  `${JSON.stringify(
+    {
+      catalogue_version: catalogueVersion,
+      built: buildDate,
+      skills: uhiSlugs.map((slug) => ({name: slug, title: manifest[slug].title, archive: `${slug}.tar.gz`, files: filesUnder(join(uhiPluginDir, slug))})),
     },
     null,
     2,
@@ -1282,10 +1282,14 @@ const promptLines = [
   '',
   '## 4. Report back',
   '',
-  'Tell the user what you installed and where you suggest starting. Two cautions to keep for the whole engagement:',
+  'Tell the user what you installed and where you suggest starting. Offer three prompts from the **Try asking** section of the skills that fit, and ask what they are building. Two cautions to keep for the whole engagement:',
   '',
   '- Nothing in these skills has been run against the ABDM sandbox. Verify response shapes against real calls before relying on them.',
   `- The skills are snapshots. The current documentation lives at ${promptRef('/')}; prefer it, and the MCP server when connected, over any downloaded copy that has aged.`,
+  '',
+  '## 5. Plan before you build',
+  '',
+  ...PLAN_RULE,
   '',
 ];
 // What a manual download has to fetch. A skill is a folder now, and an agent
@@ -1326,7 +1330,7 @@ const nhcxPromptLines = [
   '',
   '## 1. Establish scope',
   '',
-  'There is one skill for the whole provider-side integration, `nhcx-full`, and one per NHCX use case. Ask the user which this project builds, and install only those:',
+  'There is one skill for the whole integration, `nhcx-full`, and one per NHCX use case. Each carries both the hospital side and the payer side of its exchanges. Ask the user which this project builds, and install only those:',
   '',
   ...nhcxSlugs.map((slug) => `- \`${slug}\`: ${manifest[slug].title}. ${manifest[slug].example}.`),
   '',
@@ -1382,11 +1386,165 @@ const nhcxPromptLines = [
   '',
   '## 4. Report back',
   '',
-  'Tell the user what you installed and where you suggest starting. Two cautions to keep for the whole engagement:',
+  'Tell the user what you installed and where you suggest starting. Offer three prompts from the **Try asking** section of the skills that fit, and ask what they are building. Two cautions to keep for the whole engagement:',
   '',
   '- The skills hold the bundles they send to the pinned samples in the NHCX package. Check response shapes against real sandbox calls before relying on them.',
   `- The skills are snapshots. The current documentation lives at ${promptRef('/docs/nhcx/v1')}; prefer it, and the MCP server when connected, over any downloaded copy that has aged.`,
   '',
+  '## 5. Plan before you build',
+  '',
+  ...PLAN_RULE,
+  '',
 ];
 writeFileSync(join(promptDir, 'nhcx.md'), `${nhcxPromptLines.join('\n')}\n`);
+
+// The UHI setup prompt, fetched by the UHI Build with AI page's one line setup.
+// UHI keeps its own integrators plugin, so the prompt installs that plugin and
+// only UHI skills, from the same repository and marketplace as the others.
+const uhiPromptLines = [
+  `These are official instructions from the ABDM Developer Portal (catalogue version ${catalogueVersion}) to set up an AI development environment for integrating with UHI, the Unified Health Interface.`,
+  '',
+  'Complete the steps yourself by running the commands directly. Ask the user only the questions in step 1.',
+  '',
+  '## 1. Establish scope',
+  '',
+  'There is one skill per UHI service. Ask the user which services this project builds, and whether it is the patient app (EUA) or the provider system (HSPA), and install only those skills:',
+  '',
+  ...uhiSlugs.map((slug) => `- \`${slug}\`: ${manifest[slug].title}. ${manifest[slug].example}.`),
+  '',
+  'Each skill installs and runs alone. An EUA completes Milestone 2 on HIE-CM before any UHI onboarding, which the `abdm-integrators-assistant` plugin carries as `abdm-m2`.',
+  '',
+  '## 2. Install the skills',
+  '',
+  'The plugin carries all six and updates in place, so prefer it wherever it installs.',
+  '',
+  '### Claude Code',
+  '',
+  '```',
+  `claude plugin marketplace add ${pluginRepo} && claude plugin install uhi-integrators-assistant@${marketplaceName}`,
+  '```',
+  '',
+  '### Codex',
+  '',
+  '```',
+  `codex plugin marketplace add ${pluginRepo}`,
+  '```',
+  '',
+  'Then open /plugins in Codex and install `uhi-integrators-assistant`.',
+  '',
+  '### Every other agent',
+  '',
+  'Cursor, GitHub Copilot and the others install plugins only from their own marketplaces, where this plugin is not listed yet. Install the skills one at a time instead, which is also the fallback anywhere the marketplace add above fails:',
+  '',
+  '```',
+  `npx skills add ${pluginRepo}/plugins/uhi-integrators-assistant/skills/uhi-pmjay-hem`,
+  '```',
+  '',
+  ...uhiSlugs.map((slug) => `- \`${pluginRepo}/plugins/uhi-integrators-assistant/skills/${slug}\``),
+  '',
+  `\`${promptRef('/skills/uhi-index.json')}\` lists every UHI skill, its archive and the exact files it is made of, so take the archive rather than fetching files one at a time.`,
+  '',
+  '## 3. Connect the Docs MCP server',
+  '',
+  'A live MCP server over the documentation. Register it with your agent:',
+  '',
+  '```',
+  `claude mcp add --transport http abdm-docs ${mcpUrl}`,
+  '```',
+  '',
+  `For other agents, add an HTTP MCP server named \`abdm-docs\` at \`${mcpUrl}\` using their config format.`,
+  '',
+  '## 4. Report back',
+  '',
+  'Tell the user what you installed and where you suggest starting. Offer three prompts from the **Try asking** section of the skills that fit, and ask what they are building.',
+  `The skills are snapshots. The current documentation lives at ${promptRef('/docs/uhi/v1')}; prefer it, and the MCP server when connected, over any downloaded copy that has aged.`,
+  '',
+  '## 5. Plan before you build',
+  '',
+  ...PLAN_RULE,
+  '',
+];
+writeFileSync(join(promptDir, 'uhi.md'), `${uhiPromptLines.join('\n')}\n`);
 console.log('Wrote agent-setup/nhcx.md.');
+
+// ---------------------------------------------------------------------------
+// One start command per integrators plugin: what a person runs straight after
+// installing, to see what the plugin does and a prompt to begin with. Built
+// from the skills manifest and from the frontmatter of the plugin's own agents
+// and commands, so it lists exactly what ships and nothing it does not.
+function frontmatterOf(file) {
+  return parse(readFileSync(file, 'utf8').match(/^---\n([\s\S]*?)\n---/)?.[1] ?? '') ?? {};
+}
+
+/** The first sentence of a description, which is all a list line needs. */
+const firstSentence = (text) => String(text ?? '').trim().match(/^.*?\.(?=\s|$)/)?.[0] ?? String(text ?? '').trim();
+
+function writeStartCommand({plugin, command, what, slugs}) {
+  const dir = join(root, 'plugins', plugin);
+  const component = (sub, ext = '.md') =>
+    existsSync(join(dir, sub))
+      ? readdirSync(join(dir, sub)).filter((f) => f.endsWith(ext) && f !== `${command}.md`).sort()
+      : [];
+  const agents = component('agents').map((f) => {
+    const fm = frontmatterOf(join(dir, 'agents', f));
+    return `- \`${fm.name ?? f.replace(/\.md$/, '')}\`: ${firstSentence(fm.description)}`;
+  });
+  const commands = component('commands').map((f) => `- \`/${f.replace(/\.md$/, '')}\`: ${firstSentence(frontmatterOf(join(dir, 'commands', f)).description)}`);
+  // After three build prompts, one of each other kind: the first call, a
+  // failed call (one naming a real code when any skill has one), the tests.
+  const prompts = slugs.flatMap((slug) => tryAsking(manifest[slug]).slice(1));
+  const more = [/before my first/, /returned/, /failed/, /test cases/]
+    .map((kind) => prompts.find((p) => kind.test(p)))
+    .filter(Boolean)
+    .filter((p, i, all) => !(/failed/.test(p) && all.some((q) => /returned/.test(q))));
+  const body = [
+    '---',
+    `description: See what this plugin does and a prompt to start from, then say what you are building.`,
+    "argument-hint: '[what you are building, optional]'",
+    '---',
+    '',
+    `<!-- generated by scripts/build-skills.mjs from the skills manifest and this plugin's agents and commands. Do not edit by hand. -->`,
+    '',
+    'Introduce this plugin in the order below, then stop and wait for an answer.',
+    '',
+    `1. One line on what it is for: ${what}.`,
+    '2. What it can do, from the three lists below, one line each. Leave out what does not bear on `$ARGUMENTS` when it is given.',
+    '3. Three or four prompts from **Try asking**, picked to suit `$ARGUMENTS` when it is given.',
+    '4. Ask what they are building, and whether the code for it exists yet. Then load the one skill below that fits, or dispatch the agent when the goal spans more than one.',
+    '5. Before anything is built, follow **The plan file** below.',
+    '',
+    '## Skills, one per module, each with a prompt to start it',
+    '',
+    ...slugs.map((slug) => `- \`${slug}\`: ${manifest[slug].title}. "${manifest[slug].example}"`),
+    '',
+    ...(agents.length ? ['## Agents', '', ...agents, ''] : []),
+    ...(commands.length ? ['## Commands', '', ...commands, ''] : []),
+    ...planSection(),
+    '## Try asking',
+    '',
+    ...slugs.slice(0, 3).map((slug) => `- "${manifest[slug].example}"`),
+    ...more.map((p) => `- "${p}"`),
+    '',
+  ];
+  writeFileSync(join(dir, 'commands', `${command}.md`), body.join('\n'));
+  console.log(`Wrote plugins/${plugin}/commands/${command}.md.`);
+}
+
+writeStartCommand({
+  plugin: 'abdm-integrators-assistant',
+  command: 'abdm-start',
+  what: 'building, debugging and testing an ABDM integration on HIE-CM, module by module, against the sandbox',
+  slugs: abdmSlugs,
+});
+writeStartCommand({
+  plugin: 'uhi-integrators-assistant',
+  command: 'uhi-start',
+  what: 'building a UHI service on the network, on the buyer side or the provider side, journey by journey',
+  slugs: uhiSlugs,
+});
+writeStartCommand({
+  plugin: 'nhcx',
+  command: 'nhcx-start',
+  what: 'building an NHCX claims integration into a hospital or payer system, from coverage to payment',
+  slugs: nhcxSlugs,
+});

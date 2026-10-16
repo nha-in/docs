@@ -1,0 +1,1102 @@
+{
+  "case_id": "decline-production-cert-timeline-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "Exactly how many business days does NHA take to issue production keys after the exit form is submitted?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_011vm2MUremqEkZpHARA3st4",
+            "Name": "search",
+            "Input": {
+              "query": "production keys exit form NHA issue timeline business days",
+              "response_format": "detailed"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "production keys exit form NHA issue timeline business days",
+            "response_format": "detailed"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01UhRzvuTSLoKmTUEgPridc9",
+            "Name": "search",
+            "Input": {
+              "query": "NHA production keys onboarding",
+              "response_format": "detailed"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "NHA production keys onboarding",
+            "response_format": "detailed"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/your-certificate",
+                "id": "nhcx.flow.rotate-certificate",
+                "kind": "atom",
+                "milestone": "n/a",
+                "snippet": "...It is described in [Onboard as a participant in **production**](**production**-**onboarding**...",
+                "summary": "Replace the certificate other participants use to seal messages to you, without losing messages already sealed with the old one.",
+                "title": "Rotate your encryption certificate",
+                "type": "flow"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01QPLD5LpwMenEwYxb6X7ASk",
+            "Name": "search",
+            "Input": {
+              "query": "exit form production credentials",
+              "response_format": "detailed"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "exit form production credentials",
+            "response_format": "detailed"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/going-live",
+                "id": "shared.sandbox.going-live",
+                "kind": "atom",
+                "milestone": "n/a",
+                "snippet": "...go live.** You move the approved integration to **production**. **Production**\n   **credentials** are...",
+                "summary": "How an integration leaves the sandbox for production: functional testing and the security audit, the Health Tech Committee demonstration, then production credentials.",
+                "title": "Going live, the sandbox exit process",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/api/registry/endpoints/registry-get-session",
+                "id": "nhcx.endpoint.get-session",
+                "kind": "atom",
+                "milestone": "n/a",
+                "snippet": "...Sandbox **credentials** do not work in **production**.\n- No token is needed for...",
+                "summary": "Trade your client id and client secret, sent as a form, for an access token to use on claims exchange calls.",
+                "title": "POST /get/session",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.decision.session-endpoint",
+                "kind": "atom",
+                "milestone": "n/a",
+                "snippet": "...application/x-www-**form**-urlencoded` |\n| Body | `clientId`, `clientSecret`, `grantType` `client_**credentials**` | `client...",
+                "summary": "Get the token that every exchange call carries from one place in your code, and set the address it calls per environment.",
+                "title": "Which session token endpoint to call",
+                "type": "decision"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01AxgdACvSB7DgYKhCfAPpao",
+            "Name": "search",
+            "Input": {
+              "query": "how long issue production keys days",
+              "response_format": "detailed"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "how long issue production keys days",
+            "response_format": "detailed"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01KGUc26WhFyVwU9TbjXt5Lc",
+            "Name": "get",
+            "Input": {
+              "id": "shared.sandbox.going-live"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "shared.sandbox.going-live"
+          },
+          "output": {
+            "body": "# Going live, the sandbox exit process\n\n## In plain words\n\nWorking in the sandbox is not the same as being live. Sandbox integration has six stages.\nStages 1 to 3 get you access and build the milestones. Stages 4 to 6 take you to production,\nand you run them once, at the end.\n\nThere is no per milestone submission. Stages 4 to 6 cover your whole integration.\n\n## Before you start\n\nEvery milestone your integration needs works end to end. The\n[milestones page](/docs/hiecm/v3/milestones) says which ones apply to each entity you build\nfor, a facility, an insurer or a citizen. See [roles](hiecm.concept.roles) for which role that\nentity takes on a given call. Start stage 4 once all of them are complete, not milestone by\nmilestone.\n\n## What happens\n\n1. **Stage 4: functional testing and the security audit.** Before testing, you demonstrate\n   the [ABDM](shared.glossary.abdm) functionality you built to the integration team.\n   Empanelled agencies then run both exercises. Functional testing produces a report and a\n   certificate. The security audit produces the [Safe to Host certificate](wasa.md), and the\n   [WASA](wasa.md) atom covers it in detail. You then upload the exit form on the sandbox with\n   four things: the functional testing report and certificate, the security audit report, a\n   signed undertaking, and any other supporting document the integration team requests.\n2. **Stage 5: the Health Tech Committee demonstration.** You present the integrated solution\n   to the Health Tech Committee (HTC) and obtain approval for production access. The committee\n   records its decision in four review stages, each with its own reviewer and date, so the\n   outcome arrives as a sequence rather than a single answer.\n3. **Stage 6: go live.** You move the approved integration to production. Production\n   credentials are issued once the committee approves.\n\nConfirm the format of the functional testing report and the undertaking with the integration\nteam before you assemble them.\n\n## How you know it worked\n\nYou hold production credentials: a production client id and client secret. They are not the\nsame values as your sandbox credentials.\n\nYou also switch base URLs. For the gateway session call, sandbox is `https://dev.abdm.gov.in`\nwith `X-CM-ID: sbx`, and production is `https://apis.abdm.gov.in`. For the\n[ABHA](shared.glossary.abha) service, sandbox is `https://abhasbx.abdm.gov.in/abha/api/v3/`. A\nproduction client id against a sandbox host, or the reverse, fails.\n\nA call that worked in the sandbox returns the same result against the production host.\n\n## When it goes wrong\n\nQuestions about the exit process itself, including where to submit the exit form or what\ncounts as a valid supporting document, go to the\n[support ticketing platform](https://sandboxsupport.abdm.gov.in/) or\n`integration.support@nha.gov.in`. See [Support](/docs/support) for the report format.\n\nIf a call that worked in the sandbox fails in production, check the base URL and the `X-CM-ID`\nheader first: see [Everything returns 401](/docs/hiecm/v3/troubleshooting/everything-returns-401),\nwhich covers this exact class of failure.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/getting-started/going-live",
+            "gateway": "shared",
+            "id": "shared.sandbox.going-live",
+            "milestone": "n/a",
+            "summary": "How an integration leaves the sandbox for production: functional testing and the security audit, the Health Tech Committee demonstration, then production credentials.",
+            "title": "Going live, the sandbox exit process",
+            "type": "sandbox"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01Ld1rpyS4PMbUG57FQJUqAp",
+            "Name": "search",
+            "Input": {
+              "query": "days timeline issuance credentials after approval",
+              "response_format": "detailed"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "days timeline issuance credentials after approval",
+            "response_format": "detailed"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_015uJGDXum6btz8CzrPFjacD",
+            "Name": "search",
+            "Input": {
+              "query": "business days production access SLA",
+              "response_format": "detailed"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "business days production access SLA",
+            "response_format": "detailed"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01Uk9At3Jn73N9PMnudRKBRf",
+            "Name": "search",
+            "Input": {
+              "query": "sandbox onboarding go-live participant production",
+              "type": "flow",
+              "response_format": "detailed"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "sandbox onboarding go-live participant production",
+            "type": "flow",
+            "response_format": "detailed"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/nhcx/v1/concepts/pmjay-on-nhcx",
+                "id": "nhcx.flow.pmjay-hospital-migration",
+                "kind": "atom",
+                "milestone": "n/a",
+                "snippet": "...Onboard as a **participant** in **production**](**production**-**onboarding**.md). This flow adds...",
+                "summary": "Move a scheme-empanelled hospital from the central claims portal to its own hospital system, by onboarding it on the exchange and having its hospital ID mapped to its participant code.",
+                "title": "Migrate a PMJAY hospital to HMIS through NHCX",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/get-your-sandbox-credentials",
+                "id": "nhcx.flow.sandbox-onboarding",
+                "kind": "atom",
+                "milestone": "n/a",
+                "snippet": "...Apply at `https://**sandbox**.**abdm**.gov.in/**sandbox**/v3/` with the intent...",
+                "summary": "Register your system in the claims exchange test environment so it holds a participant code, a registered certificate and a callback address.",
+                "title": "Onboard as a participant in the NHCX sandbox",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/notifications-and-patient-apps#subscribing",
+                "id": "nhcx.flow.notification-subscribe",
+                "kind": "atom",
+                "milestone": "n/a",
+                "snippet": "...**sandbox** testing on `hcxsbx.**abdm**.gov.in`, **sandbox** certification, then production registry...",
+                "summary": "Have a patient's health record app receive plain-language updates on their pre-authorisations, claims and payments, by subscribing each time the patient logs in.",
+                "title": "Subscribe a patient app to notifications",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/go-live",
+                "id": "nhcx.flow.production-onboarding",
+                "kind": "atom",
+                "milestone": "n/a",
+                "snippet": "...See [The **sandbox** exit process and sign-off](../**sandbox**/**sandbox**-exit.md...",
+                "summary": "Create and confirm your live claims exchange participant record, then register your certificate and callback address, each step confirmed by a passcode sent to your registered mobile.",
+                "title": "Onboard as a participant in production",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/roles/provider/biometric-authentication",
+                "id": "nhcx.flow.biometric-face",
+                "kind": "atom",
+                "milestone": "n/a",
+                "snippet": "...tokens and ABHAProfile\n```\n\nThe **sandbox** host is `https://apisbx.**abdm**.gov.in...",
+                "summary": "Prove that a scheme beneficiary is at your hospital with a face scan on a phone, when fingerprint or iris is not possible, and get the same short-lived user token.",
+                "title": "Authenticate a beneficiary by face on a mobile device",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/building-and-sending-a-jwe",
+                "id": "nhcx.flow.send-a-sealed-request",
+                "kind": "atom",
+                "milestone": "n/a",
+                "snippet": "...See [Onboard as a participant in the NHCX **sandbox**](**sandbox**-onboarding.md...",
+                "summary": "Seal a claims message for one recipient, post it to the exchange, and wait for the recipient's answer to arrive at your callback address.",
+                "title": "Send a sealed request through NHCX",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/registries/policy",
+                "id": "nhcx.flow.policy-link-and-delink",
+                "kind": "atom",
+                "milestone": "n/a",
+                "snippet": "...apisbx.**abdm**.gov.in/pmjay/sbxhcx/participanthcxservice` in the **sandbox**, `https://apisprod...",
+                "summary": "As an insurer or claims administrator, record which beneficiaries hold which products so that hospitals can find their cover, and remove the record when it ends.",
+                "title": "Link and de-link an ABHA and a policy",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/roles/provider/biometric-authentication",
+                "id": "nhcx.flow.biometric-fingerprint-iris",
+                "kind": "atom",
+                "milestone": "n/a",
+                "snippet": "...refreshToken\n    end\n```\n\nThe **sandbox** host is `https://apisbx.**abdm**.gov.in`. Every...",
+                "summary": "Prove that a scheme beneficiary is physically at your hospital with a fingerprint or iris scan, and get the short-lived user token their pre-authorisation and claim carry.",
+                "title": "Authenticate a beneficiary by fingerprint or iris",
+                "type": "flow"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_0119fPmyQqGHwAecCT1a8Avh",
+            "Name": "get",
+            "Input": {
+              "id": "nhcx.flow.production-onboarding"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "nhcx.flow.production-onboarding"
+          },
+          "output": {
+            "body": "# Onboard as a participant in production\n\n## In plain words\n\nProduction on the [National Health Claims Exchange](../../shared/glossary/nhcx.md) (NHCX) has its own participant registry. You create a separate production record in four calls. Two of them confirm a passcode sent by SMS, so the person holding your registered mobile takes part.\n\nThe first pair creates the participant and returns a [participant code](../glossary/participant-code.md) ending in `@hcx`. The second pair registers your encryption certificate and callback address. Only after the second pair can NHCX send requests to you and receive your responses.\n\n## Before you start\n\n- **Sandbox sign-off.** You passed the [sandbox exit](../glossary/sandbox-exit.md): bundle validation by [NRCeS](../../shared/glossary/nrces.md), an internal demo, a Health Tech Committee demo, and NHA's confirmation email. See [The sandbox exit process and sign-off](../sandbox/sandbox-exit.md).\n- **Production credentials.** NHA has assigned your role to your [Milestone 1](../../hiecm/glossary/m1.md) production client ID. You use that client ID for every production call.\n- **The registered mobile.** For a [provider](../glossary/provider.md), the number recorded against the facility in the [Health Facility Registry](../../shared/glossary/hfr.md) (HFR). For a [payer](../glossary/payer.md), the number in the NHCX payer details. A person with that phone is available during the calls.\n- **Your registry ID.** The HFR ID for a provider. The [IRDAI](../glossary/irdai.md) registry ID for a payer, without leading zeros: `0123` is sent as `123`.\n- **A production certificate** in base64, from [Generate an encryption certificate and register it](generate-and-register-certificate.md).\n- **A live callback address** that meets the [callback address rules](../sandbox/callback-url-requirements.md).\n\n## What happens\n\nEvery call goes to the production participant service, `https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice`, with your session token.\n\n```mermaid\nsequenceDiagram\n    participant P as Person holding the registered mobile\n    participant You as Your system\n    participant GW as ABDM session gateway\n    participant PS as NHCX participant service, production\n    You->>GW: POST /api/hiecm/gateway/v3/sessions with the production client ID\n    GW-->>You: accessToken\n    You->>PS: POST /v2/participant/create\n    PS-->>You: participantid ending @hcx, and transactionid\n    PS->>P: SMS passcode for this transactionid\n    P->>You: reads out the passcode\n    You->>PS: GET /validate with transactionId and passcode\n    PS-->>You: creation confirmed\n    You->>PS: POST /v2/participant/update\n    PS-->>You: participant_code, status and a new transactionid\n    PS->>P: SMS passcode for the update\n    P->>You: reads out the passcode\n    You->>PS: GET /update/validate with transactionId and passcode\n    PS-->>You: certificate and endpoint registered\n    You->>PS: POST /fetch/certs with your participant code\n    PS-->>You: your encryption_cert\n```\n\n### 1. Get a session token\n\nUse your production client ID. [Which session token endpoint to call](../decisions/session-endpoint.md) settles the address, and [NHCX environments, hosts and base URLs](../sandbox/environments-and-base-urls.md) lists the production hosts.\n\n### 2. Create the participant\n\n`POST /v2/participant/create`:\n\n```json\n{\n  \"registrytype\": \"10001\",\n  \"registryid\": \"<YOUR_HFR_ID>\",\n  \"role\": [\"10001\"],\n  \"endpoint_url\": \"\",\n  \"mobilenumber\": \"<MOBILE_REGISTERED_IN_HFR>\",\n  \"email\": \"<YOUR_EMAIL>\"\n}\n```\n\n`registrytype` takes a registry code: `10001` HFR, `10002` NIN, `10003` ROHINI or `10004` PAYER. `role` takes role codes: `10001` provider, `10002` payer, `10003` TPA or `10009` end user application. The full enum list is in [POST /v2/participant/create](../endpoints/v2-participant-create.md). You can leave `endpoint_url` empty here, because step 4 sets it.\n\nThe answer carries `participantid`, `facilityname`, `facilitycontact`, `facilityemail`, `transactionid` and an `error` object with `code`, `message` and `trace`. On success the three error fields are null.\n\n**Wait:** the passcode arrives by SMS on the registered mobile.\n\n### 3. Confirm the creation\n\n```text\nGET /validate?transactionId=<TRANSACTION_ID_FROM_CREATE>&passcode=<PASSCODE_FROM_SMS>\n```\n\nThe transaction ID and passcode stay valid for 24 hours. Each create call issues a new pair, and a passcode works only with its own transaction ID.\n\n### 4. Register the certificate and callback address\n\n`POST /v2/participant/update`, after step 3 has succeeded:\n\n```json\n{\n  \"participantcode\": \"<YOUR_PARTICIPANT_CODE>\",\n  \"encryptioncert\": \"<BASE64_OF_CERTIFICATE_CRT>\",\n  \"endpointurl\": \"<YOUR_CALLBACK_BASE_ADDRESS>\"\n}\n```\n\nThe answer carries `participant_code`, `status` and a new `transactionid`.\n\n**Wait:** a second passcode arrives by SMS.\n\n### 5. Confirm the update\n\n```text\nGET /update/validate?transactionId=<TRANSACTION_ID_FROM_UPDATE>&passcode=<PASSCODE_FROM_SMS>\n```\n\nThe same 24-hour rule applies. When this succeeds, your callback address is active and your certificate is registered.\n\n### 6. Read your record back\n\n`POST /fetch/certs` with your `@hcx` code returns the certificate stored against it. Later certificate changes can skip the passcode through `POST /v2/update/cert`. See [Rotate your encryption certificate](rotate-certificate.md).\n\n## How you know it worked\n\n`GET /update/validate` succeeds for the transaction ID from step 4. `POST /fetch/certs` on the production participant service returns, for your `@hcx` code, a certificate whose public key matches your production `certificate.crt`.\n\n```observation schema=exit-condition\nchannel: synchronous\ncall: POST /fetch/certs\nhost: https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice\nrequest:\n  participantid: <YOUR_PRODUCTION_PARTICIPANT_CODE>\nmatch:\n  encryption_cert: public key equals the one in your production certificate.crt\n```\n\nYour production code now goes in `x-hcx-sender_code` on everything you send. Next steps:\n\n- A PMJAY hospital continues with [Migrate a PMJAY hospital to HMIS through NHCX](pmjay-hospital-migration.md).\n- A payer links its policies with [Link and de-link an ABHA and a policy](policy-link-and-delink.md).\n- Plan staff training and a pilot with a few clients before full go-live. See [Going live on NHCX production](../sandbox/going-live.md).\n\n## When it goes wrong\n\n- **Create fails on the mobile number.** It must match the HFR record for a provider, or the NHCX payer details for a payer, exactly. Correct the number at its source, then create again.\n- **Create fails on the registry ID for a payer.** Strip leading zeros from the IRDAI ID.\n- **Create is refused on `registrytype` or `role`.** Use only codes from the lists in step 2.\n- **The passcode is refused.** It is older than 24 hours, or it belongs to another transaction ID. Run the create or update call again for a fresh pair.\n- **You lost the transaction ID.** Run the create or update call again. There is no way to look it up.\n- **The update is refused.** Step 3 has not succeeded yet. The update needs a participant whose creation is confirmed.\n- **Every call returns `401`.** The token has expired, or it was minted with a sandbox client ID. See [NHCX-401](../errors/nhcx-401.md).",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/nhcx/v1/go-live",
+            "gateway": "nhcx",
+            "id": "nhcx.flow.production-onboarding",
+            "milestone": "n/a",
+            "summary": "Create and confirm your live claims exchange participant record, then register your certificate and callback address, each step confirmed by a passcode sent to your registered mobile.",
+            "title": "Onboard as a participant in production",
+            "type": "flow"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_019YxBXsJeW8ns8kJH7wNCJg",
+            "Name": "search",
+            "Input": {
+              "query": "NHCX sandbox exit process sign-off",
+              "response_format": "detailed"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "NHCX sandbox exit process sign-off",
+            "response_format": "detailed"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#nhcx",
+                "id": "shared.glossary.nhcx",
+                "kind": "atom",
+                "milestone": "n/a",
+                "snippet": "...**National** **Health** **Claims** **Exchange**\n\n## In plain words\n\n**National** **Health** **Claims** **Exchange**, **ABDM**...",
+                "summary": "The gateway for insurance claims, separate from HIE-CM and UHI.",
+                "title": "NHCX, the National Health Claims Exchange",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/go-live",
+                "id": "nhcx.flow.production-onboarding",
+                "kind": "atom",
+                "milestone": "n/a",
+                "snippet": "...the [**National** **Health** **Claims** **Exchange**](../../shared/glossary/**nhcx**.md) (**NHCX**) has its...",
+                "summary": "Create and confirm your live claims exchange participant record, then register your certificate and callback address, each step confirmed by a passcode sent to your registered mobile.",
+                "title": "Onboard as a participant in production",
+                "type": "flow"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.concept.what-nhcx-is",
+                "kind": "atom",
+                "milestone": "n/a",
+                "snippet": "# What the **National** **Health** **Claims** **Exchange** is and what it does not...",
+                "summary": "The claims exchange is a switch that carries sealed claim messages between hospitals and insurers; it routes and checks envelopes but never reads or decides a claim.",
+                "title": "What the National Health Claims Exchange is and what it does not do",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/concepts/pmjay-on-nhcx",
+                "id": "nhcx.flow.pmjay-hospital-migration",
+                "kind": "atom",
+                "milestone": "n/a",
+                "snippet": "...**claims** through the [**National** **Health** **Claims** **Exchange**](../../shared/glossary/**nhcx**.md) (**NHCX**...",
+                "summary": "Move a scheme-empanelled hospital from the central claims portal to its own hospital system, by onboarding it on the exchange and having its hospital ID mapped to its participant code.",
+                "title": "Migrate a PMJAY hospital to HMIS through NHCX",
+                "type": "flow"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.test.payer-uc-04",
+                "kind": "atom",
+                "milestone": "n/a",
+                "snippet": "...See [the **sandbox** **exit** **process**](../**sandbox**/**sandbox**-**exit**.md).\n\n```precondition\nhuman: true...",
+                "summary": "Prove that your insurance system can fetch the registered participants of one role from the claims exchange.",
+                "title": "Payer sandbox exit use case 4: Get participant list",
+                "type": "test"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.test.provider-uc-01",
+                "kind": "atom",
+                "milestone": "n/a",
+                "snippet": "...See [the **sandbox** **exit** **process**](../**sandbox**/**sandbox**-**exit**.md).\n\n```precondition\nhuman: true...",
+                "summary": "Prove that your hospital system can fetch the registered participants of one role, such as every payer, from the claims exchange.",
+                "title": "Provider sandbox exit use case 1: Get participant list",
+                "type": "test"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.test.payer-uc-15",
+                "kind": "atom",
+                "milestone": "n/a",
+                "snippet": "...See [the **sandbox** **exit** **process**](../**sandbox**/**sandbox**-**exit**.md).\n\n```precondition\nhuman: true...",
+                "summary": "Prove that your insurance system can ask the claims exchange where one of its earlier messages stands, and read the answer.",
+                "title": "Payer sandbox exit use case 15: Get status",
+                "type": "test"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.test.provider-uc-13",
+                "kind": "atom",
+                "milestone": "n/a",
+                "snippet": "...See [the **sandbox** **exit** **process**](../**sandbox**/**sandbox**-**exit**.md).\n\n```precondition\nhuman: true...",
+                "summary": "Prove that your hospital system can ask the claims exchange where one of its earlier requests stands, and read the answer.",
+                "title": "Provider sandbox exit use case 13: Get status",
+                "type": "test"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.test.provider-uc-08",
+                "kind": "atom",
+                "milestone": "n/a",
+                "snippet": "...See [the **sandbox** **exit** **process**](../**sandbox**/**sandbox**-**exit**.md).\n\n```precondition\nhuman: true...",
+                "summary": "Prove that your hospital system can receive a payer's request for more documents and send the documents back through the claims exchange.",
+                "title": "Provider sandbox exit use case 8: Respond to communication request received from payer for additional documents",
+                "type": "test"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.test.payer-uc-06",
+                "kind": "atom",
+                "milestone": "n/a",
+                "snippet": "...See [the **sandbox** **exit** **process**](../**sandbox**/**sandbox**-**exit**.md).\n\n```precondition\nhuman: true...",
+                "summary": "Prove that your insurance system can obtain, and keep fresh, the access token every call to the claims exchange must carry.",
+                "title": "Payer sandbox exit use case 6: Get the auth token",
+                "type": "test"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01CzgBeJnRbFERiUKwzD86wg",
+            "Name": "search",
+            "Input": {
+              "query": "NHCX sandbox exit process",
+              "response_format": "detailed"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "NHCX sandbox exit process",
+            "response_format": "detailed"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#nhcx",
+                "id": "shared.glossary.nhcx",
+                "kind": "atom",
+                "milestone": "n/a",
+                "snippet": "...**National** **Health** **Claims** **Exchange**\n\n## In plain words\n\n**National** **Health** **Claims** **Exchange**, **ABDM**...",
+                "summary": "The gateway for insurance claims, separate from HIE-CM and UHI.",
+                "title": "NHCX, the National Health Claims Exchange",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.concept.what-nhcx-is",
+                "kind": "atom",
+                "milestone": "n/a",
+                "snippet": "# What the **National** **Health** **Claims** **Exchange** is and what it does not...",
+                "summary": "The claims exchange is a switch that carries sealed claim messages between hospitals and insurers; it routes and checks envelopes but never reads or decides a claim.",
+                "title": "What the National Health Claims Exchange is and what it does not do",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/go-live",
+                "id": "nhcx.flow.production-onboarding",
+                "kind": "atom",
+                "milestone": "n/a",
+                "snippet": "...the [**National** **Health** **Claims** **Exchange**](../../shared/glossary/**nhcx**.md) (**NHCX**) has its...",
+                "summary": "Create and confirm your live claims exchange participant record, then register your certificate and callback address, each step confirmed by a passcode sent to your registered mobile.",
+                "title": "Onboard as a participant in production",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/get-your-sandbox-credentials",
+                "id": "nhcx.flow.sandbox-onboarding",
+                "kind": "atom",
+                "milestone": "n/a",
+                "snippet": "...**claims** messages on the [**National** **Health** **Claims** **Exchange**](../../shared/glossary/**nhcx**.md...",
+                "summary": "Register your system in the claims exchange test environment so it holds a participant code, a registered certificate and a callback address.",
+                "title": "Onboard as a participant in the NHCX sandbox",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/concepts/pmjay-on-nhcx",
+                "id": "nhcx.flow.pmjay-hospital-migration",
+                "kind": "atom",
+                "milestone": "n/a",
+                "snippet": "...**claims** through the [**National** **Health** **Claims** **Exchange**](../../shared/glossary/**nhcx**.md) (**NHCX**...",
+                "summary": "Move a scheme-empanelled hospital from the central claims portal to its own hospital system, by onboarding it on the exchange and having its hospital ID mapped to its participant code.",
+                "title": "Migrate a PMJAY hospital to HMIS through NHCX",
+                "type": "flow"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.test.payer-uc-04",
+                "kind": "atom",
+                "milestone": "n/a",
+                "snippet": "...See [the **sandbox** **exit** **process**](../**sandbox**/**sandbox**-**exit**.md).\n\n```precondition\nhuman: true...",
+                "summary": "Prove that your insurance system can fetch the registered participants of one role from the claims exchange.",
+                "title": "Payer sandbox exit use case 4: Get participant list",
+                "type": "test"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/building-and-sending-a-jwe",
+                "id": "nhcx.flow.send-a-sealed-request",
+                "kind": "atom",
+                "milestone": "n/a",
+                "snippet": "...**National** **Health** **Claims** **Exchange**](../../shared/glossary/**nhcx**.md) (**NHCX**) carries **claims** messages...",
+                "summary": "Seal a claims message for one recipient, post it to the exchange, and wait for the recipient's answer to arrive at your callback address.",
+                "title": "Send a sealed request through NHCX",
+                "type": "flow"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.test.provider-uc-01",
+                "kind": "atom",
+                "milestone": "n/a",
+                "snippet": "...See [the **sandbox** **exit** **process**](../**sandbox**/**sandbox**-**exit**.md).\n\n```precondition\nhuman: true...",
+                "summary": "Prove that your hospital system can fetch the registered participants of one role, such as every payer, from the claims exchange.",
+                "title": "Provider sandbox exit use case 1: Get participant list",
+                "type": "test"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/api/session/endpoints/session-api-hiecm-gateway-v3-sessions",
+                "id": "nhcx.endpoint.session-token",
+                "kind": "atom",
+                "milestone": "n/a",
+                "snippet": "...Every call you make to the **National** **Health** **Claims** **Exchange** ([NHCX](../../shared...",
+                "summary": "Trade your client id and client secret for the access token, valid for 1200 seconds (20 minutes), that every claims exchange call carries.",
+                "title": "POST /api/hiecm/gateway/v3/sessions",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.test.payer-uc-15",
+                "kind": "atom",
+                "milestone": "n/a",
+                "snippet": "...See [the **sandbox** **exit** **process**](../**sandbox**/**sandbox**-**exit**.md).\n\n```precondition\nhuman: true...",
+                "summary": "Prove that your insurance system can ask the claims exchange where one of its earlier messages stands, and read the answer.",
+                "title": "Payer sandbox exit use case 15: Get status",
+                "type": "test"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01VpsWVLsYkk9mmKf8AAMDwp",
+            "Name": "search",
+            "Input": {
+              "query": "sandbox exit form submission NHA approval timeline",
+              "response_format": "detailed"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "sandbox exit form submission NHA approval timeline",
+            "response_format": "detailed"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/sandbox#4-note-the-base-urls",
+                "id": "uhi.sandbox.base-urls",
+                "kind": "atom",
+                "milestone": "n/a",
+                "snippet": "...**Sandbox** | `https://uhigatewaysandbox.**abdm**.gov.in` | Reference EUA `http://uhieuasandbox.**abdm**.gov...",
+                "summary": "The UHI Gateway base URL for the sandbox and for production, and the reference EUA and HSPA apps in the sandbox.",
+                "title": "UHI Gateway base URLs for sandbox and production",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/base-urls",
+                "id": "nhcx.sandbox.environments-and-base-urls",
+                "kind": "atom",
+                "milestone": "n/a",
+                "snippet": "...**ABDM**](../../shared/glossary/**abdm**.md) **sandbox**, for client credentials | https://**sandbox**.**abdm**...",
+                "summary": "The two environments, the web portals, and the two base addresses every call is built on, for testing and for live claims.",
+                "title": "NHCX environments, hosts and base URLs",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/get-your-sandbox-credentials",
+                "id": "nhcx.sandbox.prerequisites",
+                "kind": "atom",
+                "milestone": "n/a",
+                "snippet": "...Apply for **ABDM** **sandbox** credentials\n\n1. Apply at https://**sandbox**.**abdm**.gov...",
+                "summary": "The checklist to complete before your system can register on the claims exchange sandbox: a facility registration, sandbox credentials, basic health ID features, a role, a certificate and a callback address.",
+                "title": "What you need before you register on the NHCX sandbox",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/going-live",
+                "id": "shared.sandbox.going-live",
+                "kind": "atom",
+                "milestone": "n/a",
+                "snippet": "...For the gateway session call, **sandbox** is `https://dev.**abdm**.gov.in...",
+                "summary": "How an integration leaves the sandbox for production: functional testing and the security audit, the Health Tech Committee demonstration, then production credentials.",
+                "title": "Going live, the sandbox exit process",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/first-fifteen-minutes",
+                "id": "shared.sandbox.first-fifteen-minutes",
+                "kind": "atom",
+                "milestone": "n/a",
+                "snippet": "...glossary.**abdm**) call until\n[NHA](shared.glossary.nha) approves your **sandbox** registration...",
+                "summary": "Everything you can do before NHA approves your sandbox registration: read one real gateway session exchange and assemble your own first call, ready to paste the moment credentials arrive.",
+                "title": "Your first fifteen minutes with ABDM",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/concepts/signing#generate-your-keys-and-headers",
+                "id": "uhi.concept.key-generation",
+                "kind": "atom",
+                "milestone": "n/a",
+                "snippet": "...The [UHI header signing document](https://github.com/NHA-**ABDM**/UHI/blob...",
+                "summary": "The Header Generation Utility creates your Ed25519 key pair and signs each payload; share only the public key and keep the private key on your server.",
+                "title": "Generating UHI signing keys and headers",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/api/session/endpoints/session-api-hiecm-gateway-v3-sessions",
+                "id": "nhcx.endpoint.session-token",
+                "kind": "atom",
+                "milestone": "n/a",
+                "snippet": "...No callback follows.\n\n| Environment | Session address |\n|---|---|\n| **Sandbox** | `https://dev.**abdm**.gov.in...",
+                "summary": "Trade your client id and client secret for the access token, valid for 1200 seconds (20 minutes), that every claims exchange call carries.",
+                "title": "POST /api/hiecm/gateway/v3/sessions",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.decision.session-endpoint",
+                "kind": "atom",
+                "milestone": "n/a",
+                "snippet": "...**ABDM** [**sandbox**](../../shared/glossary/**sandbox**.md), `**ABDM**_CLIENT_ID` and `**ABDM**_CLIENT...",
+                "summary": "Get the token that every exchange call carries from one place in your code, and set the address it calls per environment.",
+                "title": "Which session token endpoint to call",
+                "type": "decision"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/going-live#when-it-goes-wrong",
+                "id": "uhi.troubleshooting.go-live",
+                "kind": "atom",
+                "milestone": "n/a",
+                "snippet": "...The host is `https://uhigateway.**abdm**.gov.in`, not `https://uhigatewaysandbox.**abdm**...",
+                "summary": "A search that worked in the sandbox fails in production. Check the Gateway host, then your production IDs and callback URL.",
+                "title": "When a UHI search fails after the switch to production",
+                "type": "troubleshooting"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#sandbox",
+                "id": "shared.glossary.sandbox",
+                "kind": "atom",
+                "milestone": "n/a",
+                "snippet": "...**Sandbox** hosts\ndiffer from production, and ABHA calls go to `abhasbx.**abdm**...",
+                "summary": "NHA's test environment, with its own base URLs and credentials, separate from production.",
+                "title": "Sandbox, the test environment",
+                "type": "glossary"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01XQ1bjyknbrUUSjed4Wgh3c",
+            "Name": "related",
+            "Input": {
+              "id": "shared.sandbox.going-live"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "related",
+          "input": {
+            "id": "shared.sandbox.going-live"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "id": "shared.sandbox.going-live",
+            "related": {
+              "glossary": [
+                {
+                  "doc_url": "/docs/hiecm/v3/getting-started/glossary#abha",
+                  "id": "shared.glossary.abha",
+                  "milestone": "n/a",
+                  "title": "ABHA",
+                  "type": "glossary"
+                },
+                {
+                  "doc_url": "/docs/hiecm/v3/getting-started/glossary#nha",
+                  "id": "shared.glossary.nha",
+                  "milestone": "n/a",
+                  "title": "NHA, the National Health Authority",
+                  "type": "glossary"
+                }
+              ],
+              "sandbox": [
+                {
+                  "doc_url": "/docs/hiecm/v3/getting-started/security-audit",
+                  "id": "shared.sandbox.wasa",
+                  "milestone": "n/a",
+                  "title": "WASA and the Safe to Host certificate",
+                  "type": "sandbox"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01GAzdxFHCgHM9GJNGyUeTHU",
+            "Name": "get",
+            "Input": {
+              "id": "shared.sandbox.wasa"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "shared.sandbox.wasa"
+          },
+          "output": {
+            "body": "# WASA and the Safe to Host certificate\n\n## In plain words\n\nWASA is the security audit of your application. You cannot go to\nproduction without it, and it is a separate exercise from anything\nfunctional: passing every milestone test still leaves this to do.\n\nThe output is a Safe to Host certificate, issued by an auditor NHA\naccepts. If your application already holds a valid Safe to Host\ncertificate, you do not need to do WASA again.\n\n## Before you start\n\nHave the modules you intend to certify actually built. NHA is explicit\nthat if one audit is to cover several modules, those modules have to\nexist before you apply.\n\n## What happens\n\nThe rules that catch integrators out, in NHA's own terms:\n\n| Question | Answer |\n|---|---|\n| Who does it | An auditor from the CERT-In empanelled list |\n| Which URL | Conducted on the staging URL, licensed to the same application in production |\n| Scope | The whole application if it has never been audited |\n| Sequential modules | A later module is audited on its own, subtracting the part already certified |\n| iOS, Android, website | Separate audits. One audit of a shared ABHA base URL does not cover the apps |\n| After a code change | Required again if the change is major, or touches the backend. Minor changes can be ignored |\n| Already hold Safe to Host | No WASA needed, unless the certificate has expired |\n\nThe scope rule is worth reading twice. If application XYZ is already in\nproduction with a certificate and you add module A, only module A is\naudited. If nothing has been audited before, the audit covers everything.\n\n## How you know it worked\n\nYou hold a Safe to Host certificate, in date, naming the application you\nare about to run in production, and covering every platform you ship.\n\n## When it goes wrong\n\nAssuming one audit covers every platform. It does not. An integrator\nshipping a website, an Android app and an iOS app needs three.\n\nAuditing production rather than staging. The audit is conducted on\nstaging and the certificate then licenses the same application in\nproduction, so pointing an auditor at a live production URL is the wrong\nway round.\n\nTreating a backend change as minor. NHA leaves the minor case to\njudgement, but anything touching the backend is named as requiring a new\naudit, and discovering that at the exit gate is expensive.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/getting-started/security-audit",
+            "gateway": "shared",
+            "id": "shared.sandbox.wasa",
+            "milestone": "n/a",
+            "summary": "The security audit every integrator passes before production. It is done by a CERT-In empanelled auditor, on the staging URL, and it covers each platform separately.",
+            "title": "WASA and the Safe to Host certificate",
+            "type": "sandbox"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_017mubGwLejmg6iSkdfhRnKU",
+            "Name": "get",
+            "Input": {
+              "id": "shared.glossary.nha"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "shared.glossary.nha"
+          },
+          "output": {
+            "body": "# NHA, the National Health Authority\n\n## In plain words\n\nNational Health Authority, the government body that runs ABDM, publishes\nthe specifications these pages are written from, and operates both the\n[sandbox](sandbox.md) and the production gateways.\n\n## Before you start\n\nNothing. A glossary entry assumes no prior reading.\n\n## What happens\n\nNothing happens here. This entry defines a term, it does not describe a call.\n\n## How you know it worked\n\nYou have understood this when you can say which parts of this documentation are NHA's words and which are this portal's reading.\n\n## When it goes wrong\n\nReading everything here as NHA's own wording. Where this portal\ninterprets rather than quotes, it says so.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/getting-started/glossary#nha",
+            "gateway": "shared",
+            "id": "shared.glossary.nha",
+            "milestone": "n/a",
+            "summary": "The body that runs ABDM, publishes the specifications and operates the gateways.",
+            "title": "NHA, the National Health Authority",
+            "type": "glossary"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "Based on my search through the ABDM developer portal documentation, I cannot find a specific number of business days that NHA takes to issue production keys after the exit form is submitted.\n\nThe portal's \"[Going live, the sandbox exit process](/docs/hiecm/v3/getting-started/going-live)\" page (used for HIE-CM) states that production credentials are issued once the Health Tech Committee approves your integration, but does not specify an exact timeline for issuance.\n\nFor clarification on the exact SLA, you should contact NHA directly through:\n- **Support ticketing platform:** https://sandboxsupport.abdm.gov.in/\n- **Email:** integration.support@nha.gov.in",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "Based on my search through the ABDM developer portal documentation, I cannot find a specific number of business days that NHA takes to issue production keys after the exit form is submitted.\n\nThe portal's \"[Going live, the sandbox exit process](/docs/hiecm/v3/getting-started/going-live)\" page (used for HIE-CM) states that production credentials are issued once the Health Tech Committee approves your integration, but does not specify an exact timeline for issuance.\n\nFor clarification on the exact SLA, you should contact NHA directly through:\n- **Support ticketing platform:** https://sandboxsupport.abdm.gov.in/\n- **Email:** integration.support@nha.gov.in",
+  "sources": [
+    {
+      "id": "shared.sandbox.going-live",
+      "title": "Going live, the sandbox exit process",
+      "url": "/docs/hiecm/v3/getting-started/going-live"
+    },
+    {
+      "id": "nhcx.flow.production-onboarding",
+      "title": "Onboard as a participant in production",
+      "url": "/docs/nhcx/v1/go-live"
+    },
+    {
+      "id": "shared.sandbox.wasa",
+      "title": "WASA and the Safe to Host certificate",
+      "url": "/docs/hiecm/v3/getting-started/security-audit"
+    },
+    {
+      "id": "shared.glossary.nha",
+      "title": "NHA, the National Health Authority",
+      "url": "/docs/hiecm/v3/getting-started/glossary#nha"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/nhcx/v1/getting-started/your-certificate\",\"id\":\"nhcx.flow.rotate-certificate\",\"kind\":\"atom\",\"milestone\":\"n/a\",\"snippet\":\"...It is described in [Onboard as a participant in **production**](**production**-**onboarding**...\",\"summary\":\"Replace the certificate other participants use to seal messages to you, without losing messages already sealed with the old one.\",\"title\":\"Rotate your encryption certificate\",\"type\":\"flow\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/going-live\",\"id\":\"shared.sandbox.going-live\",\"kind\":\"atom\",\"milestone\":\"n/a\",\"snippet\":\"...go live.** You move the approved integration to **production**. **Production**\\n   **credentials** are...\",\"summary\":\"How an integration leaves the sandbox for production: functional testing and the security audit, the Health Tech Committee demonstration, then production credentials.\",\"title\":\"Going live, the sandbox exit process\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/nhcx/v1/api/registry/endpoints/registry-get-session\",\"id\":\"nhcx.endpoint.get-session\",\"kind\":\"atom\",\"milestone\":\"n/a\",\"snippet\":\"...Sandbox **credentials** do not work in **production**.\\n- No token is needed for...\",\"summary\":\"Trade your client id and client secret, sent as a form, for an access token to use on claims exchange calls.\",\"title\":\"POST /get/session\",\"type\":\"endpoint\"},{\"doc_url\":\"\",\"id\":\"nhcx.decision.session-endpoint\",\"kind\":\"atom\",\"milestone\":\"n/a\",\"snippet\":\"...application/x-www-**form**-urlencoded` |\\n| Body | `clientId`, `clientSecret`, `grantType` `client_**credentials**` | `client...\",\"summary\":\"Get the token that every exchange call carries from one place in your code, and set the address it calls per environment.\",\"title\":\"Which session token endpoint to call\",\"type\":\"decision\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"body\":\"# Going live, the sandbox exit process\\n\\n## In plain words\\n\\nWorking in the sandbox is not the same as being live. Sandbox integration has six stages.\\nStages 1 to 3 get you access and build the milestones. Stages 4 to 6 take you to production,\\nand you run them once, at the end.\\n\\nThere is no per milestone submission. Stages 4 to 6 cover your whole integration.\\n\\n## Before you start\\n\\nEvery milestone your integration needs works end to end. The\\n[milestones page](/docs/hiecm/v3/milestones) says which ones apply to each entity you build\\nfor, a facility, an insurer or a citizen. See [roles](hiecm.concept.roles) for which role that\\nentity takes on a given call. Start stage 4 once all of them are complete, not milestone by\\nmilestone.\\n\\n## What happens\\n\\n1. **Stage 4: functional testing and the security audit.** Before testing, you demonstrate\\n   the [ABDM](shared.glossary.abdm) functionality you built to the integration team.\\n   Empanelled agencies then run both exercises. Functional testing produces a report and a\\n   certificate. The security audit produces the [Safe to Host certificate](wasa.md), and the\\n   [WASA](wasa.md) atom covers it in detail. You then upload the exit form on the sandbox with\\n   four things: the functional testing report and certificate, the security audit report, a\\n   signed undertaking, and any other supporting document the integration team requests.\\n2. **Stage 5: the Health Tech Committee demonstration.** You present the integrated solution\\n   to the Health Tech Committee (HTC) and obtain approval for production access. The committee\\n   records its decision in four review stages, each with its own reviewer and date, so the\\n   outcome arrives as a sequence rather than a single answer.\\n3. **Stage 6: go live.** You move the approved integration to production. Production\\n   credentials are issued once the committee approves.\\n\\nConfirm the format of the functional testing report and the undertaking with the integration\\nteam before you assemble them.\\n\\n## How you know it worked\\n\\nYou hold production credentials: a production client id and client secret. They are not the\\nsame values as your sandbox credentials.\\n\\nYou also switch base URLs. For the gateway session call, sandbox is `https://dev.abdm.gov.in`\\nwith `X-CM-ID: sbx`, and production is `https://apis.abdm.gov.in`. For the\\n[ABHA](shared.glossary.abha) service, sandbox is `https://abhasbx.abdm.gov.in/abha/api/v3/`. A\\nproduction client id against a sandbox host, or the reverse, fails.\\n\\nA call that worked in the sandbox returns the same result against the production host.\\n\\n## When it goes wrong\\n\\nQuestions about the exit process itself, including where to submit the exit form or what\\ncounts as a valid supporting document, go to the\\n[support ticketing platform](https://sandboxsupport.abdm.gov.in/) or\\n`integration.support@nha.gov.in`. See [Support](/docs/support) for the report format.\\n\\nIf a call that worked in the sandbox fails in production, check the base URL and the `X-CM-ID`\\nheader first: see [Everything returns 401](/docs/hiecm/v3/troubleshooting/everything-returns-401),\\nwhich covers this exact class of failure.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/getting-started/going-live\",\"gateway\":\"shared\",\"id\":\"shared.sandbox.going-live\",\"milestone\":\"n/a\",\"summary\":\"How an integration leaves the sandbox for production: functional testing and the security audit, the Health Tech Committee demonstration, then production credentials.\",\"title\":\"Going live, the sandbox exit process\",\"type\":\"sandbox\"}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/nhcx/v1/concepts/pmjay-on-nhcx\",\"id\":\"nhcx.flow.pmjay-hospital-migration\",\"kind\":\"atom\",\"milestone\":\"n/a\",\"snippet\":\"...Onboard as a **participant** in **production**](**production**-**onboarding**.md). This flow adds...\",\"summary\":\"Move a scheme-empanelled hospital from the central claims portal to its own hospital system, by onboarding it on the exchange and having its hospital ID mapped to its participant code.\",\"title\":\"Migrate a PMJAY hospital to HMIS through NHCX\",\"type\":\"flow\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/get-your-sandbox-credentials\",\"id\":\"nhcx.flow.sandbox-onboarding\",\"kind\":\"atom\",\"milestone\":\"n/a\",\"snippet\":\"...Apply at `https://**sandbox**.**abdm**.gov.in/**sandbox**/v3/` with the intent...\",\"summary\":\"Register your system in the claims exchange test environment so it holds a participant code, a registered certificate and a callback address.\",\"title\":\"Onboard as a participant in the NHCX sandbox\",\"type\":\"flow\"},{\"doc_url\":\"/docs/nhcx/v1/reference/notifications-and-patient-apps#subscribing\",\"id\":\"nhcx.flow.notification-subscribe\",\"kind\":\"atom\",\"milestone\":\"n/a\",\"snippet\":\"...**sandbox** testing on `hcxsbx.**abdm**.gov.in`, **sandbox** certification, then production registry...\",\"summary\":\"Have a patient's health record app receive plain-language updates on their pre-authorisations, claims and payments, by subscribing each time the patient logs in.\",\"title\":\"Subscribe a patient app to notifications\",\"type\":\"flow\"},{\"doc_url\":\"/docs/nhcx/v1/go-live\",\"id\":\"nhcx.flow.production-onboarding\",\"kind\":\"atom\",\"milestone\":\"n/a\",\"snippet\":\"...See [The **sandbox** exit process and sign-off](../**sandbox**/**sandbox**-exit.md...\",\"summary\":\"Create and confirm your live claims exchange participant record, then register your certificate and callback address, each step confirmed by a passcode sent to your registered mobile.\",\"title\":\"Onboard as a participant in production\",\"type\":\"flow\"},{\"doc_url\":\"/docs/nhcx/v1/roles/provider/biometric-authentication\",\"id\":\"nhcx.flow.biometric-face\",\"kind\":\"atom\",\"milestone\":\"n/a\",\"snippet\":\"...tokens and ABHAProfile\\n```\\n\\nThe **sandbox** host is `https://apisbx.**abdm**.gov.in...\",\"summary\":\"Prove that a scheme beneficiary is at your hospital with a face scan on a phone, when fingerprint or iris is not possible, and get the same short-lived user token.\",\"title\":\"Authenticate a beneficiary by face on a mobile device\",\"type\":\"flow\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/building-and-sending-a-jwe\",\"id\":\"nhcx.flow.send-a-sealed-request\",\"kind\":\"atom\",\"milestone\":\"n/a\",\"snippet\":\"...See [Onboard as a participant in the NHCX **sandbox**](**sandbox**-onboarding.md...\",\"summary\":\"Seal a claims message for one recipient, post it to the exchange, and wait for the recipient's answer to arrive at your callback address.\",\"title\":\"Send a sealed request through NHCX\",\"type\":\"flow\"},{\"doc_url\":\"/docs/nhcx/v1/registries/policy\",\"id\":\"nhcx.flow.policy-link-and-delink\",\"kind\":\"atom\",\"milestone\":\"n/a\",\"snippet\":\"...apisbx.**abdm**.gov.in/pmjay/sbxhcx/participanthcxservice` in the **sandbox**, `https://apisprod...\",\"summary\":\"As an insurer or claims administrator, record which beneficiaries hold which products so that hospitals can find their cover, and remove the record when it ends.\",\"title\":\"Link and de-link an ABHA and a policy\",\"type\":\"flow\"},{\"doc_url\":\"/docs/nhcx/v1/roles/provider/biometric-authentication\",\"id\":\"nhcx.flow.biometric-fingerprint-iris\",\"kind\":\"atom\",\"milestone\":\"n/a\",\"snippet\":\"...refreshToken\\n    end\\n```\\n\\nThe **sandbox** host is `https://apisbx.**abdm**.gov.in`. Every...\",\"summary\":\"Prove that a scheme beneficiary is physically at your hospital with a fingerprint or iris scan, and get the short-lived user token their pre-authorisation and claim carry.\",\"title\":\"Authenticate a beneficiary by fingerprint or iris\",\"type\":\"flow\"}]}\n{\"body\":\"# Onboard as a participant in production\\n\\n## In plain words\\n\\nProduction on the [National Health Claims Exchange](../../shared/glossary/nhcx.md) (NHCX) has its own participant registry. You create a separate production record in four calls. Two of them confirm a passcode sent by SMS, so the person holding your registered mobile takes part.\\n\\nThe first pair creates the participant and returns a [participant code](../glossary/participant-code.md) ending in `@hcx`. The second pair registers your encryption certificate and callback address. Only after the second pair can NHCX send requests to you and receive your responses.\\n\\n## Before you start\\n\\n- **Sandbox sign-off.** You passed the [sandbox exit](../glossary/sandbox-exit.md): bundle validation by [NRCeS](../../shared/glossary/nrces.md), an internal demo, a Health Tech Committee demo, and NHA's confirmation email. See [The sandbox exit process and sign-off](../sandbox/sandbox-exit.md).\\n- **Production credentials.** NHA has assigned your role to your [Milestone 1](../../hiecm/glossary/m1.md) production client ID. You use that client ID for every production call.\\n- **The registered mobile.** For a [provider](../glossary/provider.md), the number recorded against the facility in the [Health Facility Registry](../../shared/glossary/hfr.md) (HFR). For a [payer](../glossary/payer.md), the number in the NHCX payer details. A person with that phone is available during the calls.\\n- **Your registry ID.** The HFR ID for a provider. The [IRDAI](../glossary/irdai.md) registry ID for a payer, without leading zeros: `0123` is sent as `123`.\\n- **A production certificate** in base64, from [Generate an encryption certificate and register it](generate-and-register-certificate.md).\\n- **A live callback address** that meets the [callback address rules](../sandbox/callback-url-requirements.md).\\n\\n## What happens\\n\\nEvery call goes to the production participant service, `https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice`, with your session token.\\n\\n```mermaid\\nsequenceDiagram\\n    participant P as Person holding the registered mobile\\n    participant You as Your system\\n    participant GW as ABDM session gateway\\n    participant PS as NHCX participant service, production\\n    You->>GW: POST /api/hiecm/gateway/v3/sessions with the production client ID\\n    GW-->>You: accessToken\\n    You->>PS: POST /v2/participant/create\\n    PS-->>You: participantid ending @hcx, and transactionid\\n    PS->>P: SMS passcode for this transactionid\\n    P->>You: reads out the passcode\\n    You->>PS: GET /validate with transactionId and passcode\\n    PS-->>You: creation confirmed\\n    You->>PS: POST /v2/participant/update\\n    PS-->>You: participant_code, status and a new transactionid\\n    PS->>P: SMS passcode for the update\\n    P->>You: reads out the passcode\\n    You->>PS: GET /update/validate with transactionId and passcode\\n    PS-->>You: certificate and endpoint registered\\n    You->>PS: POST /fetch/certs with your participant code\\n    PS-->>You: your encryption_cert\\n```\\n\\n### 1. Get a session token\\n\\nUse your production client ID. [Which session token endpoint to call](../decisions/session-endpoint.md) settles the address, and [NHCX environments, hosts and base URLs](../sandbox/environments-and-base-urls.md) lists the production hosts.\\n\\n### 2. Create the participant\\n\\n`POST /v2/participant/create`:\\n\\n```json\\n{\\n  \\\"registrytype\\\": \\\"10001\\\",\\n  \\\"registryid\\\": \\\"<YOUR_HFR_ID>\\\",\\n  \\\"role\\\": [\\\"10001\\\"],\\n  \\\"endpoint_url\\\": \\\"\\\",\\n  \\\"mobilenumber\\\": \\\"<MOBILE_REGISTERED_IN_HFR>\\\",\\n  \\\"email\\\": \\\"<YOUR_EMAIL>\\\"\\n}\\n```\\n\\n`registrytype` takes a registry code: `10001` HFR, `10002` NIN, `10003` ROHINI or `10004` PAYER. `role` takes role codes: `10001` provider, `10002` payer, `10003` TPA or `10009` end user application. The full enum list is in [POST /v2/participant/create](../endpoints/v2-participant-create.md). You can leave `endpoint_url` empty here, because step 4 sets it.\\n\\nThe answer carries `participantid`, `facilityname`, `facilitycontact`, `facilityemail`, `transactionid` and an `error` object with `code`, `message` and `trace`. On success the three error fields are null.\\n\\n**Wait:** the passcode arrives by SMS on the registered mobile.\\n\\n### 3. Confirm the creation\\n\\n```text\\nGET /validate?transactionId=<TRANSACTION_ID_FROM_CREATE>&passcode=<PASSCODE_FROM_SMS>\\n```\\n\\nThe transaction ID and passcode stay valid for 24 hours. Each create call issues a new pair, and a passcode works only with its own transaction ID.\\n\\n### 4. Register the certificate and callback address\\n\\n`POST /v2/participant/update`, after step 3 has succeeded:\\n\\n```json\\n{\\n  \\\"participantcode\\\": \\\"<YOUR_PARTICIPANT_CODE>\\\",\\n  \\\"encryptioncert\\\": \\\"<BASE64_OF_CERTIFICATE_CRT>\\\",\\n  \\\"endpointurl\\\": \\\"<YOUR_CALLBACK_BASE_ADDRESS>\\\"\\n}\\n```\\n\\nThe answer carries `participant_code`, `status` and a new `transactionid`.\\n\\n**Wait:** a second passcode arrives by SMS.\\n\\n### 5. Confirm the update\\n\\n```text\\nGET /update/validate?transactionId=<TRANSACTION_ID_FROM_UPDATE>&passcode=<PASSCODE_FROM_SMS>\\n```\\n\\nThe same 24-hour rule applies. When this succeeds, your callback address is active and your certificate is registered.\\n\\n### 6. Read your record back\\n\\n`POST /fetch/certs` with your `@hcx` code returns the certificate stored against it. Later certificate changes can skip the passcode through `POST /v2/update/cert`. See [Rotate your encryption certificate](rotate-certificate.md).\\n\\n## How you know it worked\\n\\n`GET /update/validate` succeeds for the transaction ID from step 4. `POST /fetch/certs` on the production participant service returns, for your `@hcx` code, a certificate whose public key matches your production `certificate.crt`.\\n\\n```observation schema=exit-condition\\nchannel: synchronous\\ncall: POST /fetch/certs\\nhost: https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice\\nrequest:\\n  participantid: <YOUR_PRODUCTION_PARTICIPANT_CODE>\\nmatch:\\n  encryption_cert: public key equals the one in your production certificate.crt\\n```\\n\\nYour production code now goes in `x-hcx-sender_code` on everything you send. Next steps:\\n\\n- A PMJAY hospital continues with [Migrate a PMJAY hospital to HMIS through NHCX](pmjay-hospital-migration.md).\\n- A payer links its policies with [Link and de-link an ABHA and a policy](policy-link-and-delink.md).\\n- Plan staff training and a pilot with a few clients before full go-live. See [Going live on NHCX production](../sandbox/going-live.md).\\n\\n## When it goes wrong\\n\\n- **Create fails on the mobile number.** It must match the HFR record for a provider, or the NHCX payer details for a payer, exactly. Correct the number at its source, then create again.\\n- **Create fails on the registry ID for a payer.** Strip leading zeros from the IRDAI ID.\\n- **Create is refused on `registrytype` or `role`.** Use only codes from the lists in step 2.\\n- **The passcode is refused.** It is older than 24 hours, or it belongs to another transaction ID. Run the create or update call again for a fresh pair.\\n- **You lost the transaction ID.** Run the create or update call again. There is no way to look it up.\\n- **The update is refused.** Step 3 has not succeeded yet. The update needs a participant whose creation is confirmed.\\n- **Every call returns `401`.** The token has expired, or it was minted with a sandbox client ID. See [NHCX-401](../errors/nhcx-401.md).\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/nhcx/v1/go-live\",\"gateway\":\"nhcx\",\"id\":\"nhcx.flow.production-onboarding\",\"milestone\":\"n/a\",\"summary\":\"Create and confirm your live claims exchange participant record, then register your certificate and callback address, each step confirmed by a passcode sent to your registered mobile.\",\"title\":\"Onboard as a participant in production\",\"type\":\"flow\"}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#nhcx\",\"id\":\"shared.glossary.nhcx\",\"kind\":\"atom\",\"milestone\":\"n/a\",\"snippet\":\"...**National** **Health** **Claims** **Exchange**\\n\\n## In plain words\\n\\n**National** **Health** **Claims** **Exchange**, **ABDM**...\",\"summary\":\"The gateway for insurance claims, separate from HIE-CM and UHI.\",\"title\":\"NHCX, the National Health Claims Exchange\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/nhcx/v1/go-live\",\"id\":\"nhcx.flow.production-onboarding\",\"kind\":\"atom\",\"milestone\":\"n/a\",\"snippet\":\"...the [**National** **Health** **Claims** **Exchange**](../../shared/glossary/**nhcx**.md) (**NHCX**) has its...\",\"summary\":\"Create and confirm your live claims exchange participant record, then register your certificate and callback address, each step confirmed by a passcode sent to your registered mobile.\",\"title\":\"Onboard as a participant in production\",\"type\":\"flow\"},{\"doc_url\":\"\",\"id\":\"nhcx.concept.what-nhcx-is\",\"kind\":\"atom\",\"milestone\":\"n/a\",\"snippet\":\"# What the **National** **Health** **Claims** **Exchange** is and what it does not...\",\"summary\":\"The claims exchange is a switch that carries sealed claim messages between hospitals and insurers; it routes and checks envelopes but never reads or decides a claim.\",\"title\":\"What the National Health Claims Exchange is and what it does not do\",\"type\":\"concept\"},{\"doc_url\":\"/docs/nhcx/v1/concepts/pmjay-on-nhcx\",\"id\":\"nhcx.flow.pmjay-hospital-migration\",\"kind\":\"atom\",\"milestone\":\"n/a\",\"snippet\":\"...**claims** through the [**National** **Health** **Claims** **Exchange**](../../shared/glossary/**nhcx**.md) (**NHCX**...\",\"summary\":\"Move a scheme-empanelled hospital from the central claims portal to its own hospital system, by onboarding it on the exchange and having its hospital ID mapped to its participant code.\",\"title\":\"Migrate a PMJAY hospital to HMIS through NHCX\",\"type\":\"flow\"},{\"doc_url\":\"\",\"id\":\"nhcx.test.payer-uc-04\",\"kind\":\"atom\",\"milestone\":\"n/a\",\"snippet\":\"...See [the **sandbox** **exit** **process**](../**sandbox**/**sandbox**-**exit**.md).\\n\\n```precondition\\nhuman: true...\",\"summary\":\"Prove that your insurance system can fetch the registered participants of one role from the claims exchange.\",\"title\":\"Payer sandbox exit use case 4: Get participant list\",\"type\":\"test\"},{\"doc_url\":\"\",\"id\":\"nhcx.test.provider-uc-01\",\"kind\":\"atom\",\"milestone\":\"n/a\",\"snippet\":\"...See [the **sandbox** **exit** **process**](../**sandbox**/**sandbox**-**exit**.md).\\n\\n```precondition\\nhuman: true...\",\"summary\":\"Prove that your hospital system can fetch the registered participants of one role, such as every payer, from the claims exchange.\",\"title\":\"Provider sandbox exit use case 1: Get participant list\",\"type\":\"test\"},{\"doc_url\":\"\",\"id\":\"nhcx.test.payer-uc-15\",\"kind\":\"atom\",\"milestone\":\"n/a\",\"snippet\":\"...See [the **sandbox** **exit** **process**](../**sandbox**/**sandbox**-**exit**.md).\\n\\n```precondition\\nhuman: true...\",\"summary\":\"Prove that your insurance system can ask the claims exchange where one of its earlier messages stands, and read the answer.\",\"title\":\"Payer sandbox exit use case 15: Get status\",\"type\":\"test\"},{\"doc_url\":\"\",\"id\":\"nhcx.test.provider-uc-13\",\"kind\":\"atom\",\"milestone\":\"n/a\",\"snippet\":\"...See [the **sandbox** **exit** **process**](../**sandbox**/**sandbox**-**exit**.md).\\n\\n```precondition\\nhuman: true...\",\"summary\":\"Prove that your hospital system can ask the claims exchange where one of its earlier requests stands, and read the answer.\",\"title\":\"Provider sandbox exit use case 13: Get status\",\"type\":\"test\"},{\"doc_url\":\"\",\"id\":\"nhcx.test.provider-uc-08\",\"kind\":\"atom\",\"milestone\":\"n/a\",\"snippet\":\"...See [the **sandbox** **exit** **process**](../**sandbox**/**sandbox**-**exit**.md).\\n\\n```precondition\\nhuman: true...\",\"summary\":\"Prove that your hospital system can receive a payer's request for more documents and send the documents back through the claims exchange.\",\"title\":\"Provider sandbox exit use case 8: Respond to communication request received from payer for additional documents\",\"type\":\"test\"},{\"doc_url\":\"\",\"id\":\"nhcx.test.payer-uc-06\",\"kind\":\"atom\",\"milestone\":\"n/a\",\"snippet\":\"...See [the **sandbox** **exit** **process**](../**sandbox**/**sandbox**-**exit**.md).\\n\\n```precondition\\nhuman: true...\",\"summary\":\"Prove that your insurance system can obtain, and keep fresh, the access token every call to the claims exchange must carry.\",\"title\":\"Payer sandbox exit use case 6: Get the auth token\",\"type\":\"test\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#nhcx\",\"id\":\"shared.glossary.nhcx\",\"kind\":\"atom\",\"milestone\":\"n/a\",\"snippet\":\"...**National** **Health** **Claims** **Exchange**\\n\\n## In plain words\\n\\n**National** **Health** **Claims** **Exchange**, **ABDM**...\",\"summary\":\"The gateway for insurance claims, separate from HIE-CM and UHI.\",\"title\":\"NHCX, the National Health Claims Exchange\",\"type\":\"glossary\"},{\"doc_url\":\"\",\"id\":\"nhcx.concept.what-nhcx-is\",\"kind\":\"atom\",\"milestone\":\"n/a\",\"snippet\":\"# What the **National** **Health** **Claims** **Exchange** is and what it does not...\",\"summary\":\"The claims exchange is a switch that carries sealed claim messages between hospitals and insurers; it routes and checks envelopes but never reads or decides a claim.\",\"title\":\"What the National Health Claims Exchange is and what it does not do\",\"type\":\"concept\"},{\"doc_url\":\"/docs/nhcx/v1/go-live\",\"id\":\"nhcx.flow.production-onboarding\",\"kind\":\"atom\",\"milestone\":\"n/a\",\"snippet\":\"...the [**National** **Health** **Claims** **Exchange**](../../shared/glossary/**nhcx**.md) (**NHCX**) has its...\",\"summary\":\"Create and confirm your live claims exchange participant record, then register your certificate and callback address, each step confirmed by a passcode sent to your registered mobile.\",\"title\":\"Onboard as a participant in production\",\"type\":\"flow\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/get-your-sandbox-credentials\",\"id\":\"nhcx.flow.sandbox-onboarding\",\"kind\":\"atom\",\"milestone\":\"n/a\",\"snippet\":\"...**claims** messages on the [**National** **Health** **Claims** **Exchange**](../../shared/glossary/**nhcx**.md...\",\"summary\":\"Register your system in the claims exchange test environment so it holds a participant code, a registered certificate and a callback address.\",\"title\":\"Onboard as a participant in the NHCX sandbox\",\"type\":\"flow\"},{\"doc_url\":\"/docs/nhcx/v1/concepts/pmjay-on-nhcx\",\"id\":\"nhcx.flow.pmjay-hospital-migration\",\"kind\":\"atom\",\"milestone\":\"n/a\",\"snippet\":\"...**claims** through the [**National** **Health** **Claims** **Exchange**](../../shared/glossary/**nhcx**.md) (**NHCX**...\",\"summary\":\"Move a scheme-empanelled hospital from the central claims portal to its own hospital system, by onboarding it on the exchange and having its hospital ID mapped to its participant code.\",\"title\":\"Migrate a PMJAY hospital to HMIS through NHCX\",\"type\":\"flow\"},{\"doc_url\":\"\",\"id\":\"nhcx.test.payer-uc-04\",\"kind\":\"atom\",\"milestone\":\"n/a\",\"snippet\":\"...See [the **sandbox** **exit** **process**](../**sandbox**/**sandbox**-**exit**.md).\\n\\n```precondition\\nhuman: true...\",\"summary\":\"Prove that your insurance system can fetch the registered participants of one role from the claims exchange.\",\"title\":\"Payer sandbox exit use case 4: Get participant list\",\"type\":\"test\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/building-and-sending-a-jwe\",\"id\":\"nhcx.flow.send-a-sealed-request\",\"kind\":\"atom\",\"milestone\":\"n/a\",\"snippet\":\"...**National** **Health** **Claims** **Exchange**](../../shared/glossary/**nhcx**.md) (**NHCX**) carries **claims** messages...\",\"summary\":\"Seal a claims message for one recipient, post it to the exchange, and wait for the recipient's answer to arrive at your callback address.\",\"title\":\"Send a sealed request through NHCX\",\"type\":\"flow\"},{\"doc_url\":\"\",\"id\":\"nhcx.test.provider-uc-01\",\"kind\":\"atom\",\"milestone\":\"n/a\",\"snippet\":\"...See [the **sandbox** **exit** **process**](../**sandbox**/**sandbox**-**exit**.md).\\n\\n```precondition\\nhuman: true...\",\"summary\":\"Prove that your hospital system can fetch the registered participants of one role, such as every payer, from the claims exchange.\",\"title\":\"Provider sandbox exit use case 1: Get participant list\",\"type\":\"test\"},{\"doc_url\":\"/docs/nhcx/v1/api/session/endpoints/session-api-hiecm-gateway-v3-sessions\",\"id\":\"nhcx.endpoint.session-token\",\"kind\":\"atom\",\"milestone\":\"n/a\",\"snippet\":\"...Every call you make to the **National** **Health** **Claims** **Exchange** ([NHCX](../../shared...\",\"summary\":\"Trade your client id and client secret for the access token, valid for 1200 seconds (20 minutes), that every claims exchange call carries.\",\"title\":\"POST /api/hiecm/gateway/v3/sessions\",\"type\":\"endpoint\"},{\"doc_url\":\"\",\"id\":\"nhcx.test.payer-uc-15\",\"kind\":\"atom\",\"milestone\":\"n/a\",\"snippet\":\"...See [the **sandbox** **exit** **process**](../**sandbox**/**sandbox**-**exit**.md).\\n\\n```precondition\\nhuman: true...\",\"summary\":\"Prove that your insurance system can ask the claims exchange where one of its earlier messages stands, and read the answer.\",\"title\":\"Payer sandbox exit use case 15: Get status\",\"type\":\"test\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/uhi/v1/getting-started/sandbox#4-note-the-base-urls\",\"id\":\"uhi.sandbox.base-urls\",\"kind\":\"atom\",\"milestone\":\"n/a\",\"snippet\":\"...**Sandbox** | `https://uhigatewaysandbox.**abdm**.gov.in` | Reference EUA `http://uhieuasandbox.**abdm**.gov...\",\"summary\":\"The UHI Gateway base URL for the sandbox and for production, and the reference EUA and HSPA apps in the sandbox.\",\"title\":\"UHI Gateway base URLs for sandbox and production\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/base-urls\",\"id\":\"nhcx.sandbox.environments-and-base-urls\",\"kind\":\"atom\",\"milestone\":\"n/a\",\"snippet\":\"...**ABDM**](../../shared/glossary/**abdm**.md) **sandbox**, for client credentials | https://**sandbox**.**abdm**...\",\"summary\":\"The two environments, the web portals, and the two base addresses every call is built on, for testing and for live claims.\",\"title\":\"NHCX environments, hosts and base URLs\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/get-your-sandbox-credentials\",\"id\":\"nhcx.sandbox.prerequisites\",\"kind\":\"atom\",\"milestone\":\"n/a\",\"snippet\":\"...Apply for **ABDM** **sandbox** credentials\\n\\n1. Apply at https://**sandbox**.**abdm**.gov...\",\"summary\":\"The checklist to complete before your system can register on the claims exchange sandbox: a facility registration, sandbox credentials, basic health ID features, a role, a certificate and a callback address.\",\"title\":\"What you need before you register on the NHCX sandbox\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/going-live\",\"id\":\"shared.sandbox.going-live\",\"kind\":\"atom\",\"milestone\":\"n/a\",\"snippet\":\"...For the gateway session call, **sandbox** is `https://dev.**abdm**.gov.in...\",\"summary\":\"How an integration leaves the sandbox for production: functional testing and the security audit, the Health Tech Committee demonstration, then production credentials.\",\"title\":\"Going live, the sandbox exit process\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/first-fifteen-minutes\",\"id\":\"shared.sandbox.first-fifteen-minutes\",\"kind\":\"atom\",\"milestone\":\"n/a\",\"snippet\":\"...glossary.**abdm**) call until\\n[NHA](shared.glossary.nha) approves your **sandbox** registration...\",\"summary\":\"Everything you can do before NHA approves your sandbox registration: read one real gateway session exchange and assemble your own first call, ready to paste the moment credentials arrive.\",\"title\":\"Your first fifteen minutes with ABDM\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/uhi/v1/concepts/signing#generate-your-keys-and-headers\",\"id\":\"uhi.concept.key-generation\",\"kind\":\"atom\",\"milestone\":\"n/a\",\"snippet\":\"...The [UHI header signing document](https://github.com/NHA-**ABDM**/UHI/blob...\",\"summary\":\"The Header Generation Utility creates your Ed25519 key pair and signs each payload; share only the public key and keep the private key on your server.\",\"title\":\"Generating UHI signing keys and headers\",\"type\":\"concept\"},{\"doc_url\":\"/docs/nhcx/v1/api/session/endpoints/session-api-hiecm-gateway-v3-sessions\",\"id\":\"nhcx.endpoint.session-token\",\"kind\":\"atom\",\"milestone\":\"n/a\",\"snippet\":\"...No callback follows.\\n\\n| Environment | Session address |\\n|---|---|\\n| **Sandbox** | `https://dev.**abdm**.gov.in...\",\"summary\":\"Trade your client id and client secret for the access token, valid for 1200 seconds (20 minutes), that every claims exchange call carries.\",\"title\":\"POST /api/hiecm/gateway/v3/sessions\",\"type\":\"endpoint\"},{\"doc_url\":\"\",\"id\":\"nhcx.decision.session-endpoint\",\"kind\":\"atom\",\"milestone\":\"n/a\",\"snippet\":\"...**ABDM** [**sandbox**](../../shared/glossary/**sandbox**.md), `**ABDM**_CLIENT_ID` and `**ABDM**_CLIENT...\",\"summary\":\"Get the token that every exchange call carries from one place in your code, and set the address it calls per environment.\",\"title\":\"Which session token endpoint to call\",\"type\":\"decision\"},{\"doc_url\":\"/docs/uhi/v1/getting-started/going-live#when-it-goes-wrong\",\"id\":\"uhi.troubleshooting.go-live\",\"kind\":\"atom\",\"milestone\":\"n/a\",\"snippet\":\"...The host is `https://uhigateway.**abdm**.gov.in`, not `https://uhigatewaysandbox.**abdm**...\",\"summary\":\"A search that worked in the sandbox fails in production. Check the Gateway host, then your production IDs and callback URL.\",\"title\":\"When a UHI search fails after the switch to production\",\"type\":\"troubleshooting\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#sandbox\",\"id\":\"shared.glossary.sandbox\",\"kind\":\"atom\",\"milestone\":\"n/a\",\"snippet\":\"...**Sandbox** hosts\\ndiffer from production, and ABHA calls go to `abhasbx.**abdm**...\",\"summary\":\"NHA's test environment, with its own base URLs and credentials, separate from production.\",\"title\":\"Sandbox, the test environment\",\"type\":\"glossary\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"id\":\"shared.sandbox.going-live\",\"related\":{\"glossary\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#abha\",\"id\":\"shared.glossary.abha\",\"milestone\":\"n/a\",\"title\":\"ABHA\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#nha\",\"id\":\"shared.glossary.nha\",\"milestone\":\"n/a\",\"title\":\"NHA, the National Health Authority\",\"type\":\"glossary\"}],\"sandbox\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/security-audit\",\"id\":\"shared.sandbox.wasa\",\"milestone\":\"n/a\",\"title\":\"WASA and the Safe to Host certificate\",\"type\":\"sandbox\"}]}}\n{\"body\":\"# WASA and the Safe to Host certificate\\n\\n## In plain words\\n\\nWASA is the security audit of your application. You cannot go to\\nproduction without it, and it is a separate exercise from anything\\nfunctional: passing every milestone test still leaves this to do.\\n\\nThe output is a Safe to Host certificate, issued by an auditor NHA\\naccepts. If your application already holds a valid Safe to Host\\ncertificate, you do not need to do WASA again.\\n\\n## Before you start\\n\\nHave the modules you intend to certify actually built. NHA is explicit\\nthat if one audit is to cover several modules, those modules have to\\nexist before you apply.\\n\\n## What happens\\n\\nThe rules that catch integrators out, in NHA's own terms:\\n\\n| Question | Answer |\\n|---|---|\\n| Who does it | An auditor from the CERT-In empanelled list |\\n| Which URL | Conducted on the staging URL, licensed to the same application in production |\\n| Scope | The whole application if it has never been audited |\\n| Sequential modules | A later module is audited on its own, subtracting the part already certified |\\n| iOS, Android, website | Separate audits. One audit of a shared ABHA base URL does not cover the apps |\\n| After a code change | Required again if the change is major, or touches the backend. Minor changes can be ignored |\\n| Already hold Safe to Host | No WASA needed, unless the certificate has expired |\\n\\nThe scope rule is worth reading twice. If application XYZ is already in\\nproduction with a certificate and you add module A, only module A is\\naudited. If nothing has been audited before, the audit covers everything.\\n\\n## How you know it worked\\n\\nYou hold a Safe to Host certificate, in date, naming the application you\\nare about to run in production, and covering every platform you ship.\\n\\n## When it goes wrong\\n\\nAssuming one audit covers every platform. It does not. An integrator\\nshipping a website, an Android app and an iOS app needs three.\\n\\nAuditing production rather than staging. The audit is conducted on\\nstaging and the certificate then licenses the same application in\\nproduction, so pointing an auditor at a live production URL is the wrong\\nway round.\\n\\nTreating a backend change as minor. NHA leaves the minor case to\\njudgement, but anything touching the backend is named as requiring a new\\naudit, and discovering that at the exit gate is expensive.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/getting-started/security-audit\",\"gateway\":\"shared\",\"id\":\"shared.sandbox.wasa\",\"milestone\":\"n/a\",\"summary\":\"The security audit every integrator passes before production. It is done by a CERT-In empanelled auditor, on the staging URL, and it covers each platform separately.\",\"title\":\"WASA and the Safe to Host certificate\",\"type\":\"sandbox\"}\n{\"body\":\"# NHA, the National Health Authority\\n\\n## In plain words\\n\\nNational Health Authority, the government body that runs ABDM, publishes\\nthe specifications these pages are written from, and operates both the\\n[sandbox](sandbox.md) and the production gateways.\\n\\n## Before you start\\n\\nNothing. A glossary entry assumes no prior reading.\\n\\n## What happens\\n\\nNothing happens here. This entry defines a term, it does not describe a call.\\n\\n## How you know it worked\\n\\nYou have understood this when you can say which parts of this documentation are NHA's words and which are this portal's reading.\\n\\n## When it goes wrong\\n\\nReading everything here as NHA's own wording. Where this portal\\ninterprets rather than quotes, it says so.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#nha\",\"gateway\":\"shared\",\"id\":\"shared.glossary.nha\",\"milestone\":\"n/a\",\"summary\":\"The body that runs ABDM, publishes the specifications and operates the gateways.\",\"title\":\"NHA, the National Health Authority\",\"type\":\"glossary\"}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T11:58:21.439Z",
+  "usage": {
+    "input_tokens": 100,
+    "output_tokens": 2042,
+    "cache_read_input_tokens": 149259,
+    "cache_creation_input_tokens": 19823,
+    "num_turns": 16,
+    "duration_ms": 30273,
+    "cost_usd_equivalent": 0.0648819
+  }
+}

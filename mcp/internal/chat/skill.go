@@ -33,6 +33,41 @@ type Command struct {
 	Gateway string
 }
 
+// A question that names a skill section in words: "scaffolding skill",
+// "debug skill", "the skill for designing M1". The word must sit next to
+// "skill", so "debug this error" or "design my consent flow" stay questions.
+var (
+	sectionThenSkillRe = regexp.MustCompile(`(?i)\b(scaffold|design|integrat|debug)\w*\s+skills?\b`)
+	skillThenSectionRe = regexp.MustCompile(`(?i)\bskills?\s+(?:for|to)\s+(scaffold|design|integrat|debug)\w*`)
+)
+
+// CommandFromQuestion returns the command a typed question asks for, or "".
+func CommandFromQuestion(q string) string {
+	m := sectionThenSkillRe.FindStringSubmatch(q)
+	if m == nil {
+		m = skillThenSectionRe.FindStringSubmatch(q)
+	}
+	if m == nil {
+		return ""
+	}
+	name := strings.ToLower(m[1])
+	if name == "integrat" {
+		return "integrate"
+	}
+	return name
+}
+
+// InferCommand fills in the command a typed question asks for when the
+// reader chose no pill. A pill always wins. The HTTP layer calls it before
+// ValidateCommand: picking a module from the choices re-sends the question
+// with the module and no command, which would otherwise be refused.
+func InferCommand(cmd Command, turns []Turn) Command {
+	if cmd.Name == "" {
+		cmd.Name = CommandFromQuestion(lastUserText(turns))
+	}
+	return cmd
+}
+
 var moduleNameRe = regexp.MustCompile(`^abdm-[a-z0-9]+(?:-[a-z0-9]+)*$`)
 
 // ValidateCommand checks the command fields the HTTP layer decoded. A module

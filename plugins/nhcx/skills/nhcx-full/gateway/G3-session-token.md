@@ -38,7 +38,7 @@ Every call to ABDM (registry, NHCX gateway) carries a session token minted from 
 
 **401 handling.** `post_with_token` is the one authenticated POST used for the registry (G4, G10) and the NHCX gateway (G7). It sends the token twice, as `bearer_auth: Bearer <token>` (header name written in lower case, exactly as NHCX documents it) and as `Authorization: Bearer <token>` [REF](../references/PAYERS.md#markers). When the answer is 401 on the first attempt it refreshes the token once and repeats the request. Any other status, including a second 401, is handed back to the caller as is.
 
-**Timeouts.** Every call uses one HTTP client with a timeout of `outboundTimeoutSeconds` (30). The session answer is read up to 1 MiB, other answers up to 4 MiB.
+**Timeouts.** Every call uses one HTTP client with a timeout of `outboundTimeoutSeconds` (30). Answers are read in full, with no size limit of their own: a large answer (a registry record, an insurance plan with thousands of packages) is never cut short or refused for its size.
 
 **Token for the application.** `gateway.token(participant)` is how the application gets an ABDM bearer token for the calls it makes itself (A16). With no participant it is the default profile's token. A participant code (either spelling) selects that hosted profile's token; an unknown code is refused with `UNKNOWN_PARTICIPANT` rather than falling back, since the wrong participant's token would fail confusingly later. `gateway.refresh_token(participant)` does the same after forcing a new fetch. The application should not keep the token beyond `expires_at`.
 
@@ -59,7 +59,7 @@ Every call to ABDM (registry, NHCX gateway) carries a session token minted from 
 | `post_with_token` | `body` | required | any JSON value |
 | `post_with_token` | `label` | `CERT_FETCH` | error prefix: `CERT_FETCH` for every registry call, `GATEWAY` for the NHCX dispatch |
 
-Request headers on the session call, `sessions` mode: `Content-Type: application/json`, `Accept: application/json`, `REQUEST-ID: <fresh UUID>`, `TIMESTAMP: <now, UTC, RFC 3339, for example 2026-09-21T06:30:00Z>`, `X-CM-ID: <cmId>`. `get-session` mode: `Content-Type: application/x-www-form-urlencoded`, `Accept: application/json`.
+Request headers on the session call, `sessions` mode: `Content-Type: application/json`, `Accept: application/json`, `REQUEST-ID: <fresh UUID>`, `TIMESTAMP: <now, UTC, with milliseconds and a trailing Z, for example 2026-09-04T06:15:51.975Z>` (the knowledge source's `nhcx.endpoint.session-token`; a value to the second was refused by the sandbox), `X-CM-ID: <cmId>`. `get-session` mode: `Content-Type: application/x-www-form-urlencoded`, `Accept: application/json`.
 
 Request headers on `post_with_token`: `Content-Type: application/json`, `Accept: application/json`, `bearer_auth: Bearer <token>`, `Authorization: Bearer <token>`.
 
@@ -131,11 +131,11 @@ fetch_locked(client):
         request = POST urls.sessions, form {client_id: id, client_secret: secret, grant_type: "client_credentials"}
     else:
         request = POST urls.sessions, JSON {clientId: id, clientSecret: secret, grantType: "client_credentials"}
-                  headers REQUEST-ID = new UUID, TIMESTAMP = now UTC RFC 3339, X-CM-ID = cmId
+                  headers REQUEST-ID = new UUID, TIMESTAMP = now UTC with milliseconds and Z (2026-09-04T06:15:51.975Z), X-CM-ID = cmId
     if request cannot be built: fail TOKEN_REQUEST
     header Accept: application/json
     response = send (timeout outboundTimeoutSeconds) or fail TOKEN_UNREACHABLE (retryable)
-    raw = read up to 1 MiB
+    raw = read the whole answer
     if status not 2xx: fail TOKEN_HTTP_<status> (retryable when >= 500 or 429; status, clipped raw)
     out = parse JSON object or fail TOKEN_BAD_JSON (retryable)
     token = first non-blank trimmed string of out.accessToken, out.access_token
@@ -168,7 +168,7 @@ post_with_token(client, url, body, label):
                           Authorization: "Bearer " + token
         if request cannot be built: fail <label>_REQUEST
         response = send or fail <label>_UNREACHABLE (retryable)
-        raw = read up to 4 MiB or fail <label>_READ_ERROR (retryable)
+        raw = read the whole answer or fail <label>_READ_ERROR (retryable)
         if response.status == 401 and attempt == 0:
             log warning "upstream answered 401, refreshing session token"
             client.refresh_token() or fail with that error
@@ -177,6 +177,6 @@ post_with_token(client, url, body, label):
 ```
 
 #### G3U. USED BY
-- APIs: [A1. Policy Search](../apis/A1-policy-search.md), [A14. Adjudicator User Role](../apis/A14-adjudicator-user-role.md), [A15. Adjudicator Process Case](../apis/A15-adjudicator-process-case.md), [A16. Gateway Token](../apis/A16-gateway-token.md)
+- APIs: [A1. Policy Search](../apis/A1-policy-search.md), [A14. Adjudicator User Role](../apis/A14-adjudicator-user-role.md), [A15. Adjudicator Process Case](../apis/A15-adjudicator-process-case.md), [A16. Gateway Token](../apis/A16-gateway-token.md), [A18. Biometric Authentication](../apis/A18-biometric-authentication.md), [A19. ABHA Create and Verify (ABDM M1)](../apis/A19-abha-m1.md)
 - Database: [D1. organization](../database/D1-organization.md)
 - Gateway: [G1. Embedding](G1-embedding.md), [G2. Configuration and Participants](G2-configuration.md), [G4. Registry and Certificates](G4-registry.md), [G5. Protocol Headers](G5-protocol-headers.md), [G6. Encryption](G6-encryption.md), [G7. Send](G7-send.md), [G10. Beneficiary Registry](G10-beneficiary-registry.md), [G11. Startup Checks and Health](G11-startup-checks.md)

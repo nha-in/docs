@@ -1,0 +1,37 @@
+{
+  "id": "terse-generate-token-01",
+  "slice": "terse",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "generate token"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "The gateway session token comes from POST /api/hiecm/gateway/v3/sessions with clientId, clientSecret and grantType set to client_credentials, and it is the one call with no Authorization header.",
+    "The response carries the token in accessToken, which you send back as Authorization: Bearer on every other call.",
+    "In M2 the link token is a different token, asked for one patient before you link their care contexts: the call returns 202 Accepted and the linkToken arrives on your bridge at /api/v3/hip/token/on-generate-token."
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.concept.gateway-session",
+    "hiecm.endpoint.m2-generate-link-token"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-hiecm-gateway-yaml",
+  "catalogue_version": "2026.09.16",
+  "notes": "Group A, an imperative task phrase that could mean either of the two tokens a first-day developer confuses: it catches an answer that gives one token without saying which, or that treats the link token as arriving in the 202. Source lines: catalogue/hiecm/concepts/gateway-session.md, '**POST** `/api/hiecm/gateway/v3/sessions`'; 'No `Authorization` header on this call. It is the one call with no token yet.'; 'Call the session endpoint with `clientId`, `clientSecret` and `grantType` set to `client_credentials`'; 'The response carries the token in `accessToken`'; 'Send the token back as `Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>` on every other call'; catalogue/hiecm/endpoints/m2-generate-link-token.md, 'Ask for a link token for one patient before you link their care contexts. The call returns 202 Accepted'; 'A `linkToken` arrives on `/api/v3/hip/token/on-generate-token`'."
+}

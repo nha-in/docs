@@ -1,0 +1,39 @@
+{
+  "id": "nha-review-abha-number-vs-address-01",
+  "slice": "nha-review",
+  "class": "compare",
+  "turns": [
+    {
+      "role": "user",
+      "text": "What is the difference between ABHA Number and ABHA Address?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "gateway": "hiecm",
+  "must_contain": [
+    "An ABHA number is fourteen digits, issued only after a successful KYC check",
+    "An ABHA address is the name a person goes by on ABDM, written like an email address, such as ajeet123@abdm on production or something@sbx on the sandbox",
+    "A person logs in to their PHR app with the address and shares it at a facility so the facility can find them, and every record linked to the person is linked against it"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom",
+    "common mistake"
+  ],
+  "expected_sources": [
+    "shared.glossary.abha-address",
+    "shared.glossary.abha-number"
+  ],
+  "expected_shape": "define",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#nha-review-2026-09-30",
+  "catalogue_version": "2026.09.16",
+  "notes": "NHA PHR review, 30 September 2026, case 5: 'ABHA number is clear, but ABHA Address definition is not clear'. Verdict group: language and register. The rejected answer called the address 'a readable handle used to route consent requests' and ended on a common mistake. Distinct from confusable-hiecm-m1-abha-number-vs-address-01, which asks which one to store as the patient id. The router gives this the define shape today because 'What is' is matched before 'difference'."
+}

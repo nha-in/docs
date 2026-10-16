@@ -31,6 +31,6 @@
   "expected_behaviour": "answer",
   "derived_from": null,
   "source_row": "annexure#sandbox-faq-general",
-  "catalogue_version": "2026.08.24",
+  "catalogue_version": "2026.09.16",
   "notes": "NHA's FAQ links to the architecture overview and the implementer's guide; the facts here come from the sandbox registration and milestone path those pages point to"
 }

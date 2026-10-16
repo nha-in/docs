@@ -1,0 +1,37 @@
+{
+  "id": "terse-link-records-01",
+  "slice": "terse",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "link records"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "In M2 the HIP generates a linking token using the patient's ABHA address and demographic details, and the patient's care context is linked to the ABHA Address.",
+    "The first M2 call is POST /api/hiecm/v3/token/generate-token with the patient's ABHA number or ABHA address, name, gender and year of birth.",
+    "In P2 a PHR app discovers with /api/hiecm/user-initiated-linking/v3/patient/care-context/discover, carrying the hip and the unverifiedIdentifiers, and on successful verification of the OTP the care contexts link to the ABHA address."
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.flow.m2-link-care-context",
+    "hiecm.flow.p2-discover-and-link"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-hiecm-hip-initiated-linking-yaml",
+  "catalogue_version": "2026.09.16",
+  "notes": "Group A, an imperative task phrase that spans two modules: it catches an answer that picks M2 or P2 alone, or hedges across both without naming either module or its first call. Source lines: catalogue/hiecm/flows/m2-link-care-context.md, 'The HIP generates a linking token using the patient's ABHA address and demographic details for authentication' and step 1 'POST /api/hiecm/v3/token/generate-token'; catalogue/hiecm/flows/p2-discover-and-link.md, 'Discover with `/api/hiecm/user-initiated-linking/v3/patient/care-context/discover`, carrying the `hip` and the `unverifiedIdentifiers`' and 'on successful verification the care contexts link to the ABHA address'."
+}

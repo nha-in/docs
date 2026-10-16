@@ -9,11 +9,11 @@ summary: >
   The patient's identity in ABDM, in two forms that look alike and are
   not: a 14 digit ABHA number and a readable ABHA address.
 sources:
-  - file: catalogue/openapi/.raw/nha-2026-09-16/abha/M1 ABHA Swagger 1.yaml
+  - file: catalogue/hiecm/openapi/.raw/nha-2026-09-16/abha/M1 ABHA Swagger 1.yaml
     hash: sha256:6ab5cfe77c29032fac5fbf25c8e28529f22951e459374fa618f570f15e25551b
     note: >
       The ABHA number and ABHA address validation patterns.
-  - file: catalogue/openapi/.raw/nha-2026-09-16/phr/PHR and Locker Swagger.yaml
+  - file: catalogue/hiecm/openapi/.raw/nha-2026-09-16/phr/PHR and Locker Swagger.yaml
     hash: sha256:a7e1b7e0b56b75297623057678cf307f21ecdbfbc9ebdb022dc67df78540f6d5
     note: >
       The ABHA number described as 14 digits.

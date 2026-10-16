@@ -1,0 +1,36 @@
+{
+  "id": "nudge-noevidence-consent-stuck-01",
+  "slice": "nudge",
+  "class": "diagnose",
+  "turns": [
+    {
+      "role": "user",
+      "text": "Our consent request just sits there. The patient swears they approved it in the app."
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "The patient's decision arrives on your bridge at /api/v3/hiu/consent/request/notify with status GRANTED and at least one consent artefact id",
+    "The status call is only for showing progress; the notify callback is what changes REQUESTED",
+    "status"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.flow.m3-request-consent"
+  ],
+  "expected_shape": "diagnose",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-hiecm-consent-management-data-flow-yaml",
+  "catalogue_version": "2026.09.16",
+  "notes": "Nudge group, debugging with no evidence: the answer comes from the consent request flow and must end with exactly one question, which status the last callback on the bridge carried; it catches an answer that tells the reader to retry the init call or asks for everything at once."
+}

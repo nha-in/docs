@@ -1,0 +1,537 @@
+{
+  "case_id": "faq-verbatim-sandbox-general-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "I am a developer, and want to build a health repository. How do I get started?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "I'll search the ABDM documentation for getting started with a health repository.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01W77Mr9zSdWkgLdQnYKNz7X",
+            "Name": "search",
+            "Input": {
+              "query": "health repository getting started",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "health repository getting started",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/how-it-fits#roles",
+                "id": "hiecm.concept.roles",
+                "summary": "Your role, IMS or PHR, is fixed by the entity your software acts for, while HIP and HIU change with the direction each record moves.",
+                "title": "Roles, which entity your software acts for and which way the record moves",
+                "type": "concept"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01DRWoWXy8EQXKmVqArgvb5i",
+            "Name": "search",
+            "Input": {
+              "query": "onboarding integration setup architecture",
+              "kind": "atom",
+              "limit": 15
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "onboarding integration setup architecture",
+            "kind": "atom",
+            "limit": 15
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01H8khcvpNMPK8oBrsCA2dbC",
+            "Name": "get",
+            "Input": {
+              "id": "hiecm.concept.roles"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "hiecm.concept.roles"
+          },
+          "output": {
+            "body": "# Roles, which entity your software acts for and which way the record moves\n\n## In plain words\n\nThere are two integrator roles on HIE-CM, and your product is one of them for its\nwhole life. What decides it is which entity your software acts for.\n\n| Role | It acts for | What you build |\n| --- | --- | --- |\n| [IMS](/docs/hiecm/v3/getting-started/glossary#ims) | A care provider. An HMIS in a hospital, an EMR in a clinic, a LIMS in a laboratory, a PMS in a pharmacy | [M1](/docs/hiecm/v3/milestones/m1) to [M4](/docs/hiecm/v3/milestones/m4) |\n| [PHR](/docs/hiecm/v3/getting-started/glossary#phr) | A care seeker, who holds their own records and gives consent | [P1](/docs/hiecm/v3/milestones/p1) to [P3](/docs/hiecm/v3/milestones/p3) |\n\n[HIP](/docs/hiecm/v3/getting-started/glossary#hip) and\n[HIU](/docs/hiecm/v3/getting-started/glossary#hiu) are not a third and a fourth\nrole, and they are not something you register as. They are the two ends of one\nrecord moving: whoever publishes it is the HIP for that exchange, and whoever\nasks to read one they did not create is the HIU.\n\nBoth roles are both, and it changes call by call:\n\n- A hospital is the HIP when it shares a discharge summary, and the HIU when it pulls an earlier prescription, through the same IMS.\n- A citizen is the HIP when they push a record from their PHR application, and the HIU when they fetch one.\n\nNeither is a thing you can build once and be. See\n[HIP and HIU](/docs/hiecm/v3/concepts/hip-hiu).\n\nSo the milestones you build follow the direction your records move, not the kind\nof product you sell. A PHR app that lets a citizen push a record publishes as\nthe HIP, and builds the M2 linking and transfer calls as well. See\n[where the citizen is the HIP](/docs/hiecm/v3/milestones/p2#where-the-citizen-is-the-hip).\nRecords never pass through the consent manager: it routes the request and holds\nthe consent, and the record goes from the system that holds it to the system\nthat asked.\n\n## Before you start\n\nKnow which entity the software acts for, a care provider or a care seeker. That fixes the role for the life of the product.\n\n## What happens\n\nDecide the role once, IMS or PHR, from the entity. Then list every direction a record moves through the product: publishing a record is HIP behaviour, fetching one it did not create is HIU behaviour. Build the milestones for each direction the product uses.\n\n## How you know it worked\n\nFor a hospital system that also pulls a patient's history, you can name the role, IMS, both directions, and the milestones: M1, M2 and M3. For a PHR app that uploads a scanned prescription, you can say the citizen is the HIP for that record.\n\n## When it goes wrong\n\nHIP, HIU, health repository and health locker are chosen as though they were one list of company types: two are directions, one is custody, one is a product. A PHR app is built for P1 alone and then cannot publish the first record a citizen pushes. A fetch is designed against the consent manager, which holds no records.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/concepts/how-it-fits#roles",
+            "gateway": "hiecm",
+            "id": "hiecm.concept.roles",
+            "milestone": "M2",
+            "summary": "Your role, IMS or PHR, is fixed by the entity your software acts for, while HIP and HIU change with the direction each record moves.",
+            "title": "Roles, which entity your software acts for and which way the record moves",
+            "type": "concept"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01YbC6dmeK6FhTUaExZJBsHp",
+            "Name": "search",
+            "Input": {
+              "query": "getting started concepts HIP HIU",
+              "type": "concept",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "getting started concepts HIP HIU",
+            "type": "concept",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/how-it-fits#roles",
+                "id": "hiecm.concept.roles",
+                "summary": "Your role, IMS or PHR, is fixed by the entity your software acts for, while HIP and HIU change with the direction each record moves.",
+                "title": "Roles, which entity your software acts for and which way the record moves",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/gateway#asynchronous-callbacks",
+                "id": "hiecm.concept.asynchronous-callbacks",
+                "summary": "Most HIE-CM calls answer 202 at once and deliver the real answer later as a callback to your registered URL, matched by request id.",
+                "title": "Asynchronous calls and callbacks, why a 200 means very little",
+                "type": "concept"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01NAnC6KMiB6Kmka9RjVj9Li",
+            "Name": "search",
+            "Input": {
+              "query": "flows endpoints milestones M1 M2",
+              "type": "flow",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "flows endpoints milestones M1 M2",
+            "type": "flow",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m4#m4-link-bridge",
+                "id": "hiecm.flow.m4-link-bridge",
+                "summary": "Connect an onboarded facility to the software that will act for it, say whether the facility publishes records through it, fetches them, or both, and name it...",
+                "title": "Link a facility to its bridge",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m1#m1-update-mobile",
+                "id": "hiecm.flow.m1-update-mobile",
+                "summary": "Change the mobile number on an ABHA profile with an OTP sent to the new number.",
+                "title": "Change the mobile number on an ABHA profile",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m1#m1-login-by-mobile",
+                "id": "hiecm.flow.m1-login-by-mobile",
+                "summary": "Send an OTP to a mobile number, verify it, choose the account, and get the user token that profile calls need.",
+                "title": "Log somebody in to their existing ABHA",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m1#m1-find-abha",
+                "id": "hiecm.flow.m1-find-abha",
+                "summary": "Search for a forgotten ABHA by mobile number, then confirm with an OTP so the person proves the account is theirs.",
+                "title": "Find somebody's ABHA when they do not know it",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m1#m1-create-abha-demographic-auth",
+                "id": "hiecm.flow.m1-create-abha-demographic-auth",
+                "summary": "Create an ABHA by matching name, date of birth and gender against Aadhaar with no OTP, for approved integrators only.",
+                "title": "Create an ABHA using Aadhaar demographic authentication",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m1#m1-create-abha-aadhaar-otp",
+                "id": "hiecm.flow.m1-create-abha-aadhaar-otp",
+                "summary": "Verify a person against Aadhaar with an OTP, create their ABHA number, then let them choose an address.",
+                "title": "Create an ABHA using an Aadhaar OTP",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m4#m4-create-hpid",
+                "id": "hiecm.flow.m4-create-hpid",
+                "summary": "Take a healthcare professional through Aadhaar authentication and mobile verification until the registry issues an HP-ID.",
+                "title": "Get a healthcare professional an HPID",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/notifications-and-patient-apps#subscribing",
+                "id": "nhcx.flow.notification-subscribe",
+                "summary": "Have a patient's health record app receive plain-language updates on their pre-authorisations, claims and payments, by subscribing each time the patient logs...",
+                "title": "Subscribe a patient app to notifications",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/go-live",
+                "id": "nhcx.flow.production-onboarding",
+                "summary": "Create and confirm your live claims exchange participant record, then register your certificate and callback address, each step confirmed by a passcode sent ...",
+                "title": "Onboard as a participant in production",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/get-your-sandbox-credentials",
+                "id": "nhcx.flow.sandbox-onboarding",
+                "summary": "Register your system in the claims exchange test environment so it holds a participant code, a registered certificate and a callback address.",
+                "title": "Onboard as a participant in the NHCX sandbox",
+                "type": "flow"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01DCzXnidXrLkwVJAh2h61UH",
+            "Name": "search",
+            "Input": {
+              "query": "health record document FHIR bundle",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "health record document FHIR bundle",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "",
+                "id": "shared.fhir.document-bundle",
+                "summary": "The FHIR R4 bundle ABDM wraps records in, profiled by NRCeS, with a Composition naming the record type and a SNOMED CT code deciding what it is.",
+                "title": "DocumentBundle, the envelope every health record travels in",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.document-bundles",
+                "summary": "Every ABDM health record travels as one FHIR document Bundle: a Composition first, eight possible NRCES profiles, and a two tier validation story. This atom ...",
+                "title": "FHIR document bundles, the eight ABDM record types",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.bundle-weight-and-narrative",
+                "summary": "Almost every byte of a document bundle is the patient's attachment, which decides how you store and log it, and every resource carries a human readable narra...",
+                "title": "Bundles are mostly somebody's health record, and they carry a narrative",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.map-healthdocumentrecord",
+                "summary": "Stub. NRCES defines no Composition section slices for this record type; only Composition.section.entry is constrained. Hand-written mapping guidance has not ...",
+                "title": "HealthDocumentRecord, the unstructured health document record",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.map-wellnessrecord",
+                "summary": "Stub. The Composition section list NRCES defines for this record type, from digests.json. Hand-written mapping guidance has not been authored yet.",
+                "title": "WellnessRecord, the PHR wellness record",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.concept.fhir-in-nhcx",
+                "summary": "Every claim message carries a collection bundle of health data records built to the national claim profiles, with clinical records attached inside it, and it...",
+                "title": "FHIR collection bundles and the NHCX claim profiles",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.map-diagnosticreport",
+                "summary": "How a lab or radiology report becomes a DiagnosticReportRecord bundle. NRCES does not slice this record type's sections; this atom maps the Composition's req...",
+                "title": "Mapping DiagnosticReport, the lab and radiology report record",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.abha-identifiers",
+                "summary": "NRCeS tells you apart the two health identifiers a person has by the identifier type code, not by a namespace URI, and it publishes no namespace URI for eith...",
+                "title": "Carrying an ABHA number and an ABHA address on a FHIR Patient",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/fhir/preauthorisation-request",
+                "id": "nhcx.fhir.preauth-request",
+                "summary": "The bundle a hospital sends to ask a payer to approve a planned treatment before it happens, with the package, the diagnosis and the required documents.",
+                "title": "Preauthorisation request bundle, a Claim with use preauthorization",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.fhir.collection-bundle",
+                "summary": "Every claims message you send is one bundle of type collection, holding the main business resource and every resource it points to.",
+                "title": "The NHCX collection bundle and its required elements",
+                "type": "fhir"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01NtBEc2GYkbW8AVNP1UQJvh",
+            "Name": "search",
+            "Input": {
+              "query": "HIP HIU publish fetch consent linking",
+              "type": "concept",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "HIP HIU publish fetch consent linking",
+            "type": "concept",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/how-it-fits#roles",
+                "id": "hiecm.concept.roles",
+                "summary": "Your role, IMS or PHR, is fixed by the entity your software acts for, while HIP and HIU change with the direction each record moves.",
+                "title": "Roles, which entity your software acts for and which way the record moves",
+                "type": "concept"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "Based on the ABDM documentation, here's how to get started building a health repository:\n\n## 1. **Understand Your Role**\nFirst, decide what entity your system represents—this is fixed for the life of your product:\n- **IMS (Information Management System)**: Acts for a care provider (hospital, clinic, lab, pharmacy)\n- **PHR (Personal Health Record)**: Acts for a care seeker (patient/citizen)\n\n## 2. **Understand Data Movement**\nYour role determines which direction records flow:\n- **HIP (Health Information Provider)**: Your system publishes/shares records\n- **HIU (Health Information User)**: Your system fetches records created elsewhere\n\nMost systems are both—a hospital publishes discharge summaries (HIP) while fetching earlier prescriptions (HIU).\n\n## 3. **Know the Record Format**\nAll health records in ABDM travel as **FHIR Document Bundles**:\n- Built to NRCeS (National FHIR Profiles) standards\n- Includes a Composition resource and clinical records\n- Eight record types supported: discharge summaries, consultations, diagnostic reports, wellness records, etc.\n\nSee [DocumentBundle, the envelope every health record travels in](/docs/hiecm/v3/concepts/gateway) and [FHIR document bundles, the eight ABDM record types](/docs/hiecm/v3/concepts/gateway).\n\n## 4. **Follow the Milestones**\nBuild features in phases:\n- **M1**: Patient identity (ABHA creation, login)\n- **M2**: Record linking and consent management  \n- **M3**: Fetching and searching records\n- **M4**: Healthcare facility and professional onboarding\n\nFor a PHR, you'd build P1–P3 instead.\n\n## 5. **Key Technical Details**\n- Gateway calls are **asynchronous**: you get a 202 response immediately, with the real answer arriving later via a callback to your registered URL\n- Integrate with the HIE-CM gateway to handle consent and routing\n- Validate bundles against NRCES profiles before sending\n\n**Start with the concepts and flows on the portal** (https://abdm.gov.in) once you've chosen your role and which direction(s) your records flow.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "Based on the ABDM documentation, here's how to get started building a health repository:\n\n## 1. **Understand Your Role**\nFirst, decide what entity your system represents—this is fixed for the life of your product:\n- **IMS (Information Management System)**: Acts for a care provider (hospital, clinic, lab, pharmacy)\n- **PHR (Personal Health Record)**: Acts for a care seeker (patient/citizen)\n\n## 2. **Understand Data Movement**\nYour role determines which direction records flow:\n- **HIP (Health Information Provider)**: Your system publishes/shares records\n- **HIU (Health Information User)**: Your system fetches records created elsewhere\n\nMost systems are both—a hospital publishes discharge summaries (HIP) while fetching earlier prescriptions (HIU).\n\n## 3. **Know the Record Format**\nAll health records in ABDM travel as **FHIR Document Bundles**:\n- Built to NRCeS (National FHIR Profiles) standards\n- Includes a Composition resource and clinical records\n- Eight record types supported: discharge summaries, consultations, diagnostic reports, wellness records, etc.\n\nSee [DocumentBundle, the envelope every health record travels in](/docs/hiecm/v3/concepts/gateway) and [FHIR document bundles, the eight ABDM record types](/docs/hiecm/v3/concepts/gateway).\n\n## 4. **Follow the Milestones**\nBuild features in phases:\n- **M1**: Patient identity (ABHA creation, login)\n- **M2**: Record linking and consent management  \n- **M3**: Fetching and searching records\n- **M4**: Healthcare facility and professional onboarding\n\nFor a PHR, you'd build P1–P3 instead.\n\n## 5. **Key Technical Details**\n- Gateway calls are **asynchronous**: you get a 202 response immediately, with the real answer arriving later via a callback to your registered URL\n- Integrate with the HIE-CM gateway to handle consent and routing\n- Validate bundles against NRCES profiles before sending\n\n**Start with the concepts and flows on the portal** (https://abdm.gov.in) once you've chosen your role and which direction(s) your records flow.",
+  "sources": [
+    {
+      "id": "hiecm.concept.roles",
+      "title": "Roles, which entity your software acts for and which way the record moves",
+      "url": "/docs/hiecm/v3/concepts/how-it-fits#roles"
+    },
+    {
+      "id": "hiecm.concept.asynchronous-callbacks",
+      "title": "Asynchronous calls and callbacks, why a 200 means very little",
+      "url": "/docs/hiecm/v3/concepts/gateway#asynchronous-callbacks"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/concepts/how-it-fits#roles\",\"id\":\"hiecm.concept.roles\",\"summary\":\"Your role, IMS or PHR, is fixed by the entity your software acts for, while HIP and HIU change with the direction each record moves.\",\"title\":\"Roles, which entity your software acts for and which way the record moves\",\"type\":\"concept\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"body\":\"# Roles, which entity your software acts for and which way the record moves\\n\\n## In plain words\\n\\nThere are two integrator roles on HIE-CM, and your product is one of them for its\\nwhole life. What decides it is which entity your software acts for.\\n\\n| Role | It acts for | What you build |\\n| --- | --- | --- |\\n| [IMS](/docs/hiecm/v3/getting-started/glossary#ims) | A care provider. An HMIS in a hospital, an EMR in a clinic, a LIMS in a laboratory, a PMS in a pharmacy | [M1](/docs/hiecm/v3/milestones/m1) to [M4](/docs/hiecm/v3/milestones/m4) |\\n| [PHR](/docs/hiecm/v3/getting-started/glossary#phr) | A care seeker, who holds their own records and gives consent | [P1](/docs/hiecm/v3/milestones/p1) to [P3](/docs/hiecm/v3/milestones/p3) |\\n\\n[HIP](/docs/hiecm/v3/getting-started/glossary#hip) and\\n[HIU](/docs/hiecm/v3/getting-started/glossary#hiu) are not a third and a fourth\\nrole, and they are not something you register as. They are the two ends of one\\nrecord moving: whoever publishes it is the HIP for that exchange, and whoever\\nasks to read one they did not create is the HIU.\\n\\nBoth roles are both, and it changes call by call:\\n\\n- A hospital is the HIP when it shares a discharge summary, and the HIU when it pulls an earlier prescription, through the same IMS.\\n- A citizen is the HIP when they push a record from their PHR application, and the HIU when they fetch one.\\n\\nNeither is a thing you can build once and be. See\\n[HIP and HIU](/docs/hiecm/v3/concepts/hip-hiu).\\n\\nSo the milestones you build follow the direction your records move, not the kind\\nof product you sell. A PHR app that lets a citizen push a record publishes as\\nthe HIP, and builds the M2 linking and transfer calls as well. See\\n[where the citizen is the HIP](/docs/hiecm/v3/milestones/p2#where-the-citizen-is-the-hip).\\nRecords never pass through the consent manager: it routes the request and holds\\nthe consent, and the record goes from the system that holds it to the system\\nthat asked.\\n\\n## Before you start\\n\\nKnow which entity the software acts for, a care provider or a care seeker. That fixes the role for the life of the product.\\n\\n## What happens\\n\\nDecide the role once, IMS or PHR, from the entity. Then list every direction a record moves through the product: publishing a record is HIP behaviour, fetching one it did not create is HIU behaviour. Build the milestones for each direction the product uses.\\n\\n## How you know it worked\\n\\nFor a hospital system that also pulls a patient's history, you can name the role, IMS, both directions, and the milestones: M1, M2 and M3. For a PHR app that uploads a scanned prescription, you can say the citizen is the HIP for that record.\\n\\n## When it goes wrong\\n\\nHIP, HIU, health repository and health locker are chosen as though they were one list of company types: two are directions, one is custody, one is a product. A PHR app is built for P1 alone and then cannot publish the first record a citizen pushes. A fetch is designed against the consent manager, which holds no records.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/concepts/how-it-fits#roles\",\"gateway\":\"hiecm\",\"id\":\"hiecm.concept.roles\",\"milestone\":\"M2\",\"summary\":\"Your role, IMS or PHR, is fixed by the entity your software acts for, while HIP and HIU change with the direction each record moves.\",\"title\":\"Roles, which entity your software acts for and which way the record moves\",\"type\":\"concept\"}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/concepts/how-it-fits#roles\",\"id\":\"hiecm.concept.roles\",\"summary\":\"Your role, IMS or PHR, is fixed by the entity your software acts for, while HIP and HIU change with the direction each record moves.\",\"title\":\"Roles, which entity your software acts for and which way the record moves\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/gateway#asynchronous-callbacks\",\"id\":\"hiecm.concept.asynchronous-callbacks\",\"summary\":\"Most HIE-CM calls answer 202 at once and deliver the real answer later as a callback to your registered URL, matched by request id.\",\"title\":\"Asynchronous calls and callbacks, why a 200 means very little\",\"type\":\"concept\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/milestones/m4#m4-link-bridge\",\"id\":\"hiecm.flow.m4-link-bridge\",\"summary\":\"Connect an onboarded facility to the software that will act for it, say whether the facility publishes records through it, fetches them, or both, and name it...\",\"title\":\"Link a facility to its bridge\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m1#m1-update-mobile\",\"id\":\"hiecm.flow.m1-update-mobile\",\"summary\":\"Change the mobile number on an ABHA profile with an OTP sent to the new number.\",\"title\":\"Change the mobile number on an ABHA profile\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m1#m1-login-by-mobile\",\"id\":\"hiecm.flow.m1-login-by-mobile\",\"summary\":\"Send an OTP to a mobile number, verify it, choose the account, and get the user token that profile calls need.\",\"title\":\"Log somebody in to their existing ABHA\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m1#m1-find-abha\",\"id\":\"hiecm.flow.m1-find-abha\",\"summary\":\"Search for a forgotten ABHA by mobile number, then confirm with an OTP so the person proves the account is theirs.\",\"title\":\"Find somebody's ABHA when they do not know it\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m1#m1-create-abha-demographic-auth\",\"id\":\"hiecm.flow.m1-create-abha-demographic-auth\",\"summary\":\"Create an ABHA by matching name, date of birth and gender against Aadhaar with no OTP, for approved integrators only.\",\"title\":\"Create an ABHA using Aadhaar demographic authentication\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m1#m1-create-abha-aadhaar-otp\",\"id\":\"hiecm.flow.m1-create-abha-aadhaar-otp\",\"summary\":\"Verify a person against Aadhaar with an OTP, create their ABHA number, then let them choose an address.\",\"title\":\"Create an ABHA using an Aadhaar OTP\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m4#m4-create-hpid\",\"id\":\"hiecm.flow.m4-create-hpid\",\"summary\":\"Take a healthcare professional through Aadhaar authentication and mobile verification until the registry issues an HP-ID.\",\"title\":\"Get a healthcare professional an HPID\",\"type\":\"flow\"},{\"doc_url\":\"/docs/nhcx/v1/reference/notifications-and-patient-apps#subscribing\",\"id\":\"nhcx.flow.notification-subscribe\",\"summary\":\"Have a patient's health record app receive plain-language updates on their pre-authorisations, claims and payments, by subscribing each time the patient logs...\",\"title\":\"Subscribe a patient app to notifications\",\"type\":\"flow\"},{\"doc_url\":\"/docs/nhcx/v1/go-live\",\"id\":\"nhcx.flow.production-onboarding\",\"summary\":\"Create and confirm your live claims exchange participant record, then register your certificate and callback address, each step confirmed by a passcode sent ...\",\"title\":\"Onboard as a participant in production\",\"type\":\"flow\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/get-your-sandbox-credentials\",\"id\":\"nhcx.flow.sandbox-onboarding\",\"summary\":\"Register your system in the claims exchange test environment so it holds a participant code, a registered certificate and a callback address.\",\"title\":\"Onboard as a participant in the NHCX sandbox\",\"type\":\"flow\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"\",\"id\":\"shared.fhir.document-bundle\",\"summary\":\"The FHIR R4 bundle ABDM wraps records in, profiled by NRCeS, with a Composition naming the record type and a SNOMED CT code deciding what it is.\",\"title\":\"DocumentBundle, the envelope every health record travels in\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.document-bundles\",\"summary\":\"Every ABDM health record travels as one FHIR document Bundle: a Composition first, eight possible NRCES profiles, and a two tier validation story. This atom ...\",\"title\":\"FHIR document bundles, the eight ABDM record types\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.bundle-weight-and-narrative\",\"summary\":\"Almost every byte of a document bundle is the patient's attachment, which decides how you store and log it, and every resource carries a human readable narra...\",\"title\":\"Bundles are mostly somebody's health record, and they carry a narrative\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.map-healthdocumentrecord\",\"summary\":\"Stub. NRCES defines no Composition section slices for this record type; only Composition.section.entry is constrained. Hand-written mapping guidance has not ...\",\"title\":\"HealthDocumentRecord, the unstructured health document record\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.map-wellnessrecord\",\"summary\":\"Stub. The Composition section list NRCES defines for this record type, from digests.json. Hand-written mapping guidance has not been authored yet.\",\"title\":\"WellnessRecord, the PHR wellness record\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"nhcx.concept.fhir-in-nhcx\",\"summary\":\"Every claim message carries a collection bundle of health data records built to the national claim profiles, with clinical records attached inside it, and it...\",\"title\":\"FHIR collection bundles and the NHCX claim profiles\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.map-diagnosticreport\",\"summary\":\"How a lab or radiology report becomes a DiagnosticReportRecord bundle. NRCES does not slice this record type's sections; this atom maps the Composition's req...\",\"title\":\"Mapping DiagnosticReport, the lab and radiology report record\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.abha-identifiers\",\"summary\":\"NRCeS tells you apart the two health identifiers a person has by the identifier type code, not by a namespace URI, and it publishes no namespace URI for eith...\",\"title\":\"Carrying an ABHA number and an ABHA address on a FHIR Patient\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/nhcx/v1/reference/fhir/preauthorisation-request\",\"id\":\"nhcx.fhir.preauth-request\",\"summary\":\"The bundle a hospital sends to ask a payer to approve a planned treatment before it happens, with the package, the diagnosis and the required documents.\",\"title\":\"Preauthorisation request bundle, a Claim with use preauthorization\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"nhcx.fhir.collection-bundle\",\"summary\":\"Every claims message you send is one bundle of type collection, holding the main business resource and every resource it points to.\",\"title\":\"The NHCX collection bundle and its required elements\",\"type\":\"fhir\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/concepts/how-it-fits#roles\",\"id\":\"hiecm.concept.roles\",\"summary\":\"Your role, IMS or PHR, is fixed by the entity your software acts for, while HIP and HIU change with the direction each record moves.\",\"title\":\"Roles, which entity your software acts for and which way the record moves\",\"type\":\"concept\"}]}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T12:04:20.486Z",
+  "usage": {
+    "input_tokens": 70,
+    "output_tokens": 1607,
+    "cache_read_input_tokens": 84573,
+    "cache_creation_input_tokens": 10348,
+    "num_turns": 8,
+    "duration_ms": 22081,
+    "cost_usd_equivalent": 0.0372583
+  }
+}

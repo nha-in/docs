@@ -59,6 +59,8 @@ bearer_auth: Bearer eyJhbGciOiJSUzI1NiIs...
 
 Leaving out the `Bearer` prefix is the portal's own example of how to get a `401`.
 
+Only your backend obtains this token, never a browser application. The client secret and the token stay on the server that makes the NHCX calls.
+
 ## Keeping it fresh
 
 The token lasts 1200 seconds (20 minutes) from the moment it arrives. Build it like this:
@@ -72,7 +74,7 @@ One token serves every call: the participant service, the use-case endpoints, an
 
 ## The other call named session
 
-The participant service publishes its own [`POST /get/session`](/docs/nhcx/v1/api/registry/endpoints/registry-get-session). It is a different call from the gateway sessions call above, and a request built for one fails on the other.
+The participant service publishes its own `POST /get/session`. It is not in the [Participant registry](/docs/nhcx/v1/api/registry/) reference. It is a different call from the gateway sessions call above, and a request built for one fails on the other.
 
 | | Gateway sessions call | Participant service `/get/session` |
 | :---- | :---- | :---- |

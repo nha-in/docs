@@ -1,0 +1,36 @@
+{
+  "id": "naive-hiecm-m2-discovery-request-01",
+  "slice": "naive",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "how does my hospital software know when a patient searches for their records in the PHR app"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "ABDM posts a discovery request to your HIP bridge at /api/v3/hip/patient/care-context/discover with the patient's name, gender, year of birth and identifiers.",
+    "You answer through on-discover with only the care contexts that are not linked yet, echoing the request's transactionId."
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.callback.m2-on-discovery-request",
+    "hiecm.endpoint.m2-on-discover-care-contexts"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-hiecm-user-initiated-linking-yaml",
+  "catalogue_version": "2026.09.16",
+  "notes": "User initiated linking from the HIP side, asked in plain words. Source lines: catalogue/hiecm/callbacks/m2-on-discovery-request.md, 'When a patient searches for their records, ABDM posts a discovery request to your HIP bridge at `/api/v3/hip/patient/care-context/discover`. It carries the patient's name, gender, year of birth, and verified and unverified identifiers.'; 'answer through on-discover with the unlinked care contexts you found'. catalogue/hiecm/endpoints/m2-on-discover-care-contexts.md, 'Share only records that are not linked yet. Echo the request's `transactionId`'."
+}

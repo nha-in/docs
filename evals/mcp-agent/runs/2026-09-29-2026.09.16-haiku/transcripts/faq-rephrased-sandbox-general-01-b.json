@@ -1,0 +1,1103 @@
+{
+  "case_id": "faq-rephrased-sandbox-general-01-b",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "as developer, how I get started to build health repository?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01NskVp59mjkH5WL7ACXjQiw",
+            "Name": "search",
+            "Input": {
+              "query": "getting started health repository build integration",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "getting started health repository build integration",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01GL2AGK9KLHyksEWpbmtRo1",
+            "Name": "search",
+            "Input": {
+              "query": "health information provider HIP setup development",
+              "kind": "operation",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "health information provider HIP setup development",
+            "kind": "operation",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_015AbsUvHfeTigYb3eNAQsfs",
+            "Name": "search",
+            "Input": {
+              "query": "health repository",
+              "kind": "atom",
+              "type": "concept"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "health repository",
+            "kind": "atom",
+            "type": "concept"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/how-it-fits#roles",
+                "id": "hiecm.concept.roles",
+                "summary": "Your role, IMS or PHR, is fixed by the entity your software acts for, while HIP and HIU change with the direction each record moves.",
+                "title": "Roles, which entity your software acts for and which way the record moves",
+                "type": "concept"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01EFEvA8cYPouGmqE17Ep9S9",
+            "Name": "search",
+            "Input": {
+              "query": "HIP",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "HIP",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/04-m2-post-v3-patients-sms-on-notify#m2-callback-api-for-sms-notification-to-patients",
+                "id": "hiecm.callback.m2-callback-api-for-sms-notification-to-patients",
+                "summary": "ABDM answers the HIP's SMS notification request on the HIP's bridge.",
+                "title": "Callback API for SMS Notification to patients",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#hip",
+                "id": "hiecm.glossary.hip",
+                "summary": "The role held by a system that holds a patient's records and shares them when a consent allows it.",
+                "title": "HIP, health information provider",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m4/endpoints/m4-multiple-hrp-api/01-m4-post-v1-bridges-mutiplehrpaddupdateservices#m1-register-hrp-services",
+                "id": "hiecm.endpoint.m1-register-hrp-services",
+                "summary": "Registers or updates the HIP and HIU services a facility offers through your bridge.",
+                "title": "Register or update HIP and HIU services for a facility",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#hfr",
+                "id": "shared.glossary.hfr",
+                "summary": "The registry of health facilities, which is where a facility is searched for, onboarded and linked to software.",
+                "title": "HFR, Health Facility Registry",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-1063",
+                "id": "hiecm.error.abdm-1063",
+                "summary": "In linking the provider id does not match the link token, and in a consent flow the date range is not valid.",
+                "title": "ABDM-1063, HIP id mismatch, or an invalid date range",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#hrp",
+                "id": "hiecm.glossary.hrp",
+                "summary": "Whoever holds the records. It describes custody, which is why it is neither a position nor a direction.",
+                "title": "HRP, health repository provider",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-1035",
+                "id": "hiecm.error.abdm-1035",
+                "summary": "ABDM does not recognise the health information provider id on the call, which is a registration problem rather than a request problem.",
+                "title": "ABDM-1035, the HIP id is not recognised",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/fetching-a-recipient-certificate#what-comes-back",
+                "id": "hiecm.glossary.key-material",
+                "summary": "The ECDH key pairs that encrypt health records in transit. A fresh pair per transfer, the HIU keeps its own, and the HIP returns its public half alongside th...",
+                "title": "Key material, who generates it and who keeps it",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/03-m2-post-user-initiated-linking-v3-link-care-context-on-confirm#m2-on-link-confirm",
+                "id": "hiecm.endpoint.m2-on-link-confirm",
+                "summary": "The HIP checks the patient's code and answers a link confirm request with the care contexts it linked.",
+                "title": "Link On-Confirm, HIP confirms linked care contexts",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#pms",
+                "id": "hiecm.glossary.pms",
+                "summary": "The system a pharmacy runs to dispense and to hold stock. A pharmacy uses it both to read the prescription it is dispensing against and to record what it dis...",
+                "title": "PMS, pharmacy management system",
+                "type": "glossary"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_019xa29XiJcas84eqdmH7Fqd",
+            "Name": "get",
+            "Input": {
+              "id": "hiecm.glossary.hrp"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "hiecm.glossary.hrp"
+          },
+          "output": {
+            "body": "# HRP, health repository provider\n\n## In plain words\n\nHealth Repository Provider. HRP is whoever holds the records. That is\nthe facility in most integrations, and its repository software is how the\nfacility holds them. Where a facility's records sit with another\norganisation, that organisation is the HRP. HRP and HIP are written\ntogether as \"HRP/HIP\" because the entity holding the records is usually\nthe entity publishing them. If you run an [HMIS](hmis.md) or a\n[LIMS](lims.md) for a facility integrating M2, that facility is the HRP.\n\nThe general form is any entity that manages, stores and transacts health\nrecords. That is a statement about custody: it says who holds the data,\nnot which side of a gateway they sit on and not what they are doing in a\ngiven call.\n\n## Before you start\n\nIt helps to know that ABDM keeps no central store of health records. If\nit did, this term would not need to exist.\n\n## What happens\n\nHRP, HIP, HIU and the health locker get listed together as though the\nfour were one set of roles to choose from. They are not comparable:\n\n| Term | What kind of thing it is |\n|---|---|\n| PHR app, HMIS, LIMS | Position, which of the two entities the software acts for |\n| HIP, HIU | Direction, which way a record is moving in one interaction |\n| HRP | Custody, who holds the records |\n| DSC | Vendor, the company that builds the software |\n\nOne integration is usually several of these at once. A hospital system\nacts for a facility by position, that facility is the HIP or the HIU\ndepending on the call, the facility is the HRP because it holds the\nrecords, and the software is sold by a DSC.\n\nIn practice the term shows up when software is registered: the bridge you\nregister with the gateway is how custody is declared, and it is where you\nname which facilities you act for.\n\n## How you know it worked\n\nYou have understood this when you can say why a facility might hold no records itself and still answer discovery.\n\n## When it goes wrong\n\nAssuming the facility named on a record is the system that holds it. A\nrepository provider can hold records for many facilities.\n\nTreating HRP as an alternative to HIP or HIU and trying to pick one.\nThey answer different questions: HRP is custody and the other two are\ndirection, so all three apply at once.\n\nReading a different term into it. HRP is written Health Records Provider\nin places, and has been misprinted as Health Professional Registry, which\nis a different thing entirely. All of them mean the repository, not the\nregistry.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/getting-started/glossary#hrp",
+            "gateway": "hiecm",
+            "id": "hiecm.glossary.hrp",
+            "milestone": "n/a",
+            "summary": "Whoever holds the records. It describes custody, which is why it is neither a position nor a direction.",
+            "title": "HRP, health repository provider",
+            "type": "glossary"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01VnBXRkNAJsMrTSPXXeoVMU",
+            "Name": "search",
+            "Input": {
+              "query": "onboarding setup registration",
+              "kind": "atom",
+              "type": "flow",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "onboarding setup registration",
+            "kind": "atom",
+            "type": "flow",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_017EvhbLCrkaZfYurZFiJBmY",
+            "Name": "catalogue_info",
+            "Input": {}
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "catalogue_info",
+          "input": {},
+          "output": {
+            "atoms": {
+              "by_gateway": {
+                "hiecm": 269,
+                "nhcx": 536,
+                "shared": 46,
+                "uhi": 111
+              },
+              "by_milestone": {
+                "M1": 74,
+                "M2": 57,
+                "M3": 20,
+                "M4": 11,
+                "P1": 29,
+                "P2": 18,
+                "P3": 36,
+                "n/a": 717
+              },
+              "by_type": {
+                "callback": 66,
+                "concept": 105,
+                "decision": 13,
+                "endpoint": 186,
+                "error": 335,
+                "fhir": 30,
+                "flow": 57,
+                "glossary": 86,
+                "sandbox": 18,
+                "test": 51,
+                "troubleshooting": 15
+              }
+            },
+            "built_at": "2026-09-29T11:55:12Z",
+            "catalogue_version": "2026.09.16",
+            "deprecated": 0,
+            "embeddings": false,
+            "facts": 0,
+            "operations": 387
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01Vi5dM8ceNxhDJWBF6ANFhT",
+            "Name": "search",
+            "Input": {
+              "query": "getting started developer guide",
+              "kind": "atom",
+              "limit": 15
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "getting started developer guide",
+            "kind": "atom",
+            "limit": 15
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01P86EADJFoJb5DoTW4x3Hde",
+            "Name": "search",
+            "Input": {
+              "query": "M1 M2 integration flow",
+              "kind": "atom",
+              "type": "flow",
+              "limit": 15
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "M1 M2 integration flow",
+            "kind": "atom",
+            "type": "flow",
+            "limit": 15
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m4#m4-link-bridge",
+                "id": "hiecm.flow.m4-link-bridge",
+                "summary": "Connect an onboarded facility to the software that will act for it, say whether the facility publishes records through it, fetches them, or both, and name it...",
+                "title": "Link a facility to its bridge",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m1#m1-update-mobile",
+                "id": "hiecm.flow.m1-update-mobile",
+                "summary": "Change the mobile number on an ABHA profile with an OTP sent to the new number.",
+                "title": "Change the mobile number on an ABHA profile",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m1#m1-login-by-mobile",
+                "id": "hiecm.flow.m1-login-by-mobile",
+                "summary": "Send an OTP to a mobile number, verify it, choose the account, and get the user token that profile calls need.",
+                "title": "Log somebody in to their existing ABHA",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m1#m1-find-abha",
+                "id": "hiecm.flow.m1-find-abha",
+                "summary": "Search for a forgotten ABHA by mobile number, then confirm with an OTP so the person proves the account is theirs.",
+                "title": "Find somebody's ABHA when they do not know it",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m1#m1-create-abha-demographic-auth",
+                "id": "hiecm.flow.m1-create-abha-demographic-auth",
+                "summary": "Create an ABHA by matching name, date of birth and gender against Aadhaar with no OTP, for approved integrators only.",
+                "title": "Create an ABHA using Aadhaar demographic authentication",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m1#m1-create-abha-aadhaar-otp",
+                "id": "hiecm.flow.m1-create-abha-aadhaar-otp",
+                "summary": "Verify a person against Aadhaar with an OTP, create their ABHA number, then let them choose an address.",
+                "title": "Create an ABHA using an Aadhaar OTP",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m4#m4-create-hpid",
+                "id": "hiecm.flow.m4-create-hpid",
+                "summary": "Take a healthcare professional through Aadhaar authentication and mobile verification until the registry issues an HP-ID.",
+                "title": "Get a healthcare professional an HPID",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/notifications-and-patient-apps#subscribing",
+                "id": "nhcx.flow.notification-subscribe",
+                "summary": "Have a patient's health record app receive plain-language updates on their pre-authorisations, claims and payments, by subscribing each time the patient logs...",
+                "title": "Subscribe a patient app to notifications",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/go-live",
+                "id": "nhcx.flow.production-onboarding",
+                "summary": "Create and confirm your live claims exchange participant record, then register your certificate and callback address, each step confirmed by a passcode sent ...",
+                "title": "Onboard as a participant in production",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/get-your-sandbox-credentials",
+                "id": "nhcx.flow.sandbox-onboarding",
+                "summary": "Register your system in the claims exchange test environment so it holds a participant code, a registered certificate and a callback address.",
+                "title": "Onboard as a participant in the NHCX sandbox",
+                "type": "flow"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_012sQHPzvdNQyVkCAL7M7qHL",
+            "Name": "search",
+            "Input": {
+              "query": "sandbox testing development",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "sandbox testing development",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/sandbox#4-note-the-base-urls",
+                "id": "uhi.sandbox.base-urls",
+                "summary": "The UHI Gateway base URL for the sandbox and for production, and the reference EUA and HSPA apps in the sandbox.",
+                "title": "UHI Gateway base URLs for sandbox and production",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/base-urls",
+                "id": "nhcx.sandbox.environments-and-base-urls",
+                "summary": "The two environments, the web portals, and the two base addresses every call is built on, for testing and for live claims.",
+                "title": "NHCX environments, hosts and base URLs",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/get-your-sandbox-credentials",
+                "id": "nhcx.sandbox.prerequisites",
+                "summary": "The checklist to complete before your system can register on the claims exchange sandbox: a facility registration, sandbox credentials, basic health ID featu...",
+                "title": "What you need before you register on the NHCX sandbox",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/going-live",
+                "id": "shared.sandbox.going-live",
+                "summary": "How an integration leaves the sandbox for production: functional testing and the security audit, the Health Tech Committee demonstration, then production cre...",
+                "title": "Going live, the sandbox exit process",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/first-fifteen-minutes",
+                "id": "shared.sandbox.first-fifteen-minutes",
+                "summary": "Everything you can do before NHA approves your sandbox registration: read one real gateway session exchange and assemble your own first call, ready to paste ...",
+                "title": "Your first fifteen minutes with ABDM",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/concepts/signing#generate-your-keys-and-headers",
+                "id": "uhi.concept.key-generation",
+                "summary": "The Header Generation Utility creates your Ed25519 key pair and signs each payload; share only the public key and keep the private key on your server.",
+                "title": "Generating UHI signing keys and headers",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/api/session/endpoints/session-api-hiecm-gateway-v3-sessions",
+                "id": "nhcx.endpoint.session-token",
+                "summary": "Trade your client id and client secret for the access token, valid for 1200 seconds (20 minutes), that every claims exchange call carries.",
+                "title": "POST /api/hiecm/gateway/v3/sessions",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.decision.session-endpoint",
+                "summary": "Get the token that every exchange call carries from one place in your code, and set the address it calls per environment.",
+                "title": "Which session token endpoint to call",
+                "type": "decision"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/going-live#when-it-goes-wrong",
+                "id": "uhi.troubleshooting.go-live",
+                "summary": "A search that worked in the sandbox fails in production. Check the Gateway host, then your production IDs and callback URL.",
+                "title": "When a UHI search fails after the switch to production",
+                "type": "troubleshooting"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#sandbox",
+                "id": "shared.glossary.sandbox",
+                "summary": "NHA's test environment, with its own base URLs and credentials, separate from production.",
+                "title": "Sandbox, the test environment",
+                "type": "glossary"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01UgpKM3a6JTy3EKkW4REz5N",
+            "Name": "get",
+            "Input": {
+              "id": "shared.sandbox.first-fifteen-minutes"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "shared.sandbox.first-fifteen-minutes"
+          },
+          "output": {
+            "body": "# Your first fifteen minutes with ABDM\n\n## In plain words\n\nYou cannot run a live [ABDM](shared.glossary.abdm) call until\n[NHA](shared.glossary.nha) approves your sandbox registration. NHA's FAQ publishes a maximum\nfor that review: applications are processed within 5 working days. This page gives you a\ngenuine fifteen minutes of your own while that runs: with nothing but a browser, read one\ncomplete transcribed exchange of the\n[gateway session](/docs/hiecm/v3/concepts/gateway) call and leave with your own first\ncall already written. Applying for sandbox access is a separate step, worth doing first since\nit starts NHA's review clock.\n\n## Before you start\n\nNothing but a browser. No editor, no terminal, no credentials. That is the point of this page:\neverything below runs while you are still waiting on NHA.\n\n## What happens\n\nApply first, then spend fifteen minutes of your own on the two steps below.\n\n1. **Register in the sandbox app, about 10 minutes.** NHA's FAQ gives this estimate for the\n   application itself, and a maximum of 5 working days for it to be processed. This starts\n   NHA's review clock, so do it before anything else. See\n   [sandbox access](/docs/hiecm/v3/getting-started/sandbox).\n2. **Read one transcribed exchange, about 5 minutes.** Below is the gateway session call, the\n   one every other ABDM call depends on. The header and body values shown are example values\n   from the specification rather than a recorded response, so read the shape and expect your\n   own values to differ.\n3. **Assemble your own first call, about 10 minutes.** A filled in curl with placeholders named\n   for where each value comes from, so the moment your credentials arrive, pasting them in is\n   the only step left.\n\n### The transcribed exchange\n\nMethod and path: `POST /api/hiecm/gateway/v3/sessions`, sandbox host\n`https://dev.abdm.gov.in`.\n\n| Header | Example value in the specification |\n| --- | --- |\n| `REQUEST-ID` | `5f7a4a1e-59ba-4c0c-9e0c-8e6b3b6e2f11` |\n| `TIMESTAMP` | `2026-08-25T15:51:15.339Z` |\n| `X-CM-ID` | `sbx` |\n| `Content-Type` | `application/json` |\n\n```bash\ncurl --request POST \\\n  --url https://dev.abdm.gov.in/api/hiecm/gateway/v3/sessions \\\n  --header 'REQUEST-ID: 5f7a4a1e-59ba-4c0c-9e0c-8e6b3b6e2f11' \\\n  --header 'TIMESTAMP: 2026-08-25T15:51:15.339Z' \\\n  --header 'X-CM-ID: sbx' \\\n  --header 'Content-Type: application/json' \\\n  --data '{\n  \"clientId\": \"<CLIENT_ID>\",\n  \"clientSecret\": \"<CLIENT_SECRET>\",\n  \"grantType\": \"client_credentials\"\n}'\n```\n\nA successful call answers `202 Accepted`, with a session created and a bearer token issued.\nThe response carries `accessToken`, `expiresIn`, `refreshExpiresIn`, `refreshToken` and\n`tokenType`. See\n[the endpoint page](/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/01-gateway-post-gateway-v3-sessions)\nfor what each field means.\n\n### Your own first call\n\nThe same request, with the credential placeholders named for where they come from and a fresh\n`X-CM-ID` for the sandbox:\n\n```bash\ncurl --request POST \\\n  --url https://dev.abdm.gov.in/api/hiecm/gateway/v3/sessions \\\n  --header 'REQUEST-ID: <A_FRESH_UUID_YOU_GENERATE>' \\\n  --header 'TIMESTAMP: <CURRENT_ISO_8601_UTC_TIMESTAMP>' \\\n  --header 'X-CM-ID: sbx' \\\n  --header 'Content-Type: application/json' \\\n  --data '{\n  \"clientId\": \"<CLIENT_ID_FROM_SANDBOX_REGISTRATION>\",\n  \"clientSecret\": \"<CLIENT_SECRET_FROM_SANDBOX_REGISTRATION>\",\n  \"grantType\": \"client_credentials\"\n}'\n```\n\nSave it. Once your access is approved, your client id and client secret are issued inside the\nsandbox application, and this is the one paste away from your first real call.\n\n### What you test M1 with\n\nEverything in the sandbox is test data, and no test identities are published\nwith it. There is no fixture Aadhaar number and no fixed OTP: an OTP goes to\nwhichever handset the identifier is registered against, and a real one\nreceives it.\n\nSo plan for this before you reach your first OTP call:\n\n- **A mobile you can read an SMS on.** This unlocks the whole login journey,\n  and it is the cheapest thing to arrange. Your own is fine.\n- **An Aadhaar whose linked mobile you hold**, if you intend to build ABHA\n  creation or anything that ends in a KYC verified ABHA number. Without one\n  you can build and read the creation calls but never complete them.\n\nTwo consequences worth designing around. Never point an OTP call at a number\nnobody on your team answers, because a real person receives that message. And\nattempts are counted against the transaction rather than against you, so a\nretry loop against one number spends the transaction rather than trying again.\n\n## How you know it worked\n\nFor the transcribed exchange, you can now say what the session endpoint returns and where the\ntoken goes on every later call: a `202` carrying `accessToken`, sent afterwards as\n`Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>` on every other gateway call.\n\nFor your own first call, this is `Not yet observed`. It stays that way until you run it, and\nrunning it needs the credentials NHA has not issued yet.\n\n## When it goes wrong\n\nRegistration is processed within 5 working days. If you are past that\nwith no word, raise it on the\n[support ticketing platform](https://sandboxsupport.abdm.gov.in/) or at\n`integration.support@nha.gov.in`. See [Support](/docs/support) for the\nreport format.\n\nIf your first real call fails with a 401, that is a different problem from registration: see\n[Everything returns 401](/docs/hiecm/v3/troubleshooting/everything-returns-401).\n\nWhile NHA reviews your registration, use the wait. See\n[sandbox access](/docs/hiecm/v3/getting-started/sandbox) for what to read next, then\n[the milestones page](/docs/hiecm/v3/milestones) to pick your role and your milestones.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/getting-started/first-fifteen-minutes",
+            "gateway": "shared",
+            "id": "shared.sandbox.first-fifteen-minutes",
+            "milestone": "n/a",
+            "summary": "Everything you can do before NHA approves your sandbox registration: read one real gateway session exchange and assemble your own first call, ready to paste the moment credentials arrive.",
+            "title": "Your first fifteen minutes with ABDM",
+            "type": "sandbox"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_018diiyHLx5U1rgeZGiESPix",
+            "Name": "search",
+            "Input": {
+              "query": "M2 consent discovery link",
+              "kind": "atom",
+              "type": "flow",
+              "milestone": "M2",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "M2 consent discovery link",
+            "kind": "atom",
+            "type": "flow",
+            "milestone": "M2",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_019WVKfE8UYCmvrtWa6CnVDo",
+            "Name": "search",
+            "Input": {
+              "query": "M2 milestone flows",
+              "kind": "atom",
+              "type": "flow",
+              "limit": 20
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "M2 milestone flows",
+            "kind": "atom",
+            "type": "flow",
+            "limit": 20
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m4#m4-link-bridge",
+                "id": "hiecm.flow.m4-link-bridge",
+                "summary": "Connect an onboarded facility to the software that will act for it, say whether the facility publishes records through it, fetches them, or both, and name it...",
+                "title": "Link a facility to its bridge",
+                "type": "flow"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_015G5vCM5uB7HnkuyPRgnBiY",
+            "Name": "search",
+            "Input": {
+              "query": "consent discovery care context linking",
+              "kind": "atom",
+              "limit": 15
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "consent discovery care context linking",
+            "kind": "atom",
+            "limit": 15
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "",
+                "id": "hiecm.glossary.m2",
+                "summary": "The milestone covering care context linking, discovery and sending records.",
+                "title": "M2 Health Information Provider: Create and link records",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/p2#p2-discover-and-link",
+                "id": "hiecm.flow.p2-discover-and-link",
+                "summary": "Let a person search for a facility they visited, discover the records it holds for them, and attach those records to their health address after an OTP confir...",
+                "title": "Find records held elsewhere and link them",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/01-m2-post-hip-v3-link-carecontext#m2-hip-link-care-context",
+                "id": "hiecm.endpoint.m2-hip-link-care-context",
+                "summary": "The HIP links one or more care contexts to a patient's ABHA address, using the patient's link token.",
+                "title": "Link care contexts to an ABHA address",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m2#m2-link-care-context",
+                "id": "hiecm.flow.m2-link-care-context",
+                "summary": "Tell ABDM that this patient had a visit at your facility so their records can be found and fetched later.",
+                "title": "Link a care context to a patient's ABHA",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/02-m2-post-v3-link-on-carecontext#m2-linking-care-context-call-back",
+                "id": "hiecm.callback.m2-linking-care-context-call-back",
+                "summary": "ABDM answers a care context link request on the HIP's bridge with the outcome.",
+                "title": "Linking care context Call back API",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token#m2-on-generate-token-result",
+                "id": "hiecm.callback.m2-on-generate-token-result",
+                "summary": "The link token arrives here; store it against the patient, because it is valid for six months.",
+                "title": "The link token you asked for, or why it was refused",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/03-m2-post-user-initiated-linking-v3-link-care-context-on-confirm#m2-on-link-confirm",
+                "id": "hiecm.endpoint.m2-on-link-confirm",
+                "summary": "The HIP checks the patient's code and answers a link confirm request with the care contexts it linked.",
+                "title": "Link On-Confirm, HIP confirms linked care contexts",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/01-m2-post-user-initiated-linking-v3-patient-care-context-on-8c9340#m2-on-discover-care-contexts",
+                "id": "hiecm.endpoint.m2-on-discover-care-contexts",
+                "summary": "The HIP answers a discovery request with the patient's unlinked care contexts and how it matched the patient.",
+                "title": "On Discovery, HIP responds with found care contexts",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/05-p2-post-user-initiated-linking-v3-link-care-context-init#p2-link-care-context-init",
+                "id": "hiecm.endpoint.p2-link-care-context-init",
+                "summary": "Start linking the records the person chose after discovery; the facility replies with how the person will confirm.",
+                "title": "Start linking the care contexts the person chose",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/care-context#care-context",
+                "id": "hiecm.concept.care-context",
+                "summary": "A care context is the unit a provider links to a patient's ABHA address, carrying a reference number and a display name and nothing clinical.",
+                "title": "Care contexts, how records are grouped so they can be found",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/06-m2-post-v3-hip-link-care-context-init#m2-on-link-init",
+                "id": "hiecm.callback.m2-on-link-init",
+                "summary": "ABDM posts the care contexts a patient chose to link; the HIP issues a link reference number and sends an OTP.",
+                "title": "A request to start linking a care context",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/06-m2-post-v3-hip-link-care-context-init#p2-callback-on-health-record-link-init",
+                "id": "hiecm.callback.p2-callback-on-health-record-link-init",
+                "summary": "ABDM tells your facility which care contexts the person chose to link.",
+                "title": "Link init request to the HIP",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/08-p2-post-v3-hiu-patient-care-context-on-confirm#p2-response-on-health-record-on-confirm",
+                "id": "hiecm.callback.p2-response-on-health-record-on-confirm",
+                "summary": "ABDM posts the outcome of the confirm call, listing the care contexts now linked.",
+                "title": "Link confirm result callback",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/04-p2-post-v3-hiu-patient-care-context-on-discover#p2-callback-on-health-record-discover",
+                "id": "hiecm.callback.p2-callback-on-health-record-discover",
+                "summary": "ABDM posts the care contexts a facility found for the person to your on-discover URL.",
+                "title": "Discovery result callback",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/05-m2-post-v3-hip-patient-care-context-discover#m2-on-discovery-request",
+                "id": "hiecm.callback.m2-on-discovery-request",
+                "summary": "ABDM asks the HIP to find a patient's unlinked care contexts from their name, gender, year of birth and identifiers.",
+                "title": "A discovery request for a patient you may hold records for",
+                "type": "callback"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01LXBtM8GiRrk1uRJVJrvLdY",
+            "Name": "search",
+            "Input": {
+              "query": "health information provider bridge implementation",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "health information provider bridge implementation",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#gateway",
+                "id": "shared.glossary.gateway",
+                "summary": "The component that routes calls between participants so they never call each other directly. It is not the consent manager, and no health record passes throu...",
+                "title": "Gateway, the routing layer between participants",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/api/onboarding/endpoints/onboarding-participant-create",
+                "id": "nhcx.endpoint.participant-create",
+                "summary": "Register your organisation in the sandbox participant registry and receive the participant code that addresses all your messages.",
+                "title": "POST /participant/create",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/troubleshooting/callback-never-arrives#callback-never-arrives",
+                "id": "hiecm.troubleshooting.callback-never-arrives",
+                "summary": "A call returned 202 or 200 and the callback that should follow never reached your registered URL.",
+                "title": "The callback never arrives",
+                "type": "troubleshooting"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/api/onboarding/endpoints/onboarding-v2-participant-create",
+                "id": "nhcx.endpoint.v2-participant-create",
+                "summary": "Start production registration by linking your organisation to its external registry record, which sends a passcode to your registered mobile.",
+                "title": "POST /v2/participant/create",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/01-gateway-get-gateway-v3-bridge-services#gateway-list-bridge-services",
+                "id": "hiecm.endpoint.gateway-list-bridge-services",
+                "summary": "Returns your bridge, its callback URL and every service registered under it.",
+                "title": "List the services registered on your bridge",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m4/endpoints/m4-multiple-hrp-api/01-m4-post-v1-bridges-mutiplehrpaddupdateservices#gateway-register-bridge-services",
+                "id": "hiecm.endpoint.gateway-register-bridge-services",
+                "summary": "Registers or updates HIU service entries for a facility against your bridge.",
+                "title": "Register or update bridge services for an HIU",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/02-gateway-get-gateway-v3-bridge-service-serviceid-service-id#gateway-get-bridge-service-by-id",
+                "id": "hiecm.endpoint.gateway-get-bridge-service-by-id",
+                "summary": "Returns one service registered on your bridge, looked up by its service id.",
+                "title": "Find a bridge service by its service id",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/03-m3-post-v3-hiu-consent-request-notify#m2-on-consent-notify-hiu",
+                "id": "hiecm.callback.m2-on-consent-notify-hiu",
+                "summary": "ABDM posts a patient's consent decision to the HIU's bridge, which acknowledges it through hiu on-notify.",
+                "title": "A consent notification to an HIU bridge",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m4#m4-link-bridge",
+                "id": "hiecm.flow.m4-link-bridge",
+                "summary": "Connect an onboarded facility to the software that will act for it, say whether the facility publishes records through it, fetches them, or both, and name it...",
+                "title": "Link a facility to its bridge",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/03-gateway-patch-gateway-v3-bridge-url#gateway-update-bridge-url",
+                "id": "hiecm.endpoint.gateway-update-bridge-url",
+                "summary": "Sets the callback URL that ABDM sends your callbacks to.",
+                "title": "Update the bridge callback URL",
+                "type": "endpoint"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "Based on the ABDM developer portal documentation, here's how to get started building a health repository:\n\n## Step 1: Understand Your Role\nA **Health Repository Provider (HRP)** is whoever holds the patient records. In most cases, this is a facility using an HMIS or LIMS system. Your software acts as the bridge between the facility and ABDM's ecosystem.\n\n## Step 2: Get Sandbox Access\nBefore any coding:\n\n1. **Register in the sandbox** at the ABDM registration app (takes ~10 minutes)\n2. **Wait for approval** — NHA processes applications within 5 working days\n3. While waiting, read the documentation and plan your implementation\n\n**Portal**: [Your first fifteen minutes with ABDM](/docs/hiecm/v3/getting-started/first-fifteen-minutes)\n\n## Step 3: Start with M2 (Health Information Provider Milestone)\nM2 is where you implement core HRP functionality:\n\n- **Link care contexts** — Tell ABDM which patient visits/records you hold\n- **Discovery** — Respond when ABDM searches for a patient's records at your facility\n- **Patient identification** — Match patients by name, DOB, gender, and identifiers\n\nKey flows to implement:\n- [Link a care context to a patient's ABHA](/docs/hiecm/v3/milestones/m2#m2-link-care-context)\n- [On Discovery, respond with patient's care contexts](/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/01-m2-post-user-initiated-linking-v3-patient-care-context-on-8c9340#m2-on-discover-care-contexts)\n\n## Step 4: Register Your Bridge\nOnce approved:\n\n1. Create a bridge (your endpoint that ABDM calls back to)\n2. Register your facility's HIP/HIU services\n3. Set your callback URL where ABDM posts requests\n\n**Flow**: [Link a facility to its bridge](/docs/hiecm/v3/milestones/m4#m4-link-bridge)\n\n## Step 5: Start Coding\nYour first call will be the **gateway session** (get an access token). The portal has a ready-to-paste curl example. Then implement M2 endpoints and callbacks.\n\n**Next Reading**: Check the [milestones page](/docs/hiecm/v3/milestones) for your complete roadmap based on whether you're building HIP (record provider), HIU (record consumer), or both.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "Based on the ABDM developer portal documentation, here's how to get started building a health repository:\n\n## Step 1: Understand Your Role\nA **Health Repository Provider (HRP)** is whoever holds the patient records. In most cases, this is a facility using an HMIS or LIMS system. Your software acts as the bridge between the facility and ABDM's ecosystem.\n\n## Step 2: Get Sandbox Access\nBefore any coding:\n\n1. **Register in the sandbox** at the ABDM registration app (takes ~10 minutes)\n2. **Wait for approval** — NHA processes applications within 5 working days\n3. While waiting, read the documentation and plan your implementation\n\n**Portal**: [Your first fifteen minutes with ABDM](/docs/hiecm/v3/getting-started/first-fifteen-minutes)\n\n## Step 3: Start with M2 (Health Information Provider Milestone)\nM2 is where you implement core HRP functionality:\n\n- **Link care contexts** — Tell ABDM which patient visits/records you hold\n- **Discovery** — Respond when ABDM searches for a patient's records at your facility\n- **Patient identification** — Match patients by name, DOB, gender, and identifiers\n\nKey flows to implement:\n- [Link a care context to a patient's ABHA](/docs/hiecm/v3/milestones/m2#m2-link-care-context)\n- [On Discovery, respond with patient's care contexts](/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/01-m2-post-user-initiated-linking-v3-patient-care-context-on-8c9340#m2-on-discover-care-contexts)\n\n## Step 4: Register Your Bridge\nOnce approved:\n\n1. Create a bridge (your endpoint that ABDM calls back to)\n2. Register your facility's HIP/HIU services\n3. Set your callback URL where ABDM posts requests\n\n**Flow**: [Link a facility to its bridge](/docs/hiecm/v3/milestones/m4#m4-link-bridge)\n\n## Step 5: Start Coding\nYour first call will be the **gateway session** (get an access token). The portal has a ready-to-paste curl example. Then implement M2 endpoints and callbacks.\n\n**Next Reading**: Check the [milestones page](/docs/hiecm/v3/milestones) for your complete roadmap based on whether you're building HIP (record provider), HIU (record consumer), or both.",
+  "sources": [
+    {
+      "id": "hiecm.glossary.hrp",
+      "title": "HRP, health repository provider",
+      "url": "/docs/hiecm/v3/getting-started/glossary#hrp"
+    },
+    {
+      "id": "shared.sandbox.first-fifteen-minutes",
+      "title": "Your first fifteen minutes with ABDM",
+      "url": "/docs/hiecm/v3/getting-started/first-fifteen-minutes"
+    },
+    {
+      "id": "hiecm.flow.m4-link-bridge",
+      "title": "Link a facility to its bridge",
+      "url": "/docs/hiecm/v3/milestones/m4#m4-link-bridge"
+    },
+    {
+      "id": "hiecm.flow.m2-link-care-context",
+      "title": "Link a care context to a patient's ABHA",
+      "url": "/docs/hiecm/v3/milestones/m2#m2-link-care-context"
+    },
+    {
+      "id": "hiecm.endpoint.m2-on-discover-care-contexts",
+      "title": "On Discovery, HIP responds with found care contexts",
+      "url": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/01-m2-post-user-initiated-linking-v3-patient-care-context-on-8c9340#m2-on-discover-care-contexts"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/concepts/how-it-fits#roles\",\"id\":\"hiecm.concept.roles\",\"summary\":\"Your role, IMS or PHR, is fixed by the entity your software acts for, while HIP and HIU change with the direction each record moves.\",\"title\":\"Roles, which entity your software acts for and which way the record moves\",\"type\":\"concept\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/04-m2-post-v3-patients-sms-on-notify#m2-callback-api-for-sms-notification-to-patients\",\"id\":\"hiecm.callback.m2-callback-api-for-sms-notification-to-patients\",\"summary\":\"ABDM answers the HIP's SMS notification request on the HIP's bridge.\",\"title\":\"Callback API for SMS Notification to patients\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hip\",\"id\":\"hiecm.glossary.hip\",\"summary\":\"The role held by a system that holds a patient's records and shares them when a consent allows it.\",\"title\":\"HIP, health information provider\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/api/m4/endpoints/m4-multiple-hrp-api/01-m4-post-v1-bridges-mutiplehrpaddupdateservices#m1-register-hrp-services\",\"id\":\"hiecm.endpoint.m1-register-hrp-services\",\"summary\":\"Registers or updates the HIP and HIU services a facility offers through your bridge.\",\"title\":\"Register or update HIP and HIU services for a facility\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hfr\",\"id\":\"shared.glossary.hfr\",\"summary\":\"The registry of health facilities, which is where a facility is searched for, onboarded and linked to software.\",\"title\":\"HFR, Health Facility Registry\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-1063\",\"id\":\"hiecm.error.abdm-1063\",\"summary\":\"In linking the provider id does not match the link token, and in a consent flow the date range is not valid.\",\"title\":\"ABDM-1063, HIP id mismatch, or an invalid date range\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hrp\",\"id\":\"hiecm.glossary.hrp\",\"summary\":\"Whoever holds the records. It describes custody, which is why it is neither a position nor a direction.\",\"title\":\"HRP, health repository provider\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-1035\",\"id\":\"hiecm.error.abdm-1035\",\"summary\":\"ABDM does not recognise the health information provider id on the call, which is a registration problem rather than a request problem.\",\"title\":\"ABDM-1035, the HIP id is not recognised\",\"type\":\"error\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/fetching-a-recipient-certificate#what-comes-back\",\"id\":\"hiecm.glossary.key-material\",\"summary\":\"The ECDH key pairs that encrypt health records in transit. A fresh pair per transfer, the HIU keeps its own, and the HIP returns its public half alongside th...\",\"title\":\"Key material, who generates it and who keeps it\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/03-m2-post-user-initiated-linking-v3-link-care-context-on-confirm#m2-on-link-confirm\",\"id\":\"hiecm.endpoint.m2-on-link-confirm\",\"summary\":\"The HIP checks the patient's code and answers a link confirm request with the care contexts it linked.\",\"title\":\"Link On-Confirm, HIP confirms linked care contexts\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#pms\",\"id\":\"hiecm.glossary.pms\",\"summary\":\"The system a pharmacy runs to dispense and to hold stock. A pharmacy uses it both to read the prescription it is dispensing against and to record what it dis...\",\"title\":\"PMS, pharmacy management system\",\"type\":\"glossary\"}]}\n{\"body\":\"# HRP, health repository provider\\n\\n## In plain words\\n\\nHealth Repository Provider. HRP is whoever holds the records. That is\\nthe facility in most integrations, and its repository software is how the\\nfacility holds them. Where a facility's records sit with another\\norganisation, that organisation is the HRP. HRP and HIP are written\\ntogether as \\\"HRP/HIP\\\" because the entity holding the records is usually\\nthe entity publishing them. If you run an [HMIS](hmis.md) or a\\n[LIMS](lims.md) for a facility integrating M2, that facility is the HRP.\\n\\nThe general form is any entity that manages, stores and transacts health\\nrecords. That is a statement about custody: it says who holds the data,\\nnot which side of a gateway they sit on and not what they are doing in a\\ngiven call.\\n\\n## Before you start\\n\\nIt helps to know that ABDM keeps no central store of health records. If\\nit did, this term would not need to exist.\\n\\n## What happens\\n\\nHRP, HIP, HIU and the health locker get listed together as though the\\nfour were one set of roles to choose from. They are not comparable:\\n\\n| Term | What kind of thing it is |\\n|---|---|\\n| PHR app, HMIS, LIMS | Position, which of the two entities the software acts for |\\n| HIP, HIU | Direction, which way a record is moving in one interaction |\\n| HRP | Custody, who holds the records |\\n| DSC | Vendor, the company that builds the software |\\n\\nOne integration is usually several of these at once. A hospital system\\nacts for a facility by position, that facility is the HIP or the HIU\\ndepending on the call, the facility is the HRP because it holds the\\nrecords, and the software is sold by a DSC.\\n\\nIn practice the term shows up when software is registered: the bridge you\\nregister with the gateway is how custody is declared, and it is where you\\nname which facilities you act for.\\n\\n## How you know it worked\\n\\nYou have understood this when you can say why a facility might hold no records itself and still answer discovery.\\n\\n## When it goes wrong\\n\\nAssuming the facility named on a record is the system that holds it. A\\nrepository provider can hold records for many facilities.\\n\\nTreating HRP as an alternative to HIP or HIU and trying to pick one.\\nThey answer different questions: HRP is custody and the other two are\\ndirection, so all three apply at once.\\n\\nReading a different term into it. HRP is written Health Records Provider\\nin places, and has been misprinted as Health Professional Registry, which\\nis a different thing entirely. All of them mean the repository, not the\\nregistry.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hrp\",\"gateway\":\"hiecm\",\"id\":\"hiecm.glossary.hrp\",\"milestone\":\"n/a\",\"summary\":\"Whoever holds the records. It describes custody, which is why it is neither a position nor a direction.\",\"title\":\"HRP, health repository provider\",\"type\":\"glossary\"}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"atoms\":{\"by_gateway\":{\"hiecm\":269,\"nhcx\":536,\"shared\":46,\"uhi\":111},\"by_milestone\":{\"M1\":74,\"M2\":57,\"M3\":20,\"M4\":11,\"P1\":29,\"P2\":18,\"P3\":36,\"n/a\":717},\"by_type\":{\"callback\":66,\"concept\":105,\"decision\":13,\"endpoint\":186,\"error\":335,\"fhir\":30,\"flow\":57,\"glossary\":86,\"sandbox\":18,\"test\":51,\"troubleshooting\":15}},\"built_at\":\"2026-09-29T11:55:12Z\",\"catalogue_version\":\"2026.09.16\",\"deprecated\":0,\"embeddings\":false,\"facts\":0,\"operations\":387}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/milestones/m4#m4-link-bridge\",\"id\":\"hiecm.flow.m4-link-bridge\",\"summary\":\"Connect an onboarded facility to the software that will act for it, say whether the facility publishes records through it, fetches them, or both, and name it...\",\"title\":\"Link a facility to its bridge\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m1#m1-update-mobile\",\"id\":\"hiecm.flow.m1-update-mobile\",\"summary\":\"Change the mobile number on an ABHA profile with an OTP sent to the new number.\",\"title\":\"Change the mobile number on an ABHA profile\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m1#m1-login-by-mobile\",\"id\":\"hiecm.flow.m1-login-by-mobile\",\"summary\":\"Send an OTP to a mobile number, verify it, choose the account, and get the user token that profile calls need.\",\"title\":\"Log somebody in to their existing ABHA\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m1#m1-find-abha\",\"id\":\"hiecm.flow.m1-find-abha\",\"summary\":\"Search for a forgotten ABHA by mobile number, then confirm with an OTP so the person proves the account is theirs.\",\"title\":\"Find somebody's ABHA when they do not know it\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m1#m1-create-abha-demographic-auth\",\"id\":\"hiecm.flow.m1-create-abha-demographic-auth\",\"summary\":\"Create an ABHA by matching name, date of birth and gender against Aadhaar with no OTP, for approved integrators only.\",\"title\":\"Create an ABHA using Aadhaar demographic authentication\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m1#m1-create-abha-aadhaar-otp\",\"id\":\"hiecm.flow.m1-create-abha-aadhaar-otp\",\"summary\":\"Verify a person against Aadhaar with an OTP, create their ABHA number, then let them choose an address.\",\"title\":\"Create an ABHA using an Aadhaar OTP\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m4#m4-create-hpid\",\"id\":\"hiecm.flow.m4-create-hpid\",\"summary\":\"Take a healthcare professional through Aadhaar authentication and mobile verification until the registry issues an HP-ID.\",\"title\":\"Get a healthcare professional an HPID\",\"type\":\"flow\"},{\"doc_url\":\"/docs/nhcx/v1/reference/notifications-and-patient-apps#subscribing\",\"id\":\"nhcx.flow.notification-subscribe\",\"summary\":\"Have a patient's health record app receive plain-language updates on their pre-authorisations, claims and payments, by subscribing each time the patient logs...\",\"title\":\"Subscribe a patient app to notifications\",\"type\":\"flow\"},{\"doc_url\":\"/docs/nhcx/v1/go-live\",\"id\":\"nhcx.flow.production-onboarding\",\"summary\":\"Create and confirm your live claims exchange participant record, then register your certificate and callback address, each step confirmed by a passcode sent ...\",\"title\":\"Onboard as a participant in production\",\"type\":\"flow\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/get-your-sandbox-credentials\",\"id\":\"nhcx.flow.sandbox-onboarding\",\"summary\":\"Register your system in the claims exchange test environment so it holds a participant code, a registered certificate and a callback address.\",\"title\":\"Onboard as a participant in the NHCX sandbox\",\"type\":\"flow\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/uhi/v1/getting-started/sandbox#4-note-the-base-urls\",\"id\":\"uhi.sandbox.base-urls\",\"summary\":\"The UHI Gateway base URL for the sandbox and for production, and the reference EUA and HSPA apps in the sandbox.\",\"title\":\"UHI Gateway base URLs for sandbox and production\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/base-urls\",\"id\":\"nhcx.sandbox.environments-and-base-urls\",\"summary\":\"The two environments, the web portals, and the two base addresses every call is built on, for testing and for live claims.\",\"title\":\"NHCX environments, hosts and base URLs\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/get-your-sandbox-credentials\",\"id\":\"nhcx.sandbox.prerequisites\",\"summary\":\"The checklist to complete before your system can register on the claims exchange sandbox: a facility registration, sandbox credentials, basic health ID featu...\",\"title\":\"What you need before you register on the NHCX sandbox\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/going-live\",\"id\":\"shared.sandbox.going-live\",\"summary\":\"How an integration leaves the sandbox for production: functional testing and the security audit, the Health Tech Committee demonstration, then production cre...\",\"title\":\"Going live, the sandbox exit process\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/first-fifteen-minutes\",\"id\":\"shared.sandbox.first-fifteen-minutes\",\"summary\":\"Everything you can do before NHA approves your sandbox registration: read one real gateway session exchange and assemble your own first call, ready to paste ...\",\"title\":\"Your first fifteen minutes with ABDM\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/uhi/v1/concepts/signing#generate-your-keys-and-headers\",\"id\":\"uhi.concept.key-generation\",\"summary\":\"The Header Generation Utility creates your Ed25519 key pair and signs each payload; share only the public key and keep the private key on your server.\",\"title\":\"Generating UHI signing keys and headers\",\"type\":\"concept\"},{\"doc_url\":\"/docs/nhcx/v1/api/session/endpoints/session-api-hiecm-gateway-v3-sessions\",\"id\":\"nhcx.endpoint.session-token\",\"summary\":\"Trade your client id and client secret for the access token, valid for 1200 seconds (20 minutes), that every claims exchange call carries.\",\"title\":\"POST /api/hiecm/gateway/v3/sessions\",\"type\":\"endpoint\"},{\"doc_url\":\"\",\"id\":\"nhcx.decision.session-endpoint\",\"summary\":\"Get the token that every exchange call carries from one place in your code, and set the address it calls per environment.\",\"title\":\"Which session token endpoint to call\",\"type\":\"decision\"},{\"doc_url\":\"/docs/uhi/v1/getting-started/going-live#when-it-goes-wrong\",\"id\":\"uhi.troubleshooting.go-live\",\"summary\":\"A search that worked in the sandbox fails in production. Check the Gateway host, then your production IDs and callback URL.\",\"title\":\"When a UHI search fails after the switch to production\",\"type\":\"troubleshooting\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#sandbox\",\"id\":\"shared.glossary.sandbox\",\"summary\":\"NHA's test environment, with its own base URLs and credentials, separate from production.\",\"title\":\"Sandbox, the test environment\",\"type\":\"glossary\"}]}\n{\"body\":\"# Your first fifteen minutes with ABDM\\n\\n## In plain words\\n\\nYou cannot run a live [ABDM](shared.glossary.abdm) call until\\n[NHA](shared.glossary.nha) approves your sandbox registration. NHA's FAQ publishes a maximum\\nfor that review: applications are processed within 5 working days. This page gives you a\\ngenuine fifteen minutes of your own while that runs: with nothing but a browser, read one\\ncomplete transcribed exchange of the\\n[gateway session](/docs/hiecm/v3/concepts/gateway) call and leave with your own first\\ncall already written. Applying for sandbox access is a separate step, worth doing first since\\nit starts NHA's review clock.\\n\\n## Before you start\\n\\nNothing but a browser. No editor, no terminal, no credentials. That is the point of this page:\\neverything below runs while you are still waiting on NHA.\\n\\n## What happens\\n\\nApply first, then spend fifteen minutes of your own on the two steps below.\\n\\n1. **Register in the sandbox app, about 10 minutes.** NHA's FAQ gives this estimate for the\\n   application itself, and a maximum of 5 working days for it to be processed. This starts\\n   NHA's review clock, so do it before anything else. See\\n   [sandbox access](/docs/hiecm/v3/getting-started/sandbox).\\n2. **Read one transcribed exchange, about 5 minutes.** Below is the gateway session call, the\\n   one every other ABDM call depends on. The header and body values shown are example values\\n   from the specification rather than a recorded response, so read the shape and expect your\\n   own values to differ.\\n3. **Assemble your own first call, about 10 minutes.** A filled in curl with placeholders named\\n   for where each value comes from, so the moment your credentials arrive, pasting them in is\\n   the only step left.\\n\\n### The transcribed exchange\\n\\nMethod and path: `POST /api/hiecm/gateway/v3/sessions`, sandbox host\\n`https://dev.abdm.gov.in`.\\n\\n| Header | Example value in the specification |\\n| --- | --- |\\n| `REQUEST-ID` | `5f7a4a1e-59ba-4c0c-9e0c-8e6b3b6e2f11` |\\n| `TIMESTAMP` | `2026-08-25T15:51:15.339Z` |\\n| `X-CM-ID` | `sbx` |\\n| `Content-Type` | `application/json` |\\n\\n```bash\\ncurl --request POST \\\\\\n  --url https://dev.abdm.gov.in/api/hiecm/gateway/v3/sessions \\\\\\n  --header 'REQUEST-ID: 5f7a4a1e-59ba-4c0c-9e0c-8e6b3b6e2f11' \\\\\\n  --header 'TIMESTAMP: 2026-08-25T15:51:15.339Z' \\\\\\n  --header 'X-CM-ID: sbx' \\\\\\n  --header 'Content-Type: application/json' \\\\\\n  --data '{\\n  \\\"clientId\\\": \\\"<CLIENT_ID>\\\",\\n  \\\"clientSecret\\\": \\\"<CLIENT_SECRET>\\\",\\n  \\\"grantType\\\": \\\"client_credentials\\\"\\n}'\\n```\\n\\nA successful call answers `202 Accepted`, with a session created and a bearer token issued.\\nThe response carries `accessToken`, `expiresIn`, `refreshExpiresIn`, `refreshToken` and\\n`tokenType`. See\\n[the endpoint page](/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/01-gateway-post-gateway-v3-sessions)\\nfor what each field means.\\n\\n### Your own first call\\n\\nThe same request, with the credential placeholders named for where they come from and a fresh\\n`X-CM-ID` for the sandbox:\\n\\n```bash\\ncurl --request POST \\\\\\n  --url https://dev.abdm.gov.in/api/hiecm/gateway/v3/sessions \\\\\\n  --header 'REQUEST-ID: <A_FRESH_UUID_YOU_GENERATE>' \\\\\\n  --header 'TIMESTAMP: <CURRENT_ISO_8601_UTC_TIMESTAMP>' \\\\\\n  --header 'X-CM-ID: sbx' \\\\\\n  --header 'Content-Type: application/json' \\\\\\n  --data '{\\n  \\\"clientId\\\": \\\"<CLIENT_ID_FROM_SANDBOX_REGISTRATION>\\\",\\n  \\\"clientSecret\\\": \\\"<CLIENT_SECRET_FROM_SANDBOX_REGISTRATION>\\\",\\n  \\\"grantType\\\": \\\"client_credentials\\\"\\n}'\\n```\\n\\nSave it. Once your access is approved, your client id and client secret are issued inside the\\nsandbox application, and this is the one paste away from your first real call.\\n\\n### What you test M1 with\\n\\nEverything in the sandbox is test data, and no test identities are published\\nwith it. There is no fixture Aadhaar number and no fixed OTP: an OTP goes to\\nwhichever handset the identifier is registered against, and a real one\\nreceives it.\\n\\nSo plan for this before you reach your first OTP call:\\n\\n- **A mobile you can read an SMS on.** This unlocks the whole login journey,\\n  and it is the cheapest thing to arrange. Your own is fine.\\n- **An Aadhaar whose linked mobile you hold**, if you intend to build ABHA\\n  creation or anything that ends in a KYC verified ABHA number. Without one\\n  you can build and read the creation calls but never complete them.\\n\\nTwo consequences worth designing around. Never point an OTP call at a number\\nnobody on your team answers, because a real person receives that message. And\\nattempts are counted against the transaction rather than against you, so a\\nretry loop against one number spends the transaction rather than trying again.\\n\\n## How you know it worked\\n\\nFor the transcribed exchange, you can now say what the session endpoint returns and where the\\ntoken goes on every later call: a `202` carrying `accessToken`, sent afterwards as\\n`Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>` on every other gateway call.\\n\\nFor your own first call, this is `Not yet observed`. It stays that way until you run it, and\\nrunning it needs the credentials NHA has not issued yet.\\n\\n## When it goes wrong\\n\\nRegistration is processed within 5 working days. If you are past that\\nwith no word, raise it on the\\n[support ticketing platform](https://sandboxsupport.abdm.gov.in/) or at\\n`integration.support@nha.gov.in`. See [Support](/docs/support) for the\\nreport format.\\n\\nIf your first real call fails with a 401, that is a different problem from registration: see\\n[Everything returns 401](/docs/hiecm/v3/troubleshooting/everything-returns-401).\\n\\nWhile NHA reviews your registration, use the wait. See\\n[sandbox access](/docs/hiecm/v3/getting-started/sandbox) for what to read next, then\\n[the milestones page](/docs/hiecm/v3/milestones) to pick your role and your milestones.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/getting-started/first-fifteen-minutes\",\"gateway\":\"shared\",\"id\":\"shared.sandbox.first-fifteen-minutes\",\"milestone\":\"n/a\",\"summary\":\"Everything you can do before NHA approves your sandbox registration: read one real gateway session exchange and assemble your own first call, ready to paste the moment credentials arrive.\",\"title\":\"Your first fifteen minutes with ABDM\",\"type\":\"sandbox\"}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/milestones/m4#m4-link-bridge\",\"id\":\"hiecm.flow.m4-link-bridge\",\"summary\":\"Connect an onboarded facility to the software that will act for it, say whether the facility publishes records through it, fetches them, or both, and name it...\",\"title\":\"Link a facility to its bridge\",\"type\":\"flow\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"\",\"id\":\"hiecm.glossary.m2\",\"summary\":\"The milestone covering care context linking, discovery and sending records.\",\"title\":\"M2 Health Information Provider: Create and link records\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/p2#p2-discover-and-link\",\"id\":\"hiecm.flow.p2-discover-and-link\",\"summary\":\"Let a person search for a facility they visited, discover the records it holds for them, and attach those records to their health address after an OTP confir...\",\"title\":\"Find records held elsewhere and link them\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/01-m2-post-hip-v3-link-carecontext#m2-hip-link-care-context\",\"id\":\"hiecm.endpoint.m2-hip-link-care-context\",\"summary\":\"The HIP links one or more care contexts to a patient's ABHA address, using the patient's link token.\",\"title\":\"Link care contexts to an ABHA address\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m2#m2-link-care-context\",\"id\":\"hiecm.flow.m2-link-care-context\",\"summary\":\"Tell ABDM that this patient had a visit at your facility so their records can be found and fetched later.\",\"title\":\"Link a care context to a patient's ABHA\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/02-m2-post-v3-link-on-carecontext#m2-linking-care-context-call-back\",\"id\":\"hiecm.callback.m2-linking-care-context-call-back\",\"summary\":\"ABDM answers a care context link request on the HIP's bridge with the outcome.\",\"title\":\"Linking care context Call back API\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token#m2-on-generate-token-result\",\"id\":\"hiecm.callback.m2-on-generate-token-result\",\"summary\":\"The link token arrives here; store it against the patient, because it is valid for six months.\",\"title\":\"The link token you asked for, or why it was refused\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/03-m2-post-user-initiated-linking-v3-link-care-context-on-confirm#m2-on-link-confirm\",\"id\":\"hiecm.endpoint.m2-on-link-confirm\",\"summary\":\"The HIP checks the patient's code and answers a link confirm request with the care contexts it linked.\",\"title\":\"Link On-Confirm, HIP confirms linked care contexts\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/01-m2-post-user-initiated-linking-v3-patient-care-context-on-8c9340#m2-on-discover-care-contexts\",\"id\":\"hiecm.endpoint.m2-on-discover-care-contexts\",\"summary\":\"The HIP answers a discovery request with the patient's unlinked care contexts and how it matched the patient.\",\"title\":\"On Discovery, HIP responds with found care contexts\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/05-p2-post-user-initiated-linking-v3-link-care-context-init#p2-link-care-context-init\",\"id\":\"hiecm.endpoint.p2-link-care-context-init\",\"summary\":\"Start linking the records the person chose after discovery; the facility replies with how the person will confirm.\",\"title\":\"Start linking the care contexts the person chose\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/care-context#care-context\",\"id\":\"hiecm.concept.care-context\",\"summary\":\"A care context is the unit a provider links to a patient's ABHA address, carrying a reference number and a display name and nothing clinical.\",\"title\":\"Care contexts, how records are grouped so they can be found\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/06-m2-post-v3-hip-link-care-context-init#m2-on-link-init\",\"id\":\"hiecm.callback.m2-on-link-init\",\"summary\":\"ABDM posts the care contexts a patient chose to link; the HIP issues a link reference number and sends an OTP.\",\"title\":\"A request to start linking a care context\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/06-m2-post-v3-hip-link-care-context-init#p2-callback-on-health-record-link-init\",\"id\":\"hiecm.callback.p2-callback-on-health-record-link-init\",\"summary\":\"ABDM tells your facility which care contexts the person chose to link.\",\"title\":\"Link init request to the HIP\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/08-p2-post-v3-hiu-patient-care-context-on-confirm#p2-response-on-health-record-on-confirm\",\"id\":\"hiecm.callback.p2-response-on-health-record-on-confirm\",\"summary\":\"ABDM posts the outcome of the confirm call, listing the care contexts now linked.\",\"title\":\"Link confirm result callback\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/04-p2-post-v3-hiu-patient-care-context-on-discover#p2-callback-on-health-record-discover\",\"id\":\"hiecm.callback.p2-callback-on-health-record-discover\",\"summary\":\"ABDM posts the care contexts a facility found for the person to your on-discover URL.\",\"title\":\"Discovery result callback\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/05-m2-post-v3-hip-patient-care-context-discover#m2-on-discovery-request\",\"id\":\"hiecm.callback.m2-on-discovery-request\",\"summary\":\"ABDM asks the HIP to find a patient's unlinked care contexts from their name, gender, year of birth and identifiers.\",\"title\":\"A discovery request for a patient you may hold records for\",\"type\":\"callback\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#gateway\",\"id\":\"shared.glossary.gateway\",\"summary\":\"The component that routes calls between participants so they never call each other directly. It is not the consent manager, and no health record passes throu...\",\"title\":\"Gateway, the routing layer between participants\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/nhcx/v1/api/onboarding/endpoints/onboarding-participant-create\",\"id\":\"nhcx.endpoint.participant-create\",\"summary\":\"Register your organisation in the sandbox participant registry and receive the participant code that addresses all your messages.\",\"title\":\"POST /participant/create\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/troubleshooting/callback-never-arrives#callback-never-arrives\",\"id\":\"hiecm.troubleshooting.callback-never-arrives\",\"summary\":\"A call returned 202 or 200 and the callback that should follow never reached your registered URL.\",\"title\":\"The callback never arrives\",\"type\":\"troubleshooting\"},{\"doc_url\":\"/docs/nhcx/v1/api/onboarding/endpoints/onboarding-v2-participant-create\",\"id\":\"nhcx.endpoint.v2-participant-create\",\"summary\":\"Start production registration by linking your organisation to its external registry record, which sends a passcode to your registered mobile.\",\"title\":\"POST /v2/participant/create\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/01-gateway-get-gateway-v3-bridge-services#gateway-list-bridge-services\",\"id\":\"hiecm.endpoint.gateway-list-bridge-services\",\"summary\":\"Returns your bridge, its callback URL and every service registered under it.\",\"title\":\"List the services registered on your bridge\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m4/endpoints/m4-multiple-hrp-api/01-m4-post-v1-bridges-mutiplehrpaddupdateservices#gateway-register-bridge-services\",\"id\":\"hiecm.endpoint.gateway-register-bridge-services\",\"summary\":\"Registers or updates HIU service entries for a facility against your bridge.\",\"title\":\"Register or update bridge services for an HIU\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/02-gateway-get-gateway-v3-bridge-service-serviceid-service-id#gateway-get-bridge-service-by-id\",\"id\":\"hiecm.endpoint.gateway-get-bridge-service-by-id\",\"summary\":\"Returns one service registered on your bridge, looked up by its service id.\",\"title\":\"Find a bridge service by its service id\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/03-m3-post-v3-hiu-consent-request-notify#m2-on-consent-notify-hiu\",\"id\":\"hiecm.callback.m2-on-consent-notify-hiu\",\"summary\":\"ABDM posts a patient's consent decision to the HIU's bridge, which acknowledges it through hiu on-notify.\",\"title\":\"A consent notification to an HIU bridge\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m4#m4-link-bridge\",\"id\":\"hiecm.flow.m4-link-bridge\",\"summary\":\"Connect an onboarded facility to the software that will act for it, say whether the facility publishes records through it, fetches them, or both, and name it...\",\"title\":\"Link a facility to its bridge\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/03-gateway-patch-gateway-v3-bridge-url#gateway-update-bridge-url\",\"id\":\"hiecm.endpoint.gateway-update-bridge-url\",\"summary\":\"Sets the callback URL that ABDM sends your callbacks to.\",\"title\":\"Update the bridge callback URL\",\"type\":\"endpoint\"}]}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T12:00:48.473Z",
+  "usage": {
+    "input_tokens": 90,
+    "output_tokens": 2295,
+    "cache_read_input_tokens": 127848,
+    "cache_creation_input_tokens": 17903,
+    "num_turns": 16,
+    "duration_ms": 31519,
+    "cost_usd_equivalent": 0.0601558
+  }
+}

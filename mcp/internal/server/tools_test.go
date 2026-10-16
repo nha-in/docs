@@ -217,6 +217,91 @@ func (failingOpener) RelatedAtoms(id string) ([]index.RelatedGroup, error) {
 	return nil, nil
 }
 
+func (failingOpener) OperationRoute(id string) (string, string, bool) { return "", "", false }
+
+func (failingOpener) RelatedOutbound(id string) ([]index.AtomRef, error) { return nil, nil }
+
+func (routedOpener) RelatedOutbound(id string) ([]index.AtomRef, error) { return nil, nil }
+
+// outboundOpener stubs the outbound walk for one passage.
+type outboundOpener struct{ refs []index.AtomRef }
+
+func (outboundOpener) GetAtom(id string) (catalogue.Atom, error) { return catalogue.Atom{ID: id}, nil }
+func (outboundOpener) RelatedAtoms(id string) ([]index.RelatedGroup, error) {
+	return nil, nil
+}
+func (outboundOpener) OperationRoute(id string) (string, string, bool) { return "", "", false }
+func (o outboundOpener) RelatedOutbound(id string) ([]index.AtomRef, error) {
+	return o.refs, nil
+}
+
+// Next questions are what the passage's author named as related, in the
+// conversation's gateway or shared, never a passage already shown and never
+// the same atom twice. The backlinks RelatedAtoms walks play no part: for
+// the ABHA glossary entry they were every NHCX callback in the catalogue.
+func TestNextQuestionsAreOutboundScopedAndUnseen(t *testing.T) {
+	o := outboundOpener{refs: []index.AtomRef{
+		{ID: "shared.glossary.ayushman-card", Type: "glossary", Title: "Ayushman card"},
+		{ID: "nhcx.callback.claim-on-submit", Type: "callback", Title: "Receiving POST /v1/claim/on_submit"},
+		{ID: "hiecm.flow.m1-create-abha-aadhaar-otp", Type: "flow", Title: "Create an ABHA"},
+		{ID: "hiecm.glossary.abha-number", Type: "glossary", Title: "ABHA number"},
+		{ID: "hiecm.flow.m1-create-abha-aadhaar-otp", Type: "flow", Title: "Create an ABHA"},
+		{ID: "shared.fhir.document-bundle", Type: "fhir", Title: "DocumentBundle"},
+		{ID: "hiecm.error.abdm-1016", Type: "error", Title: "ABDM-1016"},
+	}}
+	shown := map[string]bool{"hiecm.glossary.abha-number": true}
+	got := nextQuestions(o, "shared.glossary.abha", shown, "hiecm")
+	// The flow leads although the glossary entry was written first; the
+	// FHIR note and the error code are not next questions at all.
+	want := []string{"hiecm.flow.m1-create-abha-aadhaar-otp", "shared.glossary.ayushman-card"}
+	if len(got) != len(want) {
+		t.Fatalf("next = %v, want ids %v", got, want)
+	}
+	for i, w := range want {
+		if got[i]["id"] != w {
+			t.Errorf("next[%d] = %s, want %s", i, got[i]["id"], w)
+		}
+	}
+}
+
+// routedOpener returns an endpoint atom that names an operation, and knows
+// that operation's route, so the passage can be checked for the path line.
+type routedOpener struct{ known bool }
+
+func (routedOpener) GetAtom(id string) (catalogue.Atom, error) {
+	return catalogue.Atom{ID: id, Type: "endpoint", Operation: "m2_post_v3_link_token_generate",
+		Body: "Generates a link token for the patient."}, nil
+}
+
+func (routedOpener) RelatedAtoms(id string) ([]index.RelatedGroup, error) { return nil, nil }
+
+func (o routedOpener) OperationRoute(id string) (string, string, bool) {
+	if !o.known || id != "m2_post_v3_link_token_generate" {
+		return "", "", false
+	}
+	return "POST", "/api/hiecm/v3/token/generate-token", true
+}
+
+// The endpoint atom's body never carries its path; the guard grounds
+// literals against the pack, so the passage has to carry the route or every
+// answer quoting the real path is withheld.
+func TestOpenPassageCarriesTheOperationRoute(t *testing.T) {
+	hit := index.SearchHit{ID: "hiecm.endpoint.m2-generate-link-token", Type: "endpoint"}
+	p, _ := openPassage(routedOpener{known: true}, hit)
+	if !strings.HasPrefix(p.Body, "POST /api/hiecm/v3/token/generate-token\n\n") {
+		t.Errorf("Body should open with the method and path, got %q", p.Body)
+	}
+	if !strings.HasSuffix(p.Body, "Generates a link token for the patient.") {
+		t.Errorf("Body should still end with the atom body, got %q", p.Body)
+	}
+	// An operation the index does not know leaves the body as it was, rather
+	// than writing an empty route line.
+	p, _ = openPassage(routedOpener{known: false}, hit)
+	if p.Body != "Generates a link token for the patient." {
+		t.Errorf("unknown operation should leave the body untouched, got %q", p.Body)
+	}
+}
+
 func TestOpenPassageDegradesToSummaryOnGetAtomError(t *testing.T) {
 	hit := index.SearchHit{ID: "hiecm.flow.m2-link-care-context", Type: "flow",
 		Title: "Link a care context", Summary: "the search hit's own summary"}
@@ -229,5 +314,152 @@ func TestOpenPassageDegradesToSummaryOnGetAtomError(t *testing.T) {
 	}
 	if related != nil {
 		t.Errorf("related = %v, want nil: the related walk must be skipped when GetAtom fails", related)
+	}
+}
+
+// A code in the question names the one atom that explains it, and that atom
+// goes first whatever the rest of the wording ranks: "401 with code 900901"
+// retrieved five M1 enrolment atoms and not the error atom. Only an error
+// atom is pinned; a flow that merely mentions the code keeps its rank.
+type codeStub map[string][]index.AtomRef
+
+func (s codeStub) AtomsByErrorCode(code string) ([]index.AtomRef, error) { return s[code], nil }
+
+func TestPinErrorAtomsPutsTheCodesErrorAtomFirst(t *testing.T) {
+	stub := codeStub{"900901": {
+		{ID: "hiecm.flow.m1-create-abha", Type: "flow"},
+		{ID: "hiecm.error.900901", Type: "error", Title: "900901, the credentials are not valid"},
+	}}
+	hits := []index.SearchHit{{ID: "hiecm.endpoint.m1-enrolment-by-aadhaar"}, {ID: "hiecm.error.900901"}, {ID: "shared.glossary.abha"}}
+	got := pinErrorAtoms(stub, "abha enrolment returns 401 with code 900901 Invalid Credentials", hits, 5)
+	var ids []string
+	for _, h := range got {
+		ids = append(ids, h.ID)
+	}
+	want := []string{"hiecm.error.900901", "hiecm.endpoint.m1-enrolment-by-aadhaar", "shared.glossary.abha"}
+	if strings.Join(ids, ",") != strings.Join(want, ",") {
+		t.Errorf("ids = %v, want %v (error atom first, no duplicate, the flow not pinned)", ids, want)
+	}
+	if got := pinErrorAtoms(stub, "how do I create an ABHA", hits, 5); len(got) != 3 || got[0].ID != hits[0].ID {
+		t.Errorf("a question with no code must keep search order, got %v", got)
+	}
+}
+
+// An agent that read "900901" in a response passes exactly that. The code
+// alone was not read as one, because a bare six-digit number is only a code
+// in a JSON "code" value or after a word like "error"; an input that is
+// nothing but the code has no other reading.
+func TestDecodeErrorReadsABareGatewayCode(t *testing.T) {
+	tools := NewTools(fixtureReader(t, false), nil)
+	out, err := tools.DecodeError(context.Background(), decodeIn{Input: " 900901 "})
+	if err != nil {
+		t.Fatal(err)
+	}
+	codes, _ := out["codes"].([]string)
+	if len(codes) != 1 || codes[0] != "900901" {
+		t.Errorf("codes = %v, want [900901]", out["codes"])
+	}
+}
+
+// questionOpener gives one related atom a body with authored questions.
+type questionOpener struct{ outboundOpener }
+
+func (questionOpener) GetAtom(id string) (catalogue.Atom, error) {
+	if id == "hiecm.flow.m2-link-care-context" {
+		return catalogue.Atom{ID: id, Body: "## Questions this answers\n\n- How do I link records as a HIP?\n"}, nil
+	}
+	return catalogue.Atom{ID: id}, nil
+}
+
+// A next entry carries the first question its author listed, and an atom
+// without one is offered by its title alone.
+func TestNextQuestionsCarryTheAuthorsQuestion(t *testing.T) {
+	o := questionOpener{outboundOpener{refs: []index.AtomRef{
+		{ID: "hiecm.flow.m2-link-care-context", Type: "flow", Title: "Link a care context to a patient's ABHA"},
+		{ID: "hiecm.glossary.hip", Type: "glossary", Title: "HIP, health information provider"},
+	}}}
+	got := nextQuestions(o, "hiecm.glossary.m2", map[string]bool{}, "hiecm")
+	if len(got) != 2 || got[0]["question"] != "How do I link records as a HIP?" {
+		t.Fatalf("next = %v, want the flow first with its question", got)
+	}
+	if got[1]["question"] != "What does HIP mean?" {
+		t.Errorf("an atom with no questions section is asked about by its title: %v", got[1])
+	}
+}
+
+// A whole-flow question opens the flows and concepts the top passage names,
+// in the question's gateway, never one already in the pack, and no more
+// than three.
+func TestExpandOpensWhatTheTopPassageIsMadeOf(t *testing.T) {
+	o := outboundOpener{refs: []index.AtomRef{
+		{ID: "hiecm.flow.m3-request-consent", Type: "flow", Title: "Request consent"},
+		{ID: "hiecm.flow.m3-hip-notify", Type: "flow", Title: "Acknowledge the consent"},
+		{ID: "nhcx.flow.claim-submit", Type: "flow", Title: "Submit a claim"},
+		{ID: "hiecm.glossary.hiu", Type: "glossary", Title: "HIU"},
+		{ID: "hiecm.concept.consent-artefact", Type: "concept", Title: "Consent artefact"},
+		{ID: "hiecm.flow.m3-fetch-records", Type: "flow", Title: "Fetch records"},
+		{ID: "hiecm.flow.m3-data-push", Type: "flow", Title: "Push the data"},
+	}}
+	inPack := map[string]bool{"hiecm.flow.m3-request-consent": true}
+	got := expand(o, "hiecm.flow.m3-consent-journey", inPack, "hiecm")
+	want := []string{"hiecm.flow.m3-hip-notify", "hiecm.concept.consent-artefact", "hiecm.flow.m3-fetch-records"}
+	if len(got) != len(want) {
+		t.Fatalf("expanded %d passages, want %d: %+v", len(got), len(want), got)
+	}
+	for i, w := range want {
+		if got[i].ID != w {
+			t.Errorf("expanded[%d] = %s, want %s", i, got[i].ID, w)
+		}
+	}
+}
+
+// stepOpener is a two-call journey: the atom's call, then the link token's.
+type stepOpener struct {
+	routedOpener
+	op string
+}
+
+func (o stepOpener) GetAtom(id string) (catalogue.Atom, error) {
+	return catalogue.Atom{ID: id, Type: "endpoint", Operation: o.op}, nil
+}
+
+func (stepOpener) NextStep(op string) (index.Step, bool) {
+	if op == "first" {
+		return index.Step{Journey: "HIP initiated linking", Next: "m2_post_v3_link_token_generate"}, true
+	}
+	return index.Step{}, false
+}
+
+// The next step is the call after the top passage's in its journey, asked
+// the way a reader would, and nothing when the passage is the last step.
+func TestNextStepFollowsTheJourney(t *testing.T) {
+	got := nextStep(stepOpener{routedOpener{known: true}, "first"}, "hiecm.endpoint.a")
+	want := "What is the next step in HIP initiated linking, POST /api/hiecm/v3/token/generate-token?"
+	if got["id"] != "m2_post_v3_link_token_generate" || got["prompt"] != want {
+		t.Errorf("step: %v", got)
+	}
+	if nextStep(stepOpener{routedOpener{known: true}, "last"}, "hiecm.endpoint.b") != nil {
+		t.Error("the last step offers nothing")
+	}
+}
+
+// A related question reads as something a reader would say, whatever shape
+// the atom's title has.
+func TestNudgeTurnsATitleIntoAQuestion(t *testing.T) {
+	for _, c := range []struct{ typ, title, want string }{
+		{"flow", "Create an ABHA using an Aadhaar OTP", "How do I create an ABHA using an Aadhaar OTP?"},
+		{"flow", "HIP initiated linking from start to finish, and what the patient then sees", "Walk me through HIP initiated linking from start to finish"},
+		{"flow", "User initiated linking from a PHR app, with the HIP's side of each step", "Walk me through user initiated linking from a PHR app"},
+		{"glossary", "HIP, health information provider", "What does HIP mean?"},
+		{"glossary", "M1 Identity: Create and verify ABHA", "What does M1 Identity mean?"},
+		{"glossary", "Purpose of use, why records are being requested", "What does Purpose of use mean?"},
+		{"concept", "Consent, what it authorises and how it ends", "Tell me about consent"},
+		{"concept", "Why identifiers are encrypted, and where to do it", "Explain why identifiers are encrypted"},
+		{"concept", "Refuse to guess an undocumented step, and say so before the work starts", "Why should I refuse to guess an undocumented step?"},
+		{"concept", "ABHA number and ABHA address", "Tell me about ABHA number and ABHA address"},
+	} {
+		if got := nudge(c.typ, c.title); got != c.want {
+			t.Errorf("%s %q: got %q, want %q", c.typ, c.title, got, c.want)
+		}
 	}
 }

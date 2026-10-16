@@ -1,0 +1,593 @@
+{
+  "case_id": "naive-hiecm-m2-link-record-token-generation-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "Link record token generation"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_019sfiFNVJR1M1JvJGAKxyMf",
+            "Name": "search",
+            "Input": {
+              "query": "link record token generation",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "link record token generation",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01KukaqNanVvVAtdQCGtqmVh",
+            "Name": "search",
+            "Input": {
+              "query": "link record token",
+              "kind": "operation",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "link record token",
+            "kind": "operation",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01CVt8rVp7zJkp858KiCVFxX",
+            "Name": "search",
+            "Input": {
+              "query": "link token",
+              "kind": "operation"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "link token",
+            "kind": "operation"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-post-v3-token-generate-token",
+                "id": "m2_post_v3_token_generate_token",
+                "summary": "API used to generate link token to link the health records",
+                "title": "POST /api/hiecm/v3/token/generate-token",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-post-v3-phr-app-login-profile-link",
+                "id": "p2_post_v3_phr_app_login_profile_link",
+                "summary": "2 flows: Link Request",
+                "title": "POST /abha/api/v3/phr/app/login/profile/link",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-profile-benefit-linkanddelink-x-token",
+                "id": "m1_post_v3_profile_benefit_linkanddelink_x_token",
+                "summary": "Link / De-link benefit using X-token",
+                "title": "POST /abha/api/v3/profile/benefit/linkAndDelink",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-post-hip-v3-link-carecontext",
+                "id": "m2_post_hip_v3_link_carecontext",
+                "summary": "This API will be used to perform HIP initiated linking.",
+                "title": "POST /api/hiecm/hip/v3/link/carecontext",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p1/endpoints/p1-post-v3-profile-account-request-emailverificationlink",
+                "id": "p1_post_v3_profile_account_request_emailverificationlink",
+                "summary": "Email Verification Link",
+                "title": "POST /abha/api/v3/profile/account/request/emailVerificationLink",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-post-v3-phr-app-login-profile-verify",
+                "id": "p2_post_v3_phr_app_login_profile_verify",
+                "summary": "4 flows: Verify Otp - Update Mobile, Verify Password - Update Password, Verify ABHA Otp - Link-DeLink, Verify AADHAAR Otp - Link-DeLink",
+                "title": "POST /abha/api/v3/phr/app/login/profile/verify",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-post-v3-phr-app-login-profile-request-otp",
+                "id": "p2_post_v3_phr_app_login_profile_request_otp",
+                "summary": "3 flows: Send Otp - Update Mobile, Send ABHA Otp - Link-DeLink, Send AADHAAR Otp - Link-DeLink",
+                "title": "POST /abha/api/v3/phr/app/login/profile/request/otp",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-get-hip-v3-link-patient-links",
+                "id": "p2_get_hip_v3_link_patient_links",
+                "summary": "This is the PHR  APP API, this api will used to fetch all link care-context for a patient. ",
+                "title": "GET /api/hiecm/hip/v3/link/patient/links",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-post-user-initiated-linking-v3-link-care-context-init",
+                "id": "p2_post_user_initiated_linking_v3_link_care_context_init",
+                "summary": "This API will be invoked by the patient/user to link his/her health records.",
+                "title": "POST /api/hiecm/user-initiated-linking/v3/link/care-context/init",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-post-user-initiated-linking-v3-link-care-context-on-init",
+                "id": "m2_post_user_initiated_linking_v3_link_care_context_on_init",
+                "summary": "As a result of the initialization, HIP has to generate a unique reference-number in the link object which is called as link-reference-number and it has to tr...",
+                "title": "POST /api/hiecm/user-initiated-linking/v3/link/care-context/on-init",
+                "type": "operation"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01DAfjEv8VoHq3P71kWxwhKE",
+            "Name": "search",
+            "Input": {
+              "query": "generate link",
+              "kind": "operation"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "generate link",
+            "kind": "operation"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/m4/endpoints/m4-post-aadhaar-generatelink",
+                "id": "m4_post_aadhaar_generatelink",
+                "summary": "Generate Aadhaar Link",
+                "title": "POST /aadhaar/generateLink",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-post-v3-token-generate-token",
+                "id": "m2_post_v3_token_generate_token",
+                "summary": "API used to generate link token to link the health records",
+                "title": "POST /api/hiecm/v3/token/generate-token",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-post-user-initiated-linking-v3-link-care-context-on-init",
+                "id": "m2_post_user_initiated_linking_v3_link_care_context_on_init",
+                "summary": "As a result of the initialization, HIP has to generate a unique reference-number in the link object which is called as link-reference-number and it has to tr...",
+                "title": "POST /api/hiecm/user-initiated-linking/v3/link/care-context/on-init",
+                "type": "operation"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01Dwv3wQH2wg69nvrv76aonb",
+            "Name": "search",
+            "Input": {
+              "query": "link",
+              "kind": "flow"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "link",
+            "kind": "flow"
+          },
+          "output": "kind \"flow\" is not one of atom, operation, fhir_profile"
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_016USgarWTeTXoA7jHXk3Aui",
+            "Name": "get",
+            "Input": {
+              "id": "m2_post_v3_token_generate_token"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "m2_post_v3_token_generate_token"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "doc_path": "/docs/hiecm/v3/api/m2/endpoints/m2-post-v3-token-generate-token",
+            "operation_id": "m2_post_v3_token_generate_token",
+            "spec": {
+              "description": "This API endpoint is used to generate a link token which will be valid for 6 months.. This token can be utilized for Health Information Provider (HIP) Initiated Linking, enabling HIPs to securely link patient health records to their ABHA (Ayushman Bharat Health Account) address. The generated token ensures that the linking process is authenticated and authorized, maintaining the integrity and security of health information exchange. This functionality is crucial for facilitating seamless and efficient linking of health records within the healthcare ecosystem.<ol type='a'><li><b>Authorization:</b> We are passing the access-token in the authorization [Example: Bearer  eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJBbFJiNVd]</li></ol>",
+              "operationId": "m2_post_v3_token_generate_token",
+              "parameters": [
+                {
+                  "description": "Unique UUID for track the end to end request transaction",
+                  "example": "18235d89-cb13-479d-ad71-7a57d5f669a8",
+                  "in": "header",
+                  "name": "REQUEST-ID",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "description": "Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds",
+                  "example": "2022-10-06T15:10:00.587Z",
+                  "in": "header",
+                  "name": "TIMESTAMP",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "description": "Suffix of the consent manager to which the request was intended",
+                  "example": "sbx",
+                  "in": "header",
+                  "name": "X-CM-ID",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "description": "Identifier of the health information provider to which the request was intended",
+                  "example": "IN2810014366",
+                  "in": "header",
+                  "name": "X-HIP-ID",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "description": "In the request body, either 'abhaNumber' or 'abhaAddress' must be included, with atleast one being mandatory based on the patient profile.",
+                      "properties": {
+                        "abhaAddress": {
+                          "description": "abhaAddress of the user/patient. Allows alpha numeric character and special characters like ^[a-zA-Z0-9][a-zA-Z0-9_.]+[a-zA-Z0-9]@(abdm|sbx)$",
+                          "example": "<ABHA_ADDRESS>",
+                          "nullable": true,
+                          "type": "string"
+                        },
+                        "abhaNumber": {
+                          "description": "it can be null if abhaNumber is not linked with abhaAddress. Allows numeric character like ^\\d{14}$",
+                          "example": 12345678901234,
+                          "nullable": true,
+                          "type": "number"
+                        },
+                        "gender": {
+                          "description": "Allows M, F, O, D, T, U as a input",
+                          "example": "M",
+                          "type": "string"
+                        },
+                        "name": {
+                          "description": "Only alphabets and special characters like ',.- are allowed like ^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$",
+                          "example": "first_name + middle_name + last_name",
+                          "type": "string"
+                        },
+                        "yearOfBirth": {
+                          "description": "Year of birth must be 4 digit, ranging between 1900 and 2200",
+                          "example": 9999,
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "abhaAddress",
+                        "name",
+                        "gender",
+                        "yearOfBirth"
+                      ],
+                      "type": "object"
+                    }
+                  }
+                },
+                "required": true
+              },
+              "responses": {
+                "202": {
+                  "description": "Accepted"
+                },
+                "400": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "properties": {
+                          "error": {
+                            "description": "The error code and message, if any occurred.",
+                            "properties": {
+                              "code": {
+                                "description": "ABDM-1035 - Invalid HIP ID. May be returned either bare (`ABDM-1035`) or with a trailing \": \" separator (`ABDM-1035: `); match on the code itself and tolerate the separator.",
+                                "example": "ABDM-1035",
+                                "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                                "type": "string"
+                              },
+                              "message": {
+                                "example": "Invalid HIP ID",
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "code",
+                              "message"
+                            ],
+                            "type": "object"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Bad Request"
+                },
+                "401": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "properties": {
+                          "code": {
+                            "description": "900902 - Unauthorized. May be returned either bare or with a trailing \": \" separator; match on the code itself and tolerate the separator.",
+                            "example": "900902",
+                            "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                            "type": "string"
+                          },
+                          "description": {
+                            "example": "Invalid Credentials. Make sure your API invocation call has a header: 'Authorization : Bearer ACCESS_TOKEN' or 'Authorization : Basic ACCESS_TOKEN' or 'apikey: API_KEY'",
+                            "type": "string"
+                          },
+                          "message": {
+                            "example": "Unauthorized",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Unauthorized"
+                },
+                "403": {
+                  "content": {
+                    "text/plain": {
+                      "schema": {
+                        "example": "Access Denied",
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "description": "Forbidden"
+                },
+                "404": {
+                  "description": "server cannot find the requested resource"
+                },
+                "500": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "properties": {
+                          "code": {
+                            "description": "900900 - Unclassified Authentication Failure. May be returned either bare or with a trailing \": \" separator; match on the code itself and tolerate the separator.",
+                            "example": "900900",
+                            "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                            "type": "string"
+                          },
+                          "description": {
+                            "example": "Access failure for API: /hiecm/api/v3, version: v3 status: (900900) - Unclassified Authentication Failure",
+                            "type": "string"
+                          },
+                          "message": {
+                            "example": "Unclassified Authentication Failure",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Internal Server Error"
+                },
+                "503": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "properties": {
+                          "code": {
+                            "description": "ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing \": \" separator (`ABDM-1024: `); match on the code itself and tolerate the separator.",
+                            "example": "ABDM-1024",
+                            "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                            "type": "string"
+                          },
+                          "message": {
+                            "example": "Dependent service unavailable",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "code",
+                          "message"
+                        ],
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Service Unavailable"
+                }
+              },
+              "security": [
+                {
+                  "bearerAuth": []
+                }
+              ],
+              "summary": "API used to generate link token to link the health records",
+              "tags": [
+                "abdm-link-token-hip"
+              ],
+              "x-abdm-nha-operation-id": "abdm-link-token 1"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "## Link Record Token Generation\n\nThe **POST /api/hiecm/v3/token/generate-token** endpoint generates a link token for HIP-initiated linking. This token allows Health Information Providers (HIPs) to securely link patient health records to their ABHA (Ayushman Bharat Health Account) address, and is valid for 6 months.\n\n### Request Details\n\n**Headers (required):**\n- `Authorization`: Bearer access-token\n- `REQUEST-ID`: Unique UUID to track the request (e.g., `18235d89-cb13-479d-ad71-7a57d5f669a8`)\n- `TIMESTAMP`: ISO 8601 format (e.g., `2022-10-06T15:10:00.587Z`)\n- `X-CM-ID`: Consent manager suffix (e.g., `sbx`)\n- `X-HIP-ID`: HIP identifier (e.g., `IN2810014366`)\n\n**Request Body** (application/json):\n- `abhaAddress`: ABHA address (alphanumeric + special chars: ^[a-zA-Z0-9][a-zA-Z0-9_.]+[a-zA-Z0-9]@(abdm|sbx)$) — **required** (or abhaNumber)\n- `abhaNumber`: 14-digit ABHA number (nullable if not linked with address)\n- `name`: Patient name (alphabets and special chars: ',.- only)\n- `gender`: M, F, O, D, T, or U\n- `yearOfBirth`: 4-digit year (1900–2200)\n\n### Response\n\n**202 Accepted** — Token generated successfully\n\n**Error Codes:**\n- `400` — Bad request (e.g., invalid HIP ID)\n- `401` — Unauthorized (invalid credentials)\n- `403` — Access denied\n- `404` — Resource not found\n- `500` — Authentication failure\n- `503` — Dependent service unavailable (ABDM-1024)\n\nSee the [link token generation endpoint](https://abdm-developer.nha.gov.in/docs/hiecm/v3/api/m2/endpoints/m2-post-v3-token-generate-token) on the ABDM developer portal for complete details.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "## Link Record Token Generation\n\nThe **POST /api/hiecm/v3/token/generate-token** endpoint generates a link token for HIP-initiated linking. This token allows Health Information Providers (HIPs) to securely link patient health records to their ABHA (Ayushman Bharat Health Account) address, and is valid for 6 months.\n\n### Request Details\n\n**Headers (required):**\n- `Authorization`: Bearer access-token\n- `REQUEST-ID`: Unique UUID to track the request (e.g., `18235d89-cb13-479d-ad71-7a57d5f669a8`)\n- `TIMESTAMP`: ISO 8601 format (e.g., `2022-10-06T15:10:00.587Z`)\n- `X-CM-ID`: Consent manager suffix (e.g., `sbx`)\n- `X-HIP-ID`: HIP identifier (e.g., `IN2810014366`)\n\n**Request Body** (application/json):\n- `abhaAddress`: ABHA address (alphanumeric + special chars: ^[a-zA-Z0-9][a-zA-Z0-9_.]+[a-zA-Z0-9]@(abdm|sbx)$) — **required** (or abhaNumber)\n- `abhaNumber`: 14-digit ABHA number (nullable if not linked with address)\n- `name`: Patient name (alphabets and special chars: ',.- only)\n- `gender`: M, F, O, D, T, or U\n- `yearOfBirth`: 4-digit year (1900–2200)\n\n### Response\n\n**202 Accepted** — Token generated successfully\n\n**Error Codes:**\n- `400` — Bad request (e.g., invalid HIP ID)\n- `401` — Unauthorized (invalid credentials)\n- `403` — Access denied\n- `404` — Resource not found\n- `500` — Authentication failure\n- `503` — Dependent service unavailable (ABDM-1024)\n\nSee the [link token generation endpoint](https://abdm-developer.nha.gov.in/docs/hiecm/v3/api/m2/endpoints/m2-post-v3-token-generate-token) on the ABDM developer portal for complete details.",
+  "sources": [],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-post-v3-token-generate-token\",\"id\":\"m2_post_v3_token_generate_token\",\"summary\":\"API used to generate link token to link the health records\",\"title\":\"POST /api/hiecm/v3/token/generate-token\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-post-v3-phr-app-login-profile-link\",\"id\":\"p2_post_v3_phr_app_login_profile_link\",\"summary\":\"2 flows: Link Request\",\"title\":\"POST /abha/api/v3/phr/app/login/profile/link\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-profile-benefit-linkanddelink-x-token\",\"id\":\"m1_post_v3_profile_benefit_linkanddelink_x_token\",\"summary\":\"Link / De-link benefit using X-token\",\"title\":\"POST /abha/api/v3/profile/benefit/linkAndDelink\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-post-hip-v3-link-carecontext\",\"id\":\"m2_post_hip_v3_link_carecontext\",\"summary\":\"This API will be used to perform HIP initiated linking.\",\"title\":\"POST /api/hiecm/hip/v3/link/carecontext\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/p1/endpoints/p1-post-v3-profile-account-request-emailverificationlink\",\"id\":\"p1_post_v3_profile_account_request_emailverificationlink\",\"summary\":\"Email Verification Link\",\"title\":\"POST /abha/api/v3/profile/account/request/emailVerificationLink\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-post-v3-phr-app-login-profile-verify\",\"id\":\"p2_post_v3_phr_app_login_profile_verify\",\"summary\":\"4 flows: Verify Otp - Update Mobile, Verify Password - Update Password, Verify ABHA Otp - Link-DeLink, Verify AADHAAR Otp - Link-DeLink\",\"title\":\"POST /abha/api/v3/phr/app/login/profile/verify\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-post-v3-phr-app-login-profile-request-otp\",\"id\":\"p2_post_v3_phr_app_login_profile_request_otp\",\"summary\":\"3 flows: Send Otp - Update Mobile, Send ABHA Otp - Link-DeLink, Send AADHAAR Otp - Link-DeLink\",\"title\":\"POST /abha/api/v3/phr/app/login/profile/request/otp\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-get-hip-v3-link-patient-links\",\"id\":\"p2_get_hip_v3_link_patient_links\",\"summary\":\"This is the PHR  APP API, this api will used to fetch all link care-context for a patient. \",\"title\":\"GET /api/hiecm/hip/v3/link/patient/links\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-post-user-initiated-linking-v3-link-care-context-init\",\"id\":\"p2_post_user_initiated_linking_v3_link_care_context_init\",\"summary\":\"This API will be invoked by the patient/user to link his/her health records.\",\"title\":\"POST /api/hiecm/user-initiated-linking/v3/link/care-context/init\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-post-user-initiated-linking-v3-link-care-context-on-init\",\"id\":\"m2_post_user_initiated_linking_v3_link_care_context_on_init\",\"summary\":\"As a result of the initialization, HIP has to generate a unique reference-number in the link object which is called as link-reference-number and it has to tr...\",\"title\":\"POST /api/hiecm/user-initiated-linking/v3/link/care-context/on-init\",\"type\":\"operation\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/api/m4/endpoints/m4-post-aadhaar-generatelink\",\"id\":\"m4_post_aadhaar_generatelink\",\"summary\":\"Generate Aadhaar Link\",\"title\":\"POST /aadhaar/generateLink\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-post-v3-token-generate-token\",\"id\":\"m2_post_v3_token_generate_token\",\"summary\":\"API used to generate link token to link the health records\",\"title\":\"POST /api/hiecm/v3/token/generate-token\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-post-user-initiated-linking-v3-link-care-context-on-init\",\"id\":\"m2_post_user_initiated_linking_v3_link_care_context_on_init\",\"summary\":\"As a result of the initialization, HIP has to generate a unique reference-number in the link object which is called as link-reference-number and it has to tr...\",\"title\":\"POST /api/hiecm/user-initiated-linking/v3/link/care-context/on-init\",\"type\":\"operation\"}]}\nkind \"flow\" is not one of atom, operation, fhir_profile\n{\"catalogue_version\":\"2026.09.16\",\"doc_path\":\"/docs/hiecm/v3/api/m2/endpoints/m2-post-v3-token-generate-token\",\"operation_id\":\"m2_post_v3_token_generate_token\",\"spec\":{\"description\":\"This API endpoint is used to generate a link token which will be valid for 6 months.. This token can be utilized for Health Information Provider (HIP) Initiated Linking, enabling HIPs to securely link patient health records to their ABHA (Ayushman Bharat Health Account) address. The generated token ensures that the linking process is authenticated and authorized, maintaining the integrity and security of health information exchange. This functionality is crucial for facilitating seamless and efficient linking of health records within the healthcare ecosystem.<ol type='a'><li><b>Authorization:</b> We are passing the access-token in the authorization [Example: Bearer  eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJBbFJiNVd]</li></ol>\",\"operationId\":\"m2_post_v3_token_generate_token\",\"parameters\":[{\"description\":\"Unique UUID for track the end to end request transaction\",\"example\":\"18235d89-cb13-479d-ad71-7a57d5f669a8\",\"in\":\"header\",\"name\":\"REQUEST-ID\",\"required\":true,\"schema\":{\"type\":\"string\"}},{\"description\":\"Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds\",\"example\":\"2022-10-06T15:10:00.587Z\",\"in\":\"header\",\"name\":\"TIMESTAMP\",\"required\":true,\"schema\":{\"type\":\"string\"}},{\"description\":\"Suffix of the consent manager to which the request was intended\",\"example\":\"sbx\",\"in\":\"header\",\"name\":\"X-CM-ID\",\"required\":true,\"schema\":{\"type\":\"string\"}},{\"description\":\"Identifier of the health information provider to which the request was intended\",\"example\":\"IN2810014366\",\"in\":\"header\",\"name\":\"X-HIP-ID\",\"required\":true,\"schema\":{\"type\":\"string\"}}],\"requestBody\":{\"content\":{\"application/json\":{\"schema\":{\"description\":\"In the request body, either 'abhaNumber' or 'abhaAddress' must be included, with atleast one being mandatory based on the patient profile.\",\"properties\":{\"abhaAddress\":{\"description\":\"abhaAddress of the user/patient. Allows alpha numeric character and special characters like ^[a-zA-Z0-9][a-zA-Z0-9_.]+[a-zA-Z0-9]@(abdm|sbx)$\",\"example\":\"<ABHA_ADDRESS>\",\"nullable\":true,\"type\":\"string\"},\"abhaNumber\":{\"description\":\"it can be null if abhaNumber is not linked with abhaAddress. Allows numeric character like ^\\\\d{14}$\",\"example\":12345678901234,\"nullable\":true,\"type\":\"number\"},\"gender\":{\"description\":\"Allows M, F, O, D, T, U as a input\",\"example\":\"M\",\"type\":\"string\"},\"name\":{\"description\":\"Only alphabets and special characters like ',.- are allowed like ^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$\",\"example\":\"first_name + middle_name + last_name\",\"type\":\"string\"},\"yearOfBirth\":{\"description\":\"Year of birth must be 4 digit, ranging between 1900 and 2200\",\"example\":9999,\"type\":\"number\"}},\"required\":[\"abhaAddress\",\"name\",\"gender\",\"yearOfBirth\"],\"type\":\"object\"}}},\"required\":true},\"responses\":{\"202\":{\"description\":\"Accepted\"},\"400\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"error\":{\"description\":\"The error code and message, if any occurred.\",\"properties\":{\"code\":{\"description\":\"ABDM-1035 - Invalid HIP ID. May be returned either bare (`ABDM-1035`) or with a trailing \\\": \\\" separator (`ABDM-1035: `); match on the code itself and tolerate the separator.\",\"example\":\"ABDM-1035\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"message\":{\"example\":\"Invalid HIP ID\",\"type\":\"string\"}},\"required\":[\"code\",\"message\"],\"type\":\"object\"}},\"type\":\"object\"}}},\"description\":\"Bad Request\"},\"401\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"code\":{\"description\":\"900902 - Unauthorized. May be returned either bare or with a trailing \\\": \\\" separator; match on the code itself and tolerate the separator.\",\"example\":\"900902\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"description\":{\"example\":\"Invalid Credentials. Make sure your API invocation call has a header: 'Authorization : Bearer ACCESS_TOKEN' or 'Authorization : Basic ACCESS_TOKEN' or 'apikey: API_KEY'\",\"type\":\"string\"},\"message\":{\"example\":\"Unauthorized\",\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"Unauthorized\"},\"403\":{\"content\":{\"text/plain\":{\"schema\":{\"example\":\"Access Denied\",\"type\":\"string\"}}},\"description\":\"Forbidden\"},\"404\":{\"description\":\"server cannot find the requested resource\"},\"500\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"code\":{\"description\":\"900900 - Unclassified Authentication Failure. May be returned either bare or with a trailing \\\": \\\" separator; match on the code itself and tolerate the separator.\",\"example\":\"900900\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"description\":{\"example\":\"Access failure for API: /hiecm/api/v3, version: v3 status: (900900) - Unclassified Authentication Failure\",\"type\":\"string\"},\"message\":{\"example\":\"Unclassified Authentication Failure\",\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"Internal Server Error\"},\"503\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"code\":{\"description\":\"ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing \\\": \\\" separator (`ABDM-1024: `); match on the code itself and tolerate the separator.\",\"example\":\"ABDM-1024\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"message\":{\"example\":\"Dependent service unavailable\",\"type\":\"string\"}},\"required\":[\"code\",\"message\"],\"type\":\"object\"}}},\"description\":\"Service Unavailable\"}},\"security\":[{\"bearerAuth\":[]}],\"summary\":\"API used to generate link token to link the health records\",\"tags\":[\"abdm-link-token-hip\"],\"x-abdm-nha-operation-id\":\"abdm-link-token 1\"}}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T12:08:01.989Z",
+  "usage": {
+    "input_tokens": 38,
+    "output_tokens": 1447,
+    "cache_read_input_tokens": 41604,
+    "cache_creation_input_tokens": 10349,
+    "num_turns": 7,
+    "duration_ms": 19810,
+    "cost_usd_equivalent": 0.0321314
+  }
+}

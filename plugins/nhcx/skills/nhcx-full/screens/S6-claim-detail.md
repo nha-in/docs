@@ -4,6 +4,8 @@
 claims/view/:caseid (opens the Eligibility tab)
 claims/view/:caseid/<tab key> (opens that tab; `?tab=<tab key>` is accepted as an alias)
 
+`:caseid` is the case's stable public id (D9 `external_id`, else the row id), **never the claim number**: an accepted cancellation replaces the claim number (C7), and a route keyed on it breaks at that moment.
+
 Page title: Claim <case number>
 
 Breadcrumb: Claims (claims/list, S5) > <case number>
@@ -12,6 +14,8 @@ Companion endpoint: claims/view/:caseid/state (GET, JSON).
 
 #### S6D. DESCRIPTION
 The shell for one claim case. It carries a header that says whose case it is and where it stands, a row of next-action buttons that say what the case is waiting for, and a tab bar that walks the episode in the order it happens. Every tab's content is rendered with the page; switching tabs happens in the browser without a reload. An unknown case id shows the standard "Claim" not-found page.
+
+**Correlation id, everywhere.** Wherever a message or a thread of the exchange is on screen (an eligibility check, the ruling, the package master request, the pre-authorisation and claim legs and each reply on them, a payer's query or notification and the reply to it, a payment notice and its acknowledgement), its `x-hcx-correlation_id` is shown beside it, labelled "Correlation id", in full on hover and copied on a click. It is the one id the hospital, the payer, a capture and the exchange's own logs share, so no tab leaves it out.
 
 **Polling on load.** NHCX answers every leg asynchronously. The payer's reply normally arrives by callback ([G8. Receive](../gateway/G8-receive.md) hands it to C1), and each load of this screen is the fallback: before anything is drawn, it reads [G9. Ledger](../gateway/G9-ledger.md) once for every leg that is still out with the payer.
 
@@ -43,7 +47,8 @@ The page never reloads itself, because that would throw away whatever is being t
 | Stage `eligibility`, status `draft`, `error` or `not-eligible` | Check the cover | Eligibility (S3) |
 | Stage `eligibility`, eligible, no ready plan | Fetch the package master | Insurance plan (S7) |
 | Stage `eligibility`, plan ready, no line items | Quote the treatment | Line items (S8) |
-| Stage `eligibility`, line items present | Send the pre-authorisation | Pre-authorisation (S9) |
+| Stage `eligibility`, line items present, draft not saved (`preauth_saved_at` null) | Save the preauth draft | Pre-authorisation (S4 on S9) |
+| Stage `eligibility`, line items present, draft saved | Send the pre-authorisation | Pre-authorisation (S9) |
 | Stage `preauth`/`enhancement`, `queried` | Answer the query (payer that takes answers by resubmission) | Pre-authorisation (S9) |
 | | Answer the payer's query (payer that takes a Communication, when no query is already listed first) | Communication (S10) |
 | Stage `preauth`/`enhancement`, `draft` or `refused` | Send the pre-authorisation | Pre-authorisation (S9) |
@@ -69,10 +74,11 @@ The page never reloads itself, because that would throw away whatever is being t
 | 2 | `plan` | Insurance plan | S7 |
 | 3 | `lines` | Line items | S8 |
 | 4 | `validate` | Validate | S8.2 (auth-requirements ruling on the line items) |
-| 5 | `preauth` | Pre-authorisation | S4 (link admission, draft form) and S9 (send, verdict, documents, forms) |
-| 6 | `communication` | Communication | S10 |
-| 7 | `claim` | Claim | S11 |
-| 8 | `payments` | Payments | S12 |
+| 5 | `verification` | Verification | S18 (the beneficiary authenticated against their ABHA, at the stage the stay is at) |
+| 6 | `preauth` | Pre-authorisation | S4 (link admission, draft form) and S9 (send, verdict, documents, forms) |
+| 7 | `communication` | Communication | S10 |
+| 8 | `claim` | Claim | S11 |
+| 9 | `payments` | Payments | S12 |
 
 Tab rules:
 - No `tab`, or an unknown key, opens Eligibility.
@@ -113,11 +119,11 @@ The arrangement below is the reference implementation's [REF](../references/PAYE
 |                                [(refresh) Refresh]                           |
 | Next: [Answer the payer (1)] [With the payer; ask where it stands]           |
 |------------------------------------------------------------------------------|
-| Eligibility | Insurance plan | Line items | Validate | Pre-authorisation |    |
-| Communication | Claim | Payments                                             |
+| Eligibility | Insurance plan | Line items | Validate | Verification |       |
+| Pre-authorisation | Communication | Claim | Payments                         |
 |------------------------------------------------------------------------------|
 |                                                                              |
-|  <active tab content: S3, S7, S8, S8.2, S4+S9, S10, S11 or S12>             |
+|  <active tab content: S3, S7, S8, S8.2, S18, S4+S9, S10, S11 or S12>        |
 |                                                                              |
 |------------------------------------------------------------------------------|
 ```
@@ -132,10 +138,11 @@ The arrangement below is the reference implementation's [REF](../references/PAYE
 2. Tab "Insurance plan": show S7.
 3. Tab "Line items": show S8.
 4. Tab "Validate": show the Authorisation Requirements card S8.2, then the way on to the Pre-authorisation tab.
-5. Tab "Pre-authorisation": show S4 (admission link and pre-auth draft) above S9 (sending and the payer's verdict).
-6. Tab "Communication": show S10.
-7. Tab "Claim": show S11.
-8. Tab "Payments": show S12.
-9. Next-action button: reload this screen on the tab the action names (see the table in S6D).
-10. Refresh: reload this screen on the current URL's tab, polling every leg that is out with the payer.
-11. Breadcrumb "Claims": go to the Claim Master screen S5.
+5. Tab "Verification": show S18.
+6. Tab "Pre-authorisation": show S4 (admission link and pre-auth draft) above S9 (sending and the payer's verdict).
+7. Tab "Communication": show S10.
+8. Tab "Claim": show S11.
+9. Tab "Payments": show S12.
+10. Next-action button: reload this screen on the tab the action names (see the table in S6D).
+11. Refresh: reload this screen on the current URL's tab, polling every leg that is out with the payer.
+12. Breadcrumb "Claims": go to the Claim Master screen S5.

@@ -29,12 +29,12 @@
     "a phr app is an hiu"
   ],
   "expected_sources": [
-    "shared.glossary.hiu"
+    "hiecm.glossary.hiu"
   ],
   "expected_shape": "define",
   "expected_behaviour": "answer",
   "derived_from": null,
   "source_row": "annexure#glossary",
-  "catalogue_version": "2026.08.24",
+  "catalogue_version": "2026.09.16",
   "notes": "asked using the catalogue's own spelling."
 }

@@ -1,0 +1,215 @@
+{
+  "case_id": "confusable-session-vs-user-token-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "which token goes in the header?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_016xUrjhbY8kBToUfr9MdQun",
+            "Name": "search",
+            "Input": {
+              "query": "token header authentication",
+              "kind": "operation",
+              "limit": 5
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "token header authentication",
+            "kind": "operation",
+            "limit": 5
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01A9pPtXrv72rM5mcpMQhGsh",
+            "Name": "search",
+            "Input": {
+              "query": "bearer token header authorization",
+              "limit": 5
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "bearer token header authorization",
+            "limit": 5
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-2500",
+                "id": "hiecm.error.abdm-2500",
+                "summary": "The call carried no access token, or a callback answered a request the gateway is not waiting on.",
+                "title": "ABDM-2500, no Authorization header, or no matching request",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/callback-authenticity#callback-authenticity",
+                "id": "hiecm.concept.callback-authenticity",
+                "summary": "Anything can post to your callback URL, so require the bearer token and a request id you sent before your handler acts.",
+                "title": "Proving a callback really came from ABDM",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/api/biometric/endpoints/biometric-hcx-abha-biometric-auth-refresh-token",
+                "id": "nhcx.endpoint.abha-biometric-auth-refresh-token",
+                "summary": "Swap a scheme patient's refresh token for a new short-lived presence token without capturing their biometric again.",
+                "title": "GET /hcx/abha/biometric/auth/refresh/token",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/gateway#gateway-session",
+                "id": "hiecm.concept.gateway-session",
+                "summary": "Every gateway call carries a short lived bearer token from one session endpoint, which identifies your application, not a person.",
+                "title": "The gateway session, the first call in every integration",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/api/biometric/endpoints/biometric-hcx-abha-biometric-auth-init",
+                "id": "nhcx.endpoint.abha-biometric-auth-init",
+                "summary": "Start a fingerprint or iris check that proves a scheme patient is at the hospital, and get the transaction id the next step needs.",
+                "title": "POST /hcx/abha/biometric/auth/init",
+                "type": "endpoint"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01AB4cRYGDZEKJQkSMs2TdDD",
+            "Name": "get",
+            "Input": {
+              "id": "hiecm.concept.gateway-session"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "hiecm.concept.gateway-session"
+          },
+          "output": {
+            "body": "# The gateway session, the first call in every integration\n\n## In plain words\n\nOne endpoint issues the token every other call carries. It is the call [M1](/docs/hiecm/v3/getting-started/glossary#m1) uses. [M4](/docs/hiecm/v3/getting-started/glossary#m4) calls carry their own bearer token instead.\n\n**POST** `/api/hiecm/gateway/v3/sessions`\n\nHeaders:\n\n| Header | Example value | What it is |\n|---|---|---|\n| `REQUEST-ID` | `18235d89-cb13-479d-ad71-7a57d5f669a8` | A fresh UUID for this call |\n| `TIMESTAMP` | `2022-10-06T15:10:00.587Z` | The time you made the call, ISO 8601 |\n| `X-CM-ID` | `sbx` | The consent manager. Use `sbx` for sandbox |\n| `Content-Type` | `application/json` | |\n\nNo `Authorization` header on this call. It is the one call with no token yet.\n\nBody:\n\n```json\n{\n  \"clientId\": \"<CLIENT_ID_FROM_SANDBOX_SIGNUP>\",\n  \"clientSecret\": \"<CLIENT_SECRET_FROM_SANDBOX_SIGNUP>\",\n  \"grantType\": \"client_credentials\"\n}\n```\n\nSend the client id you were issued.\n\nResponse shape:\n\n```json\n{\n  \"accessToken\": \"<JWT>\",\n  \"expiresIn\": 1200,\n  \"refreshExpiresIn\": 1800,\n  \"refreshToken\": \"<JWT>\",\n  \"tokenType\": \"bearer\"\n}\n```\n\nThe response carries the token in `accessToken`.\n\nSend the token back as `Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>` on every other call. Headers per call, and the second token M1 login issues, are on [authentication](/docs/hiecm/v3/reference/authentication). Interactive: [gateway API reference](/reference/hiecm-gateway).\n\nThe session token says which application is calling, not which person. [M1](/docs/hiecm/v3/milestones/m1) profile calls also carry a user token in `X-token`, which login returns.\n\n## Before you start\n\nA client id and client secret from sandbox registration, held on your server. Never ship the secret in a mobile or browser build.\n\n## What happens\n\nCall the session endpoint with `clientId`, `clientSecret` and `grantType` set to `client_credentials`. Send the `accessToken` it returns as `Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>` on every other gateway call. Renew before `expiresIn` runs out rather than on a fixed timer.\n\n## How you know it worked\n\nThe response carries `accessToken` and `expiresIn`, and the next gateway call with that token is not refused as unauthorised.\n\n## When it goes wrong\n\nEvery call returns 401: see [everything returns 401](/docs/hiecm/v3/troubleshooting/everything-returns-401). A profile call is refused while the session token is fresh: the `X-token` is missing, or it holds the short lived token from login verify, which the verify user call exchanges for the user token. `ABDM-1094` reads X-token expired, and the token sent is often the wrong kind rather than an old one.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/concepts/gateway#gateway-session",
+            "gateway": "hiecm",
+            "id": "hiecm.concept.gateway-session",
+            "milestone": "M1",
+            "summary": "Every gateway call carries a short lived bearer token from one session endpoint, which identifies your application, not a person.",
+            "title": "The gateway session, the first call in every integration",
+            "type": "concept"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "The **`accessToken`** from the session endpoint goes in the header.\n\nCall `/api/hiecm/gateway/v3/sessions` with your `clientId` and `clientSecret` to get it:\n\n```json\n{\n  \"accessToken\": \"<JWT>\",\n  \"expiresIn\": 1200,\n  \"refreshToken\": \"<JWT>\",\n  \"tokenType\": \"bearer\"\n}\n```\n\nThen send it on every other gateway call as:\n```\nAuthorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>\n```\n\nThis is the application-level bearer token that identifies your app (not a person). Note that M1 profile calls also carry a separate **`X-token`** header with a user token from login.\n\nReference: [The gateway session](https://developer.abdm.gov.in/docs/hiecm/v3/concepts/gateway#gateway-session) on the developer portal.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "The **`accessToken`** from the session endpoint goes in the header.\n\nCall `/api/hiecm/gateway/v3/sessions` with your `clientId` and `clientSecret` to get it:\n\n```json\n{\n  \"accessToken\": \"<JWT>\",\n  \"expiresIn\": 1200,\n  \"refreshToken\": \"<JWT>\",\n  \"tokenType\": \"bearer\"\n}\n```\n\nThen send it on every other gateway call as:\n```\nAuthorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>\n```\n\nThis is the application-level bearer token that identifies your app (not a person). Note that M1 profile calls also carry a separate **`X-token`** header with a user token from login.\n\nReference: [The gateway session](https://developer.abdm.gov.in/docs/hiecm/v3/concepts/gateway#gateway-session) on the developer portal.",
+  "sources": [
+    {
+      "id": "hiecm.concept.gateway-session",
+      "title": "The gateway session, the first call in every integration",
+      "url": "/docs/hiecm/v3/concepts/gateway#gateway-session"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-2500\",\"id\":\"hiecm.error.abdm-2500\",\"summary\":\"The call carried no access token, or a callback answered a request the gateway is not waiting on.\",\"title\":\"ABDM-2500, no Authorization header, or no matching request\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/callback-authenticity#callback-authenticity\",\"id\":\"hiecm.concept.callback-authenticity\",\"summary\":\"Anything can post to your callback URL, so require the bearer token and a request id you sent before your handler acts.\",\"title\":\"Proving a callback really came from ABDM\",\"type\":\"concept\"},{\"doc_url\":\"/docs/nhcx/v1/api/biometric/endpoints/biometric-hcx-abha-biometric-auth-refresh-token\",\"id\":\"nhcx.endpoint.abha-biometric-auth-refresh-token\",\"summary\":\"Swap a scheme patient's refresh token for a new short-lived presence token without capturing their biometric again.\",\"title\":\"GET /hcx/abha/biometric/auth/refresh/token\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/gateway#gateway-session\",\"id\":\"hiecm.concept.gateway-session\",\"summary\":\"Every gateway call carries a short lived bearer token from one session endpoint, which identifies your application, not a person.\",\"title\":\"The gateway session, the first call in every integration\",\"type\":\"concept\"},{\"doc_url\":\"/docs/nhcx/v1/api/biometric/endpoints/biometric-hcx-abha-biometric-auth-init\",\"id\":\"nhcx.endpoint.abha-biometric-auth-init\",\"summary\":\"Start a fingerprint or iris check that proves a scheme patient is at the hospital, and get the transaction id the next step needs.\",\"title\":\"POST /hcx/abha/biometric/auth/init\",\"type\":\"endpoint\"}]}\n{\"body\":\"# The gateway session, the first call in every integration\\n\\n## In plain words\\n\\nOne endpoint issues the token every other call carries. It is the call [M1](/docs/hiecm/v3/getting-started/glossary#m1) uses. [M4](/docs/hiecm/v3/getting-started/glossary#m4) calls carry their own bearer token instead.\\n\\n**POST** `/api/hiecm/gateway/v3/sessions`\\n\\nHeaders:\\n\\n| Header | Example value | What it is |\\n|---|---|---|\\n| `REQUEST-ID` | `18235d89-cb13-479d-ad71-7a57d5f669a8` | A fresh UUID for this call |\\n| `TIMESTAMP` | `2022-10-06T15:10:00.587Z` | The time you made the call, ISO 8601 |\\n| `X-CM-ID` | `sbx` | The consent manager. Use `sbx` for sandbox |\\n| `Content-Type` | `application/json` | |\\n\\nNo `Authorization` header on this call. It is the one call with no token yet.\\n\\nBody:\\n\\n```json\\n{\\n  \\\"clientId\\\": \\\"<CLIENT_ID_FROM_SANDBOX_SIGNUP>\\\",\\n  \\\"clientSecret\\\": \\\"<CLIENT_SECRET_FROM_SANDBOX_SIGNUP>\\\",\\n  \\\"grantType\\\": \\\"client_credentials\\\"\\n}\\n```\\n\\nSend the client id you were issued.\\n\\nResponse shape:\\n\\n```json\\n{\\n  \\\"accessToken\\\": \\\"<JWT>\\\",\\n  \\\"expiresIn\\\": 1200,\\n  \\\"refreshExpiresIn\\\": 1800,\\n  \\\"refreshToken\\\": \\\"<JWT>\\\",\\n  \\\"tokenType\\\": \\\"bearer\\\"\\n}\\n```\\n\\nThe response carries the token in `accessToken`.\\n\\nSend the token back as `Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>` on every other call. Headers per call, and the second token M1 login issues, are on [authentication](/docs/hiecm/v3/reference/authentication). Interactive: [gateway API reference](/reference/hiecm-gateway).\\n\\nThe session token says which application is calling, not which person. [M1](/docs/hiecm/v3/milestones/m1) profile calls also carry a user token in `X-token`, which login returns.\\n\\n## Before you start\\n\\nA client id and client secret from sandbox registration, held on your server. Never ship the secret in a mobile or browser build.\\n\\n## What happens\\n\\nCall the session endpoint with `clientId`, `clientSecret` and `grantType` set to `client_credentials`. Send the `accessToken` it returns as `Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>` on every other gateway call. Renew before `expiresIn` runs out rather than on a fixed timer.\\n\\n## How you know it worked\\n\\nThe response carries `accessToken` and `expiresIn`, and the next gateway call with that token is not refused as unauthorised.\\n\\n## When it goes wrong\\n\\nEvery call returns 401: see [everything returns 401](/docs/hiecm/v3/troubleshooting/everything-returns-401). A profile call is refused while the session token is fresh: the `X-token` is missing, or it holds the short lived token from login verify, which the verify user call exchanges for the user token. `ABDM-1094` reads X-token expired, and the token sent is often the wrong kind rather than an old one.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/concepts/gateway#gateway-session\",\"gateway\":\"hiecm\",\"id\":\"hiecm.concept.gateway-session\",\"milestone\":\"M1\",\"summary\":\"Every gateway call carries a short lived bearer token from one session endpoint, which identifies your application, not a person.\",\"title\":\"The gateway session, the first call in every integration\",\"type\":\"concept\"}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T11:56:35.462Z",
+  "usage": {
+    "input_tokens": 30,
+    "output_tokens": 769,
+    "cache_read_input_tokens": 28620,
+    "cache_creation_input_tokens": 7231,
+    "num_turns": 4,
+    "duration_ms": 11120,
+    "cost_usd_equivalent": 0.021199000000000003
+  }
+}

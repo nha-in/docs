@@ -58,21 +58,27 @@ answer contract, is specified in support-agent-playbook.md.
 
 ## Tools
 
-Six read-only tools:
+Seven read-only tools, the seventh only when the snapshot holds compiled skills:
 
 | Tool | Does |
 |---|---|
-| search | atoms (default), API operations by intent or path (`kind: operation`), or FHIR profiles (`kind: fhir_profile`); an empty query with a type or milestone lists atoms; `response_format` concise (default) or detailed |
+| search | atoms (default), API operations by intent or path (`kind: operation`), FHIR profiles (`kind: fhir_profile`), or the integration skill for a task (`kind: skill`); a query that names a skill, such as "integrate M1", also returns a `skill` hint; an empty query with a type or milestone lists atoms; `response_format` concise (default) or detailed |
 | get | one item by id, the id's shape picking the kind: atom id, operationId, `fhir:<profile>`, `fhir-example:<hiType>` |
 | related | the atom graph walk |
 | decode_error | error atoms and specification rows for a code or raw response |
 | validate | `kind: request` checks a request body against its operation; `kind: fhir` checks a FHIR document bundle |
 | catalogue_info | version, build time and coverage |
+| skill | the compiled integration skill for a task: `task` in plain words ("integrate M1") picks the skill, or `name` and `section` load one section. A task stays on one gateway, named by `gateway` (hiecm, uhi or nhcx) or by the task ("UHI", "NHCX", "HIE-CM"): the tool picks, names and asks to install only from that gateway. It returns the router, the sections it can load next, and the commands to install the plugin for the skill's gateway, which the client asks the person to run once. No arguments lists every skill. Clients are told to call it first for any build, integrate, test or debug request, because many reach neither resources nor prompts on their own |
 
 The eleven old names (search_docs, get_atom, related_atoms, list_atoms,
 list_operations, get_operation, list_fhir_profiles, get_fhir_profile,
-get_fhir_example, validate_request, validate_fhir) are deprecated aliases
-for one release, each returning exactly what it did.
+get_fhir_example, validate_request, validate_fhir) are deprecated aliases,
+each returning exactly what it did. They stay registered because published
+skills still call them, the NHCX skills taken from nhcx-skills above all, but
+each carries a one-line description pointing at its replacement and its
+argument names without their text, since a client loads every tool's
+definition into its model's context on every request. Remove them once
+nhcx-skills calls the new names.
 
 Every response carries catalogue_version. FHIR validation never logs bundle
 contents: the tool-call logging middleware records only the tool name,
@@ -102,8 +108,8 @@ URL.
 The tools answer a question an agent already knows how to ask. The compiled
 integrator skills answer the question before that: what the steps are, in
 what order, and how to tell when one worked. `cmd/indexer` reads them from
-`-skills` (default `../plugins/abdm-integrators-assistant/skills`, or
-`SKILLS_DIR`) into the snapshot, so the server still reads the database and
+`-skills`, a comma-separated list of folders (default the HIE-CM, UHI and
+NHCX plugins' skills, or `SKILLS_DIR`), into the snapshot, so the server still reads the database and
 nothing else, and the server offers them two ways:
 
 - **Resources**, one per section, at `skill://<skill>` for the router and
@@ -145,10 +151,17 @@ the tool loop's choices stable, and 0 makes it as deterministic as the model
 allows. With an Anthropic or Amazon Nova model the system prompt is sent behind a
 cache point, so Bedrock charges that prefix at the read rate on every turn
 after the first; other model families reject cache points, so for them the
-prompt goes without one at the full input rate.
+prompt goes without one at the full input rate. OpenAI GPT-5 and GPT-6 models refuse
+a temperature, so for them it is not sent and `CHAT_TEMPERATURE` has no effect.
+For those same models `CHAT_REASONING_EFFORT` (default `medium`; `none`, `low`,
+`medium`, `high`, `xhigh` or `max`) is sent as
+`additionalModelRequestFields.reasoning.effort`. Higher effort costs latency
+and output tokens against the 90 second deadline per question. Set it empty
+(`CHAT_REASONING_EFFORT=`) to send nothing and take the provider's default;
+other model families never receive it.
 
 Guardrails are environment-tunable: `CHAT_MAX_TOKENS` (default 1500),
-`CHAT_RATE_PER_MIN` (default 5) and `CHAT_RATE_PER_DAY` (default 100) cap
+`CHAT_RATE_PER_MIN` (default 15) and `CHAT_RATE_PER_DAY` (default 100) cap
 one IP's spend (behind a reverse proxy set `TRUST_PROXY=true`, and
 `TRUST_PROXY_HOPS` to the number of proxies that each append an
 `X-Forwarded-For` entry, 2 for a CDN in front of a load balancer, so the
@@ -157,6 +170,19 @@ does. The system prompt keeps the assistant strictly inside the catalogue:
 answers only from tool results, honest about what's verified against a
 sandbox versus taken from the specification, and a plain "I don't have
 that" instead of a guess when nothing matches.
+
+A model call that Bedrock throttles, or that fails with a transient
+server-side error, is tried up to two more times after about 400 ms and then
+about 1200 ms, as long as no text has reached the reader yet. One tool call
+may run for 10 seconds, and `get` and `validate` for 20, since they read
+large specification fragments.
+
+Every turn that ends without an answer logs one `answer_missing` line with a
+`reason`: `throttle`, `model_error`, `tool_timeout`, `rate_limit`, `blocked`
+or `client_gone`. The SSE `error` event carries the same `reason` beside its
+`message`. A rate-limited request is refused with a 429 before any stream
+opens, and an answer the guard blocked reaches the reader as its notice in a
+`text` event, so those two reasons appear in the log only.
 
 Credentials for Bedrock come from the environment's default AWS
 credential chain — an EKS pod's IRSA role in production, never a stored

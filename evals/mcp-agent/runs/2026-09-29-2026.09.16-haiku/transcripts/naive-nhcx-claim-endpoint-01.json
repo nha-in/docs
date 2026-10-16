@@ -1,0 +1,422 @@
+{
+  "case_id": "naive-nhcx-claim-endpoint-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "what is the NHCX claim API endpoint"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01Jdv5MfC4LdCiNjSfqnDD7g",
+            "Name": "search",
+            "Input": {
+              "query": "NHCX claim API endpoint",
+              "kind": "operation",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "NHCX claim API endpoint",
+            "kind": "operation",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/biometric/endpoints/biometric-hcx-abha-biometric-auth-init",
+                "id": "biometric_hcx_abha_biometric_auth_init",
+                "summary": "Biometric auth init",
+                "title": "POST /hcx/abha/biometric/auth/init",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/biometric/endpoints/biometric-hcx-abha-biometric-auth-verify",
+                "id": "biometric_hcx_abha_biometric_auth_verify",
+                "summary": "Biometric auth verify",
+                "title": "POST /hcx/abha/biometric/auth/verify",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/adjudicator/endpoints/adjudicator-pmjay-hcx-nhcxpayerservice-wrapper-process-case",
+                "id": "adjudicator_pmjay_hcx_nhcxpayerservice_wrapper_process_case",
+                "summary": "Adjudicator: act on a case",
+                "title": "POST /pmjay/hcx/nhcxpayerservice/wrapper/process/case",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/biometric/endpoints/biometric-hcx-abha-biometric-auth-refresh-token",
+                "id": "biometric_hcx_abha_biometric_auth_refresh_token",
+                "summary": "Biometric auth refresh token",
+                "title": "GET /hcx/abha/biometric/auth/refresh/token",
+                "type": "operation"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01NA66EL3Yfcgbtx4Whjjix8",
+            "Name": "search",
+            "Input": {
+              "query": "NHCX claim submission endpoint",
+              "kind": "operation",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "NHCX claim submission endpoint",
+            "kind": "operation",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/biometric/endpoints/biometric-hcx-abha-biometric-auth-init",
+                "id": "biometric_hcx_abha_biometric_auth_init",
+                "summary": "Biometric auth init",
+                "title": "POST /hcx/abha/biometric/auth/init",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/biometric/endpoints/biometric-hcx-abha-biometric-auth-verify",
+                "id": "biometric_hcx_abha_biometric_auth_verify",
+                "summary": "Biometric auth verify",
+                "title": "POST /hcx/abha/biometric/auth/verify",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/adjudicator/endpoints/adjudicator-pmjay-hcx-nhcxpayerservice-wrapper-process-case",
+                "id": "adjudicator_pmjay_hcx_nhcxpayerservice_wrapper_process_case",
+                "summary": "Adjudicator: act on a case",
+                "title": "POST /pmjay/hcx/nhcxpayerservice/wrapper/process/case",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/biometric/endpoints/biometric-hcx-abha-biometric-auth-refresh-token",
+                "id": "biometric_hcx_abha_biometric_auth_refresh_token",
+                "summary": "Biometric auth refresh token",
+                "title": "GET /hcx/abha/biometric/auth/refresh/token",
+                "type": "operation"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01A8vNpfRmL5X1Pr3x9TdRZA",
+            "Name": "search",
+            "Input": {
+              "query": "submit claim",
+              "kind": "operation",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "submit claim",
+            "kind": "operation",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/claim/endpoints/claim-v1-claim-submit",
+                "id": "claim_v1_claim_submit",
+                "summary": "Provider: submit a claim",
+                "title": "POST /v1/claim/submit",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/claim/endpoints/claim-v1-claim-on-submit",
+                "id": "claim_v1_claim_on_submit",
+                "summary": "Payer: send the claim response",
+                "title": "POST /v1/claim/on_submit",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/status/endpoints/status-v1-search-submit",
+                "id": "status_v1_search_submit",
+                "summary": "Authorised entity: search for claim information",
+                "title": "POST /v1/search/submit",
+                "type": "operation"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_014BkRNgrCn29Y2961ugzLPr",
+            "Name": "get",
+            "Input": {
+              "id": "claim_v1_claim_submit"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "claim_v1_claim_submit"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "doc_path": "/docs/hiecm/v3/api/claim/endpoints/claim-v1-claim-submit",
+            "operation_id": "claim_v1_claim_submit",
+            "spec": {
+              "description": "Provider submits the final itemised Claim bundle (Claim.use claim), or a claim query response or resubmission; NHCX routes it to the payer.\n\n### Business purpose\n\nThe claim is where money actually moves. After treatment the provider assembles finalised bills, the complete document set and the preAuthRef, and asks the payer to adjudicate and settle. A well-prepared claim closes within days; a poorly prepared one cycles through queries and resubmissions for weeks. The endpoint gives hospitals a single structured channel for settlement requests and gives payers a complete evidentiary package against which to calculate the approved amount, apply deductions and trigger payment.\n\n### When to use\n\nUse it after discharge to claim payment for a case with an approved pre-authorisation. The same call answers a payer query on the claim: the workflow code in the header says which. A reprocess goes through `/v1/task/submit` instead.\n\n### Preconditions\n\n- An approved pre-authorisation exists, and no claim has been raised for the case yet.\n- The bundle is a FHIR `Claim` with `use` set to `claim` and the final bill amounts.\n- Discharge details and the required documents are attached. For PMJAY, so is proof of presence at discharge.\n- A valid access token, the payer's certificate and a fresh correlation ID.\n\n### Postconditions\n\n- NHCX answers `202` at once. That only means the message was accepted.\n- The payer's answers arrive later on `/v1/claim/on_submit`, possibly several times.\n- A `response.complete` closes the claim. Nothing more can be sent on it.\n\n### Common mistakes\n\n- Claiming more than the pre-authorisation approved, or items it did not include.\n- Answering a claim query as a new claim instead of a query reply.\n- Missing documents the payer asked for, which causes a query and delays payment.\n- Reusing the pre-authorisation's correlation ID for the claim.\n\n### Best practices\n\n- Start from the approved preauth payload: keep diagnosis and procedure entries, change Claim.use to claim, replace estimates with final amounts and add the full document set.\n- Reference preAuthRef and reuse the case number; key every submission on the correlation ID and persist workflow ID and use_case with it.\n- Check response.outcome on every callback; partial means the claim is still live, so keep monitoring the same correlation ID.\n- Validate supportingInfo value types and discharge codes before encrypting; the PAYR-1098, 1099 and 1501 to 1505 family rejects malformed supporting info.\n- For LAMA discharges send stratification with duration; for cyclic procedures send cycle information for every cycle with one biometric record per date (PAYR-1368, PAYR-1369).\n- Implement v1/error and use /v1/status with the claim's correlation ID when no callback arrives.\n\n### Related scenario\n\nA patient is discharged home after the corneal grafting approved under preAuthRef PREAUTH-HP-2026-78901. The billing desk takes the preauth bundle, sets Claim.use to claim, records discharge code DTH After Surgery, attaches the discharge summary, operative notes and final itemised bill of 13700 INR, and posts it to /v1/claim/submit under workflow 15 with use_case New and a new correlation ID. NHCX returns 202. The payer sends 25 and 28 as response.partial, then queries under 27 for a missing investigation report; the hospital answers under 151. Approval arrives under 26 as response.complete, and a payment notice follows on /v1/paymentnotice/request.\n\n### Specification\n\nChapter [Claim request](/docs/nhcx/v1/reference/fhir/claim-request) of the NHCX integration specification.",
+              "operationId": "claim_v1_claim_submit",
+              "parameters": [
+                {
+                  "description": "It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints.",
+                  "example": "Bearer <access token>",
+                  "in": "header",
+                  "name": "bearer_auth",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "example": {
+                      "payload": "eyJhbGciOiJSU0EtT0FFUC0yNTYiLCJlbmMiOiJBMjU2R0NNIiwieC1oY3gtc2VuZGVyX2NvZGUiOi4uLn0.encrypted_key.iv.ciphertext.tag"
+                    },
+                    "schema": {
+                      "properties": {
+                        "payload": {
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  }
+                },
+                "required": true
+              },
+              "responses": {
+                "202": {
+                  "content": {
+                    "application/json": {
+                      "example": {
+                        "api_call_id": "5d4c3b2a-1f0e-4d9c-8b7a-6f5e4d3c2b1a",
+                        "correlation_id": "5d4c3b2a-1f0e-4d9c-8b7a-6f5e4d3c2b1a",
+                        "error": {
+                          "code": "",
+                          "message": ""
+                        },
+                        "result": {
+                          "entity_type": "claim",
+                          "protocol_status": "request.queued",
+                          "recipient_code": "<payer participant code>",
+                          "sender_code": "<provider participant code>"
+                        },
+                        "timestamp": "19/03/2026 11:46:35:120"
+                      },
+                      "schema": {
+                        "properties": {
+                          "api_call_id": {
+                            "type": "string"
+                          },
+                          "correlation_id": {
+                            "type": "string"
+                          },
+                          "error": {
+                            "properties": {
+                              "code": {
+                                "type": "string"
+                              },
+                              "message": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "result": {
+                            "properties": {
+                              "entity_type": {
+                                "type": "string"
+                              },
+                              "protocol_status": {
+                                "type": "string"
+                              },
+                              "recipient_code": {
+                                "type": "string"
+                              },
+                              "sender_code": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "timestamp": {
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "NHCX returns HTTP 202 Accepted with a StatusSuccessResponse acknowledgement (entity_type claim) and forwards the request asynchronously."
+                }
+              },
+              "summary": "Provider: submit a claim",
+              "tags": [
+                "Claim"
+              ],
+              "x-abdm-atom": "nhcx.endpoint.claim-submit",
+              "x-abdm-use-case": "Claim",
+              "x-nhcx-protected-header": [
+                "alg",
+                "enc",
+                "x-hcx-sender_code",
+                "x-hcx-recipient_code",
+                "x-hcx-api_call_id",
+                "x-hcx-request_id",
+                "x-hcx-correlation_id",
+                "x-hcx-workflow_id",
+                "x-hcx-timestamp",
+                "x-hcx-status",
+                "x-hcx-ben-abha-id",
+                "x-hcx-use_case"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "The NHCX claim API endpoint is:\n\n**`POST /v1/claim/submit`**\n\nThis is the provider endpoint used to submit a final itemised claim to NHCX, which then routes it to the payer for adjudication and settlement.\n\n**Key details:**\n\n- **Authentication**: Requires a `bearer_auth` header with an access token\n- **Request body**: Encrypted FHIR Claim bundle (with `use` set to `claim`)\n- **Response**: HTTP `202 Accepted` with a status acknowledgement (claim is queued for processing)\n- **Payer response**: Arrives asynchronously on the callback `/v1/claim/on_submit`\n\n**Preconditions:**\n- An approved pre-authorisation exists\n- Bundle includes final bill amounts and required discharge documents\n- Valid access token and fresh correlation ID\n\n**Related endpoint:**\n- `POST /v1/claim/on_submit` — Used by payers to send the claim response\n\nSee the [Claim request](https://docs.abdm.gov.in/docs/nhcx/v1/reference/fhir/claim-request) section in the NHCX integration specification for full details.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "The NHCX claim API endpoint is:\n\n**`POST /v1/claim/submit`**\n\nThis is the provider endpoint used to submit a final itemised claim to NHCX, which then routes it to the payer for adjudication and settlement.\n\n**Key details:**\n\n- **Authentication**: Requires a `bearer_auth` header with an access token\n- **Request body**: Encrypted FHIR Claim bundle (with `use` set to `claim`)\n- **Response**: HTTP `202 Accepted` with a status acknowledgement (claim is queued for processing)\n- **Payer response**: Arrives asynchronously on the callback `/v1/claim/on_submit`\n\n**Preconditions:**\n- An approved pre-authorisation exists\n- Bundle includes final bill amounts and required discharge documents\n- Valid access token and fresh correlation ID\n\n**Related endpoint:**\n- `POST /v1/claim/on_submit` — Used by payers to send the claim response\n\nSee the [Claim request](https://docs.abdm.gov.in/docs/nhcx/v1/reference/fhir/claim-request) section in the NHCX integration specification for full details.",
+  "sources": [],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/api/biometric/endpoints/biometric-hcx-abha-biometric-auth-init\",\"id\":\"biometric_hcx_abha_biometric_auth_init\",\"summary\":\"Biometric auth init\",\"title\":\"POST /hcx/abha/biometric/auth/init\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/biometric/endpoints/biometric-hcx-abha-biometric-auth-verify\",\"id\":\"biometric_hcx_abha_biometric_auth_verify\",\"summary\":\"Biometric auth verify\",\"title\":\"POST /hcx/abha/biometric/auth/verify\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/adjudicator/endpoints/adjudicator-pmjay-hcx-nhcxpayerservice-wrapper-process-case\",\"id\":\"adjudicator_pmjay_hcx_nhcxpayerservice_wrapper_process_case\",\"summary\":\"Adjudicator: act on a case\",\"title\":\"POST /pmjay/hcx/nhcxpayerservice/wrapper/process/case\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/biometric/endpoints/biometric-hcx-abha-biometric-auth-refresh-token\",\"id\":\"biometric_hcx_abha_biometric_auth_refresh_token\",\"summary\":\"Biometric auth refresh token\",\"title\":\"GET /hcx/abha/biometric/auth/refresh/token\",\"type\":\"operation\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/api/biometric/endpoints/biometric-hcx-abha-biometric-auth-init\",\"id\":\"biometric_hcx_abha_biometric_auth_init\",\"summary\":\"Biometric auth init\",\"title\":\"POST /hcx/abha/biometric/auth/init\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/biometric/endpoints/biometric-hcx-abha-biometric-auth-verify\",\"id\":\"biometric_hcx_abha_biometric_auth_verify\",\"summary\":\"Biometric auth verify\",\"title\":\"POST /hcx/abha/biometric/auth/verify\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/adjudicator/endpoints/adjudicator-pmjay-hcx-nhcxpayerservice-wrapper-process-case\",\"id\":\"adjudicator_pmjay_hcx_nhcxpayerservice_wrapper_process_case\",\"summary\":\"Adjudicator: act on a case\",\"title\":\"POST /pmjay/hcx/nhcxpayerservice/wrapper/process/case\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/biometric/endpoints/biometric-hcx-abha-biometric-auth-refresh-token\",\"id\":\"biometric_hcx_abha_biometric_auth_refresh_token\",\"summary\":\"Biometric auth refresh token\",\"title\":\"GET /hcx/abha/biometric/auth/refresh/token\",\"type\":\"operation\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/api/claim/endpoints/claim-v1-claim-submit\",\"id\":\"claim_v1_claim_submit\",\"summary\":\"Provider: submit a claim\",\"title\":\"POST /v1/claim/submit\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/claim/endpoints/claim-v1-claim-on-submit\",\"id\":\"claim_v1_claim_on_submit\",\"summary\":\"Payer: send the claim response\",\"title\":\"POST /v1/claim/on_submit\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/status/endpoints/status-v1-search-submit\",\"id\":\"status_v1_search_submit\",\"summary\":\"Authorised entity: search for claim information\",\"title\":\"POST /v1/search/submit\",\"type\":\"operation\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"doc_path\":\"/docs/hiecm/v3/api/claim/endpoints/claim-v1-claim-submit\",\"operation_id\":\"claim_v1_claim_submit\",\"spec\":{\"description\":\"Provider submits the final itemised Claim bundle (Claim.use claim), or a claim query response or resubmission; NHCX routes it to the payer.\\n\\n### Business purpose\\n\\nThe claim is where money actually moves. After treatment the provider assembles finalised bills, the complete document set and the preAuthRef, and asks the payer to adjudicate and settle. A well-prepared claim closes within days; a poorly prepared one cycles through queries and resubmissions for weeks. The endpoint gives hospitals a single structured channel for settlement requests and gives payers a complete evidentiary package against which to calculate the approved amount, apply deductions and trigger payment.\\n\\n### When to use\\n\\nUse it after discharge to claim payment for a case with an approved pre-authorisation. The same call answers a payer query on the claim: the workflow code in the header says which. A reprocess goes through `/v1/task/submit` instead.\\n\\n### Preconditions\\n\\n- An approved pre-authorisation exists, and no claim has been raised for the case yet.\\n- The bundle is a FHIR `Claim` with `use` set to `claim` and the final bill amounts.\\n- Discharge details and the required documents are attached. For PMJAY, so is proof of presence at discharge.\\n- A valid access token, the payer's certificate and a fresh correlation ID.\\n\\n### Postconditions\\n\\n- NHCX answers `202` at once. That only means the message was accepted.\\n- The payer's answers arrive later on `/v1/claim/on_submit`, possibly several times.\\n- A `response.complete` closes the claim. Nothing more can be sent on it.\\n\\n### Common mistakes\\n\\n- Claiming more than the pre-authorisation approved, or items it did not include.\\n- Answering a claim query as a new claim instead of a query reply.\\n- Missing documents the payer asked for, which causes a query and delays payment.\\n- Reusing the pre-authorisation's correlation ID for the claim.\\n\\n### Best practices\\n\\n- Start from the approved preauth payload: keep diagnosis and procedure entries, change Claim.use to claim, replace estimates with final amounts and add the full document set.\\n- Reference preAuthRef and reuse the case number; key every submission on the correlation ID and persist workflow ID and use_case with it.\\n- Check response.outcome on every callback; partial means the claim is still live, so keep monitoring the same correlation ID.\\n- Validate supportingInfo value types and discharge codes before encrypting; the PAYR-1098, 1099 and 1501 to 1505 family rejects malformed supporting info.\\n- For LAMA discharges send stratification with duration; for cyclic procedures send cycle information for every cycle with one biometric record per date (PAYR-1368, PAYR-1369).\\n- Implement v1/error and use /v1/status with the claim's correlation ID when no callback arrives.\\n\\n### Related scenario\\n\\nA patient is discharged home after the corneal grafting approved under preAuthRef PREAUTH-HP-2026-78901. The billing desk takes the preauth bundle, sets Claim.use to claim, records discharge code DTH After Surgery, attaches the discharge summary, operative notes and final itemised bill of 13700 INR, and posts it to /v1/claim/submit under workflow 15 with use_case New and a new correlation ID. NHCX returns 202. The payer sends 25 and 28 as response.partial, then queries under 27 for a missing investigation report; the hospital answers under 151. Approval arrives under 26 as response.complete, and a payment notice follows on /v1/paymentnotice/request.\\n\\n### Specification\\n\\nChapter [Claim request](/docs/nhcx/v1/reference/fhir/claim-request) of the NHCX integration specification.\",\"operationId\":\"claim_v1_claim_submit\",\"parameters\":[{\"description\":\"It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints.\",\"example\":\"Bearer <access token>\",\"in\":\"header\",\"name\":\"bearer_auth\",\"required\":true,\"schema\":{\"type\":\"string\"}}],\"requestBody\":{\"content\":{\"application/json\":{\"example\":{\"payload\":\"eyJhbGciOiJSU0EtT0FFUC0yNTYiLCJlbmMiOiJBMjU2R0NNIiwieC1oY3gtc2VuZGVyX2NvZGUiOi4uLn0.encrypted_key.iv.ciphertext.tag\"},\"schema\":{\"properties\":{\"payload\":{\"type\":\"string\"}},\"type\":\"object\"}}},\"required\":true},\"responses\":{\"202\":{\"content\":{\"application/json\":{\"example\":{\"api_call_id\":\"5d4c3b2a-1f0e-4d9c-8b7a-6f5e4d3c2b1a\",\"correlation_id\":\"5d4c3b2a-1f0e-4d9c-8b7a-6f5e4d3c2b1a\",\"error\":{\"code\":\"\",\"message\":\"\"},\"result\":{\"entity_type\":\"claim\",\"protocol_status\":\"request.queued\",\"recipient_code\":\"<payer participant code>\",\"sender_code\":\"<provider participant code>\"},\"timestamp\":\"19/03/2026 11:46:35:120\"},\"schema\":{\"properties\":{\"api_call_id\":{\"type\":\"string\"},\"correlation_id\":{\"type\":\"string\"},\"error\":{\"properties\":{\"code\":{\"type\":\"string\"},\"message\":{\"type\":\"string\"}},\"type\":\"object\"},\"result\":{\"properties\":{\"entity_type\":{\"type\":\"string\"},\"protocol_status\":{\"type\":\"string\"},\"recipient_code\":{\"type\":\"string\"},\"sender_code\":{\"type\":\"string\"}},\"type\":\"object\"},\"timestamp\":{\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"NHCX returns HTTP 202 Accepted with a StatusSuccessResponse acknowledgement (entity_type claim) and forwards the request asynchronously.\"}},\"summary\":\"Provider: submit a claim\",\"tags\":[\"Claim\"],\"x-abdm-atom\":\"nhcx.endpoint.claim-submit\",\"x-abdm-use-case\":\"Claim\",\"x-nhcx-protected-header\":[\"alg\",\"enc\",\"x-hcx-sender_code\",\"x-hcx-recipient_code\",\"x-hcx-api_call_id\",\"x-hcx-request_id\",\"x-hcx-correlation_id\",\"x-hcx-workflow_id\",\"x-hcx-timestamp\",\"x-hcx-status\",\"x-hcx-ben-abha-id\",\"x-hcx-use_case\"]}}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T12:08:35.437Z",
+  "usage": {
+    "input_tokens": 50,
+    "output_tokens": 882,
+    "cache_read_input_tokens": 53500,
+    "cache_creation_input_tokens": 9180,
+    "num_turns": 5,
+    "duration_ms": 13743,
+    "cost_usd_equivalent": 0.02817
+  }
+}

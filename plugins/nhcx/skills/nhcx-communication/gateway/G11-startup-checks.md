@@ -152,3 +152,4 @@ readyz():
 
 #### G11U. USED BY
 - Gateway: [G1. Embedding](G1-embedding.md), [G3. Session Token](G3-session-token.md), [G4. Registry and Certificates](G4-registry.md)
+- Tests: [T2. Test Runners](../tests/T2-test-runners.md)

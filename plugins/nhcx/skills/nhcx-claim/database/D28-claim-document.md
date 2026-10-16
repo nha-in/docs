@@ -24,7 +24,7 @@ The paths that create rows:
 
 A requirement must be one the payer named for that leg, from the auth-requirements ruling (D15) when there is one, else the package master (D11). The replace step deletes by `claim_id` and `code` only, whatever the stage.
 
-Common codes offered on every upload: `CD` Clinical document (the default), `DIA` Diagnostic and laboratory reports, `RAD` Radiology / scan reports, `PRE` Doctor's prescription notes, `CER` Medical certificate / referral, `EST` Cost estimate, `MB` Medical and pharmacy bills, `INV` Final hospital invoice, `OTR` Operation theatre notes, `ICU` ICU chart, `IMP` Implant invoice and sticker, `POI` Proof of identity, `KYC` KYC / bank proof, `FCF` Filled claim form, `PAU` Pre-authorisation approval letter, `ODN` Other document [PAYER](../references/PAYERS.md#markers). `HDS` Hospital discharge summary is offered on claim uploads only, never on a pre-authorisation.
+Common codes offered on every upload: `CD` Clinical document (the default), `HDS` Hospital discharge summary, `DIA` Diagnostic and laboratory reports, `RAD` Radiology / scan reports, `PRE` Doctor's prescription notes, `CER` Medical certificate / referral, `EST` Cost estimate, `MB` Medical and pharmacy bills, `INV` Final hospital invoice, `OTR` Operation theatre notes, `ICU` ICU chart, `IMP` Implant invoice and sticker, `POI` Proof of identity, `KYC` KYC / bank proof, `FCF` Filled claim form, `PAU` Pre-authorisation approval letter, `ODN` Other document [PAYER](../references/PAYERS.md#markers).
 
 **Read.**
 
@@ -59,6 +59,6 @@ Common codes offered on every upload: `CD` Clinical document (the default), `DIA
 
 #### D28U. USED BY
 - Screens: [S11. Claim Submission](../screens/S11-claim-submission.md)
-- APIs: [A17. Claim State](../apis/A17-claim-state.md)
+- APIs: [A17. Claim State](../apis/A17-claim-state.md), [A18. Biometric Authentication](../apis/A18-biometric-authentication.md)
 - FHIR: [F7. QuestionnaireResponse](../fhir/F7-questionnaireresponse.md), [F8. Claim](../fhir/F8-claim.md), [F10. Task (claim actions)](../fhir/F10-task-claim-actions.md)
 - Database: [D9. claim](D9-claim.md), [D15. claim_auth_requirement](D15-claim-auth-requirement.md), [D17. claim_form_answer](D17-claim-form-answer.md), [D18. claim_preauth](D18-claim-preauth.md), [D23. claim_query](D23-claim-query.md), [D29. claim_enquiry](D29-claim-enquiry.md)

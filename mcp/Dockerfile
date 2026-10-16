@@ -6,9 +6,15 @@ ARG TARGETOS
 ARG TARGETARCH
 WORKDIR /src
 COPY go.mod go.sum ./
-RUN go mod download
-COPY . .
-RUN CGO_ENABLED=0 GOOS=$TARGETOS GOARCH=$TARGETARCH go build -o /docs-mcp ./cmd/docs-mcp
+RUN --mount=type=cache,target=/go/pkg/mod go mod download
+# Only the Go sources: catalogue.db changes on every catalogue edit and is
+# copied into the final stage, so it must not invalidate the compile.
+COPY cmd ./cmd
+COPY internal ./internal
+# The cache mounts keep modules and compiled packages across builds on one
+# builder; the registry cache in deploy/nha/deploy.sh carries layers across machines.
+RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build \
+    CGO_ENABLED=0 GOOS=$TARGETOS GOARCH=$TARGETARCH go build -o /docs-mcp ./cmd/docs-mcp
 
 FROM gcr.io/distroless/static-debian12
 COPY --from=build /docs-mcp /docs-mcp

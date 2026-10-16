@@ -1,0 +1,260 @@
+{
+  "case_id": "define-hiecm-m1-abha-address-rules-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "what is a valid abha address? can it just be the patient's mobile number?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01CEUSFhihuoKyT5BXsawPD5",
+            "Name": "search",
+            "Input": {
+              "query": "ABHA address valid format",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "ABHA address valid format",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/troubleshooting/consent-stuck-requested#consent-stuck-requested",
+                "id": "hiecm.troubleshooting.consent-stuck-requested",
+                "summary": "A consent request has stayed in Requested and never moved to Granted or Denied.",
+                "title": "The consent request is stuck in Requested",
+                "type": "troubleshooting"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-manager-hiu-hip/01-p2-get-hip-v3-link-patient-links#m2-get-all-link-records",
+                "id": "hiecm.endpoint.m2-get-all-link-records",
+                "summary": "Lists every care context already linked to an ABHA address.",
+                "title": "GET All Link records",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#discovery",
+                "id": "hiecm.glossary.discovery",
+                "summary": "The step where a patient's app asks a facility whether it holds records for that patient.",
+                "title": "Discovery, finding whether a facility holds records",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/notifications-and-patient-apps#subscribing",
+                "id": "nhcx.flow.notification-subscribe",
+                "summary": "Have a patient's health record app receive plain-language updates on their pre-authorisations, claims and payments, by subscribing each time the patient logs...",
+                "title": "Subscribe a patient app to notifications",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-1013",
+                "id": "hiecm.error.abdm-1013",
+                "summary": "ABDM does not accept the ABHA number you sent, usually because it is not 14 plain digits.",
+                "title": "ABDM-1013, the ABHA number is not valid",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/03-m1-post-v3-phr-web-login-abha-verify-mobile-otp#m1-phr-verify",
+                "id": "hiecm.endpoint.m1-phr-verify",
+                "summary": "Completes an ABHA address login and returns the X-token for the profile, card and QR calls.",
+                "title": "Verify OTP or biometric for ABHA address login",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m3#m3-request-consent",
+                "id": "hiecm.flow.m3-request-consent",
+                "summary": "Ask a patient, by ABHA address, for permission to read records held elsewhere, and collect the consent artefact ids once they grant it.",
+                "title": "Request consent for a patient's health records",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#abha-address",
+                "id": "shared.glossary.abha-address",
+                "summary": "The readable name, such as name@sbx, that ABDM uses to route a person's health records.",
+                "title": "ABHA address",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/api/other/endpoints/other-v1-notification-subscribe",
+                "id": "nhcx.endpoint.notification-subscribe",
+                "summary": "Let a patient's health record app receive plain-language updates about that patient's insurance claims.",
+                "title": "POST /v1/notification/subscribe",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.concept.notifications",
+                "summary": "A patient's health record app subscribes on login to claim events for that person, and the exchange then pushes short readable updates to the app, with only ...",
+                "title": "Notifications to patient apps",
+                "type": "concept"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01PeyHzopAJc4qzbB7xWWjK8",
+            "Name": "get",
+            "Input": {
+              "id": "shared.glossary.abha-address"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "shared.glossary.abha-address"
+          },
+          "output": {
+            "body": "# ABHA address\n\n## In plain words\n\nAn ABHA address looks like an email address, for example `ajeet123@abdm`\non production or `something@sbx` on the sandbox. It is the handle a\nperson shares at a facility, and the identifier that care contexts are\nlinked against.\n\nNHA calls this the PHR address in much of its own documentation, and\nsays outright that the two terms mean the same thing. Older material\nuses the `@ndhm` suffix from before the mission was renamed.\n\nThe part after the `@` is the domain of the HIE-CM holding the address.\nThat is where the value for the `X-CM-ID` header comes from.\n\nEvery ABHA number is issued a default address automatically, which is the\nfourteen digits followed by the suffix. People pick a memorable one\ninstead, subject to NHA's policy: at least four characters, no leading\ndigit, and no leading or trailing dot.\n\n## Before you start\n\nNothing. A glossary entry assumes no prior reading.\n\n## What happens\n\nNothing happens here. This entry defines a term, it does not describe a call.\n\n## How you know it worked\n\nYou have understood this when you can say what ABHA address is without using the acronym itself.\n\n## When it goes wrong\n\nThe suffix differs by environment. An address ending `@sbx` will not work against production, and the mismatch reads as a not-found rather than as an environment error.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/getting-started/glossary#abha-address",
+            "gateway": "shared",
+            "id": "shared.glossary.abha-address",
+            "milestone": "n/a",
+            "summary": "The readable name, such as name@sbx, that ABDM uses to route a person's health records.",
+            "title": "ABHA address",
+            "type": "glossary"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01BRvxZaun3BUmAaoX3GfjCG",
+            "Name": "get",
+            "Input": {
+              "id": "hiecm.error.abdm-1013"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "hiecm.error.abdm-1013"
+          },
+          "output": {
+            "body": "# ABDM-1013, the ABHA number is not valid\n\n## In plain words\n\nABDM does not accept the [ABHA number](/docs/hiecm/v3/getting-started/glossary#abha-number) you sent. The message is \"Invalid ABHA Number\". In the [HIP](/docs/hiecm/v3/getting-started/glossary#hip) initiated link request, `abhaNumber` is 14 digits and nothing else, matching `^\\d{14}$`.\n\n## When it goes wrong\n\nSend the 14 digits with no hyphens or spaces. Check that the field carries a number, not an [ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address). If the format is right, the account may not exist in the environment you are calling.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-1013",
+            "gateway": "hiecm",
+            "id": "hiecm.error.abdm-1013",
+            "milestone": "M2",
+            "summary": "ABDM does not accept the ABHA number you sent, usually because it is not 14 plain digits.",
+            "title": "ABDM-1013, the ABHA number is not valid",
+            "type": "error"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "No, an ABHA address cannot just be a patient's mobile number. Here's the distinction:\n\nFrom the ABDM documentation (glossary page):\n\n**ABHA address** is a readable identifier in email-like format, e.g., `ajeet123@sbx` (sandbox) or `ajeet123@abdm` (production). It must follow these rules:\n- At least 4 characters\n- No leading digit\n- No leading or trailing dot\n- Ends with a domain suffix like `@sbx` or `@abdm`\n\nEvery patient gets issued a default ABHA address automatically, which is their 14-digit **ABHA number** followed by the suffix (e.g., `12345678901234@sbx`), but they can choose a memorable one instead.\n\n**ABHA number** is the underlying 14-digit identifier (plain digits only, matching `^\\d{14}$`). This is what you send in API calls that expect an `abhaNumber` field.\n\nSo to clarify:\n- **ABHA address** = human-readable handle (name-like, not a phone number)\n- **ABHA number** = 14-digit identifier (could be any 14 digits, not necessarily related to the patient's phone)\n\nMobile numbers are patient contact information, but they're separate from ABHA identifiers. You'd need to use one of the actual ABHA address or number formats for ABDM operations.\n\n*Source: [ABHA address glossary](https://abdm.ndhm.gov.in/docs/hiecm/v3/getting-started/glossary#abha-address) and [ABDM-1013 error](https://abdm.ndhm.gov.in/docs/hiecm/v3/api/m2/errors#abdm-1013) page on the ABDM developer portal.*",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "No, an ABHA address cannot just be a patient's mobile number. Here's the distinction:\n\nFrom the ABDM documentation (glossary page):\n\n**ABHA address** is a readable identifier in email-like format, e.g., `ajeet123@sbx` (sandbox) or `ajeet123@abdm` (production). It must follow these rules:\n- At least 4 characters\n- No leading digit\n- No leading or trailing dot\n- Ends with a domain suffix like `@sbx` or `@abdm`\n\nEvery patient gets issued a default ABHA address automatically, which is their 14-digit **ABHA number** followed by the suffix (e.g., `12345678901234@sbx`), but they can choose a memorable one instead.\n\n**ABHA number** is the underlying 14-digit identifier (plain digits only, matching `^\\d{14}$`). This is what you send in API calls that expect an `abhaNumber` field.\n\nSo to clarify:\n- **ABHA address** = human-readable handle (name-like, not a phone number)\n- **ABHA number** = 14-digit identifier (could be any 14 digits, not necessarily related to the patient's phone)\n\nMobile numbers are patient contact information, but they're separate from ABHA identifiers. You'd need to use one of the actual ABHA address or number formats for ABDM operations.\n\n*Source: [ABHA address glossary](https://abdm.ndhm.gov.in/docs/hiecm/v3/getting-started/glossary#abha-address) and [ABDM-1013 error](https://abdm.ndhm.gov.in/docs/hiecm/v3/api/m2/errors#abdm-1013) page on the ABDM developer portal.*",
+  "sources": [
+    {
+      "id": "shared.glossary.abha-address",
+      "title": "ABHA address",
+      "url": "/docs/hiecm/v3/getting-started/glossary#abha-address"
+    },
+    {
+      "id": "hiecm.error.abdm-1013",
+      "title": "ABDM-1013, the ABHA number is not valid",
+      "url": "/docs/hiecm/v3/api/m2/errors#abdm-1013"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/troubleshooting/consent-stuck-requested#consent-stuck-requested\",\"id\":\"hiecm.troubleshooting.consent-stuck-requested\",\"summary\":\"A consent request has stayed in Requested and never moved to Granted or Denied.\",\"title\":\"The consent request is stuck in Requested\",\"type\":\"troubleshooting\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-consent-manager-hiu-hip/01-p2-get-hip-v3-link-patient-links#m2-get-all-link-records\",\"id\":\"hiecm.endpoint.m2-get-all-link-records\",\"summary\":\"Lists every care context already linked to an ABHA address.\",\"title\":\"GET All Link records\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#discovery\",\"id\":\"hiecm.glossary.discovery\",\"summary\":\"The step where a patient's app asks a facility whether it holds records for that patient.\",\"title\":\"Discovery, finding whether a facility holds records\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/nhcx/v1/reference/notifications-and-patient-apps#subscribing\",\"id\":\"nhcx.flow.notification-subscribe\",\"summary\":\"Have a patient's health record app receive plain-language updates on their pre-authorisations, claims and payments, by subscribing each time the patient logs...\",\"title\":\"Subscribe a patient app to notifications\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-1013\",\"id\":\"hiecm.error.abdm-1013\",\"summary\":\"ABDM does not accept the ABHA number you sent, usually because it is not 14 plain digits.\",\"title\":\"ABDM-1013, the ABHA number is not valid\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/03-m1-post-v3-phr-web-login-abha-verify-mobile-otp#m1-phr-verify\",\"id\":\"hiecm.endpoint.m1-phr-verify\",\"summary\":\"Completes an ABHA address login and returns the X-token for the profile, card and QR calls.\",\"title\":\"Verify OTP or biometric for ABHA address login\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m3#m3-request-consent\",\"id\":\"hiecm.flow.m3-request-consent\",\"summary\":\"Ask a patient, by ABHA address, for permission to read records held elsewhere, and collect the consent artefact ids once they grant it.\",\"title\":\"Request consent for a patient's health records\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#abha-address\",\"id\":\"shared.glossary.abha-address\",\"summary\":\"The readable name, such as name@sbx, that ABDM uses to route a person's health records.\",\"title\":\"ABHA address\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/nhcx/v1/api/other/endpoints/other-v1-notification-subscribe\",\"id\":\"nhcx.endpoint.notification-subscribe\",\"summary\":\"Let a patient's health record app receive plain-language updates about that patient's insurance claims.\",\"title\":\"POST /v1/notification/subscribe\",\"type\":\"endpoint\"},{\"doc_url\":\"\",\"id\":\"nhcx.concept.notifications\",\"summary\":\"A patient's health record app subscribes on login to claim events for that person, and the exchange then pushes short readable updates to the app, with only ...\",\"title\":\"Notifications to patient apps\",\"type\":\"concept\"}]}\n{\"body\":\"# ABHA address\\n\\n## In plain words\\n\\nAn ABHA address looks like an email address, for example `ajeet123@abdm`\\non production or `something@sbx` on the sandbox. It is the handle a\\nperson shares at a facility, and the identifier that care contexts are\\nlinked against.\\n\\nNHA calls this the PHR address in much of its own documentation, and\\nsays outright that the two terms mean the same thing. Older material\\nuses the `@ndhm` suffix from before the mission was renamed.\\n\\nThe part after the `@` is the domain of the HIE-CM holding the address.\\nThat is where the value for the `X-CM-ID` header comes from.\\n\\nEvery ABHA number is issued a default address automatically, which is the\\nfourteen digits followed by the suffix. People pick a memorable one\\ninstead, subject to NHA's policy: at least four characters, no leading\\ndigit, and no leading or trailing dot.\\n\\n## Before you start\\n\\nNothing. A glossary entry assumes no prior reading.\\n\\n## What happens\\n\\nNothing happens here. This entry defines a term, it does not describe a call.\\n\\n## How you know it worked\\n\\nYou have understood this when you can say what ABHA address is without using the acronym itself.\\n\\n## When it goes wrong\\n\\nThe suffix differs by environment. An address ending `@sbx` will not work against production, and the mismatch reads as a not-found rather than as an environment error.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#abha-address\",\"gateway\":\"shared\",\"id\":\"shared.glossary.abha-address\",\"milestone\":\"n/a\",\"summary\":\"The readable name, such as name@sbx, that ABDM uses to route a person's health records.\",\"title\":\"ABHA address\",\"type\":\"glossary\"}\n{\"body\":\"# ABDM-1013, the ABHA number is not valid\\n\\n## In plain words\\n\\nABDM does not accept the [ABHA number](/docs/hiecm/v3/getting-started/glossary#abha-number) you sent. The message is \\\"Invalid ABHA Number\\\". In the [HIP](/docs/hiecm/v3/getting-started/glossary#hip) initiated link request, `abhaNumber` is 14 digits and nothing else, matching `^\\\\d{14}$`.\\n\\n## When it goes wrong\\n\\nSend the 14 digits with no hyphens or spaces. Check that the field carries a number, not an [ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address). If the format is right, the account may not exist in the environment you are calling.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-1013\",\"gateway\":\"hiecm\",\"id\":\"hiecm.error.abdm-1013\",\"milestone\":\"M2\",\"summary\":\"ABDM does not accept the ABHA number you sent, usually because it is not 14 plain digits.\",\"title\":\"ABDM-1013, the ABHA number is not valid\",\"type\":\"error\"}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T11:58:50.292Z",
+  "usage": {
+    "input_tokens": 30,
+    "output_tokens": 1065,
+    "cache_read_input_tokens": 29076,
+    "cache_creation_input_tokens": 7581,
+    "num_turns": 4,
+    "duration_ms": 14540,
+    "cost_usd_equivalent": 0.023424600000000004
+  }
+}

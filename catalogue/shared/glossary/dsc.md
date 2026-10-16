@@ -17,7 +17,7 @@ sources:
       that provide software to patients or health facilities and names
       them the primary users of the sandbox.
 related:
-  glossary: [shared.glossary.hrp]
+  glossary: [hiecm.glossary.hrp]
   decisions: [shared.decision.role-model-two-axes]
 ---
 

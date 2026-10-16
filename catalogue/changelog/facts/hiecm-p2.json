@@ -1212,27 +1212,27 @@
     "phr"
   ],
   "sources": {
-    "catalogue/openapi/.raw/nha-2026-09-16/hiecm/consent-management-data-flow.yaml": {
+    "nha-2026-09-16/hiecm/consent-management-data-flow.yaml": {
       "fetched": "2026-09-16",
       "hash": "sha256:4b0af51af2e2b5bfbf08f5e8745a940f59c550f8a1e4600c970c526f27bc8718"
     },
-    "catalogue/openapi/.raw/nha-2026-09-16/hiecm/gateway.yaml": {
+    "nha-2026-09-16/hiecm/gateway.yaml": {
       "fetched": "2026-09-16",
       "hash": "sha256:d3bc599054c2570a50818ca54906c44cf652ad6f813473e8ac243667da4e9300"
     },
-    "catalogue/openapi/.raw/nha-2026-09-16/hiecm/hip-initiated-linking.yaml": {
+    "nha-2026-09-16/hiecm/hip-initiated-linking.yaml": {
       "fetched": "2026-09-16",
       "hash": "sha256:8c4036b49028e243d0687d5ddcde6fa025d21d63fdaf90826eb8159f8485382b"
     },
-    "catalogue/openapi/.raw/nha-2026-09-16/hiecm/patient-share.yaml": {
+    "nha-2026-09-16/hiecm/patient-share.yaml": {
       "fetched": "2026-09-16",
       "hash": "sha256:8de274b417bbb860e87718adc299bf626c093cd91435fdcd095fa8748b28523a"
     },
-    "catalogue/openapi/.raw/nha-2026-09-16/hiecm/user-initiated-linking.yaml": {
+    "nha-2026-09-16/hiecm/user-initiated-linking.yaml": {
       "fetched": "2026-09-16",
       "hash": "sha256:848439c9e1fd123e706b7d42b7cc1db365a7d779ff65d298301dfb5fbf7a3e66"
     },
-    "catalogue/openapi/.raw/nha-2026-09-16/phr/PHR and Locker Swagger.yaml": {
+    "nha-2026-09-16/phr/PHR and Locker Swagger.yaml": {
       "fetched": "2026-09-16",
       "hash": "sha256:a7e1b7e0b56b75297623057678cf307f21ecdbfbc9ebdb022dc67df78540f6d5"
     }

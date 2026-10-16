@@ -13,6 +13,7 @@ package server_test
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"log/slog"
 	"net/http"
@@ -184,6 +185,25 @@ func TestChatEndpointRateLimit(t *testing.T) {
 	if second.Code != 429 {
 		t.Fatalf("second request = %d, want 429", second.Code)
 	}
+	// The refusal names the limit and the wait, in the body for the panel
+	// and in Retry-After for any other client.
+	var body struct {
+		Error             string `json:"error"`
+		Limit             string `json:"limit"`
+		RetryAfterSeconds int    `json:"retry_after_seconds"`
+	}
+	if err := json.Unmarshal(second.Body.Bytes(), &body); err != nil {
+		t.Fatal(err)
+	}
+	if body.Limit != "minute" || body.RetryAfterSeconds < 1 || body.RetryAfterSeconds > 60 {
+		t.Fatalf("429 body = %+v, want limit minute and a wait within the minute", body)
+	}
+	if !strings.Contains(body.Error, "minute") {
+		t.Fatalf("429 error = %q, want it to say the minute limit", body.Error)
+	}
+	if ra := second.Header().Get("Retry-After"); ra == "" {
+		t.Fatal("429 has no Retry-After header")
+	}
 }
 
 func TestChatEndpointPreflight(t *testing.T) {
@@ -263,5 +283,91 @@ func TestChatSkillsReadsTheIndex(t *testing.T) {
 	}
 	if _, ok := get("abdm-no-such-module", "debug"); ok {
 		t.Error("a skill that does not exist was found")
+	}
+}
+
+// throttledModel fails every call the way Bedrock does once its own retries
+// are spent.
+type throttledModel struct{}
+
+func (throttledModel) ErrorCode() string { return "ThrottlingException" }
+func (throttledModel) Error() string     { return "ThrottlingException: too many requests" }
+
+func (m throttledModel) Stream(context.Context, string, []chat.ToolDef, []chat.Message, int, func(string)) (chat.Reply, error) {
+	return chat.Reply{}, fmt.Errorf("bedrock model: converse stream: %w", m)
+}
+
+// A turn that ends without an answer says why, to the panel in the error
+// event and to the log in one answer_missing line, and the message the
+// reader sees is the one it always was.
+func TestChatErrorEventCarriesAReason(t *testing.T) {
+	var buf bytes.Buffer
+	prior := slog.Default()
+	slog.SetDefault(slog.New(slog.NewTextHandler(&buf, nil)))
+	defer slog.SetDefault(prior)
+
+	h := testHandler(t, &chat.Service{Model: throttledModel{}, MaxTokens: 100}, chat.NewLimiter(100, 1000))
+	rec := httptest.NewRecorder()
+	h.ServeHTTP(rec, httptest.NewRequest("POST", "/api/chat",
+		strings.NewReader(`{"turns":[{"role":"user","text":"how do I link a care context"}]}`)))
+
+	want := `event: error
+data: {"message":"the assistant hit a problem, try again shortly","reason":"throttle"}
+`
+	if !strings.Contains(rec.Body.String(), want) {
+		t.Fatalf("stream = %q, want it to carry %q", rec.Body.String(), want)
+	}
+	if n := strings.Count(buf.String(), "msg=answer_missing reason=throttle"); n != 1 {
+		t.Fatalf("answer_missing reason=throttle logged %d times, want 1:\n%s", n, buf.String())
+	}
+}
+
+// A reader who left is not a model failure, whatever error the loop saw on
+// its way out.
+func TestChatLogsAReaderWhoLeft(t *testing.T) {
+	var buf bytes.Buffer
+	prior := slog.Default()
+	slog.SetDefault(slog.New(slog.NewTextHandler(&buf, nil)))
+	defer slog.SetDefault(prior)
+
+	h := testHandler(t, &chat.Service{Model: throttledModel{}, MaxTokens: 100}, chat.NewLimiter(100, 1000))
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+	req := httptest.NewRequest("POST", "/api/chat",
+		strings.NewReader(`{"turns":[{"role":"user","text":"how do I link a care context"}]}`)).WithContext(ctx)
+	h.ServeHTTP(httptest.NewRecorder(), req)
+
+	if !strings.Contains(buf.String(), "msg=answer_missing reason=client_gone") {
+		t.Fatalf("no answer_missing reason=client_gone in the log:\n%s", buf.String())
+	}
+}
+
+// The limiter's refusal is logged with its reason, and its body is the three
+// fields the panel already reads and nothing else.
+func TestChatRateLimitLogsItsReasonAndKeepsItsBody(t *testing.T) {
+	var buf bytes.Buffer
+	prior := slog.Default()
+	slog.SetDefault(slog.New(slog.NewTextHandler(&buf, nil)))
+	defer slog.SetDefault(prior)
+
+	h := testHandler(t, &chat.Service{Model: &scriptedModel{}, MaxTokens: 100}, chat.NewLimiter(1, 1000))
+	var last *httptest.ResponseRecorder
+	for range 2 {
+		last = httptest.NewRecorder()
+		h.ServeHTTP(last, httptest.NewRequest("POST", "/api/chat",
+			strings.NewReader(`{"turns":[{"role":"user","text":"hi"}]}`)))
+	}
+	if last.Code != 429 {
+		t.Fatalf("second request = %d, want 429", last.Code)
+	}
+	var body map[string]any
+	if err := json.Unmarshal(last.Body.Bytes(), &body); err != nil {
+		t.Fatal(err)
+	}
+	if len(body) != 3 || body["error"] == nil || body["limit"] != "minute" || body["retry_after_seconds"] == nil {
+		t.Fatalf("429 body = %v, want exactly error, limit and retry_after_seconds", body)
+	}
+	if n := strings.Count(buf.String(), "msg=answer_missing reason=rate_limit"); n != 1 {
+		t.Fatalf("answer_missing reason=rate_limit logged %d times, want 1:\n%s", n, buf.String())
 	}
 }

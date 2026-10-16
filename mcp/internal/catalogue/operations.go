@@ -32,6 +32,10 @@ type Operation struct {
 	Params        []string
 	ResponseCodes []string
 	ErrorCodes    []string
+	// Callback marks an operation from the spec's webhooks: a call ABDM makes
+	// to your bridge, at Path relative to your callback URL, rather than one
+	// you make.
+	Callback bool
 }
 
 // ChunkOperation is an operation as one flat search chunk: method and path,
@@ -55,16 +59,24 @@ func ChunkOperation(op Operation) Chunk {
 	return Chunk{AtomID: op.OperationID, Heading: "operation", Text: b.String(), Kind: "operation"}
 }
 
-// specGateway is the directory under openapi/ a specification sits in.
+// specGateway is the gateway a specification belongs to: the folder holding
+// its openapi/ (catalogue/hiecm/openapi/v3/...), or, where a gateway's specs
+// have not moved yet, the folder under openapi/ (catalogue/openapi/nhcx/v1/...).
 func specGateway(specPath string) string {
 	parts := strings.Split(filepath.ToSlash(specPath), "/")
-	for i := 0; i+1 < len(parts); i++ {
-		if parts[i] == "openapi" {
-			return parts[i+1]
+	for i := len(parts) - 2; i >= 0; i-- {
+		if parts[i] != "openapi" {
+			continue
 		}
+		if i > 0 && gatewayNames[parts[i-1]] {
+			return parts[i-1]
+		}
+		return parts[i+1]
 	}
 	return ""
 }
+
+var gatewayNames = map[string]bool{"hiecm": true, "nhcx": true, "uhi": true, "shared": true}
 
 // SpecErrorCode is one error code found in a specification's 4xx/5xx
 // response examples: the code as the gateway returns it, the recorded
@@ -460,8 +472,25 @@ func ParseSpec(specPath string) (SpecData, error) {
 		}
 	}
 	gateway := specGateway(specPath)
-	var ops []Operation
+	// Callbacks are OpenAPI 3.1 webhooks in the module spec that owns them.
+	// They are read with the paths, because an integrator has to receive
+	// them: left out, every M2 callback was unreachable through search and
+	// get, and its body was nowhere an agent could read it.
+	type entry struct {
+		path     string
+		item     *openapi3.PathItem
+		callback bool
+	}
+	var entries []entry
 	for path, item := range doc.Paths.Map() {
+		entries = append(entries, entry{path, item, false})
+	}
+	for path, item := range doc.Webhooks {
+		entries = append(entries, entry{path, item, true})
+	}
+	var ops []Operation
+	for _, e := range entries {
+		path, item := e.path, e.item
 		for method, op := range item.Operations() {
 			if op.OperationID == "" {
 				return SpecData{}, fmt.Errorf("%s: %s %s has no operationId; record a correction per openapi-ingest", specPath, method, path)
@@ -546,6 +575,7 @@ func ParseSpec(specPath string) (SpecData, error) {
 				SpecJSON:          frag,
 				RequestSchemaJSON: reqSchema,
 				RequiredParams:    required,
+				Callback:          e.callback,
 			})
 		}
 	}

@@ -1,0 +1,13 @@
+## Send a message to the EUA {/* #consultation-on-message-to-eua */}
+
+The [HSPA](/docs/uhi/v1/getting-started/glossary#hspa) sends an in-app chat message to the [EUA](/docs/uhi/v1/getting-started/glossary#eua)'s [`consumer_uri`](/docs/uhi/v1/getting-started/glossary#consumer-uri). The message carries its sender, its receiver, the content and a timestamp. Every EUA must expose this endpoint. See [Physical Consultation](/docs/uhi/v1/services/consultation#journey-4-post-fulfilment).
+
+<AgentOnly>
+**Before you start.** As the HSPA, an order with this EUA. Sign with your own `Authorization` header and keep the order's `transaction_id`.
+
+**What happens.** The content goes in `content_value`, Base64 encoded, with its kind in `content_type`, such as `text`. The EUA returns an `ACK` at once, then shows the message.
+
+**How you know it worked.** An HTTP 200 carrying `ACK` from the EUA.
+
+**When it goes wrong.** As the EUA, check the signature against the HSPA's key from the [registry lookup](/docs/uhi/v1/concepts/registry-lookup) before you show the message.
+</AgentOnly>

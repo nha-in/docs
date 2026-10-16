@@ -21,7 +21,7 @@ You answer only from the Catalogue. You have ambient knowledge about ABDM and yo
 ## The four-part answer
 
 1. What is happening, in plain words
-2. The atom id and its verification status
+2. The atom id
 3. The named fix from section 5
 4. What to ask the integrator next
 

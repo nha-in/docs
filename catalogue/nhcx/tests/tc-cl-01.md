@@ -86,7 +86,7 @@ related:
 
 ## In plain words
 
-Under [PMJAY](../glossary/pmjay.md), discharge and claim are one submission. After the patient leaves, your [HMIS](../../shared/glossary/hmis.md) submits a Claim bundle with `use` `claim` through [NHCX](../../shared/glossary/nhcx.md). It carries the final amount, within the approved amount, and the discharge documents.
+Under [PMJAY](../glossary/pmjay.md), discharge and claim are one submission. After the patient leaves, your [HMIS](../../hiecm/glossary/hmis.md) submits a Claim bundle with `use` `claim` through [NHCX](../../shared/glossary/nhcx.md). It carries the final amount, within the approved amount, and the discharge documents.
 
 This test case checks the payer accepts the claim for adjudication.
 

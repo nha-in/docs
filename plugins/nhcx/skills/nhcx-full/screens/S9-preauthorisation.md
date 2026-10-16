@@ -57,8 +57,9 @@ Callback: [C8. Enquiry Reply](../callbacks/C8-enquiry-on-submit.md)
 
 **Forms the payer requires.** The payer's questionnaires for this procedure set, each shown as a form to answer. The card is left out when no form applies, and it needs the insurance plan (package master, S7) to have been fetched. The forms listed are:
 - With the payer's auth-requirements ruling in: the questionnaires the ruling names for the pre-authorisation.
-- Without a ruling: every questionnaire the package master attaches to the quoted packages, such as each package's treatment-guideline form.
-- In both cases: the policy's own forms (for example the authentication consent), added when not already listed. The same policy forms are offered again on the claim leg (S11).
+- In both cases: every questionnaire the package master attaches to the quoted packages, such as each package's treatment-guideline (STG) form. The ruling adds to these, it does not replace them, and the same package forms are offered again on the claim leg (S11) [PAYER](../references/PAYERS.md#markers).
+- In both cases: the policy's own forms, added when not already listed. The same policy forms are offered again on the claim leg (S11).
+- Without a stage-Preauth token on the Verification tab (S18): the scheme's Authentication Consent form, even when nothing lists it. Its question is an attachment (the signed declaration), so the desk uploads it here; the pre-authorisation is refused PAYR-1256 without it [PAYER](../references/PAYERS.md#markers).
 
 Each form is one accordion item titled `<form title> - <answered>/<total> answered`. Several items can be open at once. Inside each item, the questions sit in a two-column grid. Each field is labelled with the question text, or with its question id when the question has no text. Each question renders by its declared answer type:
 
@@ -90,11 +91,12 @@ API: [A4. Pre-auth Submit](../apis/A4-preauth-submit.md) (answered forms)
 
 *Everything attached.* Table columns: File (opens inline in a new tab), Filed as (label, with the code as a sub-line), Type (PDF, JPEG image, PNG image, WebP image), Size ("x.x MB", or whole KB with a 1 KB minimum), Uploaded, and a "Remove" button that confirms "Remove this document from the claim?" and flashes "Document removed." Empty text: "No documents attached yet. The payer expects the admission note and the beneficiary's ID as a minimum." [PAYER](../references/PAYERS.md#markers)
 
-*Upload row.* "Files (PDF or image)" (multiple, required), "Filed as", "Label", and the button "Attach". The "Filed as" select lists the codes the ruling named first, then the common codes below [PAYER](../references/PAYERS.md#markers). `HDS` (hospital discharge summary) is not offered here: the patient has not been discharged, so a pre-authorisation never carries a discharge summary. Each option reads as the code, a dash, and the label. `CD` is selected by default.
+*Upload row.* "Files (PDF or image)" (multiple, required), "Filed as", "Label", and the button "Attach". The "Filed as" select lists the codes the ruling named first, then the common codes below [PAYER](../references/PAYERS.md#markers). Each option reads as the code, a dash, and the label. `CD` is selected by default.
 
 | Code | Label |
 |---|---|
 | CD | Clinical document (case sheet, notes) |
+| HDS | Hospital discharge summary |
 | DIA | Diagnostic & laboratory reports |
 | RAD | Radiology / scan reports |
 | PRE | Doctor's prescription notes |
@@ -143,14 +145,15 @@ API: [A4. Pre-auth Submit](../apis/A4-preauth-submit.md) (predetermination)
 
 States of the card:
 
-1. **Not sent.** "Everything above goes to the payer as one FHIR Claim bundle: the beneficiary, the admission, the diagnoses, the care team, the N quoted line(s) at ₹X, the attached documents and the answered forms." Header action: "Submit to payer" (primary, no confirm).
-2. **`submitting`.** "Submitted; awaiting the payer's `on_submit` reply. Use Refresh to check for it, or ask the payer where it stands." Then Sent at, Requested, Transaction, Correlation; the Communication pointer (S10) when the payer has an open query on this leg; the status enquiry rows; and the cancel form. Header action: "Ask where it stands" only. There is no send button while the pre-authorisation is with the payer.
+1. **Not sent.** "Everything above goes to the payer as one FHIR Claim bundle: the beneficiary, the admission, the diagnoses, the care team, the N quoted line(s) at ₹X, the attached documents and the answered forms." Header action: "Submit to payer" (primary, no confirm). **Until the S4 draft has been saved** (D9 `preauth_saved_at` null) the button is disabled with the help text "Save the preauth draft first", and a direct post is refused with the same words: the draft is what writes the diagnoses, care team and lines, so sending before it is saved met A4's "Quote at least one ICD-10 diagnosis." with a misleading cause.
+2. **`submitting`.** "Submitted; awaiting the payer's `on_submit` reply. Use Refresh to check for it, or ask the payer where it stands." Once the payer has acknowledged the send (workflow 20, or a `queued` ClaimResponse, C5) the line reads "Acknowledged by the payer. The pre-authorisation is under adjudication." and the acknowledgement's workflow id is shown beside it. Then Sent at, Requested, Transaction, Correlation; the Communication pointer (S10) when the payer has an open query on this leg; the status enquiry rows; and the cancel form. Header action: "Ask where it stands" only. There is no send button while the pre-authorisation is with the payer.
 3. **`cancelling`.** "Cancellation sent to the payer; awaiting its answer to the Task. Use Refresh to check for it." Then Reason (in words), Note, Sent at, Transaction, Correlation.
 4. **`cancelled`.** "The payer accepted the cancellation; this pre-authorisation is withdrawn." If the claim number was retired, it adds: "The payer holds **`<old number>`** against the withdrawn pre-authorisation, so the episode carries on as **`<new number>`**, anything sent under the old number would be a duplicate of a cancelled case." Then Reason, Note, Withdrawn under, Pre-auth reference, Cancelled at, Disposition. Header action: "Submit to payer" with the confirm "Send this pre-authorisation to the payer?" (a fresh pre-authorisation).
-5. **`error`.** The error text in red, or "The exchange failed.". Header action: the send button, labelled for the kind of send that failed.
+5. **`error`.** The error text in red, or "The exchange failed.". Header action: the send button, labelled for the kind of send that failed. An error the payer answered with (`ClaimResponse.error`, a `response.error` reply, a failed Task's reason) is shown here line by line with its process notes, and an "Open <title> (PDF)" link when the reply carries a `form`. It is shown, never obeyed: nothing is decided, nothing else on the case is blocked, and the send can be made again.
 6. **Decided or queried** (`approved`, `partial`, `rejected`, `queried`):
    - Three stat tiles: "Requested"; "Approved" (green when `approved`, amber otherwise); "Pre-auth reference".
    - Detail list: Status, Disposition, Outcome (`<outcome> · <adjudication>`, because the outcome alone does not say what happened), Settled at, Correlation, Enhancements (round count or `-`), Sent as (the button words of the last send, such as "Answer the query (19)" [PAYER](../references/PAYERS.md#markers)), Our reply, and Case stands at (the eligible amount, when the payer gave one).
+   - "What the payer said", when the reply carries any: its `ClaimResponse.error` entries in the danger colour, its process notes, and an "Open <title> (PDF)" link for a `form` attachment, opened in a new tab.
    - The per-item verdict table, when the payer ruled per item. Columns: Item (sequence), Status (a chip: approved green, queried amber, rejected red, pending info), Eligible, Eligible %, Deducted (amount plus the deduction reason, muted), and The payer's note (with `|` shown as ` · `, cut to 240 characters).
    - The enhancement block (below).
    - "What the payer says": the payer's query text as a code block (see S10, query note).
@@ -169,6 +172,7 @@ States of the card:
 | `submitting` / `cancelling` | refused: "The pre-authorisation is with the payer; wait for its answer before sending again." |
 
 **Submit validation**, in order, each shown as a red flash:
+- "Save the preauth draft first" (first send only, `preauth_saved_at` null)
 - "Submit a preauth only after the payer has confirmed the policy is eligible."
 - The send-kind refusals above.
 - On a query answer with no reply text: "Write the reply to the payer's query before answering it."

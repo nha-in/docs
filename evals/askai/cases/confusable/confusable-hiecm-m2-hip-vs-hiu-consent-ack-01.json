@@ -1,0 +1,35 @@
+{
+  "id": "confusable-hiecm-m2-hip-vs-hiu-consent-ack-01",
+  "slice": "confusable",
+  "class": "compare",
+  "turns": [
+    {
+      "role": "user",
+      "text": "as a HIP, when i acknowledge the consent notify, is acknowledgement an array like the HIU one?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "On the HIP consent on-notify, acknowledgement is one object carrying status and the artefact's consentId, not an array.",
+    "The HIU acknowledgement is the one that takes an array."
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.endpoint.m2-consent-hip-on-notify"
+  ],
+  "expected_shape": "compare",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-hiecm-consent-management-data-flow-yaml",
+  "catalogue_version": "2026.09.16",
+  "notes": "HIP and HIU acknowledgements of consent notify look alike and differ in shape. The HIU acknowledgement path, from catalogue/hiecm/callbacks/m2-on-consent-notify-hiu.md, is banned: an HIP answer has no reason to send the reader to it. Source lines: catalogue/hiecm/endpoints/m2-consent-hip-on-notify.md, 'Send one `acknowledgement` with the artefact's `consentId`'; '`acknowledgement` is one object on this call, with `status` and `consentId`. The HIU acknowledgement takes an array instead.' Review: must_not_contain '/api/hiecm/consent/v3/request/hiu/on-notify' removed: the question asks about the HIU call, so a correct answer names its path."
+}

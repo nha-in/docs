@@ -1,0 +1,189 @@
+{
+  "case_id": "define-abha-id-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "What is an ABHA ID?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01KRGixS9hYjpHcfE9sdiUHM",
+            "Name": "search",
+            "Input": {
+              "query": "ABHA ID",
+              "kind": "atom",
+              "limit": 5
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "ABHA ID",
+            "kind": "atom",
+            "limit": 5
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#abha",
+                "id": "shared.glossary.abha",
+                "summary": "The patient's identity in ABDM, in two forms that look alike and are not: a 14 digit ABHA number and a readable ABHA address.",
+                "title": "ABHA",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.abha-identifiers",
+                "summary": "NRCeS tells you apart the two health identifiers a person has by the identifier type code, not by a namespace URI, and it publishes no namespace URI for eith...",
+                "title": "Carrying an ABHA number and an ABHA address on a FHIR Patient",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#abha-address",
+                "id": "shared.glossary.abha-address",
+                "summary": "The readable name, such as name@sbx, that ABDM uses to route a person's health records.",
+                "title": "ABHA address",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-link-de-link/01-m1-post-v3-profile-benefit-linkanddelink-x-token#m1-benefit-link-or-delink",
+                "id": "hiecm.endpoint.m1-benefit-link-or-delink",
+                "summary": "Links or unlinks the programme named in the BENEFIT_NAME header for an ABHA.",
+                "title": "Link or unlink a benefit record from an ABHA",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#phr",
+                "id": "shared.glossary.phr",
+                "summary": "The application a patient uses to see consent requests and to approve, deny or revoke them.",
+                "title": "PHR, personal health record application",
+                "type": "glossary"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_018q7PyqVofdQCTy3rptpFFi",
+            "Name": "get",
+            "Input": {
+              "id": "shared.glossary.abha"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "shared.glossary.abha"
+          },
+          "output": {
+            "body": "## In plain words\n\nABHA expands to Ayushman Bharat Health Account. In practice it means two\ndifferent things: the ABHA number, a 14 digit identifier issued after a\nKYC check, and the ABHA address, a readable name on the HIE-CM such as\n`name@abdm` that routes records.\nYou will meet both in every module; when a document says \"the patient's\nABHA\", work out which of the two it means before writing code against it.\n\nABHA was called Health ID until NHA renamed it. The old name is still\nlive in NHA's own hostnames, `healthid.abdm.gov.in` among them, so both\nnames reach the same thing.\n\n## Before you start\n\nNothing. This is a definition.\n\n## What happens\n\nEvery ABHA number is issued a default address made from the number\nitself, `14digit@sbx` in sandbox and `14digit@abdm` in production. A\nperson can also hold an ABHA address without an ABHA number.\n\n## How you know it worked\n\nNot applicable to a definition.\n\n## When it goes wrong\n\nThe common mistake is passing an ABHA number where an API wants an ABHA\naddress, or the reverse. They are different fields with different\nformats.\n\nAn earlier version of this entry said the ABHA number validates under\nthe Luhn algorithm. That claim came from this repository's own site\nprose rather than from NHA, and no fetched NHA page states which\nchecksum the ABHA number uses. NHA's M1 documentation names Verhoeff,\nbut for the Aadhaar number inside the enrolment flow, which is a\ndifferent field. The claim is removed rather than replaced. Do not\nrestore either algorithm here without an NHA source.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/getting-started/glossary#abha",
+            "gateway": "shared",
+            "id": "shared.glossary.abha",
+            "milestone": "n/a",
+            "summary": "The patient's identity in ABDM, in two forms that look alike and are not: a 14 digit ABHA number and a readable ABHA address.",
+            "title": "ABHA",
+            "type": "glossary"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "An **ABHA ID** (Ayushman Bharat Health Account) is a patient's identity in India's ABDM system, but it actually refers to **two different things**:\n\n1. **ABHA Number** — A 14-digit identifier issued after a KYC (Know Your Customer) check\n2. **ABHA Address** — A readable name like `name@abdm` (production) or `name@sbx` (sandbox) that routes health records through the HIE-CM\n\nEvery ABHA number automatically gets a default address in the format `14digit@sbx` (sandbox) or `14digit@abdm` (production). A person can also hold an ABHA address without an ABHA number.\n\n**Important:** The common mistake is confusing the two—they're different fields with different formats, so pay attention to which one an API expects.\n\nThe term \"ABHA\" replaced the older name \"Health ID,\" but you'll still see references to the old name (e.g., `healthid.abdm.gov.in`).\n\nSource: [ABDM Glossary — ABHA](https://docs.abdm.gov.in/docs/hiecm/v3/getting-started/glossary#abha)",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "An **ABHA ID** (Ayushman Bharat Health Account) is a patient's identity in India's ABDM system, but it actually refers to **two different things**:\n\n1. **ABHA Number** — A 14-digit identifier issued after a KYC (Know Your Customer) check\n2. **ABHA Address** — A readable name like `name@abdm` (production) or `name@sbx` (sandbox) that routes health records through the HIE-CM\n\nEvery ABHA number automatically gets a default address in the format `14digit@sbx` (sandbox) or `14digit@abdm` (production). A person can also hold an ABHA address without an ABHA number.\n\n**Important:** The common mistake is confusing the two—they're different fields with different formats, so pay attention to which one an API expects.\n\nThe term \"ABHA\" replaced the older name \"Health ID,\" but you'll still see references to the old name (e.g., `healthid.abdm.gov.in`).\n\nSource: [ABDM Glossary — ABHA](https://docs.abdm.gov.in/docs/hiecm/v3/getting-started/glossary#abha)",
+  "sources": [
+    {
+      "id": "shared.glossary.abha",
+      "title": "ABHA",
+      "url": "/docs/hiecm/v3/getting-started/glossary#abha"
+    },
+    {
+      "id": "shared.glossary.phr",
+      "title": "PHR, personal health record application",
+      "url": "/docs/hiecm/v3/getting-started/glossary#phr"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#abha\",\"id\":\"shared.glossary.abha\",\"summary\":\"The patient's identity in ABDM, in two forms that look alike and are not: a 14 digit ABHA number and a readable ABHA address.\",\"title\":\"ABHA\",\"type\":\"glossary\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.abha-identifiers\",\"summary\":\"NRCeS tells you apart the two health identifiers a person has by the identifier type code, not by a namespace URI, and it publishes no namespace URI for eith...\",\"title\":\"Carrying an ABHA number and an ABHA address on a FHIR Patient\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#abha-address\",\"id\":\"shared.glossary.abha-address\",\"summary\":\"The readable name, such as name@sbx, that ABDM uses to route a person's health records.\",\"title\":\"ABHA address\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-benefit-link-de-link/01-m1-post-v3-profile-benefit-linkanddelink-x-token#m1-benefit-link-or-delink\",\"id\":\"hiecm.endpoint.m1-benefit-link-or-delink\",\"summary\":\"Links or unlinks the programme named in the BENEFIT_NAME header for an ABHA.\",\"title\":\"Link or unlink a benefit record from an ABHA\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#phr\",\"id\":\"shared.glossary.phr\",\"summary\":\"The application a patient uses to see consent requests and to approve, deny or revoke them.\",\"title\":\"PHR, personal health record application\",\"type\":\"glossary\"}]}\n{\"body\":\"## In plain words\\n\\nABHA expands to Ayushman Bharat Health Account. In practice it means two\\ndifferent things: the ABHA number, a 14 digit identifier issued after a\\nKYC check, and the ABHA address, a readable name on the HIE-CM such as\\n`name@abdm` that routes records.\\nYou will meet both in every module; when a document says \\\"the patient's\\nABHA\\\", work out which of the two it means before writing code against it.\\n\\nABHA was called Health ID until NHA renamed it. The old name is still\\nlive in NHA's own hostnames, `healthid.abdm.gov.in` among them, so both\\nnames reach the same thing.\\n\\n## Before you start\\n\\nNothing. This is a definition.\\n\\n## What happens\\n\\nEvery ABHA number is issued a default address made from the number\\nitself, `14digit@sbx` in sandbox and `14digit@abdm` in production. A\\nperson can also hold an ABHA address without an ABHA number.\\n\\n## How you know it worked\\n\\nNot applicable to a definition.\\n\\n## When it goes wrong\\n\\nThe common mistake is passing an ABHA number where an API wants an ABHA\\naddress, or the reverse. They are different fields with different\\nformats.\\n\\nAn earlier version of this entry said the ABHA number validates under\\nthe Luhn algorithm. That claim came from this repository's own site\\nprose rather than from NHA, and no fetched NHA page states which\\nchecksum the ABHA number uses. NHA's M1 documentation names Verhoeff,\\nbut for the Aadhaar number inside the enrolment flow, which is a\\ndifferent field. The claim is removed rather than replaced. Do not\\nrestore either algorithm here without an NHA source.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#abha\",\"gateway\":\"shared\",\"id\":\"shared.glossary.abha\",\"milestone\":\"n/a\",\"summary\":\"The patient's identity in ABDM, in two forms that look alike and are not: a 14 digit ABHA number and a readable ABHA address.\",\"title\":\"ABHA\",\"type\":\"glossary\"}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T11:58:17.024Z",
+  "usage": {
+    "input_tokens": 30,
+    "output_tokens": 592,
+    "cache_read_input_tokens": 28480,
+    "cache_creation_input_tokens": 6563,
+    "num_turns": 3,
+    "duration_ms": 9091,
+    "cost_usd_equivalent": 0.018964
+  }
+}

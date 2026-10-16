@@ -29,6 +29,6 @@
   "expected_behaviour": "answer",
   "derived_from": null,
   "source_row": "annexure#sandbox-faq-m1",
-  "catalogue_version": "2026.08.24",
+  "catalogue_version": "2026.09.16",
   "notes": "Source lines: catalogue/hiecm/endpoints/gateway-sessions.md:32, 'API accepts in the Authorization header.'; catalogue/hiecm/endpoints/m1-login-verify.md:10,32, 'afterwards as the X-token header.'; catalogue/hiecm/concepts/gateway-session.md, 'Two tokens exist in M1 and they are not interchangeable.' Substitution: the brief cites annexure#m1-abha-collection, which does not exist on this branch (it lives on an unmerged branch); used annexure#sandbox-faq-m1 per project ruling."
 }

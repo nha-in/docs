@@ -1,9 +1,0 @@
-{
-  "operation": "gateway_get_gateway_v3_bridge_service_serviceid_service_id",
-  "outcome": "succeeded",
-  "on": "2026-09-17",
-  "against": "https://dev.abdm.gov.in",
-  "request": "curl -X GET 'https://dev.abdm.gov.in/api/hiecm/gateway/v3/bridge-service/serviceId/{serviceId}' \\\n  -H 'Authorization: Bearer <scrubbed>' \\\n  -H 'REQUEST-ID: 459c12a0-6405-4bd7-918a-8f4d642adb86' \\\n  -H 'TIMESTAMP: 2026-09-17T11:22:40.518Z' \\\n  -H 'X-CM-ID: sbx'\n",
-  "status": 200,
-  "body": ""
-}

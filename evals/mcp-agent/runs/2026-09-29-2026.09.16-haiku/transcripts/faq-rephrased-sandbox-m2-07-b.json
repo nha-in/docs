@@ -1,0 +1,1070 @@
+{
+  "case_id": "faq-rephrased-sandbox-m2-07-b",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "what are different fetch modes which are available?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "I'll search the ABDM documentation for information about fetch modes available.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01RrzbDPVumVHPhMSDFi39e3",
+            "Name": "search",
+            "Input": {
+              "query": "fetch modes available",
+              "kind": "atom"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "fetch modes available",
+            "kind": "atom"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "",
+                "id": "hiecm.glossary.auth-modes",
+                "summary": "MOBILE_OTP, AADHAAR_OTP, DEMOGRAPHICS and DIRECT. Which are available is a property of the patient, so you ask before you choose.",
+                "title": "Auth modes, the four ways a patient proves who they are",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/roles/provider/biometric-authentication",
+                "id": "nhcx.flow.biometric-face",
+                "summary": "Prove that a scheme beneficiary is at your hospital with a face scan on a phone, when fingerprint or iris is not possible, and get the same short-lived user ...",
+                "title": "Authenticate a beneficiary by face on a mobile device",
+                "type": "flow"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.decision.key-encryption-algorithm",
+                "summary": "Seal what you send with the stronger key wrapping value, and open messages sealed with either value.",
+                "title": "RSA-OAEP or RSA-OAEP-256 for the content key",
+                "type": "decision"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01WdZZWepVVHqEBuNcyVpgJ4",
+            "Name": "search",
+            "Input": {
+              "query": "fetch mode record retrieval",
+              "kind": "atom"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "fetch mode record retrieval",
+            "kind": "atom"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "",
+                "id": "hiecm.glossary.auth-modes",
+                "summary": "MOBILE_OTP, AADHAAR_OTP, DEMOGRAPHICS and DIRECT. Which are available is a property of the patient, so you ask before you choose.",
+                "title": "Auth modes, the four ways a patient proves who they are",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/roles/provider/biometric-authentication",
+                "id": "nhcx.flow.biometric-face",
+                "summary": "Prove that a scheme beneficiary is at your hospital with a face scan on a phone, when fingerprint or iris is not possible, and get the same short-lived user ...",
+                "title": "Authenticate a beneficiary by face on a mobile device",
+                "type": "flow"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01Rc285Q16eNZDkn4ZsEkMTC",
+            "Name": "search",
+            "Input": {
+              "query": "ONDEMAND CONTINUOUS fetch",
+              "kind": "atom"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "ONDEMAND CONTINUOUS fetch",
+            "kind": "atom"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01TpMvPiC6ZiuyftZxDcydhS",
+            "Name": "search",
+            "Input": {
+              "query": "fetch",
+              "kind": "operation"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "fetch",
+            "kind": "operation"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/registry/endpoints/registry-fetch-certs",
+                "id": "registry_fetch_certs",
+                "summary": "Fetch certificate",
+                "title": "POST /fetch/certs",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/registry/endpoints/registry-fetch-certs-path",
+                "id": "registry_fetch_certs_path",
+                "summary": "Fetch certificate path",
+                "title": "POST /fetch/certs/path",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/registry/endpoints/registry-fetch-participants-list",
+                "id": "registry_fetch_participants_list",
+                "summary": "Fetch participants list",
+                "title": "POST /fetch/participants/list",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m4/endpoints/m4-post-v1-doctors-fetch-documents-list",
+                "id": "m4_post_v1_doctors_fetch_documents_list",
+                "summary": "Fetch Documents",
+                "title": "POST /apis/v1/doctors/fetch-documents-list",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-post-consent-v3-fetch",
+                "id": "m3_post_consent_v3_fetch",
+                "summary": "This is ABDM HIE-CM API called by HIU to fetch the consent details",
+                "title": "POST /api/hiecm/consent/v3/fetch",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m4/endpoints/m4-get-hpid-get-categories",
+                "id": "m4_get_hpid_get_categories",
+                "summary": "Fetch Hp Id Categories",
+                "title": "GET /hpid/get/categories",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m4/endpoints/m4-post-v1-doctors-fetch-professional-info",
+                "id": "m4_post_v1_doctors_fetch_professional_info",
+                "summary": "Get Professional Info",
+                "title": "POST /apis/v1/doctors/fetch-professional-info",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m4/endpoints/m4-get-hpid-get-subcategories",
+                "id": "m4_get_hpid_get_subcategories",
+                "summary": "Fetch Hp Id Sub Categories From Category",
+                "title": "GET /hpid/get/subCategories",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m4/endpoints/m4-post-v1-5-facility-fetch-facility-sub-type",
+                "id": "m4_post_v1_5_facility_fetch_facility_sub_type",
+                "summary": "Get All Facility Sub Type By Facility Type",
+                "title": "POST /v1.5/facility/fetch-facility-Sub-type",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m4/endpoints/m4-post-v1-5-facility-fetch-facility-type",
+                "id": "m4_post_v1_5_facility_fetch_facility_type",
+                "summary": "Get All Facility Type By Ownership And Sys Of Med",
+                "title": "POST /v1.5/facility/fetch-facility-type",
+                "type": "operation"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01C6oj6YZoi8utEvpPsg1hRD",
+            "Name": "search",
+            "Input": {
+              "query": "data request fetch mode type",
+              "kind": "atom"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "data request fetch mode type",
+            "kind": "atom"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "",
+                "id": "hiecm.glossary.auth-modes",
+                "summary": "MOBILE_OTP, AADHAAR_OTP, DEMOGRAPHICS and DIRECT. Which are available is a property of the patient, so you ask before you choose.",
+                "title": "Auth modes, the four ways a patient proves who they are",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/roles/provider/biometric-authentication",
+                "id": "nhcx.flow.biometric-face",
+                "summary": "Prove that a scheme beneficiary is at your hospital with a face scan on a phone, when fingerprint or iris is not possible, and get the same short-lived user ...",
+                "title": "Authenticate a beneficiary by face on a mobile device",
+                "type": "flow"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01Jhfb9eKos4yuCuqFC8W7gK",
+            "Name": "search",
+            "Input": {
+              "query": "data request types DATAPUSH PULL",
+              "kind": "atom"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "data request types DATAPUSH PULL",
+            "kind": "atom"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01QP6CqW9D4ThZb19jvHCyCT",
+            "Name": "search",
+            "Input": {
+              "query": "health information request",
+              "kind": "atom"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "health information request",
+            "kind": "atom"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/07-m3-get-data-flow-v3-health-information-request-status-tra-550104#p3-request-status",
+                "id": "hiecm.endpoint.p3-request-status",
+                "summary": "Check how far a health information request has got, by its transaction id.",
+                "title": "Get the status of a health information request",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/05-m3-post-v3-hiu-health-information-on-request#p3-call-back-to-hiu",
+                "id": "hiecm.callback.p3-call-back-to-hiu",
+                "summary": "ABDM tells the HIU that its health information request is valid for the consent it names.",
+                "title": "Health information request acknowledgement",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/02-m2-post-data-flow-v3-health-information-hip-on-request#m2-hip-health-information-on-request",
+                "id": "hiecm.endpoint.m2-hip-health-information-on-request",
+                "summary": "The HIP acknowledges a health information request, then encrypts the records and pushes them to the requester.",
+                "title": "Acknowledge a health information data request",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/05-m3-post-v3-hiu-health-information-on-request#m3-on-health-information-request",
+                "id": "hiecm.callback.m3-on-health-information-request",
+                "summary": "ABDM acknowledges an HIU's data request with its transaction id and status; the records come separately.",
+                "title": "Acknowledgement of a health information request",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#hiu",
+                "id": "hiecm.glossary.hiu",
+                "summary": "The role held by a system that asks a patient for consent and then fetches records held elsewhere.",
+                "title": "HIU, health information user",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.glossary.m3",
+                "summary": "The milestone covering consent requests and fetching someone else's records.",
+                "title": "M3 Health Information User: Fetch data with consent",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#hip",
+                "id": "hiecm.glossary.hip",
+                "summary": "The role held by a system that holds a patient's records and shares them when a consent allows it.",
+                "title": "HIP, health information provider",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/10-m2-post-health-information-transfer#m2-on-data-notification",
+                "id": "hiecm.callback.m2-on-data-notification",
+                "summary": "The HIP posts the encrypted records straight to the HIU's data push URL, outside the gateway.",
+                "title": "The provider pushes encrypted health information to the URL named in the request",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/05-m3-post-data-flow-v3-health-information-request#m3-hiu-health-information-request",
+                "id": "hiecm.endpoint.m3-hiu-health-information-request",
+                "summary": "The HIU asks for the records a consent artefact covers, with its ECDH key material and the URL to push them to.",
+                "title": "Request a patient's health information",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-1040",
+                "id": "hiecm.error.abdm-1040",
+                "summary": "ABDM does not recognise the health information user id on the request, which is a registration problem rather than a request problem.",
+                "title": "ABDM-1040, the HIU id is not recognised",
+                "type": "error"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01MWEV8iYNmwkGkwGX8F1coN",
+            "Name": "get",
+            "Input": {
+              "id": "hiecm.endpoint.m3-hiu-health-information-request"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "hiecm.endpoint.m3-hiu-health-information-request"
+          },
+          "output": {
+            "body": "# Request a patient's health information\n\n## In plain words\n\nAsk for the records a [consent artefact](/docs/hiecm/v3/getting-started/glossary#consent-artefact) covers. Before the call, generate an [ECDH](/docs/hiecm/v3/getting-started/glossary#ecdh) key pair on `Curve25519` and a 32 byte nonce. Send the public key and nonce in `keyMaterial`, with the `dataPushUrl` where the [HIP](/docs/hiecm/v3/getting-started/glossary#hip) should push the records. The HIP encrypts each entry with AES-GCM. Decrypt with your private key, the HIP's public key and both nonces.\n\n## Before you start\n\nA gateway session token, a fetched consent artefact and a public `dataPushUrl`. Send the `REQUEST-ID`, `TIMESTAMP`, `X-CM-ID` and `X-HIU-ID` headers.\n\n## What happens\n\n`cryptoAlg` is `ECDH`. `keyValue` is the public key, Base64 encoded, in X.509 SubjectPublicKeyInfo form. The nonce is 32 random bytes, Base64 encoded. The call returns 202 Accepted.\n\n## How you know it worked\n\nAn acknowledgement on `/api/v3/hiu/health-information/on-request` carries the `transactionId`, and the records reach your `dataPushUrl`.\n\n## When it goes wrong\n\n`ABDM-1015` (Invalid Response). Keep the private key until the transfer completes, or the data cannot be decrypted. `ABDM-2402` (Invalid Timestamp): check `TIMESTAMP` against your clock. `ABDM-2404` (Invalid Request Id): send a fresh UUID in `REQUEST-ID`. `ABDM-2500` (Authorization header is missing): send the session token. `ABDM-9999` (Unknown exception) gives no cause.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/05-m3-post-data-flow-v3-health-information-request#m3-hiu-health-information-request",
+            "gateway": "hiecm",
+            "id": "hiecm.endpoint.m3-hiu-health-information-request",
+            "milestone": "M3",
+            "operation": "m3_post_data_flow_v3_health_information_request",
+            "summary": "The HIU asks for the records a consent artefact covers, with its ECDH key material and the URL to push them to.",
+            "title": "Request a patient's health information",
+            "type": "endpoint"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_018bVYLFnA6NmM4Ri87rB9SS",
+            "Name": "get",
+            "Input": {
+              "id": "m3_post_data_flow_v3_health_information_request"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "m3_post_data_flow_v3_health_information_request"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "doc_path": "/docs/hiecm/v3/api/m3/endpoints/m3-post-data-flow-v3-health-information-request",
+            "operation_id": "m3_post_data_flow_v3_health_information_request",
+            "spec": {
+              "description": "This API facilitates the exchange of health data between Health Information Providers (HIP) and Health Information Users (HIU) within the ABDM system. It ensures secure and efficient data transfer, enabling seamless communication and interoperability between different healthcare entities.\n1. **X-HIU-ID** if the requester is HIU (SERVICE-ID).",
+              "operationId": "m3_post_data_flow_v3_health_information_request",
+              "parameters": [
+                {
+                  "description": "Unique UUID for track the end to end request transaction",
+                  "example": "18235d89-cb13-479d-ad71-7a57d5f669a8",
+                  "in": "header",
+                  "name": "REQUEST-ID",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "description": "Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds",
+                  "example": "2022-10-06T15:10:00.587Z",
+                  "in": "header",
+                  "name": "TIMESTAMP",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "description": "Suffix of the consent manager to which the request was intended",
+                  "example": "sbx",
+                  "in": "header",
+                  "name": "X-CM-ID",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "description": "Identifier of the health information user to which the request was intended",
+                  "example": "IN2810014366",
+                  "in": "header",
+                  "name": "X-HIU-ID",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "properties": {
+                        "hiRequest": {
+                          "properties": {
+                            "consent": {
+                              "properties": {
+                                "id": {
+                                  "description": "The consent artefact id for health information request. Allows alpha numeric character and special characters like \"^[a-zA-Z0-9_\\\\-@,. \\\":/]{0,255}$\"",
+                                  "example": "18235d89-cb13-479d-ad71-7a57d5f669a8",
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "id"
+                              ],
+                              "type": "object"
+                            },
+                            "dataPushUrl": {
+                              "description": "The URL to which the Health Information Provider has to send the health information data. Allows alpha numeric character and special characters like \"^[a-zA-Z0-9_\\\\-@,. \\\":=?/&]{0,255}$\"",
+                              "example": "https://live.ndhm.gov.in/api-hiu/data/notification",
+                              "type": "string"
+                            },
+                            "dateRange": {
+                              "description": "Health information created between this date range is requested",
+                              "properties": {
+                                "from": {
+                                  "description": "Should be a UTC date time in ISO Format.Allows alpha numeric character and special characters like ^\\\\d{4}-\\\\d{2}-\\\\d{2}T\\\\d{2}:\\\\d{2}:\\\\d{2}.\\\\d{3}Z$",
+                                  "example": "2022-10-06T15:10:00.587Z",
+                                  "format": "date-time",
+                                  "type": "string"
+                                },
+                                "to": {
+                                  "description": "Should be a UTC date time in ISO Format.Allows alpha numeric character and special characters like ^\\\\d{4}-\\\\d{2}-\\\\d{2}T\\\\d{2}:\\\\d{2}:\\\\d{2}.\\\\d{3}Z$",
+                                  "example": "2022-11-06T15:10:00.587Z",
+                                  "format": "date-time",
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "from",
+                                "to"
+                              ],
+                              "type": "object"
+                            },
+                            "keyMaterial": {
+                              "description": "The requester's half of the ECDH key agreement. The HIP derives the shared key from it and its own key pair, and encrypts every entry it pushes with AES-GCM.",
+                              "properties": {
+                                "cryptoAlg": {
+                                  "description": "The key agreement algorithm. Always ECDH.",
+                                  "example": "ECDH",
+                                  "type": "string"
+                                },
+                                "curve": {
+                                  "description": "The curve the key pair is generated on. Always Curve25519.",
+                                  "example": "curve25519",
+                                  "type": "string"
+                                },
+                                "dhPublicKey": {
+                                  "description": "The public half of the ephemeral key pair generated for this transaction.",
+                                  "properties": {
+                                    "expiry": {
+                                      "description": "When this key stops being valid, as an ISO 8601 timestamp.",
+                                      "example": "2022-12-28T13:18:20.742Z",
+                                      "type": "string"
+                                    },
+                                    "keyValue": {
+                                      "description": "The public key, Base64 encoded, in X.509 SubjectPublicKeyInfo form.",
+                                      "example": "BFN7KTdOT0jIAExG2A8Jg+01wMPWxptiGqwHRVvtiVEsUq2FR7P2UdqZxJyPJSeR6muai21iQhasNxnhh8I5M+g=",
+                                      "type": "string"
+                                    },
+                                    "parameters": {
+                                      "description": "The key parameters. Ephemeral public key.",
+                                      "example": "Ephemeral public key",
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "expiry",
+                                    "parameters",
+                                    "keyValue"
+                                  ],
+                                  "type": "object"
+                                },
+                                "nonce": {
+                                  "description": "32 random bytes, Base64 encoded, generated for this transaction. The other side combines it with its own nonce to derive the AES-GCM key and initialisation vector.",
+                                  "example": "28236d89-cb13-479d-ad71-7a57d5f669a9",
+                                  "format": "uuid",
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "cryptoAlg",
+                                "curve",
+                                "dhPublicKey"
+                              ],
+                              "type": "object"
+                            }
+                          },
+                          "required": [
+                            "consent",
+                            "dateRange",
+                            "dataPushUrl",
+                            "keyMaterial",
+                            "nonce"
+                          ],
+                          "type": "object"
+                        }
+                      },
+                      "required": [
+                        "hiRequest"
+                      ],
+                      "type": "object"
+                    }
+                  }
+                },
+                "required": true
+              },
+              "responses": {
+                "202": {
+                  "description": "Accepted"
+                },
+                "400": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "properties": {
+                          "error": {
+                            "description": "The error code and message, if any occurred.",
+                            "properties": {
+                              "code": {
+                                "description": "ABDM-1015 - Invalid Response. May be returned either bare (`ABDM-1015`) or with a trailing \": \" separator (`ABDM-1015: `); match on the code itself and tolerate the separator.",
+                                "example": "ABDM-1015",
+                                "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                                "type": "string"
+                              },
+                              "message": {
+                                "example": "Invalid Response",
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "code",
+                              "message"
+                            ],
+                            "type": "object"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Bad Request"
+                },
+                "401": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "properties": {
+                          "code": {
+                            "description": "900901 - Invalid Credentials. May be returned either bare or with a trailing \": \" separator; match on the code itself and tolerate the separator.",
+                            "example": "900901",
+                            "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                            "type": "string"
+                          },
+                          "description": {
+                            "example": "Invalid Credentials. Make sure you have provided the correct security credentials",
+                            "type": "string"
+                          },
+                          "message": {
+                            "example": "Invalid Credentials",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "code",
+                          "message",
+                          "description"
+                        ],
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Unauthorized"
+                },
+                "403": {
+                  "content": {
+                    "text/plain": {
+                      "schema": {
+                        "example": "Access Denied",
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "description": "Access Denied"
+                },
+                "404": {
+                  "content": {
+                    "text/plain": {
+                      "schema": {
+                        "properties": {
+                          "code": {
+                            "description": "404 - Runtime error. May be returned either bare or with a trailing \": \" separator; match on the code itself and tolerate the separator.",
+                            "example": "404",
+                            "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                            "type": "string"
+                          },
+                          "description": {
+                            "example": "No matching resource found for given API Request",
+                            "type": "string"
+                          },
+                          "message": {
+                            "example": "Runtime error",
+                            "type": "string"
+                          },
+                          "type": {
+                            "example": "status report",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "code",
+                          "type",
+                          "message",
+                          "description"
+                        ],
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Not Found"
+                },
+                "500": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "properties": {
+                          "code": {
+                            "description": "900900 - Unclassified Authentication Failure. May be returned either bare or with a trailing \": \" separator; match on the code itself and tolerate the separator.",
+                            "example": "900900",
+                            "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                            "type": "string"
+                          },
+                          "description": {
+                            "example": "Access failure for API: /hiecm/api/v3, version: v3 status: (900900) - Unclassified Authentication Failure",
+                            "type": "string"
+                          },
+                          "message": {
+                            "example": "Unclassified Authentication Failure",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Internal Server Error"
+                },
+                "503": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "properties": {
+                          "code": {
+                            "description": "ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing \": \" separator (`ABDM-1024: `); match on the code itself and tolerate the separator.",
+                            "example": "ABDM-1024",
+                            "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                            "type": "string"
+                          },
+                          "message": {
+                            "example": "Dependent service unavailable",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "code",
+                          "message"
+                        ],
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Service Unavailable"
+                }
+              },
+              "security": [
+                {
+                  "bearerAuth": []
+                }
+              ],
+              "summary": "Health information data request from HIU.",
+              "tags": [
+                "consent-management-data-flow-hiu"
+              ],
+              "x-abdm-nha-operation-id": "abdm-data-flow 7"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_019UyHvVQStNr5zQMu77ZaK5",
+            "Name": "search",
+            "Input": {
+              "query": "fetchMode",
+              "kind": "atom"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "fetchMode",
+            "kind": "atom"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01MtG1X9azfFuP4Xwtcu6RoJ",
+            "Name": "search",
+            "Input": {
+              "query": "mode",
+              "type": "glossary"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "mode",
+            "type": "glossary"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "",
+                "id": "hiecm.glossary.auth-modes",
+                "summary": "MOBILE_OTP, AADHAAR_OTP, DEMOGRAPHICS and DIRECT. Which are available is a property of the patient, so you ask before you choose.",
+                "title": "Auth modes, the four ways a patient proves who they are",
+                "type": "glossary"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "I couldn't find documentation about \"fetch modes\" in the ABDM developer portal (catalogue version 2026.09.16). \n\nCould you clarify what you mean by fetch modes? Are you asking about:\n\n1. **Different ways to request health information** (e.g., on-demand vs. continuous consent)?\n2. **Data retrieval patterns** in a specific ABDM milestone (M1-M4)?\n3. **A specific API parameter or field** you've seen in documentation?\n4. **Different data transfer mechanisms** (e.g., pull vs. push)?\n\nIf you can provide more context or point me to a specific API endpoint or document you're referencing, I can search more effectively and find the answer for you.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "I couldn't find documentation about \"fetch modes\" in the ABDM developer portal (catalogue version 2026.09.16). \n\nCould you clarify what you mean by fetch modes? Are you asking about:\n\n1. **Different ways to request health information** (e.g., on-demand vs. continuous consent)?\n2. **Data retrieval patterns** in a specific ABDM milestone (M1-M4)?\n3. **A specific API parameter or field** you've seen in documentation?\n4. **Different data transfer mechanisms** (e.g., pull vs. push)?\n\nIf you can provide more context or point me to a specific API endpoint or document you're referencing, I can search more effectively and find the answer for you.",
+  "sources": [
+    {
+      "id": "hiecm.endpoint.m3-hiu-health-information-request",
+      "title": "Request a patient's health information",
+      "url": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/05-m3-post-data-flow-v3-health-information-request#m3-hiu-health-information-request"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"\",\"id\":\"hiecm.glossary.auth-modes\",\"summary\":\"MOBILE_OTP, AADHAAR_OTP, DEMOGRAPHICS and DIRECT. Which are available is a property of the patient, so you ask before you choose.\",\"title\":\"Auth modes, the four ways a patient proves who they are\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/nhcx/v1/roles/provider/biometric-authentication\",\"id\":\"nhcx.flow.biometric-face\",\"summary\":\"Prove that a scheme beneficiary is at your hospital with a face scan on a phone, when fingerprint or iris is not possible, and get the same short-lived user ...\",\"title\":\"Authenticate a beneficiary by face on a mobile device\",\"type\":\"flow\"},{\"doc_url\":\"\",\"id\":\"nhcx.decision.key-encryption-algorithm\",\"summary\":\"Seal what you send with the stronger key wrapping value, and open messages sealed with either value.\",\"title\":\"RSA-OAEP or RSA-OAEP-256 for the content key\",\"type\":\"decision\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"\",\"id\":\"hiecm.glossary.auth-modes\",\"summary\":\"MOBILE_OTP, AADHAAR_OTP, DEMOGRAPHICS and DIRECT. Which are available is a property of the patient, so you ask before you choose.\",\"title\":\"Auth modes, the four ways a patient proves who they are\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/nhcx/v1/roles/provider/biometric-authentication\",\"id\":\"nhcx.flow.biometric-face\",\"summary\":\"Prove that a scheme beneficiary is at your hospital with a face scan on a phone, when fingerprint or iris is not possible, and get the same short-lived user ...\",\"title\":\"Authenticate a beneficiary by face on a mobile device\",\"type\":\"flow\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/api/registry/endpoints/registry-fetch-certs\",\"id\":\"registry_fetch_certs\",\"summary\":\"Fetch certificate\",\"title\":\"POST /fetch/certs\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/registry/endpoints/registry-fetch-certs-path\",\"id\":\"registry_fetch_certs_path\",\"summary\":\"Fetch certificate path\",\"title\":\"POST /fetch/certs/path\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/registry/endpoints/registry-fetch-participants-list\",\"id\":\"registry_fetch_participants_list\",\"summary\":\"Fetch participants list\",\"title\":\"POST /fetch/participants/list\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m4/endpoints/m4-post-v1-doctors-fetch-documents-list\",\"id\":\"m4_post_v1_doctors_fetch_documents_list\",\"summary\":\"Fetch Documents\",\"title\":\"POST /apis/v1/doctors/fetch-documents-list\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-post-consent-v3-fetch\",\"id\":\"m3_post_consent_v3_fetch\",\"summary\":\"This is ABDM HIE-CM API called by HIU to fetch the consent details\",\"title\":\"POST /api/hiecm/consent/v3/fetch\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m4/endpoints/m4-get-hpid-get-categories\",\"id\":\"m4_get_hpid_get_categories\",\"summary\":\"Fetch Hp Id Categories\",\"title\":\"GET /hpid/get/categories\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m4/endpoints/m4-post-v1-doctors-fetch-professional-info\",\"id\":\"m4_post_v1_doctors_fetch_professional_info\",\"summary\":\"Get Professional Info\",\"title\":\"POST /apis/v1/doctors/fetch-professional-info\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m4/endpoints/m4-get-hpid-get-subcategories\",\"id\":\"m4_get_hpid_get_subcategories\",\"summary\":\"Fetch Hp Id Sub Categories From Category\",\"title\":\"GET /hpid/get/subCategories\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m4/endpoints/m4-post-v1-5-facility-fetch-facility-sub-type\",\"id\":\"m4_post_v1_5_facility_fetch_facility_sub_type\",\"summary\":\"Get All Facility Sub Type By Facility Type\",\"title\":\"POST /v1.5/facility/fetch-facility-Sub-type\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m4/endpoints/m4-post-v1-5-facility-fetch-facility-type\",\"id\":\"m4_post_v1_5_facility_fetch_facility_type\",\"summary\":\"Get All Facility Type By Ownership And Sys Of Med\",\"title\":\"POST /v1.5/facility/fetch-facility-type\",\"type\":\"operation\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"\",\"id\":\"hiecm.glossary.auth-modes\",\"summary\":\"MOBILE_OTP, AADHAAR_OTP, DEMOGRAPHICS and DIRECT. Which are available is a property of the patient, so you ask before you choose.\",\"title\":\"Auth modes, the four ways a patient proves who they are\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/nhcx/v1/roles/provider/biometric-authentication\",\"id\":\"nhcx.flow.biometric-face\",\"summary\":\"Prove that a scheme beneficiary is at your hospital with a face scan on a phone, when fingerprint or iris is not possible, and get the same short-lived user ...\",\"title\":\"Authenticate a beneficiary by face on a mobile device\",\"type\":\"flow\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/07-m3-get-data-flow-v3-health-information-request-status-tra-550104#p3-request-status\",\"id\":\"hiecm.endpoint.p3-request-status\",\"summary\":\"Check how far a health information request has got, by its transaction id.\",\"title\":\"Get the status of a health information request\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/05-m3-post-v3-hiu-health-information-on-request#p3-call-back-to-hiu\",\"id\":\"hiecm.callback.p3-call-back-to-hiu\",\"summary\":\"ABDM tells the HIU that its health information request is valid for the consent it names.\",\"title\":\"Health information request acknowledgement\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/02-m2-post-data-flow-v3-health-information-hip-on-request#m2-hip-health-information-on-request\",\"id\":\"hiecm.endpoint.m2-hip-health-information-on-request\",\"summary\":\"The HIP acknowledges a health information request, then encrypts the records and pushes them to the requester.\",\"title\":\"Acknowledge a health information data request\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/05-m3-post-v3-hiu-health-information-on-request#m3-on-health-information-request\",\"id\":\"hiecm.callback.m3-on-health-information-request\",\"summary\":\"ABDM acknowledges an HIU's data request with its transaction id and status; the records come separately.\",\"title\":\"Acknowledgement of a health information request\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hiu\",\"id\":\"hiecm.glossary.hiu\",\"summary\":\"The role held by a system that asks a patient for consent and then fetches records held elsewhere.\",\"title\":\"HIU, health information user\",\"type\":\"glossary\"},{\"doc_url\":\"\",\"id\":\"hiecm.glossary.m3\",\"summary\":\"The milestone covering consent requests and fetching someone else's records.\",\"title\":\"M3 Health Information User: Fetch data with consent\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hip\",\"id\":\"hiecm.glossary.hip\",\"summary\":\"The role held by a system that holds a patient's records and shares them when a consent allows it.\",\"title\":\"HIP, health information provider\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/10-m2-post-health-information-transfer#m2-on-data-notification\",\"id\":\"hiecm.callback.m2-on-data-notification\",\"summary\":\"The HIP posts the encrypted records straight to the HIU's data push URL, outside the gateway.\",\"title\":\"The provider pushes encrypted health information to the URL named in the request\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/05-m3-post-data-flow-v3-health-information-request#m3-hiu-health-information-request\",\"id\":\"hiecm.endpoint.m3-hiu-health-information-request\",\"summary\":\"The HIU asks for the records a consent artefact covers, with its ECDH key material and the URL to push them to.\",\"title\":\"Request a patient's health information\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-1040\",\"id\":\"hiecm.error.abdm-1040\",\"summary\":\"ABDM does not recognise the health information user id on the request, which is a registration problem rather than a request problem.\",\"title\":\"ABDM-1040, the HIU id is not recognised\",\"type\":\"error\"}]}\n{\"body\":\"# Request a patient's health information\\n\\n## In plain words\\n\\nAsk for the records a [consent artefact](/docs/hiecm/v3/getting-started/glossary#consent-artefact) covers. Before the call, generate an [ECDH](/docs/hiecm/v3/getting-started/glossary#ecdh) key pair on `Curve25519` and a 32 byte nonce. Send the public key and nonce in `keyMaterial`, with the `dataPushUrl` where the [HIP](/docs/hiecm/v3/getting-started/glossary#hip) should push the records. The HIP encrypts each entry with AES-GCM. Decrypt with your private key, the HIP's public key and both nonces.\\n\\n## Before you start\\n\\nA gateway session token, a fetched consent artefact and a public `dataPushUrl`. Send the `REQUEST-ID`, `TIMESTAMP`, `X-CM-ID` and `X-HIU-ID` headers.\\n\\n## What happens\\n\\n`cryptoAlg` is `ECDH`. `keyValue` is the public key, Base64 encoded, in X.509 SubjectPublicKeyInfo form. The nonce is 32 random bytes, Base64 encoded. The call returns 202 Accepted.\\n\\n## How you know it worked\\n\\nAn acknowledgement on `/api/v3/hiu/health-information/on-request` carries the `transactionId`, and the records reach your `dataPushUrl`.\\n\\n## When it goes wrong\\n\\n`ABDM-1015` (Invalid Response). Keep the private key until the transfer completes, or the data cannot be decrypted. `ABDM-2402` (Invalid Timestamp): check `TIMESTAMP` against your clock. `ABDM-2404` (Invalid Request Id): send a fresh UUID in `REQUEST-ID`. `ABDM-2500` (Authorization header is missing): send the session token. `ABDM-9999` (Unknown exception) gives no cause.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/05-m3-post-data-flow-v3-health-information-request#m3-hiu-health-information-request\",\"gateway\":\"hiecm\",\"id\":\"hiecm.endpoint.m3-hiu-health-information-request\",\"milestone\":\"M3\",\"operation\":\"m3_post_data_flow_v3_health_information_request\",\"summary\":\"The HIU asks for the records a consent artefact covers, with its ECDH key material and the URL to push them to.\",\"title\":\"Request a patient's health information\",\"type\":\"endpoint\"}\n{\"catalogue_version\":\"2026.09.16\",\"doc_path\":\"/docs/hiecm/v3/api/m3/endpoints/m3-post-data-flow-v3-health-information-request\",\"operation_id\":\"m3_post_data_flow_v3_health_information_request\",\"spec\":{\"description\":\"This API facilitates the exchange of health data between Health Information Providers (HIP) and Health Information Users (HIU) within the ABDM system. It ensures secure and efficient data transfer, enabling seamless communication and interoperability between different healthcare entities.\\n1. **X-HIU-ID** if the requester is HIU (SERVICE-ID).\",\"operationId\":\"m3_post_data_flow_v3_health_information_request\",\"parameters\":[{\"description\":\"Unique UUID for track the end to end request transaction\",\"example\":\"18235d89-cb13-479d-ad71-7a57d5f669a8\",\"in\":\"header\",\"name\":\"REQUEST-ID\",\"required\":true,\"schema\":{\"type\":\"string\"}},{\"description\":\"Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds\",\"example\":\"2022-10-06T15:10:00.587Z\",\"in\":\"header\",\"name\":\"TIMESTAMP\",\"required\":true,\"schema\":{\"type\":\"string\"}},{\"description\":\"Suffix of the consent manager to which the request was intended\",\"example\":\"sbx\",\"in\":\"header\",\"name\":\"X-CM-ID\",\"required\":true,\"schema\":{\"type\":\"string\"}},{\"description\":\"Identifier of the health information user to which the request was intended\",\"example\":\"IN2810014366\",\"in\":\"header\",\"name\":\"X-HIU-ID\",\"required\":true,\"schema\":{\"type\":\"string\"}}],\"requestBody\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"hiRequest\":{\"properties\":{\"consent\":{\"properties\":{\"id\":{\"description\":\"The consent artefact id for health information request. Allows alpha numeric character and special characters like \\\"^[a-zA-Z0-9_\\\\\\\\-@,. \\\\\\\":/]{0,255}$\\\"\",\"example\":\"18235d89-cb13-479d-ad71-7a57d5f669a8\",\"type\":\"string\"}},\"required\":[\"id\"],\"type\":\"object\"},\"dataPushUrl\":{\"description\":\"The URL to which the Health Information Provider has to send the health information data. Allows alpha numeric character and special characters like \\\"^[a-zA-Z0-9_\\\\\\\\-@,. \\\\\\\":=?/&]{0,255}$\\\"\",\"example\":\"https://live.ndhm.gov.in/api-hiu/data/notification\",\"type\":\"string\"},\"dateRange\":{\"description\":\"Health information created between this date range is requested\",\"properties\":{\"from\":{\"description\":\"Should be a UTC date time in ISO Format.Allows alpha numeric character and special characters like ^\\\\\\\\d{4}-\\\\\\\\d{2}-\\\\\\\\d{2}T\\\\\\\\d{2}:\\\\\\\\d{2}:\\\\\\\\d{2}.\\\\\\\\d{3}Z$\",\"example\":\"2022-10-06T15:10:00.587Z\",\"format\":\"date-time\",\"type\":\"string\"},\"to\":{\"description\":\"Should be a UTC date time in ISO Format.Allows alpha numeric character and special characters like ^\\\\\\\\d{4}-\\\\\\\\d{2}-\\\\\\\\d{2}T\\\\\\\\d{2}:\\\\\\\\d{2}:\\\\\\\\d{2}.\\\\\\\\d{3}Z$\",\"example\":\"2022-11-06T15:10:00.587Z\",\"format\":\"date-time\",\"type\":\"string\"}},\"required\":[\"from\",\"to\"],\"type\":\"object\"},\"keyMaterial\":{\"description\":\"The requester's half of the ECDH key agreement. The HIP derives the shared key from it and its own key pair, and encrypts every entry it pushes with AES-GCM.\",\"properties\":{\"cryptoAlg\":{\"description\":\"The key agreement algorithm. Always ECDH.\",\"example\":\"ECDH\",\"type\":\"string\"},\"curve\":{\"description\":\"The curve the key pair is generated on. Always Curve25519.\",\"example\":\"curve25519\",\"type\":\"string\"},\"dhPublicKey\":{\"description\":\"The public half of the ephemeral key pair generated for this transaction.\",\"properties\":{\"expiry\":{\"description\":\"When this key stops being valid, as an ISO 8601 timestamp.\",\"example\":\"2022-12-28T13:18:20.742Z\",\"type\":\"string\"},\"keyValue\":{\"description\":\"The public key, Base64 encoded, in X.509 SubjectPublicKeyInfo form.\",\"example\":\"BFN7KTdOT0jIAExG2A8Jg+01wMPWxptiGqwHRVvtiVEsUq2FR7P2UdqZxJyPJSeR6muai21iQhasNxnhh8I5M+g=\",\"type\":\"string\"},\"parameters\":{\"description\":\"The key parameters. Ephemeral public key.\",\"example\":\"Ephemeral public key\",\"type\":\"string\"}},\"required\":[\"expiry\",\"parameters\",\"keyValue\"],\"type\":\"object\"},\"nonce\":{\"description\":\"32 random bytes, Base64 encoded, generated for this transaction. The other side combines it with its own nonce to derive the AES-GCM key and initialisation vector.\",\"example\":\"28236d89-cb13-479d-ad71-7a57d5f669a9\",\"format\":\"uuid\",\"type\":\"string\"}},\"required\":[\"cryptoAlg\",\"curve\",\"dhPublicKey\"],\"type\":\"object\"}},\"required\":[\"consent\",\"dateRange\",\"dataPushUrl\",\"keyMaterial\",\"nonce\"],\"type\":\"object\"}},\"required\":[\"hiRequest\"],\"type\":\"object\"}}},\"required\":true},\"responses\":{\"202\":{\"description\":\"Accepted\"},\"400\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"error\":{\"description\":\"The error code and message, if any occurred.\",\"properties\":{\"code\":{\"description\":\"ABDM-1015 - Invalid Response. May be returned either bare (`ABDM-1015`) or with a trailing \\\": \\\" separator (`ABDM-1015: `); match on the code itself and tolerate the separator.\",\"example\":\"ABDM-1015\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"message\":{\"example\":\"Invalid Response\",\"type\":\"string\"}},\"required\":[\"code\",\"message\"],\"type\":\"object\"}},\"type\":\"object\"}}},\"description\":\"Bad Request\"},\"401\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"code\":{\"description\":\"900901 - Invalid Credentials. May be returned either bare or with a trailing \\\": \\\" separator; match on the code itself and tolerate the separator.\",\"example\":\"900901\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"description\":{\"example\":\"Invalid Credentials. Make sure you have provided the correct security credentials\",\"type\":\"string\"},\"message\":{\"example\":\"Invalid Credentials\",\"type\":\"string\"}},\"required\":[\"code\",\"message\",\"description\"],\"type\":\"object\"}}},\"description\":\"Unauthorized\"},\"403\":{\"content\":{\"text/plain\":{\"schema\":{\"example\":\"Access Denied\",\"type\":\"string\"}}},\"description\":\"Access Denied\"},\"404\":{\"content\":{\"text/plain\":{\"schema\":{\"properties\":{\"code\":{\"description\":\"404 - Runtime error. May be returned either bare or with a trailing \\\": \\\" separator; match on the code itself and tolerate the separator.\",\"example\":\"404\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"description\":{\"example\":\"No matching resource found for given API Request\",\"type\":\"string\"},\"message\":{\"example\":\"Runtime error\",\"type\":\"string\"},\"type\":{\"example\":\"status report\",\"type\":\"string\"}},\"required\":[\"code\",\"type\",\"message\",\"description\"],\"type\":\"object\"}}},\"description\":\"Not Found\"},\"500\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"code\":{\"description\":\"900900 - Unclassified Authentication Failure. May be returned either bare or with a trailing \\\": \\\" separator; match on the code itself and tolerate the separator.\",\"example\":\"900900\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"description\":{\"example\":\"Access failure for API: /hiecm/api/v3, version: v3 status: (900900) - Unclassified Authentication Failure\",\"type\":\"string\"},\"message\":{\"example\":\"Unclassified Authentication Failure\",\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"Internal Server Error\"},\"503\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"code\":{\"description\":\"ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing \\\": \\\" separator (`ABDM-1024: `); match on the code itself and tolerate the separator.\",\"example\":\"ABDM-1024\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"message\":{\"example\":\"Dependent service unavailable\",\"type\":\"string\"}},\"required\":[\"code\",\"message\"],\"type\":\"object\"}}},\"description\":\"Service Unavailable\"}},\"security\":[{\"bearerAuth\":[]}],\"summary\":\"Health information data request from HIU.\",\"tags\":[\"consent-management-data-flow-hiu\"],\"x-abdm-nha-operation-id\":\"abdm-data-flow 7\"}}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"\",\"id\":\"hiecm.glossary.auth-modes\",\"summary\":\"MOBILE_OTP, AADHAAR_OTP, DEMOGRAPHICS and DIRECT. Which are available is a property of the patient, so you ask before you choose.\",\"title\":\"Auth modes, the four ways a patient proves who they are\",\"type\":\"glossary\"}]}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T12:02:32.476Z",
+  "usage": {
+    "input_tokens": 120,
+    "output_tokens": 1709,
+    "cache_read_input_tokens": 165240,
+    "cache_creation_input_tokens": 14588,
+    "num_turns": 12,
+    "duration_ms": 26585,
+    "cost_usd_equivalent": 0.054365000000000004
+  }
+}

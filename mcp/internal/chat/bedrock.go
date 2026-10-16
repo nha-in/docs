@@ -3,8 +3,12 @@ package chat
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"log/slog"
+	"math/rand/v2"
 	"strings"
+	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	awsconfig "github.com/aws/aws-sdk-go-v2/config"
@@ -19,6 +23,32 @@ type bedrockModel struct {
 	client      *bedrockruntime.Client
 	modelID     string
 	temperature float32
+	// reasoningEffort is sent to models that take it (see
+	// reasoningFieldsFor); empty sends nothing and the provider's default
+	// applies.
+	reasoningEffort string
+}
+
+// BedrockOption configures a model built by NewBedrockModel.
+type BedrockOption func(*bedrockModel)
+
+// WithReasoningEffort sets how hard a reasoning model thinks before it
+// answers: none, low, medium, high, xhigh or max on OpenAI's GPT-5 and GPT-6
+// families. More effort costs latency and output tokens, and every question
+// has one 90 second deadline across all its model calls. Empty leaves the
+// provider's default, which AWS documents as medium for GPT-6.
+func WithReasoningEffort(effort string) BedrockOption {
+	return func(b *bedrockModel) { b.reasoningEffort = effort }
+}
+
+// ValidReasoningEffort reports whether effort is one of the levels Bedrock
+// accepts for OpenAI reasoning models, or empty for none sent.
+func ValidReasoningEffort(effort string) bool {
+	switch effort {
+	case "", "none", "low", "medium", "high", "xhigh", "max":
+		return true
+	}
+	return false
 }
 
 // NewBedrockModel resolves credentials through the SDK default chain: the
@@ -30,7 +60,7 @@ type bedrockModel struct {
 // variance is a defect there, not a feature. A low value keeps quoted
 // literals (paths, headers, error codes) stable and makes the tool loop's
 // choices repeatable.
-func NewBedrockModel(ctx context.Context, region, modelID string, temperature float32) (Model, error) {
+func NewBedrockModel(ctx context.Context, region, modelID string, temperature float32, options ...BedrockOption) (Model, error) {
 	opts := []func(*awsconfig.LoadOptions) error{}
 	if region != "" {
 		opts = append(opts, awsconfig.WithRegion(region))
@@ -39,11 +69,15 @@ func NewBedrockModel(ctx context.Context, region, modelID string, temperature fl
 	if err != nil {
 		return nil, fmt.Errorf("bedrock model: load aws config: %w", err)
 	}
-	return &bedrockModel{
+	m := &bedrockModel{
 		client:      bedrockruntime.NewFromConfig(cfg),
 		modelID:     modelID,
 		temperature: temperature,
-	}, nil
+	}
+	for _, o := range options {
+		o(m)
+	}
+	return m, nil
 }
 
 // toBedrockMessages maps our provider-agnostic Message shape onto Bedrock's
@@ -175,8 +209,135 @@ func promptCacheable(modelID string) bool {
 	return strings.Contains(modelID, "anthropic.") || strings.Contains(modelID, "amazon.nova")
 }
 
+// temperatureFor returns the sampling temperature to send, or nil for models
+// that refuse the field. OpenAI's GPT-5 and GPT-6 families are reasoning
+// models and reject any temperature with ValidationException "This model
+// doesn't support the temperature field", which fails every chat. For them
+// CHAT_TEMPERATURE is ignored and the model's own sampling applies. gpt-oss
+// accepts it and keeps it. The id may carry a cross-region prefix (global.,
+// in., us.), hence Contains.
+func temperatureFor(modelID string, t float32) *float32 {
+	if openAIReasoningModel(modelID) {
+		return nil
+	}
+	return aws.Float32(t)
+}
+
+func openAIReasoningModel(modelID string) bool {
+	return strings.Contains(modelID, "openai.gpt-5") || strings.Contains(modelID, "openai.gpt-6")
+}
+
+// reasoningFieldsFor returns the additionalModelRequestFields that set an
+// OpenAI GPT-5 or GPT-6 model's reasoning effort, or nil. Converse takes it
+// nested, {"reasoning":{"effort":...}}; the flat reasoning_effort key that
+// gpt-oss uses is rejected by these models as an unknown parameter. AWS's
+// GPT-6 model cards list the levels and a default of medium; the GPT-5.6
+// cards do not document the field, so a rejection there fails every chat and
+// the effort is a setting (CHAT_REASONING_EFFORT) that can be emptied without
+// a code change.
+func reasoningFieldsFor(modelID, effort string) document.Interface {
+	if effort == "" || !openAIReasoningModel(modelID) {
+		return nil
+	}
+	return document.NewLazyDocument(map[string]any{"reasoning": map[string]any{"effort": effort}})
+}
+
+// Bedrock failure classes, as classifyBedrockError names them. A throttle
+// and a transient failure are both worth another attempt; they are told
+// apart because the turn's log line names a throttle on its own.
+const (
+	bedrockThrottle  = "throttle"
+	bedrockTransient = "transient"
+)
+
+// classifyBedrockError reports whether err is a throttle, a transient
+// server-side failure, or neither (the empty string). It reads the error
+// code and the HTTP status through two small interfaces rather than the
+// SDK's concrete types: every Bedrock exception and every HTTP response
+// error in the chain satisfies one of them, on the initial call and inside
+// the event stream alike, and a test can build either without AWS.
+func classifyBedrockError(err error) string {
+	var coded interface{ ErrorCode() string }
+	if errors.As(err, &coded) {
+		switch coded.ErrorCode() {
+		case "ThrottlingException", "TooManyRequestsException":
+			return bedrockThrottle
+		case "InternalServerException", "ServiceUnavailableException",
+			"ModelStreamErrorException", "ModelTimeoutException", "ModelNotReadyException":
+			return bedrockTransient
+		}
+	}
+	var status interface{ HTTPStatusCode() int }
+	if errors.As(err, &status) {
+		switch code := status.HTTPStatusCode(); {
+		case code == 429:
+			return bedrockThrottle
+		case code >= 500:
+			return bedrockTransient
+		}
+	}
+	return ""
+}
+
+// streamBackoffs are the waits before the second and third attempts. Two
+// retries is the budget because every question has one 90 second deadline
+// across all its model calls: a third wait would spend it on a provider
+// that is not coming back in time.
+var streamBackoffs = []time.Duration{400 * time.Millisecond, 1200 * time.Millisecond}
+
+// jitter spreads d over plus or minus a quarter, so readers throttled in
+// the same second do not all come back in the same later one.
+func jitter(d time.Duration) time.Duration {
+	return d*3/4 + rand.N(d/2+1)
+}
+
+// sleepCtx waits for d, or returns ctx's error the moment it is cancelled.
+func sleepCtx(ctx context.Context, d time.Duration) error {
+	t := time.NewTimer(d)
+	defer t.Stop()
+	select {
+	case <-ctx.Done():
+		return ctx.Err()
+	case <-t.C:
+		return nil
+	}
+}
+
+// streamWithRetry runs attempt, and runs it again after a backoff when it
+// failed with a throttle or a transient error before any text reached
+// onText. Once a delta has been delivered there is no retry: the reader may
+// already have seen that text, and a second attempt would say it twice. A
+// cancelled ctx ends the waiting at once and the failure that was being
+// retried is returned, since that is the one worth logging.
+func streamWithRetry(ctx context.Context, wait func(context.Context, time.Duration) error,
+	onText func(string), attempt func(onText func(string)) (Reply, error)) (Reply, error) {
+
+	delivered := false
+	counting := func(delta string) {
+		delivered = true
+		if onText != nil {
+			onText(delta)
+		}
+	}
+	for try := 0; ; try++ {
+		reply, err := attempt(counting)
+		if err == nil {
+			return reply, nil
+		}
+		class := classifyBedrockError(err)
+		if class == "" || delivered || try >= len(streamBackoffs) || ctx.Err() != nil {
+			return Reply{}, err
+		}
+		slog.Warn("bedrock_retry", "class", class, "attempt", try+1, "error", err)
+		if wait(ctx, jitter(streamBackoffs[try])) != nil {
+			return Reply{}, err
+		}
+	}
+}
+
 // Stream calls Bedrock's ConverseStream and drains the event stream into one
-// assembled Reply, invoking onText as text deltas arrive.
+// assembled Reply, invoking onText as text deltas arrive. A throttle or a
+// transient failure is retried, see streamWithRetry.
 func (b *bedrockModel) Stream(ctx context.Context, system string, tools []ToolDef,
 	msgs []Message, maxTokens int, onText func(string)) (Reply, error) {
 
@@ -185,18 +346,27 @@ func (b *bedrockModel) Stream(ctx context.Context, system string, tools []ToolDe
 		return Reply{}, err
 	}
 
-	systemBlocks := systemBlocksFor(system, promptCacheable(b.modelID))
-
-	out, err := b.client.ConverseStream(ctx, &bedrockruntime.ConverseStreamInput{
-		ModelId:    aws.String(b.modelID),
-		System:     systemBlocks,
-		Messages:   toBedrockMessages(msgs),
-		ToolConfig: toolConfig,
+	input := &bedrockruntime.ConverseStreamInput{
+		ModelId:                      aws.String(b.modelID),
+		System:                       systemBlocksFor(system, promptCacheable(b.modelID)),
+		Messages:                     toBedrockMessages(msgs),
+		ToolConfig:                   toolConfig,
+		AdditionalModelRequestFields: reasoningFieldsFor(b.modelID, b.reasoningEffort),
 		InferenceConfig: &types.InferenceConfiguration{
 			MaxTokens:   aws.Int32(int32(maxTokens)),
-			Temperature: aws.Float32(b.temperature),
+			Temperature: temperatureFor(b.modelID, b.temperature),
 		},
+	}
+	return streamWithRetry(ctx, sleepCtx, onText, func(onText func(string)) (Reply, error) {
+		return b.streamOnce(ctx, input, onText)
 	})
+}
+
+// streamOnce is one ConverseStream call, drained to its end.
+func (b *bedrockModel) streamOnce(ctx context.Context, input *bedrockruntime.ConverseStreamInput,
+	onText func(string)) (Reply, error) {
+
+	out, err := b.client.ConverseStream(ctx, input)
 	if err != nil {
 		return Reply{}, fmt.Errorf("bedrock model: converse stream: %w", err)
 	}

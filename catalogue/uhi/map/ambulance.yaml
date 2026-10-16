@@ -1,0 +1,32 @@
+# UHI Ambulance Booking: init and on_init, sent directly between the EUA and
+# the ambulance HSPA. Words live in site/docs/_notes/uhi/<operationId>.mdx.
+uhi.endpoint.ambulance-init:
+  type: endpoint
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: "Send the patient's details for a quote"
+  summary: The EUA sends the chosen ambulance, billing details, the patient's ABHA address and the pickup location directly to the HSPA, which answers with on_init.
+  page: site/docs/_notes/uhi/uhi_ambulance_init.mdx
+  heading: ambulance-init
+  url: /docs/uhi/v1/api/ambulance/endpoints/uhi-ambulance-order/01-uhi-ambulance-init#ambulance-init
+  operation: uhi_ambulance_init
+  related:
+    callbacks: [uhi.callback.ambulance-on-init]
+    concepts: [uhi.concept.direct-calls, uhi.concept.signing-headers, uhi.concept.registry-lookup]
+    flows: [uhi.flow.ambulance-order]
+uhi.callback.ambulance-on-init:
+  type: callback
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Send the quote and terms
+  summary: The ambulance HSPA answers init with the order.id, the confirmed price and breakup, payment details and five terms. It is a quote, not a booking.
+  page: site/docs/_notes/uhi/uhi_ambulance_on_init.mdx
+  heading: ambulance-on-init
+  url: /docs/uhi/v1/api/ambulance/endpoints/uhi-ambulance-order/02-uhi-ambulance-on-init#ambulance-on-init
+  operation: uhi_ambulance_on_init
+  related:
+    endpoints: [uhi.endpoint.ambulance-init]
+    concepts: [uhi.concept.direct-calls, uhi.concept.verifying-signatures]
+    flows: [uhi.flow.ambulance-order]

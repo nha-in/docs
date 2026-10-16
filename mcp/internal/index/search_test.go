@@ -388,7 +388,7 @@ func TestSideFilter(t *testing.T) {
 // that repeats the term must not outrank the entry that defines it.
 func TestDefinitionQuestionsPreferTheGlossary(t *testing.T) {
 	atoms := append(fixtureAtoms(),
-		catalogue.Atom{ID: "shared.glossary.hiu", Type: "glossary", Gateway: "shared", Milestone: "n/a", Title: "HIU, health information user", Summary: "The system that requests records.", Body: "## In plain words\n\nAn HIU requests a person's records with consent.", Related: map[string][]string{}},
+		catalogue.Atom{ID: "hiecm.glossary.hiu", Type: "glossary", Gateway: "hiecm", Milestone: "n/a", Title: "HIU, health information user", Summary: "The system that requests records.", Body: "## In plain words\n\nAn HIU requests a person's records with consent.", Related: map[string][]string{}},
 		catalogue.Atom{ID: "hiecm.error.abdm-1040", Type: "error", Gateway: "hiecm", Milestone: "M3", Title: "ABDM-1040 HIU not found", Summary: "The HIU id is not registered as an HIU.", Body: "## In plain words\n\nHIU HIU HIU. The HIU in the request is not an HIU the gateway knows. Register the HIU.", Related: map[string][]string{}},
 	)
 	dbPath := filepath.Join(t.TempDir(), "catalogue.db")
@@ -405,7 +405,7 @@ func TestDefinitionQuestionsPreferTheGlossary(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		if len(hits) == 0 || hits[0].ID != "shared.glossary.hiu" {
+		if len(hits) == 0 || hits[0].ID != "hiecm.glossary.hiu" {
 			t.Errorf("%q: top hit %v, want the glossary entry first", q, ids(hits))
 		}
 	}
@@ -478,6 +478,62 @@ func TestFlowQuestionLeadsWithTheMilestoneFlows(t *testing.T) {
 	for _, h := range other {
 		if h.Type == "flow" && h.Milestone != "n/a" && strings.HasPrefix(h.ID, "hiecm.") {
 			t.Errorf("an NHCX-scoped search returned %s", h.ID)
+		}
+	}
+}
+
+// A floor above every cosine leaves the vector leg empty; zero keeps it.
+func TestVectorFloorDropsNeighbours(t *testing.T) {
+	r := openFixture(t, true)
+	f := embed.NewFake(64)
+	hits, err := r.vectorSearch(context.Background(), "link a care context", Filter{}, 10, f)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(hits) == 0 {
+		t.Fatal("fixture vector search returned nothing with no floor")
+	}
+	r.VectorFloor = 1.5 // above any cosine
+	hits, err = r.vectorSearch(context.Background(), "link a care context", Filter{}, 10, f)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(hits) != 0 {
+		t.Errorf("floor above every score should drop every hit, got %d", len(hits))
+	}
+}
+
+// An atom searched for by its own title comes first, whatever else shares
+// its words, and a query that is no atom's title is left as ranked.
+func TestSearchPinsTheAtomWhoseTitleIsTheQuery(t *testing.T) {
+	r := openFixture(t, false)
+	a, err := r.GetAtom("hiecm.endpoint.m1-enrolment-by-aadhaar")
+	if err != nil {
+		t.Fatal(err)
+	}
+	hits, err := r.Search(context.Background(), strings.ToUpper(a.Title), "", "", 5, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(hits) == 0 || hits[0].ID != a.ID {
+		t.Fatalf("searching for the title %q did not put its atom first: %+v", a.Title, hits)
+	}
+	seen := 0
+	for _, h := range hits {
+		if h.ID == a.ID {
+			seen++
+		}
+	}
+	if seen != 1 {
+		t.Errorf("the pinned atom appears %d times", seen)
+	}
+	plain, err := r.Search(context.Background(), "care context", "", "", 5, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, h := range plain {
+		if strings.EqualFold(h.Title, "care context") {
+			t.Errorf("a query that is no atom's title was pinned: %+v", h)
 		}
 	}
 }

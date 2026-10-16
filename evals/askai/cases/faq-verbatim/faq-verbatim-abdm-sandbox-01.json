@@ -32,6 +32,6 @@
   "expected_behaviour": "answer",
   "derived_from": null,
   "source_row": "annexure#abdm-faq-sandbox",
-  "catalogue_version": "2026.08.24",
+  "catalogue_version": "2026.09.16",
   "notes": "the catalogue covers the security audit gate before production without naming NHA's information security policy document by that exact title"
 }

@@ -25,7 +25,7 @@ An end-to-end journey with more than one call. Creating an ABHA by Aadhaar, link
 One OpenAPI operation. Usually generated as a stub by ingestion, then given prose by hand.
 
 - Section 3 carries the working curl with every header shown, including `REQUEST-ID`, `TIMESTAMP` and `X-CM-ID` where the gateway needs them.
-- Record the sandbox response in a fenced `response` block. `npm run verify:atoms` writes the observed one to `catalogue/verification/<operationId>.<date>.<n>.json`, named for the operation the curl calls; correct the atom when a `succeeded` record differs.
+- Record the sandbox response in a fenced `response` block.
 - Note idempotency: whether retrying with the same identifier is safe. This is asked constantly and documented rarely.
 - Link the callback atom if the operation is asynchronous. A 202 with no callback link is an incomplete atom.
 
@@ -76,6 +76,7 @@ One term. ABHA, HFR, X-CM-ID.
 - Say the expansion, then what it means in practice, then where the reader will meet it.
 - No sections 2 and 3 in the usual sense; keep the headings and write "Nothing" under 2 if that is true. Lint requires the headings, not padding.
 - Every acronym in the Catalogue links here on first use in every atom, so this is the most linked-to type. Keep the id obvious.
+- Pick the gateway by who owns the term. `shared` only when it means the same thing on every gateway (ABHA, FHIR, NHA). A term one gateway owns goes in that gateway's `glossary/`: `hiecm.glossary.hip`, `uhi.glossary.eua`. The site's glossary partials draw the same line: a term on `site/docs/_glossary/_shared.mdx` is `shared`, one on `_hiecm.mdx` is `hiecm`, one on `_uhi.mdx` is `uhi`.
 
 ## fhir
 

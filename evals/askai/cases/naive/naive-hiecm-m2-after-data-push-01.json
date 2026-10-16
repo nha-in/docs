@@ -1,0 +1,35 @@
+{
+  "id": "naive-hiecm-m2-after-data-push-01",
+  "slice": "naive",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "i pushed the data to the datapushurl, what do i do next"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "After the push, report the transfer to the gateway with notifier.type HIP and sessionStatus TRANSFERRED or FAILED.",
+    "Each care context gets a hiStatus of DELIVERED or ERRORED, because OK is the HIU's value, not the HIP's."
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.endpoint.m2-hip-data-flow-notify"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-hiecm-consent-management-data-flow-yaml",
+  "catalogue_version": "2026.09.16",
+  "notes": "The step after the push that integrators skip or fill with the HIU's values. Source lines: catalogue/hiecm/endpoints/m2-hip-data-flow-notify.md, 'After you push the encrypted records to the `dataPushUrl`, call this to report the transfer. Set `notifier.type` to `HIP`. Set `sessionStatus` to `TRANSFERRED` or `FAILED`. Give each care context a `hiStatus` of `DELIVERED` or `ERRORED`.'; 'A `hiStatus` of `OK` is the HIU's value, not the HIP's.'"
+}

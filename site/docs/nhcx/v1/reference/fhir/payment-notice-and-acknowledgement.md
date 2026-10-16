@@ -131,7 +131,11 @@ Net plus the deductions equals the adjudicated benefit, not the submitted amount
 
 ### The acknowledgement
 
-A `Task` coded `status` in `financialtaskcode`, `completed`, with an output `paymentack` and the claim number as a second output. It confirms receipt, not agreement.
+A `Task` coded `status` in `financialtaskcode`, `completed`, with an output `paymentack` and the claim number as a second output. It confirms receipt, not agreement. The hospital's case id and remarks ride in the outputs and the description, and either can be missing.
+
+### What the hospital shows
+
+The hospital maps the payer's status to its own words: Initiated as paid, Paid as cleared, Recovered as adjusted, Re-Initiated as itself, and any error as Rejected. A notice is sent only once a UTR or settlement reference exists.
 
 ### Three notices
 

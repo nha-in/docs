@@ -32,21 +32,24 @@ function walk(dir) {
   return out;
 }
 
-// Returns { atoms: Map<id, {file, fm, body, raw}>, problems: {file, msg}[] }.
-// A problem here means the atom could not be parsed at all; callers decide
-// whether that is fatal.
+// Returns { atoms: Map<id, {file, fm, body, raw}>, problems: {file, msg}[],
+// duplicates: string[] }. A problem here means the atom could not be parsed at
+// all; callers decide whether that is fatal. A duplicate is an id two files
+// carry, as "<id>: <first file>, <second file>"; the first file is kept.
 export function loadAtoms(dir = catalogueDir) {
   const atoms = new Map();
   const problems = [];
+  const duplicates = [];
   for (const file of walk(dir)) {
     const raw = readFileSync(file, "utf8");
     const m = raw.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
     if (!m) { problems.push({ file, msg: "no frontmatter block" }); continue; }
     let fm;
     try { fm = parse(m[1]); } catch (e) { problems.push({ file, msg: `frontmatter is not valid YAML: ${e.message}` }); continue; }
+    if (atoms.has(fm?.id)) { duplicates.push(`${fm.id}: ${atoms.get(fm.id).file}, ${file}`); continue; }
     atoms.set(fm?.id, { file, fm, body: m[2], raw });
   }
-  return { atoms, problems };
+  return { atoms, problems, duplicates };
 }
 
 // Pulls the text under a "## Heading" up to the next "## " heading, or end

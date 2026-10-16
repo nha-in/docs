@@ -1,0 +1,210 @@
+{
+  "case_id": "define-lis-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "What is LIS?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01E75guPhNe1puxuEymfHw8h",
+            "Name": "search",
+            "Input": {
+              "query": "LIS",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "LIS",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#lims",
+                "id": "hiecm.glossary.lims",
+                "summary": "The system a diagnostic laboratory uses to manage samples, tests and results.",
+                "title": "LIMS, laboratory information management system, also written LMIS",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#ims",
+                "id": "hiecm.glossary.ims",
+                "summary": "The umbrella term for the software a health facility runs, whichever of HMIS, EMR, LIMS or PMS it happens to be.",
+                "title": "IMS, information management system",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/fhir/codes-and-value-sets#supporting-info-categories",
+                "id": "shared.glossary.dsc",
+                "summary": "The company that builds ABDM compliant software for patients or health facilities. It is the entity that certifies, as distinct from the software that integr...",
+                "title": "DSC, Digital Solution Company",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#pms",
+                "id": "hiecm.glossary.pms",
+                "summary": "The system a pharmacy runs to dispense and to hold stock. A pharmacy uses it both to read the prescription it is dispensing against and to record what it dis...",
+                "title": "PMS, pharmacy management system",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#hrp",
+                "id": "hiecm.glossary.hrp",
+                "summary": "Whoever holds the records. It describes custody, which is why it is neither a position nor a direction.",
+                "title": "HRP, health repository provider",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m4#m4-onboard-facility",
+                "id": "hiecm.flow.m4-onboard-facility",
+                "summary": "Search for the facility first, then create it in three writes and submit it, so it leaves draft and becomes a facility ABDM can see.",
+                "title": "Onboard a facility to the HFR",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/care-context#care-context",
+                "id": "hiecm.concept.care-context",
+                "summary": "A care context is the unit a provider links to a patient's ABHA address, carrying a reference number and a display name and nothing clinical.",
+                "title": "Care contexts, how records are grouped so they can be found",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/how-it-fits#roles",
+                "id": "hiecm.concept.roles",
+                "summary": "Your role, IMS or PHR, is fixed by the entity your software acts for, while HIP and HIU change with the direction each record moves.",
+                "title": "Roles, which entity your software acts for and which way the record moves",
+                "type": "concept"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01KRScA94UsAZw8f12oQeRtk",
+            "Name": "get",
+            "Input": {
+              "id": "hiecm.glossary.lims"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "hiecm.glossary.lims"
+          },
+          "output": {
+            "body": "# LIMS, laboratory information management system, also written LMIS\n\n## In plain words\n\nLaboratory Information Management System, also written LMIS: the system a\ndiagnostic lab uses to record orders, samples and results. A laboratory\nuses it to publish as the [HIP](hip.md), linking each report as a care\ncontext in [M2](m2.md), which is most of what a lab does, and to fetch a\npatient's history as the [HIU](hiu.md) on the rarer occasions it needs to.\nSee [Hospital, lab and pharmacy systems](/docs/hiecm/v3/concepts/hip-hiu).\n\n## Before you start\n\nNothing. A glossary entry assumes no prior reading.\n\n## What happens\n\nNothing happens here. This entry defines a term, it does not describe a call.\n\n## How you know it worked\n\nYou have understood this when you can say what a LIMS links as a care context.\n\n## When it goes wrong\n\nLinking the patient once rather than each report. A LIMS links each\nreport as its own care context, which is how a specific result is found\nlater.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/getting-started/glossary#lims",
+            "gateway": "hiecm",
+            "id": "hiecm.glossary.lims",
+            "milestone": "n/a",
+            "summary": "The system a diagnostic laboratory uses to manage samples, tests and results.",
+            "title": "LIMS, laboratory information management system, also written LMIS",
+            "type": "glossary"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "In the ABDM documentation, **LIS** is referred to as **LIMS** — **Laboratory Information Management System** (also written LMIS).\n\nAccording to the [ABDM glossary](/docs/hiecm/v3/getting-started/glossary#lims):\n\nA LIMS is the system a diagnostic laboratory uses to manage samples, tests, and results. In the context of ABDM:\n\n- A lab uses it to **publish records as an HIP** (Health Information Provider) by linking each report as a separate care context in M2\n- A lab can also use it to **fetch patient history as an HIU** when needed\n- A key point: each **report should be linked as its own care context** — not just the patient once — so that specific results can be found later",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "In the ABDM documentation, **LIS** is referred to as **LIMS** — **Laboratory Information Management System** (also written LMIS).\n\nAccording to the [ABDM glossary](/docs/hiecm/v3/getting-started/glossary#lims):\n\nA LIMS is the system a diagnostic laboratory uses to manage samples, tests, and results. In the context of ABDM:\n\n- A lab uses it to **publish records as an HIP** (Health Information Provider) by linking each report as a separate care context in M2\n- A lab can also use it to **fetch patient history as an HIU** when needed\n- A key point: each **report should be linked as its own care context** — not just the patient once — so that specific results can be found later",
+  "sources": [
+    {
+      "id": "hiecm.glossary.lims",
+      "title": "LIMS, laboratory information management system, also written LMIS",
+      "url": "/docs/hiecm/v3/getting-started/glossary#lims"
+    },
+    {
+      "id": "hiecm.glossary.hrp",
+      "title": "HRP, health repository provider",
+      "url": "/docs/hiecm/v3/getting-started/glossary#hrp"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#lims\",\"id\":\"hiecm.glossary.lims\",\"summary\":\"The system a diagnostic laboratory uses to manage samples, tests and results.\",\"title\":\"LIMS, laboratory information management system, also written LMIS\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#ims\",\"id\":\"hiecm.glossary.ims\",\"summary\":\"The umbrella term for the software a health facility runs, whichever of HMIS, EMR, LIMS or PMS it happens to be.\",\"title\":\"IMS, information management system\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/nhcx/v1/reference/fhir/codes-and-value-sets#supporting-info-categories\",\"id\":\"shared.glossary.dsc\",\"summary\":\"The company that builds ABDM compliant software for patients or health facilities. It is the entity that certifies, as distinct from the software that integr...\",\"title\":\"DSC, Digital Solution Company\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#pms\",\"id\":\"hiecm.glossary.pms\",\"summary\":\"The system a pharmacy runs to dispense and to hold stock. A pharmacy uses it both to read the prescription it is dispensing against and to record what it dis...\",\"title\":\"PMS, pharmacy management system\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hrp\",\"id\":\"hiecm.glossary.hrp\",\"summary\":\"Whoever holds the records. It describes custody, which is why it is neither a position nor a direction.\",\"title\":\"HRP, health repository provider\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m4#m4-onboard-facility\",\"id\":\"hiecm.flow.m4-onboard-facility\",\"summary\":\"Search for the facility first, then create it in three writes and submit it, so it leaves draft and becomes a facility ABDM can see.\",\"title\":\"Onboard a facility to the HFR\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/care-context#care-context\",\"id\":\"hiecm.concept.care-context\",\"summary\":\"A care context is the unit a provider links to a patient's ABHA address, carrying a reference number and a display name and nothing clinical.\",\"title\":\"Care contexts, how records are grouped so they can be found\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/how-it-fits#roles\",\"id\":\"hiecm.concept.roles\",\"summary\":\"Your role, IMS or PHR, is fixed by the entity your software acts for, while HIP and HIU change with the direction each record moves.\",\"title\":\"Roles, which entity your software acts for and which way the record moves\",\"type\":\"concept\"}]}\n{\"body\":\"# LIMS, laboratory information management system, also written LMIS\\n\\n## In plain words\\n\\nLaboratory Information Management System, also written LMIS: the system a\\ndiagnostic lab uses to record orders, samples and results. A laboratory\\nuses it to publish as the [HIP](hip.md), linking each report as a care\\ncontext in [M2](m2.md), which is most of what a lab does, and to fetch a\\npatient's history as the [HIU](hiu.md) on the rarer occasions it needs to.\\nSee [Hospital, lab and pharmacy systems](/docs/hiecm/v3/concepts/hip-hiu).\\n\\n## Before you start\\n\\nNothing. A glossary entry assumes no prior reading.\\n\\n## What happens\\n\\nNothing happens here. This entry defines a term, it does not describe a call.\\n\\n## How you know it worked\\n\\nYou have understood this when you can say what a LIMS links as a care context.\\n\\n## When it goes wrong\\n\\nLinking the patient once rather than each report. A LIMS links each\\nreport as its own care context, which is how a specific result is found\\nlater.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#lims\",\"gateway\":\"hiecm\",\"id\":\"hiecm.glossary.lims\",\"milestone\":\"n/a\",\"summary\":\"The system a diagnostic laboratory uses to manage samples, tests and results.\",\"title\":\"LIMS, laboratory information management system, also written LMIS\",\"type\":\"glossary\"}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T11:59:10.019Z",
+  "usage": {
+    "input_tokens": 30,
+    "output_tokens": 703,
+    "cache_read_input_tokens": 28828,
+    "cache_creation_input_tokens": 6774,
+    "num_turns": 3,
+    "duration_ms": 10686,
+    "cost_usd_equivalent": 0.019975800000000002
+  }
+}

@@ -20,17 +20,28 @@ Two places where the gap has teeth.
 
 **The profile carries values a digest may not show you.** NRCeS fixes the
 SNOMED CT code that types a Composition at `Composition.type.coding.code`,
-three levels below the top of the resource:
+three levels below the top of the resource, and the code is different for each
+record type. `Composition.type.coding.system` is `http://snomed.info/sct`
+wherever a code is used.
 
-| Element | Fixed value |
-|---|---|
-| `Composition.type.coding.system` | `http://snomed.info/sct` |
-| `Composition.type.coding.code` | `419891008` |
-| `Composition.type.coding.display` | `Record artifact` |
+| Record type | `Composition.type.coding.code` | Where it is set |
+|---|---|---|
+| OPConsultation | `371530004`, Clinical consultation report | fixed by the OPConsultRecord profile |
+| Prescription | `440545006`, Prescription record | fixed by the PrescriptionRecord profile |
+| DischargeSummary | `373942005`, Discharge summary | fixed by the DischargeSummaryRecord profile |
+| ImmunizationRecord | `41000179103`, Immunization record | fixed by the ImmunizationRecord profile |
+| HealthDocumentRecord | `419891008`, Record artifact | fixed by the HealthDocumentRecord profile |
+| DiagnosticReport | `721981007`, Diagnostic studies report | the example; the profile fixes the system only |
+| WellnessRecord | no code; `Composition.type.text` is `Wellness Record` | the example |
+| Invoice | no code; `Composition.type.text` is `Invoice Record` | the example |
+
+Typing every document `419891008` is the commonest form of this mistake: it is
+right for a HealthDocumentRecord only, and the [HI type](/docs/hiecm/v3/getting-started/glossary#hi-type)
+a receiver reads from the bundle follows the code.
 
 A summary that reports only the top two levels of a profile shows none of them,
 and a reader concludes the code exists only in the example and is therefore
-optional. It is fixed by the profile. Check the depth of whatever summary you
+optional. Where the profile fixes it, it is not. Check the depth of whatever summary you
 are reading before concluding something is absent.
 
 **The example may use a shape the profile merely permits.** NRCeS requires

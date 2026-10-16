@@ -1,0 +1,36 @@
+{
+  "id": "naive-hiecm-m3-consent-request-id-01",
+  "slice": "naive",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "i called consent request init and only got 202 back with no body. where do i get the consent request id from"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "The init call only returns 202 Accepted, and the consent request id arrives later on a callback to your HIU bridge.",
+    "That callback lands at /api/v3/hiu/consent/request/on-init, and consentRequest.id in it is the consent request id to store."
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.endpoint.m3-consent-request-init",
+    "hiecm.callback.m3-on-consent-request-init"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-hiecm-consent-management-data-flow-yaml",
+  "catalogue_version": "2026.09.16",
+  "notes": "A first-day HIU developer expects the id in the synchronous response; a wrong answer tells them to parse the 202 body. Distinct from faq-verbatim-sandbox-m3-07, which only says an id is returned, not where. Source lines: catalogue/hiecm/endpoints/m3-consent-request-init.md, 'The call returns 202 Accepted. The consent request id arrives on [consent request on-init]'; catalogue/hiecm/callbacks/m3-on-consent-request-init.md, 'ABDM answers on your [HIU] bridge at `/api/v3/hiu/consent/request/on-init`. `consentRequest.id` is the consent request id. Store it'."
+}

@@ -1,0 +1,170 @@
+{
+  "case_id": "faq-verbatim-sandbox-general-05",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "Is WASA required for entire application or specific module?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01TTLmobykGdbSC6wfweUcvQ",
+            "Name": "search",
+            "Input": {
+              "query": "WASA requirement scope application module",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "WASA requirement scope application module",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/security-audit",
+                "id": "shared.sandbox.wasa",
+                "summary": "The security audit every integrator passes before production. It is done by a CERT-In empanelled auditor, on the staging URL, and it covers each platform sep...",
+                "title": "WASA and the Safe to Host certificate",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/going-live",
+                "id": "shared.sandbox.going-live",
+                "summary": "How an integration leaves the sandbox for production: functional testing and the security audit, the Health Tech Committee demonstration, then production cre...",
+                "title": "Going live, the sandbox exit process",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/go-live",
+                "id": "nhcx.sandbox.going-live",
+                "summary": "What happens after sandbox sign-off: the production role, registering and confirming your participant with a passcode, adding your certificate and callback a...",
+                "title": "Going live on NHCX production",
+                "type": "sandbox"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01Po98XJn2Nw2eHqJBubhsis",
+            "Name": "get",
+            "Input": {
+              "id": "shared.sandbox.wasa"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "shared.sandbox.wasa"
+          },
+          "output": {
+            "body": "# WASA and the Safe to Host certificate\n\n## In plain words\n\nWASA is the security audit of your application. You cannot go to\nproduction without it, and it is a separate exercise from anything\nfunctional: passing every milestone test still leaves this to do.\n\nThe output is a Safe to Host certificate, issued by an auditor NHA\naccepts. If your application already holds a valid Safe to Host\ncertificate, you do not need to do WASA again.\n\n## Before you start\n\nHave the modules you intend to certify actually built. NHA is explicit\nthat if one audit is to cover several modules, those modules have to\nexist before you apply.\n\n## What happens\n\nThe rules that catch integrators out, in NHA's own terms:\n\n| Question | Answer |\n|---|---|\n| Who does it | An auditor from the CERT-In empanelled list |\n| Which URL | Conducted on the staging URL, licensed to the same application in production |\n| Scope | The whole application if it has never been audited |\n| Sequential modules | A later module is audited on its own, subtracting the part already certified |\n| iOS, Android, website | Separate audits. One audit of a shared ABHA base URL does not cover the apps |\n| After a code change | Required again if the change is major, or touches the backend. Minor changes can be ignored |\n| Already hold Safe to Host | No WASA needed, unless the certificate has expired |\n\nThe scope rule is worth reading twice. If application XYZ is already in\nproduction with a certificate and you add module A, only module A is\naudited. If nothing has been audited before, the audit covers everything.\n\n## How you know it worked\n\nYou hold a Safe to Host certificate, in date, naming the application you\nare about to run in production, and covering every platform you ship.\n\n## When it goes wrong\n\nAssuming one audit covers every platform. It does not. An integrator\nshipping a website, an Android app and an iOS app needs three.\n\nAuditing production rather than staging. The audit is conducted on\nstaging and the certificate then licenses the same application in\nproduction, so pointing an auditor at a live production URL is the wrong\nway round.\n\nTreating a backend change as minor. NHA leaves the minor case to\njudgement, but anything touching the backend is named as requiring a new\naudit, and discovering that at the exit gate is expensive.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/getting-started/security-audit",
+            "gateway": "shared",
+            "id": "shared.sandbox.wasa",
+            "milestone": "n/a",
+            "summary": "The security audit every integrator passes before production. It is done by a CERT-In empanelled auditor, on the staging URL, and it covers each platform separately.",
+            "title": "WASA and the Safe to Host certificate",
+            "type": "sandbox"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "Based on the ABDM documentation on **[WASA and the Safe to Host certificate](https://developer.nha.gov.in/docs/hiecm/v3/getting-started/security-audit)**:\n\n**WASA scope depends on whether your application has been audited before:**\n\n1. **First-time audit**: WASA covers the **whole application** if it has never been audited\n2. **Sequential modules**: If your application is already in production with a valid Safe to Host certificate, a later module is audited on its own (only the new module, not the entire app)\n\n**Important notes:**\n- **Each platform is separate**: If you ship a website, Android app, and iOS app, you need three separate audits\n- **After code changes**: Required again if the change is major or touches the backend. Minor changes can be ignored\n- **Staging URL**: The audit is conducted on staging, and the certificate then licenses the same application in production\n\nSo the answer is: **specific module** if already certified, but **entire application** if it's your first time going through WASA.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "Based on the ABDM documentation on **[WASA and the Safe to Host certificate](https://developer.nha.gov.in/docs/hiecm/v3/getting-started/security-audit)**:\n\n**WASA scope depends on whether your application has been audited before:**\n\n1. **First-time audit**: WASA covers the **whole application** if it has never been audited\n2. **Sequential modules**: If your application is already in production with a valid Safe to Host certificate, a later module is audited on its own (only the new module, not the entire app)\n\n**Important notes:**\n- **Each platform is separate**: If you ship a website, Android app, and iOS app, you need three separate audits\n- **After code changes**: Required again if the change is major or touches the backend. Minor changes can be ignored\n- **Staging URL**: The audit is conducted on staging, and the certificate then licenses the same application in production\n\nSo the answer is: **specific module** if already certified, but **entire application** if it's your first time going through WASA.",
+  "sources": [
+    {
+      "id": "shared.sandbox.wasa",
+      "title": "WASA and the Safe to Host certificate",
+      "url": "/docs/hiecm/v3/getting-started/security-audit"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/security-audit\",\"id\":\"shared.sandbox.wasa\",\"summary\":\"The security audit every integrator passes before production. It is done by a CERT-In empanelled auditor, on the staging URL, and it covers each platform sep...\",\"title\":\"WASA and the Safe to Host certificate\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/going-live\",\"id\":\"shared.sandbox.going-live\",\"summary\":\"How an integration leaves the sandbox for production: functional testing and the security audit, the Health Tech Committee demonstration, then production cre...\",\"title\":\"Going live, the sandbox exit process\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/nhcx/v1/go-live\",\"id\":\"nhcx.sandbox.going-live\",\"summary\":\"What happens after sandbox sign-off: the production role, registering and confirming your participant with a passcode, adding your certificate and callback a...\",\"title\":\"Going live on NHCX production\",\"type\":\"sandbox\"}]}\n{\"body\":\"# WASA and the Safe to Host certificate\\n\\n## In plain words\\n\\nWASA is the security audit of your application. You cannot go to\\nproduction without it, and it is a separate exercise from anything\\nfunctional: passing every milestone test still leaves this to do.\\n\\nThe output is a Safe to Host certificate, issued by an auditor NHA\\naccepts. If your application already holds a valid Safe to Host\\ncertificate, you do not need to do WASA again.\\n\\n## Before you start\\n\\nHave the modules you intend to certify actually built. NHA is explicit\\nthat if one audit is to cover several modules, those modules have to\\nexist before you apply.\\n\\n## What happens\\n\\nThe rules that catch integrators out, in NHA's own terms:\\n\\n| Question | Answer |\\n|---|---|\\n| Who does it | An auditor from the CERT-In empanelled list |\\n| Which URL | Conducted on the staging URL, licensed to the same application in production |\\n| Scope | The whole application if it has never been audited |\\n| Sequential modules | A later module is audited on its own, subtracting the part already certified |\\n| iOS, Android, website | Separate audits. One audit of a shared ABHA base URL does not cover the apps |\\n| After a code change | Required again if the change is major, or touches the backend. Minor changes can be ignored |\\n| Already hold Safe to Host | No WASA needed, unless the certificate has expired |\\n\\nThe scope rule is worth reading twice. If application XYZ is already in\\nproduction with a certificate and you add module A, only module A is\\naudited. If nothing has been audited before, the audit covers everything.\\n\\n## How you know it worked\\n\\nYou hold a Safe to Host certificate, in date, naming the application you\\nare about to run in production, and covering every platform you ship.\\n\\n## When it goes wrong\\n\\nAssuming one audit covers every platform. It does not. An integrator\\nshipping a website, an Android app and an iOS app needs three.\\n\\nAuditing production rather than staging. The audit is conducted on\\nstaging and the certificate then licenses the same application in\\nproduction, so pointing an auditor at a live production URL is the wrong\\nway round.\\n\\nTreating a backend change as minor. NHA leaves the minor case to\\njudgement, but anything touching the backend is named as requiring a new\\naudit, and discovering that at the exit gate is expensive.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/getting-started/security-audit\",\"gateway\":\"shared\",\"id\":\"shared.sandbox.wasa\",\"milestone\":\"n/a\",\"summary\":\"The security audit every integrator passes before production. It is done by a CERT-In empanelled auditor, on the staging URL, and it covers each platform separately.\",\"title\":\"WASA and the Safe to Host certificate\",\"type\":\"sandbox\"}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T12:04:28.168Z",
+  "usage": {
+    "input_tokens": 30,
+    "output_tokens": 660,
+    "cache_read_input_tokens": 28231,
+    "cache_creation_input_tokens": 6475,
+    "num_turns": 3,
+    "duration_ms": 10074,
+    "cost_usd_equivalent": 0.0191031
+  }
+}

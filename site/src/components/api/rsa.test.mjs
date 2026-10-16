@@ -81,3 +81,23 @@ test('SHA-1 and SHA-256 OAEP produce different ciphertext for the same value', a
     ),
   );
 });
+
+test('certificateUrl keeps the /abha/api prefix the paths carry', () => {
+  // The send-OTP call in the screenshot that found this: server at the host,
+  // prefix in the path. The certificate went to /v3/profile/... and got a 404.
+  assert.equal(
+    mod.certificateUrl('https://abhasbx.abdm.gov.in', '/abha/api/v3/profile/login/request/otp'),
+    'https://abhasbx.abdm.gov.in/abha/api/v3/profile/public/certificate',
+  );
+  assert.equal(
+    mod.certificateUrl('https://abhasbx.abdm.gov.in/abha/api/', '/v3/enrollment/request/otp'),
+    'https://abhasbx.abdm.gov.in/abha/api/v3/profile/public/certificate',
+  );
+});
+
+test('certificateUrl gives a PHR call the PHR key', () => {
+  assert.equal(
+    mod.certificateUrl('https://abhasbx.abdm.gov.in', '/abha/api/v3/phr/app/login/request/otp'),
+    'https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/public/certificate',
+  );
+});

@@ -10,6 +10,7 @@ import (
 	"unicode/utf8"
 
 	"github.com/nha-in/docs/mcp/internal/guard"
+	"github.com/nha-in/docs/mcp/internal/route"
 )
 
 // fakeModel scripts a sequence of replies, one per call, in order. texts[i],
@@ -211,7 +212,7 @@ func TestRespondScopesTheLookupToTheReadersGateway(t *testing.T) {
 	if scoped != "hiecm" {
 		t.Errorf("lookup scope = %q, want hiecm", scoped)
 	}
-	if !strings.Contains(sawTurn, "reading the HIE-CM documentation") {
+	if !strings.Contains(sawTurn, "reading the HIE-CM section of the ABDM documentation") {
 		t.Errorf("the model was not told which documentation the reader is in: %q", sawTurn)
 	}
 }
@@ -240,6 +241,16 @@ func TestScopeFor(t *testing.T) {
 		{"", "where does HIE-CM send the consent", "hiecm"},
 		{"", "is the NHCX session token the same as the HIE-CM one", ""},
 		{"someothergateway", "anything", ""},
+		// A milestone is ABDM's, and its documentation lives in the HIE-CM
+		// section whatever page the reader is on: "what is M1" on the NHCX
+		// claims page was searched in NHCX alone and answered as "the HIE-CM
+		// milestone ... not an NHCX claims workflow".
+		{"nhcx", "what is M1 how can i integrate M1", "hiecm"},
+		{"uhi", "which milestones do I need", "hiecm"},
+		{"nhcx", "is milestone 4 required for hospitals", "hiecm"},
+		{"nhcx", "how do I get sandbox credentials", "nhcx"},
+		{"nhcx", "how do I submit a claim", "nhcx"},
+		{"nhcx", "what is M1 in HIE-CM and in NHCX", ""},
 	} {
 		if got := scopeFor(tc.page, tc.question); got != tc.want {
 			t.Errorf("scopeFor(%q, %q) = %q, want %q", tc.page, tc.question, got, tc.want)
@@ -250,11 +261,48 @@ func TestScopeFor(t *testing.T) {
 // An inferred scope must not tell the model the reader is on a page they
 // are not on.
 func TestGatewayNoteSaysWhereTheScopeCameFrom(t *testing.T) {
-	if n := gatewayNote("hiecm", true); !strings.Contains(n, "reading the HIE-CM documentation") {
+	if n := gatewayNote("hiecm", true, false); !strings.Contains(n, "reading the HIE-CM section of the ABDM documentation") {
 		t.Errorf("page scope note = %q", n)
 	}
-	if n := gatewayNote("hiecm", false); strings.Contains(n, "reading the") || !strings.Contains(n, "HIE-CM") {
+	if n := gatewayNote("hiecm", false, false); strings.Contains(n, "reading the") || !strings.Contains(n, "HIE-CM") {
 		t.Errorf("inferred scope note = %q", n)
+	}
+}
+
+// The note carries behaviour, not ABDM's facts: those are in the glossary
+// atoms the search returns. It must not tell the model to answer "for
+// HIE-CM", which is what made the panel call M1 "the HIE-CM milestone" (NHA
+// review, 30 September 2026).
+func TestGatewayNoteCarriesBehaviourNotFacts(t *testing.T) {
+	for _, gw := range []string{"hiecm", "nhcx", "uhi"} {
+		for _, wide := range []bool{false, true} {
+			n := gatewayNote(gw, true, wide)
+			for _, fact := range []string{"Answer for", "M1", "M4", "milestone"} {
+				if strings.Contains(n, fact) {
+					t.Errorf("%s note (abdmWide %v) carries %q: %s", gw, wide, fact, n)
+				}
+			}
+		}
+	}
+	if n := gatewayNote("hiecm", true, true); !strings.Contains(n, "answer at the ABDM level") {
+		t.Errorf("an ABDM-wide question must be answered at the ABDM level: %s", n)
+	}
+}
+
+func TestABDMLevelQuestions(t *testing.T) {
+	for q, want := range map[string]bool{
+		"how can I integrate with ABDM":               true,
+		"what is M1":                                  true,
+		"who is eligible for ABDM integration":        true,
+		"which milestones do I need":                  true,
+		"what authentication is needed for ABDM APIs": true,
+		"why do I get ABDM-1016 on the link call":     false,
+		"how do I link a care context":                false,
+		"what does the NHCX claim submit call return": false,
+	} {
+		if got := abdmLevel(q); got != want {
+			t.Errorf("abdmLevel(%q) = %v, want %v", q, got, want)
+		}
 	}
 }
 
@@ -562,6 +610,54 @@ func TestRespondBlocksAnInventedLiteral(t *testing.T) {
 	}
 }
 
+// An answer the guard would block is not the end of the turn: the model is
+// told which literal the documentation does not carry and gets one more go.
+// "Link record token generation" reached a reader as the blocked notice while
+// search had returned the three atoms that answer it.
+func TestRespondRetriesAnInventedLiteralOnce(t *testing.T) {
+	result := map[string]any{"hits": []map[string]any{{
+		"id": "hiecm.error.abdm-1035", "title": "Facility not onboarded",
+		"doc_url": "/docs/hiecm/v3/reference/error-codes",
+		"snippet": "ABDM-1035 means the X-HIP-ID is not registered.",
+	}}}
+	var retryPrompt string
+	fm := &fakeModel{next: func(msgs []Message) Reply {
+		switch len(msgs) {
+		case 1:
+			return Reply{ToolCalls: []ToolCall{{ID: "1", Name: "search_docs",
+				Input: json.RawMessage(`{"query":"x"}`)}}, StopReason: "tool_use"}
+		case 3:
+			return Reply{Text: "Add X-Retry-After-Ms to the call and it clears.\n", StopReason: "end_turn"}
+		default:
+			retryPrompt = msgs[len(msgs)-1].Text
+			return Reply{Text: "ABDM-1035 means your X-HIP-ID is not registered yet.\n", StopReason: "end_turn"}
+		}
+	}}
+	svc := &Service{Model: fm, MaxTokens: 100,
+		Tools: []ToolDef{{Name: "search_docs",
+			Call: func(context.Context, json.RawMessage) (map[string]any, error) { return result, nil }}}}
+	var seen strings.Builder
+	emit := func(name string, data any) error {
+		if name == "text" {
+			seen.WriteString(data.(map[string]string)["delta"])
+		}
+		return nil
+	}
+	if err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: "why ABDM-1035?"}}, nil, emit); err != nil {
+		t.Fatal(err)
+	}
+	got := seen.String()
+	if strings.Contains(got, "X-Retry-After-Ms") || strings.Contains(got, BlockedNotice) {
+		t.Errorf("the first draft or the notice reached the reader: %q", got)
+	}
+	if !strings.Contains(got, "X-HIP-ID is not registered") {
+		t.Errorf("the corrected answer went missing: %q", got)
+	}
+	if !strings.Contains(retryPrompt, "X-Retry-After-Ms") {
+		t.Errorf("the retry did not name the literal: %q", retryPrompt)
+	}
+}
+
 // The model narrating its own plumbing ("let me look that up") before a tool
 // call must never reach the reader. The prompt already forbids it, which is
 // exactly why this is here: the tool call that identifies the words as
@@ -790,7 +886,7 @@ func TestRespondRetriesWithoutPuttingWordsInTheReadersMouth(t *testing.T) {
 	// mention of the first attempt.
 	// Asked with no page, the question's scope is inferred, and its note
 	// rides with the retry in the same place a page's would.
-	want := lookFirst + "\n\n" + gatewayNote("hiecm", false) + "\n\n" + ShapeBlock("define") + "\n\n" + "jhhjjk"
+	want := lookFirst + "\n\n" + gatewayNote("hiecm", false, false) + "\n\n" + ShapeBlock("define") + "\n\n" + "jhhjjk"
 	if got := fm.gotMsgs[1]; len(got) != 1 || got[0].Text != want {
 		t.Errorf("the retry changed the conversation: %+v", got)
 	}
@@ -1211,6 +1307,25 @@ func TestLookupQueryLeavesALongTurnAlone(t *testing.T) {
 	}
 }
 
+// A follow-up that points back ("that callback", "it", "both") names nothing
+// the search can find on its own, whatever its length: "how do i know which
+// patient's request that callback is for" is nine words and retrieved a
+// discovery callback instead of the link-token callback it meant. Follow-ups
+// scored 0.20 recall at 3 on the first recorded run.
+func TestLookupQueryCarriesThePreviousTurnForAFollowUpThatRefersBack(t *testing.T) {
+	for _, tc := range []struct{ prev, last string }{
+		{"how do I link a care context to a patient's ABHA", "how do i know which patient's request that callback is for"},
+		{"patient approved my consent request, what next", "there were two ids in it, do i need both"},
+		{"how do i create an ABHA with aadhaar otp", "ok got the number back. now how does the person pick their address"},
+		{"how do I get the X-token after a mobile OTP login", "and when it expires? do they have to login again"},
+	} {
+		turns := []Turn{{Role: "user", Text: tc.prev}, {Role: "assistant", Text: "..."}, {Role: "user", Text: tc.last}}
+		if got := lookupQuery(turns); !strings.Contains(got, tc.prev) || !strings.Contains(got, tc.last) {
+			t.Errorf("lookupQuery for %q = %q, want both turns", tc.last, got)
+		}
+	}
+}
+
 // TestRespondPreRetrievesOnAShortFollowUp covers finding 5 end to end: the
 // pre-retrieval query for "and the address?" must carry the previous turn,
 // or a follow-up like it can never find the flow it is asking to continue.
@@ -1296,6 +1411,35 @@ func TestSystemPromptIsStableAndShapeAndPageRideInTheUserTurn(t *testing.T) {
 	}
 }
 
+func TestRespondAnswersAQuestionAboutItselfWithoutLookingItUp(t *testing.T) {
+	// "how many languages do you understand" retrieved header and certificate
+	// atoms and cited them under an answer that said the documentation did
+	// not specify.
+	var sawTurn string
+	m := &fakeModel{next: func(msgs []Message) Reply {
+		sawTurn = msgs[len(msgs)-1].Text
+		return Reply{Text: "I read and reply in the language you write in."}
+	}}
+	svc := &Service{Model: m, MaxTokens: 100,
+		Lookup: func(ctx context.Context, q string) (json.RawMessage, []Source, guard.PackFacts, error) {
+			t.Fatal("a question about the assistant was looked up")
+			return nil, nil, guard.PackFacts{}, nil
+		},
+	}
+	emit, evs := collectEvents()
+	if err := svc.RespondCommand(context.Background(), []Turn{{Role: "user", Text: "how many languages do you understand"}}, nil, Command{Gateway: "hiecm"}, emit); err != nil {
+		t.Fatal(err)
+	}
+	for _, e := range *evs {
+		if e.name == "sources" {
+			t.Errorf("a question about the assistant cited sources: %v", e.data)
+		}
+	}
+	if !strings.Contains(sawTurn, `name="self"`) {
+		t.Errorf("the self shape did not reach the model: %q", sawTurn)
+	}
+}
+
 func TestSourcesComeFromTheNewToolNames(t *testing.T) {
 	var got []Source
 	collectSources(&got, "get", map[string]any{"id": "hiecm.error.abdm-1035", "title": "T", "doc_url": "/d"})
@@ -1313,5 +1457,404 @@ func TestFlowsFirstOnlyForAFlowQuestion(t *testing.T) {
 	}
 	if got := flowsFirst(src, "how do I link a care context"); got[0].ID != "a" {
 		t.Errorf("a non-flow question was reordered: %v", got)
+	}
+}
+
+// "thanks" used to match the greeting and got "Hi. What are you building?"
+// back, so a reader closing a conversation was greeted as if they had just
+// arrived. It now gets its own fixed line, still with no lookup and no model.
+func TestRespondAnswersThanksWithoutGreetingBack(t *testing.T) {
+	m := &fakeModel{next: func([]Message) Reply {
+		t.Fatal("the model was called for thanks")
+		return Reply{}
+	}}
+	svc := &Service{Model: m, MaxTokens: 100,
+		Lookup: func(ctx context.Context, q string) (json.RawMessage, []Source, guard.PackFacts, error) {
+			t.Fatal("thanks was looked up")
+			return nil, nil, guard.PackFacts{}, nil
+		},
+	}
+	emit, evs := collectEvents()
+	if err := svc.RespondCommand(context.Background(), []Turn{{Role: "user", Text: "thanks!"}}, nil, Command{Gateway: "hiecm"}, emit); err != nil {
+		t.Fatal(err)
+	}
+	var text string
+	for _, e := range *evs {
+		if e.name == "text" {
+			text += e.data.(map[string]string)["delta"]
+		}
+	}
+	if text != thanksReply {
+		t.Errorf("thanks got %q, want %q", text, thanksReply)
+	}
+	if strings.Contains(text, "What are you building") {
+		t.Error("thanks was answered with the greeting")
+	}
+}
+
+// An endpoint passage opens with its method and path and names its page, so
+// the turn ends with a links event pairing the two. The widget renders the
+// path as a link from that, never from anything the model wrote.
+func TestRespondEmitsLinksForEndpointPassages(t *testing.T) {
+	m := &fakeModel{replies: []Reply{{Text: "Call `/api/hiecm/v3/token/generate-token` first.", StopReason: "end_turn"}}}
+	svc := &Service{Model: m, MaxTokens: 100,
+		Lookup: func(ctx context.Context, q string) (json.RawMessage, []Source, guard.PackFacts, error) {
+			return json.RawMessage(`{"passages":[
+				{"id":"hiecm.endpoint.m2-generate-link-token","title":"Generate link token","doc_url":"/docs/hiecm/v3/api/m2/generate-token","body":"POST /api/hiecm/v3/token/generate-token\n\nGenerates a link token."},
+				{"id":"hiecm.concept.care-context","title":"Care context","doc_url":"/docs/hiecm/v3/concepts/care-context","body":"A care context is a visit."},
+				{"id":"hiecm.endpoint.orphan","title":"No page","doc_url":"","body":"GET /api/nowhere\n\nUnrouted."}]}`),
+				[]Source{{ID: "hiecm.endpoint.m2-generate-link-token"}}, guard.PackFacts{}, nil
+		},
+	}
+	var links []Link
+	emit := func(event string, data any) error {
+		if event == "links" {
+			links = data.([]Link)
+		}
+		return nil
+	}
+	if err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: "link records"}}, nil, emit); err != nil {
+		t.Fatal(err)
+	}
+	want := Link{Literal: "/api/hiecm/v3/token/generate-token", URL: "/docs/hiecm/v3/api/m2/generate-token"}
+	if len(links) != 1 || links[0] != want {
+		t.Errorf("links = %v, want [%v]: one per endpoint passage with a route line and a page", links, want)
+	}
+}
+
+// The related atoms one hop out from the pack become up to three pills, none
+// of them a passage the reader was already shown.
+func TestSuggestionsFromPack(t *testing.T) {
+	pack := []byte(`{"passages":[{"id":"hiecm.x.a"}],"next":[
+		{"id":"hiecm.x.a","type":"flow","title":"Already shown"},
+		{"id":"hiecm.x.b","type":"flow","title":"Link a care context"},
+		{"id":"","type":"flow","title":"No id"},
+		{"id":"hiecm.x.c","type":"error","title":"ABDM-1016"},
+		{"id":"hiecm.x.b","type":"flow","title":"Duplicate"},
+		{"id":"hiecm.x.d","type":"concept","title":"Care context"},
+		{"id":"hiecm.x.e","type":"concept","title":"One too many"}]}`)
+	got := suggestionsFromPack(pack, "")
+	want := []Suggestion{
+		{ID: "hiecm.x.b", Title: "Link a care context", Prompt: "Link a care context"},
+		{ID: "hiecm.x.c", Title: "ABDM-1016", Prompt: "ABDM-1016"},
+		{ID: "hiecm.x.d", Title: "Care context", Prompt: "Care context"},
+	}
+	if len(got) != len(want) {
+		t.Fatalf("got %v, want %v", got, want)
+	}
+	for i := range want {
+		if got[i] != want[i] {
+			t.Errorf("suggestion %d = %v, want %v", i, got[i], want[i])
+		}
+	}
+}
+
+// A pill stays in the answer's gateway. "what is abha" opened the shared
+// ABHA entry, which NHCX callbacks cite, and offered three of them.
+func TestSuggestionsStayInTheGateway(t *testing.T) {
+	pack := []byte(`{"passages":[{"id":"shared.glossary.abha"}],"next":[
+		{"id":"nhcx.callback.claim-on-submit","title":"Receiving POST /v1/claim/on_submit"},
+		{"id":"uhi.flow.search","title":"Search for a doctor"},
+		{"id":"shared.glossary.ayushman-card","title":"Ayushman card"},
+		{"id":"hiecm.flow.m1-create-abha","title":"Create an ABHA number"}]}`)
+	ids := func(s []Suggestion) []string {
+		var out []string
+		for _, x := range s {
+			out = append(out, x.ID)
+		}
+		return out
+	}
+	cases := []struct {
+		scope string
+		want  []string
+	}{
+		// No scope and a shared top passage: HIE-CM, ABDM's own gateway.
+		{"", []string{"shared.glossary.ayushman-card", "hiecm.flow.m1-create-abha"}},
+		{"hiecm", []string{"shared.glossary.ayushman-card", "hiecm.flow.m1-create-abha"}},
+		{"nhcx", []string{"nhcx.callback.claim-on-submit", "shared.glossary.ayushman-card"}},
+	}
+	for _, c := range cases {
+		if got := ids(suggestionsFromPack(pack, c.scope)); strings.Join(got, ",") != strings.Join(c.want, ",") {
+			t.Errorf("scope %q: got %v, want %v", c.scope, got, c.want)
+		}
+	}
+	// No scope: a gateway top passage sets the gateway.
+	nhcxTop := []byte(`{"passages":[{"id":"nhcx.concept.policy-linking"}],"next":[
+		{"id":"hiecm.flow.m1-create-abha","title":"Create an ABHA number"},
+		{"id":"nhcx.flow.coverage","title":"Check coverage"}]}`)
+	if got := ids(suggestionsFromPack(nhcxTop, "")); strings.Join(got, ",") != "nhcx.flow.coverage" {
+		t.Errorf("nhcx top passage: got %v, want [nhcx.flow.coverage]", got)
+	}
+}
+
+// A question about the assistant with a file attached still takes the self
+// shape: "what can you do with this" is about the assistant, and the self
+// facts say it reads what is attached.
+func TestAboutSelfWithAttachmentTakesSelfShape(t *testing.T) {
+	var lastUser string
+	m := &fakeModel{
+		replies:  []Reply{{Text: "I read the request you attached and explain it.", StopReason: "end_turn"}},
+		onStream: func(system string, tools []ToolDef, msgs []Message) { lastUser = msgs[len(msgs)-1].Text },
+	}
+	svc := &Service{Model: m, MaxTokens: 100,
+		Lookup: func(ctx context.Context, q string) (json.RawMessage, []Source, guard.PackFacts, error) {
+			t.Fatal("an about question was looked up")
+			return nil, nil, guard.PackFacts{}, nil
+		},
+	}
+	emit := func(event string, data any) error { return nil }
+	turns := []Turn{{Role: "user", Text: "what can you do with this?", Attachment: &Attachment{Name: "req.txt", Text: "POST /x"}}}
+	if err := svc.Respond(context.Background(), turns, nil, emit); err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(lastUser, `<answer_shape name="self"`) {
+		t.Errorf("about question with attachment did not take the self shape: %q", lastUser)
+	}
+}
+
+// A bare portal feature name gets the portal's page from a fixed reply, with
+// no lookup and no model, the way a greeting does.
+func TestRespondAnswersAPortalFeatureNameWithoutLookingItUp(t *testing.T) {
+	m := &fakeModel{next: func([]Message) Reply {
+		t.Fatal("the model was called for a feature name")
+		return Reply{}
+	}}
+	svc := &Service{Model: m, MaxTokens: 100,
+		Lookup: func(ctx context.Context, q string) (json.RawMessage, []Source, guard.PackFacts, error) {
+			t.Fatalf("a feature name was looked up: %q", q)
+			return nil, nil, guard.PackFacts{}, nil
+		},
+	}
+	for _, tc := range []struct{ q, want string }{
+		{"scaffold skill", "/docs/hiecm/v3/getting-started/build-with-ai"},
+		{"MCP server", "/docs/hiecm/v3/getting-started/build-with-ai"},
+		{"postman collection", "/docs/hiecm/v3/api/"},
+	} {
+		emit, evs := collectEvents()
+		if err := svc.RespondCommand(context.Background(), []Turn{{Role: "user", Text: tc.q}}, nil, Command{}, emit); err != nil {
+			t.Fatal(err)
+		}
+		var text string
+		for _, e := range *evs {
+			if e.name == "text" {
+				text += e.data.(map[string]string)["delta"]
+			}
+		}
+		if !strings.Contains(text, tc.want) {
+			t.Errorf("%q: reply %q does not name %s", tc.q, text, tc.want)
+		}
+	}
+}
+
+// A two or three word noun phrase whose top passage is a flow takes the
+// topic shape; the same phrase over a glossary passage stays a definition.
+func TestShortPhraseOverAFlowTakesTheTopicShape(t *testing.T) {
+	for _, tc := range []struct{ top, wantShape string }{{"flow", "topic"}, {"glossary", "define"}} {
+		var lastUser string
+		m := &fakeModel{
+			replies:  []Reply{{Text: "Consent is requested by an HIU.", StopReason: "end_turn"}},
+			onStream: func(system string, tools []ToolDef, msgs []Message) { lastUser = msgs[len(msgs)-1].Text },
+		}
+		svc := &Service{Model: m, MaxTokens: 100,
+			Lookup: func(ctx context.Context, q string) (json.RawMessage, []Source, guard.PackFacts, error) {
+				return json.RawMessage(`{"passages":[{"id":"hiecm.flow.m3-request-consent","type":"` + tc.top + `","title":"Request consent","body":"An HIU requests consent."}]}`),
+					[]Source{{ID: "hiecm.flow.m3-request-consent"}}, guard.PackFacts{}, nil
+			},
+		}
+		if err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: "consent flow"}}, nil, func(string, any) error { return nil }); err != nil {
+			t.Fatal(err)
+		}
+		if !strings.Contains(lastUser, `<answer_shape name="`+tc.wantShape+`"`) {
+			t.Errorf("top passage %s: shape should be %s, user turn was %q", tc.top, tc.wantShape, lastUser)
+		}
+	}
+}
+
+// A path the model quoted from a flow atom, with a method in front of it,
+// links once the answer is finished; a path nobody documents does not.
+func TestAnswerLinksResolveQuotedPaths(t *testing.T) {
+	answer := "Call `POST /api/hiecm/v3/token/generate-token`, then `/api/hiecm/hip/v3/link/carecontext`. Not `/api/nowhere`."
+	m := &fakeModel{texts: []string{answer}, replies: []Reply{{Text: answer, StopReason: "end_turn"}}}
+	svc := &Service{Model: m, MaxTokens: 100,
+		Lookup: func(ctx context.Context, q string) (json.RawMessage, []Source, guard.PackFacts, error) {
+			return json.RawMessage(`{"passages":[{"id":"hiecm.flow.m2-link-care-context","type":"flow","title":"Link","doc_url":"/docs/hiecm/v3/flows/m2","body":"POST /api/hiecm/v3/token/generate-token then POST /api/hiecm/hip/v3/link/carecontext and /api/nowhere"}]}`),
+				[]Source{{ID: "hiecm.flow.m2-link-care-context"}}, guard.PackFacts{}, nil
+		},
+		LinkFor: func(path string) (string, bool) {
+			pages := map[string]string{
+				"/api/hiecm/v3/token/generate-token": "/docs/hiecm/v3/api/m2/endpoints/generate-token",
+				"/api/hiecm/hip/v3/link/carecontext": "/docs/hiecm/v3/api/m2/endpoints/link-carecontext",
+			}
+			u, ok := pages[path]
+			return u, ok
+		},
+	}
+	var links []Link
+	var text string
+	emit := func(event string, data any) error {
+		if event == "links" {
+			links = data.([]Link)
+		}
+		if event == "text" {
+			text += data.(map[string]string)["delta"]
+		}
+		return nil
+	}
+	if err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: "link records"}}, nil, emit); err != nil {
+		t.Fatal(err)
+	}
+	if text == "" {
+		t.Fatal("no text was released")
+	}
+	got := map[string]string{}
+	for _, l := range links {
+		got[l.Literal] = l.URL
+	}
+	if len(got) != 2 || got["/api/hiecm/v3/token/generate-token"] == "" || got["/api/hiecm/hip/v3/link/carecontext"] == "" {
+		t.Errorf("links = %v; want the two documented paths and not /api/nowhere", links)
+	}
+}
+
+// The pack's related list is the model's hint that siblings exist, backlinks
+// included. Pills never come from it: a pack with related atoms and no next
+// list offers nothing.
+func TestSuggestionsIgnoreTheRelatedList(t *testing.T) {
+	pack := []byte(`{"passages":[{"id":"shared.glossary.abha"}],"related":[
+		{"id":"hiecm.callback.m2-on-generate-token","type":"callback","title":"A backlink"}]}`)
+	if got := suggestionsFromPack(pack, "hiecm"); len(got) != 0 {
+		t.Errorf("pills came from the related list: %v", got)
+	}
+}
+
+// Next questions follow an open-ended question and no other. A definition, a
+// diagnosis, a comparison or a how-to about one named call has one answer.
+func TestOpenEnded(t *testing.T) {
+	for _, tc := range []struct {
+		shape route.Shape
+		r     route.Result
+		want  bool
+	}{
+		{route.Overview, route.Result{}, true},
+		{route.Topic, route.Result{}, true},
+		{route.Walkthrough, route.Result{}, true},
+		{route.HowDoI, route.Result{}, true},
+		{route.HowDoI, route.Result{OperationRef: "/api/hiecm/v3/token/generate-token"}, false},
+		{route.HowDoI, route.Result{ErrorCodes: []string{"ABDM-1016"}}, false},
+		{route.Define, route.Result{}, false},
+		{route.Diagnose, route.Result{}, false},
+		{route.Compare, route.Result{}, false},
+		{route.Meta, route.Result{}, false},
+		{route.Self, route.Result{}, false},
+	} {
+		if got := openEnded(string(tc.shape), tc.r); got != tc.want {
+			t.Errorf("openEnded(%s, %+v) = %v, want %v", tc.shape, tc.r, got, tc.want)
+		}
+	}
+}
+
+// The same pack offers next questions under "link records" and none under
+// "what is an abha address", and none under an answer that declined.
+func TestRespondOffersNextOnlyWhenOpenEnded(t *testing.T) {
+	pack := `{"passages":[{"id":"hiecm.flow.m2-link-care-context","type":"flow","title":"Link a care context","body":"A HIP links care contexts."}],
+		"next":[{"id":"hiecm.flow.p2-discover-and-link","type":"flow","title":"Discover and link","question":"How does a PHR app link records?"}]}`
+	for _, tc := range []struct {
+		q, answer string
+		want      int
+	}{
+		{"link records", "Linking records attaches a care context to an ABHA address.", 1},
+		{"what is an abha address", "An ABHA address is a readable handle.", 0},
+		{"how do I link records as a HIP", "Linking for a HIP is not documented on this portal. See /docs/support.", 0},
+		{"how do I link records in bulk", "This is not covered here; the nearest page is /docs/hiecm/v3/milestones/m2.", 0},
+	} {
+		m := &fakeModel{texts: []string{tc.answer}, replies: []Reply{{Text: tc.answer, StopReason: "end_turn"}}}
+		svc := &Service{Model: m, MaxTokens: 100,
+			Lookup: func(ctx context.Context, q string) (json.RawMessage, []Source, guard.PackFacts, error) {
+				return json.RawMessage(pack), []Source{{ID: "hiecm.flow.m2-link-care-context"}}, guard.PackFacts{}, nil
+			},
+		}
+		var got []Suggestion
+		emit := func(event string, data any) error {
+			if event == "suggestions" {
+				got = data.([]Suggestion)
+			}
+			return nil
+		}
+		if err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: tc.q}}, nil, emit); err != nil {
+			t.Fatal(err)
+		}
+		if len(got) != tc.want {
+			t.Errorf("%q: %d suggestions, want %d: %v", tc.q, len(got), tc.want, got)
+		}
+		if tc.want == 1 && got[0].Prompt != "How does a PHR app link records?" {
+			t.Errorf("%q: prompt = %q, want the atom's own question", tc.q, got[0].Prompt)
+		}
+	}
+}
+
+// A question for a whole flow or a whole build asks the lookup to expand;
+// a definition does not.
+func TestLookupIsAskedToExpandForAWholeFlow(t *testing.T) {
+	for _, tc := range []struct {
+		q    string
+		want bool
+	}{
+		{"Explain the complete consent and data sharing flow from consent request creation until health records are received by the HIU.", true},
+		{"How to build a PHR application", true},
+		{"what is an abha address", false},
+	} {
+		var asked bool
+		m := &fakeModel{texts: []string{"ok."}, replies: []Reply{{Text: "ok.", StopReason: "end_turn"}}}
+		svc := &Service{Model: m, MaxTokens: 100,
+			Lookup: func(ctx context.Context, q string) (json.RawMessage, []Source, guard.PackFacts, error) {
+				asked = ExpandFrom(ctx)
+				return json.RawMessage(`{"passages":[{"id":"hiecm.flow.x","type":"flow","title":"X","body":"x"}]}`),
+					[]Source{{ID: "hiecm.flow.x"}}, guard.PackFacts{}, nil
+			},
+		}
+		if err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: tc.q}}, nil, func(string, any) error { return nil }); err != nil {
+			t.Fatal(err)
+		}
+		if asked != tc.want {
+			t.Errorf("%q: expand = %v, want %v", tc.q, asked, tc.want)
+		}
+	}
+}
+
+// A follow-up's pack carries the earlier question's passages beside its
+// own, each once, and keeps the rest of its own pack.
+func TestMergePacksInterleavesAndDropsRepeats(t *testing.T) {
+	a := []byte(`{"passages":[{"id":"x"},{"id":"y"}],"next":[{"id":"n"}]}`)
+	b := []byte(`{"passages":[{"id":"m1"},{"id":"x"},{"id":"m2"}]}`)
+	var got struct {
+		Passages []struct{ ID string } `json:"passages"`
+		Next     []struct{ ID string } `json:"next"`
+	}
+	if err := json.Unmarshal(mergePacks(a, b), &got); err != nil {
+		t.Fatal(err)
+	}
+	var ids []string
+	for _, p := range got.Passages {
+		ids = append(ids, p.ID)
+	}
+	if strings.Join(ids, " ") != "x m1 y m2" || len(got.Next) != 1 {
+		t.Errorf("merged: %v, next %v", ids, got.Next)
+	}
+	if string(mergePacks(a, []byte("not json"))) != string(a) {
+		t.Error("a pack that cannot be read leaves the first as it was")
+	}
+}
+
+// A short turn after a question leans on it; a full question does not.
+func TestCarriedFrom(t *testing.T) {
+	first := Turn{Role: "user", Text: "how do I integrate m1?"}
+	answer := Turn{Role: "assistant", Text: "..."}
+	if got := carriedFrom([]Turn{first, answer, {Role: "user", Text: "as a hmis"}}); got != first.Text {
+		t.Errorf("a few words carry the question before them, got %q", got)
+	}
+	if got := carriedFrom([]Turn{first, answer, {Role: "user", Text: "what is the encryption algorithm used in data transfer"}}); got != "" {
+		t.Errorf("a full question stands alone, got %q", got)
+	}
+	if got := carriedFrom([]Turn{{Role: "user", Text: "consent flow"}}); got != "" {
+		t.Errorf("a first question has nothing before it, got %q", got)
 	}
 }

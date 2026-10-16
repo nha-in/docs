@@ -10,7 +10,7 @@ import {parse} from 'yaml';
 import {listSpecTree} from './specs.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-const dir = join(root, 'catalogue', 'openapi', 'uhi', 'v1');
+const dir = join(root, 'catalogue', 'uhi', 'openapi', 'v1');
 const FILES = {network: 'uhi-network.yaml', consultation: 'uhi-consultation.yaml', ambulance: 'uhi-ambulance.yaml'};
 const load = (m) => parse(readFileSync(join(dir, FILES[m]), 'utf8'));
 const ops = (spec) => Object.entries(spec.paths ?? {}).flatMap(([path, item]) => Object.entries(item).filter(([m]) => m === 'post').map(([, op]) => ({path, op})));
@@ -32,7 +32,7 @@ test('operation counts', () => {
   assert.equal(ops(load('ambulance')).length, 2);
 });
 
-test('operationIds unique across catalogue/openapi', () => {
+test('operationIds unique across every gateway spec', () => {
   const ids = listSpecTree().flatMap(({files}) => files.flatMap((f) => {
     const s = parse(readFileSync(f.path, 'utf8'));
     return [...Object.values(s.paths ?? {}), ...Object.values(s.webhooks ?? {})].flatMap((item) => Object.values(item).map((o) => o?.operationId).filter(Boolean));
@@ -48,7 +48,7 @@ test('no suffix leaks', () => {
 });
 
 test('mandatory extensions', () => {
-  const manifest = readFileSync(join(root, 'catalogue', 'openapi', '.raw', 'nha-2026-09-28-uhi', 'MANIFEST.md'), 'utf8');
+  const manifest = readFileSync(join(root, 'catalogue', 'uhi', 'openapi', '.raw', 'nha-2026-09-28-uhi', 'MANIFEST.md'), 'utf8');
   for (const m of Object.keys(FILES)) {
     const s = load(m);
     assert.equal(s.openapi, '3.1.1');
@@ -59,7 +59,7 @@ test('mandatory extensions', () => {
     assert.equal(s.info['x-portal'].module, m);
     assert.ok(s['x-abdm-sources']?.length >= 2);
     for (const src of s['x-abdm-sources']) {
-      const rel = src.file.replace('catalogue/openapi/.raw/nha-2026-09-28-uhi/', '');
+      const rel = src.file.replace('catalogue/uhi/openapi/.raw/nha-2026-09-28-uhi/', '');
       assert.ok(manifest.includes(`| \`${rel}\` | \`${src.hash.replace('sha256:', '')}\``), `${src.file} hash matches the manifest`);
     }
   }

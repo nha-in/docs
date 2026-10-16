@@ -85,7 +85,7 @@ related:
 
 ## In plain words
 
-This test case checks the first exchange of a [PMJAY](../glossary/pmjay.md) admission. Your [HMIS](../../shared/glossary/hmis.md) sends a coverage eligibility request with purpose `validation` for the patient's [ABHA](../../shared/glossary/abha.md) number. The payer answers on your callback with the patient's cover and wallet position.
+This test case checks the first exchange of a [PMJAY](../glossary/pmjay.md) admission. Your [HMIS](../../hiecm/glossary/hmis.md) sends a coverage eligibility request with purpose `validation` for the patient's [ABHA](../../shared/glossary/abha.md) number. The payer answers on your callback with the patient's cover and wallet position.
 
 It is the happy path: a linked ABHA number and an active policy.
 

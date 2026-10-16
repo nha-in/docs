@@ -1,0 +1,36 @@
+{
+  "id": "naive-hiecm-m1-update-mobile-01",
+  "slice": "naive",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "how to change the mobile number linked to someones abha"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "Call POST /abha/api/v3/profile/account/request/otp with scope abha-profile and mobile-verify, loginHint mobile and the encrypted new number as loginId, then POST /abha/api/v3/profile/account/verify with the same scope, the txnId and the encrypted OTP.",
+    "Both calls carry the person's X-token, so the person has to be logged in first.",
+    "The OTP goes to the new number, not the old one."
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.flow.m1-update-mobile"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-abha-m1-abha-collection-json",
+  "catalogue_version": "2026.09.16",
+  "notes": "Profile update is the last M1 area and needs the X-token, which people forget. Source lines: catalogue/hiecm/flows/m1-update-mobile.md, '`POST /abha/api/v3/profile/account/request/otp` with scope `abha-profile` and `mobile-verify`, then `POST /abha/api/v3/profile/account/verify` with the same scope and the OTP. Both carry the person's `X-token`.'; 'Request the OTP with scope `abha-profile` and `mobile-verify`, `loginHint` set to `mobile` and the encrypted new number as `loginId`. Verify with the same scope, the `txnId` and the encrypted OTP'; 'The person logged in, so you hold their `X-token`'; 'The OTP goes to the new number, not the old one'."
+}

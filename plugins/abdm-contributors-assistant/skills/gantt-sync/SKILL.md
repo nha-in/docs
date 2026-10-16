@@ -87,7 +87,7 @@ finished. The test is external.
 
 | Stream | Done means |
 |---|---|
-| Catalogue | Atoms merged, lint passing, and for M1 to M3 endpoint atoms, a curl run against sandbox with the response recorded |
+| Catalogue | Atoms merged and lint passing |
 | Site and MCP | The page or surface is reachable and behaves, not that the config is written |
 | Skills | The skill compiles, validates and installs, not that the template exists |
 | Pipeline | It has run once for real, not that it is deployed |
@@ -192,5 +192,5 @@ exactly as with the plan itself.
 - The schedule this is compiled from: `portal-planning`, plan#p8-schedule
 - Editing the plan that feeds it: `plan-sync`
 - What moved and what is blocked, in prose: `/standup`
-- Coverage and verification state behind a percentage: `/catalogue-status`
+- Coverage and graph health behind a percentage: `/catalogue-status`
 - Apply it: `/gantt-update`

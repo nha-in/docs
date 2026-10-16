@@ -2,14 +2,14 @@
  {
   "query": "am I a HIP or a HIU?",
   "expect": [
-   "shared.glossary.hip",
-   "shared.glossary.hiu"
+   "hiecm.glossary.hip",
+   "hiecm.glossary.hiu"
   ]
  },
  {
   "query": "is the link token the access token?",
   "expect": [
-   "shared.glossary.link-token"
+   "hiecm.glossary.link-token"
   ]
  },
  {
@@ -40,7 +40,7 @@
  {
   "query": "What is discovery in ABDM?",
   "expect": [
-   "shared.glossary.discovery"
+   "hiecm.glossary.discovery"
   ]
  },
  {
@@ -52,7 +52,7 @@
  {
   "query": "What is the elliptic curve step in ABDM's data flow?",
   "expect": [
-   "shared.glossary.ecdh"
+   "hiecm.glossary.ecdh"
   ]
  },
  {
@@ -70,37 +70,37 @@
  {
   "query": "What is a health records provider in ABDM?",
   "expect": [
-   "shared.glossary.hrp"
+   "hiecm.glossary.hrp"
   ]
  },
  {
   "query": "What is HIMS in the ABDM context?",
   "expect": [
-   "shared.glossary.hmis"
+   "hiecm.glossary.hmis"
   ]
  },
  {
   "query": "What is HIP?",
   "expect": [
-   "shared.glossary.hip"
+   "hiecm.glossary.hip"
   ]
  },
  {
   "query": "What is HIU?",
   "expect": [
-   "shared.glossary.hiu"
+   "hiecm.glossary.hiu"
   ]
  },
  {
   "query": "What is a linktoken in ABDM?",
   "expect": [
-   "shared.glossary.link-token"
+   "hiecm.glossary.link-token"
   ]
  },
  {
   "query": "What is LIS?",
   "expect": [
-   "shared.glossary.lims"
+   "hiecm.glossary.lims"
   ]
  },
  {
@@ -196,118 +196,118 @@
  {
   "query": "what are abdm sandbox milestones?",
   "expect": [
-   "shared.glossary.m1",
-   "shared.glossary.m2",
-   "shared.glossary.m3"
+   "hiecm.glossary.m1",
+   "hiecm.glossary.m2",
+   "hiecm.glossary.m3"
   ]
  },
  {
   "query": "what are the different milestones present in ABDM Sandbox?",
   "expect": [
-   "shared.glossary.m1",
-   "shared.glossary.m2",
-   "shared.glossary.m3"
+   "hiecm.glossary.m1",
+   "hiecm.glossary.m2",
+   "hiecm.glossary.m3"
   ]
  },
  {
   "query": "sandbox milestones",
   "expect": [
-   "shared.glossary.m1",
-   "shared.glossary.m2",
-   "shared.glossary.m3"
+   "hiecm.glossary.m1",
+   "hiecm.glossary.m2",
+   "hiecm.glossary.m3"
   ]
  },
  {
   "query": "what is m2?",
   "expect": [
-   "shared.glossary.hip"
+   "hiecm.glossary.hip"
   ]
  },
  {
   "query": "what is meaning of milestone M2?",
   "expect": [
-   "shared.glossary.hip"
+   "hiecm.glossary.hip"
   ]
  },
  {
   "query": "m2",
   "expect": [
-   "shared.glossary.hip"
+   "hiecm.glossary.hip"
   ]
  },
  {
   "query": "who can be a hip?",
   "expect": [
-   "shared.glossary.hip"
+   "hiecm.glossary.hip"
   ]
  },
  {
   "query": "who all can become HIP?",
   "expect": [
-   "shared.glossary.hip"
+   "hiecm.glossary.hip"
   ]
  },
  {
   "query": "hip eligibility",
   "expect": [
-   "shared.glossary.hip"
+   "hiecm.glossary.hip"
   ]
  },
  {
   "query": "what fetch modes are there?",
   "expect": [
-   "shared.glossary.auth-modes"
+   "hiecm.glossary.auth-modes"
   ]
  },
  {
   "query": "what are different fetch modes which are available?",
   "expect": [
-   "shared.glossary.auth-modes"
+   "hiecm.glossary.auth-modes"
   ]
  },
  {
   "query": "fetch modes",
   "expect": [
-   "shared.glossary.auth-modes"
+   "hiecm.glossary.auth-modes"
   ]
  },
  {
   "query": "what is a hiu?",
   "expect": [
-   "shared.glossary.hiu"
+   "hiecm.glossary.hiu"
   ]
  },
  {
   "query": "what is the meaning of HIU?",
   "expect": [
-   "shared.glossary.hiu"
+   "hiecm.glossary.hiu"
   ]
  },
  {
   "query": "hiu",
   "expect": [
-   "shared.glossary.hiu"
+   "hiecm.glossary.hiu"
   ]
  },
  {
   "query": "where are fhir bundle samples?",
   "expect": [
    "shared.fhir.document-bundle",
-   "shared.glossary.hi-type"
+   "hiecm.glossary.hi-type"
   ]
  },
  {
   "query": "from where I can get FHIR bundle samples in Sandbox documentation?",
   "expect": [
    "shared.fhir.document-bundle",
-   "shared.glossary.hi-type"
+   "hiecm.glossary.hi-type"
   ]
  },
  {
   "query": "fhir samples",
   "expect": [
    "shared.fhir.document-bundle",
-   "shared.glossary.hi-type"
+   "hiecm.glossary.hi-type"
   ]
  },
  {
@@ -394,16 +394,16 @@
  {
   "query": "Who can participate in the ABDM Sandbox?",
   "expect": [
-   "shared.glossary.hmis",
+   "hiecm.glossary.hmis",
    "shared.glossary.phr"
   ]
  },
  {
   "query": "What are the different Milestones in ABDM Sandbox?",
   "expect": [
-   "shared.glossary.m1",
-   "shared.glossary.m2",
-   "shared.glossary.m3"
+   "hiecm.glossary.m1",
+   "hiecm.glossary.m2",
+   "hiecm.glossary.m3"
   ]
  },
  {
@@ -415,13 +415,13 @@
  {
   "query": "What is milestone-M2?",
   "expect": [
-   "shared.glossary.hip"
+   "hiecm.glossary.hip"
   ]
  },
  {
   "query": "Who can become a HIP?",
   "expect": [
-   "shared.glossary.hip"
+   "hiecm.glossary.hip"
   ]
  },
  {
@@ -439,44 +439,44 @@
  {
   "query": "What are the different fetch modes available?",
   "expect": [
-   "shared.glossary.auth-modes"
+   "hiecm.glossary.auth-modes"
   ]
  },
  {
   "query": "How FHIR and SNOMED CT linked?",
   "expect": [
-   "shared.glossary.hi-type"
+   "hiecm.glossary.hi-type"
   ]
  },
  {
   "query": "What is milestone-M3?",
   "expect": [
-   "shared.glossary.hiu"
+   "hiecm.glossary.hiu"
   ]
  },
  {
   "query": "What is HIU (Health Information User)?",
   "expect": [
-   "shared.glossary.hiu"
+   "hiecm.glossary.hiu"
   ]
  },
  {
   "query": "Where can I get FHIR bundle samples on Sandbox documentation?",
   "expect": [
    "shared.fhir.document-bundle",
-   "shared.glossary.hi-type"
+   "hiecm.glossary.hi-type"
   ]
  },
  {
   "query": "Will HIP or HIU have to store the public / private key at their end?",
   "expect": [
-   "shared.glossary.key-material"
+   "hiecm.glossary.key-material"
   ]
  },
  {
   "query": "Does HIP send the public key to HIU?",
   "expect": [
-   "shared.glossary.key-material"
+   "hiecm.glossary.key-material"
   ]
  },
  {

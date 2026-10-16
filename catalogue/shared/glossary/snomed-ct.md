@@ -19,7 +19,7 @@ sources:
     status: docs-only
     note: NRCeS's SNOMED CT resource page, which NHA points integrators at.
 related:
-  glossary: [shared.glossary.hi-type]
+  glossary: [hiecm.glossary.hi-type]
 ---
 
 # SNOMED CT, and the licence you need in India

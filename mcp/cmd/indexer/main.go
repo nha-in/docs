@@ -45,8 +45,9 @@ func main() {
 	region := flag.String("aws-region", envOr("AWS_REGION", ""), "AWS region, for -embed-provider bedrock")
 	nrces := flag.String("nrces", envOr("NRCES_PACKAGE", "../catalogue/openapi/.raw/nrces-ndhm.in-6.5.0.tgz"),
 		"path to the pinned NRCES IG package; empty skips FHIR indexing")
-	skills := flag.String("skills", envOr("SKILLS_DIR", "../plugins/abdm-integrators-assistant/skills"),
-		"path to the compiled integrator skills; empty skips skill indexing")
+	skills := flag.String("skills", envOr("SKILLS_DIR",
+		"../plugins/abdm-integrators-assistant/skills,../plugins/uhi-integrators-assistant/skills,../plugins/nhcx/skills"),
+		"comma-separated skill folders, one per plugin; empty skips skill indexing")
 	flag.Parse()
 	emb, err := embed.New(context.Background(), embed.Config{
 		Provider:  *provider,
@@ -63,17 +64,19 @@ func main() {
 }
 
 // isSpecPath reports whether rel (a path relative to the catalogue root) is
-// an OpenAPI spec to parse: exactly openapi/<platform>/<version>/<name>.yaml,
-// four path segments, none starting with ".". This is what excludes
-// journeys/ (five segments, step lists read through lib/journeys.mjs, not
-// OpenAPI), corrections/ and asyncapi files (both live outside that shape
-// today), and catalogue/openapi/.raw (an untouched-download folder, and a
-// dot segment either way). Mirrors scripts/specs.mjs's listSpecTree, which
-// also only treats a three-segment-under-openapi file as spec-tree
-// structure.
+// an OpenAPI spec to parse: exactly <gateway>/openapi/<version>/<name>.yaml,
+// where HIE-CM and UHI keep theirs, or openapi/<gateway>/<version>/<name>.yaml,
+// where NHCX's still sit. Four path segments, none starting with ".". This is
+// what excludes journeys/ and errors/ (five segments, not OpenAPI),
+// corrections/, and every .raw folder (a dot segment). Mirrors
+// scripts/specs.mjs's listSpecTree.
 func isSpecPath(rel string) bool {
 	segs := strings.Split(filepath.ToSlash(rel), "/")
-	if len(segs) != 4 || segs[0] != "openapi" {
+	if len(segs) != 4 || (segs[0] != "openapi" && segs[1] != "openapi") {
+		return false
+	}
+	// A gateway's correction logs sit where a version folder would.
+	if segs[2] == "corrections" || segs[1] == "corrections" {
 		return false
 	}
 	for _, s := range segs {
@@ -156,6 +159,28 @@ func run(catDir, outPath, nrcesPath, skillsDir string, emb embed.Embedder) error
 	meta := index.Meta{SourceHashes: hashes,
 		BuiltAt: time.Now().UTC().Format(time.RFC3339)}
 
+	// The journey order travels in the index for the same reason as the
+	// synonym table below. It is what lets an answer offer the next step.
+	var journeyFiles [][]byte
+	for _, pattern := range []string{"*/openapi/*/journeys/*.yaml", "openapi/*/*/journeys/*.yaml"} {
+		paths, _ := filepath.Glob(filepath.Join(catDir, pattern))
+		for _, p := range paths {
+			raw, err := os.ReadFile(p)
+			if err != nil {
+				return fmt.Errorf("read journeys: %w", err)
+			}
+			journeyFiles = append(journeyFiles, raw)
+		}
+	}
+	steps, err := index.ParseJourneys(journeyFiles)
+	if err != nil {
+		return err
+	}
+	if len(steps) > 0 {
+		raw, _ := json.Marshal(steps)
+		meta.NextSteps = string(raw)
+	}
+
 	// The synonym table travels inside the index, so a deployed server
 	// needs the database and not the catalogue. A missing file is not an
 	// error: search then behaves as it did before expansion existed.
@@ -176,14 +201,19 @@ func run(catDir, outPath, nrcesPath, skillsDir string, emb embed.Embedder) error
 	// the loops from the database like everything else. An absent
 	// directory is not an error: the server then offers its tools and no
 	// prompts, which is what it did before skills were indexed.
-	if skillsDir != "" {
-		switch loaded, err := catalogue.LoadSkills(skillsDir); {
+	// One folder per plugin, so the HIE-CM, UHI and NHCX skills are all
+	// served, each under its own gateway's prefix.
+	for _, dir := range strings.Split(skillsDir, ",") {
+		if dir = strings.TrimSpace(dir); dir == "" {
+			continue
+		}
+		switch loaded, err := catalogue.LoadSkills(dir); {
 		case errors.Is(err, fs.ErrNotExist):
-			fmt.Fprintf(os.Stderr, "no skills at %s, the server will offer no prompts\n", skillsDir)
+			fmt.Fprintf(os.Stderr, "no skills at %s, the server will offer none from it\n", dir)
 		case err != nil:
-			return fmt.Errorf("load skills: %w", err)
+			return fmt.Errorf("load skills from %s: %w", dir, err)
 		default:
-			meta.Skills = loaded
+			meta.Skills = append(meta.Skills, loaded...)
 		}
 	}
 
@@ -204,21 +234,41 @@ func run(catDir, outPath, nrcesPath, skillsDir string, emb embed.Embedder) error
 		for _, o := range ops {
 			all = append(all, catalogue.ChunkOperation(o))
 		}
-		for start := 0; start < len(all); start += embedBatch {
-			end := min(start+embedBatch, len(all))
-			var texts []string
-			for _, c := range all[start:end] {
-				texts = append(texts, c.Text)
+		// A chunk whose text the previous snapshot already embedded with the
+		// same model keeps that vector; only new or edited text is sent to
+		// the provider. A deploy that changes a few atoms embeds a few chunks.
+		prev, err := index.PreviousVectors(outPath, emb.Model())
+		if err != nil {
+			return fmt.Errorf("read previous vectors: %w", err)
+		}
+		vecs := make([][]float32, len(all))
+		var todo []int
+		for i, c := range all {
+			if v, ok := prev[c.Text]; ok {
+				vecs[i] = v
+			} else {
+				todo = append(todo, i)
 			}
-			vecs, err := emb.Embed(context.Background(), texts)
+		}
+		for start := 0; start < len(todo); start += embedBatch {
+			batch := todo[start:min(start+embedBatch, len(todo))]
+			var texts []string
+			for _, i := range batch {
+				texts = append(texts, all[i].Text)
+			}
+			got, err := emb.Embed(context.Background(), texts)
 			if err != nil {
 				return fmt.Errorf("embed batch at %d: %w", start, err)
 			}
-			for i, c := range all[start:end] {
-				chunks = append(chunks, index.EmbeddedChunk{Chunk: c, Vector: vecs[i]})
-				meta.EmbeddingDim = len(vecs[i])
+			for j, i := range batch {
+				vecs[i] = got[j]
 			}
 		}
+		for i, c := range all {
+			chunks = append(chunks, index.EmbeddedChunk{Chunk: c, Vector: vecs[i]})
+			meta.EmbeddingDim = len(vecs[i])
+		}
+		fmt.Printf("embedded %d of %d chunks, reused %d from %s\n", len(todo), len(all), len(all)-len(todo), outPath)
 		meta.EmbeddingModel = emb.Model()
 	}
 

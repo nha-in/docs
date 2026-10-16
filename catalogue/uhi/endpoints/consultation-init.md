@@ -1,0 +1,51 @@
+---
+id: uhi.endpoint.consultation-init
+type: endpoint
+gateway: uhi
+milestone: n/a
+version: uhi-v1
+title: Initialise an order
+summary: The EUA sends the patient and the chosen slot directly to the HSPA,
+  which holds the slot for 15 minutes and answers with on_init.
+generated: true
+operation: uhi_consultation_init
+sources:
+  - url: https://github.com/nha-in/docs/blob/main/site/docs/_notes/uhi/uhi_consultation_init.mdx
+    status: page
+    note: Generated from
+      site/docs/_notes/uhi/uhi_consultation_init.mdx#consultation-init. Edit the
+      page, never this file.
+related:
+  callbacks:
+    - uhi.callback.consultation-on-init
+  concepts:
+    - uhi.concept.direct-calls
+    - uhi.concept.signing-headers
+    - uhi.concept.registry-lookup
+  flows:
+    - uhi.flow.consultation-order
+---
+
+# Initialise an order
+
+## In plain words
+
+The [EUA](/docs/uhi/v1/getting-started/glossary#eua) sends the patient and the chosen slot [directly](/docs/uhi/v1/getting-started/glossary#direct-call-p2p) to the [HSPA](/docs/uhi/v1/getting-started/glossary#hspa)'s [`provider_uri`](/docs/uhi/v1/getting-started/glossary#provider-uri). The HSPA replies with an `ACK` and holds the slot for 15 minutes. It then sends `on_init` with the `order.id`, the quote and five terms. See [Physical Consultation](/docs/uhi/v1/services/consultation).
+
+Sign every request with a fresh `Authorization` header. See [Signing](/docs/uhi/v1/concepts/signing).
+
+## Before you start
+
+The second `on_search`, carrying the doctor's slots, and the `provider_id` and `provider_uri` stored from `on_search`. Keep the same `transaction_id`. Fetch the HSPA's key with the [registry lookup](/docs/uhi/v1/concepts/registry-lookup), so you can check its callbacks.
+
+## What happens
+
+Send the slot's UUID from `on_search` as the fulfillment id. Tag the patient's ABHA number in `@abdm/gov.in/abha_number` and the slot in `@abdm/gov.in/slot_id`. Use the `order.id` that `on_init` returns from then on, not any value you sent here.
+
+## How you know it worked
+
+An HTTP 200 carrying `ACK`, then an `on_init` at your `consumer_uri` with the same `transaction_id`.
+
+## When it goes wrong
+
+A fulfillment id that differs from the slot UUID makes the HSPA reject the request or fail to hold the slot. A 401 means the signature was built over a different body, was reused, or has expired.

@@ -164,7 +164,7 @@ curl --request POST \
 
 **Exit condition (Observe until this is true)**
 
-A 202 response. The specification gives no body for it, so read what comes back.
+A 202 on this reply, sent with `response.requestId` set to the `REQUEST-ID` of the `POST /api/v3/hip/patient/share` request it answers. A reply without that id answers nothing.
 
 ## Where the detail is
 

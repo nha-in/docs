@@ -10,11 +10,11 @@
 // not the sources that produced it.
 //
 // Checks:
-//   skills     every skill in skills/index.json and skills/nhcx-index.json has
-//              its folder, every file the index lists, and, for NHCX, an
+//   skills     every skill in skills/index.json, nhcx-index.json and uhi-index.json has
+//              its folder, every file the index lists, and, for NHCX and UHI, an
 //              archive that is a readable tar.gz holding the same SKILL.md
 //   stale      no skill folder or archive in the build that no index lists
-//   prompts    agent-setup/prompt.md and agent-setup/nhcx.md exist, and every
+//   prompts    agent-setup/prompt.md, nhcx.md and uhi.md exist, and every
 //              site URL they name is a file in the build
 //   plugins    each plugin that ships a .mcp.json names an HTTP server with a
 //              URL, and its Codex manifest points at that file
@@ -38,7 +38,7 @@ if (!existsSync(join(build, 'index.html'))) {
 // ---- skills -----------------------------------------------------------------
 const skillsDir = join(build, 'skills');
 const listed = new Set();
-for (const indexName of ['index.json', 'nhcx-index.json']) {
+for (const indexName of ['index.json', 'nhcx-index.json', 'uhi-index.json']) {
   const indexFile = join(skillsDir, indexName);
   if (!existsSync(indexFile)) {
     fail(`skills/${indexName} is missing`);
@@ -107,7 +107,7 @@ const siteFile = (path) => {
   if (existsSync(full) && statSync(full).isDirectory() && readdirSync(full).length > 0) return true;
   return existsSync(join(full, 'index.html'));
 };
-for (const prompt of ['prompt.md', 'nhcx.md']) {
+for (const prompt of ['prompt.md', 'nhcx.md', 'uhi.md']) {
   const file = join(build, 'agent-setup', prompt);
   if (!existsSync(file)) {
     fail(`agent-setup/${prompt} is missing`);
@@ -161,5 +161,5 @@ if (problems.length) {
 }
 const count = (f) => (existsSync(join(skillsDir, f)) ? JSON.parse(readFileSync(join(skillsDir, f), 'utf8')).skills.length : 0);
 console.log(
-  `check-build-assets: ${count('index.json')} ABDM and ${count('nhcx-index.json')} NHCX skill(s), their archives, both agent prompts and the plugin MCP configs are all in the build.`,
+  `check-build-assets: ${count('index.json')} ABDM, ${count('nhcx-index.json')} NHCX and ${count('uhi-index.json')} UHI skill(s), their archives, the three agent prompts and the plugin MCP configs are all in the build.`,
 );

@@ -18,6 +18,7 @@
 import {existsSync, readdirSync, readFileSync, statSync} from 'node:fs';
 import {join, relative} from 'node:path';
 import {parse} from 'yaml';
+import {specRoots} from './paths.mjs';
 
 const METHODS = ['get', 'post', 'put', 'patch', 'delete'];
 
@@ -115,7 +116,7 @@ function moduleFacts(gateway, version, file, spec) {
   const sources = {};
   for (const s of spec['x-abdm-sources'] ?? []) {
     if (!s.file) continue;
-    sources[s.file] = {hash: s.hash ?? null, fetched: s.fetched ? String(s.fetched) : null};
+    sources[sourceKey(s.file)] = {hash: s.hash ?? null, fetched: s.fetched ? String(s.fetched) : null};
   }
   return {
     gateway,
@@ -228,15 +229,22 @@ function artefacts(root) {
  * out: one entry per module under `modules`, and one `site` entry for what
  * belongs to no module.
  */
+/**
+ * A source file as the facts key it: the part after `.raw/`, the set and the
+ * file, so moving a set between gateway folders is not news from NHA.
+ */
+export const sourceKey = (file) => {
+  const at = file.lastIndexOf('/.raw/');
+  return at === -1 ? file : file.slice(at + '/.raw/'.length);
+};
+
 export function extractFacts(root) {
   const modules = {};
-  const openapi = join(root, 'catalogue', 'openapi');
-  if (isDir(openapi)) {
-    for (const gateway of readdirSync(openapi)) {
-      if (gateway.startsWith('.') || !isDir(join(openapi, gateway))) continue;
-      for (const version of readdirSync(join(openapi, gateway))) {
-        const dir = join(openapi, gateway, version);
-        if (!isDir(dir)) continue;
+  for (const {gateway, dir: base} of specRoots(root)) {
+    {
+      for (const version of readdirSync(base)) {
+        const dir = join(base, version);
+        if (version.startsWith('.') || !isDir(dir)) continue;
         for (const file of readdirSync(dir)) {
           if (!/\.ya?ml$/.test(file)) continue;
           const spec = parse(readFileSync(join(dir, file), 'utf8'));

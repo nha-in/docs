@@ -1,0 +1,36 @@
+{
+  "id": "nudge-variant-health-id-01",
+  "slice": "nudge",
+  "class": "define",
+  "turns": [
+    {
+      "role": "user",
+      "text": "Is a Health ID the same thing as an ABHA number?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "ABHA",
+    "ABHA was called Health ID until NHA renamed it, and both names reach the same thing",
+    "ABHA means two different things: the 14 digit ABHA number and the ABHA address such as name@abdm"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "shared.glossary.abha"
+  ],
+  "expected_shape": "define",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#glossary",
+  "catalogue_version": "2026.09.16",
+  "notes": "Nudge group, variant term: the reader wrote Health ID, and the case catches an answer that treats it as a separate identifier or omits that the portal's term is ABHA."
+}

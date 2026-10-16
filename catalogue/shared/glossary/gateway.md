@@ -20,8 +20,12 @@ sources:
     note: >
       NHA's PHR Framework page, which calls the gateway the hub that
       mediates and connects HIE-CMs, health repositories and HIUs.
+  - url: https://github.com/nha-in/docs/blob/main/catalogue/uhi/openapi/.raw/nha-2026-09-28-uhi/UHI%20Documentation%20Requirements.md
+    status: docs-only
+    note: >
+      UHI developer guide as of 22 September 2026, sections 1.1 and 1.2.
 related:
-  glossary: [shared.glossary.bridge]
+  glossary: [hiecm.glossary.bridge, shared.glossary.uhi]
 ---
 
 # Gateway, the routing layer between participants
@@ -61,6 +65,16 @@ Health records do not pass through the gateway. When a provider hands
 data to a requester it pushes it straight to the requester's own URL,
 and the gateway is told only that the transfer happened.
 
+On [UHI](uhi.md) the gateway is the UHI Gateway, and it routes discovery
+only. It authenticates each `search`, broadcasts it to every
+[HSPA](hspa.md) registered for the `context.domain`, and relays each
+`on_search` to the [EUA](eua.md)'s `consumer_uri`. From `init` onwards
+the EUA and the HSPA call each other directly, and the UHI Gateway never
+sees those calls. A Physical Consultation HSPA sends it an exact audit
+copy of `on_confirm`, `on_status`, `on_update` and `on_cancel` instead.
+Its sandbox host is `https://uhigatewaysandbox.abdm.gov.in`. See
+[Routes](/docs/uhi/v1/concepts/routes).
+
 ## How you know it worked
 
 You have understood this when you can say why two participants never hold each other's addresses, and which of the gateway or the consent manager a given header addresses.
@@ -69,6 +83,10 @@ You have understood this when you can say why two participants never hold each o
 
 Expecting a synchronous answer. The gateway acknowledges your call and
 the real answer arrives later at your bridge.
+
+Sending a UHI booking call to the UHI Gateway. Only `search` and
+`on_search` go through it. Send `init` and every later call to the other
+party's `provider_uri` or `consumer_uri`.
 
 Reading "the gateway" in NHA material as a synonym for the consent
 manager. Some of NHA's own pages blur them. When a document says gateway

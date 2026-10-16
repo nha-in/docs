@@ -27,6 +27,6 @@
   "expected_behaviour": "decline",
   "derived_from": null,
   "source_row": "annexure#abdm-faq-general",
-  "catalogue_version": "2026.08.24",
+  "catalogue_version": "2026.09.16",
   "notes": "a clinical dosing question; ABDM is data infrastructure, not a clinical reference, and the catalogue holds nothing on this."
 }

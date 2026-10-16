@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "sync-specs": "node scripts/sync-specs.mjs",
-    "lint:specs": "spectral lint \"catalogue/openapi/*/*/*.yaml\" --fail-severity=error",
+    "lint:specs": "spectral lint \"catalogue/*/openapi/*/*.yaml\" \"catalogue/openapi/*/*/*.yaml\" --fail-severity=error",
     "build:specs": "node scripts/ingest-nha.mjs && node scripts/ingest-uhi.mjs",
     "check:specs": "node scripts/ingest-nha.mjs --check && node scripts/ingest-uhi.mjs --check",
     "start": "npm start --workspace site",
@@ -35,6 +35,8 @@
     "lint:journeys": "node scripts/lint-journeys.mjs",
     "build:icons": "node scripts/build-sidebar-icons.mjs",
     "check:icons": "node scripts/build-sidebar-icons.mjs --check",
+    "build:fhir-builder": "node scripts/build-fhir-builder.mjs",
+    "check:fhir-builder": "node scripts/build-fhir-builder.mjs --check",
     "build:routes": "node scripts/build-atom-routes.mjs",
     "check:routes": "node scripts/build-atom-routes.mjs --check",
     "build:sections": "node scripts/build-sections.mjs",
@@ -44,7 +46,7 @@
     "test:widget": "npm test --workspace ai-widget",
     "test:postman": "node --test scripts/postman.test.mjs site/src/components/api/carry.test.mjs",
     "test:changelog": "node --test scripts/changelog.test.mjs",
-    "test:scripts": "node --test scripts/*.test.mjs scripts/lib/*.test.mjs",
+    "test:scripts": "node --test scripts/*.test.mjs scripts/lib/*.test.mjs site/src/components/docs/uhi-quickstart-values.test.mjs site/src/components/api/uhi-sign.test.mjs site/src/components/fhir/fhir.test.mjs",
     "changelog": "node scripts/build-whats-new.mjs",
     "check:changelog": "node scripts/build-whats-new.mjs --check",
     "eval:askai:run": "cd mcp && go run ./cmd/askai-eval run -cases ../evals/askai/cases -out ../evals/askai/runs/$(date +%Y-%m-%d)-$(cat ../catalogue/VERSION)",
@@ -53,7 +55,8 @@
     "eval:askai:report": "cd mcp && go run ./cmd/askai-eval report -cases ../evals/askai/cases",
     "eval:askai:calibrate": "cd mcp && go run ./cmd/askai-eval calibrate",
     "eval:agent": "node scripts/eval-agent.mjs",
-    "verify:atoms": "node scripts/verify-atoms.mjs"
+    "eval:mcp-agent": "node scripts/eval-mcp-agent.mjs",
+    "eval:contract": "cd mcp && go run ./cmd/indexer -catalogue ../catalogue -out ${TMPDIR:-/tmp}/abdm-contract.db && go run ./cmd/contract -db ${TMPDIR:-/tmp}/abdm-contract.db"
   },
   "devDependencies": {
     "@docusaurus/faster": "^3.10.2",

@@ -38,7 +38,7 @@ export function contractProblems(fm, body, ctx) {
     if (fm.operation === undefined) {
       if (fm.gateway !== "nhcx") out.push(`${fm.type} atoms need operation: the operationId this atom documents`);
     } else if (!ctx.operations[fm.gateway]?.has(fm.operation)) {
-      out.push(`operation "${fm.operation}" is not an operationId in catalogue/openapi/${fm.gateway}/`);
+      out.push(`operation "${fm.operation}" is not an operationId in catalogue/${fm.gateway}/openapi/`);
     }
   }
   if (fm.side !== undefined && !SIDES.includes(fm.side)) out.push(`side must be one of ${SIDES.join(", ")}`);

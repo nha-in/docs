@@ -185,7 +185,15 @@ One supporting-info entry per cycle, with `timingPeriod`, listed in the item's `
 
 ### Newborn
 
-The parent stays the primary `Patient`; the child is a second `Patient` linked with `link.type` `refer`, with gender and birth date, and a proof of birth under category `DOB`, code `BCF` or `DCB`.
+The parent stays the primary `Patient`; the child is a second `Patient` linked with `link.type` `refer`, with gender and birth date, and a proof of birth under category `DOB`, code `BCF` or `DCB`. An invalid newborn resource fails the submit.
+
+### The referral
+
+A referral number, when present, is a `ServiceRequest.identifier` of type `OIN`.
+
+### Practitioners
+
+Only a `Practitioner` referenced from `Claim.careTeam` reaches adjudication. Any other is dropped.
 
 ## PMJAY
 

@@ -24,7 +24,7 @@ Per adapter (see [PAYERS.md](../references/PAYERS.md)) [PAYER](../references/PAY
 | Adapter | `payment_ack` | Workflow id sent |
 |---|---|---|
 | `pmjay` | 17 (PAYMENT_RECEIVED) | `17` |
-| `xyz` (Sandbox Payer) | none | the notice's own workflow id echoed back (for example `30`) |
+| `kyrocare` (Sandbox Payer) | none | the notice's own workflow id echoed back (for example `30`) |
 | `generic` | none | the notice's own workflow id echoed back |
 
 A per-environment override (a JSON object of kind to workflow id) can set `payment_ack` too; an empty value there means "echo the notice's own".
@@ -117,3 +117,4 @@ function acknowledge_payment(payment_id):
 - FHIR: [F1. Bundle](../fhir/F1-bundle.md), [F13. PaymentNotice](../fhir/F13-paymentnotice.md), [F14. Payment acknowledgement](../fhir/F14-payment-acknowledgement.md)
 - Database: [D21. claim_payment](../database/D21-claim-payment.md)
 - Gateway: [G1. Embedding](../gateway/G1-embedding.md), [G7. Send](../gateway/G7-send.md)
+- Tests: [T11. IRDAI Payment Notice and Acknowledgement](../tests/T11-irdai-payment.md), [T18. PMJAY Payment Notice, Status Refusal and Cancel](../tests/T18-pmjay-payment-status-cancel.md)

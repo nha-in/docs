@@ -1,0 +1,133 @@
+{
+  "case_id": "diagnose-hiecm-m1-abdm-1016-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "Profile API gives 404 with ABDM-1016 Invalid Timestamp. Is my URL wrong?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_012fazasSYCWzNKrjtkEmuvN",
+            "Name": "decode_error",
+            "Input": {
+              "input": "ABDM-1016"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "decode_error",
+          "input": {
+            "input": "ABDM-1016"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "codes": [
+              "ABDM-1016"
+            ],
+            "matches": {
+              "ABDM-1016": {
+                "atoms": [
+                  {
+                    "body": "# ABDM-1016, the timestamp is not valid\n\n## In plain words\n\nThe service refused the `TIMESTAMP` header before it read the rest of the request. The message is \"Invalid Timestamp\". The profile calls return it with HTTP 404, and the public certificate call with HTTP 400.\n\nSend `TIMESTAMP` as ISO 8601 in UTC, with milliseconds and the `Z` suffix, for example `2022-10-06T15:10:00.587Z`. The code arrives as `ABDM-1016:` followed by a space, inside an `error` object.\n\n## What happens\n\nA 404 here does not mean the path is wrong. Match on the code in the body, not on the HTTP status. Trim the code, or match on its prefix, because an exact match on `ABDM-1016` misses the trailing colon and space.\n\n## How you know it worked\n\nThe same request, with only `TIMESTAMP` corrected, returns its normal response.\n\n## When it goes wrong\n\nGenerate the value with a date library, never by hand. If a well formed UTC value still fails, compare your host clock with a time server, and see [ABDM-2402](/docs/hiecm/v3/api/m2/errors#abdm-2402).",
+                    "id": "hiecm.error.abdm-1016",
+                    "summary": "The TIMESTAMP header is not in the accepted format, so send it as ISO 8601 UTC with milliseconds and the Z suffix.",
+                    "title": "ABDM-1016, the timestamp is not valid"
+                  },
+                  {
+                    "body": "# ABDM-2402, the timestamp is not valid\n\n## In plain words\n\nABDM refused the `TIMESTAMP` header, with the message \"Invalid Timestamp\". Send it as ISO 8601 in UTC, with milliseconds and the `Z` suffix, for example `2022-10-06T15:10:00.587Z`. [ABDM-1016](/docs/hiecm/v3/api/m1/errors#abdm-1016), \"Invalid TimeStamp\", reports the same header.\n\n## How you know it worked\n\nThe same request, with only `TIMESTAMP` corrected, returns its normal response.\n\n## When it goes wrong\n\nGenerate the value from a synchronised clock with a date library, never by hand. If a well formed UTC value still fails, compare your host clock with a time server.",
+                    "id": "hiecm.error.abdm-2402",
+                    "summary": "ABDM refused the TIMESTAMP header, so send it as ISO 8601 UTC with milliseconds from a synchronised clock.",
+                    "title": "ABDM-2402, the timestamp is not valid"
+                  }
+                ],
+                "source": "specification response example",
+                "specification": [
+                  {
+                    "code": "ABDM-1016",
+                    "message": "Invalid TimeStamp",
+                    "http": "",
+                    "operation_id": "",
+                    "module": "m2"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "Your URL is probably fine—the 404 is misleading. **ABDM-1016 means your `TIMESTAMP` header is in the wrong format**, not that the path is wrong.\n\nFix the `TIMESTAMP` header: send it as **ISO 8601 UTC with milliseconds and the `Z` suffix**, for example:\n```\n2022-10-06T15:10:00.587Z\n```\n\nGenerate it with a date library (JavaScript `new Date().toISOString()`, Python `datetime.datetime.now(datetime.timezone.utc).isoformat(timespec='milliseconds').replace('+00:00', 'Z')`, etc.), never by hand. If a properly formatted timestamp still fails, verify your system clock is synchronized with a time server.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "Your URL is probably fine—the 404 is misleading. **ABDM-1016 means your `TIMESTAMP` header is in the wrong format**, not that the path is wrong.\n\nFix the `TIMESTAMP` header: send it as **ISO 8601 UTC with milliseconds and the `Z` suffix**, for example:\n```\n2022-10-06T15:10:00.587Z\n```\n\nGenerate it with a date library (JavaScript `new Date().toISOString()`, Python `datetime.datetime.now(datetime.timezone.utc).isoformat(timespec='milliseconds').replace('+00:00', 'Z')`, etc.), never by hand. If a properly formatted timestamp still fails, verify your system clock is synchronized with a time server.",
+  "sources": [
+    {
+      "id": "hiecm.error.abdm-1016",
+      "title": "ABDM-1016, the timestamp is not valid",
+      "url": ""
+    },
+    {
+      "id": "hiecm.error.abdm-2402",
+      "title": "ABDM-2402, the timestamp is not valid",
+      "url": ""
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"codes\":[\"ABDM-1016\"],\"matches\":{\"ABDM-1016\":{\"atoms\":[{\"body\":\"# ABDM-1016, the timestamp is not valid\\n\\n## In plain words\\n\\nThe service refused the `TIMESTAMP` header before it read the rest of the request. The message is \\\"Invalid Timestamp\\\". The profile calls return it with HTTP 404, and the public certificate call with HTTP 400.\\n\\nSend `TIMESTAMP` as ISO 8601 in UTC, with milliseconds and the `Z` suffix, for example `2022-10-06T15:10:00.587Z`. The code arrives as `ABDM-1016:` followed by a space, inside an `error` object.\\n\\n## What happens\\n\\nA 404 here does not mean the path is wrong. Match on the code in the body, not on the HTTP status. Trim the code, or match on its prefix, because an exact match on `ABDM-1016` misses the trailing colon and space.\\n\\n## How you know it worked\\n\\nThe same request, with only `TIMESTAMP` corrected, returns its normal response.\\n\\n## When it goes wrong\\n\\nGenerate the value with a date library, never by hand. If a well formed UTC value still fails, compare your host clock with a time server, and see [ABDM-2402](/docs/hiecm/v3/api/m2/errors#abdm-2402).\",\"id\":\"hiecm.error.abdm-1016\",\"summary\":\"The TIMESTAMP header is not in the accepted format, so send it as ISO 8601 UTC with milliseconds and the Z suffix.\",\"title\":\"ABDM-1016, the timestamp is not valid\"},{\"body\":\"# ABDM-2402, the timestamp is not valid\\n\\n## In plain words\\n\\nABDM refused the `TIMESTAMP` header, with the message \\\"Invalid Timestamp\\\". Send it as ISO 8601 in UTC, with milliseconds and the `Z` suffix, for example `2022-10-06T15:10:00.587Z`. [ABDM-1016](/docs/hiecm/v3/api/m1/errors#abdm-1016), \\\"Invalid TimeStamp\\\", reports the same header.\\n\\n## How you know it worked\\n\\nThe same request, with only `TIMESTAMP` corrected, returns its normal response.\\n\\n## When it goes wrong\\n\\nGenerate the value from a synchronised clock with a date library, never by hand. If a well formed UTC value still fails, compare your host clock with a time server.\",\"id\":\"hiecm.error.abdm-2402\",\"summary\":\"ABDM refused the TIMESTAMP header, so send it as ISO 8601 UTC with milliseconds from a synchronised clock.\",\"title\":\"ABDM-2402, the timestamp is not valid\"}],\"source\":\"specification response example\",\"specification\":[{\"code\":\"ABDM-1016\",\"message\":\"Invalid TimeStamp\",\"http\":\"\",\"operation_id\":\"\",\"module\":\"m2\"}]}}}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T11:59:15.562Z",
+  "usage": {
+    "input_tokens": 20,
+    "output_tokens": 465,
+    "cache_read_input_tokens": 16787,
+    "cache_creation_input_tokens": 6024,
+    "num_turns": 2,
+    "duration_ms": 6908,
+    "cost_usd_equivalent": 0.0160717
+  }
+}

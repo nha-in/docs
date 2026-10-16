@@ -120,7 +120,7 @@ Built from the procedures already on the pre-authorisation, from what their plan
 
 A filter row above the card, a GET form: "Search" (text, at least 18rem, matches code or name as a substring), "Speciality" (blank "All specialities", options `<name> (<count>)`), "Type" (blank "Any type", `Procedure` or `Implant`), and a primary "Search" button. Unlike S7 there is no Clear button.
 
-Card title "<n> in the payer's package master". Columns: Code, Package, Speciality, Type (chip, Procedure info, otherwise warning), Rate, and "Add". A benefit whose kind a pre-authorisation cannot quote (a policy-wide allowance such as an ambulance or room sub-limit) gets no Add button. At most 200 rows, then "Showing the first 200 of <n> - search to narrow it." Empty: "Nothing matches that search."
+Card title "<n> in the payer's package master". Columns: Code, Package, Speciality, Type (chip, Procedure info, otherwise warning), Rate, and "Add". A benefit whose kind a pre-authorisation cannot quote (a policy-wide allowance such as an ambulance or room sub-limit) gets no Add button. Every package is listed, with no row limit: paged 100 rows a page with "Previous" and "Next" and "Page <p> of <q>" [REF](../references/PAYERS.md#markers), and the search and filters narrow the whole package master. Empty: "Nothing matches that search."
 
 **Adding a line** posts the kind, the code, and for a tier the parent procedure code. The price is read from the plan at add time, never from the form: a Procedure or Implant takes the benefit's rate, a tier takes the rate its parent procedure lists for it (different procedures price the same ward differently [PAYER](../references/PAYERS.md#markers)). The new line starts at quantity 1. Rules, each shown verbatim as a red flash:
 - Kind not one of the three: "That is not something a preauth can quote."
@@ -162,7 +162,7 @@ Data: [D11. claim_plan_benefit](../database/D11-claim-plan-benefit.md)
 | [____________]    [All specialities v]  [Any type v]  [Search]   |
 | [Card] 975 in the payer's package master                         |
 |  Code | Package | Speciality | Type | Rate | [+ Add]             |
-|  Showing the first 200 of 975 - search to narrow it.             |
+|  [Previous]  Page 1 of 10  [Next]                                |
 |------------------------------------------------------------------|
 ```
 
@@ -193,8 +193,7 @@ States:
 
 | State | Body | Header action |
 |---|---|---|
-| The payer's adapter does not answer this check (the generic NHCX payer) | "<adapter name> does not answer a procedure-set check, so the pre-authorisation goes in on the eligibility verdict alone." | none |
-| Never asked | "Before sending the pre-authorisation, the <n> quoted line(s) go to the payer as a `auth-requirements` check: it rules on each one and names the documents and forms this particular procedure set needs." | primary "Validate procedure set" (shield-check icon) |
+| Never asked | "The <n> quoted line(s) can go to the payer as a `auth-requirements` check: it rules on each one and names the documents and forms this particular procedure set needs. The check is optional; the pre-authorisation can be sent without it." | primary "Validate procedure set" (shield-check icon) |
 | `checking` | "Procedure set sent; awaiting the payer's ruling. Use Refresh to check for it." with Sent at, Transaction, Correlation | "Check again" |
 | `error` | The error in the danger colour, or "The exchange failed." | "Check again" |
 | `ready` | Ruling (below) | "Check again" |
@@ -212,7 +211,6 @@ Requirement tables: columns Kind (chip `Form` info or `Document` warning), Code,
 
 **Sending.** Checked before any call (red flash on S4):
 - Case not eligible: "Check the policy's eligibility before validating a procedure set against it."
-- Adapter without the check: "<adapter name> does not answer authorisation requirement checks."
 - No lines: "Choose the line items first, this checks the procedure set, so there has to be one."
 - Facility setup missing: "Set the facility's HFR ID and NHCX participant code under Settings before checking requirements."
 
@@ -252,7 +250,7 @@ Data: [D15. claim_auth_requirement](../database/D15-claim-auth-requirement.md)
 |  > Needed for this pre-authorisation (3)                         |
 |    Kind | Code | What | For | Stage                             |
 |  > Needed later, with the claim (1)                              |
-|  Payer adapter: PMJAY / Ayushman Bharat                          |
+|  Payer adapter: PMJAY, State Health Agency                         |
 |------------------------------------------------------------------|
 ```
 

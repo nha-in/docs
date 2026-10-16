@@ -11,7 +11,7 @@ func answerCase() Case {
 	return Case{ID: "define-hmis-01", Slice: "define", Class: "define",
 		Turns:       []Turn{{Role: "user", Text: "what is a HIMS"}},
 		MustContain: []string{"hospital software"}, MustNotContain: []string{"maybe"},
-		ExpectedSources: []string{"shared.glossary.hmis"}, ExpectedShape: "define",
+		ExpectedSources: []string{"hiecm.glossary.hmis"}, ExpectedShape: "define",
 		ExpectedBehaviour: "answer", SourceRow: "annexure#glossary", CatalogueVersion: "2026.08.24"}
 }
 
@@ -19,7 +19,7 @@ func TestCheckPassesAGroundedShapedAnswer(t *testing.T) {
 	tr := Transcript{CaseID: "define-hmis-01",
 		Answer:  "HMIS is the software a hospital runs day to day. NHA writes it HMIS.",
 		Corpus:  "HMIS, hospital management information system",
-		Sources: []chat.Source{{ID: "shared.glossary.hmis"}}}
+		Sources: []chat.Source{{ID: "hiecm.glossary.hmis"}}}
 	if r := Check(answerCase(), tr); len(r.Failures) != 0 {
 		t.Fatalf("unexpected failures: %v", r.Failures)
 	}
@@ -30,7 +30,7 @@ func TestCheckFlagsForbiddenPhrasesAndMissingSource(t *testing.T) {
 		Answer: "Great question! Let me look that up. HMIS is hospital software.",
 		Corpus: "HMIS"}
 	r := Check(answerCase(), tr)
-	want := []string{"forbidden: great question", "forbidden: let me ", "citations: none", "expected_source: shared.glossary.hmis absent"}
+	want := []string{"forbidden: great question", "forbidden: let me ", "citations: none", "expected_source: hiecm.glossary.hmis absent"}
 	for _, w := range want {
 		if !contains(r.Failures, w) {
 			t.Errorf("missing %q in %v", w, r.Failures)
@@ -42,7 +42,7 @@ func TestCheckFlagsAnUngroundedLiteral(t *testing.T) {
 	tr := Transcript{CaseID: "define-hmis-01",
 		Answer:  "Send `X-Retry-After-Ms` with the call.",
 		Corpus:  "nothing about that header",
-		Sources: []chat.Source{{ID: "shared.glossary.hmis"}}}
+		Sources: []chat.Source{{ID: "hiecm.glossary.hmis"}}}
 	r := Check(answerCase(), tr)
 	if !hasPrefix(r.Failures, "grounding: X-Retry-After-Ms") {
 		t.Errorf("ungrounded header not flagged: %v", r.Failures)
@@ -85,7 +85,7 @@ func TestCheckLiteralOutsideCodeSpan(t *testing.T) {
 	tr := Transcript{CaseID: "define-hmis-01",
 		Answer:  "Send X-HIP-ID on every call.",
 		Corpus:  "X-HIP-ID header",
-		Sources: []chat.Source{{ID: "shared.glossary.hmis"}}}
+		Sources: []chat.Source{{ID: "hiecm.glossary.hmis"}}}
 	r := Check(answerCase(), tr)
 	if !hasPrefix(r.Failures, "shape: literal X-HIP-ID outside a code span") {
 		t.Errorf("bare literal passed: %v", r.Failures)
@@ -237,5 +237,53 @@ func TestToolCallsAndRetrievalHit(t *testing.T) {
 	tr.Sources = nil
 	if Check(c, tr).RetrievalHit {
 		t.Errorf("RetrievalHit should be false when no expected source was retrieved")
+	}
+}
+
+// An external agent answering through the MCP is not bound by the panel's
+// answer shapes or word budgets, which live in the chat loop, not in the
+// tools. Everything the tools are answerable for still applies: grounded
+// literals, forbidden phrases, expected sources.
+func TestCheckSkipsPanelShapesForAnMCPAgent(t *testing.T) {
+	long := "HMIS is the software a hospital runs day to day.\n\n1. One.\n2. Two.\n\nA. B. C. D. E. F."
+	tr := Transcript{CaseID: "define-hmis-01", Surface: SurfaceMCPAgent, Answer: long,
+		Corpus: "HMIS, hospital management information system", Sources: []chat.Source{{ID: "hiecm.glossary.hmis"}}}
+	if r := Check(answerCase(), tr); len(r.Failures) != 0 {
+		t.Fatalf("an MCP agent answer was held to the panel's shape: %v", r.Failures)
+	}
+	// The panel's voice and formatting are the panel's too: an em dash, a
+	// heading, "let me" and a path outside a code span say nothing about the
+	// tools. A case's own forbidden entry still applies.
+	tr.Answer = "## HMIS\n\nLet me explain \u2014 HMIS is the hospital software; see /docs/x. It lives at /api/v3/hmis/info."
+	tr.Corpus += " /api/v3/hmis/info"
+	if r := Check(answerCase(), tr); len(r.Failures) != 0 {
+		t.Fatalf("an MCP agent answer was held to the panel's voice: %v", r.Failures)
+	}
+	tr.Answer += " It maybe works."
+	if r := Check(answerCase(), tr); len(r.Failures) != 1 || r.Failures[0] != "forbidden: maybe" {
+		t.Fatalf("a case's own forbidden entry must still apply, got %v", r.Failures)
+	}
+	tr.Answer = long
+	tr.Answer = long + " Send X-Made-Up-Header."
+	if r := Check(answerCase(), tr); len(r.Failures) == 0 {
+		t.Fatal("grounding must still apply to an MCP agent answer")
+	}
+	tr.Surface = ""
+	tr.Answer = long
+	if r := Check(answerCase(), tr); len(r.Failures) == 0 {
+		t.Fatal("a panel answer must still be held to its shape")
+	}
+}
+
+func TestCheckSkipsThePanelDeclineShapeForAnMCPAgent(t *testing.T) {
+	c := answerCase()
+	c.ExpectedBehaviour, c.ExpectedSources = "decline", nil
+	tr := Transcript{Surface: SurfaceMCPAgent, Answer: "That is outside ABDM. I cannot help. Try elsewhere. Sorry."}
+	if r := Check(c, tr); len(r.Failures) != 0 {
+		t.Fatalf("an MCP agent decline was held to the panel's shape: %v", r.Failures)
+	}
+	tr.Surface = ""
+	if r := Check(c, tr); len(r.Failures) == 0 {
+		t.Fatal("a panel decline must still be held to its shape")
 	}
 }

@@ -106,8 +106,7 @@ const ROLE_EVENT = 'abdm-portal:role';
  * carried by a link when one is shared.
  *
  * The role is a facet, not a location, so it never enters the path: a module
- * can serve several roles (the gateway session serves all of them, M1 and M3
- * serve both HIE-CM roles), and a path segment can only put a page in one
+ * can serve several roles (the gateway session serves all of them), and a path segment can only put a page in one
  * place. It rides in `?role=` instead, which makes a role scoped view
  * shareable without duplicating a page or breaking a published URL.
  *

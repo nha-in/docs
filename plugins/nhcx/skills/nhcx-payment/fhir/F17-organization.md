@@ -17,7 +17,7 @@ Both identifiers carry `system` `https://nhcx.abdm.gov.in` (not the facility's o
 
 **Where they come from.**
 - Provider: the default facility (`D1 organization` with `is_default`). Every send refuses without its HFR id and participant code ("Set the facility's HFR ID and NHCX participant code under Settings ...").
-- Payer: the claim's payer (`D9 claim.payer_id`, `D9 claim.payer_name`), else the configured default payer code and name (the reference implementation defaults to the PMJAY payer, see [PAYERS.md](../references/PAYERS.md)) [REF](../references/PAYERS.md#markers). `D9 claim.payer_name` is set when the claim is opened: the name the policy search returned, else the payer adapter's name (for example `PMJAY / Ayushman Bharat`).
+- Payer: the claim's payer (`D9 claim.payer_id`, `D9 claim.payer_name`), else the configured default payer code and name (the reference implementation defaults to the PMJAY payer, see [PAYERS.md](../references/PAYERS.md)) [REF](../references/PAYERS.md#markers). `D9 claim.payer_name` is set when the claim is opened: the payer's registered name on the participant registry (G4), cached; never the search row's name or the adapter's.
 - Exception: when a notification is acknowledged and the payer named no Organization as the facility's, the payer Organization built there takes its code from the notification's `x-hcx-sender_code` (F12).
 
 **`id` by bundle.**
@@ -57,7 +57,7 @@ Payers type themselves differently: PMJAY `pay`, the Sandbox Payer `ins` "Insura
 | `identifier[0].system` | `https://nhcx.abdm.gov.in` | constant |
 | `identifier[0].value` | `D9 claim.payer_id` else the default payer code, cut at the first `@`, trimmed | |
 | `type[0].coding[0]` | organization-type `pay` "Payer" | |
-| `name` | `D9 claim.payer_name`, else the default payer name; else the NIIP value | |
+| `name` | `D9 claim.payer_name` (the registry name), else the registry name fetched now (G4), else the NIIP value | |
 
 Not sent: `active`, `telecom`, `address` (D1 holds phone and address; they are not used).
 

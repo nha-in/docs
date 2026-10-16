@@ -1,6 +1,6 @@
 # Spectral ruleset for the catalogue's OpenAPI files.
 # NHA's upstream files often fail strict rules; corrections are recorded in
-# catalogue/openapi/corrections/, never applied silently. Keep warnings
+# each gateway's openapi/corrections/, never applied silently. Keep warnings
 # visible but only fail CI on errors (see lint:specs --fail-severity).
 extends:
   - spectral:oas
@@ -9,6 +9,6 @@ rules:
   oas3-schema: error
   # Task 3 (2026-09-16 final NHA set): NHA's own examples fail these two
   # rules (nullable siblings, non-object example values); downgraded to
-  # warn rather than hand-edited. See catalogue/openapi/corrections/2026-09-16-final-set.md.
+  # warn rather than hand-edited. See catalogue/hiecm/openapi/corrections/2026-09-16-final-set.md.
   oas3-valid-media-example: warn
   oas3-valid-schema-example: warn

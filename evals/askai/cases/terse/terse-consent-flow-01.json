@@ -1,0 +1,37 @@
+{
+  "id": "terse-consent-flow-01",
+  "slice": "terse",
+  "class": "define",
+  "turns": [
+    {
+      "role": "user",
+      "text": "consent flow"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "In M3 an HIU requests access to a patient's health data by sending a consent request with the patient's ABHA address via the HIE-CM.",
+    "There are five states: Requested, Granted, Denied, Expired and Revoked.",
+    "Granted is not permanent. Revoked and Expired are ordinary destinations, not faults."
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.flow.m3-request-consent",
+    "hiecm.concept.consent-artefact"
+  ],
+  "expected_shape": "define",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-hiecm-consent-management-data-flow-yaml",
+  "catalogue_version": "2026.09.16",
+  "notes": "Group B, a bare topic noun phrase the router sends to define: it catches a definition that names no module and compresses the flow to a grant, losing the five states. Source lines: catalogue/hiecm/flows/m3-request-consent.md, 'An HIU requests access to a patient's health data by sending a consent request with the patient's ABHA address via the HIE-CM.'; catalogue/hiecm/concepts/consent-artefact.md, 'There are five states, in the two sections a PHR app shows: Requests holds Requested, Denied and Expired; Approved holds Granted and Revoked.'; 'Granted is not permanent. Revoked and Expired are ordinary destinations, not faults, and your system will meet both in production.'"
+}

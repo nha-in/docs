@@ -1,0 +1,184 @@
+{
+  "case_id": "faq-rephrased-sandbox-m3-02-a",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "what is a hiu?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01WZxdwL4by93MJpEvPLLuqq",
+            "Name": "search",
+            "Input": {
+              "query": "HIU health information user",
+              "kind": "atom",
+              "limit": 5
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "HIU health information user",
+            "kind": "atom",
+            "limit": 5
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#hiu",
+                "id": "hiecm.glossary.hiu",
+                "summary": "The role held by a system that asks a patient for consent and then fetches records held elsewhere.",
+                "title": "HIU, health information user",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-1040",
+                "id": "hiecm.error.abdm-1040",
+                "summary": "ABDM does not recognise the health information user id on the request, which is a registration problem rather than a request problem.",
+                "title": "ABDM-1040, the HIU id is not recognised",
+                "type": "error"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.glossary.m3",
+                "summary": "The milestone covering consent requests and fetching someone else's records.",
+                "title": "M3 Health Information User: Fetch data with consent",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/01-p2-post-consent-v3-auto-approve#p3-consent-auto-approve",
+                "id": "hiecm.endpoint.p3-consent-auto-approve",
+                "summary": "Let consent requests from one health information user be approved automatically, within limits the person sets.",
+                "title": "Set an auto approval policy",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.decision.role-model-two-axes",
+                "summary": "HIP, HIU, HRP and the health locker read as one list of four roles. This catalogue separates the entity that holds the role from what that entity is doing, b...",
+                "title": "Roles belong to the entity, and split into two axes, position and direction",
+                "type": "decision"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01JAjMzEqWzghydbvqLe28n1",
+            "Name": "get",
+            "Input": {
+              "id": "hiecm.glossary.hiu"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "hiecm.glossary.hiu"
+          },
+          "output": {
+            "body": "# HIU, health information user\n\n## In plain words\n\nA health information user is the side of an exchange that wants records it\ndoes not hold. It is identified by a service id, carried in the `X-HIU-ID`\nheader, which the specification describes as:\n\n> Identifier of the health information user to which the request was intended\n\nThe same organisation often holds both roles, one for the records it keeps\nand one for the records it wants to read.\n\n## Before you start\n\nYou need a consent request the patient has approved, because this role reads\nnothing without one.\n\n## What happens\n\n`m3_post_consent_v3_request_init` raises the consent request that this role\nbegins every exchange with.\n\n## How you know it worked\n\nYou have understood this when you can say which role a consent request is\nraised by and which role it is served against.\n\n## When it goes wrong\n\nRequesting health information on a consent artefact that has expired or been\nrevoked, which the specification states must not be done.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/getting-started/glossary#hiu",
+            "gateway": "hiecm",
+            "id": "hiecm.glossary.hiu",
+            "milestone": "n/a",
+            "summary": "The role held by a system that asks a patient for consent and then fetches records held elsewhere.",
+            "title": "HIU, health information user",
+            "type": "glossary"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "**HIU** stands for **Health Information User**. It's a role in ABDM's data exchange model for a system that wants to access health records it doesn't hold itself.\n\nHere's how it works:\n\n- **What it does**: Requests patient consent, then fetches medical records from other healthcare providers (HIP — Health Information Providers)\n- **Identified by**: A service ID passed in the `X-HIU-ID` header\n- **Requires consent**: An HIU can only read records with explicit patient approval via a consent artefact\n\n**Common scenario**: The same organization often holds both roles — it might be an HIU requesting records from external providers while simultaneously acting as an HIP providing its own records to others.\n\nSee the [ABDM glossary](https://abdm-docs.eka.care/docs/hiecm/v3/getting-started/glossary#hiu) for more details.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "**HIU** stands for **Health Information User**. It's a role in ABDM's data exchange model for a system that wants to access health records it doesn't hold itself.\n\nHere's how it works:\n\n- **What it does**: Requests patient consent, then fetches medical records from other healthcare providers (HIP — Health Information Providers)\n- **Identified by**: A service ID passed in the `X-HIU-ID` header\n- **Requires consent**: An HIU can only read records with explicit patient approval via a consent artefact\n\n**Common scenario**: The same organization often holds both roles — it might be an HIU requesting records from external providers while simultaneously acting as an HIP providing its own records to others.\n\nSee the [ABDM glossary](https://abdm-docs.eka.care/docs/hiecm/v3/getting-started/glossary#hiu) for more details.",
+  "sources": [
+    {
+      "id": "hiecm.glossary.hiu",
+      "title": "HIU, health information user",
+      "url": "/docs/hiecm/v3/getting-started/glossary#hiu"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hiu\",\"id\":\"hiecm.glossary.hiu\",\"summary\":\"The role held by a system that asks a patient for consent and then fetches records held elsewhere.\",\"title\":\"HIU, health information user\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-1040\",\"id\":\"hiecm.error.abdm-1040\",\"summary\":\"ABDM does not recognise the health information user id on the request, which is a registration problem rather than a request problem.\",\"title\":\"ABDM-1040, the HIU id is not recognised\",\"type\":\"error\"},{\"doc_url\":\"\",\"id\":\"hiecm.glossary.m3\",\"summary\":\"The milestone covering consent requests and fetching someone else's records.\",\"title\":\"M3 Health Information User: Fetch data with consent\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/01-p2-post-consent-v3-auto-approve#p3-consent-auto-approve\",\"id\":\"hiecm.endpoint.p3-consent-auto-approve\",\"summary\":\"Let consent requests from one health information user be approved automatically, within limits the person sets.\",\"title\":\"Set an auto approval policy\",\"type\":\"endpoint\"},{\"doc_url\":\"\",\"id\":\"shared.decision.role-model-two-axes\",\"summary\":\"HIP, HIU, HRP and the health locker read as one list of four roles. This catalogue separates the entity that holds the role from what that entity is doing, b...\",\"title\":\"Roles belong to the entity, and split into two axes, position and direction\",\"type\":\"decision\"}]}\n{\"body\":\"# HIU, health information user\\n\\n## In plain words\\n\\nA health information user is the side of an exchange that wants records it\\ndoes not hold. It is identified by a service id, carried in the `X-HIU-ID`\\nheader, which the specification describes as:\\n\\n> Identifier of the health information user to which the request was intended\\n\\nThe same organisation often holds both roles, one for the records it keeps\\nand one for the records it wants to read.\\n\\n## Before you start\\n\\nYou need a consent request the patient has approved, because this role reads\\nnothing without one.\\n\\n## What happens\\n\\n`m3_post_consent_v3_request_init` raises the consent request that this role\\nbegins every exchange with.\\n\\n## How you know it worked\\n\\nYou have understood this when you can say which role a consent request is\\nraised by and which role it is served against.\\n\\n## When it goes wrong\\n\\nRequesting health information on a consent artefact that has expired or been\\nrevoked, which the specification states must not be done.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hiu\",\"gateway\":\"hiecm\",\"id\":\"hiecm.glossary.hiu\",\"milestone\":\"n/a\",\"summary\":\"The role held by a system that asks a patient for consent and then fetches records held elsewhere.\",\"title\":\"HIU, health information user\",\"type\":\"glossary\"}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T12:02:21.034Z",
+  "usage": {
+    "input_tokens": 30,
+    "output_tokens": 540,
+    "cache_read_input_tokens": 28425,
+    "cache_creation_input_tokens": 6330,
+    "num_turns": 3,
+    "duration_ms": 9092,
+    "cost_usd_equivalent": 0.0182325
+  }
+}

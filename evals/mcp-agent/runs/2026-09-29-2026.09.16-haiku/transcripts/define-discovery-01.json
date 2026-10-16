@@ -1,0 +1,219 @@
+{
+  "case_id": "define-discovery-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "What is discovery in ABDM?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01NKR3YbMF5QvSyLjQBa151U",
+            "Name": "search",
+            "Input": {
+              "query": "discovery ABDM",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "discovery ABDM",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#abdm",
+                "id": "shared.glossary.abdm",
+                "summary": "India's national programme for connecting health records, identities and facilities across providers.",
+                "title": "ABDM, Ayushman Bharat Digital Mission",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/glossary#notto",
+                "id": "uhi.glossary.notto",
+                "summary": "The National Organ and Tissue Transplant Organisation runs the HSPA for NOTTO Hospital Discovery, backed by its registry of authorised hospitals.",
+                "title": "NOTTO, the organisation behind NOTTO Hospital Discovery",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#discovery",
+                "id": "hiecm.glossary.discovery",
+                "summary": "The step where a patient's app asks a facility whether it holds records for that patient.",
+                "title": "Discovery, finding whether a facility holds records",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/fhir/coverage-eligibility-request",
+                "id": "nhcx.fhir.coverage-eligibility-request",
+                "summary": "The bundle a hospital sends to ask a payer whether a patient's policy is in force, what it covers, and whether a treatment needs prior approval.",
+                "title": "CoverageEligibilityRequest bundle",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/05-m2-post-v3-hip-patient-care-context-discover#p2-callback-to-hip-discovery",
+                "id": "hiecm.callback.p2-callback-to-hip-discovery",
+                "summary": "ABDM asks your facility which records it holds for a person who started discovery from their PHR app.",
+                "title": "Discovery request to the HIP",
+                "type": "callback"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.glossary.m2",
+                "summary": "The milestone covering care context linking, discovery and sending records.",
+                "title": "M2 Health Information Provider: Create and link records",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/01-m2-post-user-initiated-linking-v3-patient-care-context-on-8c9340#m2-on-discover-care-contexts",
+                "id": "hiecm.endpoint.m2-on-discover-care-contexts",
+                "summary": "The HIP answers a discovery request with the patient's unlinked care contexts and how it matched the patient.",
+                "title": "On Discovery, HIP responds with found care contexts",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/glossary#pm-jay-hem",
+                "id": "uhi.glossary.pm-jay-hem",
+                "summary": "PM-JAY Hospital Empanelment Management knows which hospitals are empanelled under PM-JAY today. Its HSPA searches it live.",
+                "title": "PM-JAY HEM, the system that knows which hospitals are empanelled",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/05-m2-post-v3-hip-patient-care-context-discover#m2-on-discovery-request",
+                "id": "hiecm.callback.m2-on-discovery-request",
+                "summary": "ABDM asks the HIP to find a patient's unlinked care contexts from their name, gender, year of birth and identifiers.",
+                "title": "A discovery request for a patient you may hold records for",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/authentication#coverage-eligibility",
+                "id": "nhcx.glossary.coverage-eligibility",
+                "summary": "The check a hospital runs to confirm a patient's policy and what it covers.",
+                "title": "Coverage eligibility",
+                "type": "glossary"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_016SWDkitKVKmZgXGcgboJMu",
+            "Name": "get",
+            "Input": {
+              "id": "hiecm.glossary.discovery"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "hiecm.glossary.discovery"
+          },
+          "output": {
+            "body": "# Discovery, finding whether a facility holds records\n\n## In plain words\n\nThe step where a patient's [PHR](phr.md) app asks a facility whether it\nholds records for that patient. The [HIE-CM](hie-cm.md) forwards the\nrequest to the [HIP](hip.md) with verified identifiers (ABHA address,\nmobile number, name, gender, year of birth) and any unverified\nidentifier the patient typed, such as a hospital patient ID. Your system\nmatches those against your own patients and replies with a list of [care\ncontexts](/docs/hiecm/v3/concepts/care-context), carrying no clinical detail.\n\n## Before you start\n\nNothing. A glossary entry assumes no prior reading.\n\n## What happens\n\nNothing happens here. This entry defines a term, it does not describe a call.\n\n## How you know it worked\n\nYou have understood this when you can say what discovery returns when a facility holds nothing for that patient.\n\n## When it goes wrong\n\nTreating a discovery hit as permission to send data. Discovery only says\nrecords exist. Sending them still needs a linked care context and a\ngranted consent.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/getting-started/glossary#discovery",
+            "gateway": "hiecm",
+            "id": "hiecm.glossary.discovery",
+            "milestone": "n/a",
+            "summary": "The step where a patient's app asks a facility whether it holds records for that patient.",
+            "title": "Discovery, finding whether a facility holds records",
+            "type": "glossary"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "**Discovery in ABDM** is the step where a patient's PHR app asks a facility whether it holds records for that patient.\n\nHere's how it works:\n\n- The patient initiates discovery from their PHR app\n- HIE-CM forwards the request to the health information provider (HIP) with:\n  - Verified identifiers: ABHA address, mobile number, name, gender, year of birth\n  - Any unverified identifiers the patient entered (like a hospital patient ID)\n- Your facility matches those identifiers against your patient records\n- You respond with a list of **care contexts** the patient has at your facility—but **without any clinical detail**\n\n**Key point:** Discovery only tells you that records exist. It's not permission to send data. To actually send records, you still need:\n- A linked care context\n- A granted consent from the patient\n\nSee the HIE-CM glossary on the [developer portal](https://developer.abdm.gov.in/docs/hiecm/v3/getting-started/glossary#discovery).",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "**Discovery in ABDM** is the step where a patient's PHR app asks a facility whether it holds records for that patient.\n\nHere's how it works:\n\n- The patient initiates discovery from their PHR app\n- HIE-CM forwards the request to the health information provider (HIP) with:\n  - Verified identifiers: ABHA address, mobile number, name, gender, year of birth\n  - Any unverified identifiers the patient entered (like a hospital patient ID)\n- Your facility matches those identifiers against your patient records\n- You respond with a list of **care contexts** the patient has at your facility—but **without any clinical detail**\n\n**Key point:** Discovery only tells you that records exist. It's not permission to send data. To actually send records, you still need:\n- A linked care context\n- A granted consent from the patient\n\nSee the HIE-CM glossary on the [developer portal](https://developer.abdm.gov.in/docs/hiecm/v3/getting-started/glossary#discovery).",
+  "sources": [
+    {
+      "id": "hiecm.glossary.discovery",
+      "title": "Discovery, finding whether a facility holds records",
+      "url": "/docs/hiecm/v3/getting-started/glossary#discovery"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#abdm\",\"id\":\"shared.glossary.abdm\",\"summary\":\"India's national programme for connecting health records, identities and facilities across providers.\",\"title\":\"ABDM, Ayushman Bharat Digital Mission\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/uhi/v1/getting-started/glossary#notto\",\"id\":\"uhi.glossary.notto\",\"summary\":\"The National Organ and Tissue Transplant Organisation runs the HSPA for NOTTO Hospital Discovery, backed by its registry of authorised hospitals.\",\"title\":\"NOTTO, the organisation behind NOTTO Hospital Discovery\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#discovery\",\"id\":\"hiecm.glossary.discovery\",\"summary\":\"The step where a patient's app asks a facility whether it holds records for that patient.\",\"title\":\"Discovery, finding whether a facility holds records\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/nhcx/v1/reference/fhir/coverage-eligibility-request\",\"id\":\"nhcx.fhir.coverage-eligibility-request\",\"summary\":\"The bundle a hospital sends to ask a payer whether a patient's policy is in force, what it covers, and whether a treatment needs prior approval.\",\"title\":\"CoverageEligibilityRequest bundle\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/05-m2-post-v3-hip-patient-care-context-discover#p2-callback-to-hip-discovery\",\"id\":\"hiecm.callback.p2-callback-to-hip-discovery\",\"summary\":\"ABDM asks your facility which records it holds for a person who started discovery from their PHR app.\",\"title\":\"Discovery request to the HIP\",\"type\":\"callback\"},{\"doc_url\":\"\",\"id\":\"hiecm.glossary.m2\",\"summary\":\"The milestone covering care context linking, discovery and sending records.\",\"title\":\"M2 Health Information Provider: Create and link records\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/01-m2-post-user-initiated-linking-v3-patient-care-context-on-8c9340#m2-on-discover-care-contexts\",\"id\":\"hiecm.endpoint.m2-on-discover-care-contexts\",\"summary\":\"The HIP answers a discovery request with the patient's unlinked care contexts and how it matched the patient.\",\"title\":\"On Discovery, HIP responds with found care contexts\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/uhi/v1/getting-started/glossary#pm-jay-hem\",\"id\":\"uhi.glossary.pm-jay-hem\",\"summary\":\"PM-JAY Hospital Empanelment Management knows which hospitals are empanelled under PM-JAY today. Its HSPA searches it live.\",\"title\":\"PM-JAY HEM, the system that knows which hospitals are empanelled\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/05-m2-post-v3-hip-patient-care-context-discover#m2-on-discovery-request\",\"id\":\"hiecm.callback.m2-on-discovery-request\",\"summary\":\"ABDM asks the HIP to find a patient's unlinked care contexts from their name, gender, year of birth and identifiers.\",\"title\":\"A discovery request for a patient you may hold records for\",\"type\":\"callback\"},{\"doc_url\":\"/docs/nhcx/v1/reference/authentication#coverage-eligibility\",\"id\":\"nhcx.glossary.coverage-eligibility\",\"summary\":\"The check a hospital runs to confirm a patient's policy and what it covers.\",\"title\":\"Coverage eligibility\",\"type\":\"glossary\"}]}\n{\"body\":\"# Discovery, finding whether a facility holds records\\n\\n## In plain words\\n\\nThe step where a patient's [PHR](phr.md) app asks a facility whether it\\nholds records for that patient. The [HIE-CM](hie-cm.md) forwards the\\nrequest to the [HIP](hip.md) with verified identifiers (ABHA address,\\nmobile number, name, gender, year of birth) and any unverified\\nidentifier the patient typed, such as a hospital patient ID. Your system\\nmatches those against your own patients and replies with a list of [care\\ncontexts](/docs/hiecm/v3/concepts/care-context), carrying no clinical detail.\\n\\n## Before you start\\n\\nNothing. A glossary entry assumes no prior reading.\\n\\n## What happens\\n\\nNothing happens here. This entry defines a term, it does not describe a call.\\n\\n## How you know it worked\\n\\nYou have understood this when you can say what discovery returns when a facility holds nothing for that patient.\\n\\n## When it goes wrong\\n\\nTreating a discovery hit as permission to send data. Discovery only says\\nrecords exist. Sending them still needs a linked care context and a\\ngranted consent.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#discovery\",\"gateway\":\"hiecm\",\"id\":\"hiecm.glossary.discovery\",\"milestone\":\"n/a\",\"summary\":\"The step where a patient's app asks a facility whether it holds records for that patient.\",\"title\":\"Discovery, finding whether a facility holds records\",\"type\":\"glossary\"}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T11:58:28.113Z",
+  "usage": {
+    "input_tokens": 30,
+    "output_tokens": 568,
+    "cache_read_input_tokens": 29063,
+    "cache_creation_input_tokens": 6999,
+    "num_turns": 3,
+    "duration_ms": 10125,
+    "cost_usd_equivalent": 0.019774299999999998
+  }
+}

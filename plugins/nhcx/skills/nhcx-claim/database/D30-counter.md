@@ -17,7 +17,7 @@ The value returned is the new number, so the first number of any series is 1. Th
 | name | Used for | Format |
 |---|---|---|
 | `claim` | claim numbers (D9 `claim_no`) | `NM-<yy>-<mmdd><serial>` [REF](../references/PAYERS.md#markers) |
-| `mrn` | patient MRN (D3), when none is given | `MRN` + 5 digits |
+| `mrn` | patient MRN (D3), when none is given; unused when the HMIS has its own patient identifier | `MRN` + 5 digits |
 | `encounter_OPD`, `encounter_IPD` | visit and admission numbers (D4) | `OPD-` / `IPD-` + 5 digits |
 | `lab` | lab orders | `LAB-` + 5 digits |
 | `invoice` | invoices | `INV-` + 5 digits |
@@ -28,7 +28,7 @@ The value returned is the new number, so the first number of any series is 1. Th
 
 Other series are left-padded to 5 digits (wider numbers are not cut).
 
-**Claim numbers.** `NM-` then the two-digit year, a hyphen, then 9 characters in a base32 alphabet whose ASCII order matches its numeric order (`0123456789ABCDEFGHIJKLMNOPQRSTUV`): 3 characters for month * 100 + day, and 6 for the next value of the `claim` series [REF](../references/PAYERS.md#markers). Example: `NM-26-0SE000001`, the first claim opened on 10 September 2026. Every number has the same length and sorts by date, then by issue order. The `claim` series never resets by date, so the serial keeps counting across days.
+**Claim numbers.** The claim prefix (`NM` in the reference implementation [REF](../references/PAYERS.md#markers)) is a **setting**, not a constant: payment notices and payer-started communications are matched on the claim number alone, so every desk that shares a participant code must mint numbers under a prefix of its own ([OPERATIONS.md](../references/OPERATIONS.md)). Then the two-digit year, a hyphen, then 9 characters in a base32 alphabet whose ASCII order matches its numeric order (`0123456789ABCDEFGHIJKLMNOPQRSTUV`): 3 characters for month * 100 + day, and 6 for the next value of the `claim` series [REF](../references/PAYERS.md#markers). Example: `NM-26-0SE000001`, the first claim opened on 10 September 2026. Every number has the same length and sorts by date, then by issue order. The `claim` series never resets by date, so the serial keeps counting across days.
 
 A claim number is taken when a claim is created from a selected policy (S2), and again when the payer accepts a pre-authorisation cancellation (C7) [REF](../references/PAYERS.md#markers): the withdrawn number stays on D18 `claim_ref` and the episode carries on under the fresh one.
 

@@ -60,7 +60,7 @@ Purpose options:
 | `benefits` | Benefits, what does the policy cover for this package? |
 | `discovery` | Discovery, find active coverage |
 
-`validation` is used at registration. `benefits` is used before a pre-authorisation or an enhancement. `discovery` is what an indemnity payer answers when the policy is not yet known. A fourth purpose, `auth-requirements`, uses the same exchange but is not offered here: it is sent on the chosen procedure set from the Validate step before pre-authorisation (see S9).
+`validation` is used at registration. `benefits` is used before a pre-authorisation or an enhancement. `discovery` is what an indemnity payer answers when the policy is not yet known; a discovery that carries more than one identifier is sent from its own page, [S17. Beneficiary Discovery](S17-beneficiary-discovery.md). A fourth purpose, `auth-requirements`, uses the same exchange but is not offered here: it is sent on the chosen procedure set from the Validate step before pre-authorisation (see S9).
 
 The button reads "Send to payer" while the case is a draft, and "Check again" after any earlier check.
 

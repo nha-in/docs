@@ -8,7 +8,7 @@ After the lines are chosen, the procedure set is sent as a coverage eligibility 
 
 When it is sent:
 - By hand from S8 ("Validate"). This needs `claim.status = 'eligible'` ("Check the policy's eligibility before validating a procedure set against it."). A failed send raises the error.
-- Automatically before every pre-auth send (first request, enhancement, query answer). Skipped when the claim is not `eligible`, has no lines, or the payer adapter does not answer auth-requirements. Also skipped when a non-`error` ruling already exists for the same procedure set (`asked_codes` equal to the current set). A failed automatic send is swallowed, and the pre-auth goes out anyway.
+- Automatically before every pre-auth send (first request, enhancement, query answer). Skipped when the claim is not `eligible`, has no lines, or the payer adapter does not send the check unasked (the operator may still ask any payer from S8). Also skipped when a non-`error` ruling already exists for the same procedure set (`asked_codes` equal to the current set). A failed automatic send is swallowed, and the pre-auth goes out anyway.
 
 Request:
 - Written: `status = 'checking'`, `txn_id`, `correlation_id`, `requested_at` = now, `asked_codes` = the current procedure set. Nulled: `settled_at`, `error_message`, `outcome`, `disposition`, `inforce`, `response_json`. A failed send writes `status = 'error'` and `error_message`.

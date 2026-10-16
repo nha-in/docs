@@ -1,0 +1,36 @@
+{
+  "id": "naive-hiecm-m2-update-linked-care-context-01",
+  "slice": "naive",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "patient came back and new reports got added to a visit we already linked. how do i update abdm"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "Tell ABDM with POST /api/hiecm/hip/v3/link/context/notify, sending the ABHA address, the care context references, the hiTypes and your HIP id.",
+    "The update was accepted when a callback on /api/v3/links/context/on-notify carries acknowledgement status SUCCESS."
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.endpoint.m2-link-care-context-notify",
+    "hiecm.flow.m2-link-care-context"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-hiecm-hip-initiated-linking-yaml",
+  "catalogue_version": "2026.09.16",
+  "notes": "A wrong answer links the care context again, which the gateway refuses as already linked. Source lines: catalogue/hiecm/flows/m2-link-care-context.md, 'When a linked care context changes, tell ABDM with `POST /api/hiecm/hip/v3/link/context/notify`. The outcome arrives on your bridge at `/api/v3/links/context/on-notify`.'; catalogue/hiecm/endpoints/m2-link-care-context-notify.md, 'Call this when a care context you already linked gains new health information types'; 'Send the patient's ABHA address, the care context references, the `hiTypes` and your HIP id'; 'A callback on `/api/v3/links/context/on-notify` with `acknowledgement` `status` of `SUCCESS`.'"
+}

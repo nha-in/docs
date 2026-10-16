@@ -14,6 +14,7 @@ The FHIR resources the application builds for NHCX and reads back from it. APIs 
 |---|---|---|---|
 | [F2](F2-coverage-eligibility-request.md) | CoverageEligibilityRequest | sent | [F2-coverage-eligibility-request.md](F2-coverage-eligibility-request.md) |
 | [F3](F3-coverage-eligibility-response.md) | CoverageEligibilityResponse | received | [F3-coverage-eligibility-response.md](F3-coverage-eligibility-response.md) |
+| [F7](F7-questionnaireresponse.md) | QuestionnaireResponse | sent | [F7-questionnaireresponse.md](F7-questionnaireresponse.md) |
 
 ## Parties and supporting resources
 

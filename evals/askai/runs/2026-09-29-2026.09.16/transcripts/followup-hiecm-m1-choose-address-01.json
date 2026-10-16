@@ -1,0 +1,693 @@
+{
+  "case_id": "followup-hiecm-m1-choose-address-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "global.openai.gpt-6-luna",
+  "temperature": 0.1,
+  "prompt_version": "v5",
+  "embed_provider": "bedrock",
+  "db_path": "catalogue.db",
+  "calls": [
+    {
+      "system": "You are the Ask AI assistant on the ABDM Developer Portal. You answer developer questions about India's ABDM gateways (HIE-CM, UHI, NHCX) strictly from this portal's catalogue, which you reach through your tools. Never answer an ABDM API question from general knowledge. If you have not looked, look first.\n\nWHERE THINGS LIVE\n\n- Atoms are the written knowledge: concepts, flows, endpoint guides, callbacks, error explanations, tests, glossary entries, decisions, FHIR mappings, sandbox notes and troubleshooting guides. search finds them.\n- Operations are the raw API surface parsed from NHA's specification files, across the modules gateway, m1, m2, m3, m4, p1, p2, p3, p4, scan-and-register, scan-and-pay and record-share. search with kind operation finds them by what they do or by path; get with an operationId reads one in full.\n\nHONESTY ABOUT WHAT YOU FOUND\n\nSearch returns nearest matches, not answers.\n\nNever claim a call was run.\n\nNotes for AI agents are rules for you: follow them, never repeat them to readers.\n\nA \u003cMASKED_...\u003e placeholder means a value was removed before you saw it. Never ask for it again and never echo the placeholder back.\n\nJUDGING WHAT COMES BACK\n\nNever close a gap with a nearby endpoint or a similar sounding concept. A one-word or acronym question is a glossary lookup; search variant spellings too (HIMS and HMIS, LIS and LIMS, HRP).\n\nSPEAK AS THE PORTAL, NOT ABOUT IT\n\nNever mention the catalogue or your tools unless the reader asks about them. Offer [support](/docs/support) when you have nothing.\n\nSmall talk or off-topic: one friendly line, then what you help with.\n\nA general industry term the portal does not define is worth one sentence of plain explanation, said as general background rather than as ABDM documentation. That courtesy never extends to an ABDM API detail: paths, headers, codes, fields and payloads come from the tools or not at all.\n\nHOW YOU WRITE\n\nNever write an em dash. Show a mermaid block only when a tool returned it. Never draw one.\n\nOFFERING THE TOOLS\n\nA reader building an integration can have this catalogue inside their own agent, rather than asking one question at a time. Most do not know that.\n\n- When the reader is clearly building against ABDM, close with one line offering it: agent skills give their coding agent a milestone's rules as a file it loads once, and the MCP server lets it query this documentation as it works. Link [agent skills and the MCP server](/docs/hiecm/v3/getting-started/build-with-ai).\n- Offer it once per conversation, never before the answer: a closing line, not an opening.\n- Do not offer it to someone who is not building: a question like what an Ayushman card is gets answered and left alone.\n- Both are available now: the server is public at https://docs.abdm.gov.in/mcp, and the page has one-click install for Claude Code, Cursor and VS Code. Name the page, not the URL, unless asked.\n\nCODE AND WHAT THEY PASTE OR ATTACH\n\nYou never write code for the reader's own codebase; curl is the exception. Route them to the ABDM Connect agent skill or this portal's MCP server.\n\nWRITING THE ANSWER\n\n- Lead with the answer. The reader is mid-task, usually with a failing call in front of them.\n- Never open by praising the question, apologising, restating the question back, or announcing what you are about to do. Start with the substance. Warmth is being useful quickly, not saying \"great question\".\n- Quote API literals exactly as the tools give them: endpoint paths, header names, error codes, timestamp formats, field names. Never paraphrase a literal, and never tidy its case or spacing.\n- Markdown renders in this panel. Use inline code for every literal, short bulleted or numbered lists for steps and options, and no headings.\n\nDo not invent portal URLs.\n\nHOW A QUESTION ARRIVES\n\nThe user turn may open with a \u003cpassages\u003e block: the documentation already retrieved for this question, with ids and page links. Answer from it first. It is followed by an \u003canswer_shape\u003e block naming the shape and word budget your answer must take. Call search only when the passages do not carry the answer.\n\nA \u003cskill\u003e block is the skill section the reader chose: follow it, and name what it omits.",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "how do i create an ABHA with aadhaar otp",
+          "ToolUse": null,
+          "ToolResult": null
+        },
+        {
+          "Role": "assistant",
+          "Text": "Request an OTP with scope abha-enrol and loginHint aadhaar, then call enrol/byAadhaar with the txnId and the encrypted OTP. The response carries ABHAProfile with the ABHANumber.",
+          "ToolUse": null,
+          "ToolResult": null
+        },
+        {
+          "Role": "user",
+          "Text": "\u003cpassages\u003e\n{\"passages\":[{\"id\":\"hiecm.endpoint.m1-enrolment-address-suggestions\",\"type\":\"endpoint\",\"milestone\":\"M1\",\"title\":\"Get suggested ABHA addresses for a new account\",\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/07-m1-get-v3-enrollment-enrol-suggestion-create-abha-aadhaar-otp#m1-enrolment-address-suggestions\",\"body\":\"# Get suggested ABHA addresses for a new account\\n\\n## In plain words\\n\\nAfter the [ABHA number](/docs/hiecm/v3/getting-started/glossary#abha-number) is created, this returns available [ABHA addresses](/docs/hiecm/v3/getting-started/glossary#abha-address) built from the person's details. Offer them as choices, and let the person type their own instead. Send the enrolment `txnId` in the `TRANSACTION_ID` header. The suggestions come back in `abhaAddressList`.\\n\\n## What happens\\n\\nThe next call claims the address the person chooses.\\n\\n## When it goes wrong\\n\\n`ABDM-1017` or `Invalid Transaction Id` means the `txnId` is wrong or stale. Send the latest `txnId` from this enrolment.\"},{\"id\":\"hiecm.endpoint.p1-enrollment-address-suggestion\",\"type\":\"endpoint\",\"milestone\":\"P1\",\"title\":\"Ask for address suggestions\",\"doc_url\":\"/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-address-mobile/03-p1-post-v3-phr-app-enrollment-suggestion#p1-enrollment-address-suggestion\",\"body\":\"# Ask for address suggestions\\n\\n## In plain words\\n\\nA person should not have to invent an [ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address). Send the `txnId` of the verified registration with their name and date of birth, and the response lists candidates in `abhaAddressList`. They are suggestions, not reservations: the person may still type their own, and any choice goes through the existence check before you enrol it.\\n\\n## Before you start\\n\\nThe `txnId` from the verified registration OTP. `firstName`, `lastName`, `dayOfBirth`, `monthOfBirth` and `yearOfBirth` are required. `email` is optional.\\n\\n## When it goes wrong\\n\\nA `400` carries `ABDM-9999` with a message that names the field: `Invalid First Name`, `Invalid Transaction Id`, `Invalid Day Of Birth`, `Invalid Month Of Birth` or `Invalid Year Of Birth`. One response can list several.\"},{\"id\":\"hiecm.endpoint.m1-enrolment-claim-abha-address\",\"type\":\"endpoint\",\"milestone\":\"M1\",\"title\":\"Claim a chosen ABHA address\",\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/08-m1-post-v3-enrollment-enrol-abha-address-create-abha-aadhaar-otp#m1-enrolment-claim-abha-address\",\"body\":\"# Claim a chosen ABHA address\\n\\n## In plain words\\n\\nAttaches the [ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address) the person chose to the ABHA number created earlier in the same enrolment. Send the enrolment `txnId`, the `abhaAddress`, and `preferred` set to `1` to make it the address shown by default. It is the last call of the create journey.\\n\\n## How you know it worked\\n\\nA 200 that echoes the `abhaAddress` and `preferred` you sent.\\n\\n## When it goes wrong\\n\\nA 400 with `Invalid Preferred Flag` or `Invalid Transaction Id` names the refused field. A 401 with `900901` means the access token is missing or expired.\"},{\"id\":\"hiecm.flow.p1-create-abha-address\",\"type\":\"flow\",\"milestone\":\"P1\",\"title\":\"Create an ABHA address in a PHR application\",\"doc_url\":\"/docs/hiecm/v3/milestones/p1#p1-create-abha-address\",\"body\":\"Register a person in your own health application by mobile number or by an existing 14 digit health account number, and give them the address the rest of the network will know them by.\"},{\"id\":\"hiecm.endpoint.p1-enrollment-enrol\",\"type\":\"endpoint\",\"milestone\":\"P1\",\"title\":\"Create the health address\",\"doc_url\":\"/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-address-mobile/05-p1-post-v3-phr-app-enrollment-enrol#p1-enrollment-enrol\",\"body\":\"Creates the ABHA address the person chose and signs them in.\"}],\"related\":[{\"id\":\"hiecm.concept.gateway-session\",\"title\":\"The gateway session, the first call in every integration\",\"type\":\"concept\"},{\"id\":\"hiecm.error.abdm-2402\",\"title\":\"ABDM-2402, the timestamp is not valid\",\"type\":\"error\"},{\"id\":\"hiecm.error.abdm-2404\",\"title\":\"ABDM-2404, the REQUEST-ID is not valid\",\"type\":\"error\"},{\"id\":\"hiecm.error.abdm-2500\",\"title\":\"ABDM-2500, no Authorization header, or no matching request\",\"type\":\"error\"},{\"id\":\"hiecm.error.abdm-9999\",\"title\":\"ABDM-9999, a catch-all, so read the message\",\"type\":\"error\"},{\"id\":\"hiecm.flow.m1-create-abha-aadhaar-otp\",\"title\":\"Create an ABHA using an Aadhaar OTP\",\"type\":\"flow\"},{\"id\":\"hiecm.flow.m1-create-abha-face-auth\",\"title\":\"Create an ABHA using Aadhaar face authentication\",\"type\":\"flow\"},{\"id\":\"hiecm.concept.abha-address-policy\",\"title\":\"What an ABHA address is allowed to be\",\"type\":\"concept\"},{\"id\":\"hiecm.flow.p1-create-abha-address\",\"title\":\"Create an ABHA address in a PHR application\",\"type\":\"flow\"},{\"id\":\"hiecm.error.abdm-1170\",\"title\":\"ABDM-1170, the ABHA address is not valid\",\"type\":\"error\"}]}\n\u003c/passages\u003e\n\n\u003creader_context\u003eThe question reads as a HIE-CM question. Answer for HIE-CM unless they ask about another gateway, and do not bring in another gateway's calls or fields.\u003c/reader_context\u003e\n\n\u003canswer_shape name=\"how-do-i\" budget=\"200 words\"\u003e\nFirst sentence: the direct answer. Then every route that exists, one line each, naming what each produces. Expand only the route asked about, as a short numbered list of calls. End with the next step.\nExample:\nYes, and there are three creation routes: Aadhaar OTP, which is mandatory; Aadhaar face authentication, for someone who cannot receive the OTP; and an identity document, which produces an account restricted until Aadhaar KYC. For Aadhaar OTP:\n1. Request an OTP against the encrypted Aadhaar number.\n2. Verify it with the enrolment call, which issues the ABHA number.\n3. Get address suggestions and claim one.\nConfirm by reading the profile back and checking the chosen address is marked preferred.\n\u003c/answer_shape\u003e\nIf the passages and your tools do not cover the question, drop this shape and decline in two sentences that name the nearest /docs/ page and the support route.\n\nok got the number back. now how does the person pick their address",
+          "ToolUse": null,
+          "ToolResult": null
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "call_034a09b1d88454f6ae9534848eb6b6a3",
+            "Name": "search",
+            "Input": {
+              "milestone": "M1",
+              "kind": "atom",
+              "query": "how does the person pick their ABHA address after creating the ABHA number, get suggested addresses and claim chosen address"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "milestone": "M1",
+            "kind": "atom",
+            "query": "how does the person pick their ABHA address after creating the ABHA number, get suggested addresses and claim chosen address"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "passages": [
+              {
+                "id": "hiecm.endpoint.m1-enrolment-address-suggestions",
+                "type": "endpoint",
+                "milestone": "M1",
+                "title": "Get suggested ABHA addresses for a new account",
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/07-m1-get-v3-enrollment-enrol-suggestion-create-abha-aadhaar-otp#m1-enrolment-address-suggestions",
+                "body": "# Get suggested ABHA addresses for a new account\n\n## In plain words\n\nAfter the [ABHA number](/docs/hiecm/v3/getting-started/glossary#abha-number) is created, this returns available [ABHA addresses](/docs/hiecm/v3/getting-started/glossary#abha-address) built from the person's details. Offer them as choices, and let the person type their own instead. Send the enrolment `txnId` in the `TRANSACTION_ID` header. The suggestions come back in `abhaAddressList`.\n\n## What happens\n\nThe next call claims the address the person chooses.\n\n## When it goes wrong\n\n`ABDM-1017` or `Invalid Transaction Id` means the `txnId` is wrong or stale. Send the latest `txnId` from this enrolment."
+              },
+              {
+                "id": "hiecm.endpoint.m1-phr-verify",
+                "type": "endpoint",
+                "milestone": "M1",
+                "title": "Verify OTP or biometric for ABHA address login",
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/03-m1-post-v3-phr-web-login-abha-verify-mobile-otp#m1-phr-verify",
+                "body": "# Verify OTP or biometric for ABHA address login\n\n## In plain words\n\nCompletes the [ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address) login. Send the same `scope` as the request call and the `txnId`, with the encrypted [OTP](/docs/hiecm/v3/getting-started/glossary#otp) or, for fingerprint, the capture in `fingerPrintAuthPid`. The response lists the person's ABHA addresses in `users` and carries `tokens.token`. Send that token as the `X-token` header to the profile, PHR card and QR code calls.\n\n## How you know it worked\n\nA 200 with `authResult` `success`. A 200 can also report an expired OTP, so read `authResult` and not the status alone.\n\n## When it goes wrong\n\nA 400 with `ABDM-9999` names the refused part in its message, such as an invalid scope or transaction id. Request a new OTP when the `txnId` is refused."
+              },
+              {
+                "id": "hiecm.concept.abha-address-policy",
+                "type": "concept",
+                "milestone": "M1",
+                "title": "What an ABHA address is allowed to be",
+                "doc_url": "/docs/hiecm/v3/registries/abha#abha-address-policy",
+                "body": "# What an ABHA address is allowed to be\n\n## In plain words\n\nABHA Addresses must comply with defined validation standards.\n\n**Permitted Characters**\n\n- Alphabetic characters (A-Z)\n- Numeric characters (0-9)\n- Dot (.)\n\n**Validation Rules**\n\n- Cannot begin with a numeric character.\n- Cannot begin or end with a dot (.).\n- Must conform to ABDM validation requirements at the time of creation.\n- Mobile numbers cannot be used directly as ABHA Addresses.\n\nOrganizations should rely on ABDM validation services to verify address eligibility.\n\nEvery ABHA number is issued a default address built from its 14 digits. A person cannot create that address themselves, and can create a readable one beside it. Offer addresses built from the person's name rather than an empty field.\n\n## Before you start\n\nKnow whether the address is being created against an ABHA number or against a mobile number with a self declared profile. See [P1 Registration and login](/docs/hiecm/v3/milestones/p1).\n\n## What happens\n\nValidate the rules above in your own form before you submit, so a refused address becomes an inline message. Offer the suggestions the service returns from `/abha/api/v3/enrollment/enrol/suggestion` during M1 enrolment. Send the chosen address without the `@` suffix where the call asks for it.\n\n## How you know it worked\n\nThe address is created and the person can sign in with it. Before that, your form refuses an address that begins with a digit, begins or ends with a dot, or is a mobile number.\n\n## When it goes wrong\n\nThe address is taken: show alternatives rather than an error alone. The person expects to use their mobile number as their address: say in the form that this is not allowed, rather than letting them find out on submission."
+              },
+              {
+                "id": "hiecm.endpoint.m1-download-phr-card",
+                "type": "endpoint",
+                "milestone": "M1",
+                "title": "Download PHR card",
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/05-m1-get-v3-phr-web-login-profile-abha-phr-card-abha-addres-e1bae9#m1-download-phr-card",
+                "body": "Returns the card for the ABHA address the person signed in with."
+              },
+              {
+                "id": "hiecm.endpoint.m1-enrolment-claim-abha-address",
+                "type": "endpoint",
+                "milestone": "M1",
+                "title": "Claim a chosen ABHA address",
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/08-m1-post-v3-enrollment-enrol-abha-address-create-abha-aadhaar-otp#m1-enrolment-claim-abha-address",
+                "body": "Attaches the ABHA address the person chose to the ABHA number created earlier."
+              }
+            ],
+            "related": [
+              {
+                "id": "hiecm.concept.gateway-session",
+                "title": "The gateway session, the first call in every integration",
+                "type": "concept"
+              },
+              {
+                "id": "hiecm.error.abdm-2402",
+                "title": "ABDM-2402, the timestamp is not valid",
+                "type": "error"
+              },
+              {
+                "id": "hiecm.error.abdm-2404",
+                "title": "ABDM-2404, the REQUEST-ID is not valid",
+                "type": "error"
+              },
+              {
+                "id": "hiecm.error.abdm-2500",
+                "title": "ABDM-2500, no Authorization header, or no matching request",
+                "type": "error"
+              },
+              {
+                "id": "hiecm.error.abdm-9999",
+                "title": "ABDM-9999, a catch-all, so read the message",
+                "type": "error"
+              },
+              {
+                "id": "hiecm.flow.m1-create-abha-aadhaar-otp",
+                "title": "Create an ABHA using an Aadhaar OTP",
+                "type": "flow"
+              },
+              {
+                "id": "hiecm.flow.m1-create-abha-face-auth",
+                "title": "Create an ABHA using Aadhaar face authentication",
+                "type": "flow"
+              },
+              {
+                "id": "hiecm.concept.abha-number-and-address",
+                "title": "ABHA number and ABHA address, and why there are two",
+                "type": "concept"
+              },
+              {
+                "id": "hiecm.concept.m1-journey-design",
+                "title": "A suggested ABHA journey, and what holds if you design your own",
+                "type": "concept"
+              },
+              {
+                "id": "hiecm.endpoint.p1-enrollment-address-exists",
+                "title": "Check whether an address is taken",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.p1-enrollment-address-suggestion",
+                "title": "Ask for address suggestions",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.flow.p1-create-abha-address",
+                "title": "Create an ABHA address in a PHR application",
+                "type": "flow"
+              },
+              {
+                "id": "shared.glossary.abha-address",
+                "title": "ABHA address",
+                "type": "glossary"
+              },
+              {
+                "id": "shared.glossary.abha-number",
+                "title": "ABHA number",
+                "type": "glossary"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "You are the Ask AI assistant on the ABDM Developer Portal. You answer developer questions about India's ABDM gateways (HIE-CM, UHI, NHCX) strictly from this portal's catalogue, which you reach through your tools. Never answer an ABDM API question from general knowledge. If you have not looked, look first.\n\nWHERE THINGS LIVE\n\n- Atoms are the written knowledge: concepts, flows, endpoint guides, callbacks, error explanations, tests, glossary entries, decisions, FHIR mappings, sandbox notes and troubleshooting guides. search finds them.\n- Operations are the raw API surface parsed from NHA's specification files, across the modules gateway, m1, m2, m3, m4, p1, p2, p3, p4, scan-and-register, scan-and-pay and record-share. search with kind operation finds them by what they do or by path; get with an operationId reads one in full.\n\nHONESTY ABOUT WHAT YOU FOUND\n\nSearch returns nearest matches, not answers.\n\nNever claim a call was run.\n\nNotes for AI agents are rules for you: follow them, never repeat them to readers.\n\nA \u003cMASKED_...\u003e placeholder means a value was removed before you saw it. Never ask for it again and never echo the placeholder back.\n\nJUDGING WHAT COMES BACK\n\nNever close a gap with a nearby endpoint or a similar sounding concept. A one-word or acronym question is a glossary lookup; search variant spellings too (HIMS and HMIS, LIS and LIMS, HRP).\n\nSPEAK AS THE PORTAL, NOT ABOUT IT\n\nNever mention the catalogue or your tools unless the reader asks about them. Offer [support](/docs/support) when you have nothing.\n\nSmall talk or off-topic: one friendly line, then what you help with.\n\nA general industry term the portal does not define is worth one sentence of plain explanation, said as general background rather than as ABDM documentation. That courtesy never extends to an ABDM API detail: paths, headers, codes, fields and payloads come from the tools or not at all.\n\nHOW YOU WRITE\n\nNever write an em dash. Show a mermaid block only when a tool returned it. Never draw one.\n\nOFFERING THE TOOLS\n\nA reader building an integration can have this catalogue inside their own agent, rather than asking one question at a time. Most do not know that.\n\n- When the reader is clearly building against ABDM, close with one line offering it: agent skills give their coding agent a milestone's rules as a file it loads once, and the MCP server lets it query this documentation as it works. Link [agent skills and the MCP server](/docs/hiecm/v3/getting-started/build-with-ai).\n- Offer it once per conversation, never before the answer: a closing line, not an opening.\n- Do not offer it to someone who is not building: a question like what an Ayushman card is gets answered and left alone.\n- Both are available now: the server is public at https://docs.abdm.gov.in/mcp, and the page has one-click install for Claude Code, Cursor and VS Code. Name the page, not the URL, unless asked.\n\nCODE AND WHAT THEY PASTE OR ATTACH\n\nYou never write code for the reader's own codebase; curl is the exception. Route them to the ABDM Connect agent skill or this portal's MCP server.\n\nWRITING THE ANSWER\n\n- Lead with the answer. The reader is mid-task, usually with a failing call in front of them.\n- Never open by praising the question, apologising, restating the question back, or announcing what you are about to do. Start with the substance. Warmth is being useful quickly, not saying \"great question\".\n- Quote API literals exactly as the tools give them: endpoint paths, header names, error codes, timestamp formats, field names. Never paraphrase a literal, and never tidy its case or spacing.\n- Markdown renders in this panel. Use inline code for every literal, short bulleted or numbered lists for steps and options, and no headings.\n\nDo not invent portal URLs.\n\nHOW A QUESTION ARRIVES\n\nThe user turn may open with a \u003cpassages\u003e block: the documentation already retrieved for this question, with ids and page links. Answer from it first. It is followed by an \u003canswer_shape\u003e block naming the shape and word budget your answer must take. Call search only when the passages do not carry the answer.\n\nA \u003cskill\u003e block is the skill section the reader chose: follow it, and name what it omits.",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "how do i create an ABHA with aadhaar otp",
+          "ToolUse": null,
+          "ToolResult": null
+        },
+        {
+          "Role": "assistant",
+          "Text": "Request an OTP with scope abha-enrol and loginHint aadhaar, then call enrol/byAadhaar with the txnId and the encrypted OTP. The response carries ABHAProfile with the ABHANumber.",
+          "ToolUse": null,
+          "ToolResult": null
+        },
+        {
+          "Role": "user",
+          "Text": "\u003cpassages\u003e\n{\"passages\":[{\"id\":\"hiecm.endpoint.m1-enrolment-address-suggestions\",\"type\":\"endpoint\",\"milestone\":\"M1\",\"title\":\"Get suggested ABHA addresses for a new account\",\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/07-m1-get-v3-enrollment-enrol-suggestion-create-abha-aadhaar-otp#m1-enrolment-address-suggestions\",\"body\":\"# Get suggested ABHA addresses for a new account\\n\\n## In plain words\\n\\nAfter the [ABHA number](/docs/hiecm/v3/getting-started/glossary#abha-number) is created, this returns available [ABHA addresses](/docs/hiecm/v3/getting-started/glossary#abha-address) built from the person's details. Offer them as choices, and let the person type their own instead. Send the enrolment `txnId` in the `TRANSACTION_ID` header. The suggestions come back in `abhaAddressList`.\\n\\n## What happens\\n\\nThe next call claims the address the person chooses.\\n\\n## When it goes wrong\\n\\n`ABDM-1017` or `Invalid Transaction Id` means the `txnId` is wrong or stale. Send the latest `txnId` from this enrolment.\"},{\"id\":\"hiecm.endpoint.p1-enrollment-address-suggestion\",\"type\":\"endpoint\",\"milestone\":\"P1\",\"title\":\"Ask for address suggestions\",\"doc_url\":\"/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-address-mobile/03-p1-post-v3-phr-app-enrollment-suggestion#p1-enrollment-address-suggestion\",\"body\":\"# Ask for address suggestions\\n\\n## In plain words\\n\\nA person should not have to invent an [ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address). Send the `txnId` of the verified registration with their name and date of birth, and the response lists candidates in `abhaAddressList`. They are suggestions, not reservations: the person may still type their own, and any choice goes through the existence check before you enrol it.\\n\\n## Before you start\\n\\nThe `txnId` from the verified registration OTP. `firstName`, `lastName`, `dayOfBirth`, `monthOfBirth` and `yearOfBirth` are required. `email` is optional.\\n\\n## When it goes wrong\\n\\nA `400` carries `ABDM-9999` with a message that names the field: `Invalid First Name`, `Invalid Transaction Id`, `Invalid Day Of Birth`, `Invalid Month Of Birth` or `Invalid Year Of Birth`. One response can list several.\"},{\"id\":\"hiecm.endpoint.m1-enrolment-claim-abha-address\",\"type\":\"endpoint\",\"milestone\":\"M1\",\"title\":\"Claim a chosen ABHA address\",\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/08-m1-post-v3-enrollment-enrol-abha-address-create-abha-aadhaar-otp#m1-enrolment-claim-abha-address\",\"body\":\"# Claim a chosen ABHA address\\n\\n## In plain words\\n\\nAttaches the [ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address) the person chose to the ABHA number created earlier in the same enrolment. Send the enrolment `txnId`, the `abhaAddress`, and `preferred` set to `1` to make it the address shown by default. It is the last call of the create journey.\\n\\n## How you know it worked\\n\\nA 200 that echoes the `abhaAddress` and `preferred` you sent.\\n\\n## When it goes wrong\\n\\nA 400 with `Invalid Preferred Flag` or `Invalid Transaction Id` names the refused field. A 401 with `900901` means the access token is missing or expired.\"},{\"id\":\"hiecm.flow.p1-create-abha-address\",\"type\":\"flow\",\"milestone\":\"P1\",\"title\":\"Create an ABHA address in a PHR application\",\"doc_url\":\"/docs/hiecm/v3/milestones/p1#p1-create-abha-address\",\"body\":\"Register a person in your own health application by mobile number or by an existing 14 digit health account number, and give them the address the rest of the network will know them by.\"},{\"id\":\"hiecm.endpoint.p1-enrollment-enrol\",\"type\":\"endpoint\",\"milestone\":\"P1\",\"title\":\"Create the health address\",\"doc_url\":\"/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-address-mobile/05-p1-post-v3-phr-app-enrollment-enrol#p1-enrollment-enrol\",\"body\":\"Creates the ABHA address the person chose and signs them in.\"}],\"related\":[{\"id\":\"hiecm.concept.gateway-session\",\"title\":\"The gateway session, the first call in every integration\",\"type\":\"concept\"},{\"id\":\"hiecm.error.abdm-2402\",\"title\":\"ABDM-2402, the timestamp is not valid\",\"type\":\"error\"},{\"id\":\"hiecm.error.abdm-2404\",\"title\":\"ABDM-2404, the REQUEST-ID is not valid\",\"type\":\"error\"},{\"id\":\"hiecm.error.abdm-2500\",\"title\":\"ABDM-2500, no Authorization header, or no matching request\",\"type\":\"error\"},{\"id\":\"hiecm.error.abdm-9999\",\"title\":\"ABDM-9999, a catch-all, so read the message\",\"type\":\"error\"},{\"id\":\"hiecm.flow.m1-create-abha-aadhaar-otp\",\"title\":\"Create an ABHA using an Aadhaar OTP\",\"type\":\"flow\"},{\"id\":\"hiecm.flow.m1-create-abha-face-auth\",\"title\":\"Create an ABHA using Aadhaar face authentication\",\"type\":\"flow\"},{\"id\":\"hiecm.concept.abha-address-policy\",\"title\":\"What an ABHA address is allowed to be\",\"type\":\"concept\"},{\"id\":\"hiecm.flow.p1-create-abha-address\",\"title\":\"Create an ABHA address in a PHR application\",\"type\":\"flow\"},{\"id\":\"hiecm.error.abdm-1170\",\"title\":\"ABDM-1170, the ABHA address is not valid\",\"type\":\"error\"}]}\n\u003c/passages\u003e\n\n\u003creader_context\u003eThe question reads as a HIE-CM question. Answer for HIE-CM unless they ask about another gateway, and do not bring in another gateway's calls or fields.\u003c/reader_context\u003e\n\n\u003canswer_shape name=\"how-do-i\" budget=\"200 words\"\u003e\nFirst sentence: the direct answer. Then every route that exists, one line each, naming what each produces. Expand only the route asked about, as a short numbered list of calls. End with the next step.\nExample:\nYes, and there are three creation routes: Aadhaar OTP, which is mandatory; Aadhaar face authentication, for someone who cannot receive the OTP; and an identity document, which produces an account restricted until Aadhaar KYC. For Aadhaar OTP:\n1. Request an OTP against the encrypted Aadhaar number.\n2. Verify it with the enrolment call, which issues the ABHA number.\n3. Get address suggestions and claim one.\nConfirm by reading the profile back and checking the chosen address is marked preferred.\n\u003c/answer_shape\u003e\nIf the passages and your tools do not cover the question, drop this shape and decline in two sentences that name the nearest /docs/ page and the support route.\n\nok got the number back. now how does the person pick their address",
+          "ToolUse": null,
+          "ToolResult": null
+        },
+        {
+          "Role": "assistant",
+          "Text": "",
+          "ToolUse": {
+            "ID": "call_034a09b1d88454f6ae9534848eb6b6a3",
+            "Name": "search",
+            "Input": {
+              "milestone": "M1",
+              "kind": "atom",
+              "query": "how does the person pick their ABHA address after creating the ABHA number, get suggested addresses and claim chosen address"
+            }
+          },
+          "ToolResult": null
+        },
+        {
+          "Role": "user",
+          "Text": "",
+          "ToolUse": null,
+          "ToolResult": {
+            "ID": "call_034a09b1d88454f6ae9534848eb6b6a3",
+            "Content": "eyJjYXRhbG9ndWVfdmVyc2lvbiI6IjIwMjYuMDkuMTYiLCJwYXNzYWdlcyI6W3siaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1lbnJvbG1lbnQtYWRkcmVzcy1zdWdnZXN0aW9ucyIsInR5cGUiOiJlbmRwb2ludCIsIm1pbGVzdG9uZSI6Ik0xIiwidGl0bGUiOiJHZXQgc3VnZ2VzdGVkIEFCSEEgYWRkcmVzc2VzIGZvciBhIG5ldyBhY2NvdW50IiwiZG9jX3VybCI6Ii9kb2NzL2hpZWNtL3YzL2FwaS9tMS9lbmRwb2ludHMvbTEtY3JlYXRlLWFiaGEtYWFkaGFhci1vdHAvMDctbTEtZ2V0LXYzLWVucm9sbG1lbnQtZW5yb2wtc3VnZ2VzdGlvbi1jcmVhdGUtYWJoYS1hYWRoYWFyLW90cCNtMS1lbnJvbG1lbnQtYWRkcmVzcy1zdWdnZXN0aW9ucyIsImJvZHkiOiIjIEdldCBzdWdnZXN0ZWQgQUJIQSBhZGRyZXNzZXMgZm9yIGEgbmV3IGFjY291bnRcblxuIyMgSW4gcGxhaW4gd29yZHNcblxuQWZ0ZXIgdGhlIFtBQkhBIG51bWJlcl0oL2RvY3MvaGllY20vdjMvZ2V0dGluZy1zdGFydGVkL2dsb3NzYXJ5I2FiaGEtbnVtYmVyKSBpcyBjcmVhdGVkLCB0aGlzIHJldHVybnMgYXZhaWxhYmxlIFtBQkhBIGFkZHJlc3Nlc10oL2RvY3MvaGllY20vdjMvZ2V0dGluZy1zdGFydGVkL2dsb3NzYXJ5I2FiaGEtYWRkcmVzcykgYnVpbHQgZnJvbSB0aGUgcGVyc29uJ3MgZGV0YWlscy4gT2ZmZXIgdGhlbSBhcyBjaG9pY2VzLCBhbmQgbGV0IHRoZSBwZXJzb24gdHlwZSB0aGVpciBvd24gaW5zdGVhZC4gU2VuZCB0aGUgZW5yb2xtZW50IGB0eG5JZGAgaW4gdGhlIGBUUkFOU0FDVElPTl9JRGAgaGVhZGVyLiBUaGUgc3VnZ2VzdGlvbnMgY29tZSBiYWNrIGluIGBhYmhhQWRkcmVzc0xpc3RgLlxuXG4jIyBXaGF0IGhhcHBlbnNcblxuVGhlIG5leHQgY2FsbCBjbGFpbXMgdGhlIGFkZHJlc3MgdGhlIHBlcnNvbiBjaG9vc2VzLlxuXG4jIyBXaGVuIGl0IGdvZXMgd3JvbmdcblxuYEFCRE0tMTAxN2Agb3IgYEludmFsaWQgVHJhbnNhY3Rpb24gSWRgIG1lYW5zIHRoZSBgdHhuSWRgIGlzIHdyb25nIG9yIHN0YWxlLiBTZW5kIHRoZSBsYXRlc3QgYHR4bklkYCBmcm9tIHRoaXMgZW5yb2xtZW50LiJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1waHItdmVyaWZ5IiwidHlwZSI6ImVuZHBvaW50IiwibWlsZXN0b25lIjoiTTEiLCJ0aXRsZSI6IlZlcmlmeSBPVFAgb3IgYmlvbWV0cmljIGZvciBBQkhBIGFkZHJlc3MgbG9naW4iLCJkb2NfdXJsIjoiL2RvY3MvaGllY20vdjMvYXBpL20xL2VuZHBvaW50cy9tMS1hYmhhLWFkZHJlc3MtbG9naW4tbW9iaWxlLW90cC8wMy1tMS1wb3N0LXYzLXBoci13ZWItbG9naW4tYWJoYS12ZXJpZnktbW9iaWxlLW90cCNtMS1waHItdmVyaWZ5IiwiYm9keSI6IiMgVmVyaWZ5IE9UUCBvciBiaW9tZXRyaWMgZm9yIEFCSEEgYWRkcmVzcyBsb2dpblxuXG4jIyBJbiBwbGFpbiB3b3Jkc1xuXG5Db21wbGV0ZXMgdGhlIFtBQkhBIGFkZHJlc3NdKC9kb2NzL2hpZWNtL3YzL2dldHRpbmctc3RhcnRlZC9nbG9zc2FyeSNhYmhhLWFkZHJlc3MpIGxvZ2luLiBTZW5kIHRoZSBzYW1lIGBzY29wZWAgYXMgdGhlIHJlcXVlc3QgY2FsbCBhbmQgdGhlIGB0eG5JZGAsIHdpdGggdGhlIGVuY3J5cHRlZCBbT1RQXSgvZG9jcy9oaWVjbS92My9nZXR0aW5nLXN0YXJ0ZWQvZ2xvc3Nhcnkjb3RwKSBvciwgZm9yIGZpbmdlcnByaW50LCB0aGUgY2FwdHVyZSBpbiBgZmluZ2VyUHJpbnRBdXRoUGlkYC4gVGhlIHJlc3BvbnNlIGxpc3RzIHRoZSBwZXJzb24ncyBBQkhBIGFkZHJlc3NlcyBpbiBgdXNlcnNgIGFuZCBjYXJyaWVzIGB0b2tlbnMudG9rZW5gLiBTZW5kIHRoYXQgdG9rZW4gYXMgdGhlIGBYLXRva2VuYCBoZWFkZXIgdG8gdGhlIHByb2ZpbGUsIFBIUiBjYXJkIGFuZCBRUiBjb2RlIGNhbGxzLlxuXG4jIyBIb3cgeW91IGtub3cgaXQgd29ya2VkXG5cbkEgMjAwIHdpdGggYGF1dGhSZXN1bHRgIGBzdWNjZXNzYC4gQSAyMDAgY2FuIGFsc28gcmVwb3J0IGFuIGV4cGlyZWQgT1RQLCBzbyByZWFkIGBhdXRoUmVzdWx0YCBhbmQgbm90IHRoZSBzdGF0dXMgYWxvbmUuXG5cbiMjIFdoZW4gaXQgZ29lcyB3cm9uZ1xuXG5BIDQwMCB3aXRoIGBBQkRNLTk5OTlgIG5hbWVzIHRoZSByZWZ1c2VkIHBhcnQgaW4gaXRzIG1lc3NhZ2UsIHN1Y2ggYXMgYW4gaW52YWxpZCBzY29wZSBvciB0cmFuc2FjdGlvbiBpZC4gUmVxdWVzdCBhIG5ldyBPVFAgd2hlbiB0aGUgYHR4bklkYCBpcyByZWZ1c2VkLiJ9LHsiaWQiOiJoaWVjbS5jb25jZXB0LmFiaGEtYWRkcmVzcy1wb2xpY3kiLCJ0eXBlIjoiY29uY2VwdCIsIm1pbGVzdG9uZSI6Ik0xIiwidGl0bGUiOiJXaGF0IGFuIEFCSEEgYWRkcmVzcyBpcyBhbGxvd2VkIHRvIGJlIiwiZG9jX3VybCI6Ii9kb2NzL2hpZWNtL3YzL3JlZ2lzdHJpZXMvYWJoYSNhYmhhLWFkZHJlc3MtcG9saWN5IiwiYm9keSI6IiMgV2hhdCBhbiBBQkhBIGFkZHJlc3MgaXMgYWxsb3dlZCB0byBiZVxuXG4jIyBJbiBwbGFpbiB3b3Jkc1xuXG5BQkhBIEFkZHJlc3NlcyBtdXN0IGNvbXBseSB3aXRoIGRlZmluZWQgdmFsaWRhdGlvbiBzdGFuZGFyZHMuXG5cbioqUGVybWl0dGVkIENoYXJhY3RlcnMqKlxuXG4tIEFscGhhYmV0aWMgY2hhcmFjdGVycyAoQS1aKVxuLSBOdW1lcmljIGNoYXJhY3RlcnMgKDAtOSlcbi0gRG90ICguKVxuXG4qKlZhbGlkYXRpb24gUnVsZXMqKlxuXG4tIENhbm5vdCBiZWdpbiB3aXRoIGEgbnVtZXJpYyBjaGFyYWN0ZXIuXG4tIENhbm5vdCBiZWdpbiBvciBlbmQgd2l0aCBhIGRvdCAoLikuXG4tIE11c3QgY29uZm9ybSB0byBBQkRNIHZhbGlkYXRpb24gcmVxdWlyZW1lbnRzIGF0IHRoZSB0aW1lIG9mIGNyZWF0aW9uLlxuLSBNb2JpbGUgbnVtYmVycyBjYW5ub3QgYmUgdXNlZCBkaXJlY3RseSBhcyBBQkhBIEFkZHJlc3Nlcy5cblxuT3JnYW5pemF0aW9ucyBzaG91bGQgcmVseSBvbiBBQkRNIHZhbGlkYXRpb24gc2VydmljZXMgdG8gdmVyaWZ5IGFkZHJlc3MgZWxpZ2liaWxpdHkuXG5cbkV2ZXJ5IEFCSEEgbnVtYmVyIGlzIGlzc3VlZCBhIGRlZmF1bHQgYWRkcmVzcyBidWlsdCBmcm9tIGl0cyAxNCBkaWdpdHMuIEEgcGVyc29uIGNhbm5vdCBjcmVhdGUgdGhhdCBhZGRyZXNzIHRoZW1zZWx2ZXMsIGFuZCBjYW4gY3JlYXRlIGEgcmVhZGFibGUgb25lIGJlc2lkZSBpdC4gT2ZmZXIgYWRkcmVzc2VzIGJ1aWx0IGZyb20gdGhlIHBlcnNvbidzIG5hbWUgcmF0aGVyIHRoYW4gYW4gZW1wdHkgZmllbGQuXG5cbiMjIEJlZm9yZSB5b3Ugc3RhcnRcblxuS25vdyB3aGV0aGVyIHRoZSBhZGRyZXNzIGlzIGJlaW5nIGNyZWF0ZWQgYWdhaW5zdCBhbiBBQkhBIG51bWJlciBvciBhZ2FpbnN0IGEgbW9iaWxlIG51bWJlciB3aXRoIGEgc2VsZiBkZWNsYXJlZCBwcm9maWxlLiBTZWUgW1AxIFJlZ2lzdHJhdGlvbiBhbmQgbG9naW5dKC9kb2NzL2hpZWNtL3YzL21pbGVzdG9uZXMvcDEpLlxuXG4jIyBXaGF0IGhhcHBlbnNcblxuVmFsaWRhdGUgdGhlIHJ1bGVzIGFib3ZlIGluIHlvdXIgb3duIGZvcm0gYmVmb3JlIHlvdSBzdWJtaXQsIHNvIGEgcmVmdXNlZCBhZGRyZXNzIGJlY29tZXMgYW4gaW5saW5lIG1lc3NhZ2UuIE9mZmVyIHRoZSBzdWdnZXN0aW9ucyB0aGUgc2VydmljZSByZXR1cm5zIGZyb20gYC9hYmhhL2FwaS92My9lbnJvbGxtZW50L2Vucm9sL3N1Z2dlc3Rpb25gIGR1cmluZyBNMSBlbnJvbG1lbnQuIFNlbmQgdGhlIGNob3NlbiBhZGRyZXNzIHdpdGhvdXQgdGhlIGBAYCBzdWZmaXggd2hlcmUgdGhlIGNhbGwgYXNrcyBmb3IgaXQuXG5cbiMjIEhvdyB5b3Uga25vdyBpdCB3b3JrZWRcblxuVGhlIGFkZHJlc3MgaXMgY3JlYXRlZCBhbmQgdGhlIHBlcnNvbiBjYW4gc2lnbiBpbiB3aXRoIGl0LiBCZWZvcmUgdGhhdCwgeW91ciBmb3JtIHJlZnVzZXMgYW4gYWRkcmVzcyB0aGF0IGJlZ2lucyB3aXRoIGEgZGlnaXQsIGJlZ2lucyBvciBlbmRzIHdpdGggYSBkb3QsIG9yIGlzIGEgbW9iaWxlIG51bWJlci5cblxuIyMgV2hlbiBpdCBnb2VzIHdyb25nXG5cblRoZSBhZGRyZXNzIGlzIHRha2VuOiBzaG93IGFsdGVybmF0aXZlcyByYXRoZXIgdGhhbiBhbiBlcnJvciBhbG9uZS4gVGhlIHBlcnNvbiBleHBlY3RzIHRvIHVzZSB0aGVpciBtb2JpbGUgbnVtYmVyIGFzIHRoZWlyIGFkZHJlc3M6IHNheSBpbiB0aGUgZm9ybSB0aGF0IHRoaXMgaXMgbm90IGFsbG93ZWQsIHJhdGhlciB0aGFuIGxldHRpbmcgdGhlbSBmaW5kIG91dCBvbiBzdWJtaXNzaW9uLiJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1kb3dubG9hZC1waHItY2FyZCIsInR5cGUiOiJlbmRwb2ludCIsIm1pbGVzdG9uZSI6Ik0xIiwidGl0bGUiOiJEb3dubG9hZCBQSFIgY2FyZCIsImRvY191cmwiOiIvZG9jcy9oaWVjbS92My9hcGkvbTEvZW5kcG9pbnRzL20xLWFiaGEtYWRkcmVzcy1sb2dpbi1tb2JpbGUtb3RwLzA1LW0xLWdldC12My1waHItd2ViLWxvZ2luLXByb2ZpbGUtYWJoYS1waHItY2FyZC1hYmhhLWFkZHJlcy1lMWJhZTkjbTEtZG93bmxvYWQtcGhyLWNhcmQiLCJib2R5IjoiUmV0dXJucyB0aGUgY2FyZCBmb3IgdGhlIEFCSEEgYWRkcmVzcyB0aGUgcGVyc29uIHNpZ25lZCBpbiB3aXRoLiJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1lbnJvbG1lbnQtY2xhaW0tYWJoYS1hZGRyZXNzIiwidHlwZSI6ImVuZHBvaW50IiwibWlsZXN0b25lIjoiTTEiLCJ0aXRsZSI6IkNsYWltIGEgY2hvc2VuIEFCSEEgYWRkcmVzcyIsImRvY191cmwiOiIvZG9jcy9oaWVjbS92My9hcGkvbTEvZW5kcG9pbnRzL20xLWNyZWF0ZS1hYmhhLWFhZGhhYXItb3RwLzA4LW0xLXBvc3QtdjMtZW5yb2xsbWVudC1lbnJvbC1hYmhhLWFkZHJlc3MtY3JlYXRlLWFiaGEtYWFkaGFhci1vdHAjbTEtZW5yb2xtZW50LWNsYWltLWFiaGEtYWRkcmVzcyIsImJvZHkiOiJBdHRhY2hlcyB0aGUgQUJIQSBhZGRyZXNzIHRoZSBwZXJzb24gY2hvc2UgdG8gdGhlIEFCSEEgbnVtYmVyIGNyZWF0ZWQgZWFybGllci4ifV0sInJlbGF0ZWQiOlt7ImlkIjoiaGllY20uY29uY2VwdC5nYXRld2F5LXNlc3Npb24iLCJ0aXRsZSI6IlRoZSBnYXRld2F5IHNlc3Npb24sIHRoZSBmaXJzdCBjYWxsIGluIGV2ZXJ5IGludGVncmF0aW9uIiwidHlwZSI6ImNvbmNlcHQifSx7ImlkIjoiaGllY20uZXJyb3IuYWJkbS0yNDAyIiwidGl0bGUiOiJBQkRNLTI0MDIsIHRoZSB0aW1lc3RhbXAgaXMgbm90IHZhbGlkIiwidHlwZSI6ImVycm9yIn0seyJpZCI6ImhpZWNtLmVycm9yLmFiZG0tMjQwNCIsInRpdGxlIjoiQUJETS0yNDA0LCB0aGUgUkVRVUVTVC1JRCBpcyBub3QgdmFsaWQiLCJ0eXBlIjoiZXJyb3IifSx7ImlkIjoiaGllY20uZXJyb3IuYWJkbS0yNTAwIiwidGl0bGUiOiJBQkRNLTI1MDAsIG5vIEF1dGhvcml6YXRpb24gaGVhZGVyLCBvciBubyBtYXRjaGluZyByZXF1ZXN0IiwidHlwZSI6ImVycm9yIn0seyJpZCI6ImhpZWNtLmVycm9yLmFiZG0tOTk5OSIsInRpdGxlIjoiQUJETS05OTk5LCBhIGNhdGNoLWFsbCwgc28gcmVhZCB0aGUgbWVzc2FnZSIsInR5cGUiOiJlcnJvciJ9LHsiaWQiOiJoaWVjbS5mbG93Lm0xLWNyZWF0ZS1hYmhhLWFhZGhhYXItb3RwIiwidGl0bGUiOiJDcmVhdGUgYW4gQUJIQSB1c2luZyBhbiBBYWRoYWFyIE9UUCIsInR5cGUiOiJmbG93In0seyJpZCI6ImhpZWNtLmZsb3cubTEtY3JlYXRlLWFiaGEtZmFjZS1hdXRoIiwidGl0bGUiOiJDcmVhdGUgYW4gQUJIQSB1c2luZyBBYWRoYWFyIGZhY2UgYXV0aGVudGljYXRpb24iLCJ0eXBlIjoiZmxvdyJ9LHsiaWQiOiJoaWVjbS5jb25jZXB0LmFiaGEtbnVtYmVyLWFuZC1hZGRyZXNzIiwidGl0bGUiOiJBQkhBIG51bWJlciBhbmQgQUJIQSBhZGRyZXNzLCBhbmQgd2h5IHRoZXJlIGFyZSB0d28iLCJ0eXBlIjoiY29uY2VwdCJ9LHsiaWQiOiJoaWVjbS5jb25jZXB0Lm0xLWpvdXJuZXktZGVzaWduIiwidGl0bGUiOiJBIHN1Z2dlc3RlZCBBQkhBIGpvdXJuZXksIGFuZCB3aGF0IGhvbGRzIGlmIHlvdSBkZXNpZ24geW91ciBvd24iLCJ0eXBlIjoiY29uY2VwdCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5wMS1lbnJvbGxtZW50LWFkZHJlc3MtZXhpc3RzIiwidGl0bGUiOiJDaGVjayB3aGV0aGVyIGFuIGFkZHJlc3MgaXMgdGFrZW4iLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDEtZW5yb2xsbWVudC1hZGRyZXNzLXN1Z2dlc3Rpb24iLCJ0aXRsZSI6IkFzayBmb3IgYWRkcmVzcyBzdWdnZXN0aW9ucyIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5mbG93LnAxLWNyZWF0ZS1hYmhhLWFkZHJlc3MiLCJ0aXRsZSI6IkNyZWF0ZSBhbiBBQkhBIGFkZHJlc3MgaW4gYSBQSFIgYXBwbGljYXRpb24iLCJ0eXBlIjoiZmxvdyJ9LHsiaWQiOiJzaGFyZWQuZ2xvc3NhcnkuYWJoYS1hZGRyZXNzIiwidGl0bGUiOiJBQkhBIGFkZHJlc3MiLCJ0eXBlIjoiZ2xvc3NhcnkifSx7ImlkIjoic2hhcmVkLmdsb3NzYXJ5LmFiaGEtbnVtYmVyIiwidGl0bGUiOiJBQkhBIG51bWJlciIsInR5cGUiOiJnbG9zc2FyeSJ9XX0=",
+            "IsError": false
+          }
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "call_b8d52cc01f0b5c5885754c6d11808b59",
+            "Name": "search",
+            "Input": {
+              "milestone": "M1",
+              "kind": "operation",
+              "query": "M1 GET /abha/api/v3/enrollment/enrol/suggestion and POST enrollment enrol abha-address claim chosen ABHA address endpoint request path"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "milestone": "M1",
+            "kind": "operation",
+            "query": "M1 GET /abha/api/v3/enrollment/enrol/suggestion and POST enrollment enrol abha-address claim chosen ABHA address endpoint request path"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/p1/endpoints/p1-post-v3-phr-app-enrollment-enrol",
+                "id": "p1_post_v3_phr_app_enrollment_enrol",
+                "kind": "operation",
+                "milestone": "",
+                "snippet": "3 flows: Enroll ABHA Address",
+                "summary": "3 flows: Enroll ABHA Address",
+                "title": "POST /abha/api/v3/phr/app/enrollment/enrol",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-get-v3-enrollment-enrol-suggestion-create-abha-fingerprint",
+                "id": "m1_get_v3_enrollment_enrol_suggestion_create_abha_fingerprint",
+                "kind": "operation",
+                "milestone": "",
+                "snippet": "After ABHA creation - get ABHA address suggestions",
+                "summary": "After ABHA creation - get ABHA address suggestions",
+                "title": "GET /abha/api/v3/enrollment/enrol/suggestion",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-get-v3-enrollment-enrol-suggestion-create-abha-iris",
+                "id": "m1_get_v3_enrollment_enrol_suggestion_create_abha_iris",
+                "kind": "operation",
+                "milestone": "",
+                "snippet": "After ABHA creation - get ABHA address suggestions",
+                "summary": "After ABHA creation - get ABHA address suggestions",
+                "title": "GET /abha/api/v3/enrollment/enrol/suggestion",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-phr-web-login-abha-search-abha-address-login-a-de8184",
+                "id": "m1_post_v3_phr_web_login_abha_search_abha_address_login_a_de8184",
+                "kind": "operation",
+                "milestone": "",
+                "snippet": "Search ABHA address (auth methods)",
+                "summary": "Search ABHA address (auth methods)",
+                "title": "POST /abha/api/v3/phr/web/login/abha/search",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-get-v3-enrollment-enrol-suggestion-create-abha-face-au-848b26",
+                "id": "m1_get_v3_enrollment_enrol_suggestion_create_abha_face_au_848b26",
+                "kind": "operation",
+                "milestone": "",
+                "snippet": "After ABHA creation - get ABHA address suggestions",
+                "summary": "After ABHA creation - get ABHA address suggestions",
+                "title": "GET /abha/api/v3/enrollment/enrol/suggestion",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-phr-web-login-abha-verify-fingerprint",
+                "id": "m1_post_v3_phr_web_login_abha_verify_fingerprint",
+                "kind": "operation",
+                "milestone": "",
+                "snippet": "ABHA address login via Fingerprint - verify",
+                "summary": "ABHA address login via Fingerprint - verify",
+                "title": "POST /abha/api/v3/phr/web/login/abha/verify",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-get-v3-enrollment-enrol-suggestion-create-abha-aadhaar-otp",
+                "id": "m1_get_v3_enrollment_enrol_suggestion_create_abha_aadhaar_otp",
+                "kind": "operation",
+                "milestone": "",
+                "snippet": "After ABHA creation - get ABHA address suggestions",
+                "summary": "After ABHA creation - get ABHA address suggestions",
+                "title": "GET /abha/api/v3/enrollment/enrol/suggestion",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-phr-web-login-abha-verify-iris",
+                "id": "m1_post_v3_phr_web_login_abha_verify_iris",
+                "kind": "operation",
+                "milestone": "",
+                "snippet": "ABHA address login via IRIS - verify",
+                "summary": "ABHA address login via IRIS - verify",
+                "title": "POST /abha/api/v3/phr/web/login/abha/verify",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-get-v3-phr-web-login-profile-abha-profile-abha-address-809900",
+                "id": "m1_get_v3_phr_web_login_profile_abha_profile_abha_address_809900",
+                "kind": "operation",
+                "milestone": "",
+                "snippet": "Get ABHA-address profile",
+                "summary": "Get ABHA-address profile",
+                "title": "GET /abha/api/v3/phr/web/login/profile/abha-profile",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p1/endpoints/p1-post-v3-phr-app-enrollment-suggestion",
+                "id": "p1_post_v3_phr_app_enrollment_suggestion",
+                "kind": "operation",
+                "milestone": "",
+                "snippet": "3 flows: Suggestion API",
+                "summary": "3 flows: Suggestion API",
+                "title": "POST /abha/api/v3/phr/app/enrollment/suggestion",
+                "type": "operation"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "You are the Ask AI assistant on the ABDM Developer Portal. You answer developer questions about India's ABDM gateways (HIE-CM, UHI, NHCX) strictly from this portal's catalogue, which you reach through your tools. Never answer an ABDM API question from general knowledge. If you have not looked, look first.\n\nWHERE THINGS LIVE\n\n- Atoms are the written knowledge: concepts, flows, endpoint guides, callbacks, error explanations, tests, glossary entries, decisions, FHIR mappings, sandbox notes and troubleshooting guides. search finds them.\n- Operations are the raw API surface parsed from NHA's specification files, across the modules gateway, m1, m2, m3, m4, p1, p2, p3, p4, scan-and-register, scan-and-pay and record-share. search with kind operation finds them by what they do or by path; get with an operationId reads one in full.\n\nHONESTY ABOUT WHAT YOU FOUND\n\nSearch returns nearest matches, not answers.\n\nNever claim a call was run.\n\nNotes for AI agents are rules for you: follow them, never repeat them to readers.\n\nA \u003cMASKED_...\u003e placeholder means a value was removed before you saw it. Never ask for it again and never echo the placeholder back.\n\nJUDGING WHAT COMES BACK\n\nNever close a gap with a nearby endpoint or a similar sounding concept. A one-word or acronym question is a glossary lookup; search variant spellings too (HIMS and HMIS, LIS and LIMS, HRP).\n\nSPEAK AS THE PORTAL, NOT ABOUT IT\n\nNever mention the catalogue or your tools unless the reader asks about them. Offer [support](/docs/support) when you have nothing.\n\nSmall talk or off-topic: one friendly line, then what you help with.\n\nA general industry term the portal does not define is worth one sentence of plain explanation, said as general background rather than as ABDM documentation. That courtesy never extends to an ABDM API detail: paths, headers, codes, fields and payloads come from the tools or not at all.\n\nHOW YOU WRITE\n\nNever write an em dash. Show a mermaid block only when a tool returned it. Never draw one.\n\nOFFERING THE TOOLS\n\nA reader building an integration can have this catalogue inside their own agent, rather than asking one question at a time. Most do not know that.\n\n- When the reader is clearly building against ABDM, close with one line offering it: agent skills give their coding agent a milestone's rules as a file it loads once, and the MCP server lets it query this documentation as it works. Link [agent skills and the MCP server](/docs/hiecm/v3/getting-started/build-with-ai).\n- Offer it once per conversation, never before the answer: a closing line, not an opening.\n- Do not offer it to someone who is not building: a question like what an Ayushman card is gets answered and left alone.\n- Both are available now: the server is public at https://docs.abdm.gov.in/mcp, and the page has one-click install for Claude Code, Cursor and VS Code. Name the page, not the URL, unless asked.\n\nCODE AND WHAT THEY PASTE OR ATTACH\n\nYou never write code for the reader's own codebase; curl is the exception. Route them to the ABDM Connect agent skill or this portal's MCP server.\n\nWRITING THE ANSWER\n\n- Lead with the answer. The reader is mid-task, usually with a failing call in front of them.\n- Never open by praising the question, apologising, restating the question back, or announcing what you are about to do. Start with the substance. Warmth is being useful quickly, not saying \"great question\".\n- Quote API literals exactly as the tools give them: endpoint paths, header names, error codes, timestamp formats, field names. Never paraphrase a literal, and never tidy its case or spacing.\n- Markdown renders in this panel. Use inline code for every literal, short bulleted or numbered lists for steps and options, and no headings.\n\nDo not invent portal URLs.\n\nHOW A QUESTION ARRIVES\n\nThe user turn may open with a \u003cpassages\u003e block: the documentation already retrieved for this question, with ids and page links. Answer from it first. It is followed by an \u003canswer_shape\u003e block naming the shape and word budget your answer must take. Call search only when the passages do not carry the answer.\n\nA \u003cskill\u003e block is the skill section the reader chose: follow it, and name what it omits.",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "how do i create an ABHA with aadhaar otp",
+          "ToolUse": null,
+          "ToolResult": null
+        },
+        {
+          "Role": "assistant",
+          "Text": "Request an OTP with scope abha-enrol and loginHint aadhaar, then call enrol/byAadhaar with the txnId and the encrypted OTP. The response carries ABHAProfile with the ABHANumber.",
+          "ToolUse": null,
+          "ToolResult": null
+        },
+        {
+          "Role": "user",
+          "Text": "\u003cpassages\u003e\n{\"passages\":[{\"id\":\"hiecm.endpoint.m1-enrolment-address-suggestions\",\"type\":\"endpoint\",\"milestone\":\"M1\",\"title\":\"Get suggested ABHA addresses for a new account\",\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/07-m1-get-v3-enrollment-enrol-suggestion-create-abha-aadhaar-otp#m1-enrolment-address-suggestions\",\"body\":\"# Get suggested ABHA addresses for a new account\\n\\n## In plain words\\n\\nAfter the [ABHA number](/docs/hiecm/v3/getting-started/glossary#abha-number) is created, this returns available [ABHA addresses](/docs/hiecm/v3/getting-started/glossary#abha-address) built from the person's details. Offer them as choices, and let the person type their own instead. Send the enrolment `txnId` in the `TRANSACTION_ID` header. The suggestions come back in `abhaAddressList`.\\n\\n## What happens\\n\\nThe next call claims the address the person chooses.\\n\\n## When it goes wrong\\n\\n`ABDM-1017` or `Invalid Transaction Id` means the `txnId` is wrong or stale. Send the latest `txnId` from this enrolment.\"},{\"id\":\"hiecm.endpoint.p1-enrollment-address-suggestion\",\"type\":\"endpoint\",\"milestone\":\"P1\",\"title\":\"Ask for address suggestions\",\"doc_url\":\"/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-address-mobile/03-p1-post-v3-phr-app-enrollment-suggestion#p1-enrollment-address-suggestion\",\"body\":\"# Ask for address suggestions\\n\\n## In plain words\\n\\nA person should not have to invent an [ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address). Send the `txnId` of the verified registration with their name and date of birth, and the response lists candidates in `abhaAddressList`. They are suggestions, not reservations: the person may still type their own, and any choice goes through the existence check before you enrol it.\\n\\n## Before you start\\n\\nThe `txnId` from the verified registration OTP. `firstName`, `lastName`, `dayOfBirth`, `monthOfBirth` and `yearOfBirth` are required. `email` is optional.\\n\\n## When it goes wrong\\n\\nA `400` carries `ABDM-9999` with a message that names the field: `Invalid First Name`, `Invalid Transaction Id`, `Invalid Day Of Birth`, `Invalid Month Of Birth` or `Invalid Year Of Birth`. One response can list several.\"},{\"id\":\"hiecm.endpoint.m1-enrolment-claim-abha-address\",\"type\":\"endpoint\",\"milestone\":\"M1\",\"title\":\"Claim a chosen ABHA address\",\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/08-m1-post-v3-enrollment-enrol-abha-address-create-abha-aadhaar-otp#m1-enrolment-claim-abha-address\",\"body\":\"# Claim a chosen ABHA address\\n\\n## In plain words\\n\\nAttaches the [ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address) the person chose to the ABHA number created earlier in the same enrolment. Send the enrolment `txnId`, the `abhaAddress`, and `preferred` set to `1` to make it the address shown by default. It is the last call of the create journey.\\n\\n## How you know it worked\\n\\nA 200 that echoes the `abhaAddress` and `preferred` you sent.\\n\\n## When it goes wrong\\n\\nA 400 with `Invalid Preferred Flag` or `Invalid Transaction Id` names the refused field. A 401 with `900901` means the access token is missing or expired.\"},{\"id\":\"hiecm.flow.p1-create-abha-address\",\"type\":\"flow\",\"milestone\":\"P1\",\"title\":\"Create an ABHA address in a PHR application\",\"doc_url\":\"/docs/hiecm/v3/milestones/p1#p1-create-abha-address\",\"body\":\"Register a person in your own health application by mobile number or by an existing 14 digit health account number, and give them the address the rest of the network will know them by.\"},{\"id\":\"hiecm.endpoint.p1-enrollment-enrol\",\"type\":\"endpoint\",\"milestone\":\"P1\",\"title\":\"Create the health address\",\"doc_url\":\"/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-address-mobile/05-p1-post-v3-phr-app-enrollment-enrol#p1-enrollment-enrol\",\"body\":\"Creates the ABHA address the person chose and signs them in.\"}],\"related\":[{\"id\":\"hiecm.concept.gateway-session\",\"title\":\"The gateway session, the first call in every integration\",\"type\":\"concept\"},{\"id\":\"hiecm.error.abdm-2402\",\"title\":\"ABDM-2402, the timestamp is not valid\",\"type\":\"error\"},{\"id\":\"hiecm.error.abdm-2404\",\"title\":\"ABDM-2404, the REQUEST-ID is not valid\",\"type\":\"error\"},{\"id\":\"hiecm.error.abdm-2500\",\"title\":\"ABDM-2500, no Authorization header, or no matching request\",\"type\":\"error\"},{\"id\":\"hiecm.error.abdm-9999\",\"title\":\"ABDM-9999, a catch-all, so read the message\",\"type\":\"error\"},{\"id\":\"hiecm.flow.m1-create-abha-aadhaar-otp\",\"title\":\"Create an ABHA using an Aadhaar OTP\",\"type\":\"flow\"},{\"id\":\"hiecm.flow.m1-create-abha-face-auth\",\"title\":\"Create an ABHA using Aadhaar face authentication\",\"type\":\"flow\"},{\"id\":\"hiecm.concept.abha-address-policy\",\"title\":\"What an ABHA address is allowed to be\",\"type\":\"concept\"},{\"id\":\"hiecm.flow.p1-create-abha-address\",\"title\":\"Create an ABHA address in a PHR application\",\"type\":\"flow\"},{\"id\":\"hiecm.error.abdm-1170\",\"title\":\"ABDM-1170, the ABHA address is not valid\",\"type\":\"error\"}]}\n\u003c/passages\u003e\n\n\u003creader_context\u003eThe question reads as a HIE-CM question. Answer for HIE-CM unless they ask about another gateway, and do not bring in another gateway's calls or fields.\u003c/reader_context\u003e\n\n\u003canswer_shape name=\"how-do-i\" budget=\"200 words\"\u003e\nFirst sentence: the direct answer. Then every route that exists, one line each, naming what each produces. Expand only the route asked about, as a short numbered list of calls. End with the next step.\nExample:\nYes, and there are three creation routes: Aadhaar OTP, which is mandatory; Aadhaar face authentication, for someone who cannot receive the OTP; and an identity document, which produces an account restricted until Aadhaar KYC. For Aadhaar OTP:\n1. Request an OTP against the encrypted Aadhaar number.\n2. Verify it with the enrolment call, which issues the ABHA number.\n3. Get address suggestions and claim one.\nConfirm by reading the profile back and checking the chosen address is marked preferred.\n\u003c/answer_shape\u003e\nIf the passages and your tools do not cover the question, drop this shape and decline in two sentences that name the nearest /docs/ page and the support route.\n\nok got the number back. now how does the person pick their address",
+          "ToolUse": null,
+          "ToolResult": null
+        },
+        {
+          "Role": "assistant",
+          "Text": "",
+          "ToolUse": {
+            "ID": "call_034a09b1d88454f6ae9534848eb6b6a3",
+            "Name": "search",
+            "Input": {
+              "milestone": "M1",
+              "kind": "atom",
+              "query": "how does the person pick their ABHA address after creating the ABHA number, get suggested addresses and claim chosen address"
+            }
+          },
+          "ToolResult": null
+        },
+        {
+          "Role": "user",
+          "Text": "",
+          "ToolUse": null,
+          "ToolResult": {
+            "ID": "call_034a09b1d88454f6ae9534848eb6b6a3",
+            "Content": "eyJjYXRhbG9ndWVfdmVyc2lvbiI6IjIwMjYuMDkuMTYiLCJwYXNzYWdlcyI6W3siaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1lbnJvbG1lbnQtYWRkcmVzcy1zdWdnZXN0aW9ucyIsInR5cGUiOiJlbmRwb2ludCIsIm1pbGVzdG9uZSI6Ik0xIiwidGl0bGUiOiJHZXQgc3VnZ2VzdGVkIEFCSEEgYWRkcmVzc2VzIGZvciBhIG5ldyBhY2NvdW50IiwiZG9jX3VybCI6Ii9kb2NzL2hpZWNtL3YzL2FwaS9tMS9lbmRwb2ludHMvbTEtY3JlYXRlLWFiaGEtYWFkaGFhci1vdHAvMDctbTEtZ2V0LXYzLWVucm9sbG1lbnQtZW5yb2wtc3VnZ2VzdGlvbi1jcmVhdGUtYWJoYS1hYWRoYWFyLW90cCNtMS1lbnJvbG1lbnQtYWRkcmVzcy1zdWdnZXN0aW9ucyIsImJvZHkiOiIjIEdldCBzdWdnZXN0ZWQgQUJIQSBhZGRyZXNzZXMgZm9yIGEgbmV3IGFjY291bnRcblxuIyMgSW4gcGxhaW4gd29yZHNcblxuQWZ0ZXIgdGhlIFtBQkhBIG51bWJlcl0oL2RvY3MvaGllY20vdjMvZ2V0dGluZy1zdGFydGVkL2dsb3NzYXJ5I2FiaGEtbnVtYmVyKSBpcyBjcmVhdGVkLCB0aGlzIHJldHVybnMgYXZhaWxhYmxlIFtBQkhBIGFkZHJlc3Nlc10oL2RvY3MvaGllY20vdjMvZ2V0dGluZy1zdGFydGVkL2dsb3NzYXJ5I2FiaGEtYWRkcmVzcykgYnVpbHQgZnJvbSB0aGUgcGVyc29uJ3MgZGV0YWlscy4gT2ZmZXIgdGhlbSBhcyBjaG9pY2VzLCBhbmQgbGV0IHRoZSBwZXJzb24gdHlwZSB0aGVpciBvd24gaW5zdGVhZC4gU2VuZCB0aGUgZW5yb2xtZW50IGB0eG5JZGAgaW4gdGhlIGBUUkFOU0FDVElPTl9JRGAgaGVhZGVyLiBUaGUgc3VnZ2VzdGlvbnMgY29tZSBiYWNrIGluIGBhYmhhQWRkcmVzc0xpc3RgLlxuXG4jIyBXaGF0IGhhcHBlbnNcblxuVGhlIG5leHQgY2FsbCBjbGFpbXMgdGhlIGFkZHJlc3MgdGhlIHBlcnNvbiBjaG9vc2VzLlxuXG4jIyBXaGVuIGl0IGdvZXMgd3JvbmdcblxuYEFCRE0tMTAxN2Agb3IgYEludmFsaWQgVHJhbnNhY3Rpb24gSWRgIG1lYW5zIHRoZSBgdHhuSWRgIGlzIHdyb25nIG9yIHN0YWxlLiBTZW5kIHRoZSBsYXRlc3QgYHR4bklkYCBmcm9tIHRoaXMgZW5yb2xtZW50LiJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1waHItdmVyaWZ5IiwidHlwZSI6ImVuZHBvaW50IiwibWlsZXN0b25lIjoiTTEiLCJ0aXRsZSI6IlZlcmlmeSBPVFAgb3IgYmlvbWV0cmljIGZvciBBQkhBIGFkZHJlc3MgbG9naW4iLCJkb2NfdXJsIjoiL2RvY3MvaGllY20vdjMvYXBpL20xL2VuZHBvaW50cy9tMS1hYmhhLWFkZHJlc3MtbG9naW4tbW9iaWxlLW90cC8wMy1tMS1wb3N0LXYzLXBoci13ZWItbG9naW4tYWJoYS12ZXJpZnktbW9iaWxlLW90cCNtMS1waHItdmVyaWZ5IiwiYm9keSI6IiMgVmVyaWZ5IE9UUCBvciBiaW9tZXRyaWMgZm9yIEFCSEEgYWRkcmVzcyBsb2dpblxuXG4jIyBJbiBwbGFpbiB3b3Jkc1xuXG5Db21wbGV0ZXMgdGhlIFtBQkhBIGFkZHJlc3NdKC9kb2NzL2hpZWNtL3YzL2dldHRpbmctc3RhcnRlZC9nbG9zc2FyeSNhYmhhLWFkZHJlc3MpIGxvZ2luLiBTZW5kIHRoZSBzYW1lIGBzY29wZWAgYXMgdGhlIHJlcXVlc3QgY2FsbCBhbmQgdGhlIGB0eG5JZGAsIHdpdGggdGhlIGVuY3J5cHRlZCBbT1RQXSgvZG9jcy9oaWVjbS92My9nZXR0aW5nLXN0YXJ0ZWQvZ2xvc3Nhcnkjb3RwKSBvciwgZm9yIGZpbmdlcnByaW50LCB0aGUgY2FwdHVyZSBpbiBgZmluZ2VyUHJpbnRBdXRoUGlkYC4gVGhlIHJlc3BvbnNlIGxpc3RzIHRoZSBwZXJzb24ncyBBQkhBIGFkZHJlc3NlcyBpbiBgdXNlcnNgIGFuZCBjYXJyaWVzIGB0b2tlbnMudG9rZW5gLiBTZW5kIHRoYXQgdG9rZW4gYXMgdGhlIGBYLXRva2VuYCBoZWFkZXIgdG8gdGhlIHByb2ZpbGUsIFBIUiBjYXJkIGFuZCBRUiBjb2RlIGNhbGxzLlxuXG4jIyBIb3cgeW91IGtub3cgaXQgd29ya2VkXG5cbkEgMjAwIHdpdGggYGF1dGhSZXN1bHRgIGBzdWNjZXNzYC4gQSAyMDAgY2FuIGFsc28gcmVwb3J0IGFuIGV4cGlyZWQgT1RQLCBzbyByZWFkIGBhdXRoUmVzdWx0YCBhbmQgbm90IHRoZSBzdGF0dXMgYWxvbmUuXG5cbiMjIFdoZW4gaXQgZ29lcyB3cm9uZ1xuXG5BIDQwMCB3aXRoIGBBQkRNLTk5OTlgIG5hbWVzIHRoZSByZWZ1c2VkIHBhcnQgaW4gaXRzIG1lc3NhZ2UsIHN1Y2ggYXMgYW4gaW52YWxpZCBzY29wZSBvciB0cmFuc2FjdGlvbiBpZC4gUmVxdWVzdCBhIG5ldyBPVFAgd2hlbiB0aGUgYHR4bklkYCBpcyByZWZ1c2VkLiJ9LHsiaWQiOiJoaWVjbS5jb25jZXB0LmFiaGEtYWRkcmVzcy1wb2xpY3kiLCJ0eXBlIjoiY29uY2VwdCIsIm1pbGVzdG9uZSI6Ik0xIiwidGl0bGUiOiJXaGF0IGFuIEFCSEEgYWRkcmVzcyBpcyBhbGxvd2VkIHRvIGJlIiwiZG9jX3VybCI6Ii9kb2NzL2hpZWNtL3YzL3JlZ2lzdHJpZXMvYWJoYSNhYmhhLWFkZHJlc3MtcG9saWN5IiwiYm9keSI6IiMgV2hhdCBhbiBBQkhBIGFkZHJlc3MgaXMgYWxsb3dlZCB0byBiZVxuXG4jIyBJbiBwbGFpbiB3b3Jkc1xuXG5BQkhBIEFkZHJlc3NlcyBtdXN0IGNvbXBseSB3aXRoIGRlZmluZWQgdmFsaWRhdGlvbiBzdGFuZGFyZHMuXG5cbioqUGVybWl0dGVkIENoYXJhY3RlcnMqKlxuXG4tIEFscGhhYmV0aWMgY2hhcmFjdGVycyAoQS1aKVxuLSBOdW1lcmljIGNoYXJhY3RlcnMgKDAtOSlcbi0gRG90ICguKVxuXG4qKlZhbGlkYXRpb24gUnVsZXMqKlxuXG4tIENhbm5vdCBiZWdpbiB3aXRoIGEgbnVtZXJpYyBjaGFyYWN0ZXIuXG4tIENhbm5vdCBiZWdpbiBvciBlbmQgd2l0aCBhIGRvdCAoLikuXG4tIE11c3QgY29uZm9ybSB0byBBQkRNIHZhbGlkYXRpb24gcmVxdWlyZW1lbnRzIGF0IHRoZSB0aW1lIG9mIGNyZWF0aW9uLlxuLSBNb2JpbGUgbnVtYmVycyBjYW5ub3QgYmUgdXNlZCBkaXJlY3RseSBhcyBBQkhBIEFkZHJlc3Nlcy5cblxuT3JnYW5pemF0aW9ucyBzaG91bGQgcmVseSBvbiBBQkRNIHZhbGlkYXRpb24gc2VydmljZXMgdG8gdmVyaWZ5IGFkZHJlc3MgZWxpZ2liaWxpdHkuXG5cbkV2ZXJ5IEFCSEEgbnVtYmVyIGlzIGlzc3VlZCBhIGRlZmF1bHQgYWRkcmVzcyBidWlsdCBmcm9tIGl0cyAxNCBkaWdpdHMuIEEgcGVyc29uIGNhbm5vdCBjcmVhdGUgdGhhdCBhZGRyZXNzIHRoZW1zZWx2ZXMsIGFuZCBjYW4gY3JlYXRlIGEgcmVhZGFibGUgb25lIGJlc2lkZSBpdC4gT2ZmZXIgYWRkcmVzc2VzIGJ1aWx0IGZyb20gdGhlIHBlcnNvbidzIG5hbWUgcmF0aGVyIHRoYW4gYW4gZW1wdHkgZmllbGQuXG5cbiMjIEJlZm9yZSB5b3Ugc3RhcnRcblxuS25vdyB3aGV0aGVyIHRoZSBhZGRyZXNzIGlzIGJlaW5nIGNyZWF0ZWQgYWdhaW5zdCBhbiBBQkhBIG51bWJlciBvciBhZ2FpbnN0IGEgbW9iaWxlIG51bWJlciB3aXRoIGEgc2VsZiBkZWNsYXJlZCBwcm9maWxlLiBTZWUgW1AxIFJlZ2lzdHJhdGlvbiBhbmQgbG9naW5dKC9kb2NzL2hpZWNtL3YzL21pbGVzdG9uZXMvcDEpLlxuXG4jIyBXaGF0IGhhcHBlbnNcblxuVmFsaWRhdGUgdGhlIHJ1bGVzIGFib3ZlIGluIHlvdXIgb3duIGZvcm0gYmVmb3JlIHlvdSBzdWJtaXQsIHNvIGEgcmVmdXNlZCBhZGRyZXNzIGJlY29tZXMgYW4gaW5saW5lIG1lc3NhZ2UuIE9mZmVyIHRoZSBzdWdnZXN0aW9ucyB0aGUgc2VydmljZSByZXR1cm5zIGZyb20gYC9hYmhhL2FwaS92My9lbnJvbGxtZW50L2Vucm9sL3N1Z2dlc3Rpb25gIGR1cmluZyBNMSBlbnJvbG1lbnQuIFNlbmQgdGhlIGNob3NlbiBhZGRyZXNzIHdpdGhvdXQgdGhlIGBAYCBzdWZmaXggd2hlcmUgdGhlIGNhbGwgYXNrcyBmb3IgaXQuXG5cbiMjIEhvdyB5b3Uga25vdyBpdCB3b3JrZWRcblxuVGhlIGFkZHJlc3MgaXMgY3JlYXRlZCBhbmQgdGhlIHBlcnNvbiBjYW4gc2lnbiBpbiB3aXRoIGl0LiBCZWZvcmUgdGhhdCwgeW91ciBmb3JtIHJlZnVzZXMgYW4gYWRkcmVzcyB0aGF0IGJlZ2lucyB3aXRoIGEgZGlnaXQsIGJlZ2lucyBvciBlbmRzIHdpdGggYSBkb3QsIG9yIGlzIGEgbW9iaWxlIG51bWJlci5cblxuIyMgV2hlbiBpdCBnb2VzIHdyb25nXG5cblRoZSBhZGRyZXNzIGlzIHRha2VuOiBzaG93IGFsdGVybmF0aXZlcyByYXRoZXIgdGhhbiBhbiBlcnJvciBhbG9uZS4gVGhlIHBlcnNvbiBleHBlY3RzIHRvIHVzZSB0aGVpciBtb2JpbGUgbnVtYmVyIGFzIHRoZWlyIGFkZHJlc3M6IHNheSBpbiB0aGUgZm9ybSB0aGF0IHRoaXMgaXMgbm90IGFsbG93ZWQsIHJhdGhlciB0aGFuIGxldHRpbmcgdGhlbSBmaW5kIG91dCBvbiBzdWJtaXNzaW9uLiJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1kb3dubG9hZC1waHItY2FyZCIsInR5cGUiOiJlbmRwb2ludCIsIm1pbGVzdG9uZSI6Ik0xIiwidGl0bGUiOiJEb3dubG9hZCBQSFIgY2FyZCIsImRvY191cmwiOiIvZG9jcy9oaWVjbS92My9hcGkvbTEvZW5kcG9pbnRzL20xLWFiaGEtYWRkcmVzcy1sb2dpbi1tb2JpbGUtb3RwLzA1LW0xLWdldC12My1waHItd2ViLWxvZ2luLXByb2ZpbGUtYWJoYS1waHItY2FyZC1hYmhhLWFkZHJlcy1lMWJhZTkjbTEtZG93bmxvYWQtcGhyLWNhcmQiLCJib2R5IjoiUmV0dXJucyB0aGUgY2FyZCBmb3IgdGhlIEFCSEEgYWRkcmVzcyB0aGUgcGVyc29uIHNpZ25lZCBpbiB3aXRoLiJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1lbnJvbG1lbnQtY2xhaW0tYWJoYS1hZGRyZXNzIiwidHlwZSI6ImVuZHBvaW50IiwibWlsZXN0b25lIjoiTTEiLCJ0aXRsZSI6IkNsYWltIGEgY2hvc2VuIEFCSEEgYWRkcmVzcyIsImRvY191cmwiOiIvZG9jcy9oaWVjbS92My9hcGkvbTEvZW5kcG9pbnRzL20xLWNyZWF0ZS1hYmhhLWFhZGhhYXItb3RwLzA4LW0xLXBvc3QtdjMtZW5yb2xsbWVudC1lbnJvbC1hYmhhLWFkZHJlc3MtY3JlYXRlLWFiaGEtYWFkaGFhci1vdHAjbTEtZW5yb2xtZW50LWNsYWltLWFiaGEtYWRkcmVzcyIsImJvZHkiOiJBdHRhY2hlcyB0aGUgQUJIQSBhZGRyZXNzIHRoZSBwZXJzb24gY2hvc2UgdG8gdGhlIEFCSEEgbnVtYmVyIGNyZWF0ZWQgZWFybGllci4ifV0sInJlbGF0ZWQiOlt7ImlkIjoiaGllY20uY29uY2VwdC5nYXRld2F5LXNlc3Npb24iLCJ0aXRsZSI6IlRoZSBnYXRld2F5IHNlc3Npb24sIHRoZSBmaXJzdCBjYWxsIGluIGV2ZXJ5IGludGVncmF0aW9uIiwidHlwZSI6ImNvbmNlcHQifSx7ImlkIjoiaGllY20uZXJyb3IuYWJkbS0yNDAyIiwidGl0bGUiOiJBQkRNLTI0MDIsIHRoZSB0aW1lc3RhbXAgaXMgbm90IHZhbGlkIiwidHlwZSI6ImVycm9yIn0seyJpZCI6ImhpZWNtLmVycm9yLmFiZG0tMjQwNCIsInRpdGxlIjoiQUJETS0yNDA0LCB0aGUgUkVRVUVTVC1JRCBpcyBub3QgdmFsaWQiLCJ0eXBlIjoiZXJyb3IifSx7ImlkIjoiaGllY20uZXJyb3IuYWJkbS0yNTAwIiwidGl0bGUiOiJBQkRNLTI1MDAsIG5vIEF1dGhvcml6YXRpb24gaGVhZGVyLCBvciBubyBtYXRjaGluZyByZXF1ZXN0IiwidHlwZSI6ImVycm9yIn0seyJpZCI6ImhpZWNtLmVycm9yLmFiZG0tOTk5OSIsInRpdGxlIjoiQUJETS05OTk5LCBhIGNhdGNoLWFsbCwgc28gcmVhZCB0aGUgbWVzc2FnZSIsInR5cGUiOiJlcnJvciJ9LHsiaWQiOiJoaWVjbS5mbG93Lm0xLWNyZWF0ZS1hYmhhLWFhZGhhYXItb3RwIiwidGl0bGUiOiJDcmVhdGUgYW4gQUJIQSB1c2luZyBhbiBBYWRoYWFyIE9UUCIsInR5cGUiOiJmbG93In0seyJpZCI6ImhpZWNtLmZsb3cubTEtY3JlYXRlLWFiaGEtZmFjZS1hdXRoIiwidGl0bGUiOiJDcmVhdGUgYW4gQUJIQSB1c2luZyBBYWRoYWFyIGZhY2UgYXV0aGVudGljYXRpb24iLCJ0eXBlIjoiZmxvdyJ9LHsiaWQiOiJoaWVjbS5jb25jZXB0LmFiaGEtbnVtYmVyLWFuZC1hZGRyZXNzIiwidGl0bGUiOiJBQkhBIG51bWJlciBhbmQgQUJIQSBhZGRyZXNzLCBhbmQgd2h5IHRoZXJlIGFyZSB0d28iLCJ0eXBlIjoiY29uY2VwdCJ9LHsiaWQiOiJoaWVjbS5jb25jZXB0Lm0xLWpvdXJuZXktZGVzaWduIiwidGl0bGUiOiJBIHN1Z2dlc3RlZCBBQkhBIGpvdXJuZXksIGFuZCB3aGF0IGhvbGRzIGlmIHlvdSBkZXNpZ24geW91ciBvd24iLCJ0eXBlIjoiY29uY2VwdCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5wMS1lbnJvbGxtZW50LWFkZHJlc3MtZXhpc3RzIiwidGl0bGUiOiJDaGVjayB3aGV0aGVyIGFuIGFkZHJlc3MgaXMgdGFrZW4iLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDEtZW5yb2xsbWVudC1hZGRyZXNzLXN1Z2dlc3Rpb24iLCJ0aXRsZSI6IkFzayBmb3IgYWRkcmVzcyBzdWdnZXN0aW9ucyIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5mbG93LnAxLWNyZWF0ZS1hYmhhLWFkZHJlc3MiLCJ0aXRsZSI6IkNyZWF0ZSBhbiBBQkhBIGFkZHJlc3MgaW4gYSBQSFIgYXBwbGljYXRpb24iLCJ0eXBlIjoiZmxvdyJ9LHsiaWQiOiJzaGFyZWQuZ2xvc3NhcnkuYWJoYS1hZGRyZXNzIiwidGl0bGUiOiJBQkhBIGFkZHJlc3MiLCJ0eXBlIjoiZ2xvc3NhcnkifSx7ImlkIjoic2hhcmVkLmdsb3NzYXJ5LmFiaGEtbnVtYmVyIiwidGl0bGUiOiJBQkhBIG51bWJlciIsInR5cGUiOiJnbG9zc2FyeSJ9XX0=",
+            "IsError": false
+          }
+        },
+        {
+          "Role": "assistant",
+          "Text": "",
+          "ToolUse": {
+            "ID": "call_b8d52cc01f0b5c5885754c6d11808b59",
+            "Name": "search",
+            "Input": {
+              "milestone": "M1",
+              "kind": "operation",
+              "query": "M1 GET /abha/api/v3/enrollment/enrol/suggestion and POST enrollment enrol abha-address claim chosen ABHA address endpoint request path"
+            }
+          },
+          "ToolResult": null
+        },
+        {
+          "Role": "user",
+          "Text": "",
+          "ToolUse": null,
+          "ToolResult": {
+            "ID": "call_b8d52cc01f0b5c5885754c6d11808b59",
+            "Content": "eyJjYXRhbG9ndWVfdmVyc2lvbiI6IjIwMjYuMDkuMTYiLCJoaXRzIjpbeyJkb2NfdXJsIjoiL2RvY3MvaGllY20vdjMvYXBpL3AxL2VuZHBvaW50cy9wMS1wb3N0LXYzLXBoci1hcHAtZW5yb2xsbWVudC1lbnJvbCIsImlkIjoicDFfcG9zdF92M19waHJfYXBwX2Vucm9sbG1lbnRfZW5yb2wiLCJraW5kIjoib3BlcmF0aW9uIiwibWlsZXN0b25lIjoiIiwic25pcHBldCI6IjMgZmxvd3M6IEVucm9sbCBBQkhBIEFkZHJlc3MiLCJzdW1tYXJ5IjoiMyBmbG93czogRW5yb2xsIEFCSEEgQWRkcmVzcyIsInRpdGxlIjoiUE9TVCAvYWJoYS9hcGkvdjMvcGhyL2FwcC9lbnJvbGxtZW50L2Vucm9sIiwidHlwZSI6Im9wZXJhdGlvbiJ9LHsiZG9jX3VybCI6Ii9kb2NzL2hpZWNtL3YzL2FwaS9tMS9lbmRwb2ludHMvbTEtZ2V0LXYzLWVucm9sbG1lbnQtZW5yb2wtc3VnZ2VzdGlvbi1jcmVhdGUtYWJoYS1maW5nZXJwcmludCIsImlkIjoibTFfZ2V0X3YzX2Vucm9sbG1lbnRfZW5yb2xfc3VnZ2VzdGlvbl9jcmVhdGVfYWJoYV9maW5nZXJwcmludCIsImtpbmQiOiJvcGVyYXRpb24iLCJtaWxlc3RvbmUiOiIiLCJzbmlwcGV0IjoiQWZ0ZXIgQUJIQSBjcmVhdGlvbiAtIGdldCBBQkhBIGFkZHJlc3Mgc3VnZ2VzdGlvbnMiLCJzdW1tYXJ5IjoiQWZ0ZXIgQUJIQSBjcmVhdGlvbiAtIGdldCBBQkhBIGFkZHJlc3Mgc3VnZ2VzdGlvbnMiLCJ0aXRsZSI6IkdFVCAvYWJoYS9hcGkvdjMvZW5yb2xsbWVudC9lbnJvbC9zdWdnZXN0aW9uIiwidHlwZSI6Im9wZXJhdGlvbiJ9LHsiZG9jX3VybCI6Ii9kb2NzL2hpZWNtL3YzL2FwaS9tMS9lbmRwb2ludHMvbTEtZ2V0LXYzLWVucm9sbG1lbnQtZW5yb2wtc3VnZ2VzdGlvbi1jcmVhdGUtYWJoYS1pcmlzIiwiaWQiOiJtMV9nZXRfdjNfZW5yb2xsbWVudF9lbnJvbF9zdWdnZXN0aW9uX2NyZWF0ZV9hYmhhX2lyaXMiLCJraW5kIjoib3BlcmF0aW9uIiwibWlsZXN0b25lIjoiIiwic25pcHBldCI6IkFmdGVyIEFCSEEgY3JlYXRpb24gLSBnZXQgQUJIQSBhZGRyZXNzIHN1Z2dlc3Rpb25zIiwic3VtbWFyeSI6IkFmdGVyIEFCSEEgY3JlYXRpb24gLSBnZXQgQUJIQSBhZGRyZXNzIHN1Z2dlc3Rpb25zIiwidGl0bGUiOiJHRVQgL2FiaGEvYXBpL3YzL2Vucm9sbG1lbnQvZW5yb2wvc3VnZ2VzdGlvbiIsInR5cGUiOiJvcGVyYXRpb24ifSx7ImRvY191cmwiOiIvZG9jcy9oaWVjbS92My9hcGkvbTEvZW5kcG9pbnRzL20xLXBvc3QtdjMtcGhyLXdlYi1sb2dpbi1hYmhhLXNlYXJjaC1hYmhhLWFkZHJlc3MtbG9naW4tYS1kZTgxODQiLCJpZCI6Im0xX3Bvc3RfdjNfcGhyX3dlYl9sb2dpbl9hYmhhX3NlYXJjaF9hYmhhX2FkZHJlc3NfbG9naW5fYV9kZTgxODQiLCJraW5kIjoib3BlcmF0aW9uIiwibWlsZXN0b25lIjoiIiwic25pcHBldCI6IlNlYXJjaCBBQkhBIGFkZHJlc3MgKGF1dGggbWV0aG9kcykiLCJzdW1tYXJ5IjoiU2VhcmNoIEFCSEEgYWRkcmVzcyAoYXV0aCBtZXRob2RzKSIsInRpdGxlIjoiUE9TVCAvYWJoYS9hcGkvdjMvcGhyL3dlYi9sb2dpbi9hYmhhL3NlYXJjaCIsInR5cGUiOiJvcGVyYXRpb24ifSx7ImRvY191cmwiOiIvZG9jcy9oaWVjbS92My9hcGkvbTEvZW5kcG9pbnRzL20xLWdldC12My1lbnJvbGxtZW50LWVucm9sLXN1Z2dlc3Rpb24tY3JlYXRlLWFiaGEtZmFjZS1hdS04NDhiMjYiLCJpZCI6Im0xX2dldF92M19lbnJvbGxtZW50X2Vucm9sX3N1Z2dlc3Rpb25fY3JlYXRlX2FiaGFfZmFjZV9hdV84NDhiMjYiLCJraW5kIjoib3BlcmF0aW9uIiwibWlsZXN0b25lIjoiIiwic25pcHBldCI6IkFmdGVyIEFCSEEgY3JlYXRpb24gLSBnZXQgQUJIQSBhZGRyZXNzIHN1Z2dlc3Rpb25zIiwic3VtbWFyeSI6IkFmdGVyIEFCSEEgY3JlYXRpb24gLSBnZXQgQUJIQSBhZGRyZXNzIHN1Z2dlc3Rpb25zIiwidGl0bGUiOiJHRVQgL2FiaGEvYXBpL3YzL2Vucm9sbG1lbnQvZW5yb2wvc3VnZ2VzdGlvbiIsInR5cGUiOiJvcGVyYXRpb24ifSx7ImRvY191cmwiOiIvZG9jcy9oaWVjbS92My9hcGkvbTEvZW5kcG9pbnRzL20xLXBvc3QtdjMtcGhyLXdlYi1sb2dpbi1hYmhhLXZlcmlmeS1maW5nZXJwcmludCIsImlkIjoibTFfcG9zdF92M19waHJfd2ViX2xvZ2luX2FiaGFfdmVyaWZ5X2ZpbmdlcnByaW50Iiwia2luZCI6Im9wZXJhdGlvbiIsIm1pbGVzdG9uZSI6IiIsInNuaXBwZXQiOiJBQkhBIGFkZHJlc3MgbG9naW4gdmlhIEZpbmdlcnByaW50IC0gdmVyaWZ5Iiwic3VtbWFyeSI6IkFCSEEgYWRkcmVzcyBsb2dpbiB2aWEgRmluZ2VycHJpbnQgLSB2ZXJpZnkiLCJ0aXRsZSI6IlBPU1QgL2FiaGEvYXBpL3YzL3Boci93ZWIvbG9naW4vYWJoYS92ZXJpZnkiLCJ0eXBlIjoib3BlcmF0aW9uIn0seyJkb2NfdXJsIjoiL2RvY3MvaGllY20vdjMvYXBpL20xL2VuZHBvaW50cy9tMS1nZXQtdjMtZW5yb2xsbWVudC1lbnJvbC1zdWdnZXN0aW9uLWNyZWF0ZS1hYmhhLWFhZGhhYXItb3RwIiwiaWQiOiJtMV9nZXRfdjNfZW5yb2xsbWVudF9lbnJvbF9zdWdnZXN0aW9uX2NyZWF0ZV9hYmhhX2FhZGhhYXJfb3RwIiwia2luZCI6Im9wZXJhdGlvbiIsIm1pbGVzdG9uZSI6IiIsInNuaXBwZXQiOiJBZnRlciBBQkhBIGNyZWF0aW9uIC0gZ2V0IEFCSEEgYWRkcmVzcyBzdWdnZXN0aW9ucyIsInN1bW1hcnkiOiJBZnRlciBBQkhBIGNyZWF0aW9uIC0gZ2V0IEFCSEEgYWRkcmVzcyBzdWdnZXN0aW9ucyIsInRpdGxlIjoiR0VUIC9hYmhhL2FwaS92My9lbnJvbGxtZW50L2Vucm9sL3N1Z2dlc3Rpb24iLCJ0eXBlIjoib3BlcmF0aW9uIn0seyJkb2NfdXJsIjoiL2RvY3MvaGllY20vdjMvYXBpL20xL2VuZHBvaW50cy9tMS1wb3N0LXYzLXBoci13ZWItbG9naW4tYWJoYS12ZXJpZnktaXJpcyIsImlkIjoibTFfcG9zdF92M19waHJfd2ViX2xvZ2luX2FiaGFfdmVyaWZ5X2lyaXMiLCJraW5kIjoib3BlcmF0aW9uIiwibWlsZXN0b25lIjoiIiwic25pcHBldCI6IkFCSEEgYWRkcmVzcyBsb2dpbiB2aWEgSVJJUyAtIHZlcmlmeSIsInN1bW1hcnkiOiJBQkhBIGFkZHJlc3MgbG9naW4gdmlhIElSSVMgLSB2ZXJpZnkiLCJ0aXRsZSI6IlBPU1QgL2FiaGEvYXBpL3YzL3Boci93ZWIvbG9naW4vYWJoYS92ZXJpZnkiLCJ0eXBlIjoib3BlcmF0aW9uIn0seyJkb2NfdXJsIjoiL2RvY3MvaGllY20vdjMvYXBpL20xL2VuZHBvaW50cy9tMS1nZXQtdjMtcGhyLXdlYi1sb2dpbi1wcm9maWxlLWFiaGEtcHJvZmlsZS1hYmhhLWFkZHJlc3MtODA5OTAwIiwiaWQiOiJtMV9nZXRfdjNfcGhyX3dlYl9sb2dpbl9wcm9maWxlX2FiaGFfcHJvZmlsZV9hYmhhX2FkZHJlc3NfODA5OTAwIiwia2luZCI6Im9wZXJhdGlvbiIsIm1pbGVzdG9uZSI6IiIsInNuaXBwZXQiOiJHZXQgQUJIQS1hZGRyZXNzIHByb2ZpbGUiLCJzdW1tYXJ5IjoiR2V0IEFCSEEtYWRkcmVzcyBwcm9maWxlIiwidGl0bGUiOiJHRVQgL2FiaGEvYXBpL3YzL3Boci93ZWIvbG9naW4vcHJvZmlsZS9hYmhhLXByb2ZpbGUiLCJ0eXBlIjoib3BlcmF0aW9uIn0seyJkb2NfdXJsIjoiL2RvY3MvaGllY20vdjMvYXBpL3AxL2VuZHBvaW50cy9wMS1wb3N0LXYzLXBoci1hcHAtZW5yb2xsbWVudC1zdWdnZXN0aW9uIiwiaWQiOiJwMV9wb3N0X3YzX3Bocl9hcHBfZW5yb2xsbWVudF9zdWdnZXN0aW9uIiwia2luZCI6Im9wZXJhdGlvbiIsIm1pbGVzdG9uZSI6IiIsInNuaXBwZXQiOiIzIGZsb3dzOiBTdWdnZXN0aW9uIEFQSSIsInN1bW1hcnkiOiIzIGZsb3dzOiBTdWdnZXN0aW9uIEFQSSIsInRpdGxlIjoiUE9TVCAvYWJoYS9hcGkvdjMvcGhyL2FwcC9lbnJvbGxtZW50L3N1Z2dlc3Rpb24iLCJ0eXBlIjoib3BlcmF0aW9uIn1dfQ==",
+            "IsError": false
+          }
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "call_4103c961d1f55750930dc2616f4846f9",
+            "Name": "search",
+            "Input": {
+              "milestone": "M1",
+              "kind": "operation",
+              "query": "POST endpoint path for M1 enrolment claim chosen ABHA address created Aadhaar OTP /enrollment/enrol/abha-address"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "milestone": "M1",
+            "kind": "operation",
+            "query": "POST endpoint path for M1 enrolment claim chosen ABHA address created Aadhaar OTP /enrollment/enrol/abha-address"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/p1/endpoints/p1-post-v3-phr-app-enrollment-enrol",
+                "id": "p1_post_v3_phr_app_enrollment_enrol",
+                "kind": "operation",
+                "milestone": "",
+                "snippet": "3 flows: Enroll ABHA Address",
+                "summary": "3 flows: Enroll ABHA Address",
+                "title": "POST /abha/api/v3/phr/app/enrollment/enrol",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-enrollment-enrol-abha-address-create-abha-aadhaar-otp",
+                "id": "m1_post_v3_enrollment_enrol_abha_address_create_abha_aadhaar_otp",
+                "kind": "operation",
+                "milestone": "",
+                "snippet": "After ABHA creation - create ABHA address",
+                "summary": "After ABHA creation - create ABHA address",
+                "title": "POST /abha/api/v3/enrollment/enrol/abha-address",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-enrollment-enrol-abha-address-create-abha-iris",
+                "id": "m1_post_v3_enrollment_enrol_abha_address_create_abha_iris",
+                "kind": "operation",
+                "milestone": "",
+                "snippet": "After ABHA creation - create ABHA address",
+                "summary": "After ABHA creation - create ABHA address",
+                "title": "POST /abha/api/v3/enrollment/enrol/abha-address",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-phr-web-login-abha-search-abha-address-login-a-de8184",
+                "id": "m1_post_v3_phr_web_login_abha_search_abha_address_login_a_de8184",
+                "kind": "operation",
+                "milestone": "",
+                "snippet": "Search ABHA address (auth methods)",
+                "summary": "Search ABHA address (auth methods)",
+                "title": "POST /abha/api/v3/phr/web/login/abha/search",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-enrollment-enrol-abha-address-create-abha-fingerprint",
+                "id": "m1_post_v3_enrollment_enrol_abha_address_create_abha_fingerprint",
+                "kind": "operation",
+                "milestone": "",
+                "snippet": "After ABHA creation - create ABHA address",
+                "summary": "After ABHA creation - create ABHA address",
+                "title": "POST /abha/api/v3/enrollment/enrol/abha-address",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-phr-web-login-abha-verify-fingerprint",
+                "id": "m1_post_v3_phr_web_login_abha_verify_fingerprint",
+                "kind": "operation",
+                "milestone": "",
+                "snippet": "ABHA address login via Fingerprint - verify",
+                "summary": "ABHA address login via Fingerprint - verify",
+                "title": "POST /abha/api/v3/phr/web/login/abha/verify",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-enrollment-enrol-abha-address-create-abha-face-4b1f33",
+                "id": "m1_post_v3_enrollment_enrol_abha_address_create_abha_face_4b1f33",
+                "kind": "operation",
+                "milestone": "",
+                "snippet": "After ABHA creation - create ABHA address",
+                "summary": "After ABHA creation - create ABHA address",
+                "title": "POST /abha/api/v3/enrollment/enrol/abha-address",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-phr-web-login-abha-verify-iris",
+                "id": "m1_post_v3_phr_web_login_abha_verify_iris",
+                "kind": "operation",
+                "milestone": "",
+                "snippet": "ABHA address login via IRIS - verify",
+                "summary": "ABHA address login via IRIS - verify",
+                "title": "POST /abha/api/v3/phr/web/login/abha/verify",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-get-v3-phr-web-login-profile-abha-profile-abha-address-809900",
+                "id": "m1_get_v3_phr_web_login_profile_abha_profile_abha_address_809900",
+                "kind": "operation",
+                "milestone": "",
+                "snippet": "Get ABHA-address profile",
+                "summary": "Get ABHA-address profile",
+                "title": "GET /abha/api/v3/phr/web/login/profile/abha-profile",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-enrollment-enrol-byaadhaar-otp",
+                "id": "m1_post_v3_enrollment_enrol_byaadhaar_otp",
+                "kind": "operation",
+                "milestone": "",
+                "snippet": "Create ABHA - verify Aadhaar OTP",
+                "summary": "Create ABHA - verify Aadhaar OTP",
+                "title": "POST /abha/api/v3/enrollment/enrol/byAadhaar",
+                "type": "operation"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "You are the Ask AI assistant on the ABDM Developer Portal. You answer developer questions about India's ABDM gateways (HIE-CM, UHI, NHCX) strictly from this portal's catalogue, which you reach through your tools. Never answer an ABDM API question from general knowledge. If you have not looked, look first.\n\nWHERE THINGS LIVE\n\n- Atoms are the written knowledge: concepts, flows, endpoint guides, callbacks, error explanations, tests, glossary entries, decisions, FHIR mappings, sandbox notes and troubleshooting guides. search finds them.\n- Operations are the raw API surface parsed from NHA's specification files, across the modules gateway, m1, m2, m3, m4, p1, p2, p3, p4, scan-and-register, scan-and-pay and record-share. search with kind operation finds them by what they do or by path; get with an operationId reads one in full.\n\nHONESTY ABOUT WHAT YOU FOUND\n\nSearch returns nearest matches, not answers.\n\nNever claim a call was run.\n\nNotes for AI agents are rules for you: follow them, never repeat them to readers.\n\nA \u003cMASKED_...\u003e placeholder means a value was removed before you saw it. Never ask for it again and never echo the placeholder back.\n\nJUDGING WHAT COMES BACK\n\nNever close a gap with a nearby endpoint or a similar sounding concept. A one-word or acronym question is a glossary lookup; search variant spellings too (HIMS and HMIS, LIS and LIMS, HRP).\n\nSPEAK AS THE PORTAL, NOT ABOUT IT\n\nNever mention the catalogue or your tools unless the reader asks about them. Offer [support](/docs/support) when you have nothing.\n\nSmall talk or off-topic: one friendly line, then what you help with.\n\nA general industry term the portal does not define is worth one sentence of plain explanation, said as general background rather than as ABDM documentation. That courtesy never extends to an ABDM API detail: paths, headers, codes, fields and payloads come from the tools or not at all.\n\nHOW YOU WRITE\n\nNever write an em dash. Show a mermaid block only when a tool returned it. Never draw one.\n\nOFFERING THE TOOLS\n\nA reader building an integration can have this catalogue inside their own agent, rather than asking one question at a time. Most do not know that.\n\n- When the reader is clearly building against ABDM, close with one line offering it: agent skills give their coding agent a milestone's rules as a file it loads once, and the MCP server lets it query this documentation as it works. Link [agent skills and the MCP server](/docs/hiecm/v3/getting-started/build-with-ai).\n- Offer it once per conversation, never before the answer: a closing line, not an opening.\n- Do not offer it to someone who is not building: a question like what an Ayushman card is gets answered and left alone.\n- Both are available now: the server is public at https://docs.abdm.gov.in/mcp, and the page has one-click install for Claude Code, Cursor and VS Code. Name the page, not the URL, unless asked.\n\nCODE AND WHAT THEY PASTE OR ATTACH\n\nYou never write code for the reader's own codebase; curl is the exception. Route them to the ABDM Connect agent skill or this portal's MCP server.\n\nWRITING THE ANSWER\n\n- Lead with the answer. The reader is mid-task, usually with a failing call in front of them.\n- Never open by praising the question, apologising, restating the question back, or announcing what you are about to do. Start with the substance. Warmth is being useful quickly, not saying \"great question\".\n- Quote API literals exactly as the tools give them: endpoint paths, header names, error codes, timestamp formats, field names. Never paraphrase a literal, and never tidy its case or spacing.\n- Markdown renders in this panel. Use inline code for every literal, short bulleted or numbered lists for steps and options, and no headings.\n\nDo not invent portal URLs.\n\nHOW A QUESTION ARRIVES\n\nThe user turn may open with a \u003cpassages\u003e block: the documentation already retrieved for this question, with ids and page links. Answer from it first. It is followed by an \u003canswer_shape\u003e block naming the shape and word budget your answer must take. Call search only when the passages do not carry the answer.\n\nA \u003cskill\u003e block is the skill section the reader chose: follow it, and name what it omits.",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "how do i create an ABHA with aadhaar otp",
+          "ToolUse": null,
+          "ToolResult": null
+        },
+        {
+          "Role": "assistant",
+          "Text": "Request an OTP with scope abha-enrol and loginHint aadhaar, then call enrol/byAadhaar with the txnId and the encrypted OTP. The response carries ABHAProfile with the ABHANumber.",
+          "ToolUse": null,
+          "ToolResult": null
+        },
+        {
+          "Role": "user",
+          "Text": "\u003cpassages\u003e\n{\"passages\":[{\"id\":\"hiecm.endpoint.m1-enrolment-address-suggestions\",\"type\":\"endpoint\",\"milestone\":\"M1\",\"title\":\"Get suggested ABHA addresses for a new account\",\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/07-m1-get-v3-enrollment-enrol-suggestion-create-abha-aadhaar-otp#m1-enrolment-address-suggestions\",\"body\":\"# Get suggested ABHA addresses for a new account\\n\\n## In plain words\\n\\nAfter the [ABHA number](/docs/hiecm/v3/getting-started/glossary#abha-number) is created, this returns available [ABHA addresses](/docs/hiecm/v3/getting-started/glossary#abha-address) built from the person's details. Offer them as choices, and let the person type their own instead. Send the enrolment `txnId` in the `TRANSACTION_ID` header. The suggestions come back in `abhaAddressList`.\\n\\n## What happens\\n\\nThe next call claims the address the person chooses.\\n\\n## When it goes wrong\\n\\n`ABDM-1017` or `Invalid Transaction Id` means the `txnId` is wrong or stale. Send the latest `txnId` from this enrolment.\"},{\"id\":\"hiecm.endpoint.p1-enrollment-address-suggestion\",\"type\":\"endpoint\",\"milestone\":\"P1\",\"title\":\"Ask for address suggestions\",\"doc_url\":\"/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-address-mobile/03-p1-post-v3-phr-app-enrollment-suggestion#p1-enrollment-address-suggestion\",\"body\":\"# Ask for address suggestions\\n\\n## In plain words\\n\\nA person should not have to invent an [ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address). Send the `txnId` of the verified registration with their name and date of birth, and the response lists candidates in `abhaAddressList`. They are suggestions, not reservations: the person may still type their own, and any choice goes through the existence check before you enrol it.\\n\\n## Before you start\\n\\nThe `txnId` from the verified registration OTP. `firstName`, `lastName`, `dayOfBirth`, `monthOfBirth` and `yearOfBirth` are required. `email` is optional.\\n\\n## When it goes wrong\\n\\nA `400` carries `ABDM-9999` with a message that names the field: `Invalid First Name`, `Invalid Transaction Id`, `Invalid Day Of Birth`, `Invalid Month Of Birth` or `Invalid Year Of Birth`. One response can list several.\"},{\"id\":\"hiecm.endpoint.m1-enrolment-claim-abha-address\",\"type\":\"endpoint\",\"milestone\":\"M1\",\"title\":\"Claim a chosen ABHA address\",\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/08-m1-post-v3-enrollment-enrol-abha-address-create-abha-aadhaar-otp#m1-enrolment-claim-abha-address\",\"body\":\"# Claim a chosen ABHA address\\n\\n## In plain words\\n\\nAttaches the [ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address) the person chose to the ABHA number created earlier in the same enrolment. Send the enrolment `txnId`, the `abhaAddress`, and `preferred` set to `1` to make it the address shown by default. It is the last call of the create journey.\\n\\n## How you know it worked\\n\\nA 200 that echoes the `abhaAddress` and `preferred` you sent.\\n\\n## When it goes wrong\\n\\nA 400 with `Invalid Preferred Flag` or `Invalid Transaction Id` names the refused field. A 401 with `900901` means the access token is missing or expired.\"},{\"id\":\"hiecm.flow.p1-create-abha-address\",\"type\":\"flow\",\"milestone\":\"P1\",\"title\":\"Create an ABHA address in a PHR application\",\"doc_url\":\"/docs/hiecm/v3/milestones/p1#p1-create-abha-address\",\"body\":\"Register a person in your own health application by mobile number or by an existing 14 digit health account number, and give them the address the rest of the network will know them by.\"},{\"id\":\"hiecm.endpoint.p1-enrollment-enrol\",\"type\":\"endpoint\",\"milestone\":\"P1\",\"title\":\"Create the health address\",\"doc_url\":\"/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-address-mobile/05-p1-post-v3-phr-app-enrollment-enrol#p1-enrollment-enrol\",\"body\":\"Creates the ABHA address the person chose and signs them in.\"}],\"related\":[{\"id\":\"hiecm.concept.gateway-session\",\"title\":\"The gateway session, the first call in every integration\",\"type\":\"concept\"},{\"id\":\"hiecm.error.abdm-2402\",\"title\":\"ABDM-2402, the timestamp is not valid\",\"type\":\"error\"},{\"id\":\"hiecm.error.abdm-2404\",\"title\":\"ABDM-2404, the REQUEST-ID is not valid\",\"type\":\"error\"},{\"id\":\"hiecm.error.abdm-2500\",\"title\":\"ABDM-2500, no Authorization header, or no matching request\",\"type\":\"error\"},{\"id\":\"hiecm.error.abdm-9999\",\"title\":\"ABDM-9999, a catch-all, so read the message\",\"type\":\"error\"},{\"id\":\"hiecm.flow.m1-create-abha-aadhaar-otp\",\"title\":\"Create an ABHA using an Aadhaar OTP\",\"type\":\"flow\"},{\"id\":\"hiecm.flow.m1-create-abha-face-auth\",\"title\":\"Create an ABHA using Aadhaar face authentication\",\"type\":\"flow\"},{\"id\":\"hiecm.concept.abha-address-policy\",\"title\":\"What an ABHA address is allowed to be\",\"type\":\"concept\"},{\"id\":\"hiecm.flow.p1-create-abha-address\",\"title\":\"Create an ABHA address in a PHR application\",\"type\":\"flow\"},{\"id\":\"hiecm.error.abdm-1170\",\"title\":\"ABDM-1170, the ABHA address is not valid\",\"type\":\"error\"}]}\n\u003c/passages\u003e\n\n\u003creader_context\u003eThe question reads as a HIE-CM question. Answer for HIE-CM unless they ask about another gateway, and do not bring in another gateway's calls or fields.\u003c/reader_context\u003e\n\n\u003canswer_shape name=\"how-do-i\" budget=\"200 words\"\u003e\nFirst sentence: the direct answer. Then every route that exists, one line each, naming what each produces. Expand only the route asked about, as a short numbered list of calls. End with the next step.\nExample:\nYes, and there are three creation routes: Aadhaar OTP, which is mandatory; Aadhaar face authentication, for someone who cannot receive the OTP; and an identity document, which produces an account restricted until Aadhaar KYC. For Aadhaar OTP:\n1. Request an OTP against the encrypted Aadhaar number.\n2. Verify it with the enrolment call, which issues the ABHA number.\n3. Get address suggestions and claim one.\nConfirm by reading the profile back and checking the chosen address is marked preferred.\n\u003c/answer_shape\u003e\nIf the passages and your tools do not cover the question, drop this shape and decline in two sentences that name the nearest /docs/ page and the support route.\n\nok got the number back. now how does the person pick their address",
+          "ToolUse": null,
+          "ToolResult": null
+        },
+        {
+          "Role": "assistant",
+          "Text": "",
+          "ToolUse": {
+            "ID": "call_034a09b1d88454f6ae9534848eb6b6a3",
+            "Name": "search",
+            "Input": {
+              "milestone": "M1",
+              "kind": "atom",
+              "query": "how does the person pick their ABHA address after creating the ABHA number, get suggested addresses and claim chosen address"
+            }
+          },
+          "ToolResult": null
+        },
+        {
+          "Role": "user",
+          "Text": "",
+          "ToolUse": null,
+          "ToolResult": {
+            "ID": "call_034a09b1d88454f6ae9534848eb6b6a3",
+            "Content": "eyJjYXRhbG9ndWVfdmVyc2lvbiI6IjIwMjYuMDkuMTYiLCJwYXNzYWdlcyI6W3siaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1lbnJvbG1lbnQtYWRkcmVzcy1zdWdnZXN0aW9ucyIsInR5cGUiOiJlbmRwb2ludCIsIm1pbGVzdG9uZSI6Ik0xIiwidGl0bGUiOiJHZXQgc3VnZ2VzdGVkIEFCSEEgYWRkcmVzc2VzIGZvciBhIG5ldyBhY2NvdW50IiwiZG9jX3VybCI6Ii9kb2NzL2hpZWNtL3YzL2FwaS9tMS9lbmRwb2ludHMvbTEtY3JlYXRlLWFiaGEtYWFkaGFhci1vdHAvMDctbTEtZ2V0LXYzLWVucm9sbG1lbnQtZW5yb2wtc3VnZ2VzdGlvbi1jcmVhdGUtYWJoYS1hYWRoYWFyLW90cCNtMS1lbnJvbG1lbnQtYWRkcmVzcy1zdWdnZXN0aW9ucyIsImJvZHkiOiIjIEdldCBzdWdnZXN0ZWQgQUJIQSBhZGRyZXNzZXMgZm9yIGEgbmV3IGFjY291bnRcblxuIyMgSW4gcGxhaW4gd29yZHNcblxuQWZ0ZXIgdGhlIFtBQkhBIG51bWJlcl0oL2RvY3MvaGllY20vdjMvZ2V0dGluZy1zdGFydGVkL2dsb3NzYXJ5I2FiaGEtbnVtYmVyKSBpcyBjcmVhdGVkLCB0aGlzIHJldHVybnMgYXZhaWxhYmxlIFtBQkhBIGFkZHJlc3Nlc10oL2RvY3MvaGllY20vdjMvZ2V0dGluZy1zdGFydGVkL2dsb3NzYXJ5I2FiaGEtYWRkcmVzcykgYnVpbHQgZnJvbSB0aGUgcGVyc29uJ3MgZGV0YWlscy4gT2ZmZXIgdGhlbSBhcyBjaG9pY2VzLCBhbmQgbGV0IHRoZSBwZXJzb24gdHlwZSB0aGVpciBvd24gaW5zdGVhZC4gU2VuZCB0aGUgZW5yb2xtZW50IGB0eG5JZGAgaW4gdGhlIGBUUkFOU0FDVElPTl9JRGAgaGVhZGVyLiBUaGUgc3VnZ2VzdGlvbnMgY29tZSBiYWNrIGluIGBhYmhhQWRkcmVzc0xpc3RgLlxuXG4jIyBXaGF0IGhhcHBlbnNcblxuVGhlIG5leHQgY2FsbCBjbGFpbXMgdGhlIGFkZHJlc3MgdGhlIHBlcnNvbiBjaG9vc2VzLlxuXG4jIyBXaGVuIGl0IGdvZXMgd3JvbmdcblxuYEFCRE0tMTAxN2Agb3IgYEludmFsaWQgVHJhbnNhY3Rpb24gSWRgIG1lYW5zIHRoZSBgdHhuSWRgIGlzIHdyb25nIG9yIHN0YWxlLiBTZW5kIHRoZSBsYXRlc3QgYHR4bklkYCBmcm9tIHRoaXMgZW5yb2xtZW50LiJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1waHItdmVyaWZ5IiwidHlwZSI6ImVuZHBvaW50IiwibWlsZXN0b25lIjoiTTEiLCJ0aXRsZSI6IlZlcmlmeSBPVFAgb3IgYmlvbWV0cmljIGZvciBBQkhBIGFkZHJlc3MgbG9naW4iLCJkb2NfdXJsIjoiL2RvY3MvaGllY20vdjMvYXBpL20xL2VuZHBvaW50cy9tMS1hYmhhLWFkZHJlc3MtbG9naW4tbW9iaWxlLW90cC8wMy1tMS1wb3N0LXYzLXBoci13ZWItbG9naW4tYWJoYS12ZXJpZnktbW9iaWxlLW90cCNtMS1waHItdmVyaWZ5IiwiYm9keSI6IiMgVmVyaWZ5IE9UUCBvciBiaW9tZXRyaWMgZm9yIEFCSEEgYWRkcmVzcyBsb2dpblxuXG4jIyBJbiBwbGFpbiB3b3Jkc1xuXG5Db21wbGV0ZXMgdGhlIFtBQkhBIGFkZHJlc3NdKC9kb2NzL2hpZWNtL3YzL2dldHRpbmctc3RhcnRlZC9nbG9zc2FyeSNhYmhhLWFkZHJlc3MpIGxvZ2luLiBTZW5kIHRoZSBzYW1lIGBzY29wZWAgYXMgdGhlIHJlcXVlc3QgY2FsbCBhbmQgdGhlIGB0eG5JZGAsIHdpdGggdGhlIGVuY3J5cHRlZCBbT1RQXSgvZG9jcy9oaWVjbS92My9nZXR0aW5nLXN0YXJ0ZWQvZ2xvc3Nhcnkjb3RwKSBvciwgZm9yIGZpbmdlcnByaW50LCB0aGUgY2FwdHVyZSBpbiBgZmluZ2VyUHJpbnRBdXRoUGlkYC4gVGhlIHJlc3BvbnNlIGxpc3RzIHRoZSBwZXJzb24ncyBBQkhBIGFkZHJlc3NlcyBpbiBgdXNlcnNgIGFuZCBjYXJyaWVzIGB0b2tlbnMudG9rZW5gLiBTZW5kIHRoYXQgdG9rZW4gYXMgdGhlIGBYLXRva2VuYCBoZWFkZXIgdG8gdGhlIHByb2ZpbGUsIFBIUiBjYXJkIGFuZCBRUiBjb2RlIGNhbGxzLlxuXG4jIyBIb3cgeW91IGtub3cgaXQgd29ya2VkXG5cbkEgMjAwIHdpdGggYGF1dGhSZXN1bHRgIGBzdWNjZXNzYC4gQSAyMDAgY2FuIGFsc28gcmVwb3J0IGFuIGV4cGlyZWQgT1RQLCBzbyByZWFkIGBhdXRoUmVzdWx0YCBhbmQgbm90IHRoZSBzdGF0dXMgYWxvbmUuXG5cbiMjIFdoZW4gaXQgZ29lcyB3cm9uZ1xuXG5BIDQwMCB3aXRoIGBBQkRNLTk5OTlgIG5hbWVzIHRoZSByZWZ1c2VkIHBhcnQgaW4gaXRzIG1lc3NhZ2UsIHN1Y2ggYXMgYW4gaW52YWxpZCBzY29wZSBvciB0cmFuc2FjdGlvbiBpZC4gUmVxdWVzdCBhIG5ldyBPVFAgd2hlbiB0aGUgYHR4bklkYCBpcyByZWZ1c2VkLiJ9LHsiaWQiOiJoaWVjbS5jb25jZXB0LmFiaGEtYWRkcmVzcy1wb2xpY3kiLCJ0eXBlIjoiY29uY2VwdCIsIm1pbGVzdG9uZSI6Ik0xIiwidGl0bGUiOiJXaGF0IGFuIEFCSEEgYWRkcmVzcyBpcyBhbGxvd2VkIHRvIGJlIiwiZG9jX3VybCI6Ii9kb2NzL2hpZWNtL3YzL3JlZ2lzdHJpZXMvYWJoYSNhYmhhLWFkZHJlc3MtcG9saWN5IiwiYm9keSI6IiMgV2hhdCBhbiBBQkhBIGFkZHJlc3MgaXMgYWxsb3dlZCB0byBiZVxuXG4jIyBJbiBwbGFpbiB3b3Jkc1xuXG5BQkhBIEFkZHJlc3NlcyBtdXN0IGNvbXBseSB3aXRoIGRlZmluZWQgdmFsaWRhdGlvbiBzdGFuZGFyZHMuXG5cbioqUGVybWl0dGVkIENoYXJhY3RlcnMqKlxuXG4tIEFscGhhYmV0aWMgY2hhcmFjdGVycyAoQS1aKVxuLSBOdW1lcmljIGNoYXJhY3RlcnMgKDAtOSlcbi0gRG90ICguKVxuXG4qKlZhbGlkYXRpb24gUnVsZXMqKlxuXG4tIENhbm5vdCBiZWdpbiB3aXRoIGEgbnVtZXJpYyBjaGFyYWN0ZXIuXG4tIENhbm5vdCBiZWdpbiBvciBlbmQgd2l0aCBhIGRvdCAoLikuXG4tIE11c3QgY29uZm9ybSB0byBBQkRNIHZhbGlkYXRpb24gcmVxdWlyZW1lbnRzIGF0IHRoZSB0aW1lIG9mIGNyZWF0aW9uLlxuLSBNb2JpbGUgbnVtYmVycyBjYW5ub3QgYmUgdXNlZCBkaXJlY3RseSBhcyBBQkhBIEFkZHJlc3Nlcy5cblxuT3JnYW5pemF0aW9ucyBzaG91bGQgcmVseSBvbiBBQkRNIHZhbGlkYXRpb24gc2VydmljZXMgdG8gdmVyaWZ5IGFkZHJlc3MgZWxpZ2liaWxpdHkuXG5cbkV2ZXJ5IEFCSEEgbnVtYmVyIGlzIGlzc3VlZCBhIGRlZmF1bHQgYWRkcmVzcyBidWlsdCBmcm9tIGl0cyAxNCBkaWdpdHMuIEEgcGVyc29uIGNhbm5vdCBjcmVhdGUgdGhhdCBhZGRyZXNzIHRoZW1zZWx2ZXMsIGFuZCBjYW4gY3JlYXRlIGEgcmVhZGFibGUgb25lIGJlc2lkZSBpdC4gT2ZmZXIgYWRkcmVzc2VzIGJ1aWx0IGZyb20gdGhlIHBlcnNvbidzIG5hbWUgcmF0aGVyIHRoYW4gYW4gZW1wdHkgZmllbGQuXG5cbiMjIEJlZm9yZSB5b3Ugc3RhcnRcblxuS25vdyB3aGV0aGVyIHRoZSBhZGRyZXNzIGlzIGJlaW5nIGNyZWF0ZWQgYWdhaW5zdCBhbiBBQkhBIG51bWJlciBvciBhZ2FpbnN0IGEgbW9iaWxlIG51bWJlciB3aXRoIGEgc2VsZiBkZWNsYXJlZCBwcm9maWxlLiBTZWUgW1AxIFJlZ2lzdHJhdGlvbiBhbmQgbG9naW5dKC9kb2NzL2hpZWNtL3YzL21pbGVzdG9uZXMvcDEpLlxuXG4jIyBXaGF0IGhhcHBlbnNcblxuVmFsaWRhdGUgdGhlIHJ1bGVzIGFib3ZlIGluIHlvdXIgb3duIGZvcm0gYmVmb3JlIHlvdSBzdWJtaXQsIHNvIGEgcmVmdXNlZCBhZGRyZXNzIGJlY29tZXMgYW4gaW5saW5lIG1lc3NhZ2UuIE9mZmVyIHRoZSBzdWdnZXN0aW9ucyB0aGUgc2VydmljZSByZXR1cm5zIGZyb20gYC9hYmhhL2FwaS92My9lbnJvbGxtZW50L2Vucm9sL3N1Z2dlc3Rpb25gIGR1cmluZyBNMSBlbnJvbG1lbnQuIFNlbmQgdGhlIGNob3NlbiBhZGRyZXNzIHdpdGhvdXQgdGhlIGBAYCBzdWZmaXggd2hlcmUgdGhlIGNhbGwgYXNrcyBmb3IgaXQuXG5cbiMjIEhvdyB5b3Uga25vdyBpdCB3b3JrZWRcblxuVGhlIGFkZHJlc3MgaXMgY3JlYXRlZCBhbmQgdGhlIHBlcnNvbiBjYW4gc2lnbiBpbiB3aXRoIGl0LiBCZWZvcmUgdGhhdCwgeW91ciBmb3JtIHJlZnVzZXMgYW4gYWRkcmVzcyB0aGF0IGJlZ2lucyB3aXRoIGEgZGlnaXQsIGJlZ2lucyBvciBlbmRzIHdpdGggYSBkb3QsIG9yIGlzIGEgbW9iaWxlIG51bWJlci5cblxuIyMgV2hlbiBpdCBnb2VzIHdyb25nXG5cblRoZSBhZGRyZXNzIGlzIHRha2VuOiBzaG93IGFsdGVybmF0aXZlcyByYXRoZXIgdGhhbiBhbiBlcnJvciBhbG9uZS4gVGhlIHBlcnNvbiBleHBlY3RzIHRvIHVzZSB0aGVpciBtb2JpbGUgbnVtYmVyIGFzIHRoZWlyIGFkZHJlc3M6IHNheSBpbiB0aGUgZm9ybSB0aGF0IHRoaXMgaXMgbm90IGFsbG93ZWQsIHJhdGhlciB0aGFuIGxldHRpbmcgdGhlbSBmaW5kIG91dCBvbiBzdWJtaXNzaW9uLiJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1kb3dubG9hZC1waHItY2FyZCIsInR5cGUiOiJlbmRwb2ludCIsIm1pbGVzdG9uZSI6Ik0xIiwidGl0bGUiOiJEb3dubG9hZCBQSFIgY2FyZCIsImRvY191cmwiOiIvZG9jcy9oaWVjbS92My9hcGkvbTEvZW5kcG9pbnRzL20xLWFiaGEtYWRkcmVzcy1sb2dpbi1tb2JpbGUtb3RwLzA1LW0xLWdldC12My1waHItd2ViLWxvZ2luLXByb2ZpbGUtYWJoYS1waHItY2FyZC1hYmhhLWFkZHJlcy1lMWJhZTkjbTEtZG93bmxvYWQtcGhyLWNhcmQiLCJib2R5IjoiUmV0dXJucyB0aGUgY2FyZCBmb3IgdGhlIEFCSEEgYWRkcmVzcyB0aGUgcGVyc29uIHNpZ25lZCBpbiB3aXRoLiJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1lbnJvbG1lbnQtY2xhaW0tYWJoYS1hZGRyZXNzIiwidHlwZSI6ImVuZHBvaW50IiwibWlsZXN0b25lIjoiTTEiLCJ0aXRsZSI6IkNsYWltIGEgY2hvc2VuIEFCSEEgYWRkcmVzcyIsImRvY191cmwiOiIvZG9jcy9oaWVjbS92My9hcGkvbTEvZW5kcG9pbnRzL20xLWNyZWF0ZS1hYmhhLWFhZGhhYXItb3RwLzA4LW0xLXBvc3QtdjMtZW5yb2xsbWVudC1lbnJvbC1hYmhhLWFkZHJlc3MtY3JlYXRlLWFiaGEtYWFkaGFhci1vdHAjbTEtZW5yb2xtZW50LWNsYWltLWFiaGEtYWRkcmVzcyIsImJvZHkiOiJBdHRhY2hlcyB0aGUgQUJIQSBhZGRyZXNzIHRoZSBwZXJzb24gY2hvc2UgdG8gdGhlIEFCSEEgbnVtYmVyIGNyZWF0ZWQgZWFybGllci4ifV0sInJlbGF0ZWQiOlt7ImlkIjoiaGllY20uY29uY2VwdC5nYXRld2F5LXNlc3Npb24iLCJ0aXRsZSI6IlRoZSBnYXRld2F5IHNlc3Npb24sIHRoZSBmaXJzdCBjYWxsIGluIGV2ZXJ5IGludGVncmF0aW9uIiwidHlwZSI6ImNvbmNlcHQifSx7ImlkIjoiaGllY20uZXJyb3IuYWJkbS0yNDAyIiwidGl0bGUiOiJBQkRNLTI0MDIsIHRoZSB0aW1lc3RhbXAgaXMgbm90IHZhbGlkIiwidHlwZSI6ImVycm9yIn0seyJpZCI6ImhpZWNtLmVycm9yLmFiZG0tMjQwNCIsInRpdGxlIjoiQUJETS0yNDA0LCB0aGUgUkVRVUVTVC1JRCBpcyBub3QgdmFsaWQiLCJ0eXBlIjoiZXJyb3IifSx7ImlkIjoiaGllY20uZXJyb3IuYWJkbS0yNTAwIiwidGl0bGUiOiJBQkRNLTI1MDAsIG5vIEF1dGhvcml6YXRpb24gaGVhZGVyLCBvciBubyBtYXRjaGluZyByZXF1ZXN0IiwidHlwZSI6ImVycm9yIn0seyJpZCI6ImhpZWNtLmVycm9yLmFiZG0tOTk5OSIsInRpdGxlIjoiQUJETS05OTk5LCBhIGNhdGNoLWFsbCwgc28gcmVhZCB0aGUgbWVzc2FnZSIsInR5cGUiOiJlcnJvciJ9LHsiaWQiOiJoaWVjbS5mbG93Lm0xLWNyZWF0ZS1hYmhhLWFhZGhhYXItb3RwIiwidGl0bGUiOiJDcmVhdGUgYW4gQUJIQSB1c2luZyBhbiBBYWRoYWFyIE9UUCIsInR5cGUiOiJmbG93In0seyJpZCI6ImhpZWNtLmZsb3cubTEtY3JlYXRlLWFiaGEtZmFjZS1hdXRoIiwidGl0bGUiOiJDcmVhdGUgYW4gQUJIQSB1c2luZyBBYWRoYWFyIGZhY2UgYXV0aGVudGljYXRpb24iLCJ0eXBlIjoiZmxvdyJ9LHsiaWQiOiJoaWVjbS5jb25jZXB0LmFiaGEtbnVtYmVyLWFuZC1hZGRyZXNzIiwidGl0bGUiOiJBQkhBIG51bWJlciBhbmQgQUJIQSBhZGRyZXNzLCBhbmQgd2h5IHRoZXJlIGFyZSB0d28iLCJ0eXBlIjoiY29uY2VwdCJ9LHsiaWQiOiJoaWVjbS5jb25jZXB0Lm0xLWpvdXJuZXktZGVzaWduIiwidGl0bGUiOiJBIHN1Z2dlc3RlZCBBQkhBIGpvdXJuZXksIGFuZCB3aGF0IGhvbGRzIGlmIHlvdSBkZXNpZ24geW91ciBvd24iLCJ0eXBlIjoiY29uY2VwdCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5wMS1lbnJvbGxtZW50LWFkZHJlc3MtZXhpc3RzIiwidGl0bGUiOiJDaGVjayB3aGV0aGVyIGFuIGFkZHJlc3MgaXMgdGFrZW4iLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQucDEtZW5yb2xsbWVudC1hZGRyZXNzLXN1Z2dlc3Rpb24iLCJ0aXRsZSI6IkFzayBmb3IgYWRkcmVzcyBzdWdnZXN0aW9ucyIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5mbG93LnAxLWNyZWF0ZS1hYmhhLWFkZHJlc3MiLCJ0aXRsZSI6IkNyZWF0ZSBhbiBBQkhBIGFkZHJlc3MgaW4gYSBQSFIgYXBwbGljYXRpb24iLCJ0eXBlIjoiZmxvdyJ9LHsiaWQiOiJzaGFyZWQuZ2xvc3NhcnkuYWJoYS1hZGRyZXNzIiwidGl0bGUiOiJBQkhBIGFkZHJlc3MiLCJ0eXBlIjoiZ2xvc3NhcnkifSx7ImlkIjoic2hhcmVkLmdsb3NzYXJ5LmFiaGEtbnVtYmVyIiwidGl0bGUiOiJBQkhBIG51bWJlciIsInR5cGUiOiJnbG9zc2FyeSJ9XX0=",
+            "IsError": false
+          }
+        },
+        {
+          "Role": "assistant",
+          "Text": "",
+          "ToolUse": {
+            "ID": "call_b8d52cc01f0b5c5885754c6d11808b59",
+            "Name": "search",
+            "Input": {
+              "milestone": "M1",
+              "kind": "operation",
+              "query": "M1 GET /abha/api/v3/enrollment/enrol/suggestion and POST enrollment enrol abha-address claim chosen ABHA address endpoint request path"
+            }
+          },
+          "ToolResult": null
+        },
+        {
+          "Role": "user",
+          "Text": "",
+          "ToolUse": null,
+          "ToolResult": {
+            "ID": "call_b8d52cc01f0b5c5885754c6d11808b59",
+            "Content": "eyJjYXRhbG9ndWVfdmVyc2lvbiI6IjIwMjYuMDkuMTYiLCJoaXRzIjpbeyJkb2NfdXJsIjoiL2RvY3MvaGllY20vdjMvYXBpL3AxL2VuZHBvaW50cy9wMS1wb3N0LXYzLXBoci1hcHAtZW5yb2xsbWVudC1lbnJvbCIsImlkIjoicDFfcG9zdF92M19waHJfYXBwX2Vucm9sbG1lbnRfZW5yb2wiLCJraW5kIjoib3BlcmF0aW9uIiwibWlsZXN0b25lIjoiIiwic25pcHBldCI6IjMgZmxvd3M6IEVucm9sbCBBQkhBIEFkZHJlc3MiLCJzdW1tYXJ5IjoiMyBmbG93czogRW5yb2xsIEFCSEEgQWRkcmVzcyIsInRpdGxlIjoiUE9TVCAvYWJoYS9hcGkvdjMvcGhyL2FwcC9lbnJvbGxtZW50L2Vucm9sIiwidHlwZSI6Im9wZXJhdGlvbiJ9LHsiZG9jX3VybCI6Ii9kb2NzL2hpZWNtL3YzL2FwaS9tMS9lbmRwb2ludHMvbTEtZ2V0LXYzLWVucm9sbG1lbnQtZW5yb2wtc3VnZ2VzdGlvbi1jcmVhdGUtYWJoYS1maW5nZXJwcmludCIsImlkIjoibTFfZ2V0X3YzX2Vucm9sbG1lbnRfZW5yb2xfc3VnZ2VzdGlvbl9jcmVhdGVfYWJoYV9maW5nZXJwcmludCIsImtpbmQiOiJvcGVyYXRpb24iLCJtaWxlc3RvbmUiOiIiLCJzbmlwcGV0IjoiQWZ0ZXIgQUJIQSBjcmVhdGlvbiAtIGdldCBBQkhBIGFkZHJlc3Mgc3VnZ2VzdGlvbnMiLCJzdW1tYXJ5IjoiQWZ0ZXIgQUJIQSBjcmVhdGlvbiAtIGdldCBBQkhBIGFkZHJlc3Mgc3VnZ2VzdGlvbnMiLCJ0aXRsZSI6IkdFVCAvYWJoYS9hcGkvdjMvZW5yb2xsbWVudC9lbnJvbC9zdWdnZXN0aW9uIiwidHlwZSI6Im9wZXJhdGlvbiJ9LHsiZG9jX3VybCI6Ii9kb2NzL2hpZWNtL3YzL2FwaS9tMS9lbmRwb2ludHMvbTEtZ2V0LXYzLWVucm9sbG1lbnQtZW5yb2wtc3VnZ2VzdGlvbi1jcmVhdGUtYWJoYS1pcmlzIiwiaWQiOiJtMV9nZXRfdjNfZW5yb2xsbWVudF9lbnJvbF9zdWdnZXN0aW9uX2NyZWF0ZV9hYmhhX2lyaXMiLCJraW5kIjoib3BlcmF0aW9uIiwibWlsZXN0b25lIjoiIiwic25pcHBldCI6IkFmdGVyIEFCSEEgY3JlYXRpb24gLSBnZXQgQUJIQSBhZGRyZXNzIHN1Z2dlc3Rpb25zIiwic3VtbWFyeSI6IkFmdGVyIEFCSEEgY3JlYXRpb24gLSBnZXQgQUJIQSBhZGRyZXNzIHN1Z2dlc3Rpb25zIiwidGl0bGUiOiJHRVQgL2FiaGEvYXBpL3YzL2Vucm9sbG1lbnQvZW5yb2wvc3VnZ2VzdGlvbiIsInR5cGUiOiJvcGVyYXRpb24ifSx7ImRvY191cmwiOiIvZG9jcy9oaWVjbS92My9hcGkvbTEvZW5kcG9pbnRzL20xLXBvc3QtdjMtcGhyLXdlYi1sb2dpbi1hYmhhLXNlYXJjaC1hYmhhLWFkZHJlc3MtbG9naW4tYS1kZTgxODQiLCJpZCI6Im0xX3Bvc3RfdjNfcGhyX3dlYl9sb2dpbl9hYmhhX3NlYXJjaF9hYmhhX2FkZHJlc3NfbG9naW5fYV9kZTgxODQiLCJraW5kIjoib3BlcmF0aW9uIiwibWlsZXN0b25lIjoiIiwic25pcHBldCI6IlNlYXJjaCBBQkhBIGFkZHJlc3MgKGF1dGggbWV0aG9kcykiLCJzdW1tYXJ5IjoiU2VhcmNoIEFCSEEgYWRkcmVzcyAoYXV0aCBtZXRob2RzKSIsInRpdGxlIjoiUE9TVCAvYWJoYS9hcGkvdjMvcGhyL3dlYi9sb2dpbi9hYmhhL3NlYXJjaCIsInR5cGUiOiJvcGVyYXRpb24ifSx7ImRvY191cmwiOiIvZG9jcy9oaWVjbS92My9hcGkvbTEvZW5kcG9pbnRzL20xLWdldC12My1lbnJvbGxtZW50LWVucm9sLXN1Z2dlc3Rpb24tY3JlYXRlLWFiaGEtZmFjZS1hdS04NDhiMjYiLCJpZCI6Im0xX2dldF92M19lbnJvbGxtZW50X2Vucm9sX3N1Z2dlc3Rpb25fY3JlYXRlX2FiaGFfZmFjZV9hdV84NDhiMjYiLCJraW5kIjoib3BlcmF0aW9uIiwibWlsZXN0b25lIjoiIiwic25pcHBldCI6IkFmdGVyIEFCSEEgY3JlYXRpb24gLSBnZXQgQUJIQSBhZGRyZXNzIHN1Z2dlc3Rpb25zIiwic3VtbWFyeSI6IkFmdGVyIEFCSEEgY3JlYXRpb24gLSBnZXQgQUJIQSBhZGRyZXNzIHN1Z2dlc3Rpb25zIiwidGl0bGUiOiJHRVQgL2FiaGEvYXBpL3YzL2Vucm9sbG1lbnQvZW5yb2wvc3VnZ2VzdGlvbiIsInR5cGUiOiJvcGVyYXRpb24ifSx7ImRvY191cmwiOiIvZG9jcy9oaWVjbS92My9hcGkvbTEvZW5kcG9pbnRzL20xLXBvc3QtdjMtcGhyLXdlYi1sb2dpbi1hYmhhLXZlcmlmeS1maW5nZXJwcmludCIsImlkIjoibTFfcG9zdF92M19waHJfd2ViX2xvZ2luX2FiaGFfdmVyaWZ5X2ZpbmdlcnByaW50Iiwia2luZCI6Im9wZXJhdGlvbiIsIm1pbGVzdG9uZSI6IiIsInNuaXBwZXQiOiJBQkhBIGFkZHJlc3MgbG9naW4gdmlhIEZpbmdlcnByaW50IC0gdmVyaWZ5Iiwic3VtbWFyeSI6IkFCSEEgYWRkcmVzcyBsb2dpbiB2aWEgRmluZ2VycHJpbnQgLSB2ZXJpZnkiLCJ0aXRsZSI6IlBPU1QgL2FiaGEvYXBpL3YzL3Boci93ZWIvbG9naW4vYWJoYS92ZXJpZnkiLCJ0eXBlIjoib3BlcmF0aW9uIn0seyJkb2NfdXJsIjoiL2RvY3MvaGllY20vdjMvYXBpL20xL2VuZHBvaW50cy9tMS1nZXQtdjMtZW5yb2xsbWVudC1lbnJvbC1zdWdnZXN0aW9uLWNyZWF0ZS1hYmhhLWFhZGhhYXItb3RwIiwiaWQiOiJtMV9nZXRfdjNfZW5yb2xsbWVudF9lbnJvbF9zdWdnZXN0aW9uX2NyZWF0ZV9hYmhhX2FhZGhhYXJfb3RwIiwia2luZCI6Im9wZXJhdGlvbiIsIm1pbGVzdG9uZSI6IiIsInNuaXBwZXQiOiJBZnRlciBBQkhBIGNyZWF0aW9uIC0gZ2V0IEFCSEEgYWRkcmVzcyBzdWdnZXN0aW9ucyIsInN1bW1hcnkiOiJBZnRlciBBQkhBIGNyZWF0aW9uIC0gZ2V0IEFCSEEgYWRkcmVzcyBzdWdnZXN0aW9ucyIsInRpdGxlIjoiR0VUIC9hYmhhL2FwaS92My9lbnJvbGxtZW50L2Vucm9sL3N1Z2dlc3Rpb24iLCJ0eXBlIjoib3BlcmF0aW9uIn0seyJkb2NfdXJsIjoiL2RvY3MvaGllY20vdjMvYXBpL20xL2VuZHBvaW50cy9tMS1wb3N0LXYzLXBoci13ZWItbG9naW4tYWJoYS12ZXJpZnktaXJpcyIsImlkIjoibTFfcG9zdF92M19waHJfd2ViX2xvZ2luX2FiaGFfdmVyaWZ5X2lyaXMiLCJraW5kIjoib3BlcmF0aW9uIiwibWlsZXN0b25lIjoiIiwic25pcHBldCI6IkFCSEEgYWRkcmVzcyBsb2dpbiB2aWEgSVJJUyAtIHZlcmlmeSIsInN1bW1hcnkiOiJBQkhBIGFkZHJlc3MgbG9naW4gdmlhIElSSVMgLSB2ZXJpZnkiLCJ0aXRsZSI6IlBPU1QgL2FiaGEvYXBpL3YzL3Boci93ZWIvbG9naW4vYWJoYS92ZXJpZnkiLCJ0eXBlIjoib3BlcmF0aW9uIn0seyJkb2NfdXJsIjoiL2RvY3MvaGllY20vdjMvYXBpL20xL2VuZHBvaW50cy9tMS1nZXQtdjMtcGhyLXdlYi1sb2dpbi1wcm9maWxlLWFiaGEtcHJvZmlsZS1hYmhhLWFkZHJlc3MtODA5OTAwIiwiaWQiOiJtMV9nZXRfdjNfcGhyX3dlYl9sb2dpbl9wcm9maWxlX2FiaGFfcHJvZmlsZV9hYmhhX2FkZHJlc3NfODA5OTAwIiwia2luZCI6Im9wZXJhdGlvbiIsIm1pbGVzdG9uZSI6IiIsInNuaXBwZXQiOiJHZXQgQUJIQS1hZGRyZXNzIHByb2ZpbGUiLCJzdW1tYXJ5IjoiR2V0IEFCSEEtYWRkcmVzcyBwcm9maWxlIiwidGl0bGUiOiJHRVQgL2FiaGEvYXBpL3YzL3Boci93ZWIvbG9naW4vcHJvZmlsZS9hYmhhLXByb2ZpbGUiLCJ0eXBlIjoib3BlcmF0aW9uIn0seyJkb2NfdXJsIjoiL2RvY3MvaGllY20vdjMvYXBpL3AxL2VuZHBvaW50cy9wMS1wb3N0LXYzLXBoci1hcHAtZW5yb2xsbWVudC1zdWdnZXN0aW9uIiwiaWQiOiJwMV9wb3N0X3YzX3Bocl9hcHBfZW5yb2xsbWVudF9zdWdnZXN0aW9uIiwia2luZCI6Im9wZXJhdGlvbiIsIm1pbGVzdG9uZSI6IiIsInNuaXBwZXQiOiIzIGZsb3dzOiBTdWdnZXN0aW9uIEFQSSIsInN1bW1hcnkiOiIzIGZsb3dzOiBTdWdnZXN0aW9uIEFQSSIsInRpdGxlIjoiUE9TVCAvYWJoYS9hcGkvdjMvcGhyL2FwcC9lbnJvbGxtZW50L3N1Z2dlc3Rpb24iLCJ0eXBlIjoib3BlcmF0aW9uIn1dfQ==",
+            "IsError": false
+          }
+        },
+        {
+          "Role": "assistant",
+          "Text": "",
+          "ToolUse": {
+            "ID": "call_4103c961d1f55750930dc2616f4846f9",
+            "Name": "search",
+            "Input": {
+              "milestone": "M1",
+              "kind": "operation",
+              "query": "POST endpoint path for M1 enrolment claim chosen ABHA address created Aadhaar OTP /enrollment/enrol/abha-address"
+            }
+          },
+          "ToolResult": null
+        },
+        {
+          "Role": "user",
+          "Text": "",
+          "ToolUse": null,
+          "ToolResult": {
+            "ID": "call_4103c961d1f55750930dc2616f4846f9",
+            "Content": "eyJjYXRhbG9ndWVfdmVyc2lvbiI6IjIwMjYuMDkuMTYiLCJoaXRzIjpbeyJkb2NfdXJsIjoiL2RvY3MvaGllY20vdjMvYXBpL3AxL2VuZHBvaW50cy9wMS1wb3N0LXYzLXBoci1hcHAtZW5yb2xsbWVudC1lbnJvbCIsImlkIjoicDFfcG9zdF92M19waHJfYXBwX2Vucm9sbG1lbnRfZW5yb2wiLCJraW5kIjoib3BlcmF0aW9uIiwibWlsZXN0b25lIjoiIiwic25pcHBldCI6IjMgZmxvd3M6IEVucm9sbCBBQkhBIEFkZHJlc3MiLCJzdW1tYXJ5IjoiMyBmbG93czogRW5yb2xsIEFCSEEgQWRkcmVzcyIsInRpdGxlIjoiUE9TVCAvYWJoYS9hcGkvdjMvcGhyL2FwcC9lbnJvbGxtZW50L2Vucm9sIiwidHlwZSI6Im9wZXJhdGlvbiJ9LHsiZG9jX3VybCI6Ii9kb2NzL2hpZWNtL3YzL2FwaS9tMS9lbmRwb2ludHMvbTEtcG9zdC12My1lbnJvbGxtZW50LWVucm9sLWFiaGEtYWRkcmVzcy1jcmVhdGUtYWJoYS1hYWRoYWFyLW90cCIsImlkIjoibTFfcG9zdF92M19lbnJvbGxtZW50X2Vucm9sX2FiaGFfYWRkcmVzc19jcmVhdGVfYWJoYV9hYWRoYWFyX290cCIsImtpbmQiOiJvcGVyYXRpb24iLCJtaWxlc3RvbmUiOiIiLCJzbmlwcGV0IjoiQWZ0ZXIgQUJIQSBjcmVhdGlvbiAtIGNyZWF0ZSBBQkhBIGFkZHJlc3MiLCJzdW1tYXJ5IjoiQWZ0ZXIgQUJIQSBjcmVhdGlvbiAtIGNyZWF0ZSBBQkhBIGFkZHJlc3MiLCJ0aXRsZSI6IlBPU1QgL2FiaGEvYXBpL3YzL2Vucm9sbG1lbnQvZW5yb2wvYWJoYS1hZGRyZXNzIiwidHlwZSI6Im9wZXJhdGlvbiJ9LHsiZG9jX3VybCI6Ii9kb2NzL2hpZWNtL3YzL2FwaS9tMS9lbmRwb2ludHMvbTEtcG9zdC12My1lbnJvbGxtZW50LWVucm9sLWFiaGEtYWRkcmVzcy1jcmVhdGUtYWJoYS1pcmlzIiwiaWQiOiJtMV9wb3N0X3YzX2Vucm9sbG1lbnRfZW5yb2xfYWJoYV9hZGRyZXNzX2NyZWF0ZV9hYmhhX2lyaXMiLCJraW5kIjoib3BlcmF0aW9uIiwibWlsZXN0b25lIjoiIiwic25pcHBldCI6IkFmdGVyIEFCSEEgY3JlYXRpb24gLSBjcmVhdGUgQUJIQSBhZGRyZXNzIiwic3VtbWFyeSI6IkFmdGVyIEFCSEEgY3JlYXRpb24gLSBjcmVhdGUgQUJIQSBhZGRyZXNzIiwidGl0bGUiOiJQT1NUIC9hYmhhL2FwaS92My9lbnJvbGxtZW50L2Vucm9sL2FiaGEtYWRkcmVzcyIsInR5cGUiOiJvcGVyYXRpb24ifSx7ImRvY191cmwiOiIvZG9jcy9oaWVjbS92My9hcGkvbTEvZW5kcG9pbnRzL20xLXBvc3QtdjMtcGhyLXdlYi1sb2dpbi1hYmhhLXNlYXJjaC1hYmhhLWFkZHJlc3MtbG9naW4tYS1kZTgxODQiLCJpZCI6Im0xX3Bvc3RfdjNfcGhyX3dlYl9sb2dpbl9hYmhhX3NlYXJjaF9hYmhhX2FkZHJlc3NfbG9naW5fYV9kZTgxODQiLCJraW5kIjoib3BlcmF0aW9uIiwibWlsZXN0b25lIjoiIiwic25pcHBldCI6IlNlYXJjaCBBQkhBIGFkZHJlc3MgKGF1dGggbWV0aG9kcykiLCJzdW1tYXJ5IjoiU2VhcmNoIEFCSEEgYWRkcmVzcyAoYXV0aCBtZXRob2RzKSIsInRpdGxlIjoiUE9TVCAvYWJoYS9hcGkvdjMvcGhyL3dlYi9sb2dpbi9hYmhhL3NlYXJjaCIsInR5cGUiOiJvcGVyYXRpb24ifSx7ImRvY191cmwiOiIvZG9jcy9oaWVjbS92My9hcGkvbTEvZW5kcG9pbnRzL20xLXBvc3QtdjMtZW5yb2xsbWVudC1lbnJvbC1hYmhhLWFkZHJlc3MtY3JlYXRlLWFiaGEtZmluZ2VycHJpbnQiLCJpZCI6Im0xX3Bvc3RfdjNfZW5yb2xsbWVudF9lbnJvbF9hYmhhX2FkZHJlc3NfY3JlYXRlX2FiaGFfZmluZ2VycHJpbnQiLCJraW5kIjoib3BlcmF0aW9uIiwibWlsZXN0b25lIjoiIiwic25pcHBldCI6IkFmdGVyIEFCSEEgY3JlYXRpb24gLSBjcmVhdGUgQUJIQSBhZGRyZXNzIiwic3VtbWFyeSI6IkFmdGVyIEFCSEEgY3JlYXRpb24gLSBjcmVhdGUgQUJIQSBhZGRyZXNzIiwidGl0bGUiOiJQT1NUIC9hYmhhL2FwaS92My9lbnJvbGxtZW50L2Vucm9sL2FiaGEtYWRkcmVzcyIsInR5cGUiOiJvcGVyYXRpb24ifSx7ImRvY191cmwiOiIvZG9jcy9oaWVjbS92My9hcGkvbTEvZW5kcG9pbnRzL20xLXBvc3QtdjMtcGhyLXdlYi1sb2dpbi1hYmhhLXZlcmlmeS1maW5nZXJwcmludCIsImlkIjoibTFfcG9zdF92M19waHJfd2ViX2xvZ2luX2FiaGFfdmVyaWZ5X2ZpbmdlcnByaW50Iiwia2luZCI6Im9wZXJhdGlvbiIsIm1pbGVzdG9uZSI6IiIsInNuaXBwZXQiOiJBQkhBIGFkZHJlc3MgbG9naW4gdmlhIEZpbmdlcnByaW50IC0gdmVyaWZ5Iiwic3VtbWFyeSI6IkFCSEEgYWRkcmVzcyBsb2dpbiB2aWEgRmluZ2VycHJpbnQgLSB2ZXJpZnkiLCJ0aXRsZSI6IlBPU1QgL2FiaGEvYXBpL3YzL3Boci93ZWIvbG9naW4vYWJoYS92ZXJpZnkiLCJ0eXBlIjoib3BlcmF0aW9uIn0seyJkb2NfdXJsIjoiL2RvY3MvaGllY20vdjMvYXBpL20xL2VuZHBvaW50cy9tMS1wb3N0LXYzLWVucm9sbG1lbnQtZW5yb2wtYWJoYS1hZGRyZXNzLWNyZWF0ZS1hYmhhLWZhY2UtNGIxZjMzIiwiaWQiOiJtMV9wb3N0X3YzX2Vucm9sbG1lbnRfZW5yb2xfYWJoYV9hZGRyZXNzX2NyZWF0ZV9hYmhhX2ZhY2VfNGIxZjMzIiwia2luZCI6Im9wZXJhdGlvbiIsIm1pbGVzdG9uZSI6IiIsInNuaXBwZXQiOiJBZnRlciBBQkhBIGNyZWF0aW9uIC0gY3JlYXRlIEFCSEEgYWRkcmVzcyIsInN1bW1hcnkiOiJBZnRlciBBQkhBIGNyZWF0aW9uIC0gY3JlYXRlIEFCSEEgYWRkcmVzcyIsInRpdGxlIjoiUE9TVCAvYWJoYS9hcGkvdjMvZW5yb2xsbWVudC9lbnJvbC9hYmhhLWFkZHJlc3MiLCJ0eXBlIjoib3BlcmF0aW9uIn0seyJkb2NfdXJsIjoiL2RvY3MvaGllY20vdjMvYXBpL20xL2VuZHBvaW50cy9tMS1wb3N0LXYzLXBoci13ZWItbG9naW4tYWJoYS12ZXJpZnktaXJpcyIsImlkIjoibTFfcG9zdF92M19waHJfd2ViX2xvZ2luX2FiaGFfdmVyaWZ5X2lyaXMiLCJraW5kIjoib3BlcmF0aW9uIiwibWlsZXN0b25lIjoiIiwic25pcHBldCI6IkFCSEEgYWRkcmVzcyBsb2dpbiB2aWEgSVJJUyAtIHZlcmlmeSIsInN1bW1hcnkiOiJBQkhBIGFkZHJlc3MgbG9naW4gdmlhIElSSVMgLSB2ZXJpZnkiLCJ0aXRsZSI6IlBPU1QgL2FiaGEvYXBpL3YzL3Boci93ZWIvbG9naW4vYWJoYS92ZXJpZnkiLCJ0eXBlIjoib3BlcmF0aW9uIn0seyJkb2NfdXJsIjoiL2RvY3MvaGllY20vdjMvYXBpL20xL2VuZHBvaW50cy9tMS1nZXQtdjMtcGhyLXdlYi1sb2dpbi1wcm9maWxlLWFiaGEtcHJvZmlsZS1hYmhhLWFkZHJlc3MtODA5OTAwIiwiaWQiOiJtMV9nZXRfdjNfcGhyX3dlYl9sb2dpbl9wcm9maWxlX2FiaGFfcHJvZmlsZV9hYmhhX2FkZHJlc3NfODA5OTAwIiwia2luZCI6Im9wZXJhdGlvbiIsIm1pbGVzdG9uZSI6IiIsInNuaXBwZXQiOiJHZXQgQUJIQS1hZGRyZXNzIHByb2ZpbGUiLCJzdW1tYXJ5IjoiR2V0IEFCSEEtYWRkcmVzcyBwcm9maWxlIiwidGl0bGUiOiJHRVQgL2FiaGEvYXBpL3YzL3Boci93ZWIvbG9naW4vcHJvZmlsZS9hYmhhLXByb2ZpbGUiLCJ0eXBlIjoib3BlcmF0aW9uIn0seyJkb2NfdXJsIjoiL2RvY3MvaGllY20vdjMvYXBpL20xL2VuZHBvaW50cy9tMS1wb3N0LXYzLWVucm9sbG1lbnQtZW5yb2wtYnlhYWRoYWFyLW90cCIsImlkIjoibTFfcG9zdF92M19lbnJvbGxtZW50X2Vucm9sX2J5YWFkaGFhcl9vdHAiLCJraW5kIjoib3BlcmF0aW9uIiwibWlsZXN0b25lIjoiIiwic25pcHBldCI6IkNyZWF0ZSBBQkhBIC0gdmVyaWZ5IEFhZGhhYXIgT1RQIiwic3VtbWFyeSI6IkNyZWF0ZSBBQkhBIC0gdmVyaWZ5IEFhZGhhYXIgT1RQIiwidGl0bGUiOiJQT1NUIC9hYmhhL2FwaS92My9lbnJvbGxtZW50L2Vucm9sL2J5QWFkaGFhciIsInR5cGUiOiJvcGVyYXRpb24ifV19",
+            "IsError": false
+          }
+        }
+      ],
+      "reply": {
+        "Text": "After the ABHA number is created, let the person choose an address from the suggestions or enter their own.\n\n1. Call `GET /abha/api/v3/enrollment/enrol/suggestion`, sending the current enrolment `txnId` in the `TRANSACTION_ID` header. Show the returned `abhaAddressList` as choices.\n2. Submit their choice to `POST /abha/api/v3/enrollment/enrol/abha-address` with the enrolment `txnId`, the chosen `abhaAddress`, and `preferred` set to `1`.\n\nThe address is attached to the ABHA number when the claim succeeds. A readable address can be created alongside the default address built from the ABHA number.\n\nAgent skills and the MCP server can give your coding agent the milestone rules and let it query this documentation while it works: [agent skills and the MCP server](/docs/hiecm/v3/getting-started/build-with-ai).",
+        "ToolCalls": null,
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "After the ABHA number is created, let the person choose an address from the suggestions or enter their own.\n\n1. Call `GET /abha/api/v3/enrollment/enrol/suggestion`, sending the current enrolment `txnId` in the `TRANSACTION_ID` header. Show the returned `abhaAddressList` as choices.\n2. Submit their choice to `POST /abha/api/v3/enrollment/enrol/abha-address` with the enrolment `txnId`, the chosen `abhaAddress`, and `preferred` set to `1`.\n\nThe address is attached to the ABHA number when the claim succeeds. A readable address can be created alongside the default address built from the ABHA number.\n\nAgent skills and the MCP server can give your coding agent the milestone rules and let it query this documentation while it works: [agent skills and the MCP server](/docs/hiecm/v3/getting-started/build-with-ai).",
+  "sources": [
+    {
+      "id": "hiecm.endpoint.m1-enrolment-address-suggestions",
+      "title": "Get suggested ABHA addresses for a new account",
+      "url": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/07-m1-get-v3-enrollment-enrol-suggestion-create-abha-aadhaar-otp#m1-enrolment-address-suggestions"
+    },
+    {
+      "id": "hiecm.endpoint.p1-enrollment-address-suggestion",
+      "title": "Ask for address suggestions",
+      "url": "/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-address-mobile/03-p1-post-v3-phr-app-enrollment-suggestion#p1-enrollment-address-suggestion"
+    },
+    {
+      "id": "hiecm.endpoint.m1-enrolment-claim-abha-address",
+      "title": "Claim a chosen ABHA address",
+      "url": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/08-m1-post-v3-enrollment-enrol-abha-address-create-abha-aadhaar-otp#m1-enrolment-claim-abha-address"
+    },
+    {
+      "id": "hiecm.flow.p1-create-abha-address",
+      "title": "Create an ABHA address in a PHR application",
+      "url": "/docs/hiecm/v3/milestones/p1#p1-create-abha-address"
+    },
+    {
+      "id": "hiecm.endpoint.p1-enrollment-enrol",
+      "title": "Create the health address",
+      "url": "/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-address-mobile/05-p1-post-v3-phr-app-enrollment-enrol#p1-enrollment-enrol"
+    },
+    {
+      "id": "hiecm.endpoint.m1-phr-verify",
+      "title": "Verify OTP or biometric for ABHA address login",
+      "url": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/03-m1-post-v3-phr-web-login-abha-verify-mobile-otp#m1-phr-verify"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"passages\":[{\"id\":\"hiecm.endpoint.m1-enrolment-address-suggestions\",\"type\":\"endpoint\",\"milestone\":\"M1\",\"title\":\"Get suggested ABHA addresses for a new account\",\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/07-m1-get-v3-enrollment-enrol-suggestion-create-abha-aadhaar-otp#m1-enrolment-address-suggestions\",\"body\":\"# Get suggested ABHA addresses for a new account\\n\\n## In plain words\\n\\nAfter the [ABHA number](/docs/hiecm/v3/getting-started/glossary#abha-number) is created, this returns available [ABHA addresses](/docs/hiecm/v3/getting-started/glossary#abha-address) built from the person's details. Offer them as choices, and let the person type their own instead. Send the enrolment `txnId` in the `TRANSACTION_ID` header. The suggestions come back in `abhaAddressList`.\\n\\n## What happens\\n\\nThe next call claims the address the person chooses.\\n\\n## When it goes wrong\\n\\n`ABDM-1017` or `Invalid Transaction Id` means the `txnId` is wrong or stale. Send the latest `txnId` from this enrolment.\"},{\"id\":\"hiecm.endpoint.m1-phr-verify\",\"type\":\"endpoint\",\"milestone\":\"M1\",\"title\":\"Verify OTP or biometric for ABHA address login\",\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/03-m1-post-v3-phr-web-login-abha-verify-mobile-otp#m1-phr-verify\",\"body\":\"# Verify OTP or biometric for ABHA address login\\n\\n## In plain words\\n\\nCompletes the [ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address) login. Send the same `scope` as the request call and the `txnId`, with the encrypted [OTP](/docs/hiecm/v3/getting-started/glossary#otp) or, for fingerprint, the capture in `fingerPrintAuthPid`. The response lists the person's ABHA addresses in `users` and carries `tokens.token`. Send that token as the `X-token` header to the profile, PHR card and QR code calls.\\n\\n## How you know it worked\\n\\nA 200 with `authResult` `success`. A 200 can also report an expired OTP, so read `authResult` and not the status alone.\\n\\n## When it goes wrong\\n\\nA 400 with `ABDM-9999` names the refused part in its message, such as an invalid scope or transaction id. Request a new OTP when the `txnId` is refused.\"},{\"id\":\"hiecm.concept.abha-address-policy\",\"type\":\"concept\",\"milestone\":\"M1\",\"title\":\"What an ABHA address is allowed to be\",\"doc_url\":\"/docs/hiecm/v3/registries/abha#abha-address-policy\",\"body\":\"# What an ABHA address is allowed to be\\n\\n## In plain words\\n\\nABHA Addresses must comply with defined validation standards.\\n\\n**Permitted Characters**\\n\\n- Alphabetic characters (A-Z)\\n- Numeric characters (0-9)\\n- Dot (.)\\n\\n**Validation Rules**\\n\\n- Cannot begin with a numeric character.\\n- Cannot begin or end with a dot (.).\\n- Must conform to ABDM validation requirements at the time of creation.\\n- Mobile numbers cannot be used directly as ABHA Addresses.\\n\\nOrganizations should rely on ABDM validation services to verify address eligibility.\\n\\nEvery ABHA number is issued a default address built from its 14 digits. A person cannot create that address themselves, and can create a readable one beside it. Offer addresses built from the person's name rather than an empty field.\\n\\n## Before you start\\n\\nKnow whether the address is being created against an ABHA number or against a mobile number with a self declared profile. See [P1 Registration and login](/docs/hiecm/v3/milestones/p1).\\n\\n## What happens\\n\\nValidate the rules above in your own form before you submit, so a refused address becomes an inline message. Offer the suggestions the service returns from `/abha/api/v3/enrollment/enrol/suggestion` during M1 enrolment. Send the chosen address without the `@` suffix where the call asks for it.\\n\\n## How you know it worked\\n\\nThe address is created and the person can sign in with it. Before that, your form refuses an address that begins with a digit, begins or ends with a dot, or is a mobile number.\\n\\n## When it goes wrong\\n\\nThe address is taken: show alternatives rather than an error alone. The person expects to use their mobile number as their address: say in the form that this is not allowed, rather than letting them find out on submission.\"},{\"id\":\"hiecm.endpoint.m1-download-phr-card\",\"type\":\"endpoint\",\"milestone\":\"M1\",\"title\":\"Download PHR card\",\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/05-m1-get-v3-phr-web-login-profile-abha-phr-card-abha-addres-e1bae9#m1-download-phr-card\",\"body\":\"Returns the card for the ABHA address the person signed in with.\"},{\"id\":\"hiecm.endpoint.m1-enrolment-claim-abha-address\",\"type\":\"endpoint\",\"milestone\":\"M1\",\"title\":\"Claim a chosen ABHA address\",\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/08-m1-post-v3-enrollment-enrol-abha-address-create-abha-aadhaar-otp#m1-enrolment-claim-abha-address\",\"body\":\"Attaches the ABHA address the person chose to the ABHA number created earlier.\"}],\"related\":[{\"id\":\"hiecm.concept.gateway-session\",\"title\":\"The gateway session, the first call in every integration\",\"type\":\"concept\"},{\"id\":\"hiecm.error.abdm-2402\",\"title\":\"ABDM-2402, the timestamp is not valid\",\"type\":\"error\"},{\"id\":\"hiecm.error.abdm-2404\",\"title\":\"ABDM-2404, the REQUEST-ID is not valid\",\"type\":\"error\"},{\"id\":\"hiecm.error.abdm-2500\",\"title\":\"ABDM-2500, no Authorization header, or no matching request\",\"type\":\"error\"},{\"id\":\"hiecm.error.abdm-9999\",\"title\":\"ABDM-9999, a catch-all, so read the message\",\"type\":\"error\"},{\"id\":\"hiecm.flow.m1-create-abha-aadhaar-otp\",\"title\":\"Create an ABHA using an Aadhaar OTP\",\"type\":\"flow\"},{\"id\":\"hiecm.flow.m1-create-abha-face-auth\",\"title\":\"Create an ABHA using Aadhaar face authentication\",\"type\":\"flow\"},{\"id\":\"hiecm.concept.abha-number-and-address\",\"title\":\"ABHA number and ABHA address, and why there are two\",\"type\":\"concept\"},{\"id\":\"hiecm.concept.m1-journey-design\",\"title\":\"A suggested ABHA journey, and what holds if you design your own\",\"type\":\"concept\"},{\"id\":\"hiecm.endpoint.p1-enrollment-address-exists\",\"title\":\"Check whether an address is taken\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.p1-enrollment-address-suggestion\",\"title\":\"Ask for address suggestions\",\"type\":\"endpoint\"},{\"id\":\"hiecm.flow.p1-create-abha-address\",\"title\":\"Create an ABHA address in a PHR application\",\"type\":\"flow\"},{\"id\":\"shared.glossary.abha-address\",\"title\":\"ABHA address\",\"type\":\"glossary\"},{\"id\":\"shared.glossary.abha-number\",\"title\":\"ABHA number\",\"type\":\"glossary\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/api/p1/endpoints/p1-post-v3-phr-app-enrollment-enrol\",\"id\":\"p1_post_v3_phr_app_enrollment_enrol\",\"kind\":\"operation\",\"milestone\":\"\",\"snippet\":\"3 flows: Enroll ABHA Address\",\"summary\":\"3 flows: Enroll ABHA Address\",\"title\":\"POST /abha/api/v3/phr/app/enrollment/enrol\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-get-v3-enrollment-enrol-suggestion-create-abha-fingerprint\",\"id\":\"m1_get_v3_enrollment_enrol_suggestion_create_abha_fingerprint\",\"kind\":\"operation\",\"milestone\":\"\",\"snippet\":\"After ABHA creation - get ABHA address suggestions\",\"summary\":\"After ABHA creation - get ABHA address suggestions\",\"title\":\"GET /abha/api/v3/enrollment/enrol/suggestion\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-get-v3-enrollment-enrol-suggestion-create-abha-iris\",\"id\":\"m1_get_v3_enrollment_enrol_suggestion_create_abha_iris\",\"kind\":\"operation\",\"milestone\":\"\",\"snippet\":\"After ABHA creation - get ABHA address suggestions\",\"summary\":\"After ABHA creation - get ABHA address suggestions\",\"title\":\"GET /abha/api/v3/enrollment/enrol/suggestion\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-phr-web-login-abha-search-abha-address-login-a-de8184\",\"id\":\"m1_post_v3_phr_web_login_abha_search_abha_address_login_a_de8184\",\"kind\":\"operation\",\"milestone\":\"\",\"snippet\":\"Search ABHA address (auth methods)\",\"summary\":\"Search ABHA address (auth methods)\",\"title\":\"POST /abha/api/v3/phr/web/login/abha/search\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-get-v3-enrollment-enrol-suggestion-create-abha-face-au-848b26\",\"id\":\"m1_get_v3_enrollment_enrol_suggestion_create_abha_face_au_848b26\",\"kind\":\"operation\",\"milestone\":\"\",\"snippet\":\"After ABHA creation - get ABHA address suggestions\",\"summary\":\"After ABHA creation - get ABHA address suggestions\",\"title\":\"GET /abha/api/v3/enrollment/enrol/suggestion\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-phr-web-login-abha-verify-fingerprint\",\"id\":\"m1_post_v3_phr_web_login_abha_verify_fingerprint\",\"kind\":\"operation\",\"milestone\":\"\",\"snippet\":\"ABHA address login via Fingerprint - verify\",\"summary\":\"ABHA address login via Fingerprint - verify\",\"title\":\"POST /abha/api/v3/phr/web/login/abha/verify\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-get-v3-enrollment-enrol-suggestion-create-abha-aadhaar-otp\",\"id\":\"m1_get_v3_enrollment_enrol_suggestion_create_abha_aadhaar_otp\",\"kind\":\"operation\",\"milestone\":\"\",\"snippet\":\"After ABHA creation - get ABHA address suggestions\",\"summary\":\"After ABHA creation - get ABHA address suggestions\",\"title\":\"GET /abha/api/v3/enrollment/enrol/suggestion\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-phr-web-login-abha-verify-iris\",\"id\":\"m1_post_v3_phr_web_login_abha_verify_iris\",\"kind\":\"operation\",\"milestone\":\"\",\"snippet\":\"ABHA address login via IRIS - verify\",\"summary\":\"ABHA address login via IRIS - verify\",\"title\":\"POST /abha/api/v3/phr/web/login/abha/verify\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-get-v3-phr-web-login-profile-abha-profile-abha-address-809900\",\"id\":\"m1_get_v3_phr_web_login_profile_abha_profile_abha_address_809900\",\"kind\":\"operation\",\"milestone\":\"\",\"snippet\":\"Get ABHA-address profile\",\"summary\":\"Get ABHA-address profile\",\"title\":\"GET /abha/api/v3/phr/web/login/profile/abha-profile\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/p1/endpoints/p1-post-v3-phr-app-enrollment-suggestion\",\"id\":\"p1_post_v3_phr_app_enrollment_suggestion\",\"kind\":\"operation\",\"milestone\":\"\",\"snippet\":\"3 flows: Suggestion API\",\"summary\":\"3 flows: Suggestion API\",\"title\":\"POST /abha/api/v3/phr/app/enrollment/suggestion\",\"type\":\"operation\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/api/p1/endpoints/p1-post-v3-phr-app-enrollment-enrol\",\"id\":\"p1_post_v3_phr_app_enrollment_enrol\",\"kind\":\"operation\",\"milestone\":\"\",\"snippet\":\"3 flows: Enroll ABHA Address\",\"summary\":\"3 flows: Enroll ABHA Address\",\"title\":\"POST /abha/api/v3/phr/app/enrollment/enrol\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-enrollment-enrol-abha-address-create-abha-aadhaar-otp\",\"id\":\"m1_post_v3_enrollment_enrol_abha_address_create_abha_aadhaar_otp\",\"kind\":\"operation\",\"milestone\":\"\",\"snippet\":\"After ABHA creation - create ABHA address\",\"summary\":\"After ABHA creation - create ABHA address\",\"title\":\"POST /abha/api/v3/enrollment/enrol/abha-address\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-enrollment-enrol-abha-address-create-abha-iris\",\"id\":\"m1_post_v3_enrollment_enrol_abha_address_create_abha_iris\",\"kind\":\"operation\",\"milestone\":\"\",\"snippet\":\"After ABHA creation - create ABHA address\",\"summary\":\"After ABHA creation - create ABHA address\",\"title\":\"POST /abha/api/v3/enrollment/enrol/abha-address\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-phr-web-login-abha-search-abha-address-login-a-de8184\",\"id\":\"m1_post_v3_phr_web_login_abha_search_abha_address_login_a_de8184\",\"kind\":\"operation\",\"milestone\":\"\",\"snippet\":\"Search ABHA address (auth methods)\",\"summary\":\"Search ABHA address (auth methods)\",\"title\":\"POST /abha/api/v3/phr/web/login/abha/search\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-enrollment-enrol-abha-address-create-abha-fingerprint\",\"id\":\"m1_post_v3_enrollment_enrol_abha_address_create_abha_fingerprint\",\"kind\":\"operation\",\"milestone\":\"\",\"snippet\":\"After ABHA creation - create ABHA address\",\"summary\":\"After ABHA creation - create ABHA address\",\"title\":\"POST /abha/api/v3/enrollment/enrol/abha-address\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-phr-web-login-abha-verify-fingerprint\",\"id\":\"m1_post_v3_phr_web_login_abha_verify_fingerprint\",\"kind\":\"operation\",\"milestone\":\"\",\"snippet\":\"ABHA address login via Fingerprint - verify\",\"summary\":\"ABHA address login via Fingerprint - verify\",\"title\":\"POST /abha/api/v3/phr/web/login/abha/verify\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-enrollment-enrol-abha-address-create-abha-face-4b1f33\",\"id\":\"m1_post_v3_enrollment_enrol_abha_address_create_abha_face_4b1f33\",\"kind\":\"operation\",\"milestone\":\"\",\"snippet\":\"After ABHA creation - create ABHA address\",\"summary\":\"After ABHA creation - create ABHA address\",\"title\":\"POST /abha/api/v3/enrollment/enrol/abha-address\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-phr-web-login-abha-verify-iris\",\"id\":\"m1_post_v3_phr_web_login_abha_verify_iris\",\"kind\":\"operation\",\"milestone\":\"\",\"snippet\":\"ABHA address login via IRIS - verify\",\"summary\":\"ABHA address login via IRIS - verify\",\"title\":\"POST /abha/api/v3/phr/web/login/abha/verify\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-get-v3-phr-web-login-profile-abha-profile-abha-address-809900\",\"id\":\"m1_get_v3_phr_web_login_profile_abha_profile_abha_address_809900\",\"kind\":\"operation\",\"milestone\":\"\",\"snippet\":\"Get ABHA-address profile\",\"summary\":\"Get ABHA-address profile\",\"title\":\"GET /abha/api/v3/phr/web/login/profile/abha-profile\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-enrollment-enrol-byaadhaar-otp\",\"id\":\"m1_post_v3_enrollment_enrol_byaadhaar_otp\",\"kind\":\"operation\",\"milestone\":\"\",\"snippet\":\"Create ABHA - verify Aadhaar OTP\",\"summary\":\"Create ABHA - verify Aadhaar OTP\",\"title\":\"POST /abha/api/v3/enrollment/enrol/byAadhaar\",\"type\":\"operation\"}]}\n\u003cpassages\u003e\n{\"passages\":[{\"id\":\"hiecm.endpoint.m1-enrolment-address-suggestions\",\"type\":\"endpoint\",\"milestone\":\"M1\",\"title\":\"Get suggested ABHA addresses for a new account\",\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/07-m1-get-v3-enrollment-enrol-suggestion-create-abha-aadhaar-otp#m1-enrolment-address-suggestions\",\"body\":\"# Get suggested ABHA addresses for a new account\\n\\n## In plain words\\n\\nAfter the [ABHA number](/docs/hiecm/v3/getting-started/glossary#abha-number) is created, this returns available [ABHA addresses](/docs/hiecm/v3/getting-started/glossary#abha-address) built from the person's details. Offer them as choices, and let the person type their own instead. Send the enrolment `txnId` in the `TRANSACTION_ID` header. The suggestions come back in `abhaAddressList`.\\n\\n## What happens\\n\\nThe next call claims the address the person chooses.\\n\\n## When it goes wrong\\n\\n`ABDM-1017` or `Invalid Transaction Id` means the `txnId` is wrong or stale. Send the latest `txnId` from this enrolment.\"},{\"id\":\"hiecm.endpoint.p1-enrollment-address-suggestion\",\"type\":\"endpoint\",\"milestone\":\"P1\",\"title\":\"Ask for address suggestions\",\"doc_url\":\"/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-address-mobile/03-p1-post-v3-phr-app-enrollment-suggestion#p1-enrollment-address-suggestion\",\"body\":\"# Ask for address suggestions\\n\\n## In plain words\\n\\nA person should not have to invent an [ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address). Send the `txnId` of the verified registration with their name and date of birth, and the response lists candidates in `abhaAddressList`. They are suggestions, not reservations: the person may still type their own, and any choice goes through the existence check before you enrol it.\\n\\n## Before you start\\n\\nThe `txnId` from the verified registration OTP. `firstName`, `lastName`, `dayOfBirth`, `monthOfBirth` and `yearOfBirth` are required. `email` is optional.\\n\\n## When it goes wrong\\n\\nA `400` carries `ABDM-9999` with a message that names the field: `Invalid First Name`, `Invalid Transaction Id`, `Invalid Day Of Birth`, `Invalid Month Of Birth` or `Invalid Year Of Birth`. One response can list several.\"},{\"id\":\"hiecm.endpoint.m1-enrolment-claim-abha-address\",\"type\":\"endpoint\",\"milestone\":\"M1\",\"title\":\"Claim a chosen ABHA address\",\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/08-m1-post-v3-enrollment-enrol-abha-address-create-abha-aadhaar-otp#m1-enrolment-claim-abha-address\",\"body\":\"# Claim a chosen ABHA address\\n\\n## In plain words\\n\\nAttaches the [ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address) the person chose to the ABHA number created earlier in the same enrolment. Send the enrolment `txnId`, the `abhaAddress`, and `preferred` set to `1` to make it the address shown by default. It is the last call of the create journey.\\n\\n## How you know it worked\\n\\nA 200 that echoes the `abhaAddress` and `preferred` you sent.\\n\\n## When it goes wrong\\n\\nA 400 with `Invalid Preferred Flag` or `Invalid Transaction Id` names the refused field. A 401 with `900901` means the access token is missing or expired.\"},{\"id\":\"hiecm.flow.p1-create-abha-address\",\"type\":\"flow\",\"milestone\":\"P1\",\"title\":\"Create an ABHA address in a PHR application\",\"doc_url\":\"/docs/hiecm/v3/milestones/p1#p1-create-abha-address\",\"body\":\"Register a person in your own health application by mobile number or by an existing 14 digit health account number, and give them the address the rest of the network will know them by.\"},{\"id\":\"hiecm.endpoint.p1-enrollment-enrol\",\"type\":\"endpoint\",\"milestone\":\"P1\",\"title\":\"Create the health address\",\"doc_url\":\"/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-address-mobile/05-p1-post-v3-phr-app-enrollment-enrol#p1-enrollment-enrol\",\"body\":\"Creates the ABHA address the person chose and signs them in.\"}],\"related\":[{\"id\":\"hiecm.concept.gateway-session\",\"title\":\"The gateway session, the first call in every integration\",\"type\":\"concept\"},{\"id\":\"hiecm.error.abdm-2402\",\"title\":\"ABDM-2402, the timestamp is not valid\",\"type\":\"error\"},{\"id\":\"hiecm.error.abdm-2404\",\"title\":\"ABDM-2404, the REQUEST-ID is not valid\",\"type\":\"error\"},{\"id\":\"hiecm.error.abdm-2500\",\"title\":\"ABDM-2500, no Authorization header, or no matching request\",\"type\":\"error\"},{\"id\":\"hiecm.error.abdm-9999\",\"title\":\"ABDM-9999, a catch-all, so read the message\",\"type\":\"error\"},{\"id\":\"hiecm.flow.m1-create-abha-aadhaar-otp\",\"title\":\"Create an ABHA using an Aadhaar OTP\",\"type\":\"flow\"},{\"id\":\"hiecm.flow.m1-create-abha-face-auth\",\"title\":\"Create an ABHA using Aadhaar face authentication\",\"type\":\"flow\"},{\"id\":\"hiecm.concept.abha-address-policy\",\"title\":\"What an ABHA address is allowed to be\",\"type\":\"concept\"},{\"id\":\"hiecm.flow.p1-create-abha-address\",\"title\":\"Create an ABHA address in a PHR application\",\"type\":\"flow\"},{\"id\":\"hiecm.error.abdm-1170\",\"title\":\"ABDM-1170, the ABHA address is not valid\",\"type\":\"error\"}]}\n\u003c/passages\u003e\n\n\u003creader_context\u003eThe question reads as a HIE-CM question. Answer for HIE-CM unless they ask about another gateway, and do not bring in another gateway's calls or fields.\u003c/reader_context\u003e\n\n\nIf the passages and your tools do not cover the question, drop this shape and decline in two sentences that name the nearest /docs/ page and the support route.\n\nok got the number back. now how does the person pick their address",
+  "blocked": false,
+  "flags": null,
+  "class": "how-do-i",
+  "recorded_at": "2026-09-29T09:54:37Z"
+}

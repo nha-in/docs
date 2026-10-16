@@ -24,12 +24,12 @@
     "atom"
   ],
   "expected_sources": [
-    "shared.glossary.hip"
+    "hiecm.glossary.hip"
   ],
   "expected_shape": "define",
   "expected_behaviour": "answer",
   "derived_from": "faq-verbatim-sandbox-m2-01",
   "source_row": "annexure#sandbox-faq-m2",
-  "catalogue_version": "2026.08.24",
+  "catalogue_version": "2026.09.16",
   "notes": "variant b of faq-verbatim-sandbox-m2-01, the same question in the non-native phrasing a developer might use in a hurry"
 }

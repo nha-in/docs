@@ -1,0 +1,33 @@
+{
+  "id": "meta-catalogue-version-01",
+  "slice": "meta",
+  "class": "meta",
+  "turns": [
+    {
+      "role": "user",
+      "text": "What version of the documentation are you answering from?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "2026.09.16"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom",
+    "2026.08.24"
+  ],
+  "expected_sources": [],
+  "expected_shape": "meta",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#catalogue-version",
+  "catalogue_version": "2026.09.16",
+  "notes": "Meta group, the version question: it catches an answer that repeats the shape's example version or invents one instead of the value of catalogue/VERSION."
+}

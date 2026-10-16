@@ -1,0 +1,1416 @@
+{
+  "case_id": "faq-verbatim-sandbox-m1-04",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "What are the prerequisites for integration?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_0114NRpmMb2DRMgdMiZTCSmt",
+            "Name": "search",
+            "Input": {
+              "query": "prerequisites integration requirements",
+              "limit": 5
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "prerequisites integration requirements",
+            "limit": 5
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/nhcx/v1/go-live",
+                "id": "nhcx.sandbox.sandbox-exit",
+                "summary": "The use cases you must show working, the bundle review, the two demonstrations and the sign-off that let you move from testing to live claims.",
+                "title": "The sandbox exit process and sign-off",
+                "type": "sandbox"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01RueUwBibRo9SsJC8fcuMJv",
+            "Name": "search",
+            "Input": {
+              "query": "getting started integration setup onboarding",
+              "limit": 10,
+              "response_format": "detailed"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "getting started integration setup onboarding",
+            "limit": 10,
+            "response_format": "detailed"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01DduZzCeBbF8EB5GjpoSBq9",
+            "Name": "search",
+            "Input": {
+              "query": "credentials authentication registration enrollment",
+              "type": "concept",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "credentials authentication registration enrollment",
+            "type": "concept",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01VN9AkBZvwVKDMYaB4P7LfP",
+            "Name": "catalogue_info",
+            "Input": {}
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "catalogue_info",
+          "input": {},
+          "output": {
+            "atoms": {
+              "by_gateway": {
+                "hiecm": 269,
+                "nhcx": 536,
+                "shared": 46,
+                "uhi": 111
+              },
+              "by_milestone": {
+                "M1": 74,
+                "M2": 57,
+                "M3": 20,
+                "M4": 11,
+                "P1": 29,
+                "P2": 18,
+                "P3": 36,
+                "n/a": 717
+              },
+              "by_type": {
+                "callback": 66,
+                "concept": 105,
+                "decision": 13,
+                "endpoint": 186,
+                "error": 335,
+                "fhir": 30,
+                "flow": 57,
+                "glossary": 86,
+                "sandbox": 18,
+                "test": 51,
+                "troubleshooting": 15
+              }
+            },
+            "built_at": "2026-09-29T11:55:12Z",
+            "catalogue_version": "2026.09.16",
+            "deprecated": 0,
+            "embeddings": false,
+            "facts": 0,
+            "operations": 387
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_012AjKrktvKmZKuXuw3iPt8L",
+            "Name": "search",
+            "Input": {
+              "query": "prerequisites",
+              "type": "concept"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "prerequisites",
+            "type": "concept"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01A4rA9M6wy8Nwiv1VPUXkoh",
+            "Name": "search",
+            "Input": {
+              "type": "concept",
+              "query": "",
+              "limit": 25
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "type": "concept",
+            "query": "",
+            "limit": 25
+          },
+          "output": {
+            "atoms": [
+              {
+                "doc_url": "/docs/hiecm/v3/registries/abha#abha-address-policy",
+                "id": "hiecm.concept.abha-address-policy",
+                "milestone": "M1",
+                "title": "What an ABHA address is allowed to be",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/registries/abha#abha-number-and-address",
+                "id": "hiecm.concept.abha-number-and-address",
+                "milestone": "M1",
+                "title": "ABHA number and ABHA address, and why there are two",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/gateway#asynchronous-callbacks",
+                "id": "hiecm.concept.asynchronous-callbacks",
+                "milestone": "M2",
+                "title": "Asynchronous calls and callbacks, why a 200 means very little",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/callback-authenticity#callback-authenticity",
+                "id": "hiecm.concept.callback-authenticity",
+                "milestone": "M2",
+                "title": "Proving a callback really came from ABDM",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/care-context#care-context",
+                "id": "hiecm.concept.care-context",
+                "milestone": "M2",
+                "title": "Care contexts, how records are grouped so they can be found",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/consent#consent-artefact",
+                "id": "hiecm.concept.consent-artefact",
+                "milestone": "M3",
+                "title": "Consent, what it authorises and how it ends",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/consent#consent-in-a-phr-app",
+                "id": "hiecm.concept.consent-in-a-phr-app",
+                "milestone": "P3",
+                "title": "The five things a personal health record application must let a person do with consent",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/encryption#encrypted-identifiers",
+                "id": "hiecm.concept.encrypted-identifiers",
+                "milestone": "M1",
+                "title": "Why identifiers are encrypted, and where to do it",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/build-it-well#error-codes",
+                "id": "hiecm.concept.error-codes",
+                "milestone": "M2",
+                "title": "Reading an ABDM error code",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/gateway#gateway-session",
+                "id": "hiecm.concept.gateway-session",
+                "milestone": "M1",
+                "title": "The gateway session, the first call in every integration",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/encryption#input-encryption",
+                "id": "hiecm.concept.input-encryption",
+                "milestone": "M1",
+                "title": "Encrypting sensitive inputs, Aadhaar, mobile, OTP and passwords",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m1-avoiding-duplicate-abha",
+                "milestone": "M1",
+                "title": "The branch that creates a duplicate ABHA, and how to close it",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m1-confirm-the-filled-form",
+                "milestone": "M1",
+                "title": "Present the filled form for confirmation rather than saving it unseen",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m1-counter-journey-order",
+                "milestone": "M1",
+                "title": "The ABHA step comes before the registration form and fills it",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m1-deployment-interview",
+                "milestone": "M1",
+                "title": "Ask the integrator about the deployment, not the patient about the journey",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m1-honest-screen-states",
+                "milestone": "M1",
+                "title": "Telling the truth on screen at the counter",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m1-identifier-and-auth-method",
+                "milestone": "M1",
+                "title": "An identifier and an auth method are two different questions",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m1-journey-completes-without-abha",
+                "milestone": "M1",
+                "title": "A journey has to complete without an ABHA",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/abha-journey#m1-journey-design",
+                "id": "hiecm.concept.m1-journey-design",
+                "milestone": "M1",
+                "title": "A suggested ABHA journey, and what holds if you design your own",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m1-never-ask-twice",
+                "milestone": "M1",
+                "title": "Never ask a patient the same thing twice, enforced by structure",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m1-operations-not-a-journey",
+                "milestone": "M1",
+                "title": "ABDM publishes operations, not a journey",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m1-screen-contract",
+                "milestone": "M1",
+                "title": "The six counter screens, and what each is forbidden to ask",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m1-the-whole-surface",
+                "milestone": "M1",
+                "title": "The surface is more than a registration form",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m1-two-routes-to-the-profile",
+                "milestone": "M1",
+                "title": "Two routes to the profile, and the form is the destination of both",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m2-care-context-and-records",
+                "milestone": "M2",
+                "title": "A care context and its records are one thing",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m2-exchange-not-call",
+                "milestone": "M2",
+                "title": "The unit of work is an exchange, not a call",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m2-inbound-is-a-surface",
+                "milestone": "M2",
+                "title": "Inbound is a surface, and silence there is a failure state",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m2-integrator-call-panel",
+                "milestone": "M2",
+                "title": "What the integrator needs on screen, separately from the patient",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m2-never-block-the-desk",
+                "milestone": "M2",
+                "title": "Nobody is standing there, so never block and never lose the state",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m2-retry-is-a-duplicate",
+                "milestone": "M2",
+                "title": "A refused request is still remembered, so a retry is a duplicate",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m3-plural-artefacts-and-codes",
+                "milestone": "M3",
+                "title": "Read plural as plural, and never translate a code into a meaning",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m3-refuse-to-guess",
+                "milestone": "M3",
+                "title": "Refuse to guess an undocumented step, and say so before the work starts",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/p3#phr-subscriptions",
+                "id": "hiecm.concept.phr-subscriptions",
+                "milestone": "P3",
+                "title": "Subscriptions, and why a personal health record application needs one",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/how-it-fits#roles",
+                "id": "hiecm.concept.roles",
+                "milestone": "M2",
+                "title": "Roles, which entity your software acts for and which way the record moves",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.concept.access-control",
+                "milestone": "n/a",
+                "title": "Who may call what: the NHCX access control matrix",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.concept.audit-and-non-repudiation",
+                "milestone": "n/a",
+                "title": "Audit logging and non-repudiation",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.concept.beneficiary-consent",
+                "milestone": "n/a",
+                "title": "Beneficiary consent and data rights",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/roles/provider/biometric-authentication",
+                "id": "nhcx.concept.biometric-authentication",
+                "milestone": "n/a",
+                "title": "Biometric authentication of the beneficiary",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.concept.claim-cycle",
+                "milestone": "n/a",
+                "title": "The claim cycle from eligibility to payment",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.concept.coverage-eligibility-purposes",
+                "milestone": "n/a",
+                "title": "The four coverage eligibility purposes",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.concept.encryption-certificate",
+                "milestone": "n/a",
+                "title": "Your encryption certificate and the recipient's",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/error-codes",
+                "id": "nhcx.concept.error-code-spaces",
+                "milestone": "n/a",
+                "title": "Error code spaces: NHCX codes, standard payer codes and reference payer codes",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.concept.fhir-in-nhcx",
+                "milestone": "n/a",
+                "title": "FHIR collection bundles and the NHCX claim profiles",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.concept.four-message-legs",
+                "milestone": "n/a",
+                "title": "The four legs of every exchange: request, acknowledgement, callback, acknowledgement",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.concept.grievance-redressal",
+                "milestone": "n/a",
+                "title": "Grievance redressal on the exchange",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.concept.hmis-integration-architecture",
+                "milestone": "n/a",
+                "title": "Hospital HMIS integration for PMJAY through NHCX",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/api/insurance-plan",
+                "id": "nhcx.concept.insurance-plan",
+                "milestone": "n/a",
+                "title": "The insurance plan and what a provider learns from it",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.concept.jwe-envelope",
+                "milestone": "n/a",
+                "title": "The JWE envelope that seals every payload",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.concept.message-identifiers",
+                "milestone": "n/a",
+                "title": "Correlation id, API call id and workflow id",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.concept.notifications",
+                "milestone": "n/a",
+                "title": "Notifications to patient apps",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.concept.participant-code",
+                "milestone": "n/a",
+                "title": "Participant codes and how every message is addressed",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.concept.participant-registry",
+                "milestone": "n/a",
+                "title": "The participant registry and what a participant record holds",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.concept.participant-roles",
+                "milestone": "n/a",
+                "title": "Participant roles: provider, payer, TPA and the exchange",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/concepts/pmjay-on-nhcx",
+                "id": "nhcx.concept.pmjay-on-nhcx",
+                "milestone": "n/a",
+                "title": "PMJAY on NHCX and how it differs from the standard exchange",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.concept.policy-linking",
+                "milestone": "n/a",
+                "title": "Linking an ABHA to an insurance policy",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.concept.protocol-headers",
+                "milestone": "n/a",
+                "title": "The x-hcx protocol headers",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.concept.queries-and-communication",
+                "milestone": "n/a",
+                "title": "Payer queries and the communication cycle",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.concept.reprocess-and-cancel",
+                "milestone": "n/a",
+                "title": "Reprocess, cancel and the task resource",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.concept.retries-and-expiry",
+                "milestone": "n/a",
+                "title": "Gateway retries and the 24 hour expiry window",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/session-token",
+                "id": "nhcx.concept.session-token",
+                "milestone": "n/a",
+                "title": "The session token every NHCX call carries",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.concept.status-lifecycle",
+                "milestone": "n/a",
+                "title": "Status values and how a request moves through them",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.concept.synchronous-acknowledgement",
+                "milestone": "n/a",
+                "title": "The 202 acknowledgement and the 30 second rule",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.concept.what-nhcx-is",
+                "milestone": "n/a",
+                "title": "What the National Health Claims Exchange is and what it does not do",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/concepts/workflow-codes",
+                "id": "nhcx.concept.workflow-codes",
+                "milestone": "n/a",
+                "title": "Workflow codes and the stage each one names",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.concept.ask-ai-assistant",
+                "milestone": "n/a",
+                "title": "What the Ask AI assistant can do",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.concept.fidelius-ecdh-interop",
+                "milestone": "n/a",
+                "title": "Fidelius ECDH interop, the curve encoding and the key derivation",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.concept.integration-practices",
+                "milestone": "n/a",
+                "title": "How to work on an ABDM integration",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.concept.survey-an-existing-codebase",
+                "milestone": "n/a",
+                "title": "Survey the existing codebase before the first journey, and write the plan",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/concepts/messages#ack-now-answer-later",
+                "id": "uhi.concept.ack-then-answer",
+                "milestone": "n/a",
+                "title": "ACK now, answer later on UHI",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/build-it-well#aggregate-the-answers",
+                "id": "uhi.concept.aggregate-answers",
+                "milestone": "n/a",
+                "title": "Aggregating the on_search answers to one UHI search",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/services/ambulance#service-identity",
+                "id": "uhi.concept.ambulance-service-identity",
+                "milestone": "n/a",
+                "title": "Ambulance Booking service identity",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/concepts/routes#audit-copies",
+                "id": "uhi.concept.audit-copies",
+                "milestone": "n/a",
+                "title": "Audit copies a Physical Consultation HSPA sends the Gateway",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/services/blood-bank#limits-to-code-against",
+                "id": "uhi.concept.blood-bank-limits",
+                "milestone": "n/a",
+                "title": "Blood Bank limits to code against",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/services/blood-bank#search-variants",
+                "id": "uhi.concept.blood-bank-search-variants",
+                "milestone": "n/a",
+                "title": "Blood Bank search modes, blood group and component codes",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/services/blood-bank#service-identity",
+                "id": "uhi.concept.blood-bank-service-identity",
+                "milestone": "n/a",
+                "title": "Blood Bank service identity",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/services/consultation#cancellation-and-override-reason-codes",
+                "id": "uhi.concept.consultation-reason-codes",
+                "milestone": "n/a",
+                "title": "Physical Consultation cancellation and PIN override reason codes",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/services/consultation#service-identity",
+                "id": "uhi.concept.consultation-service-identity",
+                "milestone": "n/a",
+                "title": "Physical Consultation service identity",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/services/consultation#terms-content",
+                "id": "uhi.concept.consultation-terms",
+                "milestone": "n/a",
+                "title": "Physical Consultation terms content",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/concepts/messages#the-context-block",
+                "id": "uhi.concept.context-block",
+                "milestone": "n/a",
+                "title": "The context block every UHI call carries",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/concepts/routes#direct-between-eua-and-hspa",
+                "id": "uhi.concept.direct-calls",
+                "milestone": "n/a",
+                "title": "Direct calls between the EUA and the HSPA",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1#the-four-stages-dofp",
+                "id": "uhi.concept.dofp-stages",
+                "milestone": "n/a",
+                "title": "The four UHI stages, DOFP",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/concepts/errors#the-error-object",
+                "id": "uhi.concept.error-object",
+                "milestone": "n/a",
+                "title": "The UHI error object",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/concepts/errors#send-and-log",
+                "id": "uhi.concept.error-send-and-log",
+                "milestone": "n/a",
+                "title": "What to send and log when a UHI call fails",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1#what-the-uhi-gateway-does",
+                "id": "uhi.concept.gateway-role",
+                "milestone": "n/a",
+                "title": "What the UHI Gateway does",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/concepts/routes#through-the-gateway",
+                "id": "uhi.concept.gateway-routes",
+                "milestone": "n/a",
+                "title": "Calls routed through the UHI Gateway",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/services/jan-aushadhi#search-variants",
+                "id": "uhi.concept.jan-aushadhi-search-variants",
+                "milestone": "n/a",
+                "title": "Jan Aushadhi location filters, medicine name and ownership codes",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/services/jan-aushadhi#service-identity",
+                "id": "uhi.concept.jan-aushadhi-service-identity",
+                "milestone": "n/a",
+                "title": "Jan Aushadhi service identity for flows A, B and C",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/concepts/signing#generate-your-keys-and-headers",
+                "id": "uhi.concept.key-generation",
+                "milestone": "n/a",
+                "title": "Generating UHI signing keys and headers",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/concepts/messages#match-on-transaction-id-and-message-id",
+                "id": "uhi.concept.match-transaction-id",
+                "milestone": "n/a",
+                "title": "Matching a UHI callback on transaction_id and message_id",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/services/notto#search-variants",
+                "id": "uhi.concept.notto-search-variants",
+                "milestone": "n/a",
+                "title": "NOTTO search filters and organ and tissue codes",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/services/notto#service-identity",
+                "id": "uhi.concept.notto-service-identity",
+                "milestone": "n/a",
+                "title": "NOTTO service identity",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/build-it-well#paginate-on-your-side",
+                "id": "uhi.concept.paginate-client-side",
+                "milestone": "n/a",
+                "title": "Paginating UHI search results on your side",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1#who-takes-part",
+                "id": "uhi.concept.participants",
+                "milestone": "n/a",
+                "title": "Who takes part in the UHI network",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/services/pmjay-hem#limits-to-code-against",
+                "id": "uhi.concept.pmjay-hem-limits",
+                "milestone": "n/a",
+                "title": "PM-JAY HEM limits to code against",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/services/pmjay-hem#search-variants",
+                "id": "uhi.concept.pmjay-hem-search-variants",
+                "milestone": "n/a",
+                "title": "PM-JAY HEM search variants and speciality codes",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/services/pmjay-hem#service-identity",
+                "id": "uhi.concept.pmjay-hem-service-identity",
+                "milestone": "n/a",
+                "title": "PM-JAY HEM service identity",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/concepts/registry-lookup#when-to-call-it",
+                "id": "uhi.concept.registry-lookup",
+                "milestone": "n/a",
+                "title": "When to call the UHI network registry lookup",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/build-it-well#time-out-and-render-as-results-arrive",
+                "id": "uhi.concept.render-as-results-arrive",
+                "milestone": "n/a",
+                "title": "Timing out a UHI search and rendering results as they arrive",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/build-it-well#what-the-screens-must-do",
+                "id": "uhi.concept.screen-requirements",
+                "milestone": "n/a",
+                "title": "What UHI app screens must do",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1#how-far-each-service-goes",
+                "id": "uhi.concept.service-reach",
+                "milestone": "n/a",
+                "title": "How far each UHI service goes, and who answers its search",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/concepts/signing#how-the-signature-is-built",
+                "id": "uhi.concept.signature-construction",
+                "milestone": "n/a",
+                "title": "How a UHI request signature is built",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/concepts/signing#the-headers",
+                "id": "uhi.concept.signing-headers",
+                "milestone": "n/a",
+                "title": "The signature headers on a UHI call",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/concepts/messages#timeouts",
+                "id": "uhi.concept.timeouts",
+                "milestone": "n/a",
+                "title": "Timeouts for a UHI search with no end signal",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/concepts/signing#checking-a-signature-you-receive",
+                "id": "uhi.concept.verifying-signatures",
+                "milestone": "n/a",
+                "title": "Checking the signature on a UHI call you receive",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/concepts/routes#the-whole-exchange",
+                "id": "uhi.concept.whole-exchange",
+                "milestone": "n/a",
+                "title": "The whole UHI exchange, from search to direct booking",
+                "type": "concept"
+              }
+            ],
+            "catalogue_version": "2026.09.16"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01X6xkZfaJJZhFhLvUfz8Zw3",
+            "Name": "get",
+            "Input": {
+              "id": "shared.concept.integration-practices"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "shared.concept.integration-practices"
+          },
+          "output": {
+            "body": "# How to work on an ABDM integration\n\n## In plain words\n\nA milestone rule tells you what one call does. These tell you how to work, and\nthey hold whichever milestone you are on.\n\nThe pattern they share is worth saying once: **an error message can name the\nwrong thing.** A refusal caused by the encryption, the headers or the clock can\nread as if a value were wrong. Working well here means suspecting the layer the\nmessage did not mention.\n\n## Before you start\n\nNothing. These apply from the first call, and several of them are about the\nfirst call.\n\n## What happens\n\n- Read the body, not only the status. A refusal often names the field in its body while the status says nothing useful.\n- When ABDM publishes a value, read it rather than hard coding what it currently says. That covers a parameter, such as the encryption algorithm the certificate endpoints return beside the key, and it covers an enumeration: councils, courses, states, districts, purposes and HI types all have master data calls, and a table typed into your source goes stale silently. Refuse to act on a published value you do not recognise rather than falling back to a default.\n- Read every field in a response, not the one you came for. The M1 certificate call returns the encryption algorithm next to the key.\n- Prove an assumption against a call that is able to disagree with you. A call that refuses every input with one message cannot tell you which input was right.\n- Suspect the transport before the data. When a call refuses a value you believe in, check the encryption, the headers and the clock before you doubt the value.\n- Do not carry an encryption path from one module to another. Read the certificate and the algorithm from the registry you are calling.\n- Never log a sensitive value before you encrypt it, and never send one to a remote service to be encrypted. Both move the leak rather than removing it.\n- Generate a fresh REQUEST-ID for every call and log it before sending. Once a call has failed it is the only handle on it.\n- Check the host on any sample before you copy it. A request copied whole can be correct in every respect except where it is pointed, and that failure looks like credentials.\n- Do not validate an identifier more strictly than the platform does. A schema that types a field as a UUID is not a promise that every value is one. Refusing a value ABDM would have accepted turns your own client into the thing that broke.\n- Read a plural response as plural. A verification returns an accounts array and a consent request can produce more than one artefact. Store the collection and decide from its length.\n- A documented callback path is not a documented callback payload. Log the whole body on arrival before you parse it, so a handler written against an assumed shape fails where you can see it.\n- Decode a token before you use it. A call that hands you a token has not necessarily handed you the token the next call wants, and the claims are base64 that need no library to read.\n- When a journey carries the same parameter through two calls, check what each call's specification asks for rather than carrying the first value forward.\n- Do not infer which path an identifier belongs to from where that identifier is most discussed. Send every identifier to the lookup first and let the answer pick the path, so nobody who already holds an account is sent to create a second.\n- Do not match an error code with string equality. A code may come back bare, as `ABDM-1001`, or with a trailing `: ` separator, as `ABDM-1001: `. Match on the code itself and tolerate the separator.\n- Handle a failure that carries no body. Check for an empty body before you parse, or your client throws on the simplest failure there is.\n- Back off on an authentication failure rather than retrying, and never loop a credential check.\n- Send TIMESTAMP in UTC, ISO-8601 with milliseconds and a trailing Z, as in `2022-10-06T15:10:00.587Z`.\n- Cache a public certificate with a validity window rather than forever. A rotation fails every encrypted call at once, and a cache with no expiry cannot recover on its own.\n\n## How you know it worked\n\nYou are working this way when a failure takes minutes rather than an afternoon.\nConcretely: you can say which layer refused a call before you change anything,\nyou have not retried an authentication loop, and no constant in your source\nduplicates a value ABDM publishes at runtime.\n\n## When it goes wrong\n\n- You changed two things and the call started working. You have not learned\n  which, and the other one is still wrong somewhere else.\n- You read a uniform negative as evidence. A call that refuses every input the\n  same way has told you nothing.\n- You trusted a message that named a field. The field is where the value\n  landed, not where it went wrong.\n- You retried an authentication failure. Back off instead, and find out why\n  the first attempt failed.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "",
+            "gateway": "shared",
+            "id": "shared.concept.integration-practices",
+            "milestone": "n/a",
+            "summary": "The habits that decide whether a wrong assumption surfaces in a minute or after a day. They are not facts about any one milestone, which is why they sit here and ship with every skill.",
+            "title": "How to work on an ABDM integration",
+            "type": "concept"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01VK2BbmiFZdgXVPh2BewJ5u",
+            "Name": "get",
+            "Input": {
+              "id": "shared.concept.survey-an-existing-codebase"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "shared.concept.survey-an-existing-codebase"
+          },
+          "output": {
+            "body": "# Survey the existing codebase before the first journey, and write the plan\n\n## In plain words\n\nMost ABDM integrations are not new systems. They are a hospital management\nsystem, a laboratory system or a clinic application that already has patients,\nvisits, records, a login, an HTTP client and a way of keeping secrets. Every\nABDM journey has to land somewhere inside that, and a journey built before the\ncodebase has been read lands in the wrong place: a second HTTP client beside the\nfirst, an ABHA column on the wrong table, a callback route the reverse proxy\nnever forwards.\n\nSo the first loop is not a journey. It is a survey of the system as it is, and\nits exit condition is a written plan that names, for every ABDM touchpoint, the\nfile it will live in. The journeys then build against that plan rather than\nagainst the specification's idea of a fresh codebase.\n\n## Before you start\n\n- The repository, checked out, with permission to read all of it. A survey of\n  half a codebase produces a plan for half a system.\n- The answers to [the deployment interview](m1-deployment-interview.md). The\n  code says what the system is. Only the integrator can say what the\n  deployment is, and the two together decide which journeys are built at all.\n- [The practices that hold across every call](integration-practices.md), which\n  the plan has to leave room for.\n\n## What happens\n\nThis is one loop with a limit of eight passes over the codebase. Each pass\nreads live state only, which here means the files themselves, never a README's\ndescription of them and never an assumption carried from a similar system.\n\n**Observe.** Inventory the system from its manifests and its tree, not from its\ndocumentation. Record file paths for each of these, or record that none exists:\n\n| Find | Where it usually shows | Why ABDM needs it |\n|---|---|---|\n| Languages and runtime versions | package manifests, lock files, toolchain files | Every generated call has to be idiomatic here |\n| Build, run and test commands | manifests, CI configuration, a Makefile | Each journey's exit condition becomes a test that runs the same way |\n| The frontend and backend split, and how they talk | the top level tree, an API client in the frontend, route definitions in the backend | The counter screens go in the frontend; every ABDM call goes through the backend |\n| The outbound HTTP client the backend already uses | the dependency list, a shared client module | ABDM calls reuse it, or a second one appears and the two drift |\n| How secrets and configuration reach the process | environment loading, a vault client, a config file | The client id, the secret and the access token travel the same way |\n| The patient model, and the identifier fields it already carries | the schema, the ORM models, the migrations | The ABHA number and address become columns beside the existing identifiers, not a new table |\n| The visit, encounter or record model | the same places | A care context maps to one of these, and the plan has to say which |\n| Where inbound HTTP is routed and authenticated, and whether the deployment has a public URL | the router, the middleware, the reverse proxy configuration, the deployment manifests | ABDM calls back, and a callback route that nothing forwards is silence nobody notices |\n| Existing cryptography helpers | a security or crypto module, the dependency list | The RSA encryption of identifiers reuses them |\n| Where errors are shown to a user, and where they are logged | the frontend's error surface, the logging setup | A refused call has to land on the screen the person is looking at, and never log a token |\n\n**Orient.** Map each ABDM touchpoint onto that inventory. Where the map is\nexact, write the file path. Where it is not, write two candidates and say what\nwould decide between them. The common ambiguities: two places that could hold\nthe patient identifier, an HTTP client in the frontend and none in the backend,\na monorepo with several services and no obvious owner for callbacks.\n\nThen read the interview answers against the inventory. A government integrator\ngets the demographic route; a facility with no public URL gets no callback\ndriven journey until it has one; a desk with a fingerprint reader gets the\nbiometric method. The route set is the intersection of what the deployment\nallows and what the code can host.\n\n**Decide.** Order the journeys. The token comes first because every other call\nneeds it: the gateway session token, or for M4 the bearer token the registry calls\ncarry. Then the journey whose exit condition can be observed with\nthe least new code, usually a profile read for a patient who already holds an\nABHA. Creation and linking come after, because each depends on state the earlier\nones produce. For each journey, name the files it will touch and the test that\nproves its exit condition.\n\n**Act.** Write the plan. It is a file in the repository, at the path the\nintegrator names or at the root as `abdm-integration-plan.md`, and it is the\nonly output of this loop. Then return to observe once, reading the plan against\nthe tree, to confirm every path in it exists or is marked as new.\n\nIf the limit is reached with questions still open, escalate: name what was\nfound, name the two candidates that could not be separated, point at this\natom, and ask one question.\n\n## How you know it worked\n\nThe plan exists and answers every row of the inventory table with a file path,\nor with the words none, add at, followed by a path. No row is blank and no row\nsays to be decided.\n\nEvery ABDM touchpoint in the plan names one file, or names two candidates and\nthe observation that would choose between them. Every journey in the plan names\nthe test that proves its exit condition and the command that runs it.\n\nOpen the plan beside the tree. Every path it names resolves, or is marked as\nnew. That is the observation that ends this loop, and the first journey does\nnot start until it has been made.\n\n## When it goes wrong\n\n- **The plan puts the HTTP client in the frontend.** The survey found the\n  frontend's API client and stopped. Every ABDM call carries a secret, so it\n  goes through the backend, and the plan has to say which backend module.\n- **Two patient tables, and the plan picked one.** Orient produced one\n  hypothesis where it needed two. Name both, and name the query that shows\n  which one the visit model points at.\n- **The plan has a callback route and the deployment has no public URL.** The\n  inventory row on inbound routing was answered from the router rather than\n  from the deployment. Mark every callback driven journey as blocked on a URL,\n  and build the ones that are not.\n- **The survey read the README and not the tree.** A README describes the\n  system somebody meant to build. The plan is for the one that exists.\n- **Eight passes and the plan is still incomplete.** Escalate with the rows\n  that are answered, the rows that are not, this atom, and one question about\n  the row that blocks the most journeys.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "",
+            "gateway": "shared",
+            "id": "shared.concept.survey-an-existing-codebase",
+            "milestone": "n/a",
+            "summary": "Integrating ABDM into a system that already exists starts by reading that system whole, and ends with a written plan that names the file every ABDM touchpoint will live in.",
+            "title": "Survey the existing codebase before the first journey, and write the plan",
+            "type": "concept"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_011fW1QuyFC746hvZqDT8URq",
+            "Name": "search",
+            "Input": {
+              "query": "credentials certificate keys authentication registration enrollment onboarding",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "credentials certificate keys authentication registration enrollment onboarding",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01Cafe8YjjLezQVjA5nCApmu",
+            "Name": "search",
+            "Input": {
+              "query": "gateway session token certificate public key encryption",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "gateway session token certificate public key encryption",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/get-your-sandbox-credentials",
+                "id": "nhcx.flow.sandbox-onboarding",
+                "summary": "Register your system in the claims exchange test environment so it holds a participant code, a registered certificate and a callback address.",
+                "title": "Onboard as a participant in the NHCX sandbox",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/go-live",
+                "id": "nhcx.flow.production-onboarding",
+                "summary": "Create and confirm your live claims exchange participant record, then register your certificate and callback address, each step confirmed by a passcode sent ...",
+                "title": "Onboard as a participant in production",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/building-and-sending-a-jwe",
+                "id": "nhcx.flow.send-a-sealed-request",
+                "summary": "Seal a claims message for one recipient, post it to the exchange, and wait for the recipient's answer to arrive at your callback address.",
+                "title": "Send a sealed request through NHCX",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/sandbox#4-note-the-base-urls",
+                "id": "uhi.sandbox.base-urls",
+                "summary": "The UHI Gateway base URL for the sandbox and for production, and the reference EUA and HSPA apps in the sandbox.",
+                "title": "UHI Gateway base URLs for sandbox and production",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-2500",
+                "id": "hiecm.error.abdm-2500",
+                "summary": "The call carried no access token, or a callback answered a request the gateway is not waiting on.",
+                "title": "ABDM-2500, no Authorization header, or no matching request",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/06-m3-post-data-flow-v3-health-information-notify#m3-hiu-data-flow-notify",
+                "id": "hiecm.endpoint.m3-hiu-data-flow-notify",
+                "summary": "After the records arrive, the HIU reports receipt with a session status and a status per care context.",
+                "title": "Notify the gateway that data was received",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/03-m2-post-data-flow-v3-health-information-notify#m2-hip-data-flow-notify",
+                "id": "hiecm.endpoint.m2-hip-data-flow-notify",
+                "summary": "After pushing the records, the HIP reports the transfer with a session status and a status per care context.",
+                "title": "Notify the gateway that a data transfer finished",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/gateway#gateway-session",
+                "id": "hiecm.concept.gateway-session",
+                "summary": "Every gateway call carries a short lived bearer token from one session endpoint, which identifies your application, not a person.",
+                "title": "The gateway session, the first call in every integration",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-2406",
+                "id": "hiecm.error.abdm-2406",
+                "summary": "Your call does not fit where the gateway believes the flow has reached.",
+                "title": "ABDM-2406, the calls are out of order",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/going-live#3-switch-to-production",
+                "id": "uhi.sandbox.production-switch",
+                "summary": "Change your IDs and callback URL to production values and point your calls at the production UHI Gateway.",
+                "title": "Switch your UHI integration to production",
+                "type": "sandbox"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01LCvAmjYfCXxmE1yzJo3Sv4",
+            "Name": "get",
+            "Input": {
+              "id": "hiecm.concept.gateway-session"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "hiecm.concept.gateway-session"
+          },
+          "output": {
+            "body": "# The gateway session, the first call in every integration\n\n## In plain words\n\nOne endpoint issues the token every other call carries. It is the call [M1](/docs/hiecm/v3/getting-started/glossary#m1) uses. [M4](/docs/hiecm/v3/getting-started/glossary#m4) calls carry their own bearer token instead.\n\n**POST** `/api/hiecm/gateway/v3/sessions`\n\nHeaders:\n\n| Header | Example value | What it is |\n|---|---|---|\n| `REQUEST-ID` | `18235d89-cb13-479d-ad71-7a57d5f669a8` | A fresh UUID for this call |\n| `TIMESTAMP` | `2022-10-06T15:10:00.587Z` | The time you made the call, ISO 8601 |\n| `X-CM-ID` | `sbx` | The consent manager. Use `sbx` for sandbox |\n| `Content-Type` | `application/json` | |\n\nNo `Authorization` header on this call. It is the one call with no token yet.\n\nBody:\n\n```json\n{\n  \"clientId\": \"<CLIENT_ID_FROM_SANDBOX_SIGNUP>\",\n  \"clientSecret\": \"<CLIENT_SECRET_FROM_SANDBOX_SIGNUP>\",\n  \"grantType\": \"client_credentials\"\n}\n```\n\nSend the client id you were issued.\n\nResponse shape:\n\n```json\n{\n  \"accessToken\": \"<JWT>\",\n  \"expiresIn\": 1200,\n  \"refreshExpiresIn\": 1800,\n  \"refreshToken\": \"<JWT>\",\n  \"tokenType\": \"bearer\"\n}\n```\n\nThe response carries the token in `accessToken`.\n\nSend the token back as `Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>` on every other call. Headers per call, and the second token M1 login issues, are on [authentication](/docs/hiecm/v3/reference/authentication). Interactive: [gateway API reference](/reference/hiecm-gateway).\n\nThe session token says which application is calling, not which person. [M1](/docs/hiecm/v3/milestones/m1) profile calls also carry a user token in `X-token`, which login returns.\n\n## Before you start\n\nA client id and client secret from sandbox registration, held on your server. Never ship the secret in a mobile or browser build.\n\n## What happens\n\nCall the session endpoint with `clientId`, `clientSecret` and `grantType` set to `client_credentials`. Send the `accessToken` it returns as `Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>` on every other gateway call. Renew before `expiresIn` runs out rather than on a fixed timer.\n\n## How you know it worked\n\nThe response carries `accessToken` and `expiresIn`, and the next gateway call with that token is not refused as unauthorised.\n\n## When it goes wrong\n\nEvery call returns 401: see [everything returns 401](/docs/hiecm/v3/troubleshooting/everything-returns-401). A profile call is refused while the session token is fresh: the `X-token` is missing, or it holds the short lived token from login verify, which the verify user call exchanges for the user token. `ABDM-1094` reads X-token expired, and the token sent is often the wrong kind rather than an old one.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/concepts/gateway#gateway-session",
+            "gateway": "hiecm",
+            "id": "hiecm.concept.gateway-session",
+            "milestone": "M1",
+            "summary": "Every gateway call carries a short lived bearer token from one session endpoint, which identifies your application, not a person.",
+            "title": "The gateway session, the first call in every integration",
+            "type": "concept"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01Qki9QDhkSFxLU155xBKrNe",
+            "Name": "get",
+            "Input": {
+              "id": "nhcx.flow.sandbox-onboarding"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "nhcx.flow.sandbox-onboarding"
+          },
+          "output": {
+            "body": "# Onboard as a participant in the NHCX sandbox\n\n## In plain words\n\nEvery system that sends or receives claims messages on the [National Health Claims Exchange](../../shared/glossary/nhcx.md) (NHCX) must first exist in its participant registry. Onboarding creates that record.\n\nThe record gives you a [participant code](../glossary/participant-code.md), such as `100001@sbx`. It holds your public encryption certificate and the address where NHCX delivers your messages. Nothing else on NHCX works for you until the record exists.\n\n## Before you start\n\nEach item is something you can check before the first call.\n\n- **Registry identity.** A [provider](../glossary/provider.md) has its facility in the [Health Facility Registry](../../shared/glossary/hfr.md) (HFR) and knows its HFR ID. A [payer](../glossary/payer.md) or [TPA](../glossary/tpa.md) knows the ID its [IRDAI](../glossary/irdai.md) or equivalent authority issued. An end user application, such as a [PHR](../../shared/glossary/phr.md) app, uses its client ID.\n- **Sandbox credentials.** You hold an [ABDM](../../shared/glossary/abdm.md) sandbox client ID and secret. Apply at `https://sandbox.abdm.gov.in/sandbox/v3/` with the intent \"Providers and Payer\" and [Milestone 1](../../hiecm/glossary/m1.md). See [What you need before you register on the NHCX sandbox](../sandbox/prerequisites.md).\n- **Milestone 1 working, for a provider.** Your software creates and verifies [ABHA](../../shared/glossary/abha.md) numbers.\n- **NHCX sandbox access.** You registered at `https://sandbox.abdm.gov.in/sandbox/v3/sandbox-registration` with that client ID and secret, and roles were assigned to you.\n- **A certificate.** You have `certificate_base64.txt` from [Generate an encryption certificate and register it](generate-and-register-certificate.md).\n- **A callback address.** Your HTTPS endpoint meets the [callback address rules](../sandbox/callback-url-requirements.md). It uses a domain name with no IP address or port. The server is in India, and its firewall is open to `3.109.99.210`, `13.126.152.0` and `13.200.129.223`.\n\n## What happens\n\n```mermaid\nsequenceDiagram\n    participant You as Your system\n    participant GW as ABDM session gateway\n    participant PS as NHCX participant service\n    You->>GW: POST /api/hiecm/gateway/v3/sessions\n    GW-->>You: accessToken, expiresIn 1200\n    You->>PS: POST /participant/create\n    PS-->>You: participant_code, for example 100001@sbx\n    opt Create answers with a transactionid instead\n        Note over You: a passcode arrives by SMS on the registered mobile\n        You->>PS: GET /validate with transactionId and passcode\n        PS-->>You: creation confirmed\n    end\n    You->>PS: POST /fetch/certs with your participant code\n    PS-->>You: the encryption_cert you registered\n    opt Change the endpoint or certificate later\n        You->>PS: POST /participant/update\n        PS-->>You: participant_code\n    end\n```\n\nEvery call in this flow answers in its own response. Two waits sit outside the calls. The manual review of your sandbox registration comes before step 1. The SMS passcode arrives in step 3, when that step applies.\n\n### 1. Get a session token\n\nCall the session endpoint with your client ID and secret. [Which session token endpoint to call](../decisions/session-endpoint.md) settles the address. The token lasts 1200 seconds (20 minutes), which the answer states as `expiresIn`. Get a new token before it lapses, and after any `401`.\n\nEvery participant service call below carries this token. The [session token endpoint](../endpoints/session-token.md) shows the header.\n\n### 2. Create the participant\n\nCall `POST /participant/create` on the sandbox participant service, `https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice`. The body carries your profile:\n\n| Field | What to put |\n|---|---|\n| `linked_registry_codes` | Your registry code, from the table below |\n| `registryid` | Your ID in that registry, as listed under Before you start |\n| `participant_name` | Your legal or facility name |\n| `scheme_code`, `state`, `district` | Your scheme, for example `PMJAY`, and your location |\n| `roles` | Your role code, from the table below |\n| `primaryEmail`, `phone`, `primaryMobile` | Your contacts |\n| `signing_cert_path` | Path to your signing certificate, if you have one |\n| `encryption_cert` | The contents of `certificate_base64.txt` |\n| `endpoint_url` | Your callback base address |\n\n| You are | `roles` | `linked_registry_codes` |\n|---|---|---|\n| Provider | `10001` | `10001` (HFR) |\n| Payer | `10002` | `10004` (PAYER) |\n| TPA | `10003` | `10004` (PAYER) |\n| End user application | `10009` | `10001` |\n\nThe answer carries your `participant_code`. The full request is in [POST /participant/create](../endpoints/participant-create.md).\n\nAn entity with several facilities creates one participant code per HFR ID. It uses the same client credentials for all of them.\n\n### 3. Confirm, when the answer asks for it\n\nIf the create answer carries a `transactionid` instead of a participant code, a passcode arrives by SMS on the registered mobile. Confirm with `GET /validate`, passing `transactionId` and `passcode`. The rules for that pair are in [Onboard as a participant in production](production-onboarding.md).\n\n### 4. Read your record back\n\nCall `POST /fetch/certs` with `{\"participantid\": \"<YOUR_PARTICIPANT_CODE>\"}`. The answer carries the `encryption_cert` stored against your code. Compare it with your certificate as shown in [Generate an encryption certificate and register it](generate-and-register-certificate.md).\n\n### 5. Change it later\n\n`POST /participant/update` changes the endpoint address, the certificate or any other attribute. `participant_code` is mandatory in its body.\n\nOn success every call here answers HTTP `200`. Failures answer `400` for a client error, `404` for a resource not found, or `500` when downstream systems are down.\n\n## How you know it worked\n\nYou hold a `participant_code` from `POST /participant/create`, or from `GET /validate` when a passcode was asked for. `POST /fetch/certs` with that code returns an `encryption_cert` whose public key matches your `certificate.crt`.\n\n```observation schema=exit-condition\nchannel: synchronous\ncall: POST /fetch/certs\nrequest:\n  participantid: <YOUR_PARTICIPANT_CODE>\nmatch:\n  encryption_cert: public key equals the one in certificate.crt\n```\n\nNext, build your message handling with [Receive, open and acknowledge a sealed message](receive-a-sealed-callback.md) and [Report a processing failure on /v1/error](report-a-processing-error.md). Then work through [the sandbox exit process](../sandbox/sandbox-exit.md).\n\n## When it goes wrong\n\n- **Every call returns `401`.** The token is missing, lacks the `Bearer ` prefix, or has expired. Get a new token and retry once. See [NHCX-401](../errors/nhcx-401.md) and [Every NHCX call returns 401](../troubleshooting/everything-returns-401.md).\n- **Create is refused with `400`.** Check `roles` and `linked_registry_codes` against the table in step 2. A wrong pairing causes rejection or misrouted traffic later.\n- **Use-case calls say the sender is not registered.** You are calling before the record exists, or with a different code. See [NHCX-1002](../errors/nhcx-1002.md).\n- **Nothing ever reaches your endpoint.** The address uses an IP address or a port, or the server is outside India. A firewall may also block the NHCX addresses. See [Your callback URL is rejected or never called](../troubleshooting/callback-url-rejected.md).\n- **`/fetch/certs` returns a different key.** You registered a certificate from another key pair. Replace it with `POST /participant/update`.\n- **You are still waiting for sandbox access.** Registration approval is a manual review with no published turnaround. You cannot call anything until roles are assigned. See [Where to get help with NHCX](../sandbox/support-contacts.md).",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/nhcx/v1/getting-started/get-your-sandbox-credentials",
+            "gateway": "nhcx",
+            "id": "nhcx.flow.sandbox-onboarding",
+            "milestone": "n/a",
+            "summary": "Register your system in the claims exchange test environment so it holds a participant code, a registered certificate and a callback address.",
+            "title": "Onboard as a participant in the NHCX sandbox",
+            "type": "flow"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "Based on the ABDM developer documentation, here are the **prerequisites for integration**:\n\n## Before You Start\n\n### 1. **Sandbox Registration & Credentials**\n   - Register at `https://sandbox.abdm.gov.in/sandbox/v3/` with:\n     - Intent: \"Providers and Payer\" \n     - Milestone 1 as minimum starting point\n   - Obtain a **client ID** and **client secret** from sandbox signup\n   - Keep the secret secure on your server—never ship it in mobile or browser builds\n\n### 2. **System Requirements** (from HIE-CM)\n   The first call in every integration is the [gateway session](https://docs.abdm.gov.in/docs/hiecm/v3/concepts/gateway#gateway-session), which requires:\n   - **Client credentials**: client ID and secret from sandbox registration\n   - **HTTP client**: ability to make REST API calls (your existing HTTP client can be reused)\n   - **Timestamp capability**: ISO-8601 UTC format with milliseconds (e.g., `2022-10-06T15:10:00.587Z`)\n   - **UUID generation**: for REQUEST-ID headers on every call\n\n### 3. **For NHCX (Claims Exchange) Integration**\n   Additional prerequisites:\n   - **Registry identity**: \n     - Providers: HFR ID from Health Facility Registry\n     - Payers/TPAs: IRDAI ID or equivalent\n     - Apps: Client ID\n   - **Encryption certificate**: Generate and register a public certificate for message encryption\n   - **Callback address**: HTTPS endpoint with:\n     - Domain name (no IP addresses or ports)\n     - Server located in India\n     - Firewall open to NHCX gateways (3.109.99.210, 13.126.152.0, 13.200.129.223)\n\n### 4. **Code & Infrastructure**\n   Survey your existing system for:\n   - **Patient/beneficiary model**: where to store ABHA identifiers\n   - **HTTP infrastructure**: reuse existing HTTP client\n   - **Inbound routing**: public callback endpoints for the gateway to reach your system\n   - **Secrets management**: how to securely store client ID and secret\n   - **Logging**: ensure sensitive values (tokens, credentials) are never logged before encryption\n\n### 5. **Process Prerequisites**\n   Before coding:\n   - Read your system's **full codebase** (not just docs) to understand where ABDM touchpoints will live\n   - Complete the **deployment interview** to identify which journeys apply to your setup\n   - Write an **integration plan** naming which files will handle each ABDM touchpoint\n\n---\n\n**Reference:** [Gateway Session concept](/docs/hiecm/v3/concepts/gateway#gateway-session), [Integration practices](/docs/shared-docs), [Codebase survey guide](/docs/shared-docs), and [NHCX sandbox onboarding flow](/docs/nhcx/v1/getting-started/get-your-sandbox-credentials).",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "Based on the ABDM developer documentation, here are the **prerequisites for integration**:\n\n## Before You Start\n\n### 1. **Sandbox Registration & Credentials**\n   - Register at `https://sandbox.abdm.gov.in/sandbox/v3/` with:\n     - Intent: \"Providers and Payer\" \n     - Milestone 1 as minimum starting point\n   - Obtain a **client ID** and **client secret** from sandbox signup\n   - Keep the secret secure on your server—never ship it in mobile or browser builds\n\n### 2. **System Requirements** (from HIE-CM)\n   The first call in every integration is the [gateway session](https://docs.abdm.gov.in/docs/hiecm/v3/concepts/gateway#gateway-session), which requires:\n   - **Client credentials**: client ID and secret from sandbox registration\n   - **HTTP client**: ability to make REST API calls (your existing HTTP client can be reused)\n   - **Timestamp capability**: ISO-8601 UTC format with milliseconds (e.g., `2022-10-06T15:10:00.587Z`)\n   - **UUID generation**: for REQUEST-ID headers on every call\n\n### 3. **For NHCX (Claims Exchange) Integration**\n   Additional prerequisites:\n   - **Registry identity**: \n     - Providers: HFR ID from Health Facility Registry\n     - Payers/TPAs: IRDAI ID or equivalent\n     - Apps: Client ID\n   - **Encryption certificate**: Generate and register a public certificate for message encryption\n   - **Callback address**: HTTPS endpoint with:\n     - Domain name (no IP addresses or ports)\n     - Server located in India\n     - Firewall open to NHCX gateways (3.109.99.210, 13.126.152.0, 13.200.129.223)\n\n### 4. **Code & Infrastructure**\n   Survey your existing system for:\n   - **Patient/beneficiary model**: where to store ABHA identifiers\n   - **HTTP infrastructure**: reuse existing HTTP client\n   - **Inbound routing**: public callback endpoints for the gateway to reach your system\n   - **Secrets management**: how to securely store client ID and secret\n   - **Logging**: ensure sensitive values (tokens, credentials) are never logged before encryption\n\n### 5. **Process Prerequisites**\n   Before coding:\n   - Read your system's **full codebase** (not just docs) to understand where ABDM touchpoints will live\n   - Complete the **deployment interview** to identify which journeys apply to your setup\n   - Write an **integration plan** naming which files will handle each ABDM touchpoint\n\n---\n\n**Reference:** [Gateway Session concept](/docs/hiecm/v3/concepts/gateway#gateway-session), [Integration practices](/docs/shared-docs), [Codebase survey guide](/docs/shared-docs), and [NHCX sandbox onboarding flow](/docs/nhcx/v1/getting-started/get-your-sandbox-credentials).",
+  "sources": [
+    {
+      "id": "shared.concept.integration-practices",
+      "title": "How to work on an ABDM integration",
+      "url": ""
+    },
+    {
+      "id": "shared.concept.survey-an-existing-codebase",
+      "title": "Survey the existing codebase before the first journey, and write the plan",
+      "url": ""
+    },
+    {
+      "id": "hiecm.concept.gateway-session",
+      "title": "The gateway session, the first call in every integration",
+      "url": "/docs/hiecm/v3/concepts/gateway#gateway-session"
+    },
+    {
+      "id": "nhcx.flow.sandbox-onboarding",
+      "title": "Onboard as a participant in the NHCX sandbox",
+      "url": "/docs/nhcx/v1/getting-started/get-your-sandbox-credentials"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/nhcx/v1/go-live\",\"id\":\"nhcx.sandbox.sandbox-exit\",\"summary\":\"The use cases you must show working, the bundle review, the two demonstrations and the sign-off that let you move from testing to live claims.\",\"title\":\"The sandbox exit process and sign-off\",\"type\":\"sandbox\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"atoms\":{\"by_gateway\":{\"hiecm\":269,\"nhcx\":536,\"shared\":46,\"uhi\":111},\"by_milestone\":{\"M1\":74,\"M2\":57,\"M3\":20,\"M4\":11,\"P1\":29,\"P2\":18,\"P3\":36,\"n/a\":717},\"by_type\":{\"callback\":66,\"concept\":105,\"decision\":13,\"endpoint\":186,\"error\":335,\"fhir\":30,\"flow\":57,\"glossary\":86,\"sandbox\":18,\"test\":51,\"troubleshooting\":15}},\"built_at\":\"2026-09-29T11:55:12Z\",\"catalogue_version\":\"2026.09.16\",\"deprecated\":0,\"embeddings\":false,\"facts\":0,\"operations\":387}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"atoms\":[{\"doc_url\":\"/docs/hiecm/v3/registries/abha#abha-address-policy\",\"id\":\"hiecm.concept.abha-address-policy\",\"milestone\":\"M1\",\"title\":\"What an ABHA address is allowed to be\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/registries/abha#abha-number-and-address\",\"id\":\"hiecm.concept.abha-number-and-address\",\"milestone\":\"M1\",\"title\":\"ABHA number and ABHA address, and why there are two\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/gateway#asynchronous-callbacks\",\"id\":\"hiecm.concept.asynchronous-callbacks\",\"milestone\":\"M2\",\"title\":\"Asynchronous calls and callbacks, why a 200 means very little\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/callback-authenticity#callback-authenticity\",\"id\":\"hiecm.concept.callback-authenticity\",\"milestone\":\"M2\",\"title\":\"Proving a callback really came from ABDM\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/care-context#care-context\",\"id\":\"hiecm.concept.care-context\",\"milestone\":\"M2\",\"title\":\"Care contexts, how records are grouped so they can be found\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/consent#consent-artefact\",\"id\":\"hiecm.concept.consent-artefact\",\"milestone\":\"M3\",\"title\":\"Consent, what it authorises and how it ends\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/consent#consent-in-a-phr-app\",\"id\":\"hiecm.concept.consent-in-a-phr-app\",\"milestone\":\"P3\",\"title\":\"The five things a personal health record application must let a person do with consent\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/encryption#encrypted-identifiers\",\"id\":\"hiecm.concept.encrypted-identifiers\",\"milestone\":\"M1\",\"title\":\"Why identifiers are encrypted, and where to do it\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/build-it-well#error-codes\",\"id\":\"hiecm.concept.error-codes\",\"milestone\":\"M2\",\"title\":\"Reading an ABDM error code\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/gateway#gateway-session\",\"id\":\"hiecm.concept.gateway-session\",\"milestone\":\"M1\",\"title\":\"The gateway session, the first call in every integration\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/encryption#input-encryption\",\"id\":\"hiecm.concept.input-encryption\",\"milestone\":\"M1\",\"title\":\"Encrypting sensitive inputs, Aadhaar, mobile, OTP and passwords\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m1-avoiding-duplicate-abha\",\"milestone\":\"M1\",\"title\":\"The branch that creates a duplicate ABHA, and how to close it\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m1-confirm-the-filled-form\",\"milestone\":\"M1\",\"title\":\"Present the filled form for confirmation rather than saving it unseen\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m1-counter-journey-order\",\"milestone\":\"M1\",\"title\":\"The ABHA step comes before the registration form and fills it\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m1-deployment-interview\",\"milestone\":\"M1\",\"title\":\"Ask the integrator about the deployment, not the patient about the journey\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m1-honest-screen-states\",\"milestone\":\"M1\",\"title\":\"Telling the truth on screen at the counter\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m1-identifier-and-auth-method\",\"milestone\":\"M1\",\"title\":\"An identifier and an auth method are two different questions\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m1-journey-completes-without-abha\",\"milestone\":\"M1\",\"title\":\"A journey has to complete without an ABHA\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/abha-journey#m1-journey-design\",\"id\":\"hiecm.concept.m1-journey-design\",\"milestone\":\"M1\",\"title\":\"A suggested ABHA journey, and what holds if you design your own\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m1-never-ask-twice\",\"milestone\":\"M1\",\"title\":\"Never ask a patient the same thing twice, enforced by structure\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m1-operations-not-a-journey\",\"milestone\":\"M1\",\"title\":\"ABDM publishes operations, not a journey\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m1-screen-contract\",\"milestone\":\"M1\",\"title\":\"The six counter screens, and what each is forbidden to ask\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m1-the-whole-surface\",\"milestone\":\"M1\",\"title\":\"The surface is more than a registration form\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m1-two-routes-to-the-profile\",\"milestone\":\"M1\",\"title\":\"Two routes to the profile, and the form is the destination of both\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m2-care-context-and-records\",\"milestone\":\"M2\",\"title\":\"A care context and its records are one thing\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m2-exchange-not-call\",\"milestone\":\"M2\",\"title\":\"The unit of work is an exchange, not a call\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m2-inbound-is-a-surface\",\"milestone\":\"M2\",\"title\":\"Inbound is a surface, and silence there is a failure state\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m2-integrator-call-panel\",\"milestone\":\"M2\",\"title\":\"What the integrator needs on screen, separately from the patient\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m2-never-block-the-desk\",\"milestone\":\"M2\",\"title\":\"Nobody is standing there, so never block and never lose the state\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m2-retry-is-a-duplicate\",\"milestone\":\"M2\",\"title\":\"A refused request is still remembered, so a retry is a duplicate\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m3-plural-artefacts-and-codes\",\"milestone\":\"M3\",\"title\":\"Read plural as plural, and never translate a code into a meaning\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m3-refuse-to-guess\",\"milestone\":\"M3\",\"title\":\"Refuse to guess an undocumented step, and say so before the work starts\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/p3#phr-subscriptions\",\"id\":\"hiecm.concept.phr-subscriptions\",\"milestone\":\"P3\",\"title\":\"Subscriptions, and why a personal health record application needs one\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/how-it-fits#roles\",\"id\":\"hiecm.concept.roles\",\"milestone\":\"M2\",\"title\":\"Roles, which entity your software acts for and which way the record moves\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"nhcx.concept.access-control\",\"milestone\":\"n/a\",\"title\":\"Who may call what: the NHCX access control matrix\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"nhcx.concept.audit-and-non-repudiation\",\"milestone\":\"n/a\",\"title\":\"Audit logging and non-repudiation\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"nhcx.concept.beneficiary-consent\",\"milestone\":\"n/a\",\"title\":\"Beneficiary consent and data rights\",\"type\":\"concept\"},{\"doc_url\":\"/docs/nhcx/v1/roles/provider/biometric-authentication\",\"id\":\"nhcx.concept.biometric-authentication\",\"milestone\":\"n/a\",\"title\":\"Biometric authentication of the beneficiary\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"nhcx.concept.claim-cycle\",\"milestone\":\"n/a\",\"title\":\"The claim cycle from eligibility to payment\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"nhcx.concept.coverage-eligibility-purposes\",\"milestone\":\"n/a\",\"title\":\"The four coverage eligibility purposes\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"nhcx.concept.encryption-certificate\",\"milestone\":\"n/a\",\"title\":\"Your encryption certificate and the recipient's\",\"type\":\"concept\"},{\"doc_url\":\"/docs/nhcx/v1/reference/error-codes\",\"id\":\"nhcx.concept.error-code-spaces\",\"milestone\":\"n/a\",\"title\":\"Error code spaces: NHCX codes, standard payer codes and reference payer codes\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"nhcx.concept.fhir-in-nhcx\",\"milestone\":\"n/a\",\"title\":\"FHIR collection bundles and the NHCX claim profiles\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"nhcx.concept.four-message-legs\",\"milestone\":\"n/a\",\"title\":\"The four legs of every exchange: request, acknowledgement, callback, acknowledgement\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"nhcx.concept.grievance-redressal\",\"milestone\":\"n/a\",\"title\":\"Grievance redressal on the exchange\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"nhcx.concept.hmis-integration-architecture\",\"milestone\":\"n/a\",\"title\":\"Hospital HMIS integration for PMJAY through NHCX\",\"type\":\"concept\"},{\"doc_url\":\"/docs/nhcx/v1/api/insurance-plan\",\"id\":\"nhcx.concept.insurance-plan\",\"milestone\":\"n/a\",\"title\":\"The insurance plan and what a provider learns from it\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"nhcx.concept.jwe-envelope\",\"milestone\":\"n/a\",\"title\":\"The JWE envelope that seals every payload\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"nhcx.concept.message-identifiers\",\"milestone\":\"n/a\",\"title\":\"Correlation id, API call id and workflow id\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"nhcx.concept.notifications\",\"milestone\":\"n/a\",\"title\":\"Notifications to patient apps\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"nhcx.concept.participant-code\",\"milestone\":\"n/a\",\"title\":\"Participant codes and how every message is addressed\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"nhcx.concept.participant-registry\",\"milestone\":\"n/a\",\"title\":\"The participant registry and what a participant record holds\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"nhcx.concept.participant-roles\",\"milestone\":\"n/a\",\"title\":\"Participant roles: provider, payer, TPA and the exchange\",\"type\":\"concept\"},{\"doc_url\":\"/docs/nhcx/v1/concepts/pmjay-on-nhcx\",\"id\":\"nhcx.concept.pmjay-on-nhcx\",\"milestone\":\"n/a\",\"title\":\"PMJAY on NHCX and how it differs from the standard exchange\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"nhcx.concept.policy-linking\",\"milestone\":\"n/a\",\"title\":\"Linking an ABHA to an insurance policy\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"nhcx.concept.protocol-headers\",\"milestone\":\"n/a\",\"title\":\"The x-hcx protocol headers\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"nhcx.concept.queries-and-communication\",\"milestone\":\"n/a\",\"title\":\"Payer queries and the communication cycle\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"nhcx.concept.reprocess-and-cancel\",\"milestone\":\"n/a\",\"title\":\"Reprocess, cancel and the task resource\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"nhcx.concept.retries-and-expiry\",\"milestone\":\"n/a\",\"title\":\"Gateway retries and the 24 hour expiry window\",\"type\":\"concept\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/session-token\",\"id\":\"nhcx.concept.session-token\",\"milestone\":\"n/a\",\"title\":\"The session token every NHCX call carries\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"nhcx.concept.status-lifecycle\",\"milestone\":\"n/a\",\"title\":\"Status values and how a request moves through them\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"nhcx.concept.synchronous-acknowledgement\",\"milestone\":\"n/a\",\"title\":\"The 202 acknowledgement and the 30 second rule\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"nhcx.concept.what-nhcx-is\",\"milestone\":\"n/a\",\"title\":\"What the National Health Claims Exchange is and what it does not do\",\"type\":\"concept\"},{\"doc_url\":\"/docs/nhcx/v1/concepts/workflow-codes\",\"id\":\"nhcx.concept.workflow-codes\",\"milestone\":\"n/a\",\"title\":\"Workflow codes and the stage each one names\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"shared.concept.ask-ai-assistant\",\"milestone\":\"n/a\",\"title\":\"What the Ask AI assistant can do\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"shared.concept.fidelius-ecdh-interop\",\"milestone\":\"n/a\",\"title\":\"Fidelius ECDH interop, the curve encoding and the key derivation\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"shared.concept.integration-practices\",\"milestone\":\"n/a\",\"title\":\"How to work on an ABDM integration\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"shared.concept.survey-an-existing-codebase\",\"milestone\":\"n/a\",\"title\":\"Survey the existing codebase before the first journey, and write the plan\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1/concepts/messages#ack-now-answer-later\",\"id\":\"uhi.concept.ack-then-answer\",\"milestone\":\"n/a\",\"title\":\"ACK now, answer later on UHI\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1/getting-started/build-it-well#aggregate-the-answers\",\"id\":\"uhi.concept.aggregate-answers\",\"milestone\":\"n/a\",\"title\":\"Aggregating the on_search answers to one UHI search\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1/services/ambulance#service-identity\",\"id\":\"uhi.concept.ambulance-service-identity\",\"milestone\":\"n/a\",\"title\":\"Ambulance Booking service identity\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1/concepts/routes#audit-copies\",\"id\":\"uhi.concept.audit-copies\",\"milestone\":\"n/a\",\"title\":\"Audit copies a Physical Consultation HSPA sends the Gateway\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1/services/blood-bank#limits-to-code-against\",\"id\":\"uhi.concept.blood-bank-limits\",\"milestone\":\"n/a\",\"title\":\"Blood Bank limits to code against\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1/services/blood-bank#search-variants\",\"id\":\"uhi.concept.blood-bank-search-variants\",\"milestone\":\"n/a\",\"title\":\"Blood Bank search modes, blood group and component codes\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1/services/blood-bank#service-identity\",\"id\":\"uhi.concept.blood-bank-service-identity\",\"milestone\":\"n/a\",\"title\":\"Blood Bank service identity\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1/services/consultation#cancellation-and-override-reason-codes\",\"id\":\"uhi.concept.consultation-reason-codes\",\"milestone\":\"n/a\",\"title\":\"Physical Consultation cancellation and PIN override reason codes\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1/services/consultation#service-identity\",\"id\":\"uhi.concept.consultation-service-identity\",\"milestone\":\"n/a\",\"title\":\"Physical Consultation service identity\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1/services/consultation#terms-content\",\"id\":\"uhi.concept.consultation-terms\",\"milestone\":\"n/a\",\"title\":\"Physical Consultation terms content\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1/concepts/messages#the-context-block\",\"id\":\"uhi.concept.context-block\",\"milestone\":\"n/a\",\"title\":\"The context block every UHI call carries\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1/concepts/routes#direct-between-eua-and-hspa\",\"id\":\"uhi.concept.direct-calls\",\"milestone\":\"n/a\",\"title\":\"Direct calls between the EUA and the HSPA\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1#the-four-stages-dofp\",\"id\":\"uhi.concept.dofp-stages\",\"milestone\":\"n/a\",\"title\":\"The four UHI stages, DOFP\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1/concepts/errors#the-error-object\",\"id\":\"uhi.concept.error-object\",\"milestone\":\"n/a\",\"title\":\"The UHI error object\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1/concepts/errors#send-and-log\",\"id\":\"uhi.concept.error-send-and-log\",\"milestone\":\"n/a\",\"title\":\"What to send and log when a UHI call fails\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1#what-the-uhi-gateway-does\",\"id\":\"uhi.concept.gateway-role\",\"milestone\":\"n/a\",\"title\":\"What the UHI Gateway does\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1/concepts/routes#through-the-gateway\",\"id\":\"uhi.concept.gateway-routes\",\"milestone\":\"n/a\",\"title\":\"Calls routed through the UHI Gateway\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1/services/jan-aushadhi#search-variants\",\"id\":\"uhi.concept.jan-aushadhi-search-variants\",\"milestone\":\"n/a\",\"title\":\"Jan Aushadhi location filters, medicine name and ownership codes\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1/services/jan-aushadhi#service-identity\",\"id\":\"uhi.concept.jan-aushadhi-service-identity\",\"milestone\":\"n/a\",\"title\":\"Jan Aushadhi service identity for flows A, B and C\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1/concepts/signing#generate-your-keys-and-headers\",\"id\":\"uhi.concept.key-generation\",\"milestone\":\"n/a\",\"title\":\"Generating UHI signing keys and headers\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1/concepts/messages#match-on-transaction-id-and-message-id\",\"id\":\"uhi.concept.match-transaction-id\",\"milestone\":\"n/a\",\"title\":\"Matching a UHI callback on transaction_id and message_id\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1/services/notto#search-variants\",\"id\":\"uhi.concept.notto-search-variants\",\"milestone\":\"n/a\",\"title\":\"NOTTO search filters and organ and tissue codes\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1/services/notto#service-identity\",\"id\":\"uhi.concept.notto-service-identity\",\"milestone\":\"n/a\",\"title\":\"NOTTO service identity\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1/getting-started/build-it-well#paginate-on-your-side\",\"id\":\"uhi.concept.paginate-client-side\",\"milestone\":\"n/a\",\"title\":\"Paginating UHI search results on your side\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1#who-takes-part\",\"id\":\"uhi.concept.participants\",\"milestone\":\"n/a\",\"title\":\"Who takes part in the UHI network\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1/services/pmjay-hem#limits-to-code-against\",\"id\":\"uhi.concept.pmjay-hem-limits\",\"milestone\":\"n/a\",\"title\":\"PM-JAY HEM limits to code against\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1/services/pmjay-hem#search-variants\",\"id\":\"uhi.concept.pmjay-hem-search-variants\",\"milestone\":\"n/a\",\"title\":\"PM-JAY HEM search variants and speciality codes\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1/services/pmjay-hem#service-identity\",\"id\":\"uhi.concept.pmjay-hem-service-identity\",\"milestone\":\"n/a\",\"title\":\"PM-JAY HEM service identity\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1/concepts/registry-lookup#when-to-call-it\",\"id\":\"uhi.concept.registry-lookup\",\"milestone\":\"n/a\",\"title\":\"When to call the UHI network registry lookup\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1/getting-started/build-it-well#time-out-and-render-as-results-arrive\",\"id\":\"uhi.concept.render-as-results-arrive\",\"milestone\":\"n/a\",\"title\":\"Timing out a UHI search and rendering results as they arrive\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1/getting-started/build-it-well#what-the-screens-must-do\",\"id\":\"uhi.concept.screen-requirements\",\"milestone\":\"n/a\",\"title\":\"What UHI app screens must do\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1#how-far-each-service-goes\",\"id\":\"uhi.concept.service-reach\",\"milestone\":\"n/a\",\"title\":\"How far each UHI service goes, and who answers its search\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1/concepts/signing#how-the-signature-is-built\",\"id\":\"uhi.concept.signature-construction\",\"milestone\":\"n/a\",\"title\":\"How a UHI request signature is built\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1/concepts/signing#the-headers\",\"id\":\"uhi.concept.signing-headers\",\"milestone\":\"n/a\",\"title\":\"The signature headers on a UHI call\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1/concepts/messages#timeouts\",\"id\":\"uhi.concept.timeouts\",\"milestone\":\"n/a\",\"title\":\"Timeouts for a UHI search with no end signal\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1/concepts/signing#checking-a-signature-you-receive\",\"id\":\"uhi.concept.verifying-signatures\",\"milestone\":\"n/a\",\"title\":\"Checking the signature on a UHI call you receive\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1/concepts/routes#the-whole-exchange\",\"id\":\"uhi.concept.whole-exchange\",\"milestone\":\"n/a\",\"title\":\"The whole UHI exchange, from search to direct booking\",\"type\":\"concept\"}],\"catalogue_version\":\"2026.09.16\"}\n{\"body\":\"# How to work on an ABDM integration\\n\\n## In plain words\\n\\nA milestone rule tells you what one call does. These tell you how to work, and\\nthey hold whichever milestone you are on.\\n\\nThe pattern they share is worth saying once: **an error message can name the\\nwrong thing.** A refusal caused by the encryption, the headers or the clock can\\nread as if a value were wrong. Working well here means suspecting the layer the\\nmessage did not mention.\\n\\n## Before you start\\n\\nNothing. These apply from the first call, and several of them are about the\\nfirst call.\\n\\n## What happens\\n\\n- Read the body, not only the status. A refusal often names the field in its body while the status says nothing useful.\\n- When ABDM publishes a value, read it rather than hard coding what it currently says. That covers a parameter, such as the encryption algorithm the certificate endpoints return beside the key, and it covers an enumeration: councils, courses, states, districts, purposes and HI types all have master data calls, and a table typed into your source goes stale silently. Refuse to act on a published value you do not recognise rather than falling back to a default.\\n- Read every field in a response, not the one you came for. The M1 certificate call returns the encryption algorithm next to the key.\\n- Prove an assumption against a call that is able to disagree with you. A call that refuses every input with one message cannot tell you which input was right.\\n- Suspect the transport before the data. When a call refuses a value you believe in, check the encryption, the headers and the clock before you doubt the value.\\n- Do not carry an encryption path from one module to another. Read the certificate and the algorithm from the registry you are calling.\\n- Never log a sensitive value before you encrypt it, and never send one to a remote service to be encrypted. Both move the leak rather than removing it.\\n- Generate a fresh REQUEST-ID for every call and log it before sending. Once a call has failed it is the only handle on it.\\n- Check the host on any sample before you copy it. A request copied whole can be correct in every respect except where it is pointed, and that failure looks like credentials.\\n- Do not validate an identifier more strictly than the platform does. A schema that types a field as a UUID is not a promise that every value is one. Refusing a value ABDM would have accepted turns your own client into the thing that broke.\\n- Read a plural response as plural. A verification returns an accounts array and a consent request can produce more than one artefact. Store the collection and decide from its length.\\n- A documented callback path is not a documented callback payload. Log the whole body on arrival before you parse it, so a handler written against an assumed shape fails where you can see it.\\n- Decode a token before you use it. A call that hands you a token has not necessarily handed you the token the next call wants, and the claims are base64 that need no library to read.\\n- When a journey carries the same parameter through two calls, check what each call's specification asks for rather than carrying the first value forward.\\n- Do not infer which path an identifier belongs to from where that identifier is most discussed. Send every identifier to the lookup first and let the answer pick the path, so nobody who already holds an account is sent to create a second.\\n- Do not match an error code with string equality. A code may come back bare, as `ABDM-1001`, or with a trailing `: ` separator, as `ABDM-1001: `. Match on the code itself and tolerate the separator.\\n- Handle a failure that carries no body. Check for an empty body before you parse, or your client throws on the simplest failure there is.\\n- Back off on an authentication failure rather than retrying, and never loop a credential check.\\n- Send TIMESTAMP in UTC, ISO-8601 with milliseconds and a trailing Z, as in `2022-10-06T15:10:00.587Z`.\\n- Cache a public certificate with a validity window rather than forever. A rotation fails every encrypted call at once, and a cache with no expiry cannot recover on its own.\\n\\n## How you know it worked\\n\\nYou are working this way when a failure takes minutes rather than an afternoon.\\nConcretely: you can say which layer refused a call before you change anything,\\nyou have not retried an authentication loop, and no constant in your source\\nduplicates a value ABDM publishes at runtime.\\n\\n## When it goes wrong\\n\\n- You changed two things and the call started working. You have not learned\\n  which, and the other one is still wrong somewhere else.\\n- You read a uniform negative as evidence. A call that refuses every input the\\n  same way has told you nothing.\\n- You trusted a message that named a field. The field is where the value\\n  landed, not where it went wrong.\\n- You retried an authentication failure. Back off instead, and find out why\\n  the first attempt failed.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"\",\"gateway\":\"shared\",\"id\":\"shared.concept.integration-practices\",\"milestone\":\"n/a\",\"summary\":\"The habits that decide whether a wrong assumption surfaces in a minute or after a day. They are not facts about any one milestone, which is why they sit here and ship with every skill.\",\"title\":\"How to work on an ABDM integration\",\"type\":\"concept\"}\n{\"body\":\"# Survey the existing codebase before the first journey, and write the plan\\n\\n## In plain words\\n\\nMost ABDM integrations are not new systems. They are a hospital management\\nsystem, a laboratory system or a clinic application that already has patients,\\nvisits, records, a login, an HTTP client and a way of keeping secrets. Every\\nABDM journey has to land somewhere inside that, and a journey built before the\\ncodebase has been read lands in the wrong place: a second HTTP client beside the\\nfirst, an ABHA column on the wrong table, a callback route the reverse proxy\\nnever forwards.\\n\\nSo the first loop is not a journey. It is a survey of the system as it is, and\\nits exit condition is a written plan that names, for every ABDM touchpoint, the\\nfile it will live in. The journeys then build against that plan rather than\\nagainst the specification's idea of a fresh codebase.\\n\\n## Before you start\\n\\n- The repository, checked out, with permission to read all of it. A survey of\\n  half a codebase produces a plan for half a system.\\n- The answers to [the deployment interview](m1-deployment-interview.md). The\\n  code says what the system is. Only the integrator can say what the\\n  deployment is, and the two together decide which journeys are built at all.\\n- [The practices that hold across every call](integration-practices.md), which\\n  the plan has to leave room for.\\n\\n## What happens\\n\\nThis is one loop with a limit of eight passes over the codebase. Each pass\\nreads live state only, which here means the files themselves, never a README's\\ndescription of them and never an assumption carried from a similar system.\\n\\n**Observe.** Inventory the system from its manifests and its tree, not from its\\ndocumentation. Record file paths for each of these, or record that none exists:\\n\\n| Find | Where it usually shows | Why ABDM needs it |\\n|---|---|---|\\n| Languages and runtime versions | package manifests, lock files, toolchain files | Every generated call has to be idiomatic here |\\n| Build, run and test commands | manifests, CI configuration, a Makefile | Each journey's exit condition becomes a test that runs the same way |\\n| The frontend and backend split, and how they talk | the top level tree, an API client in the frontend, route definitions in the backend | The counter screens go in the frontend; every ABDM call goes through the backend |\\n| The outbound HTTP client the backend already uses | the dependency list, a shared client module | ABDM calls reuse it, or a second one appears and the two drift |\\n| How secrets and configuration reach the process | environment loading, a vault client, a config file | The client id, the secret and the access token travel the same way |\\n| The patient model, and the identifier fields it already carries | the schema, the ORM models, the migrations | The ABHA number and address become columns beside the existing identifiers, not a new table |\\n| The visit, encounter or record model | the same places | A care context maps to one of these, and the plan has to say which |\\n| Where inbound HTTP is routed and authenticated, and whether the deployment has a public URL | the router, the middleware, the reverse proxy configuration, the deployment manifests | ABDM calls back, and a callback route that nothing forwards is silence nobody notices |\\n| Existing cryptography helpers | a security or crypto module, the dependency list | The RSA encryption of identifiers reuses them |\\n| Where errors are shown to a user, and where they are logged | the frontend's error surface, the logging setup | A refused call has to land on the screen the person is looking at, and never log a token |\\n\\n**Orient.** Map each ABDM touchpoint onto that inventory. Where the map is\\nexact, write the file path. Where it is not, write two candidates and say what\\nwould decide between them. The common ambiguities: two places that could hold\\nthe patient identifier, an HTTP client in the frontend and none in the backend,\\na monorepo with several services and no obvious owner for callbacks.\\n\\nThen read the interview answers against the inventory. A government integrator\\ngets the demographic route; a facility with no public URL gets no callback\\ndriven journey until it has one; a desk with a fingerprint reader gets the\\nbiometric method. The route set is the intersection of what the deployment\\nallows and what the code can host.\\n\\n**Decide.** Order the journeys. The token comes first because every other call\\nneeds it: the gateway session token, or for M4 the bearer token the registry calls\\ncarry. Then the journey whose exit condition can be observed with\\nthe least new code, usually a profile read for a patient who already holds an\\nABHA. Creation and linking come after, because each depends on state the earlier\\nones produce. For each journey, name the files it will touch and the test that\\nproves its exit condition.\\n\\n**Act.** Write the plan. It is a file in the repository, at the path the\\nintegrator names or at the root as `abdm-integration-plan.md`, and it is the\\nonly output of this loop. Then return to observe once, reading the plan against\\nthe tree, to confirm every path in it exists or is marked as new.\\n\\nIf the limit is reached with questions still open, escalate: name what was\\nfound, name the two candidates that could not be separated, point at this\\natom, and ask one question.\\n\\n## How you know it worked\\n\\nThe plan exists and answers every row of the inventory table with a file path,\\nor with the words none, add at, followed by a path. No row is blank and no row\\nsays to be decided.\\n\\nEvery ABDM touchpoint in the plan names one file, or names two candidates and\\nthe observation that would choose between them. Every journey in the plan names\\nthe test that proves its exit condition and the command that runs it.\\n\\nOpen the plan beside the tree. Every path it names resolves, or is marked as\\nnew. That is the observation that ends this loop, and the first journey does\\nnot start until it has been made.\\n\\n## When it goes wrong\\n\\n- **The plan puts the HTTP client in the frontend.** The survey found the\\n  frontend's API client and stopped. Every ABDM call carries a secret, so it\\n  goes through the backend, and the plan has to say which backend module.\\n- **Two patient tables, and the plan picked one.** Orient produced one\\n  hypothesis where it needed two. Name both, and name the query that shows\\n  which one the visit model points at.\\n- **The plan has a callback route and the deployment has no public URL.** The\\n  inventory row on inbound routing was answered from the router rather than\\n  from the deployment. Mark every callback driven journey as blocked on a URL,\\n  and build the ones that are not.\\n- **The survey read the README and not the tree.** A README describes the\\n  system somebody meant to build. The plan is for the one that exists.\\n- **Eight passes and the plan is still incomplete.** Escalate with the rows\\n  that are answered, the rows that are not, this atom, and one question about\\n  the row that blocks the most journeys.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"\",\"gateway\":\"shared\",\"id\":\"shared.concept.survey-an-existing-codebase\",\"milestone\":\"n/a\",\"summary\":\"Integrating ABDM into a system that already exists starts by reading that system whole, and ends with a written plan that names the file every ABDM touchpoint will live in.\",\"title\":\"Survey the existing codebase before the first journey, and write the plan\",\"type\":\"concept\"}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/nhcx/v1/getting-started/get-your-sandbox-credentials\",\"id\":\"nhcx.flow.sandbox-onboarding\",\"summary\":\"Register your system in the claims exchange test environment so it holds a participant code, a registered certificate and a callback address.\",\"title\":\"Onboard as a participant in the NHCX sandbox\",\"type\":\"flow\"},{\"doc_url\":\"/docs/nhcx/v1/go-live\",\"id\":\"nhcx.flow.production-onboarding\",\"summary\":\"Create and confirm your live claims exchange participant record, then register your certificate and callback address, each step confirmed by a passcode sent ...\",\"title\":\"Onboard as a participant in production\",\"type\":\"flow\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/building-and-sending-a-jwe\",\"id\":\"nhcx.flow.send-a-sealed-request\",\"summary\":\"Seal a claims message for one recipient, post it to the exchange, and wait for the recipient's answer to arrive at your callback address.\",\"title\":\"Send a sealed request through NHCX\",\"type\":\"flow\"},{\"doc_url\":\"/docs/uhi/v1/getting-started/sandbox#4-note-the-base-urls\",\"id\":\"uhi.sandbox.base-urls\",\"summary\":\"The UHI Gateway base URL for the sandbox and for production, and the reference EUA and HSPA apps in the sandbox.\",\"title\":\"UHI Gateway base URLs for sandbox and production\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-2500\",\"id\":\"hiecm.error.abdm-2500\",\"summary\":\"The call carried no access token, or a callback answered a request the gateway is not waiting on.\",\"title\":\"ABDM-2500, no Authorization header, or no matching request\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/06-m3-post-data-flow-v3-health-information-notify#m3-hiu-data-flow-notify\",\"id\":\"hiecm.endpoint.m3-hiu-data-flow-notify\",\"summary\":\"After the records arrive, the HIU reports receipt with a session status and a status per care context.\",\"title\":\"Notify the gateway that data was received\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/03-m2-post-data-flow-v3-health-information-notify#m2-hip-data-flow-notify\",\"id\":\"hiecm.endpoint.m2-hip-data-flow-notify\",\"summary\":\"After pushing the records, the HIP reports the transfer with a session status and a status per care context.\",\"title\":\"Notify the gateway that a data transfer finished\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/gateway#gateway-session\",\"id\":\"hiecm.concept.gateway-session\",\"summary\":\"Every gateway call carries a short lived bearer token from one session endpoint, which identifies your application, not a person.\",\"title\":\"The gateway session, the first call in every integration\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-2406\",\"id\":\"hiecm.error.abdm-2406\",\"summary\":\"Your call does not fit where the gateway believes the flow has reached.\",\"title\":\"ABDM-2406, the calls are out of order\",\"type\":\"error\"},{\"doc_url\":\"/docs/uhi/v1/getting-started/going-live#3-switch-to-production\",\"id\":\"uhi.sandbox.production-switch\",\"summary\":\"Change your IDs and callback URL to production values and point your calls at the production UHI Gateway.\",\"title\":\"Switch your UHI integration to production\",\"type\":\"sandbox\"}]}\n{\"body\":\"# The gateway session, the first call in every integration\\n\\n## In plain words\\n\\nOne endpoint issues the token every other call carries. It is the call [M1](/docs/hiecm/v3/getting-started/glossary#m1) uses. [M4](/docs/hiecm/v3/getting-started/glossary#m4) calls carry their own bearer token instead.\\n\\n**POST** `/api/hiecm/gateway/v3/sessions`\\n\\nHeaders:\\n\\n| Header | Example value | What it is |\\n|---|---|---|\\n| `REQUEST-ID` | `18235d89-cb13-479d-ad71-7a57d5f669a8` | A fresh UUID for this call |\\n| `TIMESTAMP` | `2022-10-06T15:10:00.587Z` | The time you made the call, ISO 8601 |\\n| `X-CM-ID` | `sbx` | The consent manager. Use `sbx` for sandbox |\\n| `Content-Type` | `application/json` | |\\n\\nNo `Authorization` header on this call. It is the one call with no token yet.\\n\\nBody:\\n\\n```json\\n{\\n  \\\"clientId\\\": \\\"<CLIENT_ID_FROM_SANDBOX_SIGNUP>\\\",\\n  \\\"clientSecret\\\": \\\"<CLIENT_SECRET_FROM_SANDBOX_SIGNUP>\\\",\\n  \\\"grantType\\\": \\\"client_credentials\\\"\\n}\\n```\\n\\nSend the client id you were issued.\\n\\nResponse shape:\\n\\n```json\\n{\\n  \\\"accessToken\\\": \\\"<JWT>\\\",\\n  \\\"expiresIn\\\": 1200,\\n  \\\"refreshExpiresIn\\\": 1800,\\n  \\\"refreshToken\\\": \\\"<JWT>\\\",\\n  \\\"tokenType\\\": \\\"bearer\\\"\\n}\\n```\\n\\nThe response carries the token in `accessToken`.\\n\\nSend the token back as `Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>` on every other call. Headers per call, and the second token M1 login issues, are on [authentication](/docs/hiecm/v3/reference/authentication). Interactive: [gateway API reference](/reference/hiecm-gateway).\\n\\nThe session token says which application is calling, not which person. [M1](/docs/hiecm/v3/milestones/m1) profile calls also carry a user token in `X-token`, which login returns.\\n\\n## Before you start\\n\\nA client id and client secret from sandbox registration, held on your server. Never ship the secret in a mobile or browser build.\\n\\n## What happens\\n\\nCall the session endpoint with `clientId`, `clientSecret` and `grantType` set to `client_credentials`. Send the `accessToken` it returns as `Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>` on every other gateway call. Renew before `expiresIn` runs out rather than on a fixed timer.\\n\\n## How you know it worked\\n\\nThe response carries `accessToken` and `expiresIn`, and the next gateway call with that token is not refused as unauthorised.\\n\\n## When it goes wrong\\n\\nEvery call returns 401: see [everything returns 401](/docs/hiecm/v3/troubleshooting/everything-returns-401). A profile call is refused while the session token is fresh: the `X-token` is missing, or it holds the short lived token from login verify, which the verify user call exchanges for the user token. `ABDM-1094` reads X-token expired, and the token sent is often the wrong kind rather than an old one.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/concepts/gateway#gateway-session\",\"gateway\":\"hiecm\",\"id\":\"hiecm.concept.gateway-session\",\"milestone\":\"M1\",\"summary\":\"Every gateway call carries a short lived bearer token from one session endpoint, which identifies your application, not a person.\",\"title\":\"The gateway session, the first call in every integration\",\"type\":\"concept\"}\n{\"body\":\"# Onboard as a participant in the NHCX sandbox\\n\\n## In plain words\\n\\nEvery system that sends or receives claims messages on the [National Health Claims Exchange](../../shared/glossary/nhcx.md) (NHCX) must first exist in its participant registry. Onboarding creates that record.\\n\\nThe record gives you a [participant code](../glossary/participant-code.md), such as `100001@sbx`. It holds your public encryption certificate and the address where NHCX delivers your messages. Nothing else on NHCX works for you until the record exists.\\n\\n## Before you start\\n\\nEach item is something you can check before the first call.\\n\\n- **Registry identity.** A [provider](../glossary/provider.md) has its facility in the [Health Facility Registry](../../shared/glossary/hfr.md) (HFR) and knows its HFR ID. A [payer](../glossary/payer.md) or [TPA](../glossary/tpa.md) knows the ID its [IRDAI](../glossary/irdai.md) or equivalent authority issued. An end user application, such as a [PHR](../../shared/glossary/phr.md) app, uses its client ID.\\n- **Sandbox credentials.** You hold an [ABDM](../../shared/glossary/abdm.md) sandbox client ID and secret. Apply at `https://sandbox.abdm.gov.in/sandbox/v3/` with the intent \\\"Providers and Payer\\\" and [Milestone 1](../../hiecm/glossary/m1.md). See [What you need before you register on the NHCX sandbox](../sandbox/prerequisites.md).\\n- **Milestone 1 working, for a provider.** Your software creates and verifies [ABHA](../../shared/glossary/abha.md) numbers.\\n- **NHCX sandbox access.** You registered at `https://sandbox.abdm.gov.in/sandbox/v3/sandbox-registration` with that client ID and secret, and roles were assigned to you.\\n- **A certificate.** You have `certificate_base64.txt` from [Generate an encryption certificate and register it](generate-and-register-certificate.md).\\n- **A callback address.** Your HTTPS endpoint meets the [callback address rules](../sandbox/callback-url-requirements.md). It uses a domain name with no IP address or port. The server is in India, and its firewall is open to `3.109.99.210`, `13.126.152.0` and `13.200.129.223`.\\n\\n## What happens\\n\\n```mermaid\\nsequenceDiagram\\n    participant You as Your system\\n    participant GW as ABDM session gateway\\n    participant PS as NHCX participant service\\n    You->>GW: POST /api/hiecm/gateway/v3/sessions\\n    GW-->>You: accessToken, expiresIn 1200\\n    You->>PS: POST /participant/create\\n    PS-->>You: participant_code, for example 100001@sbx\\n    opt Create answers with a transactionid instead\\n        Note over You: a passcode arrives by SMS on the registered mobile\\n        You->>PS: GET /validate with transactionId and passcode\\n        PS-->>You: creation confirmed\\n    end\\n    You->>PS: POST /fetch/certs with your participant code\\n    PS-->>You: the encryption_cert you registered\\n    opt Change the endpoint or certificate later\\n        You->>PS: POST /participant/update\\n        PS-->>You: participant_code\\n    end\\n```\\n\\nEvery call in this flow answers in its own response. Two waits sit outside the calls. The manual review of your sandbox registration comes before step 1. The SMS passcode arrives in step 3, when that step applies.\\n\\n### 1. Get a session token\\n\\nCall the session endpoint with your client ID and secret. [Which session token endpoint to call](../decisions/session-endpoint.md) settles the address. The token lasts 1200 seconds (20 minutes), which the answer states as `expiresIn`. Get a new token before it lapses, and after any `401`.\\n\\nEvery participant service call below carries this token. The [session token endpoint](../endpoints/session-token.md) shows the header.\\n\\n### 2. Create the participant\\n\\nCall `POST /participant/create` on the sandbox participant service, `https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice`. The body carries your profile:\\n\\n| Field | What to put |\\n|---|---|\\n| `linked_registry_codes` | Your registry code, from the table below |\\n| `registryid` | Your ID in that registry, as listed under Before you start |\\n| `participant_name` | Your legal or facility name |\\n| `scheme_code`, `state`, `district` | Your scheme, for example `PMJAY`, and your location |\\n| `roles` | Your role code, from the table below |\\n| `primaryEmail`, `phone`, `primaryMobile` | Your contacts |\\n| `signing_cert_path` | Path to your signing certificate, if you have one |\\n| `encryption_cert` | The contents of `certificate_base64.txt` |\\n| `endpoint_url` | Your callback base address |\\n\\n| You are | `roles` | `linked_registry_codes` |\\n|---|---|---|\\n| Provider | `10001` | `10001` (HFR) |\\n| Payer | `10002` | `10004` (PAYER) |\\n| TPA | `10003` | `10004` (PAYER) |\\n| End user application | `10009` | `10001` |\\n\\nThe answer carries your `participant_code`. The full request is in [POST /participant/create](../endpoints/participant-create.md).\\n\\nAn entity with several facilities creates one participant code per HFR ID. It uses the same client credentials for all of them.\\n\\n### 3. Confirm, when the answer asks for it\\n\\nIf the create answer carries a `transactionid` instead of a participant code, a passcode arrives by SMS on the registered mobile. Confirm with `GET /validate`, passing `transactionId` and `passcode`. The rules for that pair are in [Onboard as a participant in production](production-onboarding.md).\\n\\n### 4. Read your record back\\n\\nCall `POST /fetch/certs` with `{\\\"participantid\\\": \\\"<YOUR_PARTICIPANT_CODE>\\\"}`. The answer carries the `encryption_cert` stored against your code. Compare it with your certificate as shown in [Generate an encryption certificate and register it](generate-and-register-certificate.md).\\n\\n### 5. Change it later\\n\\n`POST /participant/update` changes the endpoint address, the certificate or any other attribute. `participant_code` is mandatory in its body.\\n\\nOn success every call here answers HTTP `200`. Failures answer `400` for a client error, `404` for a resource not found, or `500` when downstream systems are down.\\n\\n## How you know it worked\\n\\nYou hold a `participant_code` from `POST /participant/create`, or from `GET /validate` when a passcode was asked for. `POST /fetch/certs` with that code returns an `encryption_cert` whose public key matches your `certificate.crt`.\\n\\n```observation schema=exit-condition\\nchannel: synchronous\\ncall: POST /fetch/certs\\nrequest:\\n  participantid: <YOUR_PARTICIPANT_CODE>\\nmatch:\\n  encryption_cert: public key equals the one in certificate.crt\\n```\\n\\nNext, build your message handling with [Receive, open and acknowledge a sealed message](receive-a-sealed-callback.md) and [Report a processing failure on /v1/error](report-a-processing-error.md). Then work through [the sandbox exit process](../sandbox/sandbox-exit.md).\\n\\n## When it goes wrong\\n\\n- **Every call returns `401`.** The token is missing, lacks the `Bearer ` prefix, or has expired. Get a new token and retry once. See [NHCX-401](../errors/nhcx-401.md) and [Every NHCX call returns 401](../troubleshooting/everything-returns-401.md).\\n- **Create is refused with `400`.** Check `roles` and `linked_registry_codes` against the table in step 2. A wrong pairing causes rejection or misrouted traffic later.\\n- **Use-case calls say the sender is not registered.** You are calling before the record exists, or with a different code. See [NHCX-1002](../errors/nhcx-1002.md).\\n- **Nothing ever reaches your endpoint.** The address uses an IP address or a port, or the server is outside India. A firewall may also block the NHCX addresses. See [Your callback URL is rejected or never called](../troubleshooting/callback-url-rejected.md).\\n- **`/fetch/certs` returns a different key.** You registered a certificate from another key pair. Replace it with `POST /participant/update`.\\n- **You are still waiting for sandbox access.** Registration approval is a manual review with no published turnaround. You cannot call anything until roles are assigned. See [Where to get help with NHCX](../sandbox/support-contacts.md).\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/nhcx/v1/getting-started/get-your-sandbox-credentials\",\"gateway\":\"nhcx\",\"id\":\"nhcx.flow.sandbox-onboarding\",\"milestone\":\"n/a\",\"summary\":\"Register your system in the claims exchange test environment so it holds a participant code, a registered certificate and a callback address.\",\"title\":\"Onboard as a participant in the NHCX sandbox\",\"type\":\"flow\"}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T12:05:13.243Z",
+  "usage": {
+    "input_tokens": 110,
+    "output_tokens": 2076,
+    "cache_read_input_tokens": 168187,
+    "cache_creation_input_tokens": 23772,
+    "num_turns": 13,
+    "duration_ms": 40494,
+    "cost_usd_equivalent": 0.0748527
+  }
+}

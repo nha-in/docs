@@ -1,0 +1,417 @@
+{
+  "case_id": "conversation-gateway-session-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "The conversation so far:\nDeveloper: What's the Authorization header format for ABDM calls?\nYou: The Authorization header uses the Bearer scheme: the word Bearer, followed by a space, then the token value, which is the access token returned by the session call.\n\nThe developer's new message:\nCan you give me the actual call to get that token?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01PuHqCjgJ5p15Atg6dQoENc",
+            "Name": "search",
+            "Input": {
+              "query": "token generate access token",
+              "kind": "operation",
+              "limit": 5
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "token generate access token",
+            "kind": "operation",
+            "limit": 5
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/gateway/endpoints/gateway-post-gateway-v3-sessions",
+                "id": "gateway_post_gateway_v3_sessions",
+                "summary": "This API is invoked to generate access token.",
+                "title": "POST /api/hiecm/gateway/v3/sessions",
+                "type": "operation"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01CxEDan42135Htmz9L4YgXy",
+            "Name": "get",
+            "Input": {
+              "id": "gateway_post_gateway_v3_sessions"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "gateway_post_gateway_v3_sessions"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "doc_path": "/docs/hiecm/v3/api/gateway/endpoints/gateway-post-gateway-v3-sessions",
+            "operation_id": "gateway_post_gateway_v3_sessions",
+            "spec": {
+              "description": "This API is used to generate a access token. When invoked, it facilitates the authentication process by providing a secure token that can be used to access various services and resources within the system. This functionality is essential for ensuring secure and authorized access, enabling users to interact with protected endpoints and perform operations that require authentication. By using this API, users can obtain the necessary tokens to maintain secure sessions and access the system’s features effectively.",
+              "operationId": "gateway_post_gateway_v3_sessions",
+              "parameters": [
+                {
+                  "description": "Unique UUID for track the end to end request transaction",
+                  "example": "18235d89-cb13-479d-ad71-7a57d5f669a8",
+                  "in": "header",
+                  "name": "REQUEST-ID",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "description": "Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds",
+                  "example": "2022-10-06T15:10:00.587Z",
+                  "in": "header",
+                  "name": "TIMESTAMP",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "description": "Suffix of the consent manager to which the request was intended",
+                  "example": "sbx",
+                  "in": "header",
+                  "name": "X-CM-ID",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "properties": {
+                        "clientId": {
+                          "description": "The client ID issued to the integrator by ABDM at registration.",
+                          "example": "SBX_0000",
+                          "type": "string"
+                        },
+                        "clientSecret": {
+                          "description": "The client secret issued to the integrator by ABDM along with the client ID.",
+                          "example": "0******-***-***-***-a****",
+                          "type": "string"
+                        },
+                        "grantType": {
+                          "description": "The method used by the client to obtain an access token, e.g. client_credentials.",
+                          "enum": [
+                            "client_credentials"
+                          ],
+                          "example": "client_credentials",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "clientId",
+                        "clientSecret",
+                        "grantType"
+                      ],
+                      "type": "object"
+                    }
+                  }
+                },
+                "required": true
+              },
+              "responses": {
+                "202": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "properties": {
+                          "accessToken": {
+                            "example": "<TOKEN>",
+                            "format": "bearer",
+                            "type": "string"
+                          },
+                          "expiresIn": {
+                            "example": 1200,
+                            "type": "integer"
+                          },
+                          "refreshExpiresIn": {
+                            "example": 1800,
+                            "type": "integer"
+                          },
+                          "refreshToken": {
+                            "example": "<TOKEN>",
+                            "format": "bearer",
+                            "type": "string"
+                          },
+                          "tokenType": {
+                            "example": "bearer",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Accepted"
+                },
+                "204": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "properties": {
+                          "error": {
+                            "description": "The error code and message, if any occurred.",
+                            "properties": {
+                              "code": {
+                                "description": "ABDM-1001 - No data found. May be returned either bare (`ABDM-1001`) or with a trailing \": \" separator (`ABDM-1001: `); match on the code itself and tolerate the separator.",
+                                "example": "ABDM-1001",
+                                "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                                "type": "string"
+                              },
+                              "message": {
+                                "example": "No data found",
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "code",
+                              "message"
+                            ],
+                            "type": "object"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "No Content"
+                },
+                "400": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "properties": {
+                          "error": {
+                            "description": "The error code and message, if any occurred.",
+                            "properties": {
+                              "code": {
+                                "description": "ABDM-1015 - Invalid Response. May be returned either bare (`ABDM-1015`) or with a trailing \": \" separator (`ABDM-1015: `); match on the code itself and tolerate the separator.",
+                                "example": "ABDM-1015",
+                                "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                                "type": "string"
+                              },
+                              "message": {
+                                "example": "Bad Request, invalid response",
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "code",
+                              "message"
+                            ],
+                            "type": "object"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Bad Request"
+                },
+                "401": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "properties": {
+                          "code": {
+                            "description": "900901 - Invalid Credentials. May be returned either bare or with a trailing \": \" separator; match on the code itself and tolerate the separator.",
+                            "example": "900901",
+                            "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                            "type": "string"
+                          },
+                          "description": {
+                            "description": "Detailed description of the failure.",
+                            "example": "Invalid Credentials. Make sure your API invocation call has a header: 'Authorization : Bearer ACCESS_TOKEN' or 'Authorization : Basic ACCESS_TOKEN' or 'apikey: API_KEY'",
+                            "type": "string"
+                          },
+                          "message": {
+                            "description": "Short description of the failure.",
+                            "example": "Invalid Credentials",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Unauthorized. The request carried no valid credentials, or the access token has expired. Obtain a fresh token from the session API and retry."
+                },
+                "403": {
+                  "content": {
+                    "text/plain": {
+                      "schema": {
+                        "example": "Forbidden",
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "description": "Forbidden. The caller is authenticated but is not permitted to perform this operation on this resource."
+                },
+                "500": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "properties": {
+                          "error": {
+                            "description": "The error code and message, if any occurred.",
+                            "properties": {
+                              "code": {
+                                "description": "ABDM-9999 - Unknown exception. May be returned either bare (`ABDM-9999`) or with a trailing \": \" separator (`ABDM-9999: `); match on the code itself and tolerate the separator.",
+                                "example": "ABDM-9999",
+                                "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                                "type": "string"
+                              },
+                              "message": {
+                                "example": "Unknown exception",
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "code",
+                              "message"
+                            ],
+                            "type": "object"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Internal Server Error"
+                },
+                "503": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "properties": {
+                          "code": {
+                            "description": "ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing \": \" separator (`ABDM-1024: `); match on the code itself and tolerate the separator.",
+                            "example": "ABDM-1024",
+                            "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                            "type": "string"
+                          },
+                          "message": {
+                            "example": "Dependent service unavailable",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "code",
+                          "message"
+                        ],
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Service Unavailable"
+                }
+              },
+              "summary": "This API is invoked to generate access token.",
+              "tags": [
+                "abdm-sessions"
+              ],
+              "x-abdm-nha-operation-id": "abdm-sessions 1"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "Here's the actual token generation call (**POST /api/hiecm/gateway/v3/sessions** from the [gateway sessions endpoint](https://abdm-nha.nrces.in/docs/hiecm/v3/api/gateway/endpoints/gateway-post-gateway-v3-sessions)):\n\n**Request:**\n```bash\ncurl -X POST https://api.abdm.gov.in/api/hiecm/gateway/v3/sessions \\\n  -H \"REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8\" \\\n  -H \"TIMESTAMP: 2026-09-29T15:10:00.587Z\" \\\n  -H \"X-CM-ID: sbx\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"clientId\": \"SBX_0000\",\n    \"clientSecret\": \"your-secret-here\",\n    \"grantType\": \"client_credentials\"\n  }'\n```\n\n**Required headers:**\n- `REQUEST-ID` — UUID to track the request\n- `TIMESTAMP` — ISO 8601 timestamp when request was initiated\n- `X-CM-ID` — CM suffix (e.g., `sbx` for sandbox)\n\n**Response (202 Accepted):**\n```json\n{\n  \"accessToken\": \"<TOKEN>\",\n  \"expiresIn\": 1200,\n  \"tokenType\": \"bearer\",\n  \"refreshToken\": \"<TOKEN>\",\n  \"refreshExpiresIn\": 1800\n}\n```\n\nUse the `accessToken` value in your Authorization header as `Bearer <accessToken>` for subsequent calls. It expires in `expiresIn` seconds.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "Here's the actual token generation call (**POST /api/hiecm/gateway/v3/sessions** from the [gateway sessions endpoint](https://abdm-nha.nrces.in/docs/hiecm/v3/api/gateway/endpoints/gateway-post-gateway-v3-sessions)):\n\n**Request:**\n```bash\ncurl -X POST https://api.abdm.gov.in/api/hiecm/gateway/v3/sessions \\\n  -H \"REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8\" \\\n  -H \"TIMESTAMP: 2026-09-29T15:10:00.587Z\" \\\n  -H \"X-CM-ID: sbx\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"clientId\": \"SBX_0000\",\n    \"clientSecret\": \"your-secret-here\",\n    \"grantType\": \"client_credentials\"\n  }'\n```\n\n**Required headers:**\n- `REQUEST-ID` — UUID to track the request\n- `TIMESTAMP` — ISO 8601 timestamp when request was initiated\n- `X-CM-ID` — CM suffix (e.g., `sbx` for sandbox)\n\n**Response (202 Accepted):**\n```json\n{\n  \"accessToken\": \"<TOKEN>\",\n  \"expiresIn\": 1200,\n  \"tokenType\": \"bearer\",\n  \"refreshToken\": \"<TOKEN>\",\n  \"refreshExpiresIn\": 1800\n}\n```\n\nUse the `accessToken` value in your Authorization header as `Bearer <accessToken>` for subsequent calls. It expires in `expiresIn` seconds.",
+  "sources": [],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/api/gateway/endpoints/gateway-post-gateway-v3-sessions\",\"id\":\"gateway_post_gateway_v3_sessions\",\"summary\":\"This API is invoked to generate access token.\",\"title\":\"POST /api/hiecm/gateway/v3/sessions\",\"type\":\"operation\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"doc_path\":\"/docs/hiecm/v3/api/gateway/endpoints/gateway-post-gateway-v3-sessions\",\"operation_id\":\"gateway_post_gateway_v3_sessions\",\"spec\":{\"description\":\"This API is used to generate a access token. When invoked, it facilitates the authentication process by providing a secure token that can be used to access various services and resources within the system. This functionality is essential for ensuring secure and authorized access, enabling users to interact with protected endpoints and perform operations that require authentication. By using this API, users can obtain the necessary tokens to maintain secure sessions and access the system’s features effectively.\",\"operationId\":\"gateway_post_gateway_v3_sessions\",\"parameters\":[{\"description\":\"Unique UUID for track the end to end request transaction\",\"example\":\"18235d89-cb13-479d-ad71-7a57d5f669a8\",\"in\":\"header\",\"name\":\"REQUEST-ID\",\"required\":true,\"schema\":{\"type\":\"string\"}},{\"description\":\"Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds\",\"example\":\"2022-10-06T15:10:00.587Z\",\"in\":\"header\",\"name\":\"TIMESTAMP\",\"required\":true,\"schema\":{\"type\":\"string\"}},{\"description\":\"Suffix of the consent manager to which the request was intended\",\"example\":\"sbx\",\"in\":\"header\",\"name\":\"X-CM-ID\",\"required\":true,\"schema\":{\"type\":\"string\"}}],\"requestBody\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"clientId\":{\"description\":\"The client ID issued to the integrator by ABDM at registration.\",\"example\":\"SBX_0000\",\"type\":\"string\"},\"clientSecret\":{\"description\":\"The client secret issued to the integrator by ABDM along with the client ID.\",\"example\":\"0******-***-***-***-a****\",\"type\":\"string\"},\"grantType\":{\"description\":\"The method used by the client to obtain an access token, e.g. client_credentials.\",\"enum\":[\"client_credentials\"],\"example\":\"client_credentials\",\"type\":\"string\"}},\"required\":[\"clientId\",\"clientSecret\",\"grantType\"],\"type\":\"object\"}}},\"required\":true},\"responses\":{\"202\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"accessToken\":{\"example\":\"<TOKEN>\",\"format\":\"bearer\",\"type\":\"string\"},\"expiresIn\":{\"example\":1200,\"type\":\"integer\"},\"refreshExpiresIn\":{\"example\":1800,\"type\":\"integer\"},\"refreshToken\":{\"example\":\"<TOKEN>\",\"format\":\"bearer\",\"type\":\"string\"},\"tokenType\":{\"example\":\"bearer\",\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"Accepted\"},\"204\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"error\":{\"description\":\"The error code and message, if any occurred.\",\"properties\":{\"code\":{\"description\":\"ABDM-1001 - No data found. May be returned either bare (`ABDM-1001`) or with a trailing \\\": \\\" separator (`ABDM-1001: `); match on the code itself and tolerate the separator.\",\"example\":\"ABDM-1001\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"message\":{\"example\":\"No data found\",\"type\":\"string\"}},\"required\":[\"code\",\"message\"],\"type\":\"object\"}},\"type\":\"object\"}}},\"description\":\"No Content\"},\"400\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"error\":{\"description\":\"The error code and message, if any occurred.\",\"properties\":{\"code\":{\"description\":\"ABDM-1015 - Invalid Response. May be returned either bare (`ABDM-1015`) or with a trailing \\\": \\\" separator (`ABDM-1015: `); match on the code itself and tolerate the separator.\",\"example\":\"ABDM-1015\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"message\":{\"example\":\"Bad Request, invalid response\",\"type\":\"string\"}},\"required\":[\"code\",\"message\"],\"type\":\"object\"}},\"type\":\"object\"}}},\"description\":\"Bad Request\"},\"401\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"code\":{\"description\":\"900901 - Invalid Credentials. May be returned either bare or with a trailing \\\": \\\" separator; match on the code itself and tolerate the separator.\",\"example\":\"900901\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"description\":{\"description\":\"Detailed description of the failure.\",\"example\":\"Invalid Credentials. Make sure your API invocation call has a header: 'Authorization : Bearer ACCESS_TOKEN' or 'Authorization : Basic ACCESS_TOKEN' or 'apikey: API_KEY'\",\"type\":\"string\"},\"message\":{\"description\":\"Short description of the failure.\",\"example\":\"Invalid Credentials\",\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"Unauthorized. The request carried no valid credentials, or the access token has expired. Obtain a fresh token from the session API and retry.\"},\"403\":{\"content\":{\"text/plain\":{\"schema\":{\"example\":\"Forbidden\",\"type\":\"string\"}}},\"description\":\"Forbidden. The caller is authenticated but is not permitted to perform this operation on this resource.\"},\"500\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"error\":{\"description\":\"The error code and message, if any occurred.\",\"properties\":{\"code\":{\"description\":\"ABDM-9999 - Unknown exception. May be returned either bare (`ABDM-9999`) or with a trailing \\\": \\\" separator (`ABDM-9999: `); match on the code itself and tolerate the separator.\",\"example\":\"ABDM-9999\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"message\":{\"example\":\"Unknown exception\",\"type\":\"string\"}},\"required\":[\"code\",\"message\"],\"type\":\"object\"}},\"type\":\"object\"}}},\"description\":\"Internal Server Error\"},\"503\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"code\":{\"description\":\"ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing \\\": \\\" separator (`ABDM-1024: `); match on the code itself and tolerate the separator.\",\"example\":\"ABDM-1024\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"message\":{\"example\":\"Dependent service unavailable\",\"type\":\"string\"}},\"required\":[\"code\",\"message\"],\"type\":\"object\"}}},\"description\":\"Service Unavailable\"}},\"summary\":\"This API is invoked to generate access token.\",\"tags\":[\"abdm-sessions\"],\"x-abdm-nha-operation-id\":\"abdm-sessions 1\"}}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T11:56:49.271Z",
+  "usage": {
+    "input_tokens": 30,
+    "output_tokens": 808,
+    "cache_read_input_tokens": 28125,
+    "cache_creation_input_tokens": 8144,
+    "num_turns": 3,
+    "duration_ms": 12346,
+    "cost_usd_equivalent": 0.0231705
+  }
+}

@@ -1,0 +1,541 @@
+{
+  "case_id": "conversation-m1-vs-m2-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "The conversation so far:\nDeveloper: What is Milestone 1 in ABDM?\nYou: M1 is the ABHA identity milestone: creating an ABHA number, logging a person in, reading and updating their profile, downloading the ABHA card, and the gateway session and token calls everything else depends on. Most of these APIs are mandatory for both private and government integrators; Aadhaar demographic authentication is the exception, mandatory only for government integrators.\n\nThe developer's new message:\nAnd for M2?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01HZkV9aA4LEDiYfRuB4SbJB",
+            "Name": "search",
+            "Input": {
+              "query": "Milestone 2 M2 ABDM",
+              "milestone": "M2",
+              "kind": "atom",
+              "limit": 5
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "Milestone 2 M2 ABDM",
+            "milestone": "M2",
+            "kind": "atom",
+            "limit": 5
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/04-m2-post-v3-patients-sms-on-notify#m2-callback-api-for-sms-notification-to-patients",
+                "id": "hiecm.callback.m2-callback-api-for-sms-notification-to-patients",
+                "summary": "ABDM answers the HIP's SMS notification request on the HIP's bridge.",
+                "title": "Callback API for SMS Notification to patients",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/03-m2-post-v3-links-context-on-notify#m2-call-back-api-for-notify-care-context-update",
+                "id": "hiecm.callback.m2-call-back-api-for-notify-care-context-update",
+                "summary": "ABDM answers a care context update notification on the HIP's bridge.",
+                "title": "Call back API for notify care context update",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/02-m2-post-v3-link-on-carecontext#m2-linking-care-context-call-back",
+                "id": "hiecm.callback.m2-linking-care-context-call-back",
+                "summary": "ABDM answers a care context link request on the HIP's bridge with the outcome.",
+                "title": "Linking care context Call back API",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/01-m2-post-consent-v3-request-hip-on-notify#m2-consent-hip-on-notify",
+                "id": "hiecm.endpoint.m2-consent-hip-on-notify",
+                "summary": "The HIP acknowledges a consent granted, revoked or expired notification, one consent artefact at a time.",
+                "title": "Acknowledge a consent notification",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-1026",
+                "id": "hiecm.error.abdm-1026",
+                "summary": "The link token you sent cannot authorise this link, so generate a new one rather than retrying.",
+                "title": "ABDM-1026, the link token is not valid",
+                "type": "error"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_016rXqttEUYcub6TDf3QB29Y",
+            "Name": "search",
+            "Input": {
+              "query": "M2 milestone overview consent management care context linking",
+              "milestone": "M2",
+              "kind": "atom",
+              "type": "concept",
+              "limit": 5
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "M2 milestone overview consent management care context linking",
+            "milestone": "M2",
+            "kind": "atom",
+            "type": "concept",
+            "limit": 5
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/care-context#care-context",
+                "id": "hiecm.concept.care-context",
+                "summary": "A care context is the unit a provider links to a patient's ABHA address, carrying a reference number and a display name and nothing clinical.",
+                "title": "Care contexts, how records are grouped so they can be found",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m2-inbound-is-a-surface",
+                "summary": "ABDM asks your bridge questions and waits, most of them carry no documented payload, and a handler that only logs leaves records undiscoverable.",
+                "title": "Inbound is a surface, and silence there is a failure state",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m2-exchange-not-call",
+                "summary": "Every linking call answers twice, so group the outbound call, the wait and the callback into one row keyed by request id.",
+                "title": "The unit of work is an exchange, not a call",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/gateway#asynchronous-callbacks",
+                "id": "hiecm.concept.asynchronous-callbacks",
+                "summary": "Most HIE-CM calls answer 202 at once and deliver the real answer later as a callback to your registered URL, matched by request id.",
+                "title": "Asynchronous calls and callbacks, why a 200 means very little",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m2-never-block-the-desk",
+                "summary": "Linking answers on a callback that may be a minute away or may never come, so start the work, return at once, and keep where it got to on the record.",
+                "title": "Nobody is standing there, so never block and never lose the state",
+                "type": "concept"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01MR63N5iQhURSK8pBaN7J5q",
+            "Name": "search",
+            "Input": {
+              "query": "M2 consent linking discovery sharing",
+              "milestone": "M2",
+              "kind": "atom",
+              "type": "flow",
+              "limit": 5
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "M2 consent linking discovery sharing",
+            "milestone": "M2",
+            "kind": "atom",
+            "type": "flow",
+            "limit": 5
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01Jhng7oeAzQoqN1zJSkjK59",
+            "Name": "search",
+            "Input": {
+              "query": "what is M2",
+              "milestone": "M2"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "what is M2",
+            "milestone": "M2"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/04-m2-post-v3-patients-sms-on-notify#m2-callback-api-for-sms-notification-to-patients",
+                "id": "hiecm.callback.m2-callback-api-for-sms-notification-to-patients",
+                "summary": "ABDM answers the HIP's SMS notification request on the HIP's bridge.",
+                "title": "Callback API for SMS Notification to patients",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/03-m2-post-v3-links-context-on-notify#m2-call-back-api-for-notify-care-context-update",
+                "id": "hiecm.callback.m2-call-back-api-for-notify-care-context-update",
+                "summary": "ABDM answers a care context update notification on the HIP's bridge.",
+                "title": "Call back API for notify care context update",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/02-m2-post-v3-link-on-carecontext#m2-linking-care-context-call-back",
+                "id": "hiecm.callback.m2-linking-care-context-call-back",
+                "summary": "ABDM answers a care context link request on the HIP's bridge with the outcome.",
+                "title": "Linking care context Call back API",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/01-m2-post-consent-v3-request-hip-on-notify#m2-consent-hip-on-notify",
+                "id": "hiecm.endpoint.m2-consent-hip-on-notify",
+                "summary": "The HIP acknowledges a consent granted, revoked or expired notification, one consent artefact at a time.",
+                "title": "Acknowledge a consent notification",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token#m2-link-token-generation-call-back",
+                "id": "hiecm.callback.m2-link-token-generation-call-back",
+                "summary": "ABDM answers a link token request on the HIP's bridge, with the token or an error.",
+                "title": "Link token generation – Call Back API",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/06-m2-post-v3-hip-link-care-context-init#m2-on-link-init",
+                "id": "hiecm.callback.m2-on-link-init",
+                "summary": "ABDM posts the care contexts a patient chose to link; the HIP issues a link reference number and sends an OTP.",
+                "title": "A request to start linking a care context",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/03-m2-post-user-initiated-linking-v3-link-care-context-on-confirm#m2-on-link-confirm",
+                "id": "hiecm.endpoint.m2-on-link-confirm",
+                "summary": "The HIP checks the patient's code and answers a link confirm request with the care contexts it linked.",
+                "title": "Link On-Confirm, HIP confirms linked care contexts",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/07-m2-post-v3-hip-link-care-context-confirm#m2-on-link-confirm",
+                "id": "hiecm.callback.m2-on-link-confirm",
+                "summary": "ABDM posts the code the patient entered and the link reference number; the HIP checks them and answers on-confirm.",
+                "title": "Confirmation of a link, carrying the token the patient approved",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/05-m2-post-v3-hip-patient-care-context-discover#m2-on-discovery-request",
+                "id": "hiecm.callback.m2-on-discovery-request",
+                "summary": "ABDM asks the HIP to find a patient's unlinked care contexts from their name, gender, year of birth and identifiers.",
+                "title": "A discovery request for a patient you may hold records for",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/09-m2-post-v3-hip-health-information-request#m2-on-health-information-request",
+                "id": "hiecm.callback.m2-on-health-information-request",
+                "summary": "ABDM posts an HIU's data request to the HIP, with the consent artefact id, date range, push URL and key material.",
+                "title": "A request for the records a consent covers",
+                "type": "callback"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01QvWUtiBj3cjb6QM7wgJzgz",
+            "Name": "catalogue_info",
+            "Input": {}
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "catalogue_info",
+          "input": {},
+          "output": {
+            "atoms": {
+              "by_gateway": {
+                "hiecm": 269,
+                "nhcx": 536,
+                "shared": 46,
+                "uhi": 111
+              },
+              "by_milestone": {
+                "M1": 74,
+                "M2": 57,
+                "M3": 20,
+                "M4": 11,
+                "P1": 29,
+                "P2": 18,
+                "P3": 36,
+                "n/a": 717
+              },
+              "by_type": {
+                "callback": 66,
+                "concept": 105,
+                "decision": 13,
+                "endpoint": 186,
+                "error": 335,
+                "fhir": 30,
+                "flow": 57,
+                "glossary": 86,
+                "sandbox": 18,
+                "test": 51,
+                "troubleshooting": 15
+              }
+            },
+            "built_at": "2026-09-29T11:55:12Z",
+            "catalogue_version": "2026.09.16",
+            "deprecated": 0,
+            "embeddings": false,
+            "facts": 0,
+            "operations": 387
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_012m3j8GY24PDx6xj1UcjJHb",
+            "Name": "search",
+            "Input": {
+              "query": "M2 record linking discovery consent",
+              "milestone": "M2",
+              "kind": "atom",
+              "type": "concept"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "M2 record linking discovery consent",
+            "milestone": "M2",
+            "kind": "atom",
+            "type": "concept"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m2-inbound-is-a-surface",
+                "summary": "ABDM asks your bridge questions and waits, most of them carry no documented payload, and a handler that only logs leaves records undiscoverable.",
+                "title": "Inbound is a surface, and silence there is a failure state",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m2-exchange-not-call",
+                "summary": "Every linking call answers twice, so group the outbound call, the wait and the callback into one row keyed by request id.",
+                "title": "The unit of work is an exchange, not a call",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/gateway#asynchronous-callbacks",
+                "id": "hiecm.concept.asynchronous-callbacks",
+                "summary": "Most HIE-CM calls answer 202 at once and deliver the real answer later as a callback to your registered URL, matched by request id.",
+                "title": "Asynchronous calls and callbacks, why a 200 means very little",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m2-never-block-the-desk",
+                "summary": "Linking answers on a callback that may be a minute away or may never come, so start the work, return at once, and keep where it got to on the record.",
+                "title": "Nobody is standing there, so never block and never lose the state",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/how-it-fits#roles",
+                "id": "hiecm.concept.roles",
+                "summary": "Your role, IMS or PHR, is fixed by the entity your software acts for, while HIP and HIU change with the direction each record moves.",
+                "title": "Roles, which entity your software acts for and which way the record moves",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m2-retry-is-a-duplicate",
+                "summary": "ABDM records a link token request even when it refuses it, so retrying inside the window is refused as a duplicate and no longer names the original cause.",
+                "title": "A refused request is still remembered, so a retry is a duplicate",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m2-integrator-call-panel",
+                "summary": "An asynchronous integration is undebuggable without a live view of calls and callbacks, and a readiness check that names the missing value.",
+                "title": "What the integrator needs on screen, separately from the patient",
+                "type": "concept"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "M2 is the consent and linking milestone: discovering and linking a patient's care contexts (their records grouped by provider facility), managing consent artefacts for data sharing, and requesting/delivering health information based on that consent. The key M2 APIs include care context discovery, linking workflows, consent notifications, and health information requests.\n\nA defining characteristic of M2 is that most operations are asynchronous—the gateway answers 202 at once and delivers the real result later via callback to your registered bridge URL, keyed by request ID. This means M2 integration requires handling inbound callbacks and tracking request state across the exchange, not just fire-and-forget calls.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "M2 is the consent and linking milestone: discovering and linking a patient's care contexts (their records grouped by provider facility), managing consent artefacts for data sharing, and requesting/delivering health information based on that consent. The key M2 APIs include care context discovery, linking workflows, consent notifications, and health information requests.\n\nA defining characteristic of M2 is that most operations are asynchronous—the gateway answers 202 at once and delivers the real result later via callback to your registered bridge URL, keyed by request ID. This means M2 integration requires handling inbound callbacks and tracking request state across the exchange, not just fire-and-forget calls.",
+  "sources": [],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/04-m2-post-v3-patients-sms-on-notify#m2-callback-api-for-sms-notification-to-patients\",\"id\":\"hiecm.callback.m2-callback-api-for-sms-notification-to-patients\",\"summary\":\"ABDM answers the HIP's SMS notification request on the HIP's bridge.\",\"title\":\"Callback API for SMS Notification to patients\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/03-m2-post-v3-links-context-on-notify#m2-call-back-api-for-notify-care-context-update\",\"id\":\"hiecm.callback.m2-call-back-api-for-notify-care-context-update\",\"summary\":\"ABDM answers a care context update notification on the HIP's bridge.\",\"title\":\"Call back API for notify care context update\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/02-m2-post-v3-link-on-carecontext#m2-linking-care-context-call-back\",\"id\":\"hiecm.callback.m2-linking-care-context-call-back\",\"summary\":\"ABDM answers a care context link request on the HIP's bridge with the outcome.\",\"title\":\"Linking care context Call back API\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/01-m2-post-consent-v3-request-hip-on-notify#m2-consent-hip-on-notify\",\"id\":\"hiecm.endpoint.m2-consent-hip-on-notify\",\"summary\":\"The HIP acknowledges a consent granted, revoked or expired notification, one consent artefact at a time.\",\"title\":\"Acknowledge a consent notification\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-1026\",\"id\":\"hiecm.error.abdm-1026\",\"summary\":\"The link token you sent cannot authorise this link, so generate a new one rather than retrying.\",\"title\":\"ABDM-1026, the link token is not valid\",\"type\":\"error\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/concepts/care-context#care-context\",\"id\":\"hiecm.concept.care-context\",\"summary\":\"A care context is the unit a provider links to a patient's ABHA address, carrying a reference number and a display name and nothing clinical.\",\"title\":\"Care contexts, how records are grouped so they can be found\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m2-inbound-is-a-surface\",\"summary\":\"ABDM asks your bridge questions and waits, most of them carry no documented payload, and a handler that only logs leaves records undiscoverable.\",\"title\":\"Inbound is a surface, and silence there is a failure state\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m2-exchange-not-call\",\"summary\":\"Every linking call answers twice, so group the outbound call, the wait and the callback into one row keyed by request id.\",\"title\":\"The unit of work is an exchange, not a call\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/gateway#asynchronous-callbacks\",\"id\":\"hiecm.concept.asynchronous-callbacks\",\"summary\":\"Most HIE-CM calls answer 202 at once and deliver the real answer later as a callback to your registered URL, matched by request id.\",\"title\":\"Asynchronous calls and callbacks, why a 200 means very little\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m2-never-block-the-desk\",\"summary\":\"Linking answers on a callback that may be a minute away or may never come, so start the work, return at once, and keep where it got to on the record.\",\"title\":\"Nobody is standing there, so never block and never lose the state\",\"type\":\"concept\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/04-m2-post-v3-patients-sms-on-notify#m2-callback-api-for-sms-notification-to-patients\",\"id\":\"hiecm.callback.m2-callback-api-for-sms-notification-to-patients\",\"summary\":\"ABDM answers the HIP's SMS notification request on the HIP's bridge.\",\"title\":\"Callback API for SMS Notification to patients\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/03-m2-post-v3-links-context-on-notify#m2-call-back-api-for-notify-care-context-update\",\"id\":\"hiecm.callback.m2-call-back-api-for-notify-care-context-update\",\"summary\":\"ABDM answers a care context update notification on the HIP's bridge.\",\"title\":\"Call back API for notify care context update\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/02-m2-post-v3-link-on-carecontext#m2-linking-care-context-call-back\",\"id\":\"hiecm.callback.m2-linking-care-context-call-back\",\"summary\":\"ABDM answers a care context link request on the HIP's bridge with the outcome.\",\"title\":\"Linking care context Call back API\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/01-m2-post-consent-v3-request-hip-on-notify#m2-consent-hip-on-notify\",\"id\":\"hiecm.endpoint.m2-consent-hip-on-notify\",\"summary\":\"The HIP acknowledges a consent granted, revoked or expired notification, one consent artefact at a time.\",\"title\":\"Acknowledge a consent notification\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token#m2-link-token-generation-call-back\",\"id\":\"hiecm.callback.m2-link-token-generation-call-back\",\"summary\":\"ABDM answers a link token request on the HIP's bridge, with the token or an error.\",\"title\":\"Link token generation – Call Back API\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/06-m2-post-v3-hip-link-care-context-init#m2-on-link-init\",\"id\":\"hiecm.callback.m2-on-link-init\",\"summary\":\"ABDM posts the care contexts a patient chose to link; the HIP issues a link reference number and sends an OTP.\",\"title\":\"A request to start linking a care context\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/03-m2-post-user-initiated-linking-v3-link-care-context-on-confirm#m2-on-link-confirm\",\"id\":\"hiecm.endpoint.m2-on-link-confirm\",\"summary\":\"The HIP checks the patient's code and answers a link confirm request with the care contexts it linked.\",\"title\":\"Link On-Confirm, HIP confirms linked care contexts\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/07-m2-post-v3-hip-link-care-context-confirm#m2-on-link-confirm\",\"id\":\"hiecm.callback.m2-on-link-confirm\",\"summary\":\"ABDM posts the code the patient entered and the link reference number; the HIP checks them and answers on-confirm.\",\"title\":\"Confirmation of a link, carrying the token the patient approved\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/05-m2-post-v3-hip-patient-care-context-discover#m2-on-discovery-request\",\"id\":\"hiecm.callback.m2-on-discovery-request\",\"summary\":\"ABDM asks the HIP to find a patient's unlinked care contexts from their name, gender, year of birth and identifiers.\",\"title\":\"A discovery request for a patient you may hold records for\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/09-m2-post-v3-hip-health-information-request#m2-on-health-information-request\",\"id\":\"hiecm.callback.m2-on-health-information-request\",\"summary\":\"ABDM posts an HIU's data request to the HIP, with the consent artefact id, date range, push URL and key material.\",\"title\":\"A request for the records a consent covers\",\"type\":\"callback\"}]}\n{\"atoms\":{\"by_gateway\":{\"hiecm\":269,\"nhcx\":536,\"shared\":46,\"uhi\":111},\"by_milestone\":{\"M1\":74,\"M2\":57,\"M3\":20,\"M4\":11,\"P1\":29,\"P2\":18,\"P3\":36,\"n/a\":717},\"by_type\":{\"callback\":66,\"concept\":105,\"decision\":13,\"endpoint\":186,\"error\":335,\"fhir\":30,\"flow\":57,\"glossary\":86,\"sandbox\":18,\"test\":51,\"troubleshooting\":15}},\"built_at\":\"2026-09-29T11:55:12Z\",\"catalogue_version\":\"2026.09.16\",\"deprecated\":0,\"embeddings\":false,\"facts\":0,\"operations\":387}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"\",\"id\":\"hiecm.concept.m2-inbound-is-a-surface\",\"summary\":\"ABDM asks your bridge questions and waits, most of them carry no documented payload, and a handler that only logs leaves records undiscoverable.\",\"title\":\"Inbound is a surface, and silence there is a failure state\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m2-exchange-not-call\",\"summary\":\"Every linking call answers twice, so group the outbound call, the wait and the callback into one row keyed by request id.\",\"title\":\"The unit of work is an exchange, not a call\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/gateway#asynchronous-callbacks\",\"id\":\"hiecm.concept.asynchronous-callbacks\",\"summary\":\"Most HIE-CM calls answer 202 at once and deliver the real answer later as a callback to your registered URL, matched by request id.\",\"title\":\"Asynchronous calls and callbacks, why a 200 means very little\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m2-never-block-the-desk\",\"summary\":\"Linking answers on a callback that may be a minute away or may never come, so start the work, return at once, and keep where it got to on the record.\",\"title\":\"Nobody is standing there, so never block and never lose the state\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/how-it-fits#roles\",\"id\":\"hiecm.concept.roles\",\"summary\":\"Your role, IMS or PHR, is fixed by the entity your software acts for, while HIP and HIU change with the direction each record moves.\",\"title\":\"Roles, which entity your software acts for and which way the record moves\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m2-retry-is-a-duplicate\",\"summary\":\"ABDM records a link token request even when it refuses it, so retrying inside the window is refused as a duplicate and no longer names the original cause.\",\"title\":\"A refused request is still remembered, so a retry is a duplicate\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m2-integrator-call-panel\",\"summary\":\"An asynchronous integration is undebuggable without a live view of calls and callbacks, and a readiness check that names the missing value.\",\"title\":\"What the integrator needs on screen, separately from the patient\",\"type\":\"concept\"}]}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T11:57:10.295Z",
+  "usage": {
+    "input_tokens": 70,
+    "output_tokens": 1296,
+    "cache_read_input_tokens": 84319,
+    "cache_creation_input_tokens": 10231,
+    "num_turns": 7,
+    "duration_ms": 19430,
+    "cost_usd_equivalent": 0.0354439
+  }
+}

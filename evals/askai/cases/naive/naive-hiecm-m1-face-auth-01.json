@@ -1,0 +1,37 @@
+{
+  "id": "naive-hiecm-m1-face-auth-01",
+  "slice": "naive",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "patient's aadhar mobile is not with him, can we create abha with face auth? how does it work"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "Call POST /abha/api/v3/enrollment/enrol/auth/init for a txnId and show it as a QR code that the person scans in the ABHA app, where face authentication runs.",
+    "Poll /abha/api/v3/enrollment/enrol/capturePID every 5 to 10 seconds, and its status moves through PENDING, VERIFIED, FAILED and COMPLETE.",
+    "On COMPLETE, call enrol/byAadhaar with the face auth method and the same txnId, then claim an ABHA address as in the OTP journey."
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.flow.m1-create-abha-face-auth",
+    "hiecm.endpoint.m1-enrolment-capture-pid"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-abha-m1-abha-collection-json",
+  "catalogue_version": "2026.09.16",
+  "notes": "Face authentication is the route for a person without the Aadhaar linked mobile, and its polling step is not obvious from the specification. Source lines: catalogue/hiecm/flows/m1-create-abha-face-auth.md, 'Individuals who are unable to use OTP-based authentication, including cases where the mobile number linked to Aadhaar is unavailable'; 'POST /abha/api/v3/enrollment/enrol/auth/init'; 'S->>P: QR code carrying the txnId'; 'Scans the QR code in the ABHA app'; 'POST /abha/api/v3/enrollment/enrol/capturePID'; 'Poll `capturePID` every 5 to 10 seconds: its status moves through PENDING, VERIFIED, FAILED and COMPLETE. On COMPLETE, call `enrol/byAadhaar` with the face auth method and the same `txnId`, then claim an address as in the OTP journey.' catalogue/hiecm/endpoints/m1-enrolment-capture-pid.md, 'Poll every 5 to 10 seconds.' The scope for capturePID is deliberately not asserted: the flow and the endpoint disagree on it."
+}

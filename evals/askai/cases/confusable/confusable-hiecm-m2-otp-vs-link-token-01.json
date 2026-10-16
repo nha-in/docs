@@ -1,0 +1,35 @@
+{
+  "id": "confusable-hiecm-m2-otp-vs-link-token-01",
+  "slice": "confusable",
+  "class": "compare",
+  "turns": [
+    {
+      "role": "user",
+      "text": "in the link confirm request, is confirmation.token the link token?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "confirmation.token is the six digit OTP code the patient entered, not a link token.",
+    "Check it together with confirmation.linkRefNumber, the reference you issued at init, against the code you sent, then answer through on-confirm."
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.callback.m2-on-link-confirm"
+  ],
+  "expected_shape": "compare",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-hiecm-user-initiated-linking-yaml",
+  "catalogue_version": "2026.09.16",
+  "notes": "Two different things called token in M2: the link token of HIP initiated linking and the OTP carried as confirmation.token in user initiated linking. The generate token path is banned because a correct answer about the confirm request has no reason to send the reader to it. Source lines: catalogue/hiecm/callbacks/m2-on-link-confirm.md, 'After the patient enters the OTP you sent, ABDM posts it to your bridge at `/api/v3/hip/link/care-context/confirm`. `confirmation.token` is that six digit code. `confirmation.linkRefNumber` is the reference you issued at init. Check both, then answer through on-confirm.' Review: must_not_contain '/api/hiecm/v3/token/generate-token' removed: a correct contrast may cite where the link token comes from."
+}

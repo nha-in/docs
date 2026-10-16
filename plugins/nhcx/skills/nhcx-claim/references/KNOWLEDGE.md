@@ -15,7 +15,7 @@ Use it when it is connected. Test by calling `catalogue_info`: an answer means i
 | `list_operations`, `get_operation` | list the NHCX APIs; read one API's method, path, headers and body |
 | `list_atoms`, `get_atom`, `related_atoms` | read one unit of documentation (concept, flow, endpoint, callback, error, test) and what it links to |
 | `list_fhir_profiles`, `get_fhir_profile`, `get_fhir_example` | read an NRCeS profile and an example bundle |
-| `validate_fhir` | check a built bundle against the NHCX profiles |
+| `validate_fhir` | check an ABDM **DocumentBundle** (an HIE-CM clinical record) against the NRCeS profiles. With catalogue 2026.09.16 it knows only that family: it cannot validate a `ClaimBundle`, `TaskBundle` or `CoverageEligibilityRequestBundle`, reports DocumentBundle findings against them and false "points outside the bundle" warnings for the absolute `https://nhcx.abdm.gov.in/...` fullUrls. Do not use it on an NHCX bundle; compare with the example bundles instead, or run the HL7 validator with the NRCeS package |
 | `validate_request` | check a request envelope and headers |
 | `decode_error` | explain an NHCX or payer error code (for example `NHCX-1016`, `PAYR-1008`) |
 
@@ -45,6 +45,21 @@ What the package holds:
 
 Links inside the package's `docs/README.md` are absolute paths from the machine that built it. Follow them by their folder and file name under `nhcx-plan/knowledge/nhcx-package/docs/`, not as written.
 
+## ABHA, ABDM's M1
+
+The ABHA on the patient file is created or verified through ABDM's ABHA service (A19. ABHA Create and Verify (ABDM M1) (in nhcx-coverage)), and that is ABDM's HIE-CM milestone M1, not NHCX. The same MCP server serves it (the server is published as `nhcx-docs` and as `abdm-docs`; both answer `catalogue_info`), and it is the only source: the NHCX package has no M1 at all. Read M1 like this:
+
+| Need | Call |
+|---|---|
+| The router for the milestone | the `abdm-m1` prompt |
+| The flows this skill builds | `get hiecm.flow.m1-create-abha-aadhaar-otp`, `get hiecm.flow.m1-login-by-mobile` |
+| Every M1 flow, concept and endpoint | `search` with `milestone: M1` and a `type` |
+| One call's exact body, headers and responses | `get <operation id>`, the ids listed in A19 |
+| The encryption certificate and what it seals | `get m1_get_v3_profile_public_certificate` |
+| Why a call failed | `decode_error` with the `ABDM-` code; the troubleshooting atoms `everything-returns-401` and `otp-never-arrives` |
+
+Without the MCP, open the same atoms on the ABDM developer portal at the `doc_url` an earlier `search` returned, and record `"m1": "portal"` in `knowledge.json`. The biometric service ([A18. Biometric Authentication](../apis/A18-biometric-authentication.md)) is in both sources: the package's `apis/14-biometric/` and its chapter `docs/03-Building a Provider/03-Biometric Authentication.md`, and the MCP's `nhcx.endpoint.abha-biometric-*` atoms.
+
 ## Which lookup for which question
 
 | Question | MCP | Package |
@@ -52,7 +67,7 @@ Links inside the package's `docs/README.md` are absolute paths from the machine 
 | What is the path, method and header set of an NHCX call? | `get_operation` | `apis/<group>/*.bru` |
 | What does a bundle for this exchange look like? | `get_fhir_example` | `fhir/<use case>/*.json` |
 | What does a profile require? | `get_fhir_profile` | `docs/05-FHIR Reference/` |
-| Is this bundle valid? | `validate_fhir` | compare with `fhir/` and `mappings/`; no offline validator ships |
+| Is this bundle valid? | compare it with `get_fhir_example` for the exchange and with the knowledge package's bundles; `validate_fhir` does **not** validate NHCX bundles (below) | compare with `fhir/` and `mappings/`; no offline validator ships |
 | Where does this data element go? | `get_atom`, `related_atoms` | `mappings/<use case>.yaml` |
 | What does this workflow id or status mean? | `search_docs` | `workflow.yaml` |
 | What does this error code mean? | `decode_error` | `nhcx-error.yaml`, `docs/06-Reference/` |
@@ -75,7 +90,7 @@ The package and the MCP catalogue number things by NHA's own use-case codes (A1 
 | L1 | L1.0 picks the source and writes `nhcx-plan/knowledge.json`; L1.1, L1.5 and L1.6 use it to recognise NHCX code in the target |
 | L2 | FHIR elements, code systems and data element placement |
 | L5 | paths, headers, profiles and codes while writing |
-| L6 | `validate_fhir` and `validate_request`, or comparison with the package bundles |
+| L6 | `validate_request` for envelopes; for bundles, comparison with `get_fhir_example` or the package bundles (not `validate_fhir`, which knows only the DocumentBundle family) |
 | L7 | example bundles as test fixtures for callbacks and parsers |
 | L8 | error decoding and troubleshooting; go-live rules |
 

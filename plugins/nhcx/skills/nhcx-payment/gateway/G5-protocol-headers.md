@@ -43,7 +43,7 @@ Every NHCX message carries its routing and tracking headers in the JWE protected
 - `x-hcx-status` defaults by path: `response.complete` for `on_` APIs, `request.initiated` otherwise. The default is only a fallback: a query answer goes on a request path (`v1/preauth/submit`, `v1/claim/submit`) yet travels as `response.complete`, so the sending API sets the status itself (A4, A5, [PAYERS.md](../references/PAYERS.md)).
 - `x-hcx-timestamp` defaults to now.
 - `x-hcx-workflow_id` is removed when blank; it is never generated.
-- Any other header the caller passes (for example `x-hcx-error_details`) goes through unchanged. `alg`, `enc` and `typ` are dropped later by encryption (G6).
+- Any other header the caller passes (for example `x-hcx-error_details`, or the `x-hcx-use_case` every pre-authorisation and claim send sets) goes through unchanged. `alg`, `enc` and `typ` are dropped later by encryption (G6).
 
 **Correlation on replies.** A response API must carry the request's correlation id. When the application answers without one, the send fills it from the ledger (G7, G9); this module only generates.
 

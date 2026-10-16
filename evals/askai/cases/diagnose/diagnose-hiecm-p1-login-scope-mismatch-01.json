@@ -1,0 +1,41 @@
+{
+  "id": "diagnose-hiecm-p1-login-scope-mismatch-01",
+  "slice": "diagnose",
+  "class": "diagnose",
+  "turns": [
+    {
+      "role": "user",
+      "text": "PHR login: the OTP arrives and the person types it, but the verify step is rejected every time. Here are both calls."
+    }
+  ],
+  "attachment": {
+    "name": "phr-login.txt",
+    "text": "POST https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/request/otp\n{\"scope\":[\"abha-login\",\"mobile-verify\"],\"loginHint\":\"mobile\",\"loginId\":\"<MASKED_MOBILE>\",\"otpSystem\":\"abdm\"}\n-> 200 {\"txnId\":\"a1f4c9e2-5b7d-4e3a-9c8f-6d2b1a0e7f33\",\"message\":\"OTP sent\"}\n\nPOST https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/verify\n{\"scope\":[\"abha-login\",\"aadhaar-verify\"],\"authData\":{\"authMethods\":[\"otp\"],\"otp\":{\"txnId\":\"a1f4c9e2-5b7d-4e3a-9c8f-6d2b1a0e7f33\",\"otpValue\":\"<MASKED_OTP>\"}}}\n-> 400 {\"code\":\"ABDM-1107\",\"message\":\"Invalid combinations of scopes\"}",
+    "kind": "text"
+  },
+  "page": null,
+  "must_contain": [
+    "The verify call sends aadhaar-verify while the OTP request opened the transaction with mobile-verify; a login sends the same pair on both, so the verify scope must be [\"abha-login\", \"mobile-verify\"]",
+    "scope is an array, and the call checks the combination rather than any one value in it",
+    "ABDM-1107 with Invalid combinations of scopes means the scope does not match the request"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.error.abdm-1107",
+    "hiecm.endpoint.p1-login-verify-otp"
+  ],
+  "expected_shape": "diagnose",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-phr-phr-and-locker-swagger-yaml",
+  "catalogue_version": "2026.09.16",
+  "notes": "Diagnose group, attached request pair with a scope that changed between calls: it catches an answer that blames the OTP value or the txnId instead of the mismatched scope array."
+}

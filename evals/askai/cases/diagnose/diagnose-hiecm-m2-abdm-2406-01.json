@@ -1,0 +1,35 @@
+{
+  "id": "diagnose-hiecm-m2-abdm-2406-01",
+  "slice": "diagnose",
+  "class": "diagnose",
+  "turns": [
+    {
+      "role": "user",
+      "text": "ABDM-2406 Invalid API sequence flow, please follow logical flow"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "ABDM-2406 means the call does not fit where the gateway believes the flow is, for example the next step was sent before the previous step's callback arrived.",
+    "Find your last confirmed callback and resume from the step after it, rather than retrying the rejected call in place."
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.error.abdm-2406"
+  ],
+  "expected_shape": "diagnose",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-hiecm-hip-initiated-linking-yaml",
+  "catalogue_version": "2026.09.16",
+  "notes": "The reader pasted the message alone. The flow atom names this code for linking: catalogue/hiecm/flows/m2-link-care-context.md, '`ABDM-2406`: calls made out of the logical sequence.' Source lines: catalogue/hiecm/errors/abdm-2406.md, 'The gateway tracks where you are in a flow, and your call does not fit'; 'sending the next step before the previous step's callback arrived all produce it'; 'Find your last confirmed callback and resume from the step after it. Do not retry the rejected call in place.'"
+}

@@ -15,7 +15,7 @@ summary: >
   them in, so the journey belongs to the integrator and a default is a
   suggestion rather than a requirement.
 sources:
-  - file: catalogue/openapi/hiecm/v3/hiecm-m1.yaml
+  - file: catalogue/hiecm/openapi/v3/hiecm-m1.yaml
     status: read-from-spec-2026-09-20
     note: >
       The M1 specification defines around forty operations and no journey.

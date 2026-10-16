@@ -10,7 +10,7 @@ Kinds the claim flow reads:
 - `diagnosis`: SNOMED CT concept in `code` / `display`, with the ICD-10 code in `alt_code` / `alt_display`. The pre-auth quotes the ICD-10 (`alt_code`, else `code`).
 - `claim_package`: local HBP package list used only when the payer's package master ([D10](D10-claim-plan.md)) is not `ready`; `extra` is the package rate in rupees [PAYER](../references/PAYERS.md#markers).
 - `charge`: charge master for a non-package case; `extra` is `price|invoice type code`, and the price is the unit price of a [D27. claim_item](D27-claim-item.md).
-- `payer_adapter`: maps a payer's NHCX participant code (`code`, for example `<payer code>`) to the adapter key in `extra` (`pmjay`, `xyz` or `generic`, see [PAYERS.md](../references/PAYERS.md)). The claim's `payer_id` is matched on its numeric part, so `<n>`, `<n>@hcx` and `<n>@HCX` reach the same row. A payer with no row falls back to `generic`.
+- `payer_adapter`: maps a payer's NHCX participant code (`code`, for example `<payer code>`) to the adapter key in `extra` (`pmjay`, `kyrocare` or `generic`, see [PAYERS.md](../references/PAYERS.md)). The claim's `payer_id` is matched on its numeric part, so `<n>`, `<n>@hcx` and `<n>@HCX` reach the same row. A payer with no row falls back to `generic`.
 - `department`, `service_type`: practitioner department and specialty ([D2](D2-practitioner.md)).
 - `vital`: the vitals written to [D6](D6-observation.md), with `unit`, `ref_low`, `ref_high`.
 - `allergen`, `reaction`: allergies ([D7](D7-allergy.md)); an allergen's `extra` is its default category.
@@ -45,9 +45,10 @@ Lifecycle:
 #### D8K. KEYS AND INDEXES
 - Primary key `id` (integer).
 - No foreign keys in or out. Other tables copy `code` and `display`; nothing references `id`.
-- Unique: `(kind, system, code)`. The master screen also refuses a duplicate `code` inside a `kind`, whatever the system.
+- Unique `ux_terminology` on `(kind, system, code)`. The master screen also refuses a duplicate `code` inside a `kind`, whatever the system.
 - Index: `ix_terminology_kind (kind, sort_order)`.
 
 #### D8U. USED BY
 - Screens: [S4. Claim Creation Form](../screens/S4-claim-creation-form.md), [S15. Patient Detail](../screens/S15-patient-detail.md), [S16. Practitioner Master](../screens/S16-practitioner-master.md)
 - Database: [D1. organization](D1-organization.md), [D2. practitioner](D2-practitioner.md), [D5. condition](D5-condition.md), [D6. observation](D6-observation.md), [D7. allergy](D7-allergy.md), [D25. claim_diagnosis](D25-claim-diagnosis.md), [D27. claim_item](D27-claim-item.md)
+- Tests: [T1. Test Configuration](../tests/T1-test-configuration.md)

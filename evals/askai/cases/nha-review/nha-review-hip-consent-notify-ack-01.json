@@ -1,0 +1,38 @@
+{
+  "id": "nha-review-hip-consent-notify-ack-01",
+  "slice": "nha-review",
+  "class": "diagnose",
+  "turns": [
+    {
+      "role": "user",
+      "text": "Encrypted data is received, but for some Health Information Providers (HIPs), the following error appears: \"HIP did not acknowledge the HIP consent notify. Please try again after some time."
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "gateway": "hiecm",
+  "must_contain": [
+    "The message means at least one HIP has not confirmed the consent notification, and that confirmation is its own step, separate from sending the records",
+    "It appears for some HIPs and not others because a consent that covers several HIPs is split into one per HIP, and each HIP is told, and confirms, on its own",
+    "Answering the notification with 200 OK is not the acknowledgement; the acknowledgement is POST /api/hiecm/consent/v3/request/hip/on-notify",
+    "An HIU whose HIP is another organisation's cannot change it from its own calls: note the HIP and the consentId, try again later, and report it through Support if it persists"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.troubleshooting.hip-did-not-acknowledge-consent-notify"
+  ],
+  "expected_shape": "diagnose",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#nha-review-2026-09-30",
+  "catalogue_version": "2026.09.16",
+  "notes": "NHA QA sample, 30 September 2026: 'Providing generic knowledge and not specific about the topic. Not answering why this error is occurring.' Verdict group: generic rather than situational. The rejected answer explained the message and not why it shows for some HIPs only."
+}

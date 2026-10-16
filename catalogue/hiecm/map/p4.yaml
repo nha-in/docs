@@ -1,0 +1,27 @@
+# HIE-CM content map, P4: the health locker page's sections. An atom listed
+# here has no hand-written file; scripts/build-sections.mjs writes its file
+# from the page, marked generated: true.
+hiecm.flow.p4-receive-records:
+  type: flow
+  gateway: hiecm
+  milestone: P4
+  title: Receive and keep records as a health locker
+  summary: Set up a locker for the person, subscribe to their ABHA address, and
+    turn each LINK or DATA notification into a consent request, a health
+    information request and a stored record.
+  page: site/docs/hiecm/v3/milestones/p4.mdx
+  heading: p4-receive-records
+  url: /docs/hiecm/v3/milestones/p4#p4-receive-records
+  related:
+    flows:
+    - hiecm.flow.p3-subscribe-and-auto-approve
+    - hiecm.flow.p3-fetch-records
+    concepts:
+    - hiecm.concept.phr-subscriptions
+    - hiecm.concept.consent-artefact
+    - hiecm.concept.care-context
+    glossary:
+    - shared.glossary.phr
+    - shared.glossary.abha-address
+    - hiecm.glossary.hrp
+    - hiecm.glossary.hip

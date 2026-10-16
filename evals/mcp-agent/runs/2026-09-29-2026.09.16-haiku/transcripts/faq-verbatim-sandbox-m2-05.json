@@ -1,0 +1,704 @@
+{
+  "case_id": "faq-verbatim-sandbox-m2-05",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "Where do I get details of the APIs/ API sequence for milestone M2?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01Hhhe3yBDwK3rEnx23EpXdb",
+            "Name": "search",
+            "Input": {
+              "query": "M2 APIs",
+              "milestone": "M2",
+              "kind": "operation",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "M2 APIs",
+            "milestone": "M2",
+            "kind": "operation",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01Qh71LoGQQPpvuAp7YaZYed",
+            "Name": "search",
+            "Input": {
+              "query": "M2 flow sequence",
+              "milestone": "M2",
+              "kind": "atom",
+              "type": "flow",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "M2 flow sequence",
+            "milestone": "M2",
+            "kind": "atom",
+            "type": "flow",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01T46gZZBPsqNorMa7utK7nz",
+            "Name": "search",
+            "Input": {
+              "query": "",
+              "milestone": "M2",
+              "kind": "atom",
+              "limit": 25
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "",
+            "milestone": "M2",
+            "kind": "atom",
+            "limit": 25
+          },
+          "output": {
+            "atoms": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/03-m2-post-v3-links-context-on-notify#m2-call-back-api-for-notify-care-context-update",
+                "id": "hiecm.callback.m2-call-back-api-for-notify-care-context-update",
+                "milestone": "M2",
+                "title": "Call back API for notify care context update",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/04-m2-post-v3-patients-sms-on-notify#m2-callback-api-for-sms-notification-to-patients",
+                "id": "hiecm.callback.m2-callback-api-for-sms-notification-to-patients",
+                "milestone": "M2",
+                "title": "Callback API for SMS Notification to patients",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token#m2-link-token-generation-call-back",
+                "id": "hiecm.callback.m2-link-token-generation-call-back",
+                "milestone": "M2",
+                "title": "Link token generation – Call Back API",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/02-m2-post-v3-link-on-carecontext#m2-linking-care-context-call-back",
+                "id": "hiecm.callback.m2-linking-care-context-call-back",
+                "milestone": "M2",
+                "title": "Linking care context Call back API",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/02-m2-post-v3-link-on-carecontext#m2-on-carecontext-result",
+                "id": "hiecm.callback.m2-on-carecontext-result",
+                "milestone": "M2",
+                "title": "The outcome of the care context linking call you made",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/03-m3-post-v3-hiu-consent-request-notify#m2-on-consent-notify-hiu",
+                "id": "hiecm.callback.m2-on-consent-notify-hiu",
+                "milestone": "M2",
+                "title": "A consent notification to an HIU bridge",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/03-m2-post-v3-links-context-on-notify#m2-on-context-notify-result",
+                "id": "hiecm.callback.m2-on-context-notify-result",
+                "milestone": "M2",
+                "title": "The outcome of the care context notify call you made",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/10-m2-post-health-information-transfer#m2-on-data-notification",
+                "id": "hiecm.callback.m2-on-data-notification",
+                "milestone": "M2",
+                "title": "The provider pushes encrypted health information to the URL named in the request",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/05-m2-post-v3-hip-patient-care-context-discover#m2-on-discovery-request",
+                "id": "hiecm.callback.m2-on-discovery-request",
+                "milestone": "M2",
+                "title": "A discovery request for a patient you may hold records for",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token#m2-on-generate-token-result",
+                "id": "hiecm.callback.m2-on-generate-token-result",
+                "milestone": "M2",
+                "title": "The link token you asked for, or why it was refused",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/09-m2-post-v3-hip-health-information-request#m2-on-health-information-request",
+                "id": "hiecm.callback.m2-on-health-information-request",
+                "milestone": "M2",
+                "title": "A request for the records a consent covers",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/07-m2-post-v3-hip-link-care-context-confirm#m2-on-link-confirm",
+                "id": "hiecm.callback.m2-on-link-confirm",
+                "milestone": "M2",
+                "title": "Confirmation of a link, carrying the token the patient approved",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/06-m2-post-v3-hip-link-care-context-init#m2-on-link-init",
+                "id": "hiecm.callback.m2-on-link-init",
+                "milestone": "M2",
+                "title": "A request to start linking a care context",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/04-m2-post-v3-patients-sms-on-notify#m2-on-sms-notify-result",
+                "id": "hiecm.callback.m2-on-sms-notify-result",
+                "milestone": "M2",
+                "title": "The outcome of the SMS notify call you made",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/gateway#asynchronous-callbacks",
+                "id": "hiecm.concept.asynchronous-callbacks",
+                "milestone": "M2",
+                "title": "Asynchronous calls and callbacks, why a 200 means very little",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/callback-authenticity#callback-authenticity",
+                "id": "hiecm.concept.callback-authenticity",
+                "milestone": "M2",
+                "title": "Proving a callback really came from ABDM",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/care-context#care-context",
+                "id": "hiecm.concept.care-context",
+                "milestone": "M2",
+                "title": "Care contexts, how records are grouped so they can be found",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/build-it-well#error-codes",
+                "id": "hiecm.concept.error-codes",
+                "milestone": "M2",
+                "title": "Reading an ABDM error code",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m2-care-context-and-records",
+                "milestone": "M2",
+                "title": "A care context and its records are one thing",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m2-exchange-not-call",
+                "milestone": "M2",
+                "title": "The unit of work is an exchange, not a call",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m2-inbound-is-a-surface",
+                "milestone": "M2",
+                "title": "Inbound is a surface, and silence there is a failure state",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m2-integrator-call-panel",
+                "milestone": "M2",
+                "title": "What the integrator needs on screen, separately from the patient",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m2-never-block-the-desk",
+                "milestone": "M2",
+                "title": "Nobody is standing there, so never block and never lose the state",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m2-retry-is-a-duplicate",
+                "milestone": "M2",
+                "title": "A refused request is still remembered, so a retry is a duplicate",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/how-it-fits#roles",
+                "id": "hiecm.concept.roles",
+                "milestone": "M2",
+                "title": "Roles, which entity your software acts for and which way the record moves",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/01-m2-post-consent-v3-request-hip-on-notify#m2-consent-hip-on-notify",
+                "id": "hiecm.endpoint.m2-consent-hip-on-notify",
+                "milestone": "M2",
+                "title": "Acknowledge a consent notification",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-link-token-hip/01-m2-post-v3-token-generate-token#m2-generate-link-token",
+                "id": "hiecm.endpoint.m2-generate-link-token",
+                "milestone": "M2",
+                "title": "Generate Link Token",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-manager-hiu-hip/01-p2-get-hip-v3-link-patient-links#m2-get-all-link-records",
+                "id": "hiecm.endpoint.m2-get-all-link-records",
+                "milestone": "M2",
+                "title": "GET All Link records",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/03-m2-post-data-flow-v3-health-information-notify#m2-hip-data-flow-notify",
+                "id": "hiecm.endpoint.m2-hip-data-flow-notify",
+                "milestone": "M2",
+                "title": "Notify the gateway that a data transfer finished",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/02-m2-post-data-flow-v3-health-information-hip-on-request#m2-hip-health-information-on-request",
+                "id": "hiecm.endpoint.m2-hip-health-information-on-request",
+                "milestone": "M2",
+                "title": "Acknowledge a health information data request",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/01-m2-post-hip-v3-link-carecontext#m2-hip-link-care-context",
+                "id": "hiecm.endpoint.m2-hip-link-care-context",
+                "milestone": "M2",
+                "title": "Link care contexts to an ABHA address",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/02-m2-post-hip-v3-link-context-notify#m2-link-care-context-notify",
+                "id": "hiecm.endpoint.m2-link-care-context-notify",
+                "milestone": "M2",
+                "title": "Notify an update to a linked care context",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/01-m2-post-user-initiated-linking-v3-patient-care-context-on-8c9340#m2-on-discover-care-contexts",
+                "id": "hiecm.endpoint.m2-on-discover-care-contexts",
+                "milestone": "M2",
+                "title": "On Discovery, HIP responds with found care contexts",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/03-m2-post-user-initiated-linking-v3-link-care-context-on-confirm#m2-on-link-confirm",
+                "id": "hiecm.endpoint.m2-on-link-confirm",
+                "milestone": "M2",
+                "title": "Link On-Confirm, HIP confirms linked care contexts",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/02-m2-post-user-initiated-linking-v3-link-care-context-on-init#m2-on-link-init",
+                "id": "hiecm.endpoint.m2-on-link-init",
+                "milestone": "M2",
+                "title": "Link On-Init, HIP responds with OTP communication details",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/03-m2-post-hip-v3-link-patient-links-sms-notify2#m2-sms-deep-link-notify",
+                "id": "hiecm.endpoint.m2-sms-deep-link-notify",
+                "milestone": "M2",
+                "title": "Send an SMS telling the patient a care context is linked",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-1013",
+                "id": "hiecm.error.abdm-1013",
+                "milestone": "M2",
+                "title": "ABDM-1013, the ABHA number is not valid",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-1022",
+                "id": "hiecm.error.abdm-1022",
+                "milestone": "M2",
+                "title": "ABDM-1022, too many requests",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-1026",
+                "id": "hiecm.error.abdm-1026",
+                "milestone": "M2",
+                "title": "ABDM-1026, the link token is not valid",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-1032",
+                "id": "hiecm.error.abdm-1032",
+                "milestone": "M2",
+                "title": "ABDM-1032, a required header is missing or malformed",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-1035",
+                "id": "hiecm.error.abdm-1035",
+                "milestone": "M2",
+                "title": "ABDM-1035, the HIP id is not recognised",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-1056",
+                "id": "hiecm.error.abdm-1056",
+                "milestone": "M2",
+                "title": "ABDM-1056, already linked, or an invalid link reference",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-1062",
+                "id": "hiecm.error.abdm-1062",
+                "milestone": "M2",
+                "title": "ABDM-1062, ABHA number mismatch, or consent not granted",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-1063",
+                "id": "hiecm.error.abdm-1063",
+                "milestone": "M2",
+                "title": "ABDM-1063, HIP id mismatch, or an invalid date range",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-1064",
+                "id": "hiecm.error.abdm-1064",
+                "milestone": "M2",
+                "title": "ABDM-1064, a repeated request id, or a missing body",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-1170",
+                "id": "hiecm.error.abdm-1170",
+                "milestone": "M2",
+                "title": "ABDM-1170, the ABHA address is not valid",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-1407",
+                "id": "hiecm.error.abdm-1407",
+                "milestone": "M2",
+                "title": "ABDM-1407, the ABHA number is deactivated",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-2401",
+                "id": "hiecm.error.abdm-2401",
+                "milestone": "M2",
+                "title": "ABDM-2401, the X Auth token is not valid",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-2402",
+                "id": "hiecm.error.abdm-2402",
+                "milestone": "M2",
+                "title": "ABDM-2402, the timestamp is not valid",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-2403",
+                "id": "hiecm.error.abdm-2403",
+                "milestone": "M2",
+                "title": "ABDM-2403, the X-CM-ID is not valid",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-2404",
+                "id": "hiecm.error.abdm-2404",
+                "milestone": "M2",
+                "title": "ABDM-2404, the REQUEST-ID is not valid",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-2406",
+                "id": "hiecm.error.abdm-2406",
+                "milestone": "M2",
+                "title": "ABDM-2406, the calls are out of order",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-2500",
+                "id": "hiecm.error.abdm-2500",
+                "milestone": "M2",
+                "title": "ABDM-2500, no Authorization header, or no matching request",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-9999",
+                "id": "hiecm.error.abdm-9999",
+                "milestone": "M2",
+                "title": "ABDM-9999, a catch-all, so read the message",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m2#m2-link-care-context",
+                "id": "hiecm.flow.m2-link-care-context",
+                "milestone": "M2",
+                "title": "Link a care context to a patient's ABHA",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/troubleshooting/accepted-then-nothing#accepted-then-nothing",
+                "id": "hiecm.troubleshooting.accepted-then-nothing",
+                "milestone": "M2",
+                "title": "Discovery or linking was accepted, then nothing happens",
+                "type": "troubleshooting"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/troubleshooting/callback-never-arrives#callback-never-arrives",
+                "id": "hiecm.troubleshooting.callback-never-arrives",
+                "milestone": "M2",
+                "title": "The callback never arrives",
+                "type": "troubleshooting"
+              }
+            ],
+            "catalogue_version": "2026.09.16"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01VjHQ3hJB3zfYRCFQUqR4Lf",
+            "Name": "search",
+            "Input": {
+              "query": "",
+              "module": "m2",
+              "kind": "operation",
+              "limit": 25
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "",
+            "module": "m2",
+            "kind": "operation",
+            "limit": 25
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "operations": [
+              {
+                "operation_id": "m2_post_consent_v3_request_hip_on_notify",
+                "method": "POST",
+                "path": "/api/hiecm/consent/v3/request/hip/on-notify",
+                "summary": "This is ABDM HIE-CM API called by HIP to acknowledge the notification sent when a consent request is approved/revoked/expired by the patient.",
+                "tag": "consent-management-data-flow-hip",
+                "module": "m2"
+              },
+              {
+                "operation_id": "m2_post_data_flow_v3_health_information_hip_on_request",
+                "method": "POST",
+                "path": "/api/hiecm/data-flow/v3/health-information/hip/on-request",
+                "summary": "Health information data request acknowledgement from HIP.",
+                "tag": "consent-management-data-flow-hip",
+                "module": "m2"
+              },
+              {
+                "operation_id": "m2_post_data_flow_v3_health_information_notify",
+                "method": "POST",
+                "path": "/api/hiecm/data-flow/v3/health-information/notify",
+                "summary": "Notifications corresponding to events during data flow",
+                "tag": "consent-management-data-flow-hiu",
+                "module": "m2"
+              },
+              {
+                "operation_id": "m2_post_hip_v3_link_carecontext",
+                "method": "POST",
+                "path": "/api/hiecm/hip/v3/link/carecontext",
+                "summary": "This API will be used to perform HIP initiated linking.",
+                "tag": "abdm-hip-initiated-linking-hip",
+                "module": "m2"
+              },
+              {
+                "operation_id": "m2_post_hip_v3_link_context_notify",
+                "method": "POST",
+                "path": "/api/hiecm/hip/v3/link/context/notify",
+                "summary": "This API will be used to notify CM about any update on the already linked care context for a patient.",
+                "tag": "abdm-hip-initiated-linking-hip",
+                "module": "m2"
+              },
+              {
+                "operation_id": "m2_post_hip_v3_link_patient_links_sms_notify2",
+                "method": "POST",
+                "path": "/api/hiecm/hip/v3/link/patient/links/sms/notify2",
+                "summary": "This API will be used by HIP to send SMS notification to patient that a care context is linked.",
+                "tag": "abdm-hip-initiated-linking-hip",
+                "module": "m2"
+              },
+              {
+                "operation_id": "m2_post_user_initiated_linking_v3_link_care_context_on_confirm",
+                "method": "POST",
+                "path": "/api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm",
+                "summary": "This API will be invoked by the HIP for sharing the response of /api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm API",
+                "tag": "abdm-user-initiated-linking-hip",
+                "module": "m2"
+              },
+              {
+                "operation_id": "m2_post_user_initiated_linking_v3_link_care_context_on_init",
+                "method": "POST",
+                "path": "/api/hiecm/user-initiated-linking/v3/link/care-context/on-init",
+                "summary": "As a result of the initialization, HIP has to generate a unique reference-number in the link object which is called as link-reference-number and it has to trigger a OTP (token) to the patient's mobile number that is present with the HIP/HMIS/LIMS which will be provided back to HIP for validation during confirm request flow.",
+                "tag": "abdm-user-initiated-linking-hip",
+                "module": "m2"
+              },
+              {
+                "operation_id": "m2_post_user_initiated_linking_v3_patient_care_context_on_8c9340",
+                "method": "POST",
+                "path": "/api/hiecm/user-initiated-linking/v3/patient/care-context/on-discover",
+                "summary": "HMIS/LIMS/HIP has to ensure that only unlinked records of the patient has to be shared through this API.",
+                "tag": "abdm-user-initiated-linking-hip",
+                "module": "m2"
+              },
+              {
+                "operation_id": "m2_post_v3_consent_request_hip_notify",
+                "method": "POST",
+                "path": "/api/v3/consent/request/hip/notify",
+                "summary": "This is a callback api to notify hip when consent is APPROVED or REVOKED.",
+                "tag": "consent-management-data-flow-hip",
+                "module": "m2"
+              },
+              {
+                "operation_id": "m2_post_v3_token_generate_token",
+                "method": "POST",
+                "path": "/api/hiecm/v3/token/generate-token",
+                "summary": "API used to generate link token to link the health records",
+                "tag": "abdm-link-token-hip",
+                "module": "m2"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "Based on the ABDM documentation, here's where to find M2 API details and sequences:\n\n## Main M2 Flow Documentation\nThe **flow documentation** shows the API sequence for the main M2 workflows. For example:\n- **[Link a care context to a patient's ABHA](https://docs.abdm.gov.in/docs/hiecm/v3/milestones/m2#m2-link-care-context)** — this portal page shows the complete API call sequence for M2\n\n## Individual M2 APIs\nAll M2 operations are documented individually. Here's what's available:\n\n**HIP-initiated Linking:**\n- Generate Link Token\n- Link care contexts to an ABHA\n- Notify updates to linked care contexts\n- Send SMS notifications to patients\n\n**User-initiated Linking (patient discovers & links their own records):**\n- On-Discover: HIP responds with found care contexts\n- On-Init: HIP responds with OTP communication details\n- On-Confirm: HIP confirms linked care contexts\n\n**Consent & Data Flow:**\n- Acknowledge consent notifications\n- Acknowledge health information requests\n- Notify data transfer completion\n\n**Plus callbacks** for all these operations (what ABDM sends back to you)\n\n## How to Navigate\n1. Start with the **[flow page](https://docs.abdm.gov.in/docs/hiecm/v3/milestones/m2#m2-link-care-context)** for the end-to-end sequence\n2. Click into each individual endpoint for request/response schemas\n3. Check the **errors section** for M2 error codes and their meanings\n4. Review **concepts** like care contexts, callbacks, and asynchronous patterns\n\nWould you like me to drill into a specific M2 flow or operation?",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "Based on the ABDM documentation, here's where to find M2 API details and sequences:\n\n## Main M2 Flow Documentation\nThe **flow documentation** shows the API sequence for the main M2 workflows. For example:\n- **[Link a care context to a patient's ABHA](https://docs.abdm.gov.in/docs/hiecm/v3/milestones/m2#m2-link-care-context)** — this portal page shows the complete API call sequence for M2\n\n## Individual M2 APIs\nAll M2 operations are documented individually. Here's what's available:\n\n**HIP-initiated Linking:**\n- Generate Link Token\n- Link care contexts to an ABHA\n- Notify updates to linked care contexts\n- Send SMS notifications to patients\n\n**User-initiated Linking (patient discovers & links their own records):**\n- On-Discover: HIP responds with found care contexts\n- On-Init: HIP responds with OTP communication details\n- On-Confirm: HIP confirms linked care contexts\n\n**Consent & Data Flow:**\n- Acknowledge consent notifications\n- Acknowledge health information requests\n- Notify data transfer completion\n\n**Plus callbacks** for all these operations (what ABDM sends back to you)\n\n## How to Navigate\n1. Start with the **[flow page](https://docs.abdm.gov.in/docs/hiecm/v3/milestones/m2#m2-link-care-context)** for the end-to-end sequence\n2. Click into each individual endpoint for request/response schemas\n3. Check the **errors section** for M2 error codes and their meanings\n4. Review **concepts** like care contexts, callbacks, and asynchronous patterns\n\nWould you like me to drill into a specific M2 flow or operation?",
+  "sources": [],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"atoms\":[{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/03-m2-post-v3-links-context-on-notify#m2-call-back-api-for-notify-care-context-update\",\"id\":\"hiecm.callback.m2-call-back-api-for-notify-care-context-update\",\"milestone\":\"M2\",\"title\":\"Call back API for notify care context update\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/04-m2-post-v3-patients-sms-on-notify#m2-callback-api-for-sms-notification-to-patients\",\"id\":\"hiecm.callback.m2-callback-api-for-sms-notification-to-patients\",\"milestone\":\"M2\",\"title\":\"Callback API for SMS Notification to patients\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token#m2-link-token-generation-call-back\",\"id\":\"hiecm.callback.m2-link-token-generation-call-back\",\"milestone\":\"M2\",\"title\":\"Link token generation – Call Back API\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/02-m2-post-v3-link-on-carecontext#m2-linking-care-context-call-back\",\"id\":\"hiecm.callback.m2-linking-care-context-call-back\",\"milestone\":\"M2\",\"title\":\"Linking care context Call back API\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/02-m2-post-v3-link-on-carecontext#m2-on-carecontext-result\",\"id\":\"hiecm.callback.m2-on-carecontext-result\",\"milestone\":\"M2\",\"title\":\"The outcome of the care context linking call you made\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/03-m3-post-v3-hiu-consent-request-notify#m2-on-consent-notify-hiu\",\"id\":\"hiecm.callback.m2-on-consent-notify-hiu\",\"milestone\":\"M2\",\"title\":\"A consent notification to an HIU bridge\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/03-m2-post-v3-links-context-on-notify#m2-on-context-notify-result\",\"id\":\"hiecm.callback.m2-on-context-notify-result\",\"milestone\":\"M2\",\"title\":\"The outcome of the care context notify call you made\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/10-m2-post-health-information-transfer#m2-on-data-notification\",\"id\":\"hiecm.callback.m2-on-data-notification\",\"milestone\":\"M2\",\"title\":\"The provider pushes encrypted health information to the URL named in the request\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/05-m2-post-v3-hip-patient-care-context-discover#m2-on-discovery-request\",\"id\":\"hiecm.callback.m2-on-discovery-request\",\"milestone\":\"M2\",\"title\":\"A discovery request for a patient you may hold records for\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token#m2-on-generate-token-result\",\"id\":\"hiecm.callback.m2-on-generate-token-result\",\"milestone\":\"M2\",\"title\":\"The link token you asked for, or why it was refused\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/09-m2-post-v3-hip-health-information-request#m2-on-health-information-request\",\"id\":\"hiecm.callback.m2-on-health-information-request\",\"milestone\":\"M2\",\"title\":\"A request for the records a consent covers\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/07-m2-post-v3-hip-link-care-context-confirm#m2-on-link-confirm\",\"id\":\"hiecm.callback.m2-on-link-confirm\",\"milestone\":\"M2\",\"title\":\"Confirmation of a link, carrying the token the patient approved\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/06-m2-post-v3-hip-link-care-context-init#m2-on-link-init\",\"id\":\"hiecm.callback.m2-on-link-init\",\"milestone\":\"M2\",\"title\":\"A request to start linking a care context\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/04-m2-post-v3-patients-sms-on-notify#m2-on-sms-notify-result\",\"id\":\"hiecm.callback.m2-on-sms-notify-result\",\"milestone\":\"M2\",\"title\":\"The outcome of the SMS notify call you made\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/gateway#asynchronous-callbacks\",\"id\":\"hiecm.concept.asynchronous-callbacks\",\"milestone\":\"M2\",\"title\":\"Asynchronous calls and callbacks, why a 200 means very little\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/callback-authenticity#callback-authenticity\",\"id\":\"hiecm.concept.callback-authenticity\",\"milestone\":\"M2\",\"title\":\"Proving a callback really came from ABDM\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/care-context#care-context\",\"id\":\"hiecm.concept.care-context\",\"milestone\":\"M2\",\"title\":\"Care contexts, how records are grouped so they can be found\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/build-it-well#error-codes\",\"id\":\"hiecm.concept.error-codes\",\"milestone\":\"M2\",\"title\":\"Reading an ABDM error code\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m2-care-context-and-records\",\"milestone\":\"M2\",\"title\":\"A care context and its records are one thing\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m2-exchange-not-call\",\"milestone\":\"M2\",\"title\":\"The unit of work is an exchange, not a call\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m2-inbound-is-a-surface\",\"milestone\":\"M2\",\"title\":\"Inbound is a surface, and silence there is a failure state\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m2-integrator-call-panel\",\"milestone\":\"M2\",\"title\":\"What the integrator needs on screen, separately from the patient\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m2-never-block-the-desk\",\"milestone\":\"M2\",\"title\":\"Nobody is standing there, so never block and never lose the state\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m2-retry-is-a-duplicate\",\"milestone\":\"M2\",\"title\":\"A refused request is still remembered, so a retry is a duplicate\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/how-it-fits#roles\",\"id\":\"hiecm.concept.roles\",\"milestone\":\"M2\",\"title\":\"Roles, which entity your software acts for and which way the record moves\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/01-m2-post-consent-v3-request-hip-on-notify#m2-consent-hip-on-notify\",\"id\":\"hiecm.endpoint.m2-consent-hip-on-notify\",\"milestone\":\"M2\",\"title\":\"Acknowledge a consent notification\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-abdm-link-token-hip/01-m2-post-v3-token-generate-token#m2-generate-link-token\",\"id\":\"hiecm.endpoint.m2-generate-link-token\",\"milestone\":\"M2\",\"title\":\"Generate Link Token\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-consent-manager-hiu-hip/01-p2-get-hip-v3-link-patient-links#m2-get-all-link-records\",\"id\":\"hiecm.endpoint.m2-get-all-link-records\",\"milestone\":\"M2\",\"title\":\"GET All Link records\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/03-m2-post-data-flow-v3-health-information-notify#m2-hip-data-flow-notify\",\"id\":\"hiecm.endpoint.m2-hip-data-flow-notify\",\"milestone\":\"M2\",\"title\":\"Notify the gateway that a data transfer finished\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/02-m2-post-data-flow-v3-health-information-hip-on-request#m2-hip-health-information-on-request\",\"id\":\"hiecm.endpoint.m2-hip-health-information-on-request\",\"milestone\":\"M2\",\"title\":\"Acknowledge a health information data request\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/01-m2-post-hip-v3-link-carecontext#m2-hip-link-care-context\",\"id\":\"hiecm.endpoint.m2-hip-link-care-context\",\"milestone\":\"M2\",\"title\":\"Link care contexts to an ABHA address\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/02-m2-post-hip-v3-link-context-notify#m2-link-care-context-notify\",\"id\":\"hiecm.endpoint.m2-link-care-context-notify\",\"milestone\":\"M2\",\"title\":\"Notify an update to a linked care context\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/01-m2-post-user-initiated-linking-v3-patient-care-context-on-8c9340#m2-on-discover-care-contexts\",\"id\":\"hiecm.endpoint.m2-on-discover-care-contexts\",\"milestone\":\"M2\",\"title\":\"On Discovery, HIP responds with found care contexts\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/03-m2-post-user-initiated-linking-v3-link-care-context-on-confirm#m2-on-link-confirm\",\"id\":\"hiecm.endpoint.m2-on-link-confirm\",\"milestone\":\"M2\",\"title\":\"Link On-Confirm, HIP confirms linked care contexts\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/02-m2-post-user-initiated-linking-v3-link-care-context-on-init#m2-on-link-init\",\"id\":\"hiecm.endpoint.m2-on-link-init\",\"milestone\":\"M2\",\"title\":\"Link On-Init, HIP responds with OTP communication details\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/03-m2-post-hip-v3-link-patient-links-sms-notify2#m2-sms-deep-link-notify\",\"id\":\"hiecm.endpoint.m2-sms-deep-link-notify\",\"milestone\":\"M2\",\"title\":\"Send an SMS telling the patient a care context is linked\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-1013\",\"id\":\"hiecm.error.abdm-1013\",\"milestone\":\"M2\",\"title\":\"ABDM-1013, the ABHA number is not valid\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-1022\",\"id\":\"hiecm.error.abdm-1022\",\"milestone\":\"M2\",\"title\":\"ABDM-1022, too many requests\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-1026\",\"id\":\"hiecm.error.abdm-1026\",\"milestone\":\"M2\",\"title\":\"ABDM-1026, the link token is not valid\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-1032\",\"id\":\"hiecm.error.abdm-1032\",\"milestone\":\"M2\",\"title\":\"ABDM-1032, a required header is missing or malformed\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-1035\",\"id\":\"hiecm.error.abdm-1035\",\"milestone\":\"M2\",\"title\":\"ABDM-1035, the HIP id is not recognised\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-1056\",\"id\":\"hiecm.error.abdm-1056\",\"milestone\":\"M2\",\"title\":\"ABDM-1056, already linked, or an invalid link reference\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-1062\",\"id\":\"hiecm.error.abdm-1062\",\"milestone\":\"M2\",\"title\":\"ABDM-1062, ABHA number mismatch, or consent not granted\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-1063\",\"id\":\"hiecm.error.abdm-1063\",\"milestone\":\"M2\",\"title\":\"ABDM-1063, HIP id mismatch, or an invalid date range\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-1064\",\"id\":\"hiecm.error.abdm-1064\",\"milestone\":\"M2\",\"title\":\"ABDM-1064, a repeated request id, or a missing body\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-1170\",\"id\":\"hiecm.error.abdm-1170\",\"milestone\":\"M2\",\"title\":\"ABDM-1170, the ABHA address is not valid\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-1407\",\"id\":\"hiecm.error.abdm-1407\",\"milestone\":\"M2\",\"title\":\"ABDM-1407, the ABHA number is deactivated\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-2401\",\"id\":\"hiecm.error.abdm-2401\",\"milestone\":\"M2\",\"title\":\"ABDM-2401, the X Auth token is not valid\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-2402\",\"id\":\"hiecm.error.abdm-2402\",\"milestone\":\"M2\",\"title\":\"ABDM-2402, the timestamp is not valid\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-2403\",\"id\":\"hiecm.error.abdm-2403\",\"milestone\":\"M2\",\"title\":\"ABDM-2403, the X-CM-ID is not valid\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-2404\",\"id\":\"hiecm.error.abdm-2404\",\"milestone\":\"M2\",\"title\":\"ABDM-2404, the REQUEST-ID is not valid\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-2406\",\"id\":\"hiecm.error.abdm-2406\",\"milestone\":\"M2\",\"title\":\"ABDM-2406, the calls are out of order\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-2500\",\"id\":\"hiecm.error.abdm-2500\",\"milestone\":\"M2\",\"title\":\"ABDM-2500, no Authorization header, or no matching request\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-9999\",\"id\":\"hiecm.error.abdm-9999\",\"milestone\":\"M2\",\"title\":\"ABDM-9999, a catch-all, so read the message\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m2#m2-link-care-context\",\"id\":\"hiecm.flow.m2-link-care-context\",\"milestone\":\"M2\",\"title\":\"Link a care context to a patient's ABHA\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/troubleshooting/accepted-then-nothing#accepted-then-nothing\",\"id\":\"hiecm.troubleshooting.accepted-then-nothing\",\"milestone\":\"M2\",\"title\":\"Discovery or linking was accepted, then nothing happens\",\"type\":\"troubleshooting\"},{\"doc_url\":\"/docs/hiecm/v3/troubleshooting/callback-never-arrives#callback-never-arrives\",\"id\":\"hiecm.troubleshooting.callback-never-arrives\",\"milestone\":\"M2\",\"title\":\"The callback never arrives\",\"type\":\"troubleshooting\"}],\"catalogue_version\":\"2026.09.16\"}\n{\"catalogue_version\":\"2026.09.16\",\"operations\":[{\"operation_id\":\"m2_post_consent_v3_request_hip_on_notify\",\"method\":\"POST\",\"path\":\"/api/hiecm/consent/v3/request/hip/on-notify\",\"summary\":\"This is ABDM HIE-CM API called by HIP to acknowledge the notification sent when a consent request is approved/revoked/expired by the patient.\",\"tag\":\"consent-management-data-flow-hip\",\"module\":\"m2\"},{\"operation_id\":\"m2_post_data_flow_v3_health_information_hip_on_request\",\"method\":\"POST\",\"path\":\"/api/hiecm/data-flow/v3/health-information/hip/on-request\",\"summary\":\"Health information data request acknowledgement from HIP.\",\"tag\":\"consent-management-data-flow-hip\",\"module\":\"m2\"},{\"operation_id\":\"m2_post_data_flow_v3_health_information_notify\",\"method\":\"POST\",\"path\":\"/api/hiecm/data-flow/v3/health-information/notify\",\"summary\":\"Notifications corresponding to events during data flow\",\"tag\":\"consent-management-data-flow-hiu\",\"module\":\"m2\"},{\"operation_id\":\"m2_post_hip_v3_link_carecontext\",\"method\":\"POST\",\"path\":\"/api/hiecm/hip/v3/link/carecontext\",\"summary\":\"This API will be used to perform HIP initiated linking.\",\"tag\":\"abdm-hip-initiated-linking-hip\",\"module\":\"m2\"},{\"operation_id\":\"m2_post_hip_v3_link_context_notify\",\"method\":\"POST\",\"path\":\"/api/hiecm/hip/v3/link/context/notify\",\"summary\":\"This API will be used to notify CM about any update on the already linked care context for a patient.\",\"tag\":\"abdm-hip-initiated-linking-hip\",\"module\":\"m2\"},{\"operation_id\":\"m2_post_hip_v3_link_patient_links_sms_notify2\",\"method\":\"POST\",\"path\":\"/api/hiecm/hip/v3/link/patient/links/sms/notify2\",\"summary\":\"This API will be used by HIP to send SMS notification to patient that a care context is linked.\",\"tag\":\"abdm-hip-initiated-linking-hip\",\"module\":\"m2\"},{\"operation_id\":\"m2_post_user_initiated_linking_v3_link_care_context_on_confirm\",\"method\":\"POST\",\"path\":\"/api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm\",\"summary\":\"This API will be invoked by the HIP for sharing the response of /api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm API\",\"tag\":\"abdm-user-initiated-linking-hip\",\"module\":\"m2\"},{\"operation_id\":\"m2_post_user_initiated_linking_v3_link_care_context_on_init\",\"method\":\"POST\",\"path\":\"/api/hiecm/user-initiated-linking/v3/link/care-context/on-init\",\"summary\":\"As a result of the initialization, HIP has to generate a unique reference-number in the link object which is called as link-reference-number and it has to trigger a OTP (token) to the patient's mobile number that is present with the HIP/HMIS/LIMS which will be provided back to HIP for validation during confirm request flow.\",\"tag\":\"abdm-user-initiated-linking-hip\",\"module\":\"m2\"},{\"operation_id\":\"m2_post_user_initiated_linking_v3_patient_care_context_on_8c9340\",\"method\":\"POST\",\"path\":\"/api/hiecm/user-initiated-linking/v3/patient/care-context/on-discover\",\"summary\":\"HMIS/LIMS/HIP has to ensure that only unlinked records of the patient has to be shared through this API.\",\"tag\":\"abdm-user-initiated-linking-hip\",\"module\":\"m2\"},{\"operation_id\":\"m2_post_v3_consent_request_hip_notify\",\"method\":\"POST\",\"path\":\"/api/v3/consent/request/hip/notify\",\"summary\":\"This is a callback api to notify hip when consent is APPROVED or REVOKED.\",\"tag\":\"consent-management-data-flow-hip\",\"module\":\"m2\"},{\"operation_id\":\"m2_post_v3_token_generate_token\",\"method\":\"POST\",\"path\":\"/api/hiecm/v3/token/generate-token\",\"summary\":\"API used to generate link token to link the health records\",\"tag\":\"abdm-link-token-hip\",\"module\":\"m2\"}]}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T12:05:40.410Z",
+  "usage": {
+    "input_tokens": 30,
+    "output_tokens": 1062,
+    "cache_read_input_tokens": 28106,
+    "cache_creation_input_tokens": 13203,
+    "num_turns": 5,
+    "duration_ms": 15163,
+    "cost_usd_equivalent": 0.0345566
+  }
+}

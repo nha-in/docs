@@ -1,0 +1,37 @@
+{
+  "id": "naive-abdm-m1-from-nhcx-page-01",
+  "slice": "naive",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "what is M1 how can i integrate M1"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "gateway": "nhcx",
+  "must_contain": [
+    "M1 is ABDM Milestone 1, creating and verifying ABHA, and it is not part of the NHCX claims workflow"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom",
+    "hie-cm milestone",
+    "milestone of hie-cm"
+  ],
+  "expected_sources": [
+    "hiecm.glossary.m1"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#glossary",
+  "catalogue_version": "2026.09.16",
+  "notes": "NHA review of 30 September 2026, asked on the NHCX Claim Settlement page: the panel answered 'M1 is the HIE-CM milestone for integrating ABHA enrolment'. The question names a milestone, so it is searched in the milestone documentation from any page. Source lines: site/docs/_glossary/_hiecm.mdx, M1 as in define-abdm-milestone-m1-01."
+}

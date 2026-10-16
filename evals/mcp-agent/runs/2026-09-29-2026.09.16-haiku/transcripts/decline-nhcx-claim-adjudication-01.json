@@ -1,0 +1,382 @@
+{
+  "case_id": "decline-nhcx-claim-adjudication-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "What are NHCX's rules for adjudicating a rejected insurance claim?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01AbAyJL6aC9og4j811ZRerx",
+            "Name": "search",
+            "Input": {
+              "query": "NHCX rejected claim adjudication rules",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "NHCX rejected claim adjudication rules",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#nhcx",
+                "id": "shared.glossary.nhcx",
+                "summary": "The gateway for insurance claims, separate from HIE-CM and UHI.",
+                "title": "NHCX, the National Health Claims Exchange",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.concept.what-nhcx-is",
+                "summary": "The claims exchange is a switch that carries sealed claim messages between hospitals and insurers; it routes and checks envelopes but never reads or decides ...",
+                "title": "What the National Health Claims Exchange is and what it does not do",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/concepts/pmjay-on-nhcx",
+                "id": "nhcx.flow.pmjay-hospital-migration",
+                "summary": "Move a scheme-empanelled hospital from the central claims portal to its own hospital system, by onboarding it on the exchange and having its hospital ID mapp...",
+                "title": "Migrate a PMJAY hospital to HMIS through NHCX",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/api/session/endpoints/session-api-hiecm-gateway-v3-sessions",
+                "id": "nhcx.endpoint.session-token",
+                "summary": "Trade your client id and client secret for the access token, valid for 1200 seconds (20 minutes), that every claims exchange call carries.",
+                "title": "POST /api/hiecm/gateway/v3/sessions",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/go-live",
+                "id": "nhcx.flow.production-onboarding",
+                "summary": "Create and confirm your live claims exchange participant record, then register your certificate and callback address, each step confirmed by a passcode sent ...",
+                "title": "Onboard as a participant in production",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/notifications-and-patient-apps#subscribing",
+                "id": "nhcx.flow.notification-subscribe",
+                "summary": "Have a patient's health record app receive plain-language updates on their pre-authorisations, claims and payments, by subscribing each time the patient logs...",
+                "title": "Subscribe a patient app to notifications",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/get-your-sandbox-credentials",
+                "id": "nhcx.flow.sandbox-onboarding",
+                "summary": "Register your system in the claims exchange test environment so it holds a participant code, a registered certificate and a callback address.",
+                "title": "Onboard as a participant in the NHCX sandbox",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/api/eligibility/endpoints/eligibility-v1-coverageeligibility-check",
+                "id": "nhcx.endpoint.coverageeligibility-check",
+                "summary": "Ask an insurer, through the claims exchange, whether a patient's policy is active and what it covers, and get a receipt while the answer follows later.",
+                "title": "POST /v1/coverageeligibility/check",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/registries/policy",
+                "id": "nhcx.flow.policy-link-and-delink",
+                "summary": "As an insurer or claims administrator, record which beneficiaries hold which products so that hospitals can find their cover, and remove the record when it e...",
+                "title": "Link and de-link an ABHA and a policy",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/roles/payer",
+                "id": "nhcx.flow.payer-process-a-request",
+                "summary": "As an insurer or claims administrator, take a provider's request from the exchange, decide it, and send the sealed decision back on the paired answer path.",
+                "title": "Receive, adjudicate and answer a request as a payer",
+                "type": "flow"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_013M9gLayi3RaTFYtGTxKg5h",
+            "Name": "get",
+            "Input": {
+              "id": "nhcx.flow.payer-process-a-request"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "nhcx.flow.payer-process-a-request"
+          },
+          "output": {
+            "body": "# Receive, adjudicate and answer a request as a payer\n\n## In plain words\n\nAs a [payer](../glossary/payer.md), you receive providers' requests from the [National Health Claims Exchange](../../shared/glossary/nhcx.md) (NHCX): eligibility checks, pre-authorisations, claims and more. Each arrives at your registered address on the request path, for example `/v1/preauth/submit`. You acknowledge it at once, decide it in your own time, and send the decision back on the paired answer path, for example `/v1/preauth/on_submit`.\n\nThe decision is sealed for the provider. If you cannot process the request at all, you send an unsealed `ProtocolResponse` instead.\n\n## Before you start\n\n- You are onboarded as a payer or [TPA](../glossary/tpa.md). Your registered address serves the request paths for your use cases, and `/v1/error`. See [Onboard as a participant in production](production-onboarding.md).\n- Your private key matches the certificate in your participant record.\n- Your policies are linked, so providers can find them. See [Link and de-link an ABHA and a policy](policy-link-and-delink.md).\n- You hold a session token.\n- You can validate bundles against the [NRCeS](../../shared/glossary/nrces.md) profiles.\n\n| Request you receive | Answer you send | What the answer carries |\n|---|---|---|\n| `/v1/coverageeligibility/check` | `/v1/coverageeligibility/on_check` | Eligibility and plan details |\n| `/v1/insuranceplan/request` | `/v1/insuranceplan/on_request` | The insurance plan details |\n| `/v1/preauth/submit` | `/v1/preauth/on_submit` | The adjudicated pre-authorisation |\n| `/v1/claim/submit` | `/v1/claim/on_submit` | The adjudicated claim |\n| `/v1/search/submit` | `/v1/search/on_submit` | The claim responses that match the criteria |\n| `/v1/task/submit` | `/v1/task/on_submit` | The answer to a reprocess or cancel task |\n\n## What happens\n\n```mermaid\nsequenceDiagram\n    participant Prov as Provider\n    participant NHCX as NHCX exchange\n    participant You as Your payer endpoint\n    participant PS as NHCX participant service\n    participant Rev as Reviewer acting for the payer\n    participant PSvc as PMJAY payer service\n    Prov->>NHCX: POST /v1/preauth/submit\n    NHCX->>You: POST /v1/preauth/submit\n    You-->>NHCX: 202 with the acceptance body, within 30 seconds\n    Note over You: decrypt with your private key and validate the bundle\n    opt More information needed\n        You->>NHCX: POST /v1/communication/request\n        NHCX->>Prov: POST /v1/communication/request\n        Prov->>NHCX: POST /v1/communication/on_request\n        NHCX->>You: POST /v1/communication/on_request\n    end\n    opt A PMJAY case held in the PMJAY payer service\n        Rev->>PSvc: POST /pmjay/sbxhcx/nhcxpayerservice/v1/get/user-role\n        PSvc-->>Rev: the role that holds the case\n        Rev->>PSvc: POST /pmjay/hcx/nhcxpayerservice/wrapper/process/case\n    end\n    Note over You: the decision is ready\n    You->>PS: POST /fetch/certs with the provider code\n    PS-->>You: the provider's certificate\n    You->>NHCX: POST /v1/preauth/on_submit with the sealed decision\n    NHCX-->>You: 202\n    NHCX->>Prov: POST /v1/preauth/on_submit\n    opt Delivery to the provider fails five times\n        NHCX->>You: POST /v1/error\n    end\n```\n\n### 1. Receive and acknowledge\n\nAcknowledge within 30 seconds, before any processing. Follow [Receive, open and acknowledge a sealed message](receive-a-sealed-callback.md).\n\n### 2. Open and validate\n\nDecrypt the payload with your private key. Validate the bundle against the NRCeS profiles.\n\nIf you cannot decrypt it, the payload is invalid, or a protocol error occurs, do not adjudicate. Answer with a `ProtocolResponse` as in [Report a processing failure on /v1/error](report-a-processing-error.md). A payload you cannot decrypt takes [PAYR-1001](../errors/payr-1001.md).\n\n### 3. Adjudicate\n\nDecide the request in your own system, with no fixed turnaround.\n\n**Wait, when you need documents:** send `POST /v1/communication/request` to the provider, with `x-hcx-status` `request.initiated`. The payload is a TaskBundle that carries a CommunicationRequest. The provider's answer arrives on your `/v1/communication/on_request`. See [queries and communication](../concepts/queries-and-communication.md).\n\n### 4. Seal the answer\n\nFetch the provider's certificate with `POST /fetch/certs`, using the request's `x-hcx-sender_code`. Cache it for 24 hours. Then build the protected header:\n\n| Header | Rule |\n|---|---|\n| `x-hcx-sender_code` | Your participant code |\n| `x-hcx-recipient_code` | The request's `x-hcx-sender_code` |\n| `x-hcx-api_call_id` | A new UUID, different from the correlation ID |\n| `x-hcx-correlation_id` | As [message identifiers](../concepts/message-identifiers.md) sets out, so the provider can match your answer |\n| `x-hcx-status` | `response.complete` for a final decision. A claim answer can be `response.partial` |\n| `x-hcx-workflow_id` | The payer-side stage code, for example `21` approved, `23` rejected or `24` queried. See [workflow codes](../concepts/workflow-codes.md) |\n\nThe answer's `type` is `JWEPayloadResponse` for a sealed decision. Only a request you could not process gets `ProtocolResponse`.\n\n### 5. Send it\n\n`POST /v1/preauth/on_submit`, or the paired path from the table, with `{\"payload\": \"<JWE_COMPACT_STRING>\"}`. NHCX answers `202` and forwards it to the provider. The provider acknowledges it to NHCX.\n\n**Wait:** if NHCX cannot deliver your answer after five attempts, the report arrives on your `/v1/error`.\n\n### 6. PMJAY cases in the PMJAY payer service\n\nA PMJAY case is adjudicated role by role in the PMJAY payer service. `POST /pmjay/sbxhcx/nhcxpayerservice/v1/get/user-role`, with `caseid` and `payerid`, returns the role that holds the case now. `POST /pmjay/hcx/nhcxpayerservice/wrapper/process/case` applies an action as that role. Call the role lookup before every claim action.\n\n| Stage | Role | Actions | `usecase` |\n|---|---|---|---|\n| Pre-authorisation | `PPD-Trust` | `Approve`, `Reject`, `Query` | `PREAUTH` |\n| Claim step 1 | `CEX-Trust` | `Forward` | `CLAIM` |\n| Claim step 2 | `CPD-Trust` | `Pending`, `cpdApprove`, `cpdReject` | `CLAIM` |\n| Claim step 3 | `Medical Audit Committee` | `Approve`, `Reject`, `iQuery` | `Medical Audit Committee` |\n| Claim step 4 | `ACO-Trust` | `Approve`, `Reject`, `Pending` | `CLAIM` |\n| Claim step 5 | `SHA-Trust` | `Approve`, `Reject`, `Pending` | `CLAIM` |\n| Claim step 6 | `Claim Review Committee` | `Approve`, `Reject`, `Pending` | `Claim Review Committee` |\n\nThe `process/case` body carries `casenumber`, `action`, `receivercode`, `usecase`, `correlationid`, `sendercode`, `memberid` and `remarks`. Action names are case-sensitive. Give each call a unique correlation ID. See [POST /pmjay/hcx/nhcxpayerservice/wrapper/process/case](../endpoints/payer-service-process-case.md) and [Answer as your own payer system or through the PMJAY payer service](../decisions/payer-implementation.md).\n\n## How you know it worked\n\nNHCX answered `202` to your answer on the paired path, and no `/v1/error` arrives for it. To confirm delivery, send `POST /v1/status` about your answer. The reply on `/v1/on_status` carries `x-hcx-status` `request.dispatched`, meaning the provider's system received it.\n\n```observation schema=exit-condition\nchannel: callback\npath: <YOUR_ENDPOINT_URL>/v1/on_status\nprecondition:\n  your answer on /v1/preauth/on_submit: HTTP 202 from NHCX\nmatch:\n  x-hcx-status: request.dispatched\nabsent:\n  /v1/error report for your answer\n```\n\n## When it goes wrong\n\n- **The same request keeps arriving.** You process inside the 30-second window, or your acknowledgement has the wrong code or body. Acknowledge first, then process.\n- **You cannot decrypt the request.** The provider sealed it with an old copy of your certificate. Answer with a `ProtocolResponse` carrying [PAYR-1001](../errors/payr-1001.md), and check [Rotate your encryption certificate](rotate-certificate.md).\n- **NHCX refuses your answer, saying no data exists for its correlation ID.** Your `x-hcx-correlation_id` does not match the request. See [NHCX-1010](../errors/nhcx-1010.md).\n- **The provider never gets your answer.** `x-hcx-recipient_code` is not the request's sender code. Swap sender and recipient.\n- **You sent a `ProtocolResponse` for a rejection.** The provider treats it as a protocol failure. Send a sealed decision with the rejected workflow code.\n- **A PMJAY action is refused.** The case sits with another role, or the action name is misspelt. Call `get/user-role` first, and use the action names exactly as in the table.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/nhcx/v1/roles/payer",
+            "gateway": "nhcx",
+            "id": "nhcx.flow.payer-process-a-request",
+            "milestone": "n/a",
+            "summary": "As an insurer or claims administrator, take a provider's request from the exchange, decide it, and send the sealed decision back on the paired answer path.",
+            "title": "Receive, adjudicate and answer a request as a payer",
+            "type": "flow"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01GQLhXq9v1YqR5YP5yNfFtG",
+            "Name": "search",
+            "Input": {
+              "query": "workflow codes claim rejected",
+              "kind": "atom"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "workflow codes claim rejected",
+            "kind": "atom"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/nhcx/v1/concepts/workflow-codes",
+                "id": "nhcx.concept.workflow-codes",
+                "summary": "The workflow id header names the business stage a message belongs to, such as a new preauthorisation or a payment settled, and pairs with the status header t...",
+                "title": "Workflow codes and the stage each one names",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/roles/provider/preauthorisation",
+                "id": "nhcx.flow.preauth-submit",
+                "summary": "Ask the payer to approve a planned treatment before it starts, then read the decision when it arrives.",
+                "title": "Submit a preauthorisation",
+                "type": "flow"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.concept.claim-cycle",
+                "summary": "A cashless claim moves through eligibility, insurance plan, preauthorisation, claim, payment notice and, if needed, reprocess, and each stage is its own requ...",
+                "title": "The claim cycle from eligibility to payment",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.concept.status-lifecycle",
+                "summary": "A message moves through states set by the sender, by the exchange and by the responder, and each state is visible in the status header or the acknowledgement.",
+                "title": "Status values and how a request moves through them",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/error-codes#payr",
+                "id": "nhcx.error.payr-1204",
+                "summary": "The payer refused the request because a procedure code is not one the hospital's insurance plan offers.",
+                "title": "PAYR-1204: procedure code is not in the insurance plan",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/error-codes#payr",
+                "id": "nhcx.error.payr-1221",
+                "summary": "The payer refused the request because an investigation code is not one it recognises.",
+                "title": "PAYR-1221: investigation code is not valid",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/error-codes#payr",
+                "id": "nhcx.error.payr-1240",
+                "summary": "The payer refused the request because it holds no details for the procedures requested.",
+                "title": "PAYR-1240: requested procedures not found",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/api/task/endpoints/task-v1-task-submit",
+                "id": "nhcx.endpoint.task-submit",
+                "summary": "Ask an insurer, through the claims exchange, to look again at a rejected or short-paid claim, or to cancel a pre-authorisation you will not use.",
+                "title": "POST /v1/task/submit",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/error-codes#payr",
+                "id": "nhcx.error.payr-1220",
+                "summary": "The payer refused the request because an investigation's description does not match the payer's description for its code.",
+                "title": "PAYR-1220: investigation description does not match its code",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/error-codes#payr",
+                "id": "nhcx.error.payr-1225",
+                "summary": "The payer refused the request because an implant code is not one it recognises.",
+                "title": "PAYR-1225: implant code is not valid",
+                "type": "error"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_012ykafiqfv8VCw9pv12MQaM",
+            "Name": "get",
+            "Input": {
+              "id": "nhcx.concept.workflow-codes"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "nhcx.concept.workflow-codes"
+          },
+          "output": {
+            "body": "# Workflow codes and the stage each one names\n\n## In plain words\n\nThe [workflow id](../glossary/workflow-id.md) says which stage of a case a message belongs to. `12` is a new preauthorisation. `15` is a claim. `33` is a payment settled.\n\nIt travels in `x-hcx-workflow_id`, next to `x-hcx-status`. The pair tells the receiver exactly what the message is, without opening the bundle.\n\n## Before you start\n\nRead [the protocol headers](./protocol-headers.md) and [the claim cycle](./claim-cycle.md).\n\n## What happens\n\n### The codes a provider sends\n\n| Code | Stage | `x-hcx-status` |\n|---|---|---|\n| `10` | Patient registered | `request.initiated` |\n| `11` | Patient admitted | `request.initiated` |\n| `12` | Preauthorisation request initiated | `request.initiated` |\n| `121` | Preauthorisation resubmission | `request.initiated` |\n| `13` | Enhancement request initiated | `request.initiated` |\n| `19` | Preauthorisation query response submitted | `response.complete` |\n| `131` | Enhancement query response submitted | `response.complete` |\n| `14` | Discharge submitted | `request.initiated` |\n| `15` | Claim request initiated | `request.initiated` |\n| `151` | Claim query response submitted | `response.complete` |\n| `17` | Payment notice received | `response.complete` |\n| `36` | Claim arbitration intimation (reprocess or erroneous claim) | `request.initiated` |\n| `PC01` | Preauthorisation cancellation | `request.initiated` |\n\n### The codes a payer sends\n\n| Code | Stage | `x-hcx-status` |\n|---|---|---|\n| `20` | Preauthorisation acknowledged | `response.partial` |\n| `21` | Preauthorisation approved | `response.complete` |\n| `22` | Enhancement approved | `response.complete` |\n| `23` | Preauthorisation rejected | `response.complete` |\n| `24` | Preauthorisation queried | `request.initiated` |\n| `241` | Enhancement queried | `request.initiated` |\n| `25` | Claim documents acknowledged | `response.partial` |\n| `26` | Claim approved | `response.complete` |\n| `27` | Claim queried | `request.initiated` |\n| `28` | Claim in process | `response.partial` |\n| `29` | Claim forwarded | `response.partial` |\n| `252`, `253`, `254` | Reprocess approved, rejected, queried | `response.complete`, `response.complete`, `request.initiated` |\n| `30` | Payment notice initiated | `request.initiated` |\n| `31` | Payment processed | `request.initiated` |\n| `33` | Payment settled | `request.initiated` |\n| `PC02` | Preauthorisation cancellation accomplished | `response.complete` |\n\n### Other families\n\n`R` codes cover reimbursement claims, for example `R15` for a reimbursement claim submitted. `G11` to `G13` cover grievances, `RP1` to `RP3` return payments, `N01` to `N04` notifications and `DC01` to `DC02` discharge corrections.\n\n### One code, several stages\n\nSome codes appear more than once and the status tells them apart. Code `20` with `response.partial` is an acknowledgement that succeeded. The same code with `response.error` is an acknowledgement that failed, and you handle it as a protocol error.\n\n### Rule\n\nKeep workflow ids in configuration, not in code. A payer may ask for a corrected code, and a configuration change needs no release.\n\n## How you know it worked\n\nYou have understood this when you can answer both of these.\n\n1. A payer's message arrives with `x-hcx-workflow_id` `24`. What happened to your preauthorisation, and which code does your answer carry?\n2. Code `20` arrives with `response.error`. Is the preauthorisation rejected? How do you treat it?\n\n## When it goes wrong\n\n**Invalid workflow id.** The PMJAY payer refuses a claim with an unknown workflow id with [PAYR-1321](../errors/payr-1321.md). Its structure checks use [PAYR-1003](../errors/payr-1003.md) for \"Invalid workflow requested\".\n\n**Query answered as a resubmission.** Answer a query with the query response code (`19` or `151`). A resubmission code (`121`) replaces the earlier request instead.\n\n**Acknowledgement failures read as rejections.** An \"Ack Failed\" code with `response.error` is a delivery or protocol problem, not a business decision.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/nhcx/v1/concepts/workflow-codes",
+            "gateway": "nhcx",
+            "id": "nhcx.concept.workflow-codes",
+            "milestone": "n/a",
+            "summary": "The workflow id header names the business stage a message belongs to, such as a new preauthorisation or a payment settled, and pairs with the status header to say exactly what the message is.",
+            "title": "Workflow codes and the stage each one names",
+            "type": "concept"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "Based on the NHCX developer portal, here are the rules for adjudicating a rejected insurance claim:\n\n## Key Rules\n\n**1. Send a sealed decision, not a protocol error**\n- You must send a `JWEPayloadResponse` with the rejected workflow code to `POST /v1/claim/on_submit`\n- Do **not** send a `ProtocolResponse` for a rejection—the provider will treat that as a protocol failure, not a business decision\n\n**2. Set the correct headers**\nWhen sealing your answer, include:\n- `x-hcx-workflow_id`: The rejected workflow code (see below)\n- `x-hcx-status`: `response.complete` for a final decision\n- `x-hcx-sender_code`: Your participant code\n- `x-hcx-recipient_code`: The provider's code (from the request's sender)\n- `x-hcx-correlation_id`: Matches the request's correlation ID so the provider can pair them\n\n**3. Workflow codes for claim rejections**\nThe workflow codes documentation shows these codes a payer can send:\n- `26` = Claim approved\n- `27` = Claim queried  \n- `28` = Claim in process\n- `29` = Claim forwarded\n- `252` = Reprocess rejected (for arbitration/reprocess requests)\n\nThere is no explicit \"claim rejected\" code in the table—rejections appear to flow through the reprocess pathway (`252`) or claims may be moved to a queried state (`27`) for further information rather than outright rejection.\n\n**4. For PMJAY cases**\nIf the claim is in the PMJAY payer service, the rejection action depends on which role holds it (CPD-Trust, Medical Audit Committee, ACO-Trust, etc.). Call `POST /pmjay/sbxhcx/nhcxpayerservice/v1/get/user-role` first to identify the current role, then use `cpdReject` or `Reject` as appropriate.\n\n**Source:** [Receive, adjudicate and answer a request as a payer](https://portal.abdm.gov.in/docs/nhcx/v1/roles/payer) and [Workflow codes and the stage each one names](https://portal.abdm.gov.in/docs/nhcx/v1/concepts/workflow-codes) on the ABDM developer portal.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "Based on the NHCX developer portal, here are the rules for adjudicating a rejected insurance claim:\n\n## Key Rules\n\n**1. Send a sealed decision, not a protocol error**\n- You must send a `JWEPayloadResponse` with the rejected workflow code to `POST /v1/claim/on_submit`\n- Do **not** send a `ProtocolResponse` for a rejection—the provider will treat that as a protocol failure, not a business decision\n\n**2. Set the correct headers**\nWhen sealing your answer, include:\n- `x-hcx-workflow_id`: The rejected workflow code (see below)\n- `x-hcx-status`: `response.complete` for a final decision\n- `x-hcx-sender_code`: Your participant code\n- `x-hcx-recipient_code`: The provider's code (from the request's sender)\n- `x-hcx-correlation_id`: Matches the request's correlation ID so the provider can pair them\n\n**3. Workflow codes for claim rejections**\nThe workflow codes documentation shows these codes a payer can send:\n- `26` = Claim approved\n- `27` = Claim queried  \n- `28` = Claim in process\n- `29` = Claim forwarded\n- `252` = Reprocess rejected (for arbitration/reprocess requests)\n\nThere is no explicit \"claim rejected\" code in the table—rejections appear to flow through the reprocess pathway (`252`) or claims may be moved to a queried state (`27`) for further information rather than outright rejection.\n\n**4. For PMJAY cases**\nIf the claim is in the PMJAY payer service, the rejection action depends on which role holds it (CPD-Trust, Medical Audit Committee, ACO-Trust, etc.). Call `POST /pmjay/sbxhcx/nhcxpayerservice/v1/get/user-role` first to identify the current role, then use `cpdReject` or `Reject` as appropriate.\n\n**Source:** [Receive, adjudicate and answer a request as a payer](https://portal.abdm.gov.in/docs/nhcx/v1/roles/payer) and [Workflow codes and the stage each one names](https://portal.abdm.gov.in/docs/nhcx/v1/concepts/workflow-codes) on the ABDM developer portal.",
+  "sources": [
+    {
+      "id": "nhcx.flow.payer-process-a-request",
+      "title": "Receive, adjudicate and answer a request as a payer",
+      "url": "/docs/nhcx/v1/roles/payer"
+    },
+    {
+      "id": "nhcx.concept.workflow-codes",
+      "title": "Workflow codes and the stage each one names",
+      "url": "/docs/nhcx/v1/concepts/workflow-codes"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#nhcx\",\"id\":\"shared.glossary.nhcx\",\"summary\":\"The gateway for insurance claims, separate from HIE-CM and UHI.\",\"title\":\"NHCX, the National Health Claims Exchange\",\"type\":\"glossary\"},{\"doc_url\":\"\",\"id\":\"nhcx.concept.what-nhcx-is\",\"summary\":\"The claims exchange is a switch that carries sealed claim messages between hospitals and insurers; it routes and checks envelopes but never reads or decides ...\",\"title\":\"What the National Health Claims Exchange is and what it does not do\",\"type\":\"concept\"},{\"doc_url\":\"/docs/nhcx/v1/concepts/pmjay-on-nhcx\",\"id\":\"nhcx.flow.pmjay-hospital-migration\",\"summary\":\"Move a scheme-empanelled hospital from the central claims portal to its own hospital system, by onboarding it on the exchange and having its hospital ID mapp...\",\"title\":\"Migrate a PMJAY hospital to HMIS through NHCX\",\"type\":\"flow\"},{\"doc_url\":\"/docs/nhcx/v1/api/session/endpoints/session-api-hiecm-gateway-v3-sessions\",\"id\":\"nhcx.endpoint.session-token\",\"summary\":\"Trade your client id and client secret for the access token, valid for 1200 seconds (20 minutes), that every claims exchange call carries.\",\"title\":\"POST /api/hiecm/gateway/v3/sessions\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/nhcx/v1/go-live\",\"id\":\"nhcx.flow.production-onboarding\",\"summary\":\"Create and confirm your live claims exchange participant record, then register your certificate and callback address, each step confirmed by a passcode sent ...\",\"title\":\"Onboard as a participant in production\",\"type\":\"flow\"},{\"doc_url\":\"/docs/nhcx/v1/reference/notifications-and-patient-apps#subscribing\",\"id\":\"nhcx.flow.notification-subscribe\",\"summary\":\"Have a patient's health record app receive plain-language updates on their pre-authorisations, claims and payments, by subscribing each time the patient logs...\",\"title\":\"Subscribe a patient app to notifications\",\"type\":\"flow\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/get-your-sandbox-credentials\",\"id\":\"nhcx.flow.sandbox-onboarding\",\"summary\":\"Register your system in the claims exchange test environment so it holds a participant code, a registered certificate and a callback address.\",\"title\":\"Onboard as a participant in the NHCX sandbox\",\"type\":\"flow\"},{\"doc_url\":\"/docs/nhcx/v1/api/eligibility/endpoints/eligibility-v1-coverageeligibility-check\",\"id\":\"nhcx.endpoint.coverageeligibility-check\",\"summary\":\"Ask an insurer, through the claims exchange, whether a patient's policy is active and what it covers, and get a receipt while the answer follows later.\",\"title\":\"POST /v1/coverageeligibility/check\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/nhcx/v1/registries/policy\",\"id\":\"nhcx.flow.policy-link-and-delink\",\"summary\":\"As an insurer or claims administrator, record which beneficiaries hold which products so that hospitals can find their cover, and remove the record when it e...\",\"title\":\"Link and de-link an ABHA and a policy\",\"type\":\"flow\"},{\"doc_url\":\"/docs/nhcx/v1/roles/payer\",\"id\":\"nhcx.flow.payer-process-a-request\",\"summary\":\"As an insurer or claims administrator, take a provider's request from the exchange, decide it, and send the sealed decision back on the paired answer path.\",\"title\":\"Receive, adjudicate and answer a request as a payer\",\"type\":\"flow\"}]}\n{\"body\":\"# Receive, adjudicate and answer a request as a payer\\n\\n## In plain words\\n\\nAs a [payer](../glossary/payer.md), you receive providers' requests from the [National Health Claims Exchange](../../shared/glossary/nhcx.md) (NHCX): eligibility checks, pre-authorisations, claims and more. Each arrives at your registered address on the request path, for example `/v1/preauth/submit`. You acknowledge it at once, decide it in your own time, and send the decision back on the paired answer path, for example `/v1/preauth/on_submit`.\\n\\nThe decision is sealed for the provider. If you cannot process the request at all, you send an unsealed `ProtocolResponse` instead.\\n\\n## Before you start\\n\\n- You are onboarded as a payer or [TPA](../glossary/tpa.md). Your registered address serves the request paths for your use cases, and `/v1/error`. See [Onboard as a participant in production](production-onboarding.md).\\n- Your private key matches the certificate in your participant record.\\n- Your policies are linked, so providers can find them. See [Link and de-link an ABHA and a policy](policy-link-and-delink.md).\\n- You hold a session token.\\n- You can validate bundles against the [NRCeS](../../shared/glossary/nrces.md) profiles.\\n\\n| Request you receive | Answer you send | What the answer carries |\\n|---|---|---|\\n| `/v1/coverageeligibility/check` | `/v1/coverageeligibility/on_check` | Eligibility and plan details |\\n| `/v1/insuranceplan/request` | `/v1/insuranceplan/on_request` | The insurance plan details |\\n| `/v1/preauth/submit` | `/v1/preauth/on_submit` | The adjudicated pre-authorisation |\\n| `/v1/claim/submit` | `/v1/claim/on_submit` | The adjudicated claim |\\n| `/v1/search/submit` | `/v1/search/on_submit` | The claim responses that match the criteria |\\n| `/v1/task/submit` | `/v1/task/on_submit` | The answer to a reprocess or cancel task |\\n\\n## What happens\\n\\n```mermaid\\nsequenceDiagram\\n    participant Prov as Provider\\n    participant NHCX as NHCX exchange\\n    participant You as Your payer endpoint\\n    participant PS as NHCX participant service\\n    participant Rev as Reviewer acting for the payer\\n    participant PSvc as PMJAY payer service\\n    Prov->>NHCX: POST /v1/preauth/submit\\n    NHCX->>You: POST /v1/preauth/submit\\n    You-->>NHCX: 202 with the acceptance body, within 30 seconds\\n    Note over You: decrypt with your private key and validate the bundle\\n    opt More information needed\\n        You->>NHCX: POST /v1/communication/request\\n        NHCX->>Prov: POST /v1/communication/request\\n        Prov->>NHCX: POST /v1/communication/on_request\\n        NHCX->>You: POST /v1/communication/on_request\\n    end\\n    opt A PMJAY case held in the PMJAY payer service\\n        Rev->>PSvc: POST /pmjay/sbxhcx/nhcxpayerservice/v1/get/user-role\\n        PSvc-->>Rev: the role that holds the case\\n        Rev->>PSvc: POST /pmjay/hcx/nhcxpayerservice/wrapper/process/case\\n    end\\n    Note over You: the decision is ready\\n    You->>PS: POST /fetch/certs with the provider code\\n    PS-->>You: the provider's certificate\\n    You->>NHCX: POST /v1/preauth/on_submit with the sealed decision\\n    NHCX-->>You: 202\\n    NHCX->>Prov: POST /v1/preauth/on_submit\\n    opt Delivery to the provider fails five times\\n        NHCX->>You: POST /v1/error\\n    end\\n```\\n\\n### 1. Receive and acknowledge\\n\\nAcknowledge within 30 seconds, before any processing. Follow [Receive, open and acknowledge a sealed message](receive-a-sealed-callback.md).\\n\\n### 2. Open and validate\\n\\nDecrypt the payload with your private key. Validate the bundle against the NRCeS profiles.\\n\\nIf you cannot decrypt it, the payload is invalid, or a protocol error occurs, do not adjudicate. Answer with a `ProtocolResponse` as in [Report a processing failure on /v1/error](report-a-processing-error.md). A payload you cannot decrypt takes [PAYR-1001](../errors/payr-1001.md).\\n\\n### 3. Adjudicate\\n\\nDecide the request in your own system, with no fixed turnaround.\\n\\n**Wait, when you need documents:** send `POST /v1/communication/request` to the provider, with `x-hcx-status` `request.initiated`. The payload is a TaskBundle that carries a CommunicationRequest. The provider's answer arrives on your `/v1/communication/on_request`. See [queries and communication](../concepts/queries-and-communication.md).\\n\\n### 4. Seal the answer\\n\\nFetch the provider's certificate with `POST /fetch/certs`, using the request's `x-hcx-sender_code`. Cache it for 24 hours. Then build the protected header:\\n\\n| Header | Rule |\\n|---|---|\\n| `x-hcx-sender_code` | Your participant code |\\n| `x-hcx-recipient_code` | The request's `x-hcx-sender_code` |\\n| `x-hcx-api_call_id` | A new UUID, different from the correlation ID |\\n| `x-hcx-correlation_id` | As [message identifiers](../concepts/message-identifiers.md) sets out, so the provider can match your answer |\\n| `x-hcx-status` | `response.complete` for a final decision. A claim answer can be `response.partial` |\\n| `x-hcx-workflow_id` | The payer-side stage code, for example `21` approved, `23` rejected or `24` queried. See [workflow codes](../concepts/workflow-codes.md) |\\n\\nThe answer's `type` is `JWEPayloadResponse` for a sealed decision. Only a request you could not process gets `ProtocolResponse`.\\n\\n### 5. Send it\\n\\n`POST /v1/preauth/on_submit`, or the paired path from the table, with `{\\\"payload\\\": \\\"<JWE_COMPACT_STRING>\\\"}`. NHCX answers `202` and forwards it to the provider. The provider acknowledges it to NHCX.\\n\\n**Wait:** if NHCX cannot deliver your answer after five attempts, the report arrives on your `/v1/error`.\\n\\n### 6. PMJAY cases in the PMJAY payer service\\n\\nA PMJAY case is adjudicated role by role in the PMJAY payer service. `POST /pmjay/sbxhcx/nhcxpayerservice/v1/get/user-role`, with `caseid` and `payerid`, returns the role that holds the case now. `POST /pmjay/hcx/nhcxpayerservice/wrapper/process/case` applies an action as that role. Call the role lookup before every claim action.\\n\\n| Stage | Role | Actions | `usecase` |\\n|---|---|---|---|\\n| Pre-authorisation | `PPD-Trust` | `Approve`, `Reject`, `Query` | `PREAUTH` |\\n| Claim step 1 | `CEX-Trust` | `Forward` | `CLAIM` |\\n| Claim step 2 | `CPD-Trust` | `Pending`, `cpdApprove`, `cpdReject` | `CLAIM` |\\n| Claim step 3 | `Medical Audit Committee` | `Approve`, `Reject`, `iQuery` | `Medical Audit Committee` |\\n| Claim step 4 | `ACO-Trust` | `Approve`, `Reject`, `Pending` | `CLAIM` |\\n| Claim step 5 | `SHA-Trust` | `Approve`, `Reject`, `Pending` | `CLAIM` |\\n| Claim step 6 | `Claim Review Committee` | `Approve`, `Reject`, `Pending` | `Claim Review Committee` |\\n\\nThe `process/case` body carries `casenumber`, `action`, `receivercode`, `usecase`, `correlationid`, `sendercode`, `memberid` and `remarks`. Action names are case-sensitive. Give each call a unique correlation ID. See [POST /pmjay/hcx/nhcxpayerservice/wrapper/process/case](../endpoints/payer-service-process-case.md) and [Answer as your own payer system or through the PMJAY payer service](../decisions/payer-implementation.md).\\n\\n## How you know it worked\\n\\nNHCX answered `202` to your answer on the paired path, and no `/v1/error` arrives for it. To confirm delivery, send `POST /v1/status` about your answer. The reply on `/v1/on_status` carries `x-hcx-status` `request.dispatched`, meaning the provider's system received it.\\n\\n```observation schema=exit-condition\\nchannel: callback\\npath: <YOUR_ENDPOINT_URL>/v1/on_status\\nprecondition:\\n  your answer on /v1/preauth/on_submit: HTTP 202 from NHCX\\nmatch:\\n  x-hcx-status: request.dispatched\\nabsent:\\n  /v1/error report for your answer\\n```\\n\\n## When it goes wrong\\n\\n- **The same request keeps arriving.** You process inside the 30-second window, or your acknowledgement has the wrong code or body. Acknowledge first, then process.\\n- **You cannot decrypt the request.** The provider sealed it with an old copy of your certificate. Answer with a `ProtocolResponse` carrying [PAYR-1001](../errors/payr-1001.md), and check [Rotate your encryption certificate](rotate-certificate.md).\\n- **NHCX refuses your answer, saying no data exists for its correlation ID.** Your `x-hcx-correlation_id` does not match the request. See [NHCX-1010](../errors/nhcx-1010.md).\\n- **The provider never gets your answer.** `x-hcx-recipient_code` is not the request's sender code. Swap sender and recipient.\\n- **You sent a `ProtocolResponse` for a rejection.** The provider treats it as a protocol failure. Send a sealed decision with the rejected workflow code.\\n- **A PMJAY action is refused.** The case sits with another role, or the action name is misspelt. Call `get/user-role` first, and use the action names exactly as in the table.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/nhcx/v1/roles/payer\",\"gateway\":\"nhcx\",\"id\":\"nhcx.flow.payer-process-a-request\",\"milestone\":\"n/a\",\"summary\":\"As an insurer or claims administrator, take a provider's request from the exchange, decide it, and send the sealed decision back on the paired answer path.\",\"title\":\"Receive, adjudicate and answer a request as a payer\",\"type\":\"flow\"}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/nhcx/v1/concepts/workflow-codes\",\"id\":\"nhcx.concept.workflow-codes\",\"summary\":\"The workflow id header names the business stage a message belongs to, such as a new preauthorisation or a payment settled, and pairs with the status header t...\",\"title\":\"Workflow codes and the stage each one names\",\"type\":\"concept\"},{\"doc_url\":\"/docs/nhcx/v1/roles/provider/preauthorisation\",\"id\":\"nhcx.flow.preauth-submit\",\"summary\":\"Ask the payer to approve a planned treatment before it starts, then read the decision when it arrives.\",\"title\":\"Submit a preauthorisation\",\"type\":\"flow\"},{\"doc_url\":\"\",\"id\":\"nhcx.concept.claim-cycle\",\"summary\":\"A cashless claim moves through eligibility, insurance plan, preauthorisation, claim, payment notice and, if needed, reprocess, and each stage is its own requ...\",\"title\":\"The claim cycle from eligibility to payment\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"nhcx.concept.status-lifecycle\",\"summary\":\"A message moves through states set by the sender, by the exchange and by the responder, and each state is visible in the status header or the acknowledgement.\",\"title\":\"Status values and how a request moves through them\",\"type\":\"concept\"},{\"doc_url\":\"/docs/nhcx/v1/reference/error-codes#payr\",\"id\":\"nhcx.error.payr-1204\",\"summary\":\"The payer refused the request because a procedure code is not one the hospital's insurance plan offers.\",\"title\":\"PAYR-1204: procedure code is not in the insurance plan\",\"type\":\"error\"},{\"doc_url\":\"/docs/nhcx/v1/reference/error-codes#payr\",\"id\":\"nhcx.error.payr-1221\",\"summary\":\"The payer refused the request because an investigation code is not one it recognises.\",\"title\":\"PAYR-1221: investigation code is not valid\",\"type\":\"error\"},{\"doc_url\":\"/docs/nhcx/v1/reference/error-codes#payr\",\"id\":\"nhcx.error.payr-1240\",\"summary\":\"The payer refused the request because it holds no details for the procedures requested.\",\"title\":\"PAYR-1240: requested procedures not found\",\"type\":\"error\"},{\"doc_url\":\"/docs/nhcx/v1/api/task/endpoints/task-v1-task-submit\",\"id\":\"nhcx.endpoint.task-submit\",\"summary\":\"Ask an insurer, through the claims exchange, to look again at a rejected or short-paid claim, or to cancel a pre-authorisation you will not use.\",\"title\":\"POST /v1/task/submit\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/nhcx/v1/reference/error-codes#payr\",\"id\":\"nhcx.error.payr-1220\",\"summary\":\"The payer refused the request because an investigation's description does not match the payer's description for its code.\",\"title\":\"PAYR-1220: investigation description does not match its code\",\"type\":\"error\"},{\"doc_url\":\"/docs/nhcx/v1/reference/error-codes#payr\",\"id\":\"nhcx.error.payr-1225\",\"summary\":\"The payer refused the request because an implant code is not one it recognises.\",\"title\":\"PAYR-1225: implant code is not valid\",\"type\":\"error\"}]}\n{\"body\":\"# Workflow codes and the stage each one names\\n\\n## In plain words\\n\\nThe [workflow id](../glossary/workflow-id.md) says which stage of a case a message belongs to. `12` is a new preauthorisation. `15` is a claim. `33` is a payment settled.\\n\\nIt travels in `x-hcx-workflow_id`, next to `x-hcx-status`. The pair tells the receiver exactly what the message is, without opening the bundle.\\n\\n## Before you start\\n\\nRead [the protocol headers](./protocol-headers.md) and [the claim cycle](./claim-cycle.md).\\n\\n## What happens\\n\\n### The codes a provider sends\\n\\n| Code | Stage | `x-hcx-status` |\\n|---|---|---|\\n| `10` | Patient registered | `request.initiated` |\\n| `11` | Patient admitted | `request.initiated` |\\n| `12` | Preauthorisation request initiated | `request.initiated` |\\n| `121` | Preauthorisation resubmission | `request.initiated` |\\n| `13` | Enhancement request initiated | `request.initiated` |\\n| `19` | Preauthorisation query response submitted | `response.complete` |\\n| `131` | Enhancement query response submitted | `response.complete` |\\n| `14` | Discharge submitted | `request.initiated` |\\n| `15` | Claim request initiated | `request.initiated` |\\n| `151` | Claim query response submitted | `response.complete` |\\n| `17` | Payment notice received | `response.complete` |\\n| `36` | Claim arbitration intimation (reprocess or erroneous claim) | `request.initiated` |\\n| `PC01` | Preauthorisation cancellation | `request.initiated` |\\n\\n### The codes a payer sends\\n\\n| Code | Stage | `x-hcx-status` |\\n|---|---|---|\\n| `20` | Preauthorisation acknowledged | `response.partial` |\\n| `21` | Preauthorisation approved | `response.complete` |\\n| `22` | Enhancement approved | `response.complete` |\\n| `23` | Preauthorisation rejected | `response.complete` |\\n| `24` | Preauthorisation queried | `request.initiated` |\\n| `241` | Enhancement queried | `request.initiated` |\\n| `25` | Claim documents acknowledged | `response.partial` |\\n| `26` | Claim approved | `response.complete` |\\n| `27` | Claim queried | `request.initiated` |\\n| `28` | Claim in process | `response.partial` |\\n| `29` | Claim forwarded | `response.partial` |\\n| `252`, `253`, `254` | Reprocess approved, rejected, queried | `response.complete`, `response.complete`, `request.initiated` |\\n| `30` | Payment notice initiated | `request.initiated` |\\n| `31` | Payment processed | `request.initiated` |\\n| `33` | Payment settled | `request.initiated` |\\n| `PC02` | Preauthorisation cancellation accomplished | `response.complete` |\\n\\n### Other families\\n\\n`R` codes cover reimbursement claims, for example `R15` for a reimbursement claim submitted. `G11` to `G13` cover grievances, `RP1` to `RP3` return payments, `N01` to `N04` notifications and `DC01` to `DC02` discharge corrections.\\n\\n### One code, several stages\\n\\nSome codes appear more than once and the status tells them apart. Code `20` with `response.partial` is an acknowledgement that succeeded. The same code with `response.error` is an acknowledgement that failed, and you handle it as a protocol error.\\n\\n### Rule\\n\\nKeep workflow ids in configuration, not in code. A payer may ask for a corrected code, and a configuration change needs no release.\\n\\n## How you know it worked\\n\\nYou have understood this when you can answer both of these.\\n\\n1. A payer's message arrives with `x-hcx-workflow_id` `24`. What happened to your preauthorisation, and which code does your answer carry?\\n2. Code `20` arrives with `response.error`. Is the preauthorisation rejected? How do you treat it?\\n\\n## When it goes wrong\\n\\n**Invalid workflow id.** The PMJAY payer refuses a claim with an unknown workflow id with [PAYR-1321](../errors/payr-1321.md). Its structure checks use [PAYR-1003](../errors/payr-1003.md) for \\\"Invalid workflow requested\\\".\\n\\n**Query answered as a resubmission.** Answer a query with the query response code (`19` or `151`). A resubmission code (`121`) replaces the earlier request instead.\\n\\n**Acknowledgement failures read as rejections.** An \\\"Ack Failed\\\" code with `response.error` is a delivery or protocol problem, not a business decision.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/nhcx/v1/concepts/workflow-codes\",\"gateway\":\"nhcx\",\"id\":\"nhcx.concept.workflow-codes\",\"milestone\":\"n/a\",\"summary\":\"The workflow id header names the business stage a message belongs to, such as a new preauthorisation or a payment settled, and pairs with the status header to say exactly what the message is.\",\"title\":\"Workflow codes and the stage each one names\",\"type\":\"concept\"}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T11:58:06.324Z",
+  "usage": {
+    "input_tokens": 50,
+    "output_tokens": 1973,
+    "cache_read_input_tokens": 61769,
+    "cache_creation_input_tokens": 12763,
+    "num_turns": 5,
+    "duration_ms": 27981,
+    "cost_usd_equivalent": 0.0416179
+  }
+}

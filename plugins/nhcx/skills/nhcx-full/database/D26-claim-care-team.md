@@ -31,7 +31,7 @@ Roles (`role`, exact keys and their labels): `admitting` Admitting physician, `t
 #### D26K. KEYS AND INDEXES
 - Primary key `id` (integer).
 - Foreign key `claim_id` references `claim (id)` (D9), `ON DELETE CASCADE`.
-- Foreign key `practitioner_id` references `practitioner (id)` (D2), no delete action.
+- Foreign key `practitioner_id` references `practitioner (id)` (D2), `ON DELETE PROTECT` (a practitioner named on a sent care team is retired, never deleted; the reference implementation set no action [REF](../references/PAYERS.md#markers)).
 - Index `ix_claim_team` on `(claim_id, seq)`.
 
 #### D26U. USED BY

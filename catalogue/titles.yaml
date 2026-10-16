@@ -1,4 +1,6 @@
-# Hand written titles, keyed by operationId.
+# NHCX hand written titles, keyed by operationId. HIE-CM's are in
+# catalogue/hiecm/titles.yaml; these move to catalogue/nhcx/ when NHCX is
+# restructured.
 #
 # scripts/build-api-reference.mjs derives every title from NHA's summary, and
 # falls back to the method and path when the summary names nothing. These are
@@ -6,7 +8,7 @@
 # ("3 flows: Suggestion API"), a bare route, or a sentence about who calls the
 # endpoint rather than what it does.
 #
-# This file sits outside catalogue/openapi on purpose, for three reasons.
+# This file sits outside every openapi folder on purpose, for three reasons.
 # scripts/ingest-nha.mjs rewrites the module YAMLs wholesale on every run, so a
 # title stored in one would not survive the next ingest of an NHA drop.
 # listSpecTree treats every YAML under <platform>/<version> as a module, so a
@@ -17,34 +19,6 @@
 # Add a row only when the generated title is wrong or unreadable. A title here
 # is a claim about what the operation does, so it is written from the
 # operation's own description, and it starts with a verb like every other title.
-
-# M2, create and link records
-m2_post_consent_v3_request_hip_on_notify: Acknowledge the consent notification
-m2_post_health_information_transfer: Push the encrypted records to the HIU's data push URL
-m2_post_hip_v3_link_context_notify: Notify a change to a linked care context
-scan-and-register_post_patient_share_v3_on_share: Answer the patient share request
-m2_post_user_initiated_linking_v3_patient_care_context_on_8c9340: Answer the care context discovery
-m2_post_v3_consent_request_hip_notify: Receive the consent decision
-
-# M3, fetch data with consent
-m3_post_consent_v3_request_hiu_on_notify: Acknowledge the consent notification
-
-# M4, HPR and HFR
-m4_get_getpsudetailsbyministry: Get PSU details by ministry
-m4_get_v1_5_facility_get_master_types: Get all master types
-
-# P1, registration and login
-p1_get_v3_phr_app_enrollment_isexists: Check whether the ABHA address exists
-p1_post_v3_phr_app_enrollment_suggestion: Suggest an ABHA address
-p1_post_v3_phr_app_enrollment_verify: Verify the enrolment OTP
-
-# P2, named as NHA's sandbox observations of 23 September 2026 name them
-p2_post_patient_share_v3_share: OPD token generation
-p2_get_patient_share_v3_profile_gettokendetails: OPD Token History
-
-# P3, the subscription request side
-p3_post_subscription_requests_v3_hiu_care_context_on_notify: Answer the care context subscription notification
-p3_post_subscription_requests_v3_hiu_on_notify: Answer the subscription request notification
 
 # NHCX exchange modules. Named by who does what, in order, so a reader sees
 # which party makes each call and which party hosts each callback (NHA review,

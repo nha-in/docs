@@ -39,7 +39,7 @@ The workflow id (`x-hcx-workflow_id`) is what tells the payer which round it is 
 `factor` is the multiple-procedure rule, where the payer's adapter has one (see [PAYERS.md](../references/PAYERS.md)): procedure items ranked by their own line amount (tiers not counted), the costliest at 1, the second at 0.5, the rest at 0.25 [PAYER](../references/PAYERS.md#markers). Implant items carry no factor. Generic payers get no `factor`.
 
 **Claim leg differences.**
-- The lines are the claim's lines. A LAMA or DAMA discharge at stage "Before Surgery" or "During Surgery" collapses them to one procedure line `LM100` (display and rate from the plan's `LM100` package, else "LAMA / DAMA procedure" at 0; category from the plan, else from the first quoted line), because the payer disqualifies every other item (PAYR-1362) [PAYER](../references/PAYERS.md#markers).
+- The lines are the claim's lines. A LAMA or DAMA discharge at stage "Before Surgery" or "During Surgery" collapses them to one procedure line `LM100` (display and rate from the plan's `LM100` package, else "LAMA / DAMA procedure" at 0; category from the plan, else from the first quoted line), because the payer disqualifies every other item (PAYR-1362) [PAYER](../references/PAYERS.md#markers). Its `quantity` is the number of days admitted, admission date to discharge date, at least 1 (the knowledge source's `nhcx.fhir.claim-request`: "Set its quantity to the number of days admitted"), with `unitPrice` the plan's `LM100` rate and `net` rate times days [PAYER](../references/PAYERS.md#markers). Open: the knowledge source reads as a per-day rate; confirm it with the payer before go-live.
 - `billablePeriod.end` is the discharge date (else the admission date).
 - `insurance[0].preAuthRef` is the payer's pre-authorisation reference.
 - Documents are those filed at the claim stage. The discharge summary goes as the `HDS` entry: the claim-stage document whose code is a required claim document with "discharge summary" in its display, else the latest document coded `HDS`. It goes under that document's own code (for example PMJAY's `MAND0006` [PAYER](../references/PAYERS.md#markers)).
@@ -143,5 +143,5 @@ D25 `snomed_code` is not sent.
 | Answered form | `INF` "Information" or `STG` "Standard Treatment Guidelines" | `ODN` "Other document" or `STG` "Standard Treatment Guidelines" | `valueReference` to the QuestionnaireResponse (F7) | per answered form, not on a predetermination |
 
 #### F8U. USED BY
-- APIs: [A4. Pre-auth Submit](../apis/A4-preauth-submit.md)
+- APIs: [A4. Pre-auth Submit](../apis/A4-preauth-submit.md), [A17. Claim State](../apis/A17-claim-state.md)
 - FHIR: [F1. Bundle](F1-bundle.md), [F5. InsurancePlan](F5-insuranceplan.md), [F6. Questionnaire](F6-questionnaire.md), [F7. QuestionnaireResponse](F7-questionnaireresponse.md), [F9. ClaimResponse](F9-claimresponse.md), [F15. Patient](F15-patient.md), [F16. Practitioner and PractitionerRole](F16-practitioner.md), [F17. Organization](F17-organization.md), [F18. Coverage](F18-coverage.md), [F19. Other bundle resources](F19-other-resources.md)

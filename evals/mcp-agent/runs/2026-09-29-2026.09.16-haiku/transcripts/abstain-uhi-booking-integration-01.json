@@ -1,0 +1,657 @@
+{
+  "case_id": "abstain-uhi-booking-integration-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "how do I integrate with UHI booking"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01DADoyechJSgafUTheL5Apn",
+            "Name": "search",
+            "Input": {
+              "query": "UHI booking integration",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "UHI booking integration",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#uhi",
+                "id": "shared.glossary.uhi",
+                "summary": "The gateway for finding and booking health services, separate from HIE-CM and NHCX.",
+                "title": "UHI, the Unified Health Interface",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/going-live#1-build-and-run-your-services-test-cases",
+                "id": "uhi.test.run-test-cases",
+                "summary": "Build against the sample payloads and the UHI API reference, then pass every test case for your service in the sandbox.",
+                "title": "Run your UHI service's test cases",
+                "type": "test"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.concept.what-nhcx-is",
+                "summary": "The claims exchange is a switch that carries sealed claim messages between hospitals and insurers; it routes and checks envelopes but never reads or decides ...",
+                "title": "What the National Health Claims Exchange is and what it does not do",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/services/consultation#go-live-checklist",
+                "id": "uhi.test.consultation-go-live-checklist",
+                "summary": "The twenty items to complete before requesting production sign-off for Physical Consultation, from M2 and signing to promotion.",
+                "title": "Physical Consultation go-live checklist",
+                "type": "test"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_015NEvViFy2QpQKx9FHS4YQm",
+            "Name": "search",
+            "Input": {
+              "query": "UHI getting started onboarding integration guide",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "UHI getting started onboarding integration guide",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#uhi",
+                "id": "shared.glossary.uhi",
+                "summary": "The gateway for finding and booking health services, separate from HIE-CM and NHCX.",
+                "title": "UHI, the Unified Health Interface",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.concept.what-nhcx-is",
+                "summary": "The claims exchange is a switch that carries sealed claim messages between hospitals and insurers; it routes and checks envelopes but never reads or decides ...",
+                "title": "What the National Health Claims Exchange is and what it does not do",
+                "type": "concept"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01WYiEmooZGyiCskSLmAFdc7",
+            "Name": "get",
+            "Input": {
+              "id": "shared.glossary.uhi"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "shared.glossary.uhi"
+          },
+          "output": {
+            "body": "# UHI, the Unified Health Interface\n\n## In plain words\n\nUnified Health Interface, an open protocol network for health services\nthat are not record exchange: physical consultation booking, ambulance\nbooking, blood bank discovery, Jan Aushadhi and pharmacy search. It has\ntwo roles, [EUA](/docs/uhi/v1/getting-started/glossary#eua) on the\nconsumer side and [HSPA](/docs/uhi/v1/getting-started/glossary#hspa) on\nthe provider side, and every call is signed with Ed25519. See\n[UHI](/docs/uhi/v1).\n\n## Before you start\n\nNothing. A glossary entry assumes no prior reading.\n\n## What happens\n\nNothing happens here. This entry defines a term, it does not describe a call.\n\n## How you know it worked\n\nYou have understood this when you can say which of the three gateways your use case belongs to.\n\n## When it goes wrong\n\nExpecting HIE-CM endpoints to work against UHI. They are separate\ngateways with separate specifications.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/getting-started/glossary#uhi",
+            "gateway": "shared",
+            "id": "shared.glossary.uhi",
+            "milestone": "n/a",
+            "summary": "The gateway for finding and booking health services, separate from HIE-CM and NHCX.",
+            "title": "UHI, the Unified Health Interface",
+            "type": "glossary"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_0182etDMnMjJkgbvMu5wc3cn",
+            "Name": "search",
+            "Input": {
+              "query": "UHI API operations services",
+              "kind": "operation",
+              "module": "uhi",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "UHI API operations services",
+            "kind": "operation",
+            "module": "uhi",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "operations": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01Toj3hv1hZuF7NbKaHme8Bd",
+            "Name": "search",
+            "Input": {
+              "query": "UHI flow booking service",
+              "kind": "atom",
+              "type": "flow",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "UHI flow booking service",
+            "kind": "atom",
+            "type": "flow",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01MAjTTyXPUae6uQWYFoHJsx",
+            "Name": "search",
+            "Input": {
+              "query": "UHI",
+              "kind": "atom",
+              "limit": 25
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "UHI",
+            "kind": "atom",
+            "limit": 25
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#uhi",
+                "id": "shared.glossary.uhi",
+                "summary": "The gateway for finding and booking health services, separate from HIE-CM and NHCX.",
+                "title": "UHI, the Unified Health Interface",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/glossary#context-domain",
+                "id": "uhi.glossary.context-domain",
+                "summary": "The context field that names the UHI service a call belongs to. The Gateway sends a search to every HSPA registered for it.",
+                "title": "context.domain, the field that names a UHI service",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/glossary#network-registry",
+                "id": "uhi.glossary.network-registry",
+                "summary": "The register of UHI participants and their public keys. Its lookup returns another participant's key so you can check its signature.",
+                "title": "Network registry, the register of UHI participants and their keys",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/glossary#consumer-uri",
+                "id": "uhi.glossary.consumer-uri",
+                "summary": "The public HTTPS callback base URLs in a UHI call's context block, consumer_uri for the EUA and provider_uri for the HSPA.",
+                "title": "consumer_uri and provider_uri, the UHI callback base URLs",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/glossary#audit-copy",
+                "id": "uhi.glossary.audit-copy",
+                "summary": "An exact copy of on_confirm, on_status, on_update or on_cancel that a Physical Consultation HSPA sends to the UHI Gateway.",
+                "title": "Audit copy, the callback copy a Physical Consultation HSPA sends the Gateway",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/glossary#eua",
+                "id": "uhi.glossary.eua",
+                "summary": "In UHI, the consumer facing side: the app a patient uses to search for a service and book it.",
+                "title": "EUA, end user application",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/glossary#direct-call-p2p",
+                "id": "uhi.glossary.direct-call-p2p",
+                "summary": "A signed call the EUA and HSPA make to each other without the UHI Gateway. Every call from init onwards goes this way.",
+                "title": "Direct call (P2P), a call between EUA and HSPA without the Gateway",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.concept.what-nhcx-is",
+                "summary": "The claims exchange is a switch that carries sealed claim messages between hospitals and insurers; it routes and checks envelopes but never reads or decides ...",
+                "title": "What the National Health Claims Exchange is and what it does not do",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1#who-takes-part",
+                "id": "uhi.concept.participants",
+                "summary": "Three parties take part in UHI, the patient app (EUA), the provider platform (HSPA) and the UHI Gateway.",
+                "title": "Who takes part in the UHI network",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/going-live#1-build-and-run-your-services-test-cases",
+                "id": "uhi.test.run-test-cases",
+                "summary": "Build against the sample payloads and the UHI API reference, then pass every test case for your service in the sandbox.",
+                "title": "Run your UHI service's test cases",
+                "type": "test"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/sandbox#1-express-intent",
+                "id": "uhi.sandbox.express-intent",
+                "summary": "Tell your NHA point of contact which UHI service you want to integrate, and in which role, to start onboarding.",
+                "title": "Express intent to join UHI",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/going-live#3-switch-to-production",
+                "id": "uhi.sandbox.production-switch",
+                "summary": "Change your IDs and callback URL to production values and point your calls at the production UHI Gateway.",
+                "title": "Switch your UHI integration to production",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/glossary#fulfillment-type",
+                "id": "uhi.glossary.fulfillment-type",
+                "summary": "The field in a search's intent that names the kind of service asked for, such as PMJAYHEM, Physical or EMERGENCY.",
+                "title": "fulfillment.type, the kind of service a UHI search asks for",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/sandbox#4-note-the-base-urls",
+                "id": "uhi.sandbox.base-urls",
+                "summary": "The UHI Gateway base URL for the sandbox and for production, and the reference EUA and HSPA apps in the sandbox.",
+                "title": "UHI Gateway base URLs for sandbox and production",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/glossary#hspa",
+                "id": "uhi.glossary.hspa",
+                "summary": "In UHI, the provider facing side: the system that publishes services and accepts bookings.",
+                "title": "HSPA, health service provider application",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#gateway",
+                "id": "shared.glossary.gateway",
+                "summary": "The component that routes calls between participants so they never call each other directly. It is not the consent manager, and no health record passes throu...",
+                "title": "Gateway, the routing layer between participants",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#nhcx",
+                "id": "shared.glossary.nhcx",
+                "summary": "The gateway for insurance claims, separate from HIE-CM and UHI.",
+                "title": "NHCX, the National Health Claims Exchange",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/concepts/signing#the-headers",
+                "id": "uhi.concept.signing-headers",
+                "summary": "The EUA and HSPA sign every outbound call in Authorization; the UHI Gateway adds X-Gateway-Authorization to everything it forwards.",
+                "title": "The signature headers on a UHI call",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/concepts/routes#through-the-gateway",
+                "id": "uhi.concept.gateway-routes",
+                "summary": "Discovery is the only stage the UHI Gateway routes, broadcasting a search to every HSPA in the domain and relaying each on_search to the EUA.",
+                "title": "Calls routed through the UHI Gateway",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/glossary#pmbi",
+                "id": "uhi.glossary.pmbi",
+                "summary": "The Pharmaceuticals and Medical Devices Bureau of India runs the HSPA for Jan Aushadhi, backed by its Kendra and medicine database.",
+                "title": "PMBI, the organisation behind Jan Aushadhi",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/concepts/errors#the-error-object",
+                "id": "uhi.concept.error-object",
+                "summary": "A UHI error is one object with type, code, path and message, carried beside the ACK or in the body of an error response.",
+                "title": "The UHI error object",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/glossary#notto",
+                "id": "uhi.glossary.notto",
+                "summary": "The National Organ and Tissue Transplant Organisation runs the HSPA for NOTTO Hospital Discovery, backed by its registry of authorised hospitals.",
+                "title": "NOTTO, the organisation behind NOTTO Hospital Discovery",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/glossary#pm-jay-hem",
+                "id": "uhi.glossary.pm-jay-hem",
+                "summary": "PM-JAY Hospital Empanelment Management knows which hospitals are empanelled under PM-JAY today. Its HSPA searches it live.",
+                "title": "PM-JAY HEM, the system that knows which hospitals are empanelled",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/uhi/v1#how-far-each-service-goes",
+                "id": "uhi.concept.service-reach",
+                "summary": "Physical Consultation covers all four stages, Ambulance Booking reaches a quote, and the other services stop at discovery.",
+                "title": "How far each UHI service goes, and who answers its search",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/concepts/routes#the-whole-exchange",
+                "id": "uhi.concept.whole-exchange",
+                "summary": "Search and on_search pass through the UHI Gateway; from init onwards the EUA and HSPA call each other directly, with audit copies for Physical Consultation.",
+                "title": "The whole UHI exchange, from search to direct booking",
+                "type": "concept"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01NrWE3brVtyWyoUWB6K7Qvr",
+            "Name": "get",
+            "Input": {
+              "id": "uhi.concept.participants"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "uhi.concept.participants"
+          },
+          "output": {
+            "body": "# Who takes part in the UHI network\n\n## In plain words\n\n- **The patient app**, called an End User Application ([EUA](/docs/uhi/v1/getting-started/glossary#eua)). It is\n  the app a patient or caregiver uses, such as Aarogya Setu or the\n  [ABHA](/docs/uhi/v1/getting-started/glossary#abha) app.\n- **The provider platform**, called a Health Service Provider Application\n  ([HSPA](/docs/uhi/v1/getting-started/glossary#hspa)). It is the system behind a hospital network, a blood bank,\n  a Jan Aushadhi Kendra or an ambulance fleet.\n- **The [UHI Gateway](/docs/uhi/v1/getting-started/glossary#uhi-gateway)**, run by the National Health Authority\n  ([NHA](/docs/uhi/v1/getting-started/glossary#nha)).",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/uhi/v1#who-takes-part",
+            "gateway": "uhi",
+            "id": "uhi.concept.participants",
+            "milestone": "n/a",
+            "summary": "Three parties take part in UHI, the patient app (EUA), the provider platform (HSPA) and the UHI Gateway.",
+            "title": "Who takes part in the UHI network",
+            "type": "concept"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_018HZEMZ5WYEUoc1b2u1mw9w",
+            "Name": "get",
+            "Input": {
+              "id": "uhi.concept.service-reach"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "uhi.concept.service-reach"
+          },
+          "output": {
+            "body": "# How far each UHI service goes, and who answers its search\n\n## In plain words\n\nSome services stop at discovery: the patient finds what they need, then calls\nahead or visits. Physical Consultation goes all the way.\n\n| Service | Discovery | Order | Fulfilment | Post-fulfilment | Who answers the search |\n| --- | --- | --- | --- | --- | --- |\n| [Physical Consultation](/docs/uhi/v1/services/consultation) | Yes | Yes | Yes | Yes | Any registered provider platform |\n| [Ambulance Booking](/docs/uhi/v1/services/ambulance) | Yes | A quote, in Phase 1 | Phase 2 | Phase 2 | Any registered ambulance platform |\n| [PM-JAY HEM](/docs/uhi/v1/services/pmjay-hem) | Yes | No | No | No | NHA |\n| [Blood Bank](/docs/uhi/v1/services/blood-bank) | Yes | No | No | No | e-RaktKosh, and any approved blood bank system |\n| [Jan Aushadhi](/docs/uhi/v1/services/jan-aushadhi) | Yes | No | No | No | PMBI |\n| [NOTTO](/docs/uhi/v1/services/notto) | Yes | No | No | No | NOTTO |\n\nA discovery-only service still does real work. PM-JAY HEM, for example, shows\nwhich hospitals are empanelled today and the PM-JAY contact at each one, so the\npatient knows where to go and whom to call.\n\nThe technical identity of each service is on its [service page](/docs/uhi/v1/services).",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/uhi/v1#how-far-each-service-goes",
+            "gateway": "uhi",
+            "id": "uhi.concept.service-reach",
+            "milestone": "n/a",
+            "summary": "Physical Consultation covers all four stages, Ambulance Booking reaches a quote, and the other services stop at discovery.",
+            "title": "How far each UHI service goes, and who answers its search",
+            "type": "concept"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01DHUVcSoJpViudaS3Q2jBYr",
+            "Name": "get",
+            "Input": {
+              "id": "uhi.sandbox.express-intent"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "uhi.sandbox.express-intent"
+          },
+          "output": {
+            "body": "# Express intent to join UHI\n\n## In plain words\n\nTell your [NHA](/docs/uhi/v1/getting-started/glossary#nha) point of contact\nwhich service you want to integrate, and in which role.\n[Services](/docs/uhi/v1/services) lists the six, and which roles each one is\nopen to.\n\n**You get:** the onboarding kick-off.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/uhi/v1/getting-started/sandbox#1-express-intent",
+            "gateway": "uhi",
+            "id": "uhi.sandbox.express-intent",
+            "milestone": "n/a",
+            "summary": "Tell your NHA point of contact which UHI service you want to integrate, and in which role, to start onboarding.",
+            "title": "Express intent to join UHI",
+            "type": "sandbox"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "To integrate with UHI booking, here's what you need to know:\n\n## **The three participants in UHI**\nUHI has three roles:\n- **EUA** (End User Application): the patient-facing app (like Aarogya Setu or ABHA app)\n- **HSPA** (Health Service Provider Application): your provider platform (hospital, ambulance fleet, blood bank, etc.)\n- **UHI Gateway**: run by the National Health Authority (NHA), routes discovery calls only\n\n## **UHI Services and what they cover**\n\nUHI has six services with different stages:\n\n| Service | Supports Booking | Full Booking Flow |\n|---------|------------------|-------------------|\n| **Physical Consultation** | ✓ | Discovery → Order → Fulfillment → Post-fulfillment (complete 4-stage flow) |\n| **Ambulance Booking** | ✓ | Discovery + Quote in Phase 1 (full booking in Phase 2) |\n| **PM-JAY HEM** | ✗ | Discovery only (patient finds empanelled hospitals) |\n| **Blood Bank** | ✗ | Discovery only |\n| **Jan Aushadhi** | ✗ | Discovery only |\n| **NOTTO** | ✗ | Discovery only |\n\n## **How to start**\n\n1. **Express intent** to your NHA point of contact specifying:\n   - Which UHI service you want (e.g., Physical Consultation)\n   - Your role (EUA or HSPA)\n\n2. **Build and test** against the UHI API and sample payloads in the sandbox\n\n3. **Pass all test cases** for your service in the sandbox\n\n4. **Switch to production** by updating your IDs and callback URLs\n\nSee the UHI documentation at `/docs/uhi/v1` for the full API reference, service pages, and getting started guides.\n\nWhich UHI service and role are you integrating as—EUA or HSPA?",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "To integrate with UHI booking, here's what you need to know:\n\n## **The three participants in UHI**\nUHI has three roles:\n- **EUA** (End User Application): the patient-facing app (like Aarogya Setu or ABHA app)\n- **HSPA** (Health Service Provider Application): your provider platform (hospital, ambulance fleet, blood bank, etc.)\n- **UHI Gateway**: run by the National Health Authority (NHA), routes discovery calls only\n\n## **UHI Services and what they cover**\n\nUHI has six services with different stages:\n\n| Service | Supports Booking | Full Booking Flow |\n|---------|------------------|-------------------|\n| **Physical Consultation** | ✓ | Discovery → Order → Fulfillment → Post-fulfillment (complete 4-stage flow) |\n| **Ambulance Booking** | ✓ | Discovery + Quote in Phase 1 (full booking in Phase 2) |\n| **PM-JAY HEM** | ✗ | Discovery only (patient finds empanelled hospitals) |\n| **Blood Bank** | ✗ | Discovery only |\n| **Jan Aushadhi** | ✗ | Discovery only |\n| **NOTTO** | ✗ | Discovery only |\n\n## **How to start**\n\n1. **Express intent** to your NHA point of contact specifying:\n   - Which UHI service you want (e.g., Physical Consultation)\n   - Your role (EUA or HSPA)\n\n2. **Build and test** against the UHI API and sample payloads in the sandbox\n\n3. **Pass all test cases** for your service in the sandbox\n\n4. **Switch to production** by updating your IDs and callback URLs\n\nSee the UHI documentation at `/docs/uhi/v1` for the full API reference, service pages, and getting started guides.\n\nWhich UHI service and role are you integrating as—EUA or HSPA?",
+  "sources": [
+    {
+      "id": "shared.glossary.uhi",
+      "title": "UHI, the Unified Health Interface",
+      "url": "/docs/hiecm/v3/getting-started/glossary#uhi"
+    },
+    {
+      "id": "uhi.concept.participants",
+      "title": "Who takes part in the UHI network",
+      "url": "/docs/uhi/v1#who-takes-part"
+    },
+    {
+      "id": "uhi.concept.service-reach",
+      "title": "How far each UHI service goes, and who answers its search",
+      "url": "/docs/uhi/v1#how-far-each-service-goes"
+    },
+    {
+      "id": "uhi.sandbox.express-intent",
+      "title": "Express intent to join UHI",
+      "url": "/docs/uhi/v1/getting-started/sandbox#1-express-intent"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#uhi\",\"id\":\"shared.glossary.uhi\",\"summary\":\"The gateway for finding and booking health services, separate from HIE-CM and NHCX.\",\"title\":\"UHI, the Unified Health Interface\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/uhi/v1/getting-started/going-live#1-build-and-run-your-services-test-cases\",\"id\":\"uhi.test.run-test-cases\",\"summary\":\"Build against the sample payloads and the UHI API reference, then pass every test case for your service in the sandbox.\",\"title\":\"Run your UHI service's test cases\",\"type\":\"test\"},{\"doc_url\":\"\",\"id\":\"nhcx.concept.what-nhcx-is\",\"summary\":\"The claims exchange is a switch that carries sealed claim messages between hospitals and insurers; it routes and checks envelopes but never reads or decides ...\",\"title\":\"What the National Health Claims Exchange is and what it does not do\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1/services/consultation#go-live-checklist\",\"id\":\"uhi.test.consultation-go-live-checklist\",\"summary\":\"The twenty items to complete before requesting production sign-off for Physical Consultation, from M2 and signing to promotion.\",\"title\":\"Physical Consultation go-live checklist\",\"type\":\"test\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#uhi\",\"id\":\"shared.glossary.uhi\",\"summary\":\"The gateway for finding and booking health services, separate from HIE-CM and NHCX.\",\"title\":\"UHI, the Unified Health Interface\",\"type\":\"glossary\"},{\"doc_url\":\"\",\"id\":\"nhcx.concept.what-nhcx-is\",\"summary\":\"The claims exchange is a switch that carries sealed claim messages between hospitals and insurers; it routes and checks envelopes but never reads or decides ...\",\"title\":\"What the National Health Claims Exchange is and what it does not do\",\"type\":\"concept\"}]}\n{\"body\":\"# UHI, the Unified Health Interface\\n\\n## In plain words\\n\\nUnified Health Interface, an open protocol network for health services\\nthat are not record exchange: physical consultation booking, ambulance\\nbooking, blood bank discovery, Jan Aushadhi and pharmacy search. It has\\ntwo roles, [EUA](/docs/uhi/v1/getting-started/glossary#eua) on the\\nconsumer side and [HSPA](/docs/uhi/v1/getting-started/glossary#hspa) on\\nthe provider side, and every call is signed with Ed25519. See\\n[UHI](/docs/uhi/v1).\\n\\n## Before you start\\n\\nNothing. A glossary entry assumes no prior reading.\\n\\n## What happens\\n\\nNothing happens here. This entry defines a term, it does not describe a call.\\n\\n## How you know it worked\\n\\nYou have understood this when you can say which of the three gateways your use case belongs to.\\n\\n## When it goes wrong\\n\\nExpecting HIE-CM endpoints to work against UHI. They are separate\\ngateways with separate specifications.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#uhi\",\"gateway\":\"shared\",\"id\":\"shared.glossary.uhi\",\"milestone\":\"n/a\",\"summary\":\"The gateway for finding and booking health services, separate from HIE-CM and NHCX.\",\"title\":\"UHI, the Unified Health Interface\",\"type\":\"glossary\"}\n{\"catalogue_version\":\"2026.09.16\",\"operations\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#uhi\",\"id\":\"shared.glossary.uhi\",\"summary\":\"The gateway for finding and booking health services, separate from HIE-CM and NHCX.\",\"title\":\"UHI, the Unified Health Interface\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/uhi/v1/getting-started/glossary#context-domain\",\"id\":\"uhi.glossary.context-domain\",\"summary\":\"The context field that names the UHI service a call belongs to. The Gateway sends a search to every HSPA registered for it.\",\"title\":\"context.domain, the field that names a UHI service\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/uhi/v1/getting-started/glossary#network-registry\",\"id\":\"uhi.glossary.network-registry\",\"summary\":\"The register of UHI participants and their public keys. Its lookup returns another participant's key so you can check its signature.\",\"title\":\"Network registry, the register of UHI participants and their keys\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/uhi/v1/getting-started/glossary#consumer-uri\",\"id\":\"uhi.glossary.consumer-uri\",\"summary\":\"The public HTTPS callback base URLs in a UHI call's context block, consumer_uri for the EUA and provider_uri for the HSPA.\",\"title\":\"consumer_uri and provider_uri, the UHI callback base URLs\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/uhi/v1/getting-started/glossary#audit-copy\",\"id\":\"uhi.glossary.audit-copy\",\"summary\":\"An exact copy of on_confirm, on_status, on_update or on_cancel that a Physical Consultation HSPA sends to the UHI Gateway.\",\"title\":\"Audit copy, the callback copy a Physical Consultation HSPA sends the Gateway\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/uhi/v1/getting-started/glossary#eua\",\"id\":\"uhi.glossary.eua\",\"summary\":\"In UHI, the consumer facing side: the app a patient uses to search for a service and book it.\",\"title\":\"EUA, end user application\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/uhi/v1/getting-started/glossary#direct-call-p2p\",\"id\":\"uhi.glossary.direct-call-p2p\",\"summary\":\"A signed call the EUA and HSPA make to each other without the UHI Gateway. Every call from init onwards goes this way.\",\"title\":\"Direct call (P2P), a call between EUA and HSPA without the Gateway\",\"type\":\"glossary\"},{\"doc_url\":\"\",\"id\":\"nhcx.concept.what-nhcx-is\",\"summary\":\"The claims exchange is a switch that carries sealed claim messages between hospitals and insurers; it routes and checks envelopes but never reads or decides ...\",\"title\":\"What the National Health Claims Exchange is and what it does not do\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1#who-takes-part\",\"id\":\"uhi.concept.participants\",\"summary\":\"Three parties take part in UHI, the patient app (EUA), the provider platform (HSPA) and the UHI Gateway.\",\"title\":\"Who takes part in the UHI network\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1/getting-started/going-live#1-build-and-run-your-services-test-cases\",\"id\":\"uhi.test.run-test-cases\",\"summary\":\"Build against the sample payloads and the UHI API reference, then pass every test case for your service in the sandbox.\",\"title\":\"Run your UHI service's test cases\",\"type\":\"test\"},{\"doc_url\":\"/docs/uhi/v1/getting-started/sandbox#1-express-intent\",\"id\":\"uhi.sandbox.express-intent\",\"summary\":\"Tell your NHA point of contact which UHI service you want to integrate, and in which role, to start onboarding.\",\"title\":\"Express intent to join UHI\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/uhi/v1/getting-started/going-live#3-switch-to-production\",\"id\":\"uhi.sandbox.production-switch\",\"summary\":\"Change your IDs and callback URL to production values and point your calls at the production UHI Gateway.\",\"title\":\"Switch your UHI integration to production\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/uhi/v1/getting-started/glossary#fulfillment-type\",\"id\":\"uhi.glossary.fulfillment-type\",\"summary\":\"The field in a search's intent that names the kind of service asked for, such as PMJAYHEM, Physical or EMERGENCY.\",\"title\":\"fulfillment.type, the kind of service a UHI search asks for\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/uhi/v1/getting-started/sandbox#4-note-the-base-urls\",\"id\":\"uhi.sandbox.base-urls\",\"summary\":\"The UHI Gateway base URL for the sandbox and for production, and the reference EUA and HSPA apps in the sandbox.\",\"title\":\"UHI Gateway base URLs for sandbox and production\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/uhi/v1/getting-started/glossary#hspa\",\"id\":\"uhi.glossary.hspa\",\"summary\":\"In UHI, the provider facing side: the system that publishes services and accepts bookings.\",\"title\":\"HSPA, health service provider application\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#gateway\",\"id\":\"shared.glossary.gateway\",\"summary\":\"The component that routes calls between participants so they never call each other directly. It is not the consent manager, and no health record passes throu...\",\"title\":\"Gateway, the routing layer between participants\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#nhcx\",\"id\":\"shared.glossary.nhcx\",\"summary\":\"The gateway for insurance claims, separate from HIE-CM and UHI.\",\"title\":\"NHCX, the National Health Claims Exchange\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/uhi/v1/concepts/signing#the-headers\",\"id\":\"uhi.concept.signing-headers\",\"summary\":\"The EUA and HSPA sign every outbound call in Authorization; the UHI Gateway adds X-Gateway-Authorization to everything it forwards.\",\"title\":\"The signature headers on a UHI call\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1/concepts/routes#through-the-gateway\",\"id\":\"uhi.concept.gateway-routes\",\"summary\":\"Discovery is the only stage the UHI Gateway routes, broadcasting a search to every HSPA in the domain and relaying each on_search to the EUA.\",\"title\":\"Calls routed through the UHI Gateway\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1/getting-started/glossary#pmbi\",\"id\":\"uhi.glossary.pmbi\",\"summary\":\"The Pharmaceuticals and Medical Devices Bureau of India runs the HSPA for Jan Aushadhi, backed by its Kendra and medicine database.\",\"title\":\"PMBI, the organisation behind Jan Aushadhi\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/uhi/v1/concepts/errors#the-error-object\",\"id\":\"uhi.concept.error-object\",\"summary\":\"A UHI error is one object with type, code, path and message, carried beside the ACK or in the body of an error response.\",\"title\":\"The UHI error object\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1/getting-started/glossary#notto\",\"id\":\"uhi.glossary.notto\",\"summary\":\"The National Organ and Tissue Transplant Organisation runs the HSPA for NOTTO Hospital Discovery, backed by its registry of authorised hospitals.\",\"title\":\"NOTTO, the organisation behind NOTTO Hospital Discovery\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/uhi/v1/getting-started/glossary#pm-jay-hem\",\"id\":\"uhi.glossary.pm-jay-hem\",\"summary\":\"PM-JAY Hospital Empanelment Management knows which hospitals are empanelled under PM-JAY today. Its HSPA searches it live.\",\"title\":\"PM-JAY HEM, the system that knows which hospitals are empanelled\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/uhi/v1#how-far-each-service-goes\",\"id\":\"uhi.concept.service-reach\",\"summary\":\"Physical Consultation covers all four stages, Ambulance Booking reaches a quote, and the other services stop at discovery.\",\"title\":\"How far each UHI service goes, and who answers its search\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1/concepts/routes#the-whole-exchange\",\"id\":\"uhi.concept.whole-exchange\",\"summary\":\"Search and on_search pass through the UHI Gateway; from init onwards the EUA and HSPA call each other directly, with audit copies for Physical Consultation.\",\"title\":\"The whole UHI exchange, from search to direct booking\",\"type\":\"concept\"}]}\n{\"body\":\"# Who takes part in the UHI network\\n\\n## In plain words\\n\\n- **The patient app**, called an End User Application ([EUA](/docs/uhi/v1/getting-started/glossary#eua)). It is\\n  the app a patient or caregiver uses, such as Aarogya Setu or the\\n  [ABHA](/docs/uhi/v1/getting-started/glossary#abha) app.\\n- **The provider platform**, called a Health Service Provider Application\\n  ([HSPA](/docs/uhi/v1/getting-started/glossary#hspa)). It is the system behind a hospital network, a blood bank,\\n  a Jan Aushadhi Kendra or an ambulance fleet.\\n- **The [UHI Gateway](/docs/uhi/v1/getting-started/glossary#uhi-gateway)**, run by the National Health Authority\\n  ([NHA](/docs/uhi/v1/getting-started/glossary#nha)).\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/uhi/v1#who-takes-part\",\"gateway\":\"uhi\",\"id\":\"uhi.concept.participants\",\"milestone\":\"n/a\",\"summary\":\"Three parties take part in UHI, the patient app (EUA), the provider platform (HSPA) and the UHI Gateway.\",\"title\":\"Who takes part in the UHI network\",\"type\":\"concept\"}\n{\"body\":\"# How far each UHI service goes, and who answers its search\\n\\n## In plain words\\n\\nSome services stop at discovery: the patient finds what they need, then calls\\nahead or visits. Physical Consultation goes all the way.\\n\\n| Service | Discovery | Order | Fulfilment | Post-fulfilment | Who answers the search |\\n| --- | --- | --- | --- | --- | --- |\\n| [Physical Consultation](/docs/uhi/v1/services/consultation) | Yes | Yes | Yes | Yes | Any registered provider platform |\\n| [Ambulance Booking](/docs/uhi/v1/services/ambulance) | Yes | A quote, in Phase 1 | Phase 2 | Phase 2 | Any registered ambulance platform |\\n| [PM-JAY HEM](/docs/uhi/v1/services/pmjay-hem) | Yes | No | No | No | NHA |\\n| [Blood Bank](/docs/uhi/v1/services/blood-bank) | Yes | No | No | No | e-RaktKosh, and any approved blood bank system |\\n| [Jan Aushadhi](/docs/uhi/v1/services/jan-aushadhi) | Yes | No | No | No | PMBI |\\n| [NOTTO](/docs/uhi/v1/services/notto) | Yes | No | No | No | NOTTO |\\n\\nA discovery-only service still does real work. PM-JAY HEM, for example, shows\\nwhich hospitals are empanelled today and the PM-JAY contact at each one, so the\\npatient knows where to go and whom to call.\\n\\nThe technical identity of each service is on its [service page](/docs/uhi/v1/services).\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/uhi/v1#how-far-each-service-goes\",\"gateway\":\"uhi\",\"id\":\"uhi.concept.service-reach\",\"milestone\":\"n/a\",\"summary\":\"Physical Consultation covers all four stages, Ambulance Booking reaches a quote, and the other services stop at discovery.\",\"title\":\"How far each UHI service goes, and who answers its search\",\"type\":\"concept\"}\n{\"body\":\"# Express intent to join UHI\\n\\n## In plain words\\n\\nTell your [NHA](/docs/uhi/v1/getting-started/glossary#nha) point of contact\\nwhich service you want to integrate, and in which role.\\n[Services](/docs/uhi/v1/services) lists the six, and which roles each one is\\nopen to.\\n\\n**You get:** the onboarding kick-off.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/uhi/v1/getting-started/sandbox#1-express-intent\",\"gateway\":\"uhi\",\"id\":\"uhi.sandbox.express-intent\",\"milestone\":\"n/a\",\"summary\":\"Tell your NHA point of contact which UHI service you want to integrate, and in which role, to start onboarding.\",\"title\":\"Express intent to join UHI\",\"type\":\"sandbox\"}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T11:55:56.469Z",
+  "usage": {
+    "input_tokens": 60,
+    "output_tokens": 1551,
+    "cache_read_input_tokens": 69719,
+    "cache_creation_input_tokens": 11606,
+    "num_turns": 10,
+    "duration_ms": 19509,
+    "cost_usd_equivalent": 0.0379989
+  }
+}

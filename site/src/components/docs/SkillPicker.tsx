@@ -29,17 +29,17 @@ const CHOICES: Choice[] = [
   },
   {
     slug: 'abdm-m2',
-    label: 'Create and link records (M2)',
+    label: 'Creation, Linking and Sharing of Health Records (M2)',
     note: 'The whole of M2: linking care contexts, discovery, and pushing records to a requester.',
   },
   {
     slug: 'abdm-m3',
-    label: 'Fetch data with consent (M3)',
+    label: 'Health Information Exchange with Consent (M3)',
     note: 'The whole of M3: raising a consent request, reading the artefact, fetching what it covers.',
   },
   {
     slug: 'abdm-m4',
-    label: 'Register facilities and professionals (M4)',
+    label: 'Register Healthcare Professionals and Health Facilities (M4)',
     note: 'The HPR and the HFR: the operations NHA has published, the registration order and the identifier formats.',
   },
   {
@@ -69,55 +69,89 @@ const CHOICES: Choice[] = [
   },
 ];
 
-// One skill for the whole provider-side integration, and one per NHCX use
-// case. Each is a folder that installs and runs alone.
+// One skill for the whole integration, and one per NHCX use case. Each
+// carries both sides of its exchanges, and is a folder that installs and runs alone.
 const NHCX_CHOICES: Choice[] = [
   {
     slug: 'nhcx-full',
     label: 'Everything',
-    note: 'The whole provider-side integration, every exchange end to end, with the NHCX gateway embedded in the application.',
+    note: 'The whole integration, every exchange end to end on either side, with the NHCX gateway embedded in the application.',
   },
   {
     slug: 'nhcx-coverage',
     label: 'Coverage',
-    note: "Finds the patient's policy and checks that it is in force before admission or pre-authorisation.",
+    note: "Policy search and the coverage eligibility check, asked and answered, before admission or pre-authorisation.",
   },
   {
     slug: 'nhcx-preauth',
     label: 'Preauth',
-    note: "Fetches the payer's plan, builds the line items, and sends the pre-authorisation, its enhancements, query answers and cancellation.",
+    note: 'The insurance plan, the line items, and the pre-authorisation with its enhancements, queries, answers and cancellation, on either side.',
   },
   {
     slug: 'nhcx-claim',
     label: 'Claim',
-    note: "Records the discharge, files the claim with its documents, answers its queries, and reads the payer's verdict.",
+    note: 'The discharge, the claim with its documents, its queries and answers, and the verdict, on either side.',
   },
   {
     slug: 'nhcx-communication',
     label: 'Communication',
-    note: "Receives the payer's queries, notifications and notes, replies with text and documents, and acknowledges notifications.",
+    note: 'Queries, notifications and notes on a case, replies with text and documents, and acknowledgements, on either side.',
   },
   {
     slug: 'nhcx-payment',
     label: 'Payment',
-    note: "Records the payer's payment notice against its claim, and acknowledges it.",
+    note: 'The payment notice and its breakdown, sent, matched to the claim and acknowledged.',
   },
   {
     slug: 'nhcx-reprocess',
     label: 'Reprocess',
-    note: 'Asks the payer to look again at a decided claim, and for the unpaid balance of a partly paid one.',
+    note: 'A second look at a decided claim, and the unpaid balance of a partly paid one, asked for and answered.',
   },
 ];
 
-const SETS: Record<string, Choice[]> = {abdm: CHOICES, nhcx: NHCX_CHOICES};
+// One skill per UHI service. Each is a folder that installs and runs alone.
+const UHI_CHOICES: Choice[] = [
+  {
+    slug: 'uhi-consultation',
+    label: 'Physical consultation',
+    note: 'Lets patients in your app book a physical consultation, as an EUA or an HSPA.',
+  },
+  {
+    slug: 'uhi-ambulance',
+    label: 'Ambulance',
+    note: 'Adds ambulance search and a quote to your app, as an EUA or an HSPA.',
+  },
+  {
+    slug: 'uhi-pmjay-hem',
+    label: 'PM-JAY HEM',
+    note: 'Shows PM-JAY empanelled hospitals near the patient.',
+  },
+  {
+    slug: 'uhi-blood-bank',
+    label: 'Blood bank',
+    note: 'Shows blood banks near the patient that hold the group they need.',
+  },
+  {
+    slug: 'uhi-jan-aushadhi',
+    label: 'Jan Aushadhi',
+    note: 'Lets patients find a Jan Aushadhi Kendra that stocks their medicine.',
+  },
+  {
+    slug: 'uhi-notto',
+    label: 'NOTTO',
+    note: 'Shows hospitals authorised for a transplant in a state.',
+  },
+];
+
+const SETS: Record<string, Choice[]> = {abdm: CHOICES, nhcx: NHCX_CHOICES, uhi: UHI_CHOICES};
 
 /** A skill of more than one file downloads as its archive, not its SKILL.md. */
 const isFolder = (slug: string) =>
   (manifest as Record<string, {folder?: boolean}>)[slug]?.folder === true;
 
 type SkillPickerProps = {
-  /** Which gateway's skills to offer: ABDM's by default, or NHCX's. */
-  set?: 'abdm' | 'nhcx';
+  /** Which gateway's skills to offer: ABDM's by default, or NHCX's or UHI's. */
+  set?: 'abdm' | 'nhcx' | 'uhi';
 };
 
 export default function SkillPicker({set = 'abdm'}: SkillPickerProps): React.ReactNode {

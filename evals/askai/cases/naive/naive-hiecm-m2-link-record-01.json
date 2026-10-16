@@ -1,0 +1,35 @@
+{
+  "id": "naive-hiecm-m2-link-record-01",
+  "slice": "naive",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "Link record"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "Linking a record in M2 means linking a care context to the patient's ABHA address, which needs a link token for that patient.",
+    "The HIP first generates the link token, then calls POST /api/hiecm/hip/v3/link/carecontext with that token in the X-LINK-TOKEN header (header names are case-insensitive, and some pages write X-Link-Token)."
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.flow.m2-link-care-context"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-hiecm-hip-initiated-linking-yaml",
+  "catalogue_version": "2026.09.16",
+  "notes": "A real question from the live Ask AI panel that failed there, kept in the reader's exact words. It is ambiguous: the good answer reads it as HIP initiated care context linking with a link token. The Catalogue also holds hiecm.endpoint.m2-get-all-link-records ('GET All Link records'), but that is a PHR app read ('A PHR app calls this to list every care context linked'), not what an HIP integrator on M2 is building, so it is not expected. Source lines: catalogue/hiecm/flows/m2-link-care-context.md, title 'Link a care context to a patient's ABHA'; 'The HIP generates a linking token using the patient's ABHA address'; 'the patient's care context is linked to the ABHA Address'; step 5 'Your system calls `POST /api/hiecm/hip/v3/link/carecontext` with the gateway access token, the link token in `X-Link-Token`'. Review: header casing differs across atoms; either spelling is correct."
+}

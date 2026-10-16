@@ -1,0 +1,38 @@
+{
+  "id": "nha-review-phr-records-linked-01",
+  "slice": "nha-review",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "How records are linked to ABHA address in PHR application?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "gateway": "hiecm",
+  "must_contain": [
+    "In the app the patient searches for the hospital, the hospital answers with the visits it holds, the patient picks the visits to attach, and types in a one time password the hospital sends to the mobile number it has on file",
+    "It is three exchanges in order: discover, init, confirm",
+    "A linked care context is not a record in hand; reading it is a consent flow"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom",
+    "upload"
+  ],
+  "expected_sources": [
+    "hiecm.flow.journey-user-initiated-linking"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#nha-review-2026-09-30",
+  "catalogue_version": "2026.09.16",
+  "notes": "NHA PHR review, 30 September 2026, case 10: 'Why is AI focusing on uploading records, when I am not asking or mentioning it again?' Verdict group: wrong shape for the question. The rejected answer opened with 'not by uploading a file into the PHR app', a tangent carried over from earlier turns; any mention of uploading fails this case."
+}

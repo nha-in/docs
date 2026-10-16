@@ -122,3 +122,8 @@ test('a hostname keeps the case it is written in', () => {
   // A full stop that ends a sentence still lets the term case.
   assert.equal(caseTerms('ask nha. then abdm.', v), 'ask NHA. then ABDM.');
 });
+
+test('caseTerms leaves a value in a code span as written', () => {
+  const v = ['ABDM', 'ABHA'];
+  assert.equal(caseTerms('Send `["abha-enrol"]` with `aadhaar` or `abdm` for abha', v), 'Send `["abha-enrol"]` with `aadhaar` or `abdm` for ABHA');
+});

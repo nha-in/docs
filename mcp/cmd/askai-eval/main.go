@@ -80,6 +80,8 @@ func runCmd(args []string) error {
 	// saying so anywhere the scorecard can be compared against.
 	provider := fs.String("embed-provider", envOr("EMBED_PROVIDER", ""), "bedrock, ollama or none; required, no default")
 	temp := fs.Float64("temperature", 0.1, "sampling temperature")
+	// The same default the server runs with, so a run measures production.
+	effort := fs.String("reasoning-effort", envOr("CHAT_REASONING_EFFORT", "medium"), "reasoning effort for OpenAI GPT-5 and GPT-6 models; empty sends none")
 	only := fs.String("only", "", "comma separated case ids to run, empty runs all")
 	fs.Parse(args)
 	if *out == "" || *modelID == "" {
@@ -121,7 +123,10 @@ func runCmd(args []string) error {
 	if err != nil {
 		return err
 	}
-	model, err := chat.NewBedrockModel(context.Background(), *region, *modelID, float32(*temp))
+	if !chat.ValidReasoningEffort(*effort) {
+		return fmt.Errorf("run: -reasoning-effort must be none, low, medium, high, xhigh, max or empty, got %q", *effort)
+	}
+	model, err := chat.NewBedrockModel(context.Background(), *region, *modelID, float32(*temp), chat.WithReasoningEffort(*effort))
 	if err != nil {
 		return err
 	}
@@ -172,7 +177,12 @@ func checkCmd(args []string) error {
 	fs := flag.NewFlagSet("check", flag.ExitOnError)
 	casesDir := fs.String("cases", "../evals/askai/cases", "cases directory")
 	run := fs.String("run", "", "run directory; empty reads ../evals/askai/runs/latest")
+	// A run of a subset (-only, a slice, a smoke test) has no transcript for
+	// the rest, and scoring them as "transcript: missing" buries the cases it
+	// did answer, and bakes them into a first baseline.
+	answered := fs.Bool("answered", false, "score only cases that have a transcript in the run")
 	fs.Parse(args)
+	onlyAnswered = *answered
 	dir, err := resolveRun(*run)
 	if err != nil {
 		if *run == "" {
@@ -351,6 +361,9 @@ func readJSON(path string, v any) error {
 // directory and writes checks.json and retrieval.json beside the transcripts.
 // Exit status is failure when any case has a failure, which is what makes
 // this a gate rather than a report.
+// onlyAnswered is check's -answered flag, read by checkInto.
+var onlyAnswered bool
+
 func checkInto(casesDir, runDir string) error {
 	cases, err := eval.LoadCases(casesDir)
 	if err != nil {
@@ -359,6 +372,15 @@ func checkInto(casesDir, runDir string) error {
 	ts, err := eval.ReadTranscripts(filepath.Join(runDir, "transcripts"))
 	if err != nil {
 		return err
+	}
+	if onlyAnswered {
+		var kept []eval.Case
+		for _, c := range cases {
+			if _, ok := ts[c.ID]; ok {
+				kept = append(kept, c)
+			}
+		}
+		cases = kept
 	}
 	results := eval.CheckAll(cases, ts)
 	var retrieval []eval.RetrievalResult
@@ -376,8 +398,19 @@ func checkInto(casesDir, runDir string) error {
 	failing := 0
 	newFailures := 0
 	newBaseline := map[string][]string{}
+	unmeasured := 0
 	for _, r := range results {
 		if len(r.Failures) == 0 {
+			continue
+		}
+		// A case added after this run was recorded has no transcript, and
+		// a case that was never answered cannot have failed. It is reported
+		// so nobody mistakes the gate for having covered it, and it neither
+		// counts as failing nor ratchets the baseline; the next run answers
+		// it and the gate takes it from there.
+		if isUnmeasured(r) {
+			unmeasured++
+			fmt.Printf("%s (unmeasured: no transcript in this run)\n", r.CaseID)
 			continue
 		}
 		failing++
@@ -392,7 +425,7 @@ func checkInto(casesDir, runDir string) error {
 		}
 		fmt.Printf("%s%s\n  %s\n", r.CaseID, tag, strings.Join(r.Failures, "\n  "))
 	}
-	fmt.Printf("checks: %d failing, %d new since baseline\n", failing, newFailures)
+	fmt.Printf("checks: %d failing, %d new since baseline, %d unmeasured\n", failing, newFailures, unmeasured)
 	// The very first run has nothing to ratchet against. Rather than failing
 	// a command that just succeeded, this run's own failures become the
 	// baseline, and a later run is what tightens the gate.
@@ -463,6 +496,12 @@ func writeBaseline(path string, data map[string][]string) error {
 // this replaces. Otherwise a failure string not in that case's recorded
 // list is new, so a case already in the baseline can no longer acquire a
 // different failure for free.
+// isUnmeasured reports a case the run never answered: its only failure is
+// the missing transcript itself.
+func isUnmeasured(r eval.CheckResult) bool {
+	return len(r.Failures) == 1 && r.Failures[0] == "transcript: missing"
+}
+
 func newFailureStrings(baseline map[string][]string, r eval.CheckResult) []string {
 	known, inBaseline := baseline[r.CaseID]
 	if !inBaseline {

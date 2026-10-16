@@ -3,14 +3,52 @@ import type {SkillUse} from './commands';
 /** One catalogue atom an answer drew on, surfaced as a citation chip. */
 export type Source = {id: string; title: string; status: string; url: string};
 
+/**
+ * An API literal the answer may quote, paired with the reference page that
+ * documents it. The server builds these from the passages it retrieved, so
+ * a path the model invented never gets one.
+ */
+export type Link = {literal: string; url: string};
+
+/**
+ * What the composer offers after an answer; prompt is what is sent. A "step"
+ * is the next call in the journey the answer sits in. Without a kind it is a
+ * related question.
+ */
+export type Suggestion = {id: string; title: string; prompt: string; kind?: 'step'};
+
 /** Fallback text when the live backend cannot be reached mid-stream. */
 export const UNREACHABLE =
   'The assistant is unreachable right now. Try again shortly.';
+
+/**
+ * What to show when the server refused the question before answering. A
+ * rate limit is not an unreachable assistant: the server's 429 carries which
+ * limit and how long to wait, and the reader is told that. Anything the
+ * panel cannot name stays UNREACHABLE.
+ */
+export function failureMessage(status: number, body: unknown): string {
+  if (status !== 429) return UNREACHABLE;
+  const b = (body ?? {}) as {limit?: string; retry_after_seconds?: number};
+  if (b.limit === 'day') {
+    return "This connection has used today's questions. The limit resets at midnight UTC.";
+  }
+  if (b.limit === 'minute') {
+    const s = Math.ceil(b.retry_after_seconds ?? 0);
+    const wait = s > 5 ? `about ${s} seconds` : 'a moment';
+    return `Too many questions in the last minute. Wait ${wait} and ask again.`;
+  }
+  return 'Too many questions in a short time. Wait a minute and ask again.';
+}
 
 type StreamHandlers = {
   onText: (delta: string) => void;
   onTool: (detail: string) => void;
   onSources: (sources: Source[]) => void;
+  /** Literals with reference pages, sent once before "sources". */
+  onLinks?: (links: Link[]) => void;
+  /** Next questions to offer under the answer, sent once before "sources". */
+  onSuggestions?: (suggestions: Suggestion[]) => void;
   onError: (message: string) => void;
   /** Which skill section a command used, sent once before the answer. */
   onSkill?: (use: SkillUse) => void;
@@ -55,11 +93,17 @@ export async function readStream(
         break;
       case 'tool': {
         const tool = payload as {name: string; detail: string};
-        handlers.onTool(tool.detail || tool.name);
+        handlers.onTool(activityFor(tool.name));
         break;
       }
       case 'sources':
         handlers.onSources(payload as Source[]);
+        break;
+      case 'links':
+        handlers.onLinks?.(payload as Link[]);
+        break;
+      case 'suggestions':
+        handlers.onSuggestions?.(payload as Suggestion[]);
         break;
       case 'skill':
         handlers.onSkill?.(payload as SkillUse);
@@ -83,4 +127,30 @@ export async function readStream(
       dispatch(block);
     }
   }
+}
+
+/**
+ * What the activity line says while the assistant uses a tool. It names the
+ * action, never the tool's input: a search query is the reader's question
+ * reworded, and showing it read as the question repeated back to them.
+ */
+const ACTIVITY: Record<string, string> = {
+  search_docs: 'Searching the docs',
+  search: 'Searching the docs',
+  get_atom: 'Reading the docs',
+  related_atoms: 'Reading the docs',
+  list_atoms: 'Reading the docs',
+  get_operation: 'Reading the API reference',
+  list_operations: 'Reading the API reference',
+  decode_error: 'Looking up the error',
+  validate_request: 'Checking the request',
+  validate_fhir: 'Checking the FHIR bundle',
+  get_fhir_example: 'Reading the FHIR profiles',
+  get_fhir_profile: 'Reading the FHIR profiles',
+  list_fhir_profiles: 'Reading the FHIR profiles',
+  catalogue_info: 'Checking the catalogue',
+};
+
+export function activityFor(name: string): string {
+  return ACTIVITY[name] ?? 'Looking this up';
 }

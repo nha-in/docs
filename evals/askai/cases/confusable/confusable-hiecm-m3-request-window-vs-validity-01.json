@@ -1,0 +1,37 @@
+{
+  "id": "confusable-hiecm-m3-request-window-vs-validity-01",
+  "slice": "confusable",
+  "class": "compare",
+  "turns": [
+    {
+      "role": "user",
+      "text": "i set the consent request expiry to 1 day. does that mean after the patient approves i can only pull data for 1 day? and how is that different from the date range"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "The request window is how long the patient has to answer, set by the HIU, and running out of it produces Expired.",
+    "The consent validity period is how long access lasts once granted, and the patient sets it as they grant.",
+    "The date range is neither: it says which records are in scope by when the care happened."
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom",
+    "the request expiry is how long access lasts"
+  ],
+  "expected_sources": [
+    "hiecm.concept.consent-artefact"
+  ],
+  "expected_shape": "compare",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-hiecm-consent-management-data-flow-yaml",
+  "catalogue_version": "2026.09.16",
+  "notes": "Three time fields on one consent, and integrators read the request expiry as the access lifetime. Source lines: catalogue/hiecm/concepts/consent-artefact.md, 'The **request window** is how long the patient has to answer, set by the HIU, and running out produces Expired. The **consent validity period** is how long access lasts once granted, set by the patient as they grant, with a defined expiry date and time. Neither is the **date range**, which says which records are in scope by when the care happened'."
+}

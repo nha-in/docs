@@ -67,6 +67,8 @@ State changes:
 | D29 claim_enquiry | `status` `answered`, `answered_at`, `answer`, `detail`, `response_json`; or `error` with `error_message` `<code>: <message>` |
 | D20 claim_submission | reprocess or release reopened: `status` `submitting`, `settled_at` null, `error_message` null (restamps D9 `stage` / `sub_stage`) |
 
+A refused or failed Task that gives a reason (`Task.statusReason`, an output typed as an error, or `ClaimResponse.error` on the response it points at) has that reason kept in `detail` and shown with the answer; it stops nothing, and the ask can be sent again.
+
 Status answers: the payer's `entity_status` (`preauth-pending`, `claim-approved`, `settled`, ...), `not-found`, or `unknown`. Reprocess and release answers: `reopened` or `refused`.
 
 #### C8U. USED BY
@@ -75,3 +77,5 @@ Status answers: the payer's `entity_status` (`preauth-pending`, `claim-approved`
 - Callbacks: [C1. Callback Door](C1-callback-door.md), [C7. Cancel Reply](C7-cancel-on-submit.md)
 - FHIR: [F10. Task (claim actions)](../fhir/F10-task-claim-actions.md)
 - Database: [D20. claim_submission](../database/D20-claim-submission.md), [D29. claim_enquiry](../database/D29-claim-enquiry.md)
+- Gateway: [G7. Send](../gateway/G7-send.md)
+- Tests: [T9. IRDAI Status Enquiry and Cancel](../tests/T9-irdai-cancel-and-status.md)

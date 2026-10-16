@@ -1545,7 +1545,7 @@ curl --request POST \
   ],
   "loginHint": "abha-number",
   "loginId": "{{encrypted abha-number}}",
-  "otpSystem": "abdm"
+  "otpSystem": "aadhaar"
 }'
 ```
 
@@ -1620,7 +1620,7 @@ curl --request POST \
   ],
   "loginHint": "abha-number",
   "loginId": "{{encrypted abha-number}}",
-  "otpSystem": "abdm"
+  "otpSystem": "aadhaar"
 }'
 ```
 
@@ -1885,57 +1885,6 @@ A 200 whose body matches:
 }
 ```
 
-### Profile, Update Photo (`m1-profile-update-photo`)
-
-**Act: the calls in this journey, in order**
-
-#### 1. Update profile photo (`m1_patch_v3_profile_account_profile_photo`)
-
-```bash
-curl --request PATCH \
-  --url https://abhasbx.abdm.gov.in/abha/api/v3/profile/account \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
-  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
-  --header 'X-token: Bearer {{X-token}}' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "profilePhoto": "{{profile photo string}}"
-}'
-```
-
-**Exit condition (Observe until this is true)**
-
-A 200 whose body matches:
-
-```json
-{
-  "ABHANumber": "<ABHA_NUMBER>",
-  "preferredAbhaAddress": "<ABHA_ADDRESS>",
-  "mobile": "******0903",
-  "firstName": "<NAME>",
-  "middleName": "<NAME>",
-  "lastName": "<NAME>",
-  "yearOfBirth": "<DOB>",
-  "monthOfBirth": "<DOB>",
-  "dayOfBirth": "<DOB>",
-  "gender": "F",
-  "status": "ACTIVE",
-  "stateCode": 27,
-  "districtCode": 290,
-  "stateName": "Maharashtra",
-  "districtName": "<ADDRESS>",
-  "subdistrictName": "<ADDRESS>",
-  "authMethods": [
-    "MOBILE_OTP"
-  ],
-  "kycVerified": false,
-  "verificationStatus": "VERIFIED",
-  "verificationType": "CHILD_ABHA",
-  "createdDate": "10-05-2024"
-}
-```
-
 ### Find ABHA, Mobile OTP (`m1-find-abha-mobile-otp`)
 
 **Act: the calls in this journey, in order**
@@ -2064,7 +2013,7 @@ curl --request POST \
   "scope": [
     "abha-login",
     "search-abha",
-    "aadhaar-face-verify"
+    "face-auth"
   ],
   "loginHint": "index",
   "loginId": "{{rsaIndexEncryptionOutput}}",
@@ -2685,42 +2634,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. Create ABHA - Demographic authentication (Demo Auth) (`m1_post_v3_enrollment_enrol_byaadhaar_demo_auth_benefit_c_d20a11`)
-
-```bash
-curl --request POST \
-  --url https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
-  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
-  --header 'BENEFIT_NAME: {{Benefit Name}}' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "authData": {
-    "authMethods": [
-      "demo_auth"
-    ],
-    "demo_auth": {
-      "aadhaarNumber": "{{encrypted aadhaar number}}",
-      "districtCode": "{{District code}}",
-      "stateCode": "{{State code}}",
-      "dateOfBirth": "{{DOB}}",
-      "gender": "{{Gender}}",
-      "name": "{{Full name}}",
-      "mobile": "{{Mobile number}}",
-      "profilePhoto": "{{Base64 plain String}}",
-      "pinCode": "<PINCODE>",
-      "address": "<ADDRESS>"
-    }
-  },
-  "consent": {
-    "code": "abha-enrollment",
-    "version": "1.4"
-  }
-}'
-```
-
-#### 2. Create Child ABHA (`m1_post_v3_enrollment_enrol_byaadhaar_child_benefit_child_abha`)
+#### 1. Create Child ABHA (`m1_post_v3_enrollment_enrol_byaadhaar_child_benefit_child_abha`)
 
 ```bash
 curl --request POST \
@@ -2754,7 +2668,7 @@ curl --request POST \
 }'
 ```
 
-#### 3. Get Child ABHA list of the parent (`m1_get_v3_enrollment_profile_children_benefit_child_abha`)
+#### 2. Get Child ABHA list of the parent (`m1_get_v3_enrollment_profile_children_benefit_child_abha`)
 
 ```bash
 curl --request GET \
@@ -2767,7 +2681,7 @@ curl --request GET \
   --header 'X-token: Bearer {{X-token}}'
 ```
 
-#### 4. Update Child ABHA profile (`m1_patch_v3_profile_account_child_benefit_child_abha`)
+#### 3. Update Child ABHA profile (`m1_patch_v3_profile_account_child_benefit_child_abha`)
 
 ```bash
 curl --request PATCH \
@@ -2786,7 +2700,7 @@ curl --request PATCH \
 }'
 ```
 
-#### 5. Child ABHA KYC - send Aadhaar OTP (`m1_post_v3_profile_account_request_otp_child_kyc_benefit__ec9035`)
+#### 4. Child ABHA KYC - send Aadhaar OTP (`m1_post_v3_profile_account_request_otp_child_kyc_benefit__ec9035`)
 
 ```bash
 curl --request POST \
@@ -2807,7 +2721,7 @@ curl --request POST \
 }'
 ```
 
-#### 6. Child ABHA KYC - verify Aadhaar OTP (`m1_post_v3_profile_account_verify_child_kyc_benefit_child_abha`)
+#### 5. Child ABHA KYC - verify Aadhaar OTP (`m1_post_v3_profile_account_verify_child_kyc_benefit_child_abha`)
 
 ```bash
 curl --request POST \

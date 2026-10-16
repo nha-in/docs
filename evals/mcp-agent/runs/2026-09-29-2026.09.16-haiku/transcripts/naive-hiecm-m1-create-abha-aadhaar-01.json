@@ -1,0 +1,398 @@
+{
+  "case_id": "naive-hiecm-m1-create-abha-aadhaar-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "how do i create abha for a patient using aadhar otp, which apis in what order"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01NSE27DEjJmci3VaocR4ziS",
+            "Name": "search",
+            "Input": {
+              "query": "create ABHA aadhar OTP",
+              "kind": "operation",
+              "limit": 15
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "create ABHA aadhar OTP",
+            "kind": "operation",
+            "limit": 15
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/m4/endpoints/m4-post-v1-forgot-hprid-aadhaar",
+                "id": "m4_post_v1_forgot_hprid_aadhaar",
+                "summary": "Retrieval Health Id By Aadhaar",
+                "title": "POST /v1/forgot/hprId/aadhaar",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-post-data-flow-v3-health-information-request",
+                "id": "m3_post_data_flow_v3_health_information_request",
+                "summary": "Health information data request from HIU.",
+                "title": "POST /api/hiecm/data-flow/v3/health-information/request",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-post-data-flow-v3-health-information-hip-on-request",
+                "id": "m2_post_data_flow_v3_health_information_hip_on_request",
+                "summary": "Health information data request acknowledgement from HIP.",
+                "title": "POST /api/hiecm/data-flow/v3/health-information/hip/on-request",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p4/endpoints/p4-get-gateway-v3-health-lockers",
+                "id": "p4_get_gateway_v3_health_lockers",
+                "summary": "This API is invoked to fetch the record with health locker enabled provider details.",
+                "title": "GET /api/hiecm/gateway/v3/health-lockers",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-get-data-flow-v3-health-information-request-status-tra-550104",
+                "id": "m3_get_data_flow_v3_health_information_request_status_tra_550104",
+                "summary": "API to get the current status of the Health Information Request.",
+                "title": "GET /api/hiecm/data-flow/v3/health-information/request/status/{transaction-id}",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m4/endpoints/m4-post-v1-forgot-hprid-mobile",
+                "id": "m4_post_v1_forgot_hprid_mobile",
+                "summary": "Retrieval Health Id By Mobile",
+                "title": "POST /v1/forgot/hprId/mobile",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m4/endpoints/m4-post-aadhaar-generatelink",
+                "id": "m4_post_aadhaar_generatelink",
+                "summary": "Generate Aadhaar Link",
+                "title": "POST /aadhaar/generateLink",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m4/endpoints/m4-post-aadhaar-isauthenticated",
+                "id": "m4_post_aadhaar_isauthenticated",
+                "summary": "Is Aadhaar Authenticated",
+                "title": "POST /aadhaar/isAuthenticated",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-profile-login-verify-aadhaar-otp",
+                "id": "m1_post_v3_profile_login_verify_aadhaar_otp",
+                "summary": "Login via Aadhaar number - verify Aadhaar OTP",
+                "title": "POST /abha/api/v3/profile/login/verify",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-profile-login-request-otp-aadhaar",
+                "id": "m1_post_v3_profile_login_request_otp_aadhaar",
+                "summary": "Login via Aadhaar number - send Aadhaar OTP",
+                "title": "POST /abha/api/v3/profile/login/request/otp",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-post-data-flow-v3-health-information-notify",
+                "id": "m2_post_data_flow_v3_health_information_notify",
+                "summary": "Notifications corresponding to events during data flow",
+                "title": "POST /api/hiecm/data-flow/v3/health-information/notify",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-post-data-flow-v3-health-information-notify",
+                "id": "m3_post_data_flow_v3_health_information_notify",
+                "summary": "Notifications corresponding to events during data flow",
+                "title": "POST /api/hiecm/data-flow/v3/health-information/notify",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m4/endpoints/m4-post-v1-registration-aadhaar-checkhpidaccountexist",
+                "id": "m4_post_v1_registration_aadhaar_checkhpidaccountexist",
+                "summary": "Account Exist",
+                "title": "POST /v1/registration/aadhaar/checkHpIdAccountExist",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m4/endpoints/m4-post-v2-registration-aadhaar-verifyotp",
+                "id": "m4_post_v2_registration_aadhaar_verifyotp",
+                "summary": "Verify Otp",
+                "title": "POST /v2/registration/aadhaar/verifyOTP",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m4/endpoints/m4-post-password-recover-byaadhaar",
+                "id": "m4_post_password_recover_byaadhaar",
+                "summary": "Recover Password Via Aadhaar",
+                "title": "POST /password/recover/byAadhaar",
+                "type": "operation"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_011D7pnLjcZAsjxtG6XMxFJv",
+            "Name": "search",
+            "Input": {
+              "query": "ABHA creation aadhar verification",
+              "kind": "atom",
+              "limit": 15
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "ABHA creation aadhar verification",
+            "kind": "atom",
+            "limit": 15
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#abha",
+                "id": "shared.glossary.abha",
+                "summary": "The patient's identity in ABDM, in two forms that look alike and are not: a 14 digit ABHA number and a readable ABHA address.",
+                "title": "ABHA",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.abha-identifiers",
+                "summary": "NRCeS tells you apart the two health identifiers a person has by the identifier type code, not by a namespace URI, and it publishes no namespace URI for eith...",
+                "title": "Carrying an ABHA number and an ABHA address on a FHIR Patient",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.profile-and-example-together",
+                "summary": "A NRCeS profile gives the cardinalities and a NRCeS example gives the shape, and a generator written from either one alone is wrong in a different way.",
+                "title": "Read the profile and the example together, because each omits what the other carries",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m1#m1-create-abha-face-auth",
+                "id": "hiecm.flow.m1-create-abha-face-auth",
+                "summary": "Create an ABHA for someone who cannot receive an Aadhaar OTP, using face authentication in the ABHA app.",
+                "title": "Create an ABHA using Aadhaar face authentication",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-link-de-link/01-m1-post-v3-profile-benefit-linkanddelink-x-token#m1-benefit-link-or-delink",
+                "id": "hiecm.endpoint.m1-benefit-link-or-delink",
+                "summary": "Links or unlinks the programme named in the BENEFIT_NAME header for an ABHA.",
+                "title": "Link or unlink a benefit record from an ABHA",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/roles/provider/biometric-authentication",
+                "id": "nhcx.concept.biometric-authentication",
+                "summary": "Under the government health assurance scheme a hospital proves the patient is present by fingerprint, iris or face scan, and carries the resulting token or a...",
+                "title": "Biometric authentication of the beneficiary",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/errors#abdm-1094",
+                "id": "hiecm.error.abdm-1094",
+                "summary": "Your client or the person's token is not allowed to do what the call tried, and the message says which of three cases applies.",
+                "title": "ABDM-1094, access to this feature is refused",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/02-m1-post-v3-enrollment-enrol-byaadhaar-otp#m1-enrolment-by-aadhaar",
+                "id": "hiecm.endpoint.m1-enrolment-by-aadhaar",
+                "summary": "Verifies the Aadhaar OTP and creates the ABHA number, or returns the one already linked to that Aadhaar.",
+                "title": "Create an ABHA from a verified Aadhaar OTP",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m4/endpoints/m4-registration-api-s-collection-via-aadhaar/04-m4-post-v2-registration-aadhaar-demographicauthviamobile#m4-hpr-demographic-auth-mobile",
+                "id": "hiecm.endpoint.m4-hpr-demographic-auth-mobile",
+                "summary": "Tells you whether the professional's mobile number matches their Aadhaar record, which decides whether it needs its own OTP.",
+                "title": "Check whether the mobile number is the one on the Aadhaar record",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-update-mobile/01-p2-post-v3-phr-app-login-profile-request-otp#p1-link-abha-number-via-aadhaar-request-otp",
+                "id": "hiecm.endpoint.p1-link-abha-number-via-aadhaar-request-otp",
+                "summary": "Starts linking an ABHA number to the signed in ABHA address with an Aadhaar OTP.",
+                "title": "Link ABHA number via AADHAAR-Request OTP",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-link-abha-number-abha-otp/03-p2-post-v3-phr-app-login-profile-link#p1-process-link-request-via-aadhaar-number",
+                "id": "hiecm.endpoint.p1-process-link-request-via-aadhaar-number",
+                "summary": "Links the ABHA number to the signed in ABHA address after the Aadhaar OTP is verified.",
+                "title": "Process Link Request via Aadhaar OTP",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-update-mobile/02-p2-post-v3-phr-app-login-profile-verify#p1-link-abha-number-via-aadhaar-verify-otp",
+                "id": "hiecm.endpoint.p1-link-abha-number-via-aadhaar-verify-otp",
+                "summary": "Verifies the Aadhaar OTP sent to link an ABHA number to the signed in ABHA address.",
+                "title": "Link ABHA number via AADHAAR-Verify OTP",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m4#m4-create-hpid",
+                "id": "hiecm.flow.m4-create-hpid",
+                "summary": "Take a healthcare professional through Aadhaar authentication and mobile verification until the registry issues an HP-ID.",
+                "title": "Get a healthcare professional an HPID",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m1#m1-create-abha-aadhaar-otp",
+                "id": "hiecm.flow.m1-create-abha-aadhaar-otp",
+                "summary": "Verify a person against Aadhaar with an OTP, create their ABHA number, then let them choose an address.",
+                "title": "Create an ABHA using an Aadhaar OTP",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m1#m1-create-abha-demographic-auth",
+                "id": "hiecm.flow.m1-create-abha-demographic-auth",
+                "summary": "Create an ABHA by matching name, date of birth and gender against Aadhaar with no OTP, for approved integrators only.",
+                "title": "Create an ABHA using Aadhaar demographic authentication",
+                "type": "flow"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01XyHjDCESTq9Y4iM8e35Gfe",
+            "Name": "get",
+            "Input": {
+              "id": "hiecm.flow.m1-create-abha-aadhaar-otp"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "hiecm.flow.m1-create-abha-aadhaar-otp"
+          },
+          "output": {
+            "body": "# Create an ABHA using an Aadhaar OTP\n\n## In plain words\n\nThe individual provides their Aadhaar number. The ABHA service sends a one time\npassword ([OTP](/docs/hiecm/v3/getting-started/glossary#otp)) to the mobile number registered against that Aadhaar.\nUpon successful verification, the individual selects an ABHA address, and the\nABHA number is issued.\n\n```mermaid\nsequenceDiagram\n    autonumber\n    actor P as Person\n    participant S as Your system\n    participant A as ABHA service\n    Note over S: Holds the gateway access token and the<br/>public key from GET /abha/api/v3/profile/public/certificate\n    P->>S: Aadhaar number and consent\n    S->>A: POST /abha/api/v3/enrollment/request/otp<br/>scope [abha-enrol], loginHint aadhaar,<br/>loginId (encrypted Aadhaar), otpSystem aadhaar\n    A-->>S: txnId\n    A-)P: OTP by SMS to the Aadhaar linked mobile\n    P->>S: OTP, and the mobile number for ABHA communication\n    S->>A: POST /abha/api/v3/enrollment/enrol/byAadhaar<br/>authData.authMethods [otp], otp {txnId,<br/>otpValue (encrypted), mobile}, consent\n    A-->>S: ABHAProfile (ABHANumber, name, dob, gender, photo),<br/>tokens.token, isNew\n    Note over S,A: Optional: verify the communication mobile\n    S->>A: POST /abha/api/v3/enrollment/request/otp<br/>scope [abha-enrol, mobile-verify], loginHint mobile,<br/>loginId (encrypted mobile), txnId\n    A-->>S: txnId\n    A-)P: OTP by SMS to the communication mobile\n    P->>S: Mobile OTP\n    S->>A: POST /abha/api/v3/enrollment/auth/byAbdm<br/>scope [abha-enrol, mobile-verify],<br/>authData.authMethods [otp], otp {txnId,<br/>otpValue (encrypted)}\n    A-->>S: authResult success, accounts [ABHANumber]\n    S->>A: GET /abha/api/v3/enrollment/enrol/suggestion<br/>header TRANSACTION_ID txnId\n    A-->>S: abhaAddressList\n    P->>S: Picks or types an ABHA address\n    S->>A: POST /abha/api/v3/enrollment/enrol/abha-address<br/>txnId, abhaAddress, preferred 1\n    A-->>S: healthIdNumber, preferredAbhaAddress\n```\n\nEvery step answers in its own response, so nothing here waits on a callback.\nThe enrolment call is the one with a lasting effect: it creates the account.\n\n## Before you start\n\nA gateway access token, the Aadhaar number encrypted with the M1 certificate, the person present to read the OTP, and their consent to create an ABHA.\n\n## What happens\n\nRequest the OTP with scope `abha-enrol` and keep the `txnId`. Enrol with `enrol/byAadhaar`, sending the encrypted OTP, the communication mobile and the consent block. Optionally verify the communication mobile. Fetch suggestions with the `TRANSACTION_ID` header, and claim the chosen address with `preferred` set to 1.\n\n## How you know it worked\n\nThe enrolment response carries `ABHAProfile` with an `ABHANumber`, and the address step returns the chosen address as `preferredAbhaAddress`. An account left with only its default address is a half finished job the person will not recognise later.\n\n## When it goes wrong\n\nThe OTP goes only to the mobile registered against the Aadhaar, which may not be the phone in the room: see [the OTP never arrives](/docs/hiecm/v3/troubleshooting/otp-never-arrives). Enrolment for an Aadhaar that already has an ABHA returns that account with `isNew` false, so read `isNew` before telling the person anything was created. Every call failing the same way is a session or header problem: see [everything returns 401](/docs/hiecm/v3/troubleshooting/everything-returns-401).",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/milestones/m1#m1-create-abha-aadhaar-otp",
+            "gateway": "hiecm",
+            "id": "hiecm.flow.m1-create-abha-aadhaar-otp",
+            "milestone": "M1",
+            "summary": "Verify a person against Aadhaar with an OTP, create their ABHA number, then let them choose an address.",
+            "title": "Create an ABHA using an Aadhaar OTP",
+            "type": "flow"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "Here's the API sequence to create an ABHA for a patient using Aadhaar OTP (from the [Create an ABHA using an Aadhaar OTP](/docs/hiecm/v3/milestones/m1#m1-create-abha-aadhaar-otp) flow):\n\n## Required APIs in order:\n\n1. **Request OTP**\n   - `POST /abha/api/v3/enrollment/request/otp`\n   - Send: encrypted Aadhaar, scope `abha-enrol`, loginHint `aadhaar`\n   - Get back: `txnId`\n\n2. **Enrol by Aadhaar** (creates the ABHA)\n   - `POST /abha/api/v3/enrollment/enrol/byAadhaar`\n   - Send: `txnId`, encrypted OTP, communication mobile, consent\n   - Get back: `ABHAProfile` with `ABHANumber`, tokens, `isNew` flag\n\n3. **Get address suggestions**\n   - `GET /abha/api/v3/enrollment/enrol/suggestion`\n   - Send: `TRANSACTION_ID` header with the `txnId`\n   - Get back: list of suggested ABHA addresses\n\n4. **Claim chosen address**\n   - `POST /abha/api/v3/enrollment/enrol/abha-address`\n   - Send: `txnId`, chosen `abhaAddress`, `preferred` = 1\n   - Get back: `healthIdNumber`, `preferredAbhaAddress`\n\n## Optional: Verify communication mobile\n\nBetween steps 2 and 3, you can optionally verify the mobile number:\n- Request OTP: `POST /abha/api/v3/enrollment/request/otp` with scope `abha-enrol, mobile-verify`\n- Verify: `POST /abha/api/v3/enrollment/auth/byAbdm` with the mobile OTP\n\n**Important:** Check the `isNew` flag in the enrolment response. If false, the Aadhaar already had an ABHA linked to it—don't tell the person a new account was created.\n\nNeed the detailed schema or code examples for any of these? Let me know which API you want to dive into.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "Here's the API sequence to create an ABHA for a patient using Aadhaar OTP (from the [Create an ABHA using an Aadhaar OTP](/docs/hiecm/v3/milestones/m1#m1-create-abha-aadhaar-otp) flow):\n\n## Required APIs in order:\n\n1. **Request OTP**\n   - `POST /abha/api/v3/enrollment/request/otp`\n   - Send: encrypted Aadhaar, scope `abha-enrol`, loginHint `aadhaar`\n   - Get back: `txnId`\n\n2. **Enrol by Aadhaar** (creates the ABHA)\n   - `POST /abha/api/v3/enrollment/enrol/byAadhaar`\n   - Send: `txnId`, encrypted OTP, communication mobile, consent\n   - Get back: `ABHAProfile` with `ABHANumber`, tokens, `isNew` flag\n\n3. **Get address suggestions**\n   - `GET /abha/api/v3/enrollment/enrol/suggestion`\n   - Send: `TRANSACTION_ID` header with the `txnId`\n   - Get back: list of suggested ABHA addresses\n\n4. **Claim chosen address**\n   - `POST /abha/api/v3/enrollment/enrol/abha-address`\n   - Send: `txnId`, chosen `abhaAddress`, `preferred` = 1\n   - Get back: `healthIdNumber`, `preferredAbhaAddress`\n\n## Optional: Verify communication mobile\n\nBetween steps 2 and 3, you can optionally verify the mobile number:\n- Request OTP: `POST /abha/api/v3/enrollment/request/otp` with scope `abha-enrol, mobile-verify`\n- Verify: `POST /abha/api/v3/enrollment/auth/byAbdm` with the mobile OTP\n\n**Important:** Check the `isNew` flag in the enrolment response. If false, the Aadhaar already had an ABHA linked to it—don't tell the person a new account was created.\n\nNeed the detailed schema or code examples for any of these? Let me know which API you want to dive into.",
+  "sources": [
+    {
+      "id": "hiecm.flow.m1-create-abha-aadhaar-otp",
+      "title": "Create an ABHA using an Aadhaar OTP",
+      "url": "/docs/hiecm/v3/milestones/m1#m1-create-abha-aadhaar-otp"
+    },
+    {
+      "id": "hiecm.flow.m1-create-abha-demographic-auth",
+      "title": "Create an ABHA using Aadhaar demographic authentication",
+      "url": "/docs/hiecm/v3/milestones/m1#m1-create-abha-demographic-auth"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/api/m4/endpoints/m4-post-v1-forgot-hprid-aadhaar\",\"id\":\"m4_post_v1_forgot_hprid_aadhaar\",\"summary\":\"Retrieval Health Id By Aadhaar\",\"title\":\"POST /v1/forgot/hprId/aadhaar\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-post-data-flow-v3-health-information-request\",\"id\":\"m3_post_data_flow_v3_health_information_request\",\"summary\":\"Health information data request from HIU.\",\"title\":\"POST /api/hiecm/data-flow/v3/health-information/request\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-post-data-flow-v3-health-information-hip-on-request\",\"id\":\"m2_post_data_flow_v3_health_information_hip_on_request\",\"summary\":\"Health information data request acknowledgement from HIP.\",\"title\":\"POST /api/hiecm/data-flow/v3/health-information/hip/on-request\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/p4/endpoints/p4-get-gateway-v3-health-lockers\",\"id\":\"p4_get_gateway_v3_health_lockers\",\"summary\":\"This API is invoked to fetch the record with health locker enabled provider details.\",\"title\":\"GET /api/hiecm/gateway/v3/health-lockers\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-get-data-flow-v3-health-information-request-status-tra-550104\",\"id\":\"m3_get_data_flow_v3_health_information_request_status_tra_550104\",\"summary\":\"API to get the current status of the Health Information Request.\",\"title\":\"GET /api/hiecm/data-flow/v3/health-information/request/status/{transaction-id}\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m4/endpoints/m4-post-v1-forgot-hprid-mobile\",\"id\":\"m4_post_v1_forgot_hprid_mobile\",\"summary\":\"Retrieval Health Id By Mobile\",\"title\":\"POST /v1/forgot/hprId/mobile\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m4/endpoints/m4-post-aadhaar-generatelink\",\"id\":\"m4_post_aadhaar_generatelink\",\"summary\":\"Generate Aadhaar Link\",\"title\":\"POST /aadhaar/generateLink\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m4/endpoints/m4-post-aadhaar-isauthenticated\",\"id\":\"m4_post_aadhaar_isauthenticated\",\"summary\":\"Is Aadhaar Authenticated\",\"title\":\"POST /aadhaar/isAuthenticated\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-profile-login-verify-aadhaar-otp\",\"id\":\"m1_post_v3_profile_login_verify_aadhaar_otp\",\"summary\":\"Login via Aadhaar number - verify Aadhaar OTP\",\"title\":\"POST /abha/api/v3/profile/login/verify\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-profile-login-request-otp-aadhaar\",\"id\":\"m1_post_v3_profile_login_request_otp_aadhaar\",\"summary\":\"Login via Aadhaar number - send Aadhaar OTP\",\"title\":\"POST /abha/api/v3/profile/login/request/otp\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-post-data-flow-v3-health-information-notify\",\"id\":\"m2_post_data_flow_v3_health_information_notify\",\"summary\":\"Notifications corresponding to events during data flow\",\"title\":\"POST /api/hiecm/data-flow/v3/health-information/notify\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-post-data-flow-v3-health-information-notify\",\"id\":\"m3_post_data_flow_v3_health_information_notify\",\"summary\":\"Notifications corresponding to events during data flow\",\"title\":\"POST /api/hiecm/data-flow/v3/health-information/notify\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m4/endpoints/m4-post-v1-registration-aadhaar-checkhpidaccountexist\",\"id\":\"m4_post_v1_registration_aadhaar_checkhpidaccountexist\",\"summary\":\"Account Exist\",\"title\":\"POST /v1/registration/aadhaar/checkHpIdAccountExist\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m4/endpoints/m4-post-v2-registration-aadhaar-verifyotp\",\"id\":\"m4_post_v2_registration_aadhaar_verifyotp\",\"summary\":\"Verify Otp\",\"title\":\"POST /v2/registration/aadhaar/verifyOTP\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m4/endpoints/m4-post-password-recover-byaadhaar\",\"id\":\"m4_post_password_recover_byaadhaar\",\"summary\":\"Recover Password Via Aadhaar\",\"title\":\"POST /password/recover/byAadhaar\",\"type\":\"operation\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#abha\",\"id\":\"shared.glossary.abha\",\"summary\":\"The patient's identity in ABDM, in two forms that look alike and are not: a 14 digit ABHA number and a readable ABHA address.\",\"title\":\"ABHA\",\"type\":\"glossary\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.abha-identifiers\",\"summary\":\"NRCeS tells you apart the two health identifiers a person has by the identifier type code, not by a namespace URI, and it publishes no namespace URI for eith...\",\"title\":\"Carrying an ABHA number and an ABHA address on a FHIR Patient\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.profile-and-example-together\",\"summary\":\"A NRCeS profile gives the cardinalities and a NRCeS example gives the shape, and a generator written from either one alone is wrong in a different way.\",\"title\":\"Read the profile and the example together, because each omits what the other carries\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m1#m1-create-abha-face-auth\",\"id\":\"hiecm.flow.m1-create-abha-face-auth\",\"summary\":\"Create an ABHA for someone who cannot receive an Aadhaar OTP, using face authentication in the ABHA app.\",\"title\":\"Create an ABHA using Aadhaar face authentication\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-benefit-link-de-link/01-m1-post-v3-profile-benefit-linkanddelink-x-token#m1-benefit-link-or-delink\",\"id\":\"hiecm.endpoint.m1-benefit-link-or-delink\",\"summary\":\"Links or unlinks the programme named in the BENEFIT_NAME header for an ABHA.\",\"title\":\"Link or unlink a benefit record from an ABHA\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/nhcx/v1/roles/provider/biometric-authentication\",\"id\":\"nhcx.concept.biometric-authentication\",\"summary\":\"Under the government health assurance scheme a hospital proves the patient is present by fingerprint, iris or face scan, and carries the resulting token or a...\",\"title\":\"Biometric authentication of the beneficiary\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/errors#abdm-1094\",\"id\":\"hiecm.error.abdm-1094\",\"summary\":\"Your client or the person's token is not allowed to do what the call tried, and the message says which of three cases applies.\",\"title\":\"ABDM-1094, access to this feature is refused\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/02-m1-post-v3-enrollment-enrol-byaadhaar-otp#m1-enrolment-by-aadhaar\",\"id\":\"hiecm.endpoint.m1-enrolment-by-aadhaar\",\"summary\":\"Verifies the Aadhaar OTP and creates the ABHA number, or returns the one already linked to that Aadhaar.\",\"title\":\"Create an ABHA from a verified Aadhaar OTP\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m4/endpoints/m4-registration-api-s-collection-via-aadhaar/04-m4-post-v2-registration-aadhaar-demographicauthviamobile#m4-hpr-demographic-auth-mobile\",\"id\":\"hiecm.endpoint.m4-hpr-demographic-auth-mobile\",\"summary\":\"Tells you whether the professional's mobile number matches their Aadhaar record, which decides whether it needs its own OTP.\",\"title\":\"Check whether the mobile number is the one on the Aadhaar record\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-update-mobile/01-p2-post-v3-phr-app-login-profile-request-otp#p1-link-abha-number-via-aadhaar-request-otp\",\"id\":\"hiecm.endpoint.p1-link-abha-number-via-aadhaar-request-otp\",\"summary\":\"Starts linking an ABHA number to the signed in ABHA address with an Aadhaar OTP.\",\"title\":\"Link ABHA number via AADHAAR-Request OTP\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-link-abha-number-abha-otp/03-p2-post-v3-phr-app-login-profile-link#p1-process-link-request-via-aadhaar-number\",\"id\":\"hiecm.endpoint.p1-process-link-request-via-aadhaar-number\",\"summary\":\"Links the ABHA number to the signed in ABHA address after the Aadhaar OTP is verified.\",\"title\":\"Process Link Request via Aadhaar OTP\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-update-mobile/02-p2-post-v3-phr-app-login-profile-verify#p1-link-abha-number-via-aadhaar-verify-otp\",\"id\":\"hiecm.endpoint.p1-link-abha-number-via-aadhaar-verify-otp\",\"summary\":\"Verifies the Aadhaar OTP sent to link an ABHA number to the signed in ABHA address.\",\"title\":\"Link ABHA number via AADHAAR-Verify OTP\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m4#m4-create-hpid\",\"id\":\"hiecm.flow.m4-create-hpid\",\"summary\":\"Take a healthcare professional through Aadhaar authentication and mobile verification until the registry issues an HP-ID.\",\"title\":\"Get a healthcare professional an HPID\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m1#m1-create-abha-aadhaar-otp\",\"id\":\"hiecm.flow.m1-create-abha-aadhaar-otp\",\"summary\":\"Verify a person against Aadhaar with an OTP, create their ABHA number, then let them choose an address.\",\"title\":\"Create an ABHA using an Aadhaar OTP\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m1#m1-create-abha-demographic-auth\",\"id\":\"hiecm.flow.m1-create-abha-demographic-auth\",\"summary\":\"Create an ABHA by matching name, date of birth and gender against Aadhaar with no OTP, for approved integrators only.\",\"title\":\"Create an ABHA using Aadhaar demographic authentication\",\"type\":\"flow\"}]}\n{\"body\":\"# Create an ABHA using an Aadhaar OTP\\n\\n## In plain words\\n\\nThe individual provides their Aadhaar number. The ABHA service sends a one time\\npassword ([OTP](/docs/hiecm/v3/getting-started/glossary#otp)) to the mobile number registered against that Aadhaar.\\nUpon successful verification, the individual selects an ABHA address, and the\\nABHA number is issued.\\n\\n```mermaid\\nsequenceDiagram\\n    autonumber\\n    actor P as Person\\n    participant S as Your system\\n    participant A as ABHA service\\n    Note over S: Holds the gateway access token and the<br/>public key from GET /abha/api/v3/profile/public/certificate\\n    P->>S: Aadhaar number and consent\\n    S->>A: POST /abha/api/v3/enrollment/request/otp<br/>scope [abha-enrol], loginHint aadhaar,<br/>loginId (encrypted Aadhaar), otpSystem aadhaar\\n    A-->>S: txnId\\n    A-)P: OTP by SMS to the Aadhaar linked mobile\\n    P->>S: OTP, and the mobile number for ABHA communication\\n    S->>A: POST /abha/api/v3/enrollment/enrol/byAadhaar<br/>authData.authMethods [otp], otp {txnId,<br/>otpValue (encrypted), mobile}, consent\\n    A-->>S: ABHAProfile (ABHANumber, name, dob, gender, photo),<br/>tokens.token, isNew\\n    Note over S,A: Optional: verify the communication mobile\\n    S->>A: POST /abha/api/v3/enrollment/request/otp<br/>scope [abha-enrol, mobile-verify], loginHint mobile,<br/>loginId (encrypted mobile), txnId\\n    A-->>S: txnId\\n    A-)P: OTP by SMS to the communication mobile\\n    P->>S: Mobile OTP\\n    S->>A: POST /abha/api/v3/enrollment/auth/byAbdm<br/>scope [abha-enrol, mobile-verify],<br/>authData.authMethods [otp], otp {txnId,<br/>otpValue (encrypted)}\\n    A-->>S: authResult success, accounts [ABHANumber]\\n    S->>A: GET /abha/api/v3/enrollment/enrol/suggestion<br/>header TRANSACTION_ID txnId\\n    A-->>S: abhaAddressList\\n    P->>S: Picks or types an ABHA address\\n    S->>A: POST /abha/api/v3/enrollment/enrol/abha-address<br/>txnId, abhaAddress, preferred 1\\n    A-->>S: healthIdNumber, preferredAbhaAddress\\n```\\n\\nEvery step answers in its own response, so nothing here waits on a callback.\\nThe enrolment call is the one with a lasting effect: it creates the account.\\n\\n## Before you start\\n\\nA gateway access token, the Aadhaar number encrypted with the M1 certificate, the person present to read the OTP, and their consent to create an ABHA.\\n\\n## What happens\\n\\nRequest the OTP with scope `abha-enrol` and keep the `txnId`. Enrol with `enrol/byAadhaar`, sending the encrypted OTP, the communication mobile and the consent block. Optionally verify the communication mobile. Fetch suggestions with the `TRANSACTION_ID` header, and claim the chosen address with `preferred` set to 1.\\n\\n## How you know it worked\\n\\nThe enrolment response carries `ABHAProfile` with an `ABHANumber`, and the address step returns the chosen address as `preferredAbhaAddress`. An account left with only its default address is a half finished job the person will not recognise later.\\n\\n## When it goes wrong\\n\\nThe OTP goes only to the mobile registered against the Aadhaar, which may not be the phone in the room: see [the OTP never arrives](/docs/hiecm/v3/troubleshooting/otp-never-arrives). Enrolment for an Aadhaar that already has an ABHA returns that account with `isNew` false, so read `isNew` before telling the person anything was created. Every call failing the same way is a session or header problem: see [everything returns 401](/docs/hiecm/v3/troubleshooting/everything-returns-401).\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/milestones/m1#m1-create-abha-aadhaar-otp\",\"gateway\":\"hiecm\",\"id\":\"hiecm.flow.m1-create-abha-aadhaar-otp\",\"milestone\":\"M1\",\"summary\":\"Verify a person against Aadhaar with an OTP, create their ABHA number, then let them choose an address.\",\"title\":\"Create an ABHA using an Aadhaar OTP\",\"type\":\"flow\"}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T12:07:03.782Z",
+  "usage": {
+    "input_tokens": 30,
+    "output_tokens": 1152,
+    "cache_read_input_tokens": 32040,
+    "cache_creation_input_tokens": 11061,
+    "num_turns": 4,
+    "duration_ms": 13107,
+    "cost_usd_equivalent": 0.031116000000000005
+  }
+}

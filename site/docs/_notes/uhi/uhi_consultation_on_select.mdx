@@ -1,0 +1,7 @@
+## Send a quoted draft order {/* #consultation-on-select */}
+
+Do not implement `on_select` for Physical Consultation. The [HSPA](/docs/uhi/v1/getting-started/glossary#hspa) sends the `order.id` and the quote in `on_init`, in answer to the [EUA](/docs/uhi/v1/getting-started/glossary#eua)'s `init`. See [Physical Consultation](/docs/uhi/v1/services/consultation).
+
+<AgentOnly>
+**What happens.** `on_init` carries the `order.id`, the quote and five terms. The EUA uses that `order.id` in `confirm` and every call after it.
+</AgentOnly>

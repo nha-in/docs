@@ -137,6 +137,51 @@
   transform: scaleX(1);
 }
 
+/* The one tab that is a way in rather than a section: Build with AI carries a
+   mark and an outline chip, so it is found without reading the strip left to
+   right. At rest it must not look selected: the label keeps the strip's own
+   colour, the chip is a hairline with no fill, and only the mark carries the
+   accent. Selected, it takes the accent underline every tab takes.
+
+   The chip is a ::before rather than padding on the tab itself. The tabs
+   stretch to the strip's full height and the accent underline is positioned
+   against that height, so giving this one a shorter box of its own would lift
+   its underline off the strip's bottom border. */
+.docs-tab--feature::before {
+  content: '';
+  position: absolute;
+  inset-block: 0.625rem;
+  inset-inline: -0.625rem;
+  z-index: -1;
+  border-radius: var(--radius-chip);
+  border: 1px solid hsl(220 54% 36% / 0.28);
+  background: transparent;
+  transition: background-color 150ms ease;
+}
+
+[data-theme='dark'] .docs-tab--feature::before {
+  border-color: hsl(216 40% 72% / 0.3);
+}
+
+.docs-tab--feature:hover::before {
+  background-color: hsl(220 54% 36% / 0.06);
+}
+
+[data-theme='dark'] .docs-tab--feature:hover::before {
+  background-color: hsl(216 40% 72% / 0.08);
+}
+
+.docs-tab--feature .docs-tab__icon {
+  color: var(--accent);
+}
+
+.docs-tab__icon {
+  width: 0.875rem;
+  height: 0.875rem;
+  margin-inline-end: 0.375rem;
+  flex: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .docs-tab::after {
     transition: none;

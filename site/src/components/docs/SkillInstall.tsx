@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import useBaseUrl from '@docusaurus/useBaseUrl';
-import {Check, Copy, Download, Sparkles, SquareArrowOutUpRight} from 'lucide-react';
+import {Check, Copy, Download, Sparkles} from 'lucide-react';
 import {cn} from '@site/src/lib/utils';
 import manifest from '@site/src/data/skills.json';
 import {AGENTS, AgentId} from './agents';
+import AgentLogo from './AgentLogo';
 
 export type SkillInstallProps = {
   /** The skill's folder name, for example "abdm-m1". Keys into skills.json. */
@@ -14,6 +15,8 @@ export type SkillInstallProps = {
 };
 
 type Entry = {
+  /** "uhi" or "nhcx" for a gateway with its own plugin; absent for ABDM's. */
+  gateway?: string;
   /** Absent on module skills; "guided" marks a committed procedure skill. */
   kind?: 'guided';
   module: string;
@@ -138,17 +141,21 @@ const TARGETS: Record<AgentId, Target> = {
  */
 const DETAIL: Record<string, (entry: Entry) => string> = {
   scaffold: (entry) =>
-    entry.folder
-      ? 'The eight steps that build the use case into your system, from discovery and mapping through code to tests on the sandbox, each logged as it goes.'
-      : 'The loop that builds the module flow by flow against the sandbox, ending on an observed result rather than on a call returning 200.',
+    entry.gateway === 'uhi'
+      ? 'Registers, then builds each journey to its exit.'
+      : entry.folder
+      ? 'Eight steps from discovery to sandbox tests.'
+      : 'Builds each flow until the sandbox confirms it.',
   test: (entry) =>
-    (entry.tests ?? 0) > 0
-      ? `${entry.tests} test matrix rows, from offline pins up to a live payer on the sandbox.`
-      : 'The test pyramid, from offline pins up to a live payer on the sandbox.',
+    entry.gateway === 'uhi'
+      ? 'Go-live checks and the steps to production.'
+      : (entry.tests ?? 0) > 0
+      ? `${entry.tests} test rows, offline to live sandbox.`
+      : 'Tests from offline pins to a live sandbox.',
   design: () =>
-    'What the journey around the calls has to do, and what a screen is forbidden to claim.',
-  generate: () => 'Building NRCES compliant bundle generation into a codebase.',
-  audit: () => "Checking an existing FHIR store's output against the same profiles.",
+    'What a screen must do, and never claim.',
+  generate: () => 'Builds NRCES compliant bundles into your code.',
+  audit: () => "Checks a FHIR store against the profiles.",
 };
 
 function capabilities(entry: Entry) {
@@ -157,14 +164,16 @@ function capabilities(entry: Entry) {
       label: 'Integrate',
       detail:
         (entry.operations ?? 0) > 0
-          ? `${entry.operations} operations, with their hosts and headers.`
+          ? `${entry.operations} operations, with hosts and headers${entry.gateway === 'uhi' ? ' and signing' : ''}.`
           : 'No operation is recorded yet.',
     },
     {
       label: 'Debug',
       detail:
-        (entry.codes ?? 0) > 0
-          ? `${entry.codes} error codes, each with what to do about it.`
+        entry.gateway === 'uhi'
+          ? 'From a status or missing callback to a fix.'
+          : (entry.codes ?? 0) > 0
+          ? `${entry.codes} error codes, each with its fix.`
           : 'No error code is recorded yet.',
     },
   ];
@@ -249,6 +258,7 @@ export default function SkillInstall({slug, note}: SkillInstallProps): React.Rea
   // The router, for the copy button. The install commands take the whole
   // folder, because the router alone has links to files that are not there.
   const download = useBaseUrl(`/skills/${slug}/SKILL.md`);
+  const archive = useBaseUrl(`/skills/${slug}.tar.gz`);
   const entry = (manifest as Record<string, Entry>)[slug];
 
   if (!entry) return null;
@@ -266,17 +276,32 @@ export default function SkillInstall({slug, note}: SkillInstallProps): React.Rea
           <p className="skill-install__note">{note}</p>
         </div>
         <div className="skill-install__actions">
-          <CopySkillButton url={download} />
-          {/* The router only. Named for what it is, because the folder is
-              what installs and the command above is what fetches it. */}
-          <a
-            className="skill-install__download"
-            href={download}
-            download
-            title="The router. Use the command below to take the references with it.">
-            <Download className="size-4" aria-hidden="true" />
-            SKILL.md
-          </a>
+          {entry.folder ? (
+            // A folder skill is useless as its router alone, so the one
+            // button hands over the whole archive the generator writes.
+            <a
+              className="skill-install__download"
+              href={archive}
+              download
+              title="The whole skill folder, as a .tar.gz archive.">
+              <Download className="size-4" aria-hidden="true" />
+              Download skill
+            </a>
+          ) : (
+            <>
+              <CopySkillButton url={download} />
+              {/* The router only. Named for what it is, because the folder is
+                  what installs and the command above is what fetches it. */}
+              <a
+                className="skill-install__download"
+                href={download}
+                download
+                title="The router. Use the command below to take the references with it.">
+                <Download className="size-4" aria-hidden="true" />
+                SKILL.md
+              </a>
+            </>
+          )}
         </div>
       </div>
 
@@ -301,6 +326,7 @@ export default function SkillInstall({slug, note}: SkillInstallProps): React.Rea
               option.id === agent.id && 'skill-install__target--active',
             )}
             onClick={() => setAgent(option)}>
+            <AgentLogo id={option.id} />
             {option.label}
           </button>
         ))}
@@ -312,7 +338,7 @@ export default function SkillInstall({slug, note}: SkillInstallProps): React.Rea
         <a
           className="skill-launch"
           href={target.link(target.command(base, slug, entry), entry.module)}>
-          <SquareArrowOutUpRight className="size-3.5" aria-hidden="true" />
+          <AgentLogo id={agent.id} />
           Open in {agent.label}
         </a>
       )}

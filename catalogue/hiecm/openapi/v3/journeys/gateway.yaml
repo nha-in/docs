@@ -1,0 +1,14 @@
+# catalogue/hiecm/openapi/v3/journeys/gateway.yaml
+# The gateway lists the bridge calls and the session call only, as NHA's
+# sandbox observations of 23 September 2026 ask. Providers and government
+# programmes are walked in P2, the health locker list in P4.
+- id: gateway-abdm-gateway
+  title: Bridge
+  steps:
+    - op: gateway_get_gateway_v3_bridge_services
+    - op: gateway_get_gateway_v3_bridge_service_serviceid_service_id
+    - op: gateway_patch_gateway_v3_bridge_url
+- id: gateway-abdm-sessions
+  title: Session
+  steps:
+    - op: gateway_post_gateway_v3_sessions

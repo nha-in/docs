@@ -31,7 +31,7 @@ Watched sources (daily)
    Merge to main
         |
    CI: lint atoms -> Spectral -> build the Docusaurus site (specs synced
-       from catalogue/openapi) -> compile skills -> validate -> build index
+       from each gateway's openapi/) -> compile skills -> validate -> build index
        -> generate llms.txt -> bump catalogue_version -> index the catalogue
        into catalogue.db (keyword-only on PRs, no Ollama in CI; the deploy
        build embeds via the Ollama sidecar) -> check What's New against the
@@ -61,7 +61,7 @@ Three possible outcomes per affected atom:
 | Outcome | When | Action |
 |---|---|---|
 | Accept the draft edit | The change is mechanical, for example a description reword upstream | Merge |
-| Edit then accept | The change is real and needs prose work | Rewrite the affected sections, queue a run of `npm run verify:atoms` |
+| Edit then accept | The change is real and needs prose work | Rewrite the affected sections |
 | Mark unaffected | The changed part of the source does not touch this atom | Note the review in the pull request |
 
 The third outcome is common and legitimate. A single-character change to one operation should not invalidate forty atoms.
@@ -72,7 +72,7 @@ In order, because the order matters:
 
 1. **Lint atoms.** Schema, sections, prose, graph, sources.
 2. **Spectral.** The module OpenAPI files.
-3. **Build the Docusaurus site.** Specs synced from `catalogue/openapi`, navigation generated from frontmatter, never hand-edited.
+3. **Build the Docusaurus site.** Specs synced from `catalogue/<gateway>/openapi/` and NHCX's `catalogue/openapi/nhcx/`, navigation generated from frontmatter, never hand-edited.
 4. **Compile skills.** Selector, templates, prose pass.
 5. **Validate.** Identifier diff and the rest. Build blocker on any failure.
 6. **Build the index.** Because it walks everything above.

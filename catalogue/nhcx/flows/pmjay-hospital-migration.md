@@ -47,7 +47,7 @@ related:
   glossary:
   - nhcx.glossary.pmjay
   - nhcx.glossary.tms
-  - shared.glossary.hmis
+  - hiecm.glossary.hmis
   - shared.glossary.hfr
 ---
 
@@ -55,7 +55,7 @@ related:
 
 ## In plain words
 
-A [PMJAY](../glossary/pmjay.md)-empanelled hospital submits claims through the [TMS](../glossary/tms.md) Provider portal until it migrates. After migration, its own [HMIS](../../shared/glossary/hmis.md) sends pre-authorisations and claims through the [National Health Claims Exchange](../../shared/glossary/nhcx.md) (NHCX). Cases already in flight finish in TMS.
+A [PMJAY](../glossary/pmjay.md)-empanelled hospital submits claims through the [TMS](../glossary/tms.md) Provider portal until it migrates. After migration, its own [HMIS](../../hiecm/glossary/hmis.md) sends pre-authorisations and claims through the [National Health Claims Exchange](../../shared/glossary/nhcx.md) (NHCX). Cases already in flight finish in TMS.
 
 Migration has six steps. The first four are production onboarding with PMJAY's rules. The fifth is a manual mapping by NHA's NHCX Operations team, and that mapping is the switch that takes the hospital live.
 

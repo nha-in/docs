@@ -1,0 +1,42 @@
+{
+  "id": "meta-about-with-attachment-01",
+  "slice": "meta",
+  "class": "meta",
+  "turns": [
+    {
+      "role": "user",
+      "text": "what can you do with this"
+    }
+  ],
+  "attachment": {
+    "name": "request.json",
+    "text": "{\n  \"method\": \"POST\",\n  \"url\": \"https://dev.abdm.gov.in/api/hiecm/gateway/v3/sessions\",\n  \"headers\": {\n    \"REQUEST-ID\": \"7a1c3e5f-2b4d-4e6a-8c0b-9d1f3a5e7c66\",\n    \"TIMESTAMP\": \"2026-09-29T08:41:17.203Z\",\n    \"X-CM-ID\": \"sbx\"\n  },\n  \"body\": {\n    \"clientId\": \"SBX_004512\",\n    \"clientSecret\": \"<MASKED_SECRET>\",\n    \"grantType\": \"client_credentials\"\n  }\n}",
+    "kind": "text"
+  },
+  "page": null,
+  "must_contain": [
+    "It reads a request, response or log you attach and explains the calls, fields, flows and error codes in it",
+    "You can ask what a field or header in this request means, whether the body is right, or why the call failed",
+    "Only the text read from the file goes with your question, identifiers in it are masked, and it is not stored"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom",
+    "I cannot read attachments",
+    "upload it again"
+  ],
+  "expected_sources": [
+    "shared.concept.ask-ai-assistant"
+  ],
+  "expected_shape": "meta",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#ask-ai-panel",
+  "catalogue_version": "2026.09.16",
+  "notes": "Meta group, an about question with a file attached: it catches the self path being bypassed, so the assistant either diagnoses the file unasked or claims it cannot see attachments, instead of saying what it does with one and what to ask."
+}

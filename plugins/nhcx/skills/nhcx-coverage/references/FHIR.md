@@ -14,6 +14,7 @@ Every FHIR resource the application builds for NHCX or reads back, in one list. 
 |---|---|---|---|---|
 | [F2](../fhir/F2-coverage-eligibility-request.md) | CoverageEligibilityRequest | sent | The eligibility check, in a seven-entry bundle; one shape for validation, benefits, discovery and auth-requirements (which adds the quoted items). | [A2](../apis/A2-coverage-eligibility-check.md), [C2](../callbacks/C2-coverage-eligibility-on-check.md) |
 | [F3](../fhir/F3-coverage-eligibility-response.md) | CoverageEligibilityResponse | received | The payer's verdict (in force, wallet, pre-auth needed) or its ruling on each quoted item with the documents and forms required. | [C2](../callbacks/C2-coverage-eligibility-on-check.md) |
+| [F7](../fhir/F7-questionnaireresponse.md) | QuestionnaireResponse | sent | One per payer form answered for the leg being sent, pointed at from the Claim's supportingInfo. | [A18](../apis/A18-biometric-authentication.md) |
 
 ## Parties and supporting resources
 

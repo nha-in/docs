@@ -85,7 +85,7 @@ The record gives you a [participant code](../glossary/participant-code.md), such
 Each item is something you can check before the first call.
 
 - **Registry identity.** A [provider](../glossary/provider.md) has its facility in the [Health Facility Registry](../../shared/glossary/hfr.md) (HFR) and knows its HFR ID. A [payer](../glossary/payer.md) or [TPA](../glossary/tpa.md) knows the ID its [IRDAI](../glossary/irdai.md) or equivalent authority issued. An end user application, such as a [PHR](../../shared/glossary/phr.md) app, uses its client ID.
-- **Sandbox credentials.** You hold an [ABDM](../../shared/glossary/abdm.md) sandbox client ID and secret. Apply at `https://sandbox.abdm.gov.in/sandbox/v3/` with the intent "Providers and Payer" and [Milestone 1](../../shared/glossary/m1.md). See [What you need before you register on the NHCX sandbox](../sandbox/prerequisites.md).
+- **Sandbox credentials.** You hold an [ABDM](../../shared/glossary/abdm.md) sandbox client ID and secret. Apply at `https://sandbox.abdm.gov.in/sandbox/v3/` with the intent "Providers and Payer" and [Milestone 1](../../hiecm/glossary/m1.md). See [What you need before you register on the NHCX sandbox](../sandbox/prerequisites.md).
 - **Milestone 1 working, for a provider.** Your software creates and verifies [ABHA](../../shared/glossary/abha.md) numbers.
 - **NHCX sandbox access.** You registered at `https://sandbox.abdm.gov.in/sandbox/v3/sandbox-registration` with that client ID and secret, and roles were assigned to you.
 - **A certificate.** You have `certificate_base64.txt` from [Generate an encryption certificate and register it](generate-and-register-certificate.md).

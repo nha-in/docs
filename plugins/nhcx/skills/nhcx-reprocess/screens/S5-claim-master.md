@@ -1,7 +1,9 @@
 # S5. Claim Master Screen
 
 #### S5R. ROUTE
-claims/list?status=<status>
+claims/list?status=<status>[&patient=<id>]
+
+`patient` narrows the list to one patient's cases; the patient master's "Claims" shortcut (S13. Patient List (in nhcx-coverage), S15. Patient Detail (in nhcx-coverage)) opens the list this way, and the card title then reads "<n> claim(s) for <patient name>".
 
 Page title: Claims. This is the landing screen of the Claims section (sidebar item "Claims").
 

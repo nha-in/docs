@@ -12,6 +12,12 @@ type PackFacts struct {
 	FlowTitles          []string
 	MentionsABHANumber  bool
 	MentionsABHAAddress bool
+	// QuestionNamesABHA is set by the loop from the question, not the pack:
+	// the identifier rule below is for questions about ABHA. Applied to
+	// every question whose pack happened to mention both identifiers, it
+	// forced "M1 creates an ABHA number and ABHA address" into the first
+	// sentence of "how can I integrate with ABDM" and "why do I get 900901".
+	QuestionNamesABHA bool
 }
 
 var (
@@ -143,7 +149,7 @@ func CheckShape(shape, answer string, pack PackFacts) []string {
 			f = append(f, fmt.Sprintf("route not named: %s", t))
 		}
 	}
-	if pack.MentionsABHANumber && pack.MentionsABHAAddress {
+	if pack.QuestionNamesABHA && pack.MentionsABHANumber && pack.MentionsABHAAddress {
 		first := strings.ToLower(firstSentence(answer))
 		if !strings.Contains(first, "abha number") && !strings.Contains(first, "abha address") {
 			f = append(f, "first sentence names neither ABHA number nor ABHA address")

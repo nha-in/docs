@@ -47,7 +47,7 @@ You call it every time the beneficiary logs in to your app with their ABHA addre
 
 ## Before you start
 
-- [Milestone 1](../../shared/glossary/m1.md) integration complete, and your app registered in NHCX as a Beneficiary Service Provider.
+- [Milestone 1](../../hiecm/glossary/m1.md) integration complete, and your app registered in NHCX as a Beneficiary Service Provider.
 - A session token, sent on `Authorization`. See [which session endpoint to call](../decisions/session-endpoint.md).
 - An HTTPS callback endpoint, TLS 1.2 or newer, for notifications. See [receiving a notification](../callbacks/notification-delivery.md).
 - The beneficiary's explicit consent to subscribe, and their [ABHA address](../../shared/glossary/abha-address.md).

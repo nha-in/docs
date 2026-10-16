@@ -101,8 +101,20 @@ func Handler(r *index.Reader, emb embed.Embedder, allowOrigin string, chatSvc *c
 			writeJSON(w, 405, map[string]string{"error": "POST only"})
 			return
 		}
-		if !limiter.Allow(clientIP(req, trustedHops), time.Now()) {
-			writeJSON(w, 429, map[string]string{"error": "rate limit reached, try again in a minute"})
+		if d := limiter.Deny(clientIP(req, trustedHops), time.Now()); d.Limit != "" {
+			// The panel reads limit and retry_after_seconds to tell the reader
+			// what happened; any other client gets the standard header.
+			secs := int(d.RetryAfter.Seconds() + 0.999)
+			if secs < 1 {
+				secs = 1
+			}
+			msg := fmt.Sprintf("rate limit reached: %d questions a minute; try again in %d seconds", d.Cap, secs)
+			if d.Limit == "day" {
+				msg = fmt.Sprintf("rate limit reached: %d questions a day; it resets at midnight UTC", d.Cap)
+			}
+			slog.Warn("answer_missing", "reason", chat.ReasonRateLimit, "limit", d.Limit)
+			w.Header().Set("Retry-After", strconv.Itoa(secs))
+			writeJSON(w, 429, map[string]any{"error": msg, "limit": d.Limit, "retry_after_seconds": secs})
 			return
 		}
 		var in struct {
@@ -133,7 +145,7 @@ func Handler(r *index.Reader, emb embed.Embedder, allowOrigin string, chatSvc *c
 			writeJSON(w, 400, map[string]string{"error": err.Error()})
 			return
 		}
-		cmd := chat.Command{Name: in.Command, Module: in.Module, Gateway: in.Gateway}
+		cmd := chat.InferCommand(chat.Command{Name: in.Command, Module: in.Module, Gateway: in.Gateway}, in.Turns)
 		if err := chat.ValidateCommand(cmd); err != nil {
 			writeJSON(w, 400, map[string]string{"error": err.Error()})
 			return
@@ -148,7 +160,12 @@ func Handler(r *index.Reader, emb embed.Embedder, allowOrigin string, chatSvc *c
 		}
 		start := time.Now()
 		if err := chatSvc.RespondCommand(ctx, in.Turns, in.Page, cmd, sw.Event); err != nil {
-			_ = sw.Event("error", map[string]string{"message": "the assistant hit a problem, try again shortly"})
+			// The reason says why the turn has no answer, for the log and for
+			// the panel. The request's own context ends only when the reader
+			// goes away; the 90 second deadline lives on ctx, not on it.
+			reason := chat.FailureReason(err, req.Context().Err() != nil)
+			_ = sw.Event("error", map[string]string{"message": "the assistant hit a problem, try again shortly", "reason": reason})
+			slog.Warn("answer_missing", "reason", reason, "ms", time.Since(start).Milliseconds())
 			slog.Error("chat failed", "err", err)
 			return
 		}

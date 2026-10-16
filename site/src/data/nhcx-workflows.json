@@ -96,7 +96,7 @@
         "request.initiated"
       ],
       "stages": [
-        "PreAuth Reprocess(Resubmission) Initimation"
+        "PreAuth Reprocess(Resubmission) Intimation"
       ],
       "outcomes": [
         "NR"
@@ -167,7 +167,7 @@
         "Enhancement Query Response Submitted"
       ],
       "outcomes": [
-        "This should be handled as protocal error"
+        "This should be handled as protocol error"
       ],
       "reused": true
     },
@@ -415,7 +415,7 @@
       ],
       "outcomes": [
         "NR",
-        "This should be handled as protocal error"
+        "This should be handled as protocol error"
       ],
       "reused": true
     },
@@ -568,7 +568,7 @@
         "Payment Notice Ack Failed"
       ],
       "outcomes": [
-        "This should be handled as protocal error"
+        "This should be handled as protocol error"
       ],
       "reused": true
     },
@@ -602,7 +602,7 @@
     },
     {
       "code": "45",
-      "name": "Final Bill Initimation",
+      "name": "Final Bill Intimation",
       "authored_by": "status sheet only",
       "statuses": [
         "request.initiated",
@@ -610,14 +610,14 @@
         "response.error"
       ],
       "stages": [
-        "Final Bill Initimation",
+        "Final Bill Intimation",
         "Final Bill Ack Success",
         "Final Bill Ack Failed"
       ],
       "outcomes": [
         "NR",
-        "queued This should be handled as protocal error",
-        "error This should be handled as protocal error"
+        "queued This should be handled as protocol error",
+        "error This should be handled as protocol error"
       ],
       "reused": true
     },
@@ -658,7 +658,7 @@
         "PreAuth Query Ack Failed"
       ],
       "outcomes": [
-        "This should be handled as protocal error"
+        "This should be handled as protocol error"
       ],
       "reused": true
     },
@@ -706,7 +706,7 @@
       ],
       "outcomes": [
         "NR",
-        "This should be handled as protocal error"
+        "This should be handled as protocol error"
       ],
       "reused": true
     },
@@ -740,121 +740,121 @@
     },
     {
       "code": "R122",
-      "name": "Reimburstment Claim Reprocess Requested",
+      "name": "Reimbursement Claim Reprocess Requested",
       "authored_by": "status sheet only",
       "statuses": [
         "request.initiated"
       ],
       "stages": [
-        "Reimburstment Claim Reprocess Requested"
+        "Reimbursement Claim Reprocess Requested"
       ],
       "outcomes": []
     },
     {
       "code": "R15",
-      "name": "Reimburstment Claim Submitted",
+      "name": "Reimbursement Claim Submitted",
       "authored_by": "status sheet only",
       "statuses": [
         "request.initiated"
       ],
       "stages": [
-        "Reimburstment Claim Submitted"
+        "Reimbursement Claim Submitted"
       ],
       "outcomes": []
     },
     {
       "code": "R151",
-      "name": "Reimburstment Claim Query Response Submitted",
+      "name": "Reimbursement Claim Query Response Submitted",
       "authored_by": "status sheet only",
       "statuses": [
         "response.complete"
       ],
       "stages": [
-        "Reimburstment Claim Query Response Submitted"
+        "Reimbursement Claim Query Response Submitted"
       ],
       "outcomes": []
     },
     {
       "code": "R252",
-      "name": "Reimburstment Claim Reprocess Request Approved",
+      "name": "Reimbursement Claim Reprocess Request Approved",
       "authored_by": "status sheet only",
       "statuses": [
         "response.complete"
       ],
       "stages": [
-        "Reimburstment Claim Reprocess Request Approved"
+        "Reimbursement Claim Reprocess Request Approved"
       ],
       "outcomes": []
     },
     {
       "code": "R253",
-      "name": "Reimburstment Claim Reprocess Request Rejected",
+      "name": "Reimbursement Claim Reprocess Request Rejected",
       "authored_by": "status sheet only",
       "statuses": [
         "response.complete"
       ],
       "stages": [
-        "Reimburstment Claim Reprocess Request Rejected"
+        "Reimbursement Claim Reprocess Request Rejected"
       ],
       "outcomes": []
     },
     {
       "code": "R254",
-      "name": "Reimburstment Claim Reprocess Request Queried",
+      "name": "Reimbursement Claim Reprocess Request Queried",
       "authored_by": "status sheet only",
       "statuses": [
         "request.initiated"
       ],
       "stages": [
-        "Reimburstment Claim Reprocess Request Queried"
+        "Reimbursement Claim Reprocess Request Queried"
       ],
       "outcomes": []
     },
     {
       "code": "R26",
-      "name": "Reimburstment Claim Approved",
+      "name": "Reimbursement Claim Approved",
       "authored_by": "status sheet only",
       "statuses": [
         "response.complete"
       ],
       "stages": [
-        "Reimburstment Claim Approved"
+        "Reimbursement Claim Approved"
       ],
       "outcomes": []
     },
     {
       "code": "R27",
-      "name": "Reimburstment Claim Queried",
+      "name": "Reimbursement Claim Queried",
       "authored_by": "status sheet only",
       "statuses": [
         "request.initiated"
       ],
       "stages": [
-        "Reimburstment Claim Queried"
+        "Reimbursement Claim Queried"
       ],
       "outcomes": []
     },
     {
       "code": "R28",
-      "name": "Reimburstment Claim Evaluation In Process",
+      "name": "Reimbursement Claim Evaluation In Process",
       "authored_by": "status sheet only",
       "statuses": [
         "response.partial"
       ],
       "stages": [
-        "Reimburstment Claim evaluation in process"
+        "Reimbursement Claim evaluation in process"
       ],
       "outcomes": []
     },
     {
       "code": "R291",
-      "name": "Reimburstment Claim Rejected",
+      "name": "Reimbursement Claim Rejected",
       "authored_by": "status sheet only",
       "statuses": [
         "response.complete"
       ],
       "stages": [
-        "Reimburstment Claim Rejected"
+        "Reimbursement Claim Rejected"
       ],
       "outcomes": []
     },
@@ -1185,7 +1185,7 @@
       "status": "request.initiated"
     },
     {
-      "stage": "PreAuth Reprocess(Resubmission) Initimation",
+      "stage": "PreAuth Reprocess(Resubmission) Intimation",
       "code": "121",
       "status": "request.initiated",
       "outcome": "NR"
@@ -1200,13 +1200,13 @@
       "stage": "Enhancement Query Ack Success",
       "code": "131",
       "status": "response.partial",
-      "outcome": "This should be handled as protocal error"
+      "outcome": "This should be handled as protocol error"
     },
     {
       "stage": "Enhancement Query Ack Failed",
       "code": "131",
       "status": "response.error",
-      "outcome": "This should be handled as protocal error"
+      "outcome": "This should be handled as protocol error"
     },
     {
       "stage": "Enhancement Query Response Submitted",
@@ -1214,7 +1214,7 @@
       "status": "response.complete"
     },
     {
-      "stage": "Final Bill Initimation",
+      "stage": "Final Bill Intimation",
       "code": "45",
       "status": "request.initiated",
       "outcome": "NR"
@@ -1223,13 +1223,13 @@
       "stage": "Final Bill Ack Success",
       "code": "45",
       "status": "response.partial",
-      "outcome": "queued This should be handled as protocal error"
+      "outcome": "queued This should be handled as protocol error"
     },
     {
       "stage": "Final Bill Ack Failed",
       "code": "45",
       "status": "response.error",
-      "outcome": "error This should be handled as protocal error"
+      "outcome": "error This should be handled as protocol error"
     },
     {
       "stage": "Claim Request Initiated",
@@ -1261,7 +1261,7 @@
       "stage": "PreAuth Query Ack Failed",
       "code": "18",
       "status": "response.error",
-      "outcome": "This should be handled as protocal error"
+      "outcome": "This should be handled as protocol error"
     },
     {
       "stage": "PreAuth Query Response Submitted",
@@ -1355,13 +1355,13 @@
       "stage": "Final Bill Query Ack Success",
       "code": "47",
       "status": "response.partial",
-      "outcome": "This should be handled as protocal error"
+      "outcome": "This should be handled as protocol error"
     },
     {
       "stage": "Final Bill Query Ack Failed",
       "code": "47",
       "status": "response.error",
-      "outcome": "This should be handled as protocal error"
+      "outcome": "This should be handled as protocol error"
     },
     {
       "stage": "Claim Request Queried",
@@ -1373,7 +1373,7 @@
       "stage": "Claim Request Queried",
       "code": "27",
       "status": "response.partial/complete",
-      "outcome": "This should be handled as protocal error"
+      "outcome": "This should be handled as protocol error"
     },
     {
       "stage": "Final Bill Deny",
@@ -1396,61 +1396,61 @@
       "stage": "Payment Notice Ack Success",
       "code": "30",
       "status": "response.partial",
-      "outcome": "This should be handled as protocal error"
+      "outcome": "This should be handled as protocol error"
     },
     {
       "stage": "Payment Notice Ack Failed",
       "code": "30",
       "status": "response.error",
-      "outcome": "This should be handled as protocal error"
+      "outcome": "This should be handled as protocol error"
     },
     {
-      "stage": "Reimburstment Claim Reprocess Requested",
+      "stage": "Reimbursement Claim Reprocess Requested",
       "code": "R122",
       "status": "request.initiated"
     },
     {
-      "stage": "Reimburstment Claim Submitted",
+      "stage": "Reimbursement Claim Submitted",
       "code": "R15",
       "status": "request.initiated"
     },
     {
-      "stage": "Reimburstment Claim Query Response Submitted",
+      "stage": "Reimbursement Claim Query Response Submitted",
       "code": "R151",
       "status": "response.complete"
     },
     {
-      "stage": "Reimburstment Claim Reprocess Request Approved",
+      "stage": "Reimbursement Claim Reprocess Request Approved",
       "code": "R252",
       "status": "response.complete"
     },
     {
-      "stage": "Reimburstment Claim Reprocess Request Rejected",
+      "stage": "Reimbursement Claim Reprocess Request Rejected",
       "code": "R253",
       "status": "response.complete"
     },
     {
-      "stage": "Reimburstment Claim Reprocess Request Queried",
+      "stage": "Reimbursement Claim Reprocess Request Queried",
       "code": "R254",
       "status": "request.initiated"
     },
     {
-      "stage": "Reimburstment Claim Approved",
+      "stage": "Reimbursement Claim Approved",
       "code": "R26",
       "status": "response.complete"
     },
     {
-      "stage": "Reimburstment Claim Queried",
+      "stage": "Reimbursement Claim Queried",
       "code": "R27",
       "status": "request.initiated"
     },
     {
-      "stage": "Reimburstment Claim evaluation in process",
+      "stage": "Reimbursement Claim evaluation in process",
       "code": "R28",
       "status": "response.partial"
     },
     {
-      "stage": "Reimburstment Claim Rejected",
+      "stage": "Reimbursement Claim Rejected",
       "code": "R291",
       "status": "response.complete"
     },

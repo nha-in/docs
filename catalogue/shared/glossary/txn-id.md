@@ -9,7 +9,7 @@ summary: >
   The identifier ABDM returns when a multi step exchange begins, sent
   back on every later call in that exchange.
 sources:
-  - file: catalogue/openapi/.raw/nha-2026-09-16/abha/M1 ABHA Swagger 1.yaml
+  - file: catalogue/hiecm/openapi/.raw/nha-2026-09-16/abha/M1 ABHA Swagger 1.yaml
     fetched: 2026-09-16
     hash: sha256:6ab5cfe77c29032fac5fbf25c8e28529f22951e459374fa618f570f15e25551b
 related: {}

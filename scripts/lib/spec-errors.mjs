@@ -1,14 +1,13 @@
 // Every error code a spec's response examples carry, plus the codes NHA lists
-// for the module in catalogue/openapi/hiecm/v3/errors/<module>.yaml. Nothing
+// for the module in catalogue/hiecm/openapi/v3/errors/<module>.yaml. Nothing
 // is invented: a code is here because an example on some operation returns it
 // or because NHA's own list for the module names it.
 import {existsSync, readFileSync, readdirSync} from 'node:fs';
-import {join, dirname} from 'node:path';
-import {fileURLToPath} from 'node:url';
+import {join} from 'node:path';
 import {parse} from 'yaml';
+import {specDir} from '../specs.mjs';
 
 const METHODS = ['get', 'post', 'put', 'patch', 'delete'];
-const OPENAPI = join(dirname(fileURLToPath(import.meta.url)), '..', '..', 'catalogue', 'openapi');
 
 /**
  * NHA's own code list for the module, from errors/<module>.yaml beside its
@@ -20,8 +19,10 @@ export function moduleErrorList(spec, where) {
   const module = spec?.info?.['x-portal']?.module;
   const platform = where?.platform ?? spec?.info?.['x-abdm-gateway'];
   if (!module || !platform) return null;
-  const versions = where?.version ? [where.version] : existsSync(join(OPENAPI, platform)) ? readdirSync(join(OPENAPI, platform)).sort((a, b) => a.localeCompare(b, undefined, {numeric: true})) : [];
-  const file = versions.map((v) => join(OPENAPI, platform, v, 'errors', `${module}.yaml`)).find((f) => existsSync(f));
+  const base = specDir(platform);
+  if (!base) return null;
+  const versions = where?.version ? [where.version] : readdirSync(base).filter((v) => !v.startsWith('.')).sort((a, b) => a.localeCompare(b, undefined, {numeric: true}));
+  const file = versions.map((v) => join(base, v, 'errors', `${module}.yaml`)).find((f) => existsSync(f));
   if (!file) return null;
   const list = parse(readFileSync(file, 'utf8')) ?? {};
   return {intro: list.intro ?? '', source: list.source ?? '', codes: list.codes ?? []};

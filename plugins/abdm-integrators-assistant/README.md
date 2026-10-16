@@ -10,6 +10,10 @@ Three layers, each answering one question.
 
 Commands under `commands/` are thin entry points into a skill or an agent, never a fourth layer.
 
+## First run
+
+Run `/abdm-start` after installing. It says what the skills, agents and commands do, offers prompts to start from, and asks what you are building. `scripts/build-skills.mjs` writes it from the skills manifest and the frontmatter beside it, so edit those rather than `commands/abdm-start.md`. Each skill's `SKILL.md` carries its own **Try asking** section from the same source.
+
 ## Agents
 
 Three, and only three.

@@ -25,6 +25,17 @@ When A10 answers not found, the G9 ledger no longer has the transaction. The leg
 
 After the polls the case stage is worked out again and stored on the claim, so `stage` and `sub_stage` reflect what the payer has just said.
 
+**Hooks owned by A4 and A5.** Four keys of the answer are computed by the pre-authorisation and claim services, not by this endpoint, and A17 only calls them. Their contracts, so A17 can be written before them and the services after:
+
+| Hook | Owner | Signature | Answers |
+|---|---|---|---|
+| `next_send` | A4 (`preauth_send_kind`), A5 (`claim_send_kind`) | `(case_id) -> kind or {"refused": "<reason>"}` | the kind the next send would be, or the verbatim refusal the send would meet; never raises |
+| `enhancement_lines` | A4 | `(case_id) -> [line rows]` | the D16 lines whose code is not in the last sent bundle (F8 "Read back"); `[]` when nothing is decided or nothing was added |
+| `required_documents` | A4 (`preauth`), A5 (`claim`) | `(case_id, stage) -> [{code, display, category, package_code, attached_document_id}]` | the ruling's requirements due at the stage, else the package master's, as S9 and S11 list them |
+| `required_forms` | A4 (`preauth`), A5 (`claim`) | `(case_id, stage) -> [{url, title, questions}]` | the forms the stage has to carry by the D12 rule (ruling, packages' STG forms, policy-wide forms, the consent form when no token is held) |
+
+Before a hook exists (phase order, L3), A17 answers `next_send` as `{"refused": "not available yet"}`, `enhancement_lines` as `[]`, and `required_documents` and `required_forms` as `{"preauth": [], "claim": []}`, so drivers written against the shape keep working and a missing hook is visible rather than a crash.
+
 #### A17Q. REQUEST
 
 No body, no query parameters.
@@ -37,7 +48,7 @@ GET /claims/42/state
 
 `200` with a JSON object. An unknown claim returns `404` `{"error": "No such claim"}`.
 
-Row objects are the stored rows with every column, or `null` when the row does not exist. Data: [D9. claim](../database/D9-claim.md), D10. claim_plan (in nhcx-preauth), D11. claim_plan_benefit (in nhcx-preauth), D4. encounter (in nhcx-preauth), D16. claim_line (in nhcx-preauth), D13. claim_auth (in nhcx-coverage), D15. claim_auth_requirement (in nhcx-coverage), D12. claim_plan_form (in nhcx-preauth), D28. claim_document (in nhcx-preauth), D18. claim_preauth (in nhcx-preauth), D19. claim_predetermination (in nhcx-preauth), D23. claim_query (in nhcx-preauth), [D20. claim_submission](../database/D20-claim-submission.md), [D21. claim_payment](../database/D21-claim-payment.md), D29. claim_enquiry (in nhcx-preauth).
+Row objects are the stored rows with every column, or `null` when the row does not exist. Data: [D9. claim](../database/D9-claim.md), D10. claim_plan (in nhcx-coverage), D11. claim_plan_benefit (in nhcx-coverage), D4. encounter (in nhcx-coverage), D16. claim_line (in nhcx-preauth), D13. claim_auth (in nhcx-coverage), D15. claim_auth_requirement (in nhcx-coverage), D12. claim_plan_form (in nhcx-coverage), D28. claim_document (in nhcx-coverage), D18. claim_preauth (in nhcx-preauth), D19. claim_predetermination (in nhcx-preauth), D23. claim_query (in nhcx-preauth), [D20. claim_submission](../database/D20-claim-submission.md), [D21. claim_payment](../database/D21-claim-payment.md), D29. claim_enquiry (in nhcx-preauth).
 
 | Key | Type | Content |
 |---|---|---|
@@ -55,7 +66,7 @@ Row objects are the stored rows with every column, or `null` when the row does n
 | `preauth` | object or null | The pre-authorisation row. |
 | `preauth_items` | array | The payer's per-item verdict on the pre-authorisation (see below). |
 | `next_send` | object | `preauth` and `claim`: the kind of the next send, or `{"refused": "<reason>"}` when nothing may be sent. Pre-authorisation kinds: `preauth`, `preauth_query_response`, `enhancement`, `enhancement_resubmit`. Claim kinds: `claim`, `claim_query_response`, `claim_resubmit`. |
-| `adapter` | string | The payer adapter's key (for example `pmjay`, `xyz`, `generic`). |
+| `adapter` | string | The payer adapter's key (for example `pmjay`, `kyrocare`, `generic`). |
 | `desk` | string or null | Where the payer's decision is taken: `nhcx-payer-service`, `irdai-payer`, or `null` for none (see A14). |
 | `predeterminations` | array | Quote rows, newest first. |
 | `enhancement_lines` | array | Lines quoted since the pre-authorisation was decided. Empty when nothing was added or nothing is decided yet. |

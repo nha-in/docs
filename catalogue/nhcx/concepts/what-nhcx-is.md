@@ -59,7 +59,7 @@ related:
   - shared.glossary.fhir
   - shared.glossary.uhi
   - shared.glossary.hie-cm
-  - shared.glossary.hmis
+  - hiecm.glossary.hmis
   - nhcx.glossary.payer
   - nhcx.glossary.provider
   - nhcx.glossary.tpa

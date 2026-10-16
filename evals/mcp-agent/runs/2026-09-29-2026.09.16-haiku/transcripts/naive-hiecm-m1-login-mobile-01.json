@@ -1,0 +1,834 @@
+{
+  "case_id": "naive-hiecm-m1-login-mobile-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "patient already has abha, how do I log them in with their mobile no"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_018aqq7MuTW5Q1ohYnXeFtTa",
+            "Name": "search",
+            "Input": {
+              "query": "login patient mobile number ABHA already exists",
+              "kind": "atom"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "login patient mobile number ABHA already exists",
+            "kind": "atom"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#abha",
+                "id": "shared.glossary.abha",
+                "summary": "The patient's identity in ABDM, in two forms that look alike and are not: a 14 digit ABHA number and a readable ABHA address.",
+                "title": "ABHA",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.abha-identifiers",
+                "summary": "NRCeS tells you apart the two health identifiers a person has by the identifier type code, not by a namespace URI, and it publishes no namespace URI for eith...",
+                "title": "Carrying an ABHA number and an ABHA address on a FHIR Patient",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-link-de-link/01-m1-post-v3-profile-benefit-linkanddelink-x-token#m1-benefit-link-or-delink",
+                "id": "hiecm.endpoint.m1-benefit-link-or-delink",
+                "summary": "Links or unlinks the programme named in the BENEFIT_NAME header for an ABHA.",
+                "title": "Link or unlink a benefit record from an ABHA",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/errors#abdm-1094",
+                "id": "hiecm.error.abdm-1094",
+                "summary": "Your client or the person's token is not allowed to do what the call tried, and the message says which of three cases applies.",
+                "title": "ABDM-1094, access to this feature is refused",
+                "type": "error"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.profile-and-example-together",
+                "summary": "A NRCeS profile gives the cardinalities and a NRCeS example gives the shape, and a generator written from either one alone is wrong in a different way.",
+                "title": "Read the profile and the example together, because each omits what the other carries",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/07-m3-get-data-flow-v3-health-information-request-status-tra-550104#p3-request-status",
+                "id": "hiecm.endpoint.p3-request-status",
+                "summary": "Check how far a health information request has got, by its transaction id.",
+                "title": "Get the status of a health information request",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p4/endpoints/p4-locker/03-p4-get-subscription-requests-v3-patients-lockers-lockerid#p3-patient-locker-details-by-locker-id",
+                "id": "hiecm.endpoint.p3-patient-locker-details-by-locker-id",
+                "summary": "Fetch one health locker's settings for the logged-in person.",
+                "title": "Get a health locker by its id",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p4/endpoints/p4-locker/01-p4-post-subscription-requests-v3-setup-locker#p3-setup-locker",
+                "id": "hiecm.endpoint.p3-setup-locker",
+                "summary": "Set up a health locker for the logged-in person.",
+                "title": "Set up a health locker",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/02-m2-post-data-flow-v3-health-information-hip-on-request#m2-hip-health-information-on-request",
+                "id": "hiecm.endpoint.m2-hip-health-information-on-request",
+                "summary": "The HIP acknowledges a health information request, then encrypts the records and pushes them to the requester.",
+                "title": "Acknowledge a health information data request",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/05-m3-post-v3-hiu-health-information-on-request#m3-on-health-information-request",
+                "id": "hiecm.callback.m3-on-health-information-request",
+                "summary": "ABDM acknowledges an HIU's data request with its transaction id and status; the records come separately.",
+                "title": "Acknowledgement of a health information request",
+                "type": "callback"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01ToBK334xgiDxja9Ui8QkaM",
+            "Name": "search",
+            "Input": {
+              "query": "user authentication mobile OTP existing ABHA",
+              "kind": "operation"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "user authentication mobile OTP existing ABHA",
+            "kind": "operation"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-post-data-flow-v3-health-information-request",
+                "id": "m3_post_data_flow_v3_health_information_request",
+                "summary": "Health information data request from HIU.",
+                "title": "POST /api/hiecm/data-flow/v3/health-information/request",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-post-data-flow-v3-health-information-hip-on-request",
+                "id": "m2_post_data_flow_v3_health_information_hip_on_request",
+                "summary": "Health information data request acknowledgement from HIP.",
+                "title": "POST /api/hiecm/data-flow/v3/health-information/hip/on-request",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p4/endpoints/p4-get-gateway-v3-health-lockers",
+                "id": "p4_get_gateway_v3_health_lockers",
+                "summary": "This API is invoked to fetch the record with health locker enabled provider details.",
+                "title": "GET /api/hiecm/gateway/v3/health-lockers",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-get-data-flow-v3-health-information-request-status-tra-550104",
+                "id": "m3_get_data_flow_v3_health_information_request_status_tra_550104",
+                "summary": "API to get the current status of the Health Information Request.",
+                "title": "GET /api/hiecm/data-flow/v3/health-information/request/status/{transaction-id}",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m4/endpoints/m4-post-v1-forgot-hprid-aadhaar",
+                "id": "m4_post_v1_forgot_hprid_aadhaar",
+                "summary": "Retrieval Health Id By Aadhaar",
+                "title": "POST /v1/forgot/hprId/aadhaar",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m4/endpoints/m4-post-v1-forgot-hprid-mobile",
+                "id": "m4_post_v1_forgot_hprid_mobile",
+                "summary": "Retrieval Health Id By Mobile",
+                "title": "POST /v1/forgot/hprId/mobile",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-post-data-flow-v3-health-information-notify",
+                "id": "m2_post_data_flow_v3_health_information_notify",
+                "summary": "Notifications corresponding to events during data flow",
+                "title": "POST /api/hiecm/data-flow/v3/health-information/notify",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-post-data-flow-v3-health-information-notify",
+                "id": "m3_post_data_flow_v3_health_information_notify",
+                "summary": "Notifications corresponding to events during data flow",
+                "title": "POST /api/hiecm/data-flow/v3/health-information/notify",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-post-v3-token-generate-token",
+                "id": "m2_post_v3_token_generate_token",
+                "summary": "API used to generate link token to link the health records",
+                "title": "POST /api/hiecm/v3/token/generate-token",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p4/endpoints/p4-get-subscription-requests-v3-patients-lockers",
+                "id": "p4_get_subscription_requests_v3_patients_lockers",
+                "summary": "The API provides the list of health locker that the ABHA address is subscribed to.",
+                "title": "GET /api/hiecm/subscription-requests/v3/patients/lockers",
+                "type": "operation"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01NFWM5E4EXVKG79qNdVEaiW",
+            "Name": "search",
+            "Input": {
+              "query": "patient login authenticate mobile number OTP",
+              "kind": "atom"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "patient login authenticate mobile number OTP",
+            "kind": "atom"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_013Z8vTUeGtba7TVwDC5aZyR",
+            "Name": "search",
+            "Input": {
+              "query": "user auth login generate OTP verify",
+              "kind": "operation"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "user auth login generate OTP verify",
+            "kind": "operation"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01Rf7YrNT8E1jF1WmSQhxjCf",
+            "Name": "search",
+            "Input": {
+              "query": "gateway authenticate user token",
+              "kind": "operation"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "gateway authenticate user token",
+            "kind": "operation"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01WHtjfpTGpQ12dNhRaEKYSf",
+            "Name": "search",
+            "Input": {
+              "query": "authentication login flow",
+              "kind": "atom"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "authentication login flow",
+            "kind": "atom"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/nhcx/v1/roles/provider/biometric-authentication",
+                "id": "nhcx.flow.biometric-fingerprint-iris",
+                "summary": "Prove that a scheme beneficiary is physically at your hospital with a fingerprint or iris scan, and get the short-lived user token their pre-authorisation an...",
+                "title": "Authenticate a beneficiary by fingerprint or iris",
+                "type": "flow"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01Xfv7SusgF8UQ8CegQfJfdy",
+            "Name": "search",
+            "Input": {
+              "query": "user consent approval",
+              "kind": "atom"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "user consent approval",
+            "kind": "atom"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/p3#p3-subscribe-and-auto-approve",
+                "id": "hiecm.flow.p3-subscribe-and-auto-approve",
+                "summary": "Ask a person's permission to hear about changes to their health account, then set the policy that stops them approving a request every time a hospital adds a...",
+                "title": "Subscribe to a user's account and set an auto approval policy",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/01-p2-post-consent-v3-auto-approve#p3-consent-auto-approve",
+                "id": "hiecm.endpoint.p3-consent-auto-approve",
+                "summary": "Let consent requests from one health information user be approved automatically, within limits the person sets.",
+                "title": "Set an auto approval policy",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#phr",
+                "id": "shared.glossary.phr",
+                "summary": "The application a patient uses to see consent requests and to approve, deny or revoke them.",
+                "title": "PHR, personal health record application",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/error-codes#payr",
+                "id": "nhcx.error.payr-1272",
+                "summary": "The payer refused the request because the patient's biometric user token was not valid.",
+                "title": "PAYR-1272: biometric user token is not valid",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/p3#phr-subscriptions",
+                "id": "hiecm.concept.phr-subscriptions",
+                "summary": "A subscription tells a personal health record app when a record is linked to a person's address, and the person must agree to it first.",
+                "title": "Subscriptions, and why a personal health record application needs one",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/error-codes#payr",
+                "id": "nhcx.error.payr-1271",
+                "summary": "The payer refused a new preauthorisation because a question in the consent questionnaire had no answer.",
+                "title": "PAYR-1271: consent questionnaire answer missing",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m1#m1-create-abha-demographic-auth",
+                "id": "hiecm.flow.m1-create-abha-demographic-auth",
+                "summary": "Create an ABHA by matching name, date of birth and gender against Aadhaar with no OTP, for approved integrators only.",
+                "title": "Create an ABHA using Aadhaar demographic authentication",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/error-codes#payr",
+                "id": "nhcx.error.payr-1256",
+                "summary": "The payer refused a new preauthorisation because it carried neither the patient's biometric authentication nor the signed consent questionnaire.",
+                "title": "PAYR-1256: no biometric authentication and no consent questionnaire",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/roles/provider/pmjay-provider",
+                "id": "nhcx.flow.pmjay-patient-to-cashless",
+                "summary": "Take a PMJAY patient from registration to an approved preauthorisation: find the payer and policy, fetch the plan, check eligibility, authenticate, then submit.",
+                "title": "Take a PMJAY patient from registration to cashless treatment",
+                "type": "flow"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01K8fd6uXHaVMmKKJRFUjTG9",
+            "Name": "search",
+            "Input": {
+              "query": "gateway token user",
+              "kind": "operation"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "gateway token user",
+            "kind": "operation"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/scan-and-pay/endpoints/scan-and-pay-get-scan-gateway-v3-patient-scan-pay-details",
+                "id": "scan-and-pay_get_scan_gateway_v3_patient_scan_pay_details",
+                "summary": "This is retrieve the all the details of the user.",
+                "title": "GET /api/hiecm/scan-gateway/v3/patient/scan-pay/details",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/scan-and-pay/endpoints/scan-and-pay-post-scan-gateway-v3-patient-share-open-order",
+                "id": "scan-and-pay_post_scan_gateway_v3_patient_share_open_order",
+                "summary": "This API will be invoked from the integrator application (any PHR application, just like ABHA) to share the user/patient payment details with HMIS/LIMS.",
+                "title": "POST /api/hiecm/scan-gateway/v3/patient/share/open-order",
+                "type": "operation"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01KzwVZzk6SdZ77ryZ33ZJCv",
+            "Name": "search",
+            "Input": {
+              "query": "link account mobile verify patient",
+              "kind": "atom"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "link account mobile verify patient",
+            "kind": "atom"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_016Ls6XhvRDHNZvntqDopqBc",
+            "Name": "search",
+            "Input": {
+              "query": "patient identify verify",
+              "kind": "flow"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "patient identify verify",
+            "kind": "flow"
+          },
+          "output": "kind \"flow\" is not one of atom, operation, fhir_profile"
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01RkSqstmmRDPoiTZGGCkYXg",
+            "Name": "search",
+            "Input": {
+              "query": "linked mobile number link mobile",
+              "kind": "atom"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "linked mobile number link mobile",
+            "kind": "atom"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-link-abha-number-abha-otp/03-p2-post-v3-phr-app-login-profile-link#p1-process-link-request-via-abha-number",
+                "id": "hiecm.endpoint.p1-process-link-request-via-abha-number",
+                "summary": "Links the ABHA number to the signed in ABHA address after the OTP to the ABHA number's mobile is verified.",
+                "title": "Process Link Request via ABHA OTP",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/02-m1-post-v3-enrollment-enrol-byaadhaar-otp#m1-enrolment-by-aadhaar",
+                "id": "hiecm.endpoint.m1-enrolment-by-aadhaar",
+                "summary": "Verifies the Aadhaar OTP and creates the ABHA number, or returns the one already linked to that Aadhaar.",
+                "title": "Create an ABHA from a verified Aadhaar OTP",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/p2#p2-discover-and-link",
+                "id": "hiecm.flow.p2-discover-and-link",
+                "summary": "Let a person search for a facility they visited, discover the records it holds for them, and attach those records to their health address after an OTP confir...",
+                "title": "Find records held elsewhere and link them",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/api/registry/endpoints/registry-participant-get-policies",
+                "id": "nhcx.endpoint.participant-get-policies",
+                "summary": "Look up the policies linked to a beneficiary by health account number, member id or mobile number, to learn whom to address.",
+                "title": "POST /participant/get/policies",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/registries/policy",
+                "id": "nhcx.flow.policy-link-and-delink",
+                "summary": "As an insurer or claims administrator, record which beneficiaries hold which products so that hospitals can find their cover, and remove the record when it e...",
+                "title": "Link and de-link an ABHA and a policy",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/p1#p1-create-abha-address",
+                "id": "hiecm.flow.p1-create-abha-address",
+                "summary": "Register a person in your own health application by mobile number or by an existing 14 digit health account number, and give them the address the rest of the...",
+                "title": "Create an ABHA address in a PHR application",
+                "type": "flow"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.test.payer-uc-02",
+                "summary": "Prove that your insurance system can read back the policies linked to a member, exactly as hospitals will see them.",
+                "title": "Payer sandbox exit use case 2: Get policy",
+                "type": "test"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.test.provider-uc-02",
+                "summary": "Prove that your hospital system can look up the insurance policies a payer has linked to a patient, before any claim work starts.",
+                "title": "Provider sandbox exit use case 2: Get policy",
+                "type": "test"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/api/registry/endpoints/registry-participant-link-abha-policy",
+                "id": "nhcx.endpoint.participant-link-abha-policy",
+                "summary": "As a payer, link a beneficiary's health account number and member id to the products they hold, so hospitals can find the policy.",
+                "title": "POST /participant/link/abha/policy",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/api/registry/endpoints/registry-v2-participant-get-policies",
+                "id": "nhcx.endpoint.v2-participant-get-policies",
+                "summary": "The second path for looking up a beneficiary's linked policies; it takes the same body as the main lookup.",
+                "title": "POST /v2/participant/get/policies",
+                "type": "endpoint"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_014enWchZyBedYoa1GRNXzto",
+            "Name": "search",
+            "Input": {
+              "query": "patient record lookup fetch",
+              "kind": "operation"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "patient record lookup fetch",
+            "kind": "operation"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01V7q2n455hwZjep8pfRxB1w",
+            "Name": "get",
+            "Input": {
+              "id": "hiecm.flow.p1-create-abha-address"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "hiecm.flow.p1-create-abha-address"
+          },
+          "output": {
+            "body": "# Create an ABHA address in a PHR application\n\n## In plain words\n\nA person does not need an [ABHA number](/docs/hiecm/v3/getting-started/glossary#abha-number),\nand does not need Aadhaar, to get an ABHA address here. A mobile number and\nthe OTP sent to it are enough. What that buys is a Self-Declared profile: an\naddress the network can route to, with no\n[KYC](/docs/hiecm/v3/getting-started/glossary#kyc) behind it and no ABHA\nnumber until the person links one later.\n\n| Path | Validated by | Profile details | Result |\n| --- | --- | --- | --- |\n| Mobile number | Mobile [OTP](/docs/hiecm/v3/getting-started/glossary#otp) | The user types them | Self-Declared, no [KYC](/docs/hiecm/v3/getting-started/glossary#kyc) |\n| 14 digit ABHA number | Aadhaar OTP or ABHA OTP | Returned by the ABHA system | KYC Verified |\n| Aadhaar number, with no ABHA number yet | Aadhaar OTP, which creates the ABHA number first | Returned by the ABHA system | KYC Verified |\n\n```mermaid\nflowchart TD\n    A[\"User picks a path\"] --> B{\"Mobile number, ABHA number or Aadhaar number?\"}\n    B -- \"Mobile number\" --> C[\"Verify by mobile OTP\"]\n    C --> D[\"User types first name, year of birth, gender, address, state, district, pin code\"]\n    B -- \"ABHA number\" --> E[\"Verify by Aadhaar OTP or ABHA OTP\"]\n    E --> F[\"Profile details come back from the ABHA system\"]\n    B -- \"Aadhaar number\" --> K[\"Create an ABHA number by Aadhaar OTP\"]\n    K --> F\n    D --> G[\"Show the ABHA addresses already linked to this mobile or number\"]\n    F --> G\n    G --> H{\"An address already exists?\"}\n    H -- \"Yes\" --> I[\"User picks one\"]\n    H -- \"No\" --> J[\"User creates a new address\"]\n```\n\nAfter validation on any path, show the ABHA addresses already linked to that\nmobile number or ABHA number. The user then picks one instead of creating a\nduplicate.\n\nA Self-Declared profile needs a \"Link ABHA number\" action. The user enters the\n14 digit number and validates by Aadhaar OTP or ABHA OTP. Profile details\nthen follow the ABHA number, and the status changes to KYC Verified.\n\n## Before you start\n\nA gateway session token, the PHR certificate from `GET /abha/api/v3/phr/app/login/public/certificate`, and secure storage for the refresh token, because login follows at once.\n\n## What happens\n\nRequest the OTP at `/abha/api/v3/phr/app/enrollment/request/otp`, with scope `abha-address-enroll` and `mobile-verify` on the mobile path, and verify it at `/abha/api/v3/phr/app/enrollment/verify`. List the addresses already linked and let the person pick one. Only when there is none, offer suggestions from `/abha/api/v3/phr/app/enrollment/suggestion`, check the choice with `/abha/api/v3/phr/app/enrollment/isExists`, and create it with `/abha/api/v3/phr/app/enrollment/enrol`.\n\n## How you know it worked\n\nThe person holds an address such as `name@abdm`, the profile shows Self-Declared or KYC Verified by the path taken, and listing the addresses on that mobile or ABHA number now returns it.\n\n## When it goes wrong\n\nA duplicate address, because the existing addresses were not shown first. A mandatory field missing on the mobile path, refused as validation: first name, year of birth, gender, address, state, district and pin code are the mandatory set, and day and month of birth are not in it. An expired OTP: resend unlocks after 60 seconds, so say so on the screen.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/milestones/p1#p1-create-abha-address",
+            "gateway": "hiecm",
+            "id": "hiecm.flow.p1-create-abha-address",
+            "milestone": "P1",
+            "summary": "Register a person in your own health application by mobile number or by an existing 14 digit health account number, and give them the address the rest of the network will know them by.",
+            "title": "Create an ABHA address in a PHR application",
+            "type": "flow"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "To log in a patient who already has an ABHA using their mobile number, use the **[Create an ABHA address in a PHR application](https://abdm-docs.eka.care/docs/hiecm/v3/milestones/p1#p1-create-abha-address)** flow. Here's the process:\n\n**For mobile number path:**\n\n1. **Request OTP** → `/abha/api/v3/phr/app/enrollment/request/otp` with scopes `abha-address-enroll` and `mobile-verify`\n2. **Verify OTP** → `/abha/api/v3/phr/app/enrollment/verify`\n3. **List existing ABHA addresses** linked to that mobile — this is key: show them what addresses they already have\n4. **User picks an existing address** (don't create a duplicate)\n\n**Key insight:** After OTP verification, always check for existing ABHA addresses on that mobile number first. The portal emphasizes: *\"After validation on any path, show the ABHA addresses already linked to that mobile number...The user then picks one instead of creating a duplicate.\"*\n\nIf they don't have an existing address linked to that mobile (unlikely if they already have an ABHA), you'd offer to link their existing 14-digit ABHA number via Aadhaar OTP or ABHA OTP instead.\n\nThe required endpoints are documented in the P1 milestone section of the HIE-CM getting started guide.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "To log in a patient who already has an ABHA using their mobile number, use the **[Create an ABHA address in a PHR application](https://abdm-docs.eka.care/docs/hiecm/v3/milestones/p1#p1-create-abha-address)** flow. Here's the process:\n\n**For mobile number path:**\n\n1. **Request OTP** → `/abha/api/v3/phr/app/enrollment/request/otp` with scopes `abha-address-enroll` and `mobile-verify`\n2. **Verify OTP** → `/abha/api/v3/phr/app/enrollment/verify`\n3. **List existing ABHA addresses** linked to that mobile — this is key: show them what addresses they already have\n4. **User picks an existing address** (don't create a duplicate)\n\n**Key insight:** After OTP verification, always check for existing ABHA addresses on that mobile number first. The portal emphasizes: *\"After validation on any path, show the ABHA addresses already linked to that mobile number...The user then picks one instead of creating a duplicate.\"*\n\nIf they don't have an existing address linked to that mobile (unlikely if they already have an ABHA), you'd offer to link their existing 14-digit ABHA number via Aadhaar OTP or ABHA OTP instead.\n\nThe required endpoints are documented in the P1 milestone section of the HIE-CM getting started guide.",
+  "sources": [
+    {
+      "id": "hiecm.flow.p1-create-abha-address",
+      "title": "Create an ABHA address in a PHR application",
+      "url": "/docs/hiecm/v3/milestones/p1#p1-create-abha-address"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#abha\",\"id\":\"shared.glossary.abha\",\"summary\":\"The patient's identity in ABDM, in two forms that look alike and are not: a 14 digit ABHA number and a readable ABHA address.\",\"title\":\"ABHA\",\"type\":\"glossary\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.abha-identifiers\",\"summary\":\"NRCeS tells you apart the two health identifiers a person has by the identifier type code, not by a namespace URI, and it publishes no namespace URI for eith...\",\"title\":\"Carrying an ABHA number and an ABHA address on a FHIR Patient\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-benefit-link-de-link/01-m1-post-v3-profile-benefit-linkanddelink-x-token#m1-benefit-link-or-delink\",\"id\":\"hiecm.endpoint.m1-benefit-link-or-delink\",\"summary\":\"Links or unlinks the programme named in the BENEFIT_NAME header for an ABHA.\",\"title\":\"Link or unlink a benefit record from an ABHA\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/errors#abdm-1094\",\"id\":\"hiecm.error.abdm-1094\",\"summary\":\"Your client or the person's token is not allowed to do what the call tried, and the message says which of three cases applies.\",\"title\":\"ABDM-1094, access to this feature is refused\",\"type\":\"error\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.profile-and-example-together\",\"summary\":\"A NRCeS profile gives the cardinalities and a NRCeS example gives the shape, and a generator written from either one alone is wrong in a different way.\",\"title\":\"Read the profile and the example together, because each omits what the other carries\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/07-m3-get-data-flow-v3-health-information-request-status-tra-550104#p3-request-status\",\"id\":\"hiecm.endpoint.p3-request-status\",\"summary\":\"Check how far a health information request has got, by its transaction id.\",\"title\":\"Get the status of a health information request\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p4/endpoints/p4-locker/03-p4-get-subscription-requests-v3-patients-lockers-lockerid#p3-patient-locker-details-by-locker-id\",\"id\":\"hiecm.endpoint.p3-patient-locker-details-by-locker-id\",\"summary\":\"Fetch one health locker's settings for the logged-in person.\",\"title\":\"Get a health locker by its id\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p4/endpoints/p4-locker/01-p4-post-subscription-requests-v3-setup-locker#p3-setup-locker\",\"id\":\"hiecm.endpoint.p3-setup-locker\",\"summary\":\"Set up a health locker for the logged-in person.\",\"title\":\"Set up a health locker\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/02-m2-post-data-flow-v3-health-information-hip-on-request#m2-hip-health-information-on-request\",\"id\":\"hiecm.endpoint.m2-hip-health-information-on-request\",\"summary\":\"The HIP acknowledges a health information request, then encrypts the records and pushes them to the requester.\",\"title\":\"Acknowledge a health information data request\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/05-m3-post-v3-hiu-health-information-on-request#m3-on-health-information-request\",\"id\":\"hiecm.callback.m3-on-health-information-request\",\"summary\":\"ABDM acknowledges an HIU's data request with its transaction id and status; the records come separately.\",\"title\":\"Acknowledgement of a health information request\",\"type\":\"callback\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-post-data-flow-v3-health-information-request\",\"id\":\"m3_post_data_flow_v3_health_information_request\",\"summary\":\"Health information data request from HIU.\",\"title\":\"POST /api/hiecm/data-flow/v3/health-information/request\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-post-data-flow-v3-health-information-hip-on-request\",\"id\":\"m2_post_data_flow_v3_health_information_hip_on_request\",\"summary\":\"Health information data request acknowledgement from HIP.\",\"title\":\"POST /api/hiecm/data-flow/v3/health-information/hip/on-request\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/p4/endpoints/p4-get-gateway-v3-health-lockers\",\"id\":\"p4_get_gateway_v3_health_lockers\",\"summary\":\"This API is invoked to fetch the record with health locker enabled provider details.\",\"title\":\"GET /api/hiecm/gateway/v3/health-lockers\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-get-data-flow-v3-health-information-request-status-tra-550104\",\"id\":\"m3_get_data_flow_v3_health_information_request_status_tra_550104\",\"summary\":\"API to get the current status of the Health Information Request.\",\"title\":\"GET /api/hiecm/data-flow/v3/health-information/request/status/{transaction-id}\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m4/endpoints/m4-post-v1-forgot-hprid-aadhaar\",\"id\":\"m4_post_v1_forgot_hprid_aadhaar\",\"summary\":\"Retrieval Health Id By Aadhaar\",\"title\":\"POST /v1/forgot/hprId/aadhaar\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m4/endpoints/m4-post-v1-forgot-hprid-mobile\",\"id\":\"m4_post_v1_forgot_hprid_mobile\",\"summary\":\"Retrieval Health Id By Mobile\",\"title\":\"POST /v1/forgot/hprId/mobile\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-post-data-flow-v3-health-information-notify\",\"id\":\"m2_post_data_flow_v3_health_information_notify\",\"summary\":\"Notifications corresponding to events during data flow\",\"title\":\"POST /api/hiecm/data-flow/v3/health-information/notify\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-post-data-flow-v3-health-information-notify\",\"id\":\"m3_post_data_flow_v3_health_information_notify\",\"summary\":\"Notifications corresponding to events during data flow\",\"title\":\"POST /api/hiecm/data-flow/v3/health-information/notify\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-post-v3-token-generate-token\",\"id\":\"m2_post_v3_token_generate_token\",\"summary\":\"API used to generate link token to link the health records\",\"title\":\"POST /api/hiecm/v3/token/generate-token\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/p4/endpoints/p4-get-subscription-requests-v3-patients-lockers\",\"id\":\"p4_get_subscription_requests_v3_patients_lockers\",\"summary\":\"The API provides the list of health locker that the ABHA address is subscribed to.\",\"title\":\"GET /api/hiecm/subscription-requests/v3/patients/lockers\",\"type\":\"operation\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/nhcx/v1/roles/provider/biometric-authentication\",\"id\":\"nhcx.flow.biometric-fingerprint-iris\",\"summary\":\"Prove that a scheme beneficiary is physically at your hospital with a fingerprint or iris scan, and get the short-lived user token their pre-authorisation an...\",\"title\":\"Authenticate a beneficiary by fingerprint or iris\",\"type\":\"flow\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/milestones/p3#p3-subscribe-and-auto-approve\",\"id\":\"hiecm.flow.p3-subscribe-and-auto-approve\",\"summary\":\"Ask a person's permission to hear about changes to their health account, then set the policy that stops them approving a request every time a hospital adds a...\",\"title\":\"Subscribe to a user's account and set an auto approval policy\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/01-p2-post-consent-v3-auto-approve#p3-consent-auto-approve\",\"id\":\"hiecm.endpoint.p3-consent-auto-approve\",\"summary\":\"Let consent requests from one health information user be approved automatically, within limits the person sets.\",\"title\":\"Set an auto approval policy\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#phr\",\"id\":\"shared.glossary.phr\",\"summary\":\"The application a patient uses to see consent requests and to approve, deny or revoke them.\",\"title\":\"PHR, personal health record application\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/nhcx/v1/reference/error-codes#payr\",\"id\":\"nhcx.error.payr-1272\",\"summary\":\"The payer refused the request because the patient's biometric user token was not valid.\",\"title\":\"PAYR-1272: biometric user token is not valid\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/p3#phr-subscriptions\",\"id\":\"hiecm.concept.phr-subscriptions\",\"summary\":\"A subscription tells a personal health record app when a record is linked to a person's address, and the person must agree to it first.\",\"title\":\"Subscriptions, and why a personal health record application needs one\",\"type\":\"concept\"},{\"doc_url\":\"/docs/nhcx/v1/reference/error-codes#payr\",\"id\":\"nhcx.error.payr-1271\",\"summary\":\"The payer refused a new preauthorisation because a question in the consent questionnaire had no answer.\",\"title\":\"PAYR-1271: consent questionnaire answer missing\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m1#m1-create-abha-demographic-auth\",\"id\":\"hiecm.flow.m1-create-abha-demographic-auth\",\"summary\":\"Create an ABHA by matching name, date of birth and gender against Aadhaar with no OTP, for approved integrators only.\",\"title\":\"Create an ABHA using Aadhaar demographic authentication\",\"type\":\"flow\"},{\"doc_url\":\"/docs/nhcx/v1/reference/error-codes#payr\",\"id\":\"nhcx.error.payr-1256\",\"summary\":\"The payer refused a new preauthorisation because it carried neither the patient's biometric authentication nor the signed consent questionnaire.\",\"title\":\"PAYR-1256: no biometric authentication and no consent questionnaire\",\"type\":\"error\"},{\"doc_url\":\"/docs/nhcx/v1/roles/provider/pmjay-provider\",\"id\":\"nhcx.flow.pmjay-patient-to-cashless\",\"summary\":\"Take a PMJAY patient from registration to an approved preauthorisation: find the payer and policy, fetch the plan, check eligibility, authenticate, then submit.\",\"title\":\"Take a PMJAY patient from registration to cashless treatment\",\"type\":\"flow\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/api/scan-and-pay/endpoints/scan-and-pay-get-scan-gateway-v3-patient-scan-pay-details\",\"id\":\"scan-and-pay_get_scan_gateway_v3_patient_scan_pay_details\",\"summary\":\"This is retrieve the all the details of the user.\",\"title\":\"GET /api/hiecm/scan-gateway/v3/patient/scan-pay/details\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/scan-and-pay/endpoints/scan-and-pay-post-scan-gateway-v3-patient-share-open-order\",\"id\":\"scan-and-pay_post_scan_gateway_v3_patient_share_open_order\",\"summary\":\"This API will be invoked from the integrator application (any PHR application, just like ABHA) to share the user/patient payment details with HMIS/LIMS.\",\"title\":\"POST /api/hiecm/scan-gateway/v3/patient/share/open-order\",\"type\":\"operation\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\nkind \"flow\" is not one of atom, operation, fhir_profile\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-link-abha-number-abha-otp/03-p2-post-v3-phr-app-login-profile-link#p1-process-link-request-via-abha-number\",\"id\":\"hiecm.endpoint.p1-process-link-request-via-abha-number\",\"summary\":\"Links the ABHA number to the signed in ABHA address after the OTP to the ABHA number's mobile is verified.\",\"title\":\"Process Link Request via ABHA OTP\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/02-m1-post-v3-enrollment-enrol-byaadhaar-otp#m1-enrolment-by-aadhaar\",\"id\":\"hiecm.endpoint.m1-enrolment-by-aadhaar\",\"summary\":\"Verifies the Aadhaar OTP and creates the ABHA number, or returns the one already linked to that Aadhaar.\",\"title\":\"Create an ABHA from a verified Aadhaar OTP\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/p2#p2-discover-and-link\",\"id\":\"hiecm.flow.p2-discover-and-link\",\"summary\":\"Let a person search for a facility they visited, discover the records it holds for them, and attach those records to their health address after an OTP confir...\",\"title\":\"Find records held elsewhere and link them\",\"type\":\"flow\"},{\"doc_url\":\"/docs/nhcx/v1/api/registry/endpoints/registry-participant-get-policies\",\"id\":\"nhcx.endpoint.participant-get-policies\",\"summary\":\"Look up the policies linked to a beneficiary by health account number, member id or mobile number, to learn whom to address.\",\"title\":\"POST /participant/get/policies\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/nhcx/v1/registries/policy\",\"id\":\"nhcx.flow.policy-link-and-delink\",\"summary\":\"As an insurer or claims administrator, record which beneficiaries hold which products so that hospitals can find their cover, and remove the record when it e...\",\"title\":\"Link and de-link an ABHA and a policy\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/p1#p1-create-abha-address\",\"id\":\"hiecm.flow.p1-create-abha-address\",\"summary\":\"Register a person in your own health application by mobile number or by an existing 14 digit health account number, and give them the address the rest of the...\",\"title\":\"Create an ABHA address in a PHR application\",\"type\":\"flow\"},{\"doc_url\":\"\",\"id\":\"nhcx.test.payer-uc-02\",\"summary\":\"Prove that your insurance system can read back the policies linked to a member, exactly as hospitals will see them.\",\"title\":\"Payer sandbox exit use case 2: Get policy\",\"type\":\"test\"},{\"doc_url\":\"\",\"id\":\"nhcx.test.provider-uc-02\",\"summary\":\"Prove that your hospital system can look up the insurance policies a payer has linked to a patient, before any claim work starts.\",\"title\":\"Provider sandbox exit use case 2: Get policy\",\"type\":\"test\"},{\"doc_url\":\"/docs/nhcx/v1/api/registry/endpoints/registry-participant-link-abha-policy\",\"id\":\"nhcx.endpoint.participant-link-abha-policy\",\"summary\":\"As a payer, link a beneficiary's health account number and member id to the products they hold, so hospitals can find the policy.\",\"title\":\"POST /participant/link/abha/policy\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/nhcx/v1/api/registry/endpoints/registry-v2-participant-get-policies\",\"id\":\"nhcx.endpoint.v2-participant-get-policies\",\"summary\":\"The second path for looking up a beneficiary's linked policies; it takes the same body as the main lookup.\",\"title\":\"POST /v2/participant/get/policies\",\"type\":\"endpoint\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"body\":\"# Create an ABHA address in a PHR application\\n\\n## In plain words\\n\\nA person does not need an [ABHA number](/docs/hiecm/v3/getting-started/glossary#abha-number),\\nand does not need Aadhaar, to get an ABHA address here. A mobile number and\\nthe OTP sent to it are enough. What that buys is a Self-Declared profile: an\\naddress the network can route to, with no\\n[KYC](/docs/hiecm/v3/getting-started/glossary#kyc) behind it and no ABHA\\nnumber until the person links one later.\\n\\n| Path | Validated by | Profile details | Result |\\n| --- | --- | --- | --- |\\n| Mobile number | Mobile [OTP](/docs/hiecm/v3/getting-started/glossary#otp) | The user types them | Self-Declared, no [KYC](/docs/hiecm/v3/getting-started/glossary#kyc) |\\n| 14 digit ABHA number | Aadhaar OTP or ABHA OTP | Returned by the ABHA system | KYC Verified |\\n| Aadhaar number, with no ABHA number yet | Aadhaar OTP, which creates the ABHA number first | Returned by the ABHA system | KYC Verified |\\n\\n```mermaid\\nflowchart TD\\n    A[\\\"User picks a path\\\"] --> B{\\\"Mobile number, ABHA number or Aadhaar number?\\\"}\\n    B -- \\\"Mobile number\\\" --> C[\\\"Verify by mobile OTP\\\"]\\n    C --> D[\\\"User types first name, year of birth, gender, address, state, district, pin code\\\"]\\n    B -- \\\"ABHA number\\\" --> E[\\\"Verify by Aadhaar OTP or ABHA OTP\\\"]\\n    E --> F[\\\"Profile details come back from the ABHA system\\\"]\\n    B -- \\\"Aadhaar number\\\" --> K[\\\"Create an ABHA number by Aadhaar OTP\\\"]\\n    K --> F\\n    D --> G[\\\"Show the ABHA addresses already linked to this mobile or number\\\"]\\n    F --> G\\n    G --> H{\\\"An address already exists?\\\"}\\n    H -- \\\"Yes\\\" --> I[\\\"User picks one\\\"]\\n    H -- \\\"No\\\" --> J[\\\"User creates a new address\\\"]\\n```\\n\\nAfter validation on any path, show the ABHA addresses already linked to that\\nmobile number or ABHA number. The user then picks one instead of creating a\\nduplicate.\\n\\nA Self-Declared profile needs a \\\"Link ABHA number\\\" action. The user enters the\\n14 digit number and validates by Aadhaar OTP or ABHA OTP. Profile details\\nthen follow the ABHA number, and the status changes to KYC Verified.\\n\\n## Before you start\\n\\nA gateway session token, the PHR certificate from `GET /abha/api/v3/phr/app/login/public/certificate`, and secure storage for the refresh token, because login follows at once.\\n\\n## What happens\\n\\nRequest the OTP at `/abha/api/v3/phr/app/enrollment/request/otp`, with scope `abha-address-enroll` and `mobile-verify` on the mobile path, and verify it at `/abha/api/v3/phr/app/enrollment/verify`. List the addresses already linked and let the person pick one. Only when there is none, offer suggestions from `/abha/api/v3/phr/app/enrollment/suggestion`, check the choice with `/abha/api/v3/phr/app/enrollment/isExists`, and create it with `/abha/api/v3/phr/app/enrollment/enrol`.\\n\\n## How you know it worked\\n\\nThe person holds an address such as `name@abdm`, the profile shows Self-Declared or KYC Verified by the path taken, and listing the addresses on that mobile or ABHA number now returns it.\\n\\n## When it goes wrong\\n\\nA duplicate address, because the existing addresses were not shown first. A mandatory field missing on the mobile path, refused as validation: first name, year of birth, gender, address, state, district and pin code are the mandatory set, and day and month of birth are not in it. An expired OTP: resend unlocks after 60 seconds, so say so on the screen.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/milestones/p1#p1-create-abha-address\",\"gateway\":\"hiecm\",\"id\":\"hiecm.flow.p1-create-abha-address\",\"milestone\":\"P1\",\"summary\":\"Register a person in your own health application by mobile number or by an existing 14 digit health account number, and give them the address the rest of the network will know them by.\",\"title\":\"Create an ABHA address in a PHR application\",\"type\":\"flow\"}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T12:07:31.196Z",
+  "usage": {
+    "input_tokens": 78,
+    "output_tokens": 1934,
+    "cache_read_input_tokens": 110854,
+    "cache_creation_input_tokens": 13966,
+    "num_turns": 14,
+    "duration_ms": 25813,
+    "cost_usd_equivalent": 0.0487654
+  }
+}

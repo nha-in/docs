@@ -348,7 +348,7 @@
     "phr"
   ],
   "sources": {
-    "catalogue/openapi/.raw/nha-2026-09-16/phr/PHR and Locker Swagger.yaml": {
+    "nha-2026-09-16/phr/PHR and Locker Swagger.yaml": {
       "fetched": "2026-09-16",
       "hash": "sha256:a7e1b7e0b56b75297623057678cf307f21ecdbfbc9ebdb022dc67df78540f6d5"
     }

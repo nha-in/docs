@@ -1,0 +1,217 @@
+{
+  "case_id": "naive-hiecm-m1-encrypt-aadhaar-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "how to encrypt the aadhar number before sending to abha api? which padding"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01LcMXnmoyzySzgoBgQJYDzR",
+            "Name": "search",
+            "Input": {
+              "query": "encrypt aadhaar number ABHA API padding",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "encrypt aadhaar number ABHA API padding",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "",
+                "id": "shared.fhir.abha-identifiers",
+                "summary": "NRCeS tells you apart the two health identifiers a person has by the identifier type code, not by a namespace URI, and it publishes no namespace URI for eith...",
+                "title": "Carrying an ABHA number and an ABHA address on a FHIR Patient",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#abha",
+                "id": "shared.glossary.abha",
+                "summary": "The patient's identity in ABDM, in two forms that look alike and are not: a 14 digit ABHA number and a readable ABHA address.",
+                "title": "ABHA",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/encryption#input-encryption",
+                "id": "hiecm.concept.input-encryption",
+                "summary": "Aadhaar numbers, mobile numbers, OTPs and passwords are encrypted with the published certificate before they go in a request body.",
+                "title": "Encrypting sensitive inputs, Aadhaar, mobile, OTP and passwords",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.profile-and-example-together",
+                "summary": "A NRCeS profile gives the cardinalities and a NRCeS example gives the shape, and a generator written from either one alone is wrong in a different way.",
+                "title": "Read the profile and the example together, because each omits what the other carries",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-link-de-link/01-m1-post-v3-profile-benefit-linkanddelink-x-token#m1-benefit-link-or-delink",
+                "id": "hiecm.endpoint.m1-benefit-link-or-delink",
+                "summary": "Links or unlinks the programme named in the BENEFIT_NAME header for an ABHA.",
+                "title": "Link or unlink a benefit record from an ABHA",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/errors#abdm-1094",
+                "id": "hiecm.error.abdm-1094",
+                "summary": "Your client or the person's token is not allowed to do what the call tried, and the message says which of three cases applies.",
+                "title": "ABDM-1094, access to this feature is refused",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m1#m1-create-abha-face-auth",
+                "id": "hiecm.flow.m1-create-abha-face-auth",
+                "summary": "Create an ABHA for someone who cannot receive an Aadhaar OTP, using face authentication in the ABHA app.",
+                "title": "Create an ABHA using Aadhaar face authentication",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/07-m3-get-data-flow-v3-health-information-request-status-tra-550104#p3-request-status",
+                "id": "hiecm.endpoint.p3-request-status",
+                "summary": "Check how far a health information request has got, by its transaction id.",
+                "title": "Get the status of a health information request",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p4/endpoints/p4-locker/03-p4-get-subscription-requests-v3-patients-lockers-lockerid#p3-patient-locker-details-by-locker-id",
+                "id": "hiecm.endpoint.p3-patient-locker-details-by-locker-id",
+                "summary": "Fetch one health locker's settings for the logged-in person.",
+                "title": "Get a health locker by its id",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p4/endpoints/p4-locker/01-p4-post-subscription-requests-v3-setup-locker#p3-setup-locker",
+                "id": "hiecm.endpoint.p3-setup-locker",
+                "summary": "Set up a health locker for the logged-in person.",
+                "title": "Set up a health locker",
+                "type": "endpoint"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01Hgj7WeVjM6NxbN8Zv276M3",
+            "Name": "get",
+            "Input": {
+              "id": "hiecm.concept.input-encryption"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "hiecm.concept.input-encryption"
+          },
+          "output": {
+            "body": "# Encrypting sensitive inputs, Aadhaar, mobile, OTP and passwords\n\n## In plain words\n\nSix kinds of value never travel raw in an M1 request body.\n\n| Value | Where it appears |\n| --- | --- |\n| Aadhaar number | Enrolment and login by Aadhaar |\n| ABHA number | Login and search by ABHA number |\n| Mobile number | Login, search and mobile update |\n| Email address | Email verification |\n| One time password ([OTP](/docs/hiecm/v3/getting-started/glossary#otp)) value | Every call that verifies a challenge |\n| Password | Password based login |\n\nEach is encrypted with RSA using the ABDM public certificate, and the base64 of the ciphertext goes in the field.\n\nThe padding belongs to the certificate. M1 and PHR calls use RSA OAEP with SHA-1 for both the digest and the mask generation function, which the certificate names as `RSA/ECB/OAEPWithSHA-1AndMGF1Padding`. The [M4](/docs/hiecm/v3/milestones/m4) registries use `RSA/ECB/PKCS1Padding` under a certificate of their own. An integration that calls both holds both keys and never crosses them.\n\n## Before you start\n\nA gateway access token, and the current certificate for the family you are calling: `GET /abha/api/v3/profile/public/certificate` for M1.\n\n## What happens\n\nEncrypt each value in the table in your own process and send the standard base64 of the ciphertext. In most libraries OAEP defaults to SHA-256, so pass SHA-1 explicitly: in Node, the OAEP padding constant with the OAEP hash set to sha1; in Java, the transformation the certificate names. The certificate arrives as base64 DER with no PEM armour, so add the armour before your library loads it. Cache the certificate with a validity window, not forever.\n\n## How you know it worked\n\nA value your code encrypted is accepted by a real M1 call: the OTP request returns a `txnId` instead of a validation refusal.\n\n## When it goes wrong\n\nA wrong padding or digest does not fail when you encrypt. It fails at the API as a validation refusal that names the business field, which reads as a wrong Aadhaar or mobile number. Check the padding, the digest and the key before you doubt the plaintext. A stale cached certificate fails every encrypted call at once.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/concepts/encryption#input-encryption",
+            "gateway": "hiecm",
+            "id": "hiecm.concept.input-encryption",
+            "milestone": "M1",
+            "summary": "Aadhaar numbers, mobile numbers, OTPs and passwords are encrypted with the published certificate before they go in a request body.",
+            "title": "Encrypting sensitive inputs, Aadhaar, mobile, OTP and passwords",
+            "type": "concept"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "To encrypt Aadhaar numbers before sending to the ABHA API, use **RSA OAEP with SHA-1 for both the digest and mask generation function** (`RSA/ECB/OAEPWithSHA-1AndMGF1Padding`).\n\n**Key points:**\n\n1. **Algorithm**: RSA encryption with OAEP padding\n2. **Padding**: `RSA/ECB/OAEPWithSHA-1AndMGF1Padding`\n3. **Digest**: SHA-1 (not SHA-256, which is the default in many libraries)\n4. **Key**: ABDM public certificate from `GET /abha/api/v3/profile/public/certificate` (M1)\n5. **Encoding**: Base64 encode the ciphertext before sending in the request body\n\n**Important implementation notes:**\n- Explicitly pass **SHA-1** as the digest hash (most libraries default to SHA-256)\n- The certificate arrives as **base64 DER without PEM armor**, so add the PEM header/footer before loading\n- Cache the certificate with a validity window (don't cache indefinitely)\n- If encryption fails at the API, check the padding and digest first — a wrong padding doesn't fail locally but returns a \"validation refusal\" at the gateway\n\n**Other sensitive fields encrypted the same way:**\n- Mobile numbers, OTPs, passwords, ABHA numbers, and email addresses\n\nSee: [Encrypting sensitive inputs, Aadhaar, mobile, OTP and passwords](https://dev.abdm.gov.in/docs/hiecm/v3/concepts/encryption#input-encryption)",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "To encrypt Aadhaar numbers before sending to the ABHA API, use **RSA OAEP with SHA-1 for both the digest and mask generation function** (`RSA/ECB/OAEPWithSHA-1AndMGF1Padding`).\n\n**Key points:**\n\n1. **Algorithm**: RSA encryption with OAEP padding\n2. **Padding**: `RSA/ECB/OAEPWithSHA-1AndMGF1Padding`\n3. **Digest**: SHA-1 (not SHA-256, which is the default in many libraries)\n4. **Key**: ABDM public certificate from `GET /abha/api/v3/profile/public/certificate` (M1)\n5. **Encoding**: Base64 encode the ciphertext before sending in the request body\n\n**Important implementation notes:**\n- Explicitly pass **SHA-1** as the digest hash (most libraries default to SHA-256)\n- The certificate arrives as **base64 DER without PEM armor**, so add the PEM header/footer before loading\n- Cache the certificate with a validity window (don't cache indefinitely)\n- If encryption fails at the API, check the padding and digest first — a wrong padding doesn't fail locally but returns a \"validation refusal\" at the gateway\n\n**Other sensitive fields encrypted the same way:**\n- Mobile numbers, OTPs, passwords, ABHA numbers, and email addresses\n\nSee: [Encrypting sensitive inputs, Aadhaar, mobile, OTP and passwords](https://dev.abdm.gov.in/docs/hiecm/v3/concepts/encryption#input-encryption)",
+  "sources": [
+    {
+      "id": "hiecm.concept.input-encryption",
+      "title": "Encrypting sensitive inputs, Aadhaar, mobile, OTP and passwords",
+      "url": "/docs/hiecm/v3/concepts/encryption#input-encryption"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"\",\"id\":\"shared.fhir.abha-identifiers\",\"summary\":\"NRCeS tells you apart the two health identifiers a person has by the identifier type code, not by a namespace URI, and it publishes no namespace URI for eith...\",\"title\":\"Carrying an ABHA number and an ABHA address on a FHIR Patient\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#abha\",\"id\":\"shared.glossary.abha\",\"summary\":\"The patient's identity in ABDM, in two forms that look alike and are not: a 14 digit ABHA number and a readable ABHA address.\",\"title\":\"ABHA\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/encryption#input-encryption\",\"id\":\"hiecm.concept.input-encryption\",\"summary\":\"Aadhaar numbers, mobile numbers, OTPs and passwords are encrypted with the published certificate before they go in a request body.\",\"title\":\"Encrypting sensitive inputs, Aadhaar, mobile, OTP and passwords\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.profile-and-example-together\",\"summary\":\"A NRCeS profile gives the cardinalities and a NRCeS example gives the shape, and a generator written from either one alone is wrong in a different way.\",\"title\":\"Read the profile and the example together, because each omits what the other carries\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-benefit-link-de-link/01-m1-post-v3-profile-benefit-linkanddelink-x-token#m1-benefit-link-or-delink\",\"id\":\"hiecm.endpoint.m1-benefit-link-or-delink\",\"summary\":\"Links or unlinks the programme named in the BENEFIT_NAME header for an ABHA.\",\"title\":\"Link or unlink a benefit record from an ABHA\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/errors#abdm-1094\",\"id\":\"hiecm.error.abdm-1094\",\"summary\":\"Your client or the person's token is not allowed to do what the call tried, and the message says which of three cases applies.\",\"title\":\"ABDM-1094, access to this feature is refused\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m1#m1-create-abha-face-auth\",\"id\":\"hiecm.flow.m1-create-abha-face-auth\",\"summary\":\"Create an ABHA for someone who cannot receive an Aadhaar OTP, using face authentication in the ABHA app.\",\"title\":\"Create an ABHA using Aadhaar face authentication\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/07-m3-get-data-flow-v3-health-information-request-status-tra-550104#p3-request-status\",\"id\":\"hiecm.endpoint.p3-request-status\",\"summary\":\"Check how far a health information request has got, by its transaction id.\",\"title\":\"Get the status of a health information request\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p4/endpoints/p4-locker/03-p4-get-subscription-requests-v3-patients-lockers-lockerid#p3-patient-locker-details-by-locker-id\",\"id\":\"hiecm.endpoint.p3-patient-locker-details-by-locker-id\",\"summary\":\"Fetch one health locker's settings for the logged-in person.\",\"title\":\"Get a health locker by its id\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p4/endpoints/p4-locker/01-p4-post-subscription-requests-v3-setup-locker#p3-setup-locker\",\"id\":\"hiecm.endpoint.p3-setup-locker\",\"summary\":\"Set up a health locker for the logged-in person.\",\"title\":\"Set up a health locker\",\"type\":\"endpoint\"}]}\n{\"body\":\"# Encrypting sensitive inputs, Aadhaar, mobile, OTP and passwords\\n\\n## In plain words\\n\\nSix kinds of value never travel raw in an M1 request body.\\n\\n| Value | Where it appears |\\n| --- | --- |\\n| Aadhaar number | Enrolment and login by Aadhaar |\\n| ABHA number | Login and search by ABHA number |\\n| Mobile number | Login, search and mobile update |\\n| Email address | Email verification |\\n| One time password ([OTP](/docs/hiecm/v3/getting-started/glossary#otp)) value | Every call that verifies a challenge |\\n| Password | Password based login |\\n\\nEach is encrypted with RSA using the ABDM public certificate, and the base64 of the ciphertext goes in the field.\\n\\nThe padding belongs to the certificate. M1 and PHR calls use RSA OAEP with SHA-1 for both the digest and the mask generation function, which the certificate names as `RSA/ECB/OAEPWithSHA-1AndMGF1Padding`. The [M4](/docs/hiecm/v3/milestones/m4) registries use `RSA/ECB/PKCS1Padding` under a certificate of their own. An integration that calls both holds both keys and never crosses them.\\n\\n## Before you start\\n\\nA gateway access token, and the current certificate for the family you are calling: `GET /abha/api/v3/profile/public/certificate` for M1.\\n\\n## What happens\\n\\nEncrypt each value in the table in your own process and send the standard base64 of the ciphertext. In most libraries OAEP defaults to SHA-256, so pass SHA-1 explicitly: in Node, the OAEP padding constant with the OAEP hash set to sha1; in Java, the transformation the certificate names. The certificate arrives as base64 DER with no PEM armour, so add the armour before your library loads it. Cache the certificate with a validity window, not forever.\\n\\n## How you know it worked\\n\\nA value your code encrypted is accepted by a real M1 call: the OTP request returns a `txnId` instead of a validation refusal.\\n\\n## When it goes wrong\\n\\nA wrong padding or digest does not fail when you encrypt. It fails at the API as a validation refusal that names the business field, which reads as a wrong Aadhaar or mobile number. Check the padding, the digest and the key before you doubt the plaintext. A stale cached certificate fails every encrypted call at once.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/concepts/encryption#input-encryption\",\"gateway\":\"hiecm\",\"id\":\"hiecm.concept.input-encryption\",\"milestone\":\"M1\",\"summary\":\"Aadhaar numbers, mobile numbers, OTPs and passwords are encrypted with the published certificate before they go in a request body.\",\"title\":\"Encrypting sensitive inputs, Aadhaar, mobile, OTP and passwords\",\"type\":\"concept\"}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T12:07:03.870Z",
+  "usage": {
+    "input_tokens": 30,
+    "output_tokens": 764,
+    "cache_read_input_tokens": 29208,
+    "cache_creation_input_tokens": 7493,
+    "num_turns": 3,
+    "duration_ms": 11426,
+    "cost_usd_equivalent": 0.0217568
+  }
+}

@@ -16,7 +16,7 @@ sources:
       catalogue/openapi/.raw/nrces-ndhm.in-6.5.0.tgz.
 related:
   concepts: []
-  glossary: [shared.glossary.hi-type, shared.glossary.nrces]
+  glossary: [hiecm.glossary.hi-type, shared.glossary.nrces]
 ---
 
 # FHIR, Fast Healthcare Interoperability Resources

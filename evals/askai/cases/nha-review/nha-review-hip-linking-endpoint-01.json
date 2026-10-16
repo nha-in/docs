@@ -1,0 +1,37 @@
+{
+  "id": "nha-review-hip-linking-endpoint-01",
+  "slice": "nha-review",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "Which API endpoint is used to link records through hip initiated linking flow ?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "gateway": "hiecm",
+  "must_contain": [
+    "The link token goes in X-LINK-TOKEN on POST /api/hiecm/hip/v3/link/carecontext, whose own summary reads: This API will be used to perform HIP initiated linking",
+    "The link token comes first, from POST /api/hiecm/v3/token/generate-token, and arrives on /api/v3/hip/token/on-generate-token",
+    "The result arrives on /api/v3/link/on_carecontext, where status reads Successfully Linked care context"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.flow.journey-hip-initiated-linking"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#nha-review-2026-09-30",
+  "catalogue_version": "2026.09.16",
+  "notes": "NHA test-case workbook, 30 September 2026, specification grounding test: 'After getting the link token, HIP should call the HIECM API to link the record but the chat bot is suggesting to call the callback API /api/hiecm/hip/v3/link/carecontext.' Verdict group: grounding disputes. Whether that path is a call or a callback is in dispute with NHA, so the case asserts the path, its header, the specification's own summary and where the result arrives, and neither reading."
+}

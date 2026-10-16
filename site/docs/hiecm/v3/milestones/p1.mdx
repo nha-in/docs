@@ -5,7 +5,7 @@ sidebar_position: 9
 sidebar_custom_props:
   roles: [phr]
 description: 'The patient side of M1: how a person registers in your PHR app, logs in, and which login routes are mandatory.'
-source: catalogue/openapi/hiecm/v3/hiecm-p1.yaml
+source: catalogue/hiecm/openapi/v3/hiecm-p1.yaml
 covers: [hiecm.flow.p1-login]
 sidebar_class_name: sidebar-icon sidebar-icon--contact-round
 ---
@@ -130,6 +130,10 @@ than one user profile per install with sign in and sign out.
 Encrypt the Aadhaar number, mobile number, OTP and password with the PHR
 public key from `GET /abha/api/v3/phr/app/login/public/certificate`. It is a
 different key from the ABHA service's, so fetch it before any other PHR call.
+
+## Certification
+
+The cases a PHR application is tested against, each with its id, steps, expected result and the calls it exercises: [PHR application test cases](/docs/hiecm/v3/resources/test-cases/phr). Certification runs once, for the whole integration: [Go live](/docs/hiecm/v3/getting-started/going-live).
 
 ## Next
 

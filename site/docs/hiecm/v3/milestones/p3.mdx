@@ -5,7 +5,7 @@ sidebar_position: 11
 sidebar_custom_props:
   roles: [phr]
 description: 'The patient side of M3: subscriptions, auto approval, granting and revoking consent, and fetching the records a grant covers.'
-source: catalogue/openapi/hiecm/v3/hiecm-p3.yaml
+source: catalogue/hiecm/openapi/v3/hiecm-p3.yaml
 sidebar_class_name: sidebar-icon sidebar-icon--file-check
 ---
 
@@ -121,6 +121,10 @@ request behind it leaves the person with permission and no records.
 
 **When it goes wrong.** `ABDM-1112`: the artefact is invalid or already expired. Revocation is the person exercising a right, so handle it as a state, not as an error. Records fetched but not stored disappear when the consent window closes. Test every HI type the app may receive, structured and unstructured, not only one.
 </AgentOnly>
+
+## Certification
+
+The cases a PHR application is tested against, each with its id, steps, expected result and the calls it exercises: [PHR application test cases](/docs/hiecm/v3/resources/test-cases/phr). Certification runs once, for the whole integration: [Go live](/docs/hiecm/v3/getting-started/going-live).
 
 ## Next
 

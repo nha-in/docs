@@ -1,0 +1,273 @@
+{
+  "case_id": "confusable-hiecm-m2-otp-vs-link-token-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "in the link confirm request, is confirmation.token the link token?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "I'll search for information about the link confirm request and what the confirmation.token field represents.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01PgNZD5QJqAu6WfiiGjzmTz",
+            "Name": "search",
+            "Input": {
+              "query": "link confirm request confirmation token",
+              "kind": "operation",
+              "limit": 5
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "link confirm request confirmation token",
+            "kind": "operation",
+            "limit": 5
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01NQeukKqewuryUJDid2kUJi",
+            "Name": "search",
+            "Input": {
+              "query": "link confirm",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "link confirm",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/07-m2-post-v3-hip-link-care-context-confirm#p2-callback-for-health-record-confirmation",
+                "id": "hiecm.callback.p2-callback-for-health-record-confirmation",
+                "summary": "ABDM passes your facility the code the person entered, to confirm the link.",
+                "title": "Link confirm request to the HIP",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/03-m2-post-user-initiated-linking-v3-link-care-context-on-confirm#m2-on-link-confirm",
+                "id": "hiecm.endpoint.m2-on-link-confirm",
+                "summary": "The HIP checks the patient's code and answers a link confirm request with the care contexts it linked.",
+                "title": "Link On-Confirm, HIP confirms linked care contexts",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/07-m2-post-v3-hip-link-care-context-confirm#m2-on-link-confirm",
+                "id": "hiecm.callback.m2-on-link-confirm",
+                "summary": "ABDM posts the code the patient entered and the link reference number; the HIP checks them and answers on-confirm.",
+                "title": "Confirmation of a link, carrying the token the patient approved",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/08-p2-post-v3-hiu-patient-care-context-on-confirm#p2-response-on-health-record-on-confirm",
+                "id": "hiecm.callback.p2-response-on-health-record-on-confirm",
+                "summary": "ABDM posts the outcome of the confirm call, listing the care contexts now linked.",
+                "title": "Link confirm result callback",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/07-p2-post-user-initiated-linking-v3-link-care-context-confirm#p2-link-care-context-confirm",
+                "id": "hiecm.endpoint.p2-link-care-context-confirm",
+                "summary": "Finish user initiated linking by sending the code the person received.",
+                "title": "Confirm the link with the code the person received",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/06-p2-post-v3-hiu-patient-care-context-on-init#p2-response-on-health-record-link",
+                "id": "hiecm.callback.p2-response-on-health-record-link",
+                "summary": "ABDM posts the facility's answer to a link request, with the reference and where the confirmation code went.",
+                "title": "Link init result callback",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/02-m2-post-user-initiated-linking-v3-link-care-context-on-init#m2-on-link-init",
+                "id": "hiecm.endpoint.m2-on-link-init",
+                "summary": "The HIP answers a link init request with a link reference number and where it sent the patient's OTP.",
+                "title": "Link On-Init, HIP responds with OTP communication details",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/p2#p2-discover-and-link",
+                "id": "hiecm.flow.p2-discover-and-link",
+                "summary": "Let a person search for a facility they visited, discover the records it holds for them, and attach those records to their health address after an OTP confir...",
+                "title": "Find records held elsewhere and link them",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/05-p2-post-user-initiated-linking-v3-link-care-context-init#p2-link-care-context-init",
+                "id": "hiecm.endpoint.p2-link-care-context-init",
+                "summary": "Start linking the records the person chose after discovery; the facility replies with how the person will confirm.",
+                "title": "Start linking the care contexts the person chose",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/troubleshooting/accepted-then-nothing#accepted-then-nothing",
+                "id": "hiecm.troubleshooting.accepted-then-nothing",
+                "summary": "Discovery or linking was accepted and then stalled, and you need to find which callback in the chain is missing.",
+                "title": "Discovery or linking was accepted, then nothing happens",
+                "type": "troubleshooting"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01F7wBgBZ5sMuen1QiEN76uM",
+            "Name": "get",
+            "Input": {
+              "id": "hiecm.callback.m2-on-link-confirm"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "hiecm.callback.m2-on-link-confirm"
+          },
+          "output": {
+            "body": "# Confirmation of a link, carrying the token the patient approved\n\n## In plain words\n\nAfter the patient enters the [OTP](/docs/hiecm/v3/getting-started/glossary#otp) you sent, ABDM posts it to your bridge at `/api/v3/hip/link/care-context/confirm`. `confirmation.token` is that six digit code. `confirmation.linkRefNumber` is the reference you issued at init. Check both, then answer through [on-confirm](/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/03-m2-post-user-initiated-linking-v3-link-care-context-on-confirm).\n\n## Before you start\n\nThe link reference number you issued in on-init, and the code you sent the patient.\n\n## What happens\n\nABDM posts with the `REQUEST-ID`, `TIMESTAMP` and `X-HIP-ID` headers, and expects 200 OK.\n\n## When it goes wrong\n\nA repeated confirm request is the `ABDM-1105` case, Duplicate Confirm request. An on-confirm answer that cannot be accepted is the `ABDM-1111` case, Invalid On confirm response.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/07-m2-post-v3-hip-link-care-context-confirm#m2-on-link-confirm",
+            "gateway": "hiecm",
+            "id": "hiecm.callback.m2-on-link-confirm",
+            "milestone": "M2",
+            "operation": "m2_post_v3_hip_link_care_context_confirm",
+            "summary": "ABDM posts the code the patient entered and the link reference number; the HIP checks them and answers on-confirm.",
+            "title": "Confirmation of a link, carrying the token the patient approved",
+            "type": "callback"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "No, `confirmation.token` is not the link token—it's the **six-digit OTP code** that the patient entered to confirm the link.\n\nFrom the [Confirmation of a link callback](https://dev.abdm.gov.in/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/07-m2-post-v3-hip-link-care-context-confirm#m2-on-link-confirm) (HIE-CM M2):\n\n- **`confirmation.token`** — the six-digit code the patient entered\n- **`confirmation.linkRefNumber`** — the link reference number you issued at init\n\nWhen ABDM posts to your `/api/v3/hip/link/care-context/confirm` endpoint, you need to check both values against what you have on file, then respond through the on-confirm endpoint.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "No, `confirmation.token` is not the link token—it's the **six-digit OTP code** that the patient entered to confirm the link.\n\nFrom the [Confirmation of a link callback](https://dev.abdm.gov.in/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/07-m2-post-v3-hip-link-care-context-confirm#m2-on-link-confirm) (HIE-CM M2):\n\n- **`confirmation.token`** — the six-digit code the patient entered\n- **`confirmation.linkRefNumber`** — the link reference number you issued at init\n\nWhen ABDM posts to your `/api/v3/hip/link/care-context/confirm` endpoint, you need to check both values against what you have on file, then respond through the on-confirm endpoint.",
+  "sources": [
+    {
+      "id": "hiecm.callback.m2-on-link-confirm",
+      "title": "Confirmation of a link, carrying the token the patient approved",
+      "url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/07-m2-post-v3-hip-link-care-context-confirm#m2-on-link-confirm"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/07-m2-post-v3-hip-link-care-context-confirm#p2-callback-for-health-record-confirmation\",\"id\":\"hiecm.callback.p2-callback-for-health-record-confirmation\",\"summary\":\"ABDM passes your facility the code the person entered, to confirm the link.\",\"title\":\"Link confirm request to the HIP\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/03-m2-post-user-initiated-linking-v3-link-care-context-on-confirm#m2-on-link-confirm\",\"id\":\"hiecm.endpoint.m2-on-link-confirm\",\"summary\":\"The HIP checks the patient's code and answers a link confirm request with the care contexts it linked.\",\"title\":\"Link On-Confirm, HIP confirms linked care contexts\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/07-m2-post-v3-hip-link-care-context-confirm#m2-on-link-confirm\",\"id\":\"hiecm.callback.m2-on-link-confirm\",\"summary\":\"ABDM posts the code the patient entered and the link reference number; the HIP checks them and answers on-confirm.\",\"title\":\"Confirmation of a link, carrying the token the patient approved\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/08-p2-post-v3-hiu-patient-care-context-on-confirm#p2-response-on-health-record-on-confirm\",\"id\":\"hiecm.callback.p2-response-on-health-record-on-confirm\",\"summary\":\"ABDM posts the outcome of the confirm call, listing the care contexts now linked.\",\"title\":\"Link confirm result callback\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/07-p2-post-user-initiated-linking-v3-link-care-context-confirm#p2-link-care-context-confirm\",\"id\":\"hiecm.endpoint.p2-link-care-context-confirm\",\"summary\":\"Finish user initiated linking by sending the code the person received.\",\"title\":\"Confirm the link with the code the person received\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/06-p2-post-v3-hiu-patient-care-context-on-init#p2-response-on-health-record-link\",\"id\":\"hiecm.callback.p2-response-on-health-record-link\",\"summary\":\"ABDM posts the facility's answer to a link request, with the reference and where the confirmation code went.\",\"title\":\"Link init result callback\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/02-m2-post-user-initiated-linking-v3-link-care-context-on-init#m2-on-link-init\",\"id\":\"hiecm.endpoint.m2-on-link-init\",\"summary\":\"The HIP answers a link init request with a link reference number and where it sent the patient's OTP.\",\"title\":\"Link On-Init, HIP responds with OTP communication details\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/p2#p2-discover-and-link\",\"id\":\"hiecm.flow.p2-discover-and-link\",\"summary\":\"Let a person search for a facility they visited, discover the records it holds for them, and attach those records to their health address after an OTP confir...\",\"title\":\"Find records held elsewhere and link them\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/05-p2-post-user-initiated-linking-v3-link-care-context-init#p2-link-care-context-init\",\"id\":\"hiecm.endpoint.p2-link-care-context-init\",\"summary\":\"Start linking the records the person chose after discovery; the facility replies with how the person will confirm.\",\"title\":\"Start linking the care contexts the person chose\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/troubleshooting/accepted-then-nothing#accepted-then-nothing\",\"id\":\"hiecm.troubleshooting.accepted-then-nothing\",\"summary\":\"Discovery or linking was accepted and then stalled, and you need to find which callback in the chain is missing.\",\"title\":\"Discovery or linking was accepted, then nothing happens\",\"type\":\"troubleshooting\"}]}\n{\"body\":\"# Confirmation of a link, carrying the token the patient approved\\n\\n## In plain words\\n\\nAfter the patient enters the [OTP](/docs/hiecm/v3/getting-started/glossary#otp) you sent, ABDM posts it to your bridge at `/api/v3/hip/link/care-context/confirm`. `confirmation.token` is that six digit code. `confirmation.linkRefNumber` is the reference you issued at init. Check both, then answer through [on-confirm](/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/03-m2-post-user-initiated-linking-v3-link-care-context-on-confirm).\\n\\n## Before you start\\n\\nThe link reference number you issued in on-init, and the code you sent the patient.\\n\\n## What happens\\n\\nABDM posts with the `REQUEST-ID`, `TIMESTAMP` and `X-HIP-ID` headers, and expects 200 OK.\\n\\n## When it goes wrong\\n\\nA repeated confirm request is the `ABDM-1105` case, Duplicate Confirm request. An on-confirm answer that cannot be accepted is the `ABDM-1111` case, Invalid On confirm response.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/07-m2-post-v3-hip-link-care-context-confirm#m2-on-link-confirm\",\"gateway\":\"hiecm\",\"id\":\"hiecm.callback.m2-on-link-confirm\",\"milestone\":\"M2\",\"operation\":\"m2_post_v3_hip_link_care_context_confirm\",\"summary\":\"ABDM posts the code the patient entered and the link reference number; the HIP checks them and answers on-confirm.\",\"title\":\"Confirmation of a link, carrying the token the patient approved\",\"type\":\"callback\"}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T11:56:10.462Z",
+  "usage": {
+    "input_tokens": 40,
+    "output_tokens": 819,
+    "cache_read_input_tokens": 40718,
+    "cache_creation_input_tokens": 7623,
+    "num_turns": 4,
+    "duration_ms": 12488,
+    "cost_usd_equivalent": 0.0234528
+  }
+}

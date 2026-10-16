@@ -57,7 +57,7 @@ related:
   glossary:
   - shared.glossary.request-id
   - shared.glossary.timestamp-header
-  - shared.glossary.x-cm-id
+  - hiecm.glossary.x-cm-id
 ---
 
 # Which session token endpoint to call
@@ -79,7 +79,7 @@ Put token acquisition behind one client in your code. Make its address, body for
 | | ABDM gateway sessions | Participant service `/get/session` |
 |---|---|---|
 | Sandbox address | `POST https://dev.abdm.gov.in/api/hiecm/gateway/v3/sessions` | `POST /get/session` on `apisbx.abdm.gov.in` |
-| Request headers | `Content-Type: application/json`, [`REQUEST-ID`](../../shared/glossary/request-id.md), [`TIMESTAMP`](../../shared/glossary/timestamp-header.md), [`X-CM-ID`](../../shared/glossary/x-cm-id.md) `sbx` | `Content-Type: application/x-www-form-urlencoded` |
+| Request headers | `Content-Type: application/json`, [`REQUEST-ID`](../../shared/glossary/request-id.md), [`TIMESTAMP`](../../shared/glossary/timestamp-header.md), [`X-CM-ID`](../../hiecm/glossary/x-cm-id.md) `sbx` | `Content-Type: application/x-www-form-urlencoded` |
 | Body | `clientId`, `clientSecret`, `grantType` `client_credentials` | `client_id`, `client_secret`, `grant_type=client_credentials` |
 | Token field in the response | `accessToken` | `access_token` |
 | Lifetime field in the response | `expiresIn`, 1200 seconds | `expires_in`, 1200 seconds |

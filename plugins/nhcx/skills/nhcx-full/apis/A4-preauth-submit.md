@@ -29,7 +29,7 @@ A line counts as added when its code (or a ward tier code riding as a modifier) 
 
 **Workflow ids (`x-hcx-workflow_id`).** Read from the payer adapter chosen by the claim's payer participant code (see [PAYERS.md](../references/PAYERS.md)) [PAYER](../references/PAYERS.md#markers). An unmapped payer uses Generic.
 
-| Kind | `pmjay` | `xyz` (Sandbox Payer) | `generic` |
+| Kind | `pmjay` | `kyrocare` (Sandbox Payer) | `generic` |
 |---|---|---|---|
 | `preauth` | 12 | 12 | 12 |
 | `preauth_query_response` | 19 | 19 | 19 |
@@ -40,15 +40,16 @@ A line counts as added when its code (or a ward tier code riding as a modifier) 
 
 A per-environment override (a JSON object of kind to workflow id) wins over the adapter, key by key. A kind with no id anywhere is refused with "No workflow id is defined for '<kind>'.".
 
-**Headers set by the application.** Only these three; G7 generates ([G5. Protocol Headers](../gateway/G5-protocol-headers.md)) `x-hcx-api_call_id`, `x-hcx-request_id`, `x-hcx-correlation_id`, the timestamp and the status.
+**Headers set by the application.** Only these four; G7 generates ([G5. Protocol Headers](../gateway/G5-protocol-headers.md)) `x-hcx-api_call_id`, `x-hcx-request_id`, `x-hcx-correlation_id`, the timestamp and the status.
 
 | Header | Value |
 |---|---|
 | `x-hcx-sender_code` | The facility's NHCX participant code (Settings) |
 | `x-hcx-recipient_code` | The case's processing id (D9 `processing_id`), else the case's processing id, else the claim's payer id, else the configured default payer code |
 | `x-hcx-workflow_id` | From the tables above |
+| `x-hcx-use_case` | `New` for `preauth` and a predetermination, `Enhancement` for `enhancement`, `Resubmit` for `preauth_query_response`, `enhancement_resubmit` and `preauth_resubmit`. Sent to every payer, whether or not it reads it (see [PAYERS.md](../references/PAYERS.md)) |
 
-**Before a pre-authorisation send** (not a predetermination), the app fires the payer's `auth-requirements` coverage check (A2) when the adapter supports it (see [PAYERS.md](../references/PAYERS.md)) [PAYER](../references/PAYERS.md#markers), the claim is `eligible`, lines exist, and this procedure set has not been ruled on (or the last ruling is in `error`). It never waits for the answer, and a failure of that check does not stop the send.
+**Before a pre-authorisation send** (not a predetermination), the app fires the payer's `auth-requirements` coverage check (A2) when the adapter sends it unasked (see [PAYERS.md](../references/PAYERS.md)) [PAYER](../references/PAYERS.md#markers), the claim is `eligible`, lines exist, and this procedure set has not been ruled on (or the last ruling is in `error`). It never waits for the answer, and a failure of that check does not stop the send.
 
 **Checks before sending**, in order, each raised as the screen's red message:
 
@@ -71,7 +72,7 @@ The arguments passed to G7 Send:
 
 | Field | Type | Notes |
 |---|---|---|
-| `jwe_headers` | object | The three headers above |
+| `jwe_headers` | object | The three headers above, plus the beneficiary's user token under the configured header and `x-hcx-ben-abha-id` when [A18. Biometric Authentication](A18-biometric-authentication.md) holds a current stage-Preauth authentication (then the Authentication Consent form is left out of the bundle) |
 | `fhir` | Bundle | The Claim bundle |
 
 FHIR: [F1. Bundle](../fhir/F1-bundle.md), [F8. Claim](../fhir/F8-claim.md), [F15. Patient](../fhir/F15-patient.md), [F17. Organization](../fhir/F17-organization.md), [F18. Coverage](../fhir/F18-coverage.md), [F16. Practitioner and PractitionerRole](../fhir/F16-practitioner.md), [F19. Other bundle resources](../fhir/F19-other-resources.md) (Procedure), [F7. QuestionnaireResponse](../fhir/F7-questionnaireresponse.md) (pre-auth only, not predetermination)
@@ -110,7 +111,7 @@ A query answer (workflow 19 under the `pmjay` adapter [PAYER](../references/PAYE
 
 For a pre-authorisation the leg becomes `submitting` under the acknowledgement's ids (`txn_id`, `correlation_id`), and the verdict fields are cleared. An enhancement keeps the payer's pre-auth reference and counts one more round; a query answer keeps the reference and the round count. A predetermination adds a quote row in `asking`.
 
-**Failed send.** Per the shared conventions. When the failure names ids, the leg is kept under them as refused at the door: `error` with the message for a `preauth` or a query answer; back to `approved` with the message for an enhancement or an enhancement query answer (the added lines stay unsent). A predetermination is stored as `error`. If the payer later answers on that correlation, the leg reopens and the answer is applied.
+**Failed send.** Per the shared conventions. When the failure names ids, the leg is kept under them as refused at the door: `error` with the message for a `preauth` or a query answer. For an `enhancement` or an `enhancement_resubmit` the approval stands: the leg stays `approved` (or `partial`) and **keeps the approval's columns** (`request_json` of the last accepted send, `approved_amount`, `eligible_amount`, `outcome`, `adjudication`, `disposition`, `preauth_ref`, `items_json`, `settled_at`), and the failed send writes only its own ids (`txn_id`, `correlation_id`, `submitted_at`), `error_message`, `submission_kind`, `workflow_id` and `enhancement_no`. The added lines stay unsent and are offered again. A predetermination is stored as `error`. If the payer later answers on that correlation, the leg reopens and the answer is applied.
 
 Data: [D18. claim_preauth](../database/D18-claim-preauth.md), [D19. claim_predetermination](../database/D19-claim-predetermination.md)
 
@@ -170,8 +171,10 @@ function submit_preauth(case_id, reply):
     proc_type  = per procedure line, ProcedureType condition from claim_plan_benefit, else conservative
     documents  = claim_document rows at stage preauth, minus files given as form answers
                  (code default ODN, category default INV [REF](../references/PAYERS.md#markers), base64 data)
-    forms      = forms required at preauth (claim_auth_requirement ruling, else the
-                 claim_plan_form master) with answers from claim_form_answer; unanswered forms dropped
+    forms      = forms required at preauth (D12 rule: the ruling's preauth forms, plus the quoted
+                 packages' own STG forms, plus the policy-wide forms, plus the Authentication Consent
+                 when no stage-Preauth token is held) with answers from claim_form_answer;
+                 non-attachment questions filled by the F7 fallback order; unanswered forms dropped
     total      = sum of the quoted lines
 
     // build
@@ -206,9 +209,21 @@ function submit_preauth(case_id, reply):
     else if kind in {preauth_resubmit, preauth_query_response}:
         values.preauth_ref    = existing.preauth_ref
         values.enhancement_no = existing.enhancement_no
+    if kind in {enhancement, enhancement_resubmit}:
+        // the approval stands until the payer answers: approved_amount, eligible_amount,
+        // submitted_amount, outcome, adjudication, disposition, items_json and settled_at
+        // are NOT cleared by an enhancement send (D18); C5 overwrites them on approval only
+        drop from values: settled_at, outcome, disposition, approved_amount,
+                          eligible_amount, submitted_amount, items_json
     if failed:                                              // refused at the door
-        values.status = approved if kind in {enhancement, enhancement_resubmit} else error
-        values.error_message = failed.message
+        if kind in {enhancement, enhancement_resubmit}:
+            // write only the failed send's ids, error and round; request_json keeps
+            // the last accepted send's bundle
+            values = {status: existing.status, txn_id: ack.txn_id, correlation_id: ack.correlation_id,
+                      submitted_at: now, error_message: failed.message, submission_kind: kind,
+                      workflow_id: workflow, enhancement_no: values.enhancement_no}
+        else:
+            values.status = error; values.error_message = failed.message
     if existing is none: INSERT claim_preauth (values, claim_id)
     else:                UPDATE claim_preauth[existing.id] SET values; recompute case stage
     if failed: raise failed
@@ -252,8 +267,10 @@ function ask_predetermination(case_id):
 ```
 
 #### A4U. USED BY
-- Screens: [S9. Pre-authorisation](../screens/S9-preauthorisation.md), [S14. Patient Registration Form](../screens/S14-patient-registration-form.md), [S15. Patient Detail](../screens/S15-patient-detail.md), [S16. Practitioner Master](../screens/S16-practitioner-master.md)
-- APIs: [A2. Coverage Eligibility Check](A2-coverage-eligibility-check.md), [A5. Claim Submit](A5-claim-submit.md), [A7. Communication Reply](A7-communication-on-request.md), [A10. Transaction Related](A10-txn-related.md), [A11. Transaction Dispatch](A11-txn-dispatch.md), [A13. Transaction List](A13-txn-list.md)
+- Screens: [S9. Pre-authorisation](../screens/S9-preauthorisation.md), [S14. Patient Registration Form](../screens/S14-patient-registration-form.md), [S15. Patient Detail](../screens/S15-patient-detail.md), [S16. Practitioner Master](../screens/S16-practitioner-master.md), [S18. Beneficiary Verification](../screens/S18-beneficiary-verification.md)
+- APIs: [A2. Coverage Eligibility Check](A2-coverage-eligibility-check.md), [A5. Claim Submit](A5-claim-submit.md), [A7. Communication Reply](A7-communication-on-request.md), [A10. Transaction Related](A10-txn-related.md), [A11. Transaction Dispatch](A11-txn-dispatch.md), [A13. Transaction List](A13-txn-list.md), [A17. Claim State](A17-claim-state.md), [A18. Biometric Authentication](A18-biometric-authentication.md)
 - Callbacks: [C5. Pre-auth Reply](../callbacks/C5-preauth-on-submit.md)
 - FHIR: [F8. Claim](../fhir/F8-claim.md), [F9. ClaimResponse](../fhir/F9-claimresponse.md), [F12. Communication](../fhir/F12-communication.md), [F15. Patient](../fhir/F15-patient.md), [F17. Organization](../fhir/F17-organization.md), [F18. Coverage](../fhir/F18-coverage.md)
+- Database: [D12. claim_plan_form](../database/D12-claim-plan-form.md), [D18. claim_preauth](../database/D18-claim-preauth.md), [D31. biometric_auth](../database/D31-biometric-auth.md)
 - Gateway: [G5. Protocol Headers](../gateway/G5-protocol-headers.md)
+- Tests: [T5. IRDAI Pre-authorisation Approved](../tests/T5-irdai-preauth-approved.md), [T6. IRDAI Pre-authorisation Rejected and Sent Again](../tests/T6-irdai-preauth-rejected.md), [T7. IRDAI Query Answered](../tests/T7-irdai-query-answered.md), [T8. IRDAI Enhancement](../tests/T8-irdai-enhancement.md), [T14. PMJAY Pre-authorisation Through the Payer Service](../tests/T14-pmjay-preauth-adjudicated.md), [T15. PMJAY Query Answered by Resubmission](../tests/T15-pmjay-query-by-resubmission.md), [T16. PMJAY Rejection and Enhancement](../tests/T16-pmjay-rejection-and-enhancement.md), [T19. PMJAY Beneficiary Verification and ABHA](../tests/T19-pmjay-biometric-and-abha.md)

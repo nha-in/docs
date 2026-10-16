@@ -1,0 +1,16 @@
+{
+  "model": "haiku",
+  "mcp_url": "http://localhost:8097/mcp",
+  "embed_provider": "none",
+  "catalogue_version": "2026.09.16",
+  "prompt_version": "mcp-agent-v1",
+  "cases": 184,
+  "flagged": 0,
+  "input_tokens": 8298,
+  "output_tokens": 195944,
+  "cache_read_input_tokens": 9779587,
+  "cache_creation_input_tokens": 1823490,
+  "tool_calls": 841,
+  "cost_usd_equivalent": 5.61,
+  "finished_at": "2026-09-29T12:08:37.300Z"
+}

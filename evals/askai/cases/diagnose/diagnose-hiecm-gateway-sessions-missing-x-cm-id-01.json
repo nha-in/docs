@@ -1,0 +1,42 @@
+{
+  "id": "diagnose-hiecm-gateway-sessions-missing-x-cm-id-01",
+  "slice": "diagnose",
+  "class": "diagnose",
+  "turns": [
+    {
+      "role": "user",
+      "text": "The sessions call fails with Invalid header and does not say which one. Which header is it?"
+    }
+  ],
+  "attachment": {
+    "name": "sessions.txt",
+    "text": "curl -X POST https://dev.abdm.gov.in/api/hiecm/gateway/v3/sessions \\\n  -H \"REQUEST-ID: 9c4d2e1f-7a3b-4f6e-8d2c-1b5a9e7f3c22\" \\\n  -H \"TIMESTAMP: 2026-09-29T10:20:31.402Z\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"clientId\":\"SBX_004512\",\"clientSecret\":\"<MASKED_SECRET>\",\"grantType\":\"client_credentials\"}'\n\nHTTP/1.1 400 Bad Request\n\n{\"code\":\"ABDM-1032\",\"message\":\"Invalid header\"}",
+    "kind": "text"
+  },
+  "page": null,
+  "must_contain": [
+    "X-CM-ID is missing from the pasted request; the session call requires it, and in the sandbox the value is sbx",
+    "ABDM-1032 means a required header is absent or unusable and the response does not say which; the gateway calls take REQUEST-ID, TIMESTAMP, X-CM-ID and Authorization",
+    "Check that each header is present, spelled exactly, with its hyphens and case"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.error.abdm-1032",
+    "hiecm.glossary.x-cm-id",
+    "hiecm.endpoint.gateway-sessions"
+  ],
+  "expected_shape": "diagnose",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-hiecm-gateway-yaml",
+  "catalogue_version": "2026.09.16",
+  "notes": "Diagnose group, attached curl with a header absent: it catches an answer that blames the credentials or the body instead of reading the header set and naming the missing X-CM-ID."
+}
