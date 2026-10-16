@@ -1,0 +1,21 @@
+# Screens
+
+Each file has ROUTE (R), DESCRIPTION (D), LAYOUT (L) and ACTIONS (A) sections. DESCRIPTION and ACTIONS are required behaviour; LAYOUT is the reference implementation's arrangement [REF](../references/PAYERS.md#markers) and follows the target's own conventions. S13 to S16 are screens most HMIS already have: only their NHCX additions are built, and the ABHA additions are left out when the HMIS's ABDM module already has them ([SCAFFOLDING 4a](../references/SCAFFOLDING.md)). S19 is the facility's NHCX settings, the one screen an administrator needs to onboard the facility and rotate its key without a developer.
+
+## Claims
+
+| # | Screen | Route | File |
+|---|---|---|---|
+| [S5](S5-claim-master.md) | Claim Master | `claims/list` | [S5-claim-master.md](S5-claim-master.md) |
+| [S6](S6-claim-detail.md) | Claim Detail | `claims/view/:caseid` | [S6-claim-detail.md](S6-claim-detail.md) |
+| [S11](S11-claim-submission.md) | Claim Submission | `claims/view/:caseid/claim` | [S11-claim-submission.md](S11-claim-submission.md) |
+
+## Facility
+
+| # | Screen | Route | File |
+|---|---|---|---|
+| [S19](S19-nhcx-settings.md) | NHCX Settings | `settings/nhcx` | [S19-nhcx-settings.md](S19-nhcx-settings.md) |
+
+## Flow
+
+S5 Claim Master, then S1 Search Policy and S2 Select Policy, then S6 Claim Detail. The tabs of S6 run in episode order: S3 Eligibility, S7 Insurance plan, S8 Line items, S8.2 Validate (auth requirements), S18 Verification, S4 and S9 Pre-authorisation, S10 Communication, S11 Discharge and Claim (two tabs, one screen spec), S12 Payments. S4 links the case to an admission found through S13 and S15, and picks the treating team from S16. Screens this skill does not hold are specified in the skill named beside them.
