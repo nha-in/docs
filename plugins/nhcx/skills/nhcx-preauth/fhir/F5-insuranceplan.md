@@ -4,7 +4,9 @@
 `InsurancePlan`. Direction: received on `insuranceplan/on_request`, in a bundle the payer profiles as `https://nrces.in/ndhm/fhir/r4/StructureDefinition/InsurancePlanBundle` or not at all. No profile is checked. Extensions read: `https://nrces.in/ndhm/fhir/r4/StructureDefinition/Claim-Condition` and `https://nrces.in/ndhm/fhir/r4/StructureDefinition/Claim-SupportingInfoRequirement` (also spelled `claimCondition` / `claimSupportingInfoRequirement`).
 
 #### F5D. DESCRIPTION
-The payer's machine-readable package master for one policy and one facility, the answer to F4. It is flattened into one D10 `claim_plan` row, one D11 `claim_plan_benefit` row per package or implant, and one D12 `claim_plan_form` row per distinct Questionnaire (F6) in the same bundle. A new answer replaces the stored master wholesale.
+The payer's machine-readable package master for one policy and one facility, the answer to F4. It is flattened into one D10 `claim_plan` row for the claim, one D11 `claim_plan_benefit` row per package or implant **per speciality**, and one D12 `claim_plan_form` row per distinct Questionnaire (F6) in the same bundle. A refetch replaces the three.
+
+**Size.** A full scheme master is large: the PMJAY sandbox answers with a JWE of about 45 MB that decrypts to about 33 MB of JSON and parses to some 2,500 benefit rows [SANDBOX](../references/PAYERS.md#markers). The reader must take it whole: see [G8. Receive](../gateway/G8-receive.md) (chunked bodies, body limits) and [G6. Encryption](../gateway/G6-encryption.md) (decrypting a payload this size) for what breaks on the way in, and [D10. claim_plan](../database/D10-claim-plan.md) for storing it once rather than per claim. Nothing in this reader logs or pretty-prints the bundle.
 
 Only the **first** InsurancePlan in the bundle is read. Two published shapes are read, because the payer chooses, and PMJAY sends both for the same packages [PAYER](../references/PAYERS.md#markers):
 
@@ -13,7 +15,7 @@ Only the **first** InsurancePlan in the bundle is read. Two published shapes are
 | Package master | `plan[] > specificCost[] > category, benefit[] > type, cost[]` | package code, name, speciality, rate, tiers, implants |
 | Indemnity | `coverage[] > type, benefit[] > type, limit[]` | benefit code, name, category, limit |
 
-The two are merged on the package code. `specificCost` is read first and wins, and `coverage` adds only codes `specificCost` did not carry. They are never concatenated, which would double every package.
+The two are merged on the pair (category code, package code). `specificCost` is read first and wins, and `coverage` adds only pairs `specificCost` did not carry. They are never concatenated, which would double every package. A package listed under several categories is kept once per category: PMJAY repeats 545 of its 1,537 codes across specialities, Dengue `MG004A` among them under `MC`, `MG` and `MP` [PAYER](../references/PAYERS.md#markers). Merging on the code alone keeps the first category seen and loses the rest.
 
 **Costs (package master).** The cost whose `type.coding[0].code` is `Procedure` is the package rate (matched on the code, never on the display, which is a sentence). A rate of 0 is real: many packages are priced by their ward tiers alone [PAYER](../references/PAYERS.md#markers). Every other cost (`Stratification` for the ward, HDU and ICU tiers; `Implant`) is money over and above the rate. It is kept as an extra, named by its first `qualifiers[]` coding. A benefit is typed `Procedure` when it has a rate, else `Implant` when one of its extras is an Implant, else left untyped.
 
@@ -21,7 +23,7 @@ The two are merged on the package code. `specificCost` is read first and wins, a
 
 **Extensions.** A plan element (the InsurancePlan itself, a `plan`, a `coverage`, a benefit) can carry two families of complex extension, told apart by url with hyphens and underscores removed and case ignored:
 - **Conditions** (`Claim-Condition`) constrain whether the package can be claimed. Where the extension has children, a child's url tail names the condition (`.../Claim-Condition/IsDayCare` gives `IsDayCare: "Y"`). A child named `code`, `type` or `condition` paired with one named `value` is read as that code and value. An extension with no children is keyed by its own url tail. The value is the child's `value[x]`: a CodeableConcept gives its display, else code.
-- **Document requirements** (`Claim-SupportingInfoRequirement`) name a document that must ride with the claim, or a form to fill. Its children are a category and a code CodeableConcept (child urls `category` / `code`, or `SupportInfoCategory` / `SupportInfoCode`), plus an optional `documentationUrl` pointing at a Questionnaire (F6): `/policy/questionnaire/<id>` is a policy form, `/policy/stgquestionnaire/<id>` a standard treatment guideline checklist. The pointer's value is read from whichever child the payer uses: `valueUrl`, `valueUri`, `valueString`, `valueCanonical` **or `valueReference.reference`**. The IRDAI sandbox payer sends the Reference shape, `{"url": "documentationUrl", "valueReference": {"reference": "https://.../Questionnaire/<id>", "display": "<STG title>"}}` [PAYER](../references/PAYERS.md#markers); a reader that takes only the URL shapes loses every package's STG form (`form` null on each requirement), so read both. PMJAY nests one requirement per document instead (`.../Claim-SupportingInfoRequirement/MG0111A/100455/MAND0455`, each with its own category and code) [PAYER](../references/PAYERS.md#markers). When any child has children of its own, each such child is one requirement and flat children are ignored. A requirement with neither a code nor a form is dropped.
+- **Document requirements** (`Claim-SupportingInfoRequirement`) name a document that must ride with the claim, or a form to fill. Its children are a category and a code CodeableConcept (child urls `category` / `code`, or `SupportInfoCategory` / `SupportInfoCode`), plus an optional `documentationUrl` pointing at a Questionnaire (F6): `/policy/questionnaire/<id>` is a policy form, `/policy/stgquestionnaire/<id>` a standard treatment guideline checklist (PMJAY's STQ). Each requirement is classified `pre` or `post` (never both) by D11's stage rule: a `stage`, `Type` or `useContext` child when the payer sends one, else the wording of its display and the questionnaire's title. The pointer's value is read from whichever child the payer uses: `valueUrl`, `valueUri`, `valueString`, `valueCanonical` **or `valueReference.reference`**. The IRDAI sandbox payer sends the Reference shape, `{"url": "documentationUrl", "valueReference": {"reference": "https://.../Questionnaire/<id>", "display": "<STG title>"}}` [PAYER](../references/PAYERS.md#markers); a reader that takes only the URL shapes loses every package's STG form (`form` null on each requirement), so read both. PMJAY nests one requirement per document instead (`.../Claim-SupportingInfoRequirement/MG0111A/100455/MAND0455`, each with its own category and code) [PAYER](../references/PAYERS.md#markers). When any child has children of its own, each such child is one requirement and flat children are ignored. A requirement with neither a code nor a form is dropped.
 
 A benefit's conditions are its plan element's conditions overlaid with its own. Its document list is the plan element's list followed by its own. Requirements on the InsurancePlan resource itself are policy-wide (proof of identity, proof of address, forms every claim needs) and are stored once on D10.
 
@@ -46,7 +48,7 @@ Into D11 `claim_plan_benefit`, from `plan[].specificCost[]`:
 | Element read | Stored in | Notes |
 |---|---|---|
 | `specificCost[].category.coding[0]` code / display | `category_code` / `category_display` | the speciality |
-| `benefit[].type.coding[0]` code / display (else `text`) | `code` / `display` | a benefit without a code is skipped; a code already seen is skipped |
+| `benefit[].type.coding[0]` code / display (else `text`) | `code` / `display` | a benefit without a code is skipped; a (category, code) pair already seen is skipped, the same code under another category is kept |
 | `benefit[].cost[]` with `type` code `Procedure`: `value.value`, `value.unit` (else `value.code`) | `rate`, `currency` | first such cost; `cost_type` = `Procedure` when present |
 | other `cost[]`: `type` code, `qualifiers[0].coding[0]` code / display, `value.value`, `value.unit` | `extras` (JSON list of `{type, code, label, rate, currency}`) | `Stratification`, `Implant` |
 | computed | `kind` | `Procedure` with a rate, else `Implant` with an Implant extra, else null |
@@ -54,7 +56,7 @@ Into D11 `claim_plan_benefit`, from `plan[].specificCost[]`:
 | `Claim-SupportingInfoRequirement` on the `plan[]` element and on the benefit | `supporting_info` (JSON list of `{category, category_display, code, display, form}`) | plan first |
 | none | `requirement` | null on this shape |
 
-From `coverage[]` (only codes not already taken):
+From `coverage[]` (only (category, code) pairs not already taken):
 
 | Element read | Stored in | Notes |
 |---|---|---|
@@ -71,4 +73,4 @@ From `coverage[]` (only codes not already taken):
 #### F5U. USED BY
 - Screens: [S7. Insurance Plan](../screens/S7-insurance-plan.md)
 - Callbacks: [C4. Insurance Plan Reply](../callbacks/C4-insuranceplan-on-request.md)
-- FHIR: [F1. Bundle](F1-bundle.md), [F4. Task (InsurancePlan discovery)](F4-task-insuranceplan.md), [F6. Questionnaire](F6-questionnaire.md)
+- FHIR: [F1. Bundle](F1-bundle.md), [F3. CoverageEligibilityResponse](F3-coverage-eligibility-response.md), [F4. Task (InsurancePlan discovery)](F4-task-insuranceplan.md), [F6. Questionnaire](F6-questionnaire.md)

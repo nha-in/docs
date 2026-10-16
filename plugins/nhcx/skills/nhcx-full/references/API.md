@@ -32,7 +32,7 @@ Polling is the fallback when a callback is missed. Opening a claim runs these fo
 |---|---|---|---|---|---|
 | [A14](../apis/A14-adjudicator-user-role.md) | Adjudicator User Role | payer service `get/user-role`, or the IRDAI desk | Reads which payer role holds a case now, and so which actions are legal. | none | none |
 | [A15](../apis/A15-adjudicator-process-case.md) | Adjudicator Process Case | payer service `process/case`, or the IRDAI desk | Takes one decision on a pre-auth or claim, or walks a case through every role (at most 8 rounds) until it is decided. | [C10](../callbacks/C10-paymentnotice-request.md) | none |
-| [A16](../apis/A16-gateway-token.md) | Gateway Token | `gateway.token(participant)` (G3) | Supplies the ABDM session token the payer service calls need, unless a payer service token is configured. | none | none |
+| [A16](../apis/A16-gateway-token.md) | Gateway Token | `gateway.token(participant)` (G3) | Supplies the ABDM session token the payer service calls need, unless a payer service token is configured. | none | [S19](../screens/S19-nhcx-settings.md) |
 
 ## ABDM calls beside the exchange
 
@@ -47,4 +47,4 @@ Plain JSON to ABDM with the session token: the beneficiary's biometric authentic
 
 | # | API | Call | What it does | Replies | Screens |
 |---|---|---|---|---|---|
-| [A17](../apis/A17-claim-state.md) | Claim State | `GET claims/view/:caseid/state` | Runs the same polls as opening the claim, then returns everything the claim's tabs show as one JSON document, for scripted drivers and tests. | [C2](../callbacks/C2-coverage-eligibility-on-check.md), [C3](../callbacks/C3-auth-requirements-on-check.md), [C4](../callbacks/C4-insuranceplan-on-request.md), [C5](../callbacks/C5-preauth-on-submit.md), [C6](../callbacks/C6-claim-on-submit.md), [C7](../callbacks/C7-cancel-on-submit.md), [C8](../callbacks/C8-enquiry-on-submit.md) | [S6](../screens/S6-claim-detail.md) |
+| [A17](../apis/A17-claim-state.md) | Claim State | `GET claims/view/:caseid/state` | Runs the same polls as opening the claim, then returns everything the claim's tabs show as one JSON document, for scripted drivers and tests. | [C2](../callbacks/C2-coverage-eligibility-on-check.md), [C3](../callbacks/C3-auth-requirements-on-check.md), [C4](../callbacks/C4-insuranceplan-on-request.md), [C5](../callbacks/C5-preauth-on-submit.md), [C6](../callbacks/C6-claim-on-submit.md), [C7](../callbacks/C7-cancel-on-submit.md), [C8](../callbacks/C8-enquiry-on-submit.md) | [S6](../screens/S6-claim-detail.md), [S7](../screens/S7-insurance-plan.md) |

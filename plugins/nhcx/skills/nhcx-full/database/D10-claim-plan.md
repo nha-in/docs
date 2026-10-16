@@ -4,7 +4,7 @@
 One row is the payer's package master (InsurancePlan) for one claim's policy and provider pair; primary key `id`; parent table [D9. claim](D9-claim.md) (one row per claim).
 
 #### D10D. DESCRIPTION
-The package master is fetched over NHCX with an InsurancePlan discovery Task (A3, answered on C4). The Task carries only the policy number and the facility's HFR ID. The reply's InsurancePlan is flattened into this row, its packages into [D11. claim_plan_benefit](D11-claim-plan-benefit.md) and its Questionnaires into [D12. claim_plan_form](D12-claim-plan-form.md).
+The package master is fetched over NHCX with an InsurancePlan discovery Task (A3, answered on C4). The Task carries only the policy number and the facility's HFR ID. The reply's InsurancePlan is flattened into this row, its packages into [D11. claim_plan_benefit](D11-claim-plan-benefit.md) and its Questionnaires into [D12. claim_plan_form](D12-claim-plan-form.md). The master is held per claim, not once per facility: a payer may answer the same policy and facility differently for different beneficiaries, so the answer a case was priced on is kept with that case.
 
 A `ready` plan decides what the rest of the claim uses. The line picker ([D16](D16-claim-line.md)) and line prices come from its benefits, and the package picker uses it in place of the local `claim_package` list. Its documents and forms are the fallback requirement list when there is no auth-requirements ruling ([D13](D13-claim-auth.md)).
 

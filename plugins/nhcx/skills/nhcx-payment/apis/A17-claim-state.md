@@ -53,10 +53,12 @@ Row objects are the stored rows with every column, or `null` when the row does n
 | Key | Type | Content |
 |---|---|---|
 | `claim` | object | The claim row (after the polls). |
-| `plan` | object or null | The claim's insurance plan (package master) row. |
-| `benefits` | array | The plan's packages, in order, a subset of each D11 row (see A17P). Empty when there is no plan. |
-| `admissions` | array | Current inpatient stays of patients registered with the claim's ABHA number (compared on digits only). |
-| `lines` | array | The claim's line item rows, by kind then sequence. |
+| `plan` | object or null | The claim's insurance plan (package master) row (D10), without `response_json`. |
+| `benefits` | array | The plan's packages, in order, one per (speciality, code), a subset of each D11 row that includes the tiers (`extras`) and the counts of conditions and documents (see A17P). `conditions` and `supporting_info` themselves come from `GET claims/:caseid/plan/benefits/:id` (S7.1 (in nhcx-preauth)). Empty when there is no plan. |
+| `beneficiaries` | array | Every person the payer's eligibility reply returned (D9 `beneficiaries_json`), each `{member_id, name, gender, dob, address, abha_number, photo, relationship, checked, chosen}`. Empty before a reply. |
+| `beneficiary_pending` | boolean | `true` when the reply holds more than one person and none is chosen yet (D9 `beneficiary_member_id` null); the link, the plan fetch and every send are refused while it is true. |
+| `admissions` | array | Current inpatient stays of patients registered with the chosen beneficiary's ABHA number (compared on digits only), each with the HMIS patient's `name`, `gender`, `dob` and `same_person` (`true` when gender and date of birth equal the beneficiary's). Empty while `beneficiary_pending`. The application never links one of these by itself. |
+| `lines` | array | The claim's line item rows, by kind then sequence, each with its `cycle`, `benefit_id` and `open_price`. |
 | `ruling` | object or null | The auth requirements ruling row. |
 | `required_documents` | object | `preauth` and `claim`: arrays of the documents the payer named for that stage. |
 | `forms` | object | `preauth` and `claim`: arrays of `{"url", "title", "questions"}`, the questionnaires that stage has to carry, with each form's stored questions. |
@@ -85,6 +87,8 @@ Each per-item verdict (`preauth_items`, `submission_items`) is `{"sequence", "st
   "claim": {"id": 42, "claim_no": "NM-26-0SE000001", "status": "eligible", "stage": "preauth", "sub_stage": "requested"},
   "plan": null,
   "benefits": [],
+  "beneficiaries": [],
+  "beneficiary_pending": false,
   "admissions": [],
   "lines": [],
   "ruling": null,
@@ -143,13 +147,19 @@ STATE(caseid):
 
   respond 200 {
     claim:              claim row,
-    plan:               plan row or null,
+    plan:               the claim's claim_plan row, minus response_json, or null,
     benefits:           claim_plan_benefit rows of the plan ordered by seq, columns
-                        id, kind, code, display, category_code, category_display, rate
-                        ([] when no plan),
-    admissions:         current IPD encounters (status not "finished") of patients whose ABHA
+                        id, kind, code, display, category_code, category_display, rate, currency,
+                        cost_type, requirement, extras, open_price (rate null, or 0 with no
+                        Stratification extra), conditions_count, documents_count
+                        ([] when no plan); conditions and supporting_info are fetched per row
+    beneficiaries:      claim.beneficiaries_json as a list, each with chosen = (member_id == claim.beneficiary_member_id),
+    beneficiary_pending: len(beneficiaries) > 1 and claim.beneficiary_member_id is null,
+    admissions:         [] when beneficiary_pending or the claim has no ABHA digits, else
+                        current IPD encounters (status not "finished") of patients whose ABHA
                         number has the same digits as claim.abha_number, newest period_start
-                        first ([] when the claim has no ABHA digits),
+                        first, each with the patient's name, gender, dob and
+                        same_person = (gender == claim.patient_gender and dob == claim.patient_dob),
     lines:              claim_line rows,
     ruling:             claim_auth row or null,
     required_documents: {preauth: [...], claim: [...]}      # the documents the payer named per stage

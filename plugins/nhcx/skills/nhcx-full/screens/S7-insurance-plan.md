@@ -19,9 +19,15 @@ Intro text on the card: "The payer's **package master** for this policy and this
 - The facility must have an HFR ID: "Set the facility's HFR ID under Settings before fetching a package master."
 - The facility must have an NHCX participant code: "Set the facility's NHCX participant code under Settings before fetching a package master."
 
-Reuse before asking: on the first fetch (not on "Fetch again"), if another case already holds a `ready` master for the same payer, the same policy code and the same facility HFR ID, the newest one is copied onto this case and no request goes out. Flash: "Using the package master already held for this policy - Fetch again asks the payer for a new one." A master belongs to the facility and the policy, not to one case, and a full PMJAY master is tens of megabytes [SANDBOX](../references/PAYERS.md#markers).
+**Check for an existing master first.** On opening the tab the application looks for a `ready` master for the same payer, the same policy code and the same facility HFR ID on any case. Found: it is copied onto this case **and shown at once, without any fetch button being pressed**; "Fetch again" is the only call offered, and nothing asks the payer. The desk is never shown "Fetch insurance plan" for a master the facility already holds. Not found: what happens next is the integration decision `plan.trigger` (L1.A): **manual**, the tab shows the intro and the "Fetch insurance plan" button and nothing else until the desk presses it; **automatic**, the fetch is sent when the tab is first opened (the same guards apply, a refusal is shown instead). Whether a stored master is refreshed on a schedule is `plan.refresh`: manual, only "Fetch again" refreshes it; automatic, a job refetches masters older than the chosen period and the tab shows "Refreshed automatically <when>". Until a master is held the tab offers no other action: no packages, no forms, no line items ([S8. Line Items](S8-line-items.md) says "fetch the plan first").
+
+Reuse before asking: on the first fetch (not on "Fetch again"), if another case already holds a `ready` master for the same payer, the same policy code and the same facility HFR ID, the newest one is copied onto this case and no request goes out. Flash: "Using the package master already held for this policy - Fetch again asks the payer for a new one." The master is held per case ([D10. claim_plan](../database/D10-claim-plan.md)) because the payer may answer differently for different beneficiaries; a full PMJAY master is tens of megabytes [SANDBOX](../references/PAYERS.md#markers).
+
+Before the master is fetched, the tab refuses while the beneficiary is still to be chosen ([S3. Policy Discovery](S3-policy-discovery.md)): "Choose which member of the policy is the patient on the Eligibility tab first."
 
 API: [A3. Insurance Plan Request](../apis/A3-insurance-plan-request.md)
+
+**The reader must carry every field the payer sends.** The InsurancePlan the sandbox returns is checked against the knowledge package's InsurancePlan example ([F5. InsurancePlan](../fhir/F5-insuranceplan.md)): every element the example holds (plan, coverage, benefits, limits, specific costs, the questionnaire extension, the document requirements) has a column or a JSON field in [D10. claim_plan](../database/D10-claim-plan.md) to [D12. claim_plan_form](../database/D12-claim-plan-form.md), and L6 fails the build when the reader drops one. A field the hospital does not show is still stored, so a later screen can read it without a refetch.
 
 With neither a policy code nor an HFR ID the request is refused: "A plan request needs a policy code or the facility's HFR ID." Flash: "Insurance plan requested from the payer." A refetch clears the case's packages before the new answer lands, so a stale package cannot survive it.
 
@@ -72,7 +78,7 @@ Summary card "Insurance plan", three columns: Plan, Plan identifier, Plan type, 
 
 A primary "Search" button (search icon). "Clear" (x icon) appears when any filter is set and resets all three.
 
-**Packages table.** Card title "<n> package(s)" where n is the filtered count. Rows keep the payer's order. Columns:
+**Packages table.** Card title "<n> package(s)" where n is the filtered count of rows, one row per package **per speciality** (Dengue `MG004A` appears three times on a PMJAY master, under Cardiology, General Medicine and Paediatric medical management, each a row [PAYER](../references/PAYERS.md#markers)). Rows keep the payer's order. Columns:
 
 | Column | Content |
 |---|---|
@@ -80,7 +86,8 @@ A primary "Search" button (search icon). "Clear" (x icon) appears when any filte
 | Package | Package name, or the code |
 | Speciality | Speciality name, or code, or `-` |
 | Type | Chip: `Procedure` info, anything else (`Implant`) warning, `-` if none |
-| (action) | "View" small secondary button, opens S7.1 in a modal |
+| Rate | The package rate, with "+<k> tier(s), up to ₹<max>" underneath when ward or ICU tiers are priced over it; "tiers only" when the rate is 0 and tiers exist; "open" when the plan names no rate |
+| (action) | "View" small secondary button, opens S7.1 in a modal for that (speciality, package) row |
 
 Every package is listed: there is no row limit, whatever the size of the plan. A large plan is paged, 100 rows a page with "Previous" and "Next" and "Page <p> of <q>" under the table [REF](../references/PAYERS.md#markers), and search and filters narrow it across all its packages, not just the page shown. Empty state: "Nothing matches that search."
 
@@ -132,9 +139,9 @@ claims/view/:caseid/plan/:benefitid
 Breadcrumb: Claims (S5) > <case number> (S7) > <package code>
 
 #### S7.1D. DESCRIPTION
-Everything the payer published about one package. It serves both as the modal body on S7 (fragment mode, with the package name as a heading) and as a full page with the package name as the card title. A package id that does not belong to this case gives a "Package" not-found page.
+Everything the payer published about one package under one speciality. It serves both as the modal body on S7 (fragment mode, with the package name as a heading) and as a full page with the package name as the card title. The body is loaded from `GET claims/:caseid/plan/benefits/:benefitid`, which returns the whole D11 row (tiers, conditions and documents included, which the claim state A17 leaves out for size). A package id that does not belong to this case gives a "Package" not-found page.
 
-Header, three columns: Code, Type, Speciality, Package rate (`₹`), Currency, Requirement, Plan.
+Header, three columns: Code, Type, Speciality (with "also under: <other specialities>" when the master lists the same code elsewhere, each a link to that row), Package rate (`₹`; "tiers only" when 0 with tiers; "open, priced by the hospital" when none), Currency, Requirement, Plan.
 
 Below it, an accordion (several sections open at once). For a Procedure:
 
@@ -147,8 +154,8 @@ For an Implant, instead of those two:
 
 Then for both:
 
-- "Claim conditions (<n>)": columns Condition, Value (`Yes` for a true flag). Empty: "The payer published no conditions for this package."
-- "Documents required (<n>)": columns Code, Document, Category, Form (the questionnaire title, "form not sent" when the document names a form the plan did not include, `-` when none). Empty: "No documents are listed as mandatory here."
+- "Claim conditions (<n>)": columns Condition, Value (`Yes` for a true flag). Empty: "The payer published no conditions for this package." A PMJAY Dengue package carries some eighteen [SANDBOX](../references/PAYERS.md#markers); every one is listed.
+- "Documents required (<n>)": columns Code, Document, Category, Stage (a chip: "Pre-auth", "Post (claim)" or "Both", D11's stage rule), Form (the questionnaire title, "form not sent" when the document names a form the plan did not include, `-` when none). Empty: "No documents are listed as mandatory here."
 - "Forms to complete (<n>)", only when the documents name questionnaires the plan carries: an inner accordion, one panel per form titled "<form title> (<question count>)", each a read-only table as in S7.3.
 
 Data: [D11. claim_plan_benefit](../database/D11-claim-plan-benefit.md)

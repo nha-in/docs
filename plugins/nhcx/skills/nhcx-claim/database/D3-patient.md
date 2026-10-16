@@ -12,6 +12,8 @@ Once linked, the claim-side bundles take the patient from this row, falling back
 
 `abha_number` and `abha_address` are written by hand on the form, or, better, by the ABHA service through A19. ABHA Create and Verify (ABDM M1) (in nhcx-coverage): a verified or newly created ABHA, with the name, gender, date of birth and mobile the service holds filling what the form left blank. The ABHA number is unique across patients, so a second registration under the same ABHA is refused ("Another patient is already registered with that ABHA number").
 
+**When the HMIS has an ABDM module** that already holds the ABHA (its own ABHA model, or an identifier configuration under its own system URL), these two columns are not added: NHCX reads and writes the ABHA through that record, under that system, and the claim's admission match reads the same value ([SCAFFOLDING.md](../references/SCAFFOLDING.md), section 4a). One patient has one ABHA in the HMIS, visible to the module and to NHCX alike.
+
 Lifecycle:
 - Created from the registration form (S14). `name` and `phone` are mandatory ("Name and mobile number are mandatory."). On create the application allocates `mrn` from the `mrn` counter as `MRN` plus five digits (`MRN00001`) [REF](../references/PAYERS.md#markers), stamps `created_at` and `updated_at`, and sets `managing_org_id` to the facility row. `gender` falls back to `unknown`; `country` is always written as `India`.
 - Updated from the same form: every form field is overwritten and `updated_at` is stamped. `mrn` and `managing_org_id` do not change.
@@ -60,4 +62,4 @@ Lifecycle:
 - Screens: [S18. Beneficiary Verification](../screens/S18-beneficiary-verification.md)
 - APIs: [A18. Biometric Authentication](../apis/A18-biometric-authentication.md)
 - FHIR: [F15. Patient](../fhir/F15-patient.md)
-- Database: [D1. organization](D1-organization.md), [D9. claim](D9-claim.md), [D30. counter](D30-counter.md), [D31. biometric_auth](D31-biometric-auth.md)
+- Database: [D1. organization](D1-organization.md), [D9. claim](D9-claim.md), [D12. claim_plan_form](D12-claim-plan-form.md), [D30. counter](D30-counter.md), [D31. biometric_auth](D31-biometric-auth.md)

@@ -7,7 +7,7 @@ Breadcrumb: Claims (claims/list, S5) > <case number> (S6)
 
 Sub-pages in this file:
 - S8.1 Choose Line Items: claims/view/:caseid/lines/choose
-- S8.2 Authorisation Requirements card (shown on the Validate step, S4)
+- S8.2 Authorisation Requirements card, and the Benefits check card, both under the lines on this tab (there is no Validate tab from 1.7.0; the old `validate` tab key opens this tab)
 
 #### S8D. DESCRIPTION
 What the pre-authorisation quotes: the procedures being done, the implants the payer approves for them, and the ward or ICU tier the stay runs at. Every line comes from the payer's own package master (S7), priced at the payer's rate. There is no local price list on this path.
@@ -37,7 +37,7 @@ A ward or ICU tier is not a line of its own. Its rate is inside the amount of th
 
 Under the table, right-aligned: "Total ₹<sum of all line amounts>" (tiers included). Empty state: "Nothing quoted yet. The payer prices this preauth from its own package master - choose the procedure, the implants it approves and the ward tier."
 
-Nothing is sent to NHCX from this tab. Changing the lines after the payer has ruled on them marks the ruling stale on S8.2.
+Two optional checks are sent from this tab, once lines exist, and only from here: the **benefits check** (A2 `benefits` on the quoted set: "Benefits check" card, button "Ask what the policy covers", help "Sends the <n> quoted line(s) to the payer as a benefits check: what does the policy cover for these packages? Optional, before the pre-authorisation; the pre-authorisation can go without it."; the button reads "Awaiting the payer" while the case is `checking`; under it the last benefits check's status and time, **what the payer answered** (the outcome and the disposition sentence, for example "All 1 requested items are covered; pre-authorisation is required and the documents listed must accompany it.", and the **Coverage benefits table** of [S3. Policy Discovery](S3-policy-discovery.md) (every `insurance.item` of the reply: package, covered or excluded, term, authorisation required, each benefit's type with allowed and used, the supporting documents; "The payer listed no itemised benefits on its last reply." when none), with its correlation id and transaction id, each copied on a click; the Eligibility tab's wallet tiles update from the same reply) and the **authorisation-requirements ruling** (S8.2). Both are checks, never gates: a pre-authorisation is sent with or without them, an unfavourable answer is shown and does not block, and a payer that never answers (PMJAY's sandbox) holds nothing up [SANDBOX](../references/PAYERS.md#markers). Under the two cards a hand-over card reads "Both checks are optional and never hold the pre-authorisation. The Pre-authorisation tab is open." with "Go to the pre-authorisation". Changing the lines after the payer has ruled on them marks the ruling stale on S8.2.
 
 Data: [D16. claim_line](../database/D16-claim-line.md)
 
@@ -66,7 +66,8 @@ The arrangement below is the reference implementation's [REF](../references/PAYE
 #### S8A. ACTIONS
 1. Choose line items: open S8.1.
 2. Go to the insurance plan (before the plan is ready): open S7.
-3. Validate tab: open S4, where S8.2 sends this set for a ruling.
+3. Ask what the policy covers: send the benefits check on the quoted set (A2 `benefits`) and reload the tab with "Eligibility request queued to the payer."
+4. Go to the pre-authorisation: open the Pre-authorisation tab (S4 and S9).
 4. Breadcrumb "Claims": S5. Case number: S6.
 
 ---
@@ -91,7 +92,8 @@ The picker. Three blocks, top to bottom: what is on the pre-authorisation, what 
 | Item | Name, code underneath |
 | Speciality | Speciality name or `-` |
 | Ward / ICU tier | Tier chips as on S8, each with its own red "Remove" button (confirm "Take this tier off the preauth?") |
-| Rate | The plan's rate as text. Where the plan prices the line at zero or names no rate, a number input instead (8rem, min 0, step 0.01), since such a package is billed at the hospital's own price [PAYER](../references/PAYERS.md#markers) |
+| Rate | The plan's rate as text. Where the price is **open** (the plan names no rate, or names zero and offers no ward or ICU tier for the package), a number input instead (8rem, min 0, step 0.01), since such a package is billed at the hospital's own price [PAYER](../references/PAYERS.md#markers). A zero rate with tiers is not open: the package is priced by its tiers alone, the cell reads "tiers only" and cannot be typed over |
+| Cycle | For a package the payer bills per cycle or session (chemotherapy, dialysis, PMJAY's cyclic packages [PAYER](../references/PAYERS.md#markers)): the cycle number of this line, from 1. Blank for everything else |
 | Quantity | Number input (6rem, min 1, step 1), whole numbers |
 | Amount | `₹` whole rupees |
 | (action) | Red "Remove" button, confirm "Take this line off the preauth?" |
@@ -120,16 +122,18 @@ Built from the procedures already on the pre-authorisation, from what their plan
 
 A filter row above the card, a GET form: "Search" (text, at least 18rem, matches code or name as a substring), "Speciality" (blank "All specialities", options `<name> (<count>)`), "Type" (blank "Any type", `Procedure` or `Implant`), and a primary "Search" button. Unlike S7 there is no Clear button.
 
-Card title "<n> in the payer's package master". Columns: Code, Package, Speciality, Type (chip, Procedure info, otherwise warning), Rate, and "Add". A benefit whose kind a pre-authorisation cannot quote (a policy-wide allowance such as an ambulance or room sub-limit) gets no Add button. Every package is listed, with no row limit: paged 100 rows a page with "Previous" and "Next" and "Page <p> of <q>" [REF](../references/PAYERS.md#markers), and the search and filters narrow the whole package master. Empty: "Nothing matches that search."
+Card title "<n> in the payer's package master". Columns: Code, Package, Speciality, Type (chip, Procedure info, otherwise warning), Rate (as on S7: the rate, "tiers only", or "open"), and "Add". One row per package **per speciality**: Dengue `MG004A` is three rows on a PMJAY master, and the desk adds the one for the speciality the case is treated under, which is what goes out as `Claim.item.category` [PAYER](../references/PAYERS.md#markers). A benefit whose kind a pre-authorisation cannot quote (a policy-wide allowance such as an ambulance or room sub-limit) gets no Add button. Every package is listed, with no row limit: paged 100 rows a page with "Previous" and "Next" and "Page <p> of <q>" [REF](../references/PAYERS.md#markers), and the search and filters narrow the whole package master. Empty: "Nothing matches that search."
 
-**Adding a line** posts the kind, the code, and for a tier the parent procedure code. The price is read from the plan at add time, never from the form: a Procedure or Implant takes the benefit's rate, a tier takes the rate its parent procedure lists for it (different procedures price the same ward differently [PAYER](../references/PAYERS.md#markers)). The new line starts at quantity 1. Rules, each shown verbatim as a red flash:
+**Adding a line** posts the kind, the code, the speciality (`category_code`), and for a tier the parent procedure code. The price is read from the plan at add time, never from the form: a Procedure or Implant takes the benefit's rate under that speciality, a tier takes the rate its parent procedure lists for it (different procedures price the same ward differently [PAYER](../references/PAYERS.md#markers)). The new line starts at quantity 1. Rules, each shown verbatim as a red flash:
 - Kind not one of the three: "That is not something a preauth can quote."
 - No code: "Nothing was selected."
 - Plan not ready: "Fetch the payer's insurance plan first, the preauth quotes its packages and its rates."
+- Speciality missing when the code is listed under more than one: "Pick the speciality this package is quoted under."
 - Tier with an unknown parent: "Pick the procedure this ward tier belongs to."
 - Tier the parent does not offer: "That ward tier is not offered for this package."
-- Code not in the plan as that kind: "<code> is not a <kind in lower case> in this plan."
-- Already quoted: "<code> is already on this preauth."
+- Code not in the plan as that kind under that speciality: "<code> is not a <kind in lower case> in this plan under <speciality>."
+- Already quoted, and the package is not cyclic: "<code> is already on this preauth."
+- Already quoted, and the package **is** cyclic (the plan's conditions mark it so, or the adapter lists it, [PAYERS.md](../references/PAYERS.md)) [PAYER](../references/PAYERS.md#markers): a new line is added as the next cycle, flash "<code> added as cycle <n>." PMJAY wants one item per cycle on an enhancement, so a second cycle is a second line, not a quantity of 2 ([D16. claim_line](../database/D16-claim-line.md)).
 - Success: "<code> added."
 
 Every action returns to S8.1.
@@ -182,7 +186,7 @@ Data: [D11. claim_plan_benefit](../database/D11-claim-plan-benefit.md)
 ## S8.2 Authorisation Requirements
 
 #### S8.2R. ROUTE
-Card on claims/view/:caseid/validate (S4, the Validate step). Its action posts and returns to S4.
+Card on claims/view/:caseid/lines, under the quoted lines and the Benefits check card. Its action posts and returns to this tab. (Before 1.7.0 it sat on a Validate tab of its own; that tab is gone and its key opens Line items.)
 
 #### S8.2D. DESCRIPTION
 The payer's ruling on the quoted procedure set: whether each line needs authorisation or is excluded, and which documents and forms this particular set needs. A muted line "Payer adapter: <adapter name>" closes the card in every state.
@@ -207,7 +211,7 @@ Then an accordion:
 2. "Needed for this pre-authorisation (<n>)": requirements the payer marked for the pre-authorisation stage.
 3. "Needed later, with the claim (<n>)", only when there are any, with the muted note "The payer marked these for a stage after pre-authorisation, so they are not asked for here."
 
-Requirement tables: columns Kind (chip `Form` info or `Document` warning), Code, What, For (the line code it belongs to), Stage. Empty: "Nothing listed."
+Requirement tables: columns Kind (chip `Form` info or `Document` warning), Code, What, For (the line code it belongs to), Stage (chip "Pre-auth", "Post (claim)" or "Both", D11's stage rule). Empty: "Nothing listed."
 
 **Sending.** Checked before any call (red flash on S4):
 - Case not eligible: "Check the policy's eligibility before validating a procedure set against it."
@@ -255,6 +259,6 @@ Data: [D15. claim_auth_requirement](../database/D15-claim-auth-requirement.md)
 ```
 
 #### S8.2A ACTIONS:
-1. Validate procedure set / Check again: send the check and return to S4 with a flash.
+1. Validate procedure set / Check again: send the check and return to the Line items tab with a flash.
 2. Refresh (case header, S6): reload and poll for the ruling.
 3. Go to the pre-authorisation (the card under this one on S4): open S9.

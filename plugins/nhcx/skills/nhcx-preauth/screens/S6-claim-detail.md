@@ -23,7 +23,7 @@ The shell for one claim case. It carries a header that says whose case it is and
 |---|---|---|
 | Eligibility check (S3) | case status `checking` | muted note "Could not poll the gateway: <error>" on the Eligibility tab |
 | Insurance plan fetch (S7) | plan status `fetching` | muted note "Could not poll the gateway: <error>" on the Insurance plan tab |
-| Auth-requirements ruling (Validate) | ruling status `checking` | nothing; the card keeps saying it is awaiting |
+| Auth-requirements ruling (Line items) | ruling status `checking` | nothing; the card keeps saying it is awaiting |
 | Claim submission (S11) | submission status `submitting` | nothing |
 | Predetermination quote (S9) | any quote status `asking` | nothing |
 | Pre-authorisation (S9) | status `submitting` (polls the reply) or `cancelling` (polls the cancellation) | nothing |
@@ -54,7 +54,7 @@ The page never reloads itself, because that would throw away whatever is being t
 | Stage `preauth`/`enhancement`, `draft` or `refused` | Send the pre-authorisation | Pre-authorisation (S9) |
 | Stage `preauth`/`enhancement`, `rejected` | Send a fresh pre-authorisation | Pre-authorisation (S9) |
 | Stage `preauth`/`enhancement`, `approved`/`partial`, lines added since | Send the enhancement (<n> added) | Pre-authorisation (S9) |
-| Same, nothing added, no discharge recorded | Record the discharge | Claim (S11) |
+| Same, nothing added, no discharge recorded | Record the discharge | Discharge (S11, discharge card) |
 | Same, discharge recorded | File the claim | Claim (S11) |
 | Stage `preauth`/`enhancement`, `requested`/`answered`/`resubmitted` | With the payer; ask where it stands | Pre-authorisation (S9) |
 | Stage `claim`, `queried` | Answer the claim query (resubmission payer), else "Answer the payer's query" | Claim (S11) / Communication (S10) |
@@ -73,18 +73,19 @@ The page never reloads itself, because that would throw away whatever is being t
 | 1 | `eligibility` | Eligibility | S3 |
 | 2 | `plan` | Insurance plan | S7 |
 | 3 | `lines` | Line items | S8 |
-| 4 | `validate` | Validate | S8.2 (auth-requirements ruling on the line items) |
 | 5 | `verification` | Verification | S18 (the beneficiary authenticated against their ABHA, at the stage the stay is at) |
 | 6 | `preauth` | Pre-authorisation | S4 (link admission, draft form) and S9 (send, verdict, documents, forms) |
 | 7 | `communication` | Communication | S10 |
-| 8 | `claim` | Claim | S11 |
-| 9 | `payments` | Payments | S12 |
+| 8 | `discharge` | Discharge | S11 (the discharge card, the discharge summary on file for the stay, and the way on to Verification and Claim) |
+| 9 | `claim` | Claim | S11 (the bill, the send, the verdict and settlement) |
+| 10 | `payments` | Payments | S12 |
+
+Numbers 4 is kept free: the Validate tab was removed in 1.7.0 and its checks moved under the lines ([S8. Line Items](S8-line-items.md)). An optional tab **Discharge intimation** sits between Communication and Discharge when the integration decision `claim.dischargeIntimation` (L1.A) is yes (S11. Claim Submission (in nhcx-claim)).
 
 Tab rules:
 - No `tab`, or an unknown key, opens Eligibility.
-- Old key alias: `procedure` opens `plan` (the plan tab's name before line items had their own tab), so old bookmarks still land [REF](../references/PAYERS.md#markers).
-- The Pre-authorisation tab is designed to appear once the payer has ruled on the procedure set on Validate (at once for a payer that does not rule), and to stay once a pre-authorisation has been sent. In the current build it is always shown: one scheme's sandbox never answers the ruling [SANDBOX](../references/PAYERS.md#markers), so the tab does not wait, and a ruling that arrives later narrows the documents and forms it asks for. If the tab is hidden and `preauth` is asked for, Validate opens instead.
-- The Validate tab reads "Choose the line items on the previous tab first..." until line items exist. After that it holds the ruling card and a card saying the Pre-authorisation tab is open, with a primary "Go to the pre-authorisation" button (arrow icon) to S9.
+- Old key aliases: `procedure` opens `plan` (the plan tab's name before line items had their own tab) and `validate` opens `lines` (the Validate tab's checks now sit under the lines), so old bookmarks still land [REF](../references/PAYERS.md#markers).
+- The Pre-authorisation tab is always shown: the benefits check and the authorisation-requirements ruling on the Line items tab are optional and never gate it; a ruling that arrives later narrows the documents and forms it asks for.
 
 API: [A17. Claim State](../apis/A17-claim-state.md)
 
@@ -119,8 +120,8 @@ The arrangement below is the reference implementation's [REF](../references/PAYE
 |                                [(refresh) Refresh]                           |
 | Next: [Answer the payer (1)] [With the payer; ask where it stands]           |
 |------------------------------------------------------------------------------|
-| Eligibility | Insurance plan | Line items | Validate | Verification |       |
-| Pre-authorisation | Communication | Claim | Payments                         |
+| Eligibility | Insurance plan | Line items | Verification | Pre-auth... |     |
+| Pre-authorisation | Communication | Discharge | Claim | Payments             |
 |------------------------------------------------------------------------------|
 |                                                                              |
 |  <active tab content: S3, S7, S8, S8.2, S18, S4+S9, S10, S11 or S12>        |
@@ -137,11 +138,12 @@ The arrangement below is the reference implementation's [REF](../references/PAYE
 1. Tab "Eligibility": show S3.
 2. Tab "Insurance plan": show S7.
 3. Tab "Line items": show S8.
-4. Tab "Validate": show the Authorisation Requirements card S8.2, then the way on to the Pre-authorisation tab.
+4. (removed in 1.7.0; `validate` opens the Line items tab)
 5. Tab "Verification": show S18.
 6. Tab "Pre-authorisation": show S4 (admission link and pre-auth draft) above S9 (sending and the payer's verdict).
 7. Tab "Communication": show S10.
-8. Tab "Claim": show S11.
+8. Tab "Discharge": show the discharge part of S11: the stay, the discharge card (or the recorded discharge), the discharge summary on file, then buttons on to Verification (S18, stage Discharge) and Claim.
+9. Tab "Claim": show the rest of S11: the recorded discharge read-only (with a "Record the discharge" button back to the Discharge tab while the stay is open), the claim-stage requirements, the bill, the send and the settlement.
 9. Tab "Payments": show S12.
 10. Next-action button: reload this screen on the tab the action names (see the table in S6D).
 11. Refresh: reload this screen on the current URL's tab, polling every leg that is out with the payer.

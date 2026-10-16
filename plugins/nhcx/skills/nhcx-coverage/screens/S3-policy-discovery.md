@@ -7,6 +7,11 @@ Shown as the first tab, "Eligibility" (tab key `eligibility`), of the Claim Deta
 
 Form posts to: claims/view/:caseid/check (POST), then redirects back to S6.
 
+| Endpoint | Purpose |
+|---|---|
+| `POST claims/:caseid/check` | Send the eligibility check |
+| `POST claims/:caseid/beneficiary` | Choose which member of the policy is the patient (field `member_id`) |
+
 Breadcrumb (from S6): Claims (claims/list, S5) > <case number>
 
 #### S3D. DESCRIPTION
@@ -31,7 +36,24 @@ The tab is a stack of up to four cards, in this order:
 | Address | full address |
 | Found by | "<identifier label> · <identifier value>" from the S1 search, for example "Member ID · MD5SLS4X5" |
 
-After selection (S2) only member ID, ABHA, mobile and Found by are normally filled. Name, gender, date of birth, address, photo and a corrected ABHA come from the payer's eligibility reply.
+After selection (S2) only member ID, ABHA, mobile and Found by are normally filled. Name, gender, date of birth, address, photo and a corrected ABHA come from the payer's eligibility reply, and only once it is clear which person they belong to.
+
+**Who is the patient (the members table).** A family policy answers the check with every member on the card, not one person: PMJAY returns one Patient per member, three or more on a family card [PAYER](../references/PAYERS.md#markers). The reply is read into a list ([F3. CoverageEligibilityResponse](../fhir/F3-coverage-eligibility-response.md), D9 `beneficiaries_json`) and the Beneficiary card shows it whenever it holds more than one person, as a table above the detail grid:
+
+| Column | Content |
+|---|---|
+| (radio) | selected for the chosen member, when one is chosen |
+| Member | name over the member id |
+| Relationship | `Self`, `Spouse`, `Child`, ... from the member's own Coverage |
+| Gender, Date of birth | as returned |
+| ABHA | the member's ABHA, or "-" |
+| Checked | a chip "checked" on the member the payer's response is about |
+
+Under the table, a primary button "This is the patient" posts the selected `member_id` to `claims/:caseid/beneficiary`. The application never picks for the desk: when the reply holds several people and none carries the member id the case was opened with, no member is selected, the detail grid shows only the member id and "Found by", a warning chip "Choose the patient" sits in the card header, and S6's next action reads "Choose which member of the policy is the patient". Until the choice is made the admission link (S4), the plan fetch (S7) and every send are refused with "Choose which member of the policy is the patient on the Eligibility tab first." When exactly one person comes back, or one carries the case's member id, that person is chosen on arrival and the table still lists everyone, read-only, so the desk can see who else is on the card and change the choice.
+
+Choosing writes the person's details onto the case and makes their member id the case's `member_id`, so the next check, the pre-authorisation and the claim go out for the person in the bed. A choice made after an admission was linked unlinks it (the admission was matched on the earlier person's ABHA) and flashes "The admission was unlinked: it was matched to the previous beneficiary." A member id not on the list is refused: "That member is not on this policy's reply." Success flash: "<name> is the patient on this claim."
+
+Why this matters: a member id is shared across a family card, and a child's admission under the parent's details would send the parent's name, age and ABHA on the pre-authorisation and attach the claim to the parent's record. Response order says nothing about who is in the bed.
 
 **Policy card.** A three-column detail grid:
 
@@ -48,24 +70,25 @@ After selection (S2) only member ID, ABHA, mobile and Found by are normally fill
 
 | Field | Control | Default | Notes |
 |---|---|---|---|
-| Purpose (required) | dropdown | the case's last purpose, else `validation` | options below |
+| Purpose | read-only text "Validation, is the policy in force?" | `validation` | once the case exists only a validation is offered here; there is no dropdown |
 | Policy code | text | the case's policy code | help text "National health plan identifier on the card" |
 | Member ID (required) | text, required | the case's member ID | |
 
-Purpose options:
+The purposes of the exchange ([A2. Coverage Eligibility Check](../apis/A2-coverage-eligibility-check.md)) and where each is sent from:
 
-| Value (sent upstream) | Label |
-|---|---|
-| `validation` | Validation, is the policy in force? |
-| `benefits` | Benefits, what does the policy cover for this package? |
-| `discovery` | Discovery, find active coverage |
+| Value (sent upstream) | Label | Sent from |
+|---|---|---|
+| `validation` | Validation, is the policy in force? | this card, at registration and on "Check again" |
+| `benefits` | Benefits, what does the policy cover for this package? | the Line items tab S8. Line Items (in nhcx-preauth), on the quoted set, before a pre-authorisation or an enhancement; optional and never a condition of the send |
+| `discovery` | Discovery, find active coverage | its own page, [S17. Beneficiary Discovery](S17-beneficiary-discovery.md), where the payer is chosen and the policy named by number or member id |
+| `auth-requirements` | the ruling on the procedure set | the Line items tab S8. Line Items (in nhcx-preauth) (S8.2); optional and never a condition of the send |
 
-`validation` is used at registration. `benefits` is used before a pre-authorisation or an enhancement. `discovery` is what an indemnity payer answers when the policy is not yet known; a discovery that carries more than one identifier is sent from its own page, [S17. Beneficiary Discovery](S17-beneficiary-discovery.md). A fourth purpose, `auth-requirements`, uses the same exchange but is not offered here: it is sent on the chosen procedure set from the Validate step before pre-authorisation (see S9).
+The card used to offer the three purposes in a dropdown; from 1.7.0 it offers validation alone, because a desk that has a case already knows the policy, and the other two purposes have a place of their own [REF](../references/PAYERS.md#markers).
 
 The button reads "Send to payer" while the case is a draft, and "Check again" after any earlier check.
 
 Validation, in this order, before anything is sent. Each failure returns to S6 with the message as a red flash:
-- "Choose whether this check is a validation, a benefits check or a discovery."
+- "Choose whether this check is a validation, a benefits check or a discovery." (the server's guard on the purpose; the screen always sends `validation`)
 - "Member ID is required for an eligibility check."
 - "Policy code is required for a validation check." or "Policy code is required for a benefits check." (discovery may go without one)
 - "Set the facility's HFR ID under Settings before raising claims."
@@ -113,6 +136,18 @@ Verdict tiles (money shows as "₹" with thousands separators and no decimals, o
 
 Verdict details: Disposition, Outcome, In force ("Yes" or "No"), Pre-authorisation ("Required", "Not required", or "-" when the payer did not say), Checked at, Correlation.
 
+**Coverage benefits card** (shown under the verdict whenever the reply listed items; [F3. CoverageEligibilityResponse](../fhir/F3-coverage-eligibility-response.md) "Itemised benefits", D9 `benefit_items_json`). One row per `insurance[].item`:
+
+| Column | Content |
+|---|---|
+| Item | the package display (else its name, else its code), with the code and category as a muted sub-line; the wallet row is marked "Policy wallet"; the description when the payer gave one |
+| Cover | chip "Covered" or "Excluded" (`excluded`), then "Term: Annual" or "Lifetime" and "Network: ..." when given |
+| Authorisation | "Required", "Not required" or "-" (`authorizationRequired`) |
+| Benefits | one line per `benefit`: "<type>: allowed <amount> · used <amount>", money as `₹` with separators, a count as the number, a text as given |
+| Supporting documents | the `authorizationSupporting` displays, comma separated |
+
+The same table sits on the Line items tab's benefits card (S8. Line Items (in nhcx-preauth)), where the benefits check is sent from.
+
 #### S3L. LAYOUT
 The arrangement below is the reference implementation's [REF](../references/PAYERS.md#markers): follow the target HMIS's own screen conventions. What is required is in DESCRIPTION and ACTIONS: the fields, options, columns, statuses, messages and actions.
 
@@ -143,8 +178,9 @@ The arrangement below is the reference implementation's [REF](../references/PAYE
 |  PRE-AUTHORISATION  CHECKED AT    CORRELATION                    |
 |------------------------------------------------------------------|
 | [Card] Coverage eligibility check                                |
-|  Purpose *            Policy code          Member ID *           |
-|  [Validation, ... v]  [PMJAY/HP/S/G]       [MD5SLS4X5]           |
+|  Purpose              Policy code          Member ID *           |
+|   Validation, is the  [PMJAY/HP/S/G]       [MD5SLS4X5]           |
+|   policy in force?                                               |
 |                       National health plan                       |
 |                       identifier on the card                     |
 |------------------------------------------------------------------|
@@ -168,4 +204,5 @@ While awaiting the payer (check form hidden):
 1. Send to payer / Check again: validate, send the check (A2), set the case to Awaiting payer, and reload S6 on this tab with "Eligibility request queued to the payer." Validation failures reload with the message in red.
 2. Send again (only while awaiting the payer): ask "The payer has not replied to the last check yet. Send the same eligibility check again?" and on OK resend with the same purpose (default `validation`), policy code and member ID. The check form is withheld while an exchange is open so two checks on one case cannot be answered out of order; this button is the only way out of a stalled exchange.
 3. Refresh (in the S6 header while awaiting): reload S6, which polls once for the on_check reply.
-4. After an eligible verdict, the S6 next-action button "Fetch the package master" goes to the Insurance Plan tab S7.
+4. This is the patient: post the selected member id, write that person onto the case (and unlink a linked admission matched on another person), reload S6 on this tab with "<name> is the patient on this claim."
+5. After an eligible verdict with the patient known, the S6 next-action button "Fetch the package master" goes to the Insurance Plan tab S7. With the patient still to choose it reads "Choose which member of the policy is the patient" and stays on this tab.

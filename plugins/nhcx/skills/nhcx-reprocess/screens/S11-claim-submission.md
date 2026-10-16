@@ -20,7 +20,13 @@ This is the Claim tab of the Claim Detail shell S6. Its route is `claims/view/:c
 Breadcrumb: Claims (claims/list, S5) > `<claim number>`
 
 #### S11D. DESCRIPTION
-The claim is filed once the patient has left. The tab records the discharge, collects the documents and forms the payer deferred to the claim, and sends the claim. It then shows the payer's verdict, along with the claim's follow-up requests: status, reprocess and balance release.
+The claim is filed once the patient has left. This spec covers two tabs of S6: the **Discharge** tab records the discharge against the admission the case is on, shows the discharge summary record filed against the stay (the HDS attachment the claim carries; without one the final diagnosis and discharge notes stand in), and leads on to the discharge verification (S18) and the claim; the **Claim** tab shows the recorded discharge read-only (with a "Record the discharge" button back to the Discharge tab while the stay is open), collects the documents and forms the payer deferred to the claim, and sends the claim. It then shows the payer's verdict, along with the claim's follow-up requests: status, reprocess and balance release. A case not yet on an admission shows, on the Discharge tab, "This episode is not on an admission yet. Pick the stay on the pre-authorisation tab, or admit the patient under IPD first; the discharge is recorded against the stay." with a "Pick the admission" button.
+
+**Admission is mandatory for a claim**, unlike the pre-authorisation (S9. Pre-authorisation (in nhcx-preauth)): the claim bills a stay, so without a linked admission the send is refused with "This claim is not on an admission. Link the stay on the pre-authorisation tab first." and the Discharge tab says so (below). The integration decision `claim.admissionRequired` (L1.A) defaults to yes; only a hospital that bills day-care with no HMIS admission answers no, and the claim then goes against the pre-authorisation alone.
+
+**Discharge intimation (optional tab).** When `claim.dischargeIntimation` (L1.A) is yes, S6 gains a tab **Discharge intimation** before Discharge: it records the discharge (the Discharge card below moves here) and sends the payer a discharge intimation, as the adapter defines it ([PAYERS.md](../references/PAYERS.md): an A6 Task on the pre-authorisation thread, or the payer's own form), shows its acknowledgement, and only then opens the Claim tab. When no, there is no such tab and the discharge is recorded on the Discharge tab as below. The desk is asked for this at integration, never guessed.
+
+**Queries, by level.** As on the pre-authorisation (S9. Pre-authorisation (in nhcx-preauth)): a line-item query is answered by resubmitting the claim (where the adapter takes one), an order-level query by a Communication on S10. Communication (in nhcx-communication).
 
 **Discharge verification** is on the Verification tab, S18: once the admission is discharged that tab turns into the discharge verification (A18. Biometric Authentication (in nhcx-coverage), stage Discharge), and the fresh token it takes rides on the claim. The admission's token does not serve the claim, whatever its life. Without one, a payer that requires proof of presence gets the Discharge Consent form answered in the bundle instead.**When the claim can start.** The claim needs a pre-authorisation with status `approved` or `queried`. Until one exists, the tab shows a single card titled "Claim": "A claim goes in against an **approved** pre-authorisation, once the patient has left. Get the pre-authorisation answered on the previous tab first." A `partial` pre-authorisation does not open this tab.
 
@@ -69,24 +75,24 @@ Money shows as `₹12,345`. A missing value shows as `-`.
 
 For any type other than Death, the death time is cleared. Success: "Discharge recorded." Saving opens the claim in `draft` when none exists. An `error` claim goes back to `draft`.
 
-**Documents for the claim card.**
+**Documents for the claim card.** It ends with the same "Additional document" row as the pre-authorisation's (S9. Pre-authorisation (in nhcx-preauth)) when `documents.additional` is yes, and it shows the payer's documents (the settlement letter and any attachment of the ClaimResponse, C6. Claim Reply (in nhcx-claim)) in a "From the payer" list once the verdict is in.
 
-*Requirements form* (posts to `claims/:caseid/claim/documents`). The table has four columns: Code, Document (with the package code as a sub-line), Attached (a link, or "not attached yet"), and Choose a PDF (file input `req_<code>`).
+*Requirements form* (posts to `claims/:caseid/claim/documents`). The table has the columns Code, Document (with the package code as a sub-line), Stage (chip), Attached (a link, or "not attached yet"), Choose a PDF (file input `req_<code>`) and "From records" (S9's health-record picker, opened on that requirement; the discharge summary row offers the admission's DischargeSummary record first, so the summary the HMIS already filed is attached as structured data without a scan).
 - The first row is always `HDS` Hospital discharge summary.
 - The other rows are the documents the payer deferred to the claim:
   - With an auth-requirements ruling, the ruling's requirements that are not due at pre-authorisation.
-  - Without one, the package master's documents for the quoted packages that were not already attached at the pre-authorisation stage.
+  - Without one, the package master's documents for the quoted packages whose stage is `post` (D11's stage rule), and any `pre` document that was not attached at the pre-authorisation stage. Each row carries the stage chip ("Post (claim)", "Both" or "Pre-auth").
 
 The note beside the "Attach chosen files" button reads "The discharge summary is always wanted; the rest are the requirements the payer's ruling deferred to this stage." When nothing else is listed and no summary is attached, it reads "Only the discharge summary is listed, run the authorisation-requirements check on the pre-authorisation tab to learn what else this payer wants with the claim."
 
 Each code keeps one file, and a new file replaces the old one. The summary is filed under code and category `HDS` with the label "Hospital discharge summary". Other files are filed under their code at the claim stage. Errors: "Choose a PDF for at least one of them." and "That is not a document this claim was asked for." The S9 upload rules also apply: PDF, JPEG, PNG or WebP, at most 10 MB, not empty. A failure part way through adds " (N attached before the failure.)". Success: "N document(s) attached."
 
-*Everything attached for the claim.* A table of the claim-stage documents. Columns: File (opens inline in a new tab), Filed as (label with code sub-line), Size, Uploaded, and a "Remove" button with the confirm "Remove this document from the claim?". Empty text: "Nothing beyond the requirements yet." Below it is the upload row: "Files (PDF or image)" (multiple, required), "Filed as" (the ruling's codes, then the common codes listed on S9, default `CD`), "Label", and "Attach". Hidden field `stage=claim`. Errors: "Choose a PDF or image to attach." plus the upload rules. Success: "N document(s) attached."
+*Everything attached for the claim.* A table of the claim-stage documents. Columns: File (opens inline in a new tab), Filed as (label with code sub-line), Size, Uploaded, and a "Remove" button with the confirm "Remove this document from the claim?". Empty text: "Nothing beyond the requirements yet." Below it is the upload row: "Files (PDF or image)" (multiple, required), "Filed as" (the ruling's codes, then the common codes listed on S9, default `CD`), "Label", "Attach" and "From records" (S9's picker, filing at `stage=claim`). Hidden field `stage=claim`. Errors: "Choose a PDF or image to attach." plus the upload rules. Success: "N document(s) attached."
 
 **Forms for the claim card.** The payer's questionnaires to answer for the claim leg (the rule is D12's). The card is left out when no form applies. The forms listed are:
-- With an auth-requirements ruling, the questionnaires it names for the stage after pre-authorisation.
-- The quoted packages' own forms (their standard treatment guideline checklists), on this leg as on the pre-authorisation, whether or not there is a ruling: PMJAY lists an STG requirement per stage on every benefit and its ruling never names the STG [PAYER](../references/PAYERS.md#markers).
-- The policy's own forms, offered on this leg whether or not there is a ruling.
+- With an auth-requirements ruling: every form the master carries for the quoted packages and the policy that the ruling did not name (D12: the ruling's forms were the pre-authorisation's, the rest are answered at discharge), each with the chip "Post (claim)".
+- Without a ruling: the quoted packages' own forms whose stage is `post` (their claim-stage standard treatment guideline checklists, PMJAY's claim STQ; D12 `stage`) and the policy's own forms; the pre-authorisation STQ already answered on S9 is not asked again [PAYER](../references/PAYERS.md#markers).
+- Conditional forms (D12): the LAMA or DAMA questionnaire only once that discharge type is recorded in the Discharge card above; the Death questionnaire only when the discharge type is Death or the HMIS has the patient declared dead. Recording the discharge therefore changes which forms this card lists.
 - Without a stage-Discharge token on the Verification tab (S18), the scheme's Discharge Consent form, even when nothing lists it; its question is an attachment (the signed declaration), so the desk uploads it here, and the claim is refused PAYR-1363 without it [PAYER](../references/PAYERS.md#markers).
 
 Each form is one accordion item titled `<form title> - <answered>/<total> answered`, and several can be open at once. Inside it, the questions sit in a two-column grid. Each question uses the same typed controls and help text as S9. Every form posts multipart to `claims/:caseid/forms` with hidden `form_url` and `stage=claim`. Its own "Save answers" button sits right-aligned under the grid.
@@ -271,12 +277,12 @@ The arrangement below is the reference implementation's [REF](../references/PAYE
 |                                             [Save discharge]     |
 |------------------------------------------------------------------|
 | [Card] Documents for the claim                                   |
-|  Code | Document | Attached | Choose a PDF                       |
+|  Code | Document | Stage | Attached | Choose a PDF | From records |
 |  HDS  | Hospital discharge summary | not attached yet | [file]   |
 |  <note>                                  [Attach chosen files]   |
 |  Everything attached for the claim                               |
 |  File | Filed as | Size | Uploaded | [Remove]                    |
-|  [Files...] [Filed as v] [Label____] [Attach]                    |
+|  [Files...] [Filed as v] [Label____] [Attach] [From records]     |
 |------------------------------------------------------------------|
 | [Card] Forms for the claim                                       |
 |  > Authentication consent - 0/2 answered                         |

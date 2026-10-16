@@ -8,6 +8,12 @@ The FHIR resources the application builds for NHCX and reads back from it. APIs 
 |---|---|---|---|
 | [F1](F1-bundle.md) | Bundle | both | [F1-bundle.md](F1-bundle.md) |
 
+## Eligibility and plan
+
+| # | Resource | Direction | File |
+|---|---|---|---|
+| [F3](F3-coverage-eligibility-response.md) | CoverageEligibilityResponse | received | [F3-coverage-eligibility-response.md](F3-coverage-eligibility-response.md) |
+
 ## Pre-authorisation and claim
 
 | # | Resource | Direction | File |

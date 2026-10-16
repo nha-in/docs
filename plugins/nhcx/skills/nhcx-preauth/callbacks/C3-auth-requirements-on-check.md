@@ -36,9 +36,9 @@ C3(envelope, corr):
         for each support in item.authorizationSupporting:
             s = adapter.read_supporting(support)
                 # "fullUrl: <url>" in text -> kind form, else document
-                # "Type: <stage>" -> stage (a document with none is "pre"; a form with none is "") [REF](../references/PAYERS.md#markers)
+                # "Type: <stage>" -> stage; none -> D11 stage rule on the wording (pre | post | both) [REF](../references/PAYERS.md#markers)
                 # "Procedure Code:<code>" -> for_code
-                # at_preauth = kind is form, or stage in adapter.preauth_stages
+                # at_preauth = stage in adapter.preauth_stages or stage == both
             key = (s.kind, s.code, s.form_url)
             if key in seen: continue
             seen += key
@@ -70,5 +70,6 @@ A reply with no `authorizationSupporting` is valid: the ruling is `ready` with n
 - Screens: [S8. Line Items](../screens/S8-line-items.md)
 - APIs: [A2. Coverage Eligibility Check](../apis/A2-coverage-eligibility-check.md), [A10. Transaction Related](../apis/A10-txn-related.md), [A12. Transaction FHIR](../apis/A12-txn-fhir.md), [A17. Claim State](../apis/A17-claim-state.md)
 - Callbacks: [C1. Callback Door](C1-callback-door.md)
+- FHIR: [F3. CoverageEligibilityResponse](../fhir/F3-coverage-eligibility-response.md)
 - Database: [D12. claim_plan_form](../database/D12-claim-plan-form.md), [D13. claim_auth](../database/D13-claim-auth.md)
 - Tests: [T4. IRDAI Insurance Plan and Authorisation Requirements](../tests/T4-irdai-plan-and-auth-requirements.md), [T13. PMJAY Eligibility, Package Master and Ruling](../tests/T13-pmjay-eligibility-and-package-master.md)

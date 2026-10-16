@@ -8,23 +8,24 @@ Always read, whatever the task: [CORE.md](CORE.md) (addresses and the exchange t
 
 | To implement | What it is | Read with it |
 |---|---|---|
-| [S1](../screens/S1-search-policy.md) | Search Policy | nothing else |
-| [S2](../screens/S2-select-policy.md) | Select Policy | [D9](../database/D9-claim.md), [D30](../database/D30-counter.md) |
-| [S3](../screens/S3-policy-discovery.md) | Policy Discovery | [D9](../database/D9-claim.md) |
+| [S1](../screens/S1-search-policy.md) | Search Policy | [D1](../database/D1-organization.md) |
+| [S2](../screens/S2-select-policy.md) | Select Policy | [D9](../database/D9-claim.md), [D30](../database/D30-counter.md), [D32](../database/D32-participant.md) |
+| [S3](../screens/S3-policy-discovery.md) | Policy Discovery | [F3](../fhir/F3-coverage-eligibility-response.md), [D9](../database/D9-claim.md) |
 | [S5](../screens/S5-claim-master.md) | Claim Master | nothing else |
 | [S6](../screens/S6-claim-detail.md) | Claim Detail | nothing else |
 | [S13](../screens/S13-patient-list.md) | Patient List | [D3](../database/D3-patient.md) |
 | [S14](../screens/S14-patient-registration-form.md) | Patient Registration Form | [D3](../database/D3-patient.md) |
 | [S15](../screens/S15-patient-detail.md) | Patient Detail | [D3](../database/D3-patient.md), [D4](../database/D4-encounter.md), [D5](../database/D5-condition.md), [D6](../database/D6-observation.md), [D7](../database/D7-allergy.md), [D8](../database/D8-terminology.md) |
-| [S17](../screens/S17-beneficiary-discovery.md) | Beneficiary Discovery | [F2](../fhir/F2-coverage-eligibility-request.md), [F15](../fhir/F15-patient.md), [D9](../database/D9-claim.md) |
+| [S17](../screens/S17-beneficiary-discovery.md) | Beneficiary Discovery | [F2](../fhir/F2-coverage-eligibility-request.md), [F3](../fhir/F3-coverage-eligibility-response.md), [F15](../fhir/F15-patient.md), [F18](../fhir/F18-coverage.md), [D9](../database/D9-claim.md), [D32](../database/D32-participant.md), [G4](../gateway/G4-registry.md), [G7](../gateway/G7-send.md) |
 | [S18](../screens/S18-beneficiary-verification.md) | Beneficiary Verification | [D3](../database/D3-patient.md), [D31](../database/D31-biometric-auth.md) |
+| [S19](../screens/S19-nhcx-settings.md) | NHCX Settings | [D1](../database/D1-organization.md), [D32](../database/D32-participant.md), [G2](../gateway/G2-configuration.md), [G4](../gateway/G4-registry.md), [G6](../gateway/G6-encryption.md), [G8](../gateway/G8-receive.md), [G11](../gateway/G11-startup-checks.md) |
 
 ## APIs
 
 | To implement | What it is | Read with it |
 |---|---|---|
-| [A1](../apis/A1-policy-search.md) | Policy Search | [D9](../database/D9-claim.md), [G3](../gateway/G3-session-token.md), [G4](../gateway/G4-registry.md), [G10](../gateway/G10-beneficiary-registry.md) |
-| [A2](../apis/A2-coverage-eligibility-check.md) | Coverage Eligibility Check | [F1](../fhir/F1-bundle.md), [F2](../fhir/F2-coverage-eligibility-request.md), [F15](../fhir/F15-patient.md), [F16](../fhir/F16-practitioner.md), [F17](../fhir/F17-organization.md), [F18](../fhir/F18-coverage.md), [F19](../fhir/F19-other-resources.md), [D9](../database/D9-claim.md), [D13](../database/D13-claim-auth.md), [D14](../database/D14-claim-auth-item.md), [D15](../database/D15-claim-auth-requirement.md), [G5](../gateway/G5-protocol-headers.md), [G7](../gateway/G7-send.md), [G8](../gateway/G8-receive.md), [G9](../gateway/G9-ledger.md) |
+| [A1](../apis/A1-policy-search.md) | Policy Search | [D9](../database/D9-claim.md), [D32](../database/D32-participant.md), [G3](../gateway/G3-session-token.md), [G4](../gateway/G4-registry.md), [G10](../gateway/G10-beneficiary-registry.md) |
+| [A2](../apis/A2-coverage-eligibility-check.md) | Coverage Eligibility Check | [F1](../fhir/F1-bundle.md), [F2](../fhir/F2-coverage-eligibility-request.md), [F3](../fhir/F3-coverage-eligibility-response.md), [F15](../fhir/F15-patient.md), [F16](../fhir/F16-practitioner.md), [F17](../fhir/F17-organization.md), [F18](../fhir/F18-coverage.md), [F19](../fhir/F19-other-resources.md), [D9](../database/D9-claim.md), [D13](../database/D13-claim-auth.md), [D14](../database/D14-claim-auth-item.md), [D15](../database/D15-claim-auth-requirement.md), [G2](../gateway/G2-configuration.md), [G5](../gateway/G5-protocol-headers.md), [G6](../gateway/G6-encryption.md), [G7](../gateway/G7-send.md), [G8](../gateway/G8-receive.md), [G9](../gateway/G9-ledger.md), [G11](../gateway/G11-startup-checks.md) |
 | [A10](../apis/A10-txn-related.md) | Transaction Related | nothing else |
 | [A11](../apis/A11-txn-dispatch.md) | Transaction Dispatch | nothing else |
 | [A12](../apis/A12-txn-fhir.md) | Transaction FHIR | nothing else |
@@ -38,20 +39,20 @@ Always read, whatever the task: [CORE.md](CORE.md) (addresses and the exchange t
 | To implement | What it is | Read with it |
 |---|---|---|
 | [C1](../callbacks/C1-callback-door.md) | Callback Door | nothing else |
-| [C2](../callbacks/C2-coverage-eligibility-on-check.md) | Coverage Eligibility Verdict | [G8](../gateway/G8-receive.md) |
+| [C2](../callbacks/C2-coverage-eligibility-on-check.md) | Coverage Eligibility Verdict | [G2](../gateway/G2-configuration.md), [G6](../gateway/G6-encryption.md), [G8](../gateway/G8-receive.md), [G11](../gateway/G11-startup-checks.md) |
 
 ## Gateway
 
 | To implement | What it is | Read with it |
 |---|---|---|
 | [G1](../gateway/G1-embedding.md) | Embedding | nothing else |
-| [G2](../gateway/G2-configuration.md) | Configuration and Participants | nothing else |
+| [G2](../gateway/G2-configuration.md) | Configuration and Participants | [G6](../gateway/G6-encryption.md), [G8](../gateway/G8-receive.md), [G11](../gateway/G11-startup-checks.md) |
 | [G3](../gateway/G3-session-token.md) | Session Token | nothing else |
-| [G4](../gateway/G4-registry.md) | Registry and Certificates | nothing else |
+| [G4](../gateway/G4-registry.md) | Registry and Certificates | [D32](../database/D32-participant.md) |
 | [G5](../gateway/G5-protocol-headers.md) | Protocol Headers | nothing else |
 | [G6](../gateway/G6-encryption.md) | Encryption | nothing else |
 | [G7](../gateway/G7-send.md) | Send | nothing else |
-| [G8](../gateway/G8-receive.md) | Receive | nothing else |
+| [G8](../gateway/G8-receive.md) | Receive | [G2](../gateway/G2-configuration.md), [G6](../gateway/G6-encryption.md), [G11](../gateway/G11-startup-checks.md) |
 | [G9](../gateway/G9-ledger.md) | Ledger | nothing else |
 | [G10](../gateway/G10-beneficiary-registry.md) | Beneficiary Registry | nothing else |
 | [G11](../gateway/G11-startup-checks.md) | Startup Checks and Health | nothing else |

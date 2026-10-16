@@ -9,12 +9,15 @@ One row is one supporting file (PDF or image) attached to a claim for one leg, s
 - The claim must exist.
 - The content type (lower-cased, parameters dropped) must be `application/pdf`, `image/jpeg`, `image/png` or `image/webp`.
 - The file must not be empty and must be at most 10 MB (10 * 1024 * 1024 bytes) [REF](../references/PAYERS.md#markers).
-- `filename` defaults to `document`; blank `label`, `code` and `category` are stored as null; `stage` defaults to `preauth`; `size` is the byte count; `uploaded_at` is now.
+- `filename` defaults to `document`; blank `label`, `code` and `category` are stored as null; `stage` defaults to `preauth`; `size` is the byte count; `uploaded_at` is now; `source` is `upload` for a chosen file and `record` for a health record picked from the HMIS, with `record_ref` naming it.
+
+**From the HMIS's health records, not only from a file.** An HMIS with an ABDM module ([SCAFFOLDING.md](../references/SCAFFOLDING.md) section 4a) already holds, or can build, the patient's health records as ABDM M2 document bundles: the discharge summary, diagnostic reports, prescriptions, OP consultation notes, the invoice (the eight `hiType`s, read with the `abdm-m2` prompt and the atoms named in [KNOWLEDGE.md](../references/KNOWLEDGE.md)). Every place a file is chosen (S9, S10, S11 and a form's file question, D17) also offers "From records": the picker lists the linked admission's records first, then the patient's other encounters', then the patient-level ones (invoices, files on the patient), each with its `hiType`, title, date and author, and the desk ticks the ones to attach. The list is read from the HMIS's own record tables, whether or not the module has staged or linked the record to ABDM yet: at least OPConsultation (an outpatient visit), Prescription, DiagnosticReport, DischargeSummary, HealthDocumentRecord (a file on the admission or the patient) and Invoice (the billing module's invoice). Where the module has no bundle builder for a type, the application builds that type's bundle itself with the module's helpers (the NRCES profile's Composition around the record and its files; see the `abdm-m2` atoms), so every listed record can go as structured data. What is stored is the record's **M2 document bundle itself**, as JSON (`content_type` `application/fhir+json`): a picked record is the payer's structured data, not a scan, and it rides in the claim bundle as a `DocumentReference` entry that the supportingInfo row points at (F8, F19). This is how the live PMJAY provider sends the hospital's own records and PMJAY adjudicates them [PAYER](../references/PAYERS.md#markers). Only for a payer whose adapter does not take records as FHIR ([PAYERS.md](../references/PAYERS.md) "Health records as FHIR") is the record's own attachment stored instead (a `DocumentReference` or `Binary` with a PDF or image inside the bundle, as a discharge summary or a scanned report has), else the HMIS's own rendering of the record to PDF (its print or report facility for that record); a record with neither is listed but not attachable. The row is a full D28 row (the bytes are copied, so a later edit of the record does not change what the payer saw), `source = 'record'`, `record_ref` = `<hiType>:<the module's record or care-context id>`, `filename` the record's title, `label` the requirement's display or the record's title, and `code` the requirement's code when attached against one, else the default below. Default `code` by `hiType` [REF](../references/PAYERS.md#markers): DischargeSummary `HDS`, DiagnosticReport `DIA` (`RAD` when the report's category is imaging), Prescription `PRE`, Invoice `MB`, OPConsultation `CD`, ImmunizationRecord `CER`, HealthDocumentRecord and WellnessRecord `ODN`. A record attached twice to one leg is refused ("<title> is already attached to this leg.").
 
 The paths that create rows:
 
 | Path | Screen | code | category | stage | Replaces |
 |---|---|---|---|---|---|
+| Pick health records from the HMIS ("From records") | S9, S10, S11 | the requirement's code when picked against one, else the hiType default above | `INV` against a requirement, else null | the leg's | against a requirement, every other row with the same `code` |
 | Attach any files under a chosen code | S9 (or S11 with `stage` `claim`) | the code chosen (the payer's, or one of the common codes below) | null | `preauth` or `claim` | nothing |
 | Attach against a payer requirement | S9 | the requirement's code | `INV` | `preauth` | every other row on the claim with the same `code` |
 | Attach claim-stage requirements | S11 | the requirement's code | `INV` | `claim` | every other row on the claim with the same `code` |
@@ -50,6 +53,10 @@ Common codes offered on every upload: `CD` Clinical document (the default), `HDS
 | size | INTEGER | NOT NULL, default 0 | Size in bytes |
 | data | BLOB | NOT NULL | The file |
 | uploaded_at | TEXT | NOT NULL | When it was attached |
+| source | TEXT | NOT NULL, default `upload` | `upload` (a chosen file) or `record` (a health record of the HMIS, through its ABDM module). Added by migration |
+| record_ref | TEXT | null | `<hiType>:<record or care-context id>` of the module's record the bytes were taken from; null for an upload. Added by migration |
+
+A `source = record` row whose `content_type` is `application/fhir+json` holds the record's bundle; its `filename` ends `.json`. The screens show it as "From records · <hiType>" and open it in the HMIS's record viewer, never as a file download (S9).
 
 #### D28K. KEYS AND INDEXES
 - Primary key `id` (integer).

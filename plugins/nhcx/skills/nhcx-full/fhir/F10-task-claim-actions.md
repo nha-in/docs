@@ -54,7 +54,7 @@ Sent Task, per kind:
 | `input[]` the intimation input, type code from the adapter per kind (`intimationNumber`; `pmjay` cancel `initimationNumber`) [PAYER](../references/PAYERS.md#markers), display "Intimation Number" | the claim number | none | the claim number | none |
 | `input[]` `document` "Document" | none | none | one per chosen D28 document: `valueAttachment {contentType: D28 content_type (else application/pdf), data: base64, title: D28 label, else filename}`; ids kept in D29 `document_ids` | none |
 | `input[]` `amount` "Amount" | none | none | none | type on `https://nhcx.abdm.gov.in/task-input-type`; `valueMoney {value: the amount owed as entered on the release form, rounded to 2 decimals, currency: "INR"}` (not stored in D29 `amount`; the sent bundle is in D29 `request_json`) |
-| `for.identifier` | none | none | [PAYER](../references/PAYERS.md#markers) PMJAY adapter: type ndhm-identifier-type-code `PMJAY` "Pradhan Mantri Jan Aarogya Yojana (PMJAY) ID"; others: `http://terminology.hl7.org/CodeSystem/v2-0203` `MB` "Member Number"; value D9 `claim.member_id` | none |
+| `for.identifier` | none | none | type `http://terminology.hl7.org/CodeSystem/v2-0203` `MB` "Member Number", value D9 `claim.member_id`, for every adapter | none |
 
 Cancel reasons (`reasonCode`):
 

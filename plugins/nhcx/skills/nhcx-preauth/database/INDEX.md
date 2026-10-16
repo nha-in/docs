@@ -13,7 +13,8 @@ The tables behind the claim, patient and practitioner screens. Screens (S), APIs
 | [D5](D5-condition.md) | condition | Chief complaint, diagnosis or medical-history problem of a patient. | [D5-condition.md](D5-condition.md) |
 | [D6](D6-observation.md) | observation | Measured or coded finding (a vital sign reading, a lab analyte, a wellness or dialysis reading). | [D6-observation.md](D6-observation.md) |
 | [D7](D7-allergy.md) | allergy | Allergy or intolerance of a patient. | [D7-allergy.md](D7-allergy.md) |
-| [D8](D8-terminology.md) | terminology | Concept in one code list (a picker), for example one ICD-10/SNOMED diagnosis, one department or one payer adapter mapping. | [D8-terminology.md](D8-terminology.md) |
+| [D8](D8-terminology.md) | terminology | Concept in one code list (a picker), for example one ICD-10 diagnosis with its SNOMED mapping, one department or one payer adapter mapping. | [D8-terminology.md](D8-terminology.md) |
+| [D32](D32-participant.md) | participant | The participant master: every payer, provider and TPA on the exchange, government and private, pulled from the registry's participant list over a configured window (one year by default, ten in the sandbox) and refreshed daily. Primary key `code`. No parent table. | [D32-participant.md](D32-participant.md) |
 
 ## Claim
 
@@ -58,10 +59,10 @@ The tables behind the claim, patient and practitioner screens. Screens (S), APIs
 
 | # | Table | What one row is | File |
 |---|---|---|---|
-| [D25](D25-claim-diagnosis.md) | claim_diagnosis | Diagnosis quoted on a claim's pre-authorisation draft, held in both SNOMED and ICD-10. Primary key `id`. Parent table: `claim` (D9). | [D25-claim-diagnosis.md](D25-claim-diagnosis.md) |
+| [D25](D25-claim-diagnosis.md) | claim_diagnosis | Diagnosis quoted on a claim's pre-authorisation draft, held in ICD-10 with its mapped SNOMED CT. Primary key `id`. Parent table: `claim` (D9). | [D25-claim-diagnosis.md](D25-claim-diagnosis.md) |
 | [D26](D26-claim-care-team.md) | claim_care_team | Doctor on the treating team quoted on a claim's pre-authorisation draft, with the role they play. Primary key `id`. Parent tables: `claim` (D9) and `practitioner` (D2). | [D26-claim-care-team.md](D26-claim-care-team.md) |
-| [D27](D27-claim-item.md) | claim_item | Charge-master item on a non-package pre-authorisation draft: a fixed-price item and the quantity chosen. Primary key `id`. Parent table: `claim` (D9). | [D27-claim-item.md](D27-claim-item.md) |
-| [D28](D28-claim-document.md) | claim_document | Supporting file (PDF or image) attached to a claim for one leg, stored inline with the payer requirement it answers. Primary key `id`. Parent table: `claim` (D9). | [D28-claim-document.md](D28-claim-document.md) |
+| [D27](D27-claim-item.md) | claim_item | Charge-master item on a custom-line-items pre-authorisation draft: a fixed-price item and the quantity chosen. Primary key `id`. Parent table: `claim` (D9). | [D27-claim-item.md](D27-claim-item.md) |
+| [D28](D28-claim-document.md) | claim_document | Supporting document attached to a claim for one leg: an uploaded PDF or image, or a health record the HMIS already holds, sent as its FHIR bundle (structured data), stored inline with the payer requirement it answers. Primary key `id`. Parent table: `claim` (D9). | [D28-claim-document.md](D28-claim-document.md) |
 | [D29](D29-claim-enquiry.md) | claim_enquiry | Small Task exchange a claim starts beside its main legs: a status enquiry, a reprocess request or a balance release request. Primary key `id`. Parent table: `claim` (D9), many rows per claim. | [D29-claim-enquiry.md](D29-claim-enquiry.md) |
 | [D31](D31-biometric-auth.md) | biometric_auth | One biometric authentication of a beneficiary against their ABHA (fingerprint, iris or face), for one payer at one stage of the case, holding the user token that rides on the exchange and the refresh token that renews it. Primary key `id`. Parent tables: `patient` (D3), `claim` (D9, optional). | [D31-biometric-auth.md](D31-biometric-auth.md) |
 

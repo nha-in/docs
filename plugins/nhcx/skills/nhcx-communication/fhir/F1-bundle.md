@@ -79,4 +79,4 @@ Received (read):
 #### F1U. USED BY
 - APIs: [A7. Communication Reply](../apis/A7-communication-on-request.md), [A12. Transaction FHIR](../apis/A12-txn-fhir.md)
 - Callbacks: [C1. Callback Door](../callbacks/C1-callback-door.md), [C9. Payer Communication](../callbacks/C9-communication-request.md)
-- FHIR: [F8. Claim](F8-claim.md), [F10. Task (claim actions)](F10-task-claim-actions.md)
+- FHIR: [F3. CoverageEligibilityResponse](F3-coverage-eligibility-response.md), [F8. Claim](F8-claim.md), [F10. Task (claim actions)](F10-task-claim-actions.md)

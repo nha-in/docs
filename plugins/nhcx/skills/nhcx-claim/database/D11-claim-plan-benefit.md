@@ -1,14 +1,14 @@
 # D11. claim_plan_benefit
 
 #### D11T. TABLE
-One row is one package (or covered benefit) in a claim's package master; primary key `id`; parent table D10. claim_plan (in nhcx-coverage).
+One row is one package (or covered benefit) under one speciality in a claim's package master; primary key `id`; parent table D10. claim_plan (in nhcx-coverage).
 
 #### D11D. DESCRIPTION
 The InsurancePlan comes in one of two shapes, and both flatten to this table:
 - Approach 1, package master: `plan -> specificCost -> category -> benefit -> cost`.
 - Approach 2, indemnity: `coverage -> benefit -> limit`.
 
-When a bundle carries both, they are merged on the package code. `specificCost` wins, and `coverage` adds only codes it did not carry. A code already seen is skipped, so each code appears at most once per plan.
+When a bundle carries both, they are merged on the pair **(speciality `category_code`, package `code`)**, never on the code alone. `specificCost` wins, and `coverage` adds only pairs it did not carry. A payer lists the same package under several specialities: PMJAY lists Dengue (`MG004A`, `MG004B`, `MG004C`) under Cardiology (`MC`), General Medicine (`MG`) and Paediatric medical management (`MP`), and repeats 545 of its 1,537 codes across specialities [PAYER](../references/PAYERS.md#markers). Each such listing is one row, so a code can appear more than once per plan but a pair at most once. A parser that keeps the first listing of a code shows Dengue under Cardiology only and loses the speciality the case is treated under. An implant `coverage` repeated within one speciality, once per parent procedure, is one row whose `ParentProcedure` condition joins the parents with "; ".
 
 Approach 1 row:
 - `category_*` from `specificCost.category`; `code` / `display` from `benefit.type`.
@@ -24,19 +24,27 @@ Approach 2 row:
 - `cost_type` and `requirement` are `benefit.requirement`.
 - `conditions` / `supporting_info` merge the coverage-level and benefit-level ones.
 
-`rate = 0` means bundled, not free [PAYER](../references/PAYERS.md#markers). A null `rate` means the benefit has no package rate of its own.
+`rate = 0` means bundled, not free [PAYER](../references/PAYERS.md#markers). A null `rate` means the benefit has no package rate of its own. **A line's price is open** (the desk types it, S8.1) only when the row names no rate, or names `0` and has no `Stratification` extra; a `0` rate with ward or ICU tiers is a fixed price made up of its tiers, and the desk cannot type over it.
 
 Lifecycle:
 - Inserted when a plan reply is applied, numbered `seq` 1, 2, ... in merge order. All earlier rows of the plan are deleted first, in the same transaction.
-- Copied from another claim's `ready` plan when a master is reused.
+- Copied from another claim's `ready` plan when a master is reused (A3. Insurance Plan Request (in nhcx-preauth)), in one bulk insert.
 - Deleted when the plan is refetched (the request deletes them at once) or when the plan row is deleted (`ON DELETE CASCADE`).
 - Never updated in place.
 
 Reads:
-- The line picker filters by `category_code`, `kind`, and `code` or `display` LIKE the search text, ordered by `seq`.
-- An implant tier in `extras` is joined back to the benefit with the same `code`. The packages that allow an implant are found by searching `extras` for its code.
-- The price of a claim line ([D16](D16-claim-line.md)) is read from here, never from the form.
-- Without a ruling, `supporting_info` of the quoted codes lists the documents (entries with a `code` other than `STG` [PAYER](../references/PAYERS.md#markers) and no `form`) and the forms (entries with a `form`) the pre-authorisation needs.
+- The line picker filters by `category_code`, `kind`, and `code` or `display` LIKE the search text, ordered by `seq`. A benefit is identified to the picker and to the add call by its `id`, or by the pair (`category_code`, `code`), never by `code` alone.
+- An implant tier in `extras` is joined back to the benefit with the same `code` in the same speciality. The packages that allow an implant are found by searching `extras` for its code.
+- The price of a claim line ([D16](D16-claim-line.md)) is read from here, never from the form. The line keeps the speciality it was picked under (`category_code`), and readers that need one row per quoted code take the row of the line's speciality, else the first.
+- The claim state ([A17. Claim State](../apis/A17-claim-state.md)) lists every column but `conditions` and `supporting_info`; the package detail (S7.1 (in nhcx-preauth), `GET claims/:caseid/plan/benefits/:id`) returns the whole row, those two included, so the tiers, conditions and documents a package carries are what the screens show.
+- Without a ruling, `supporting_info` of the quoted codes lists the documents (entries with a `code` other than `STG` [PAYER](../references/PAYERS.md#markers) and no `form`) and the forms (entries with a `form`) the leg needs: those whose `stage` is the leg's (`pre` for the pre-authorisation, `post` for the claim); the claim also lists any `pre` document not attached at the pre-authorisation.
+**Stage of a requirement (pre or post, never both).** Every document or form the payer asks for belongs to exactly one leg: `pre` (the pre-authorisation) or `post` (the claim, after discharge). There is no third value: a requirement is wanted at one of the two stages, and a payer that wants the same document on both legs names it twice, once per stage, and PMJAY's own portal files its STG checklists the same way, as a pre-authorisation STQ and a claim STQ ("STQ", standard treatment questionnaire, is PMJAY's name for the STG checklist; this skill writes STG/STQ) [PAYER](../references/PAYERS.md#markers). The stage is read once, when the master or the ruling is applied, in this order, and stored (`supporting_info[].stage` here, D12 `stage`, D15 `stage` and `at_preauth`):
+0. The leg named in the requirement extension's own url: the sandbox payer writes `.../<package>/preauth/<code>` and `.../<package>/claim/<code>` under `Claim-SupportingInfoRequirement`, and the live PMJAY provider reads `/preauth/` as `pre` and `/claim/` as `post` from that url before anything else [PAYER](../references/PAYERS.md#markers).
+1. The payer's own word when it gives one: the ruling's `Type:` ([D15. claim_auth_requirement](D15-claim-auth-requirement.md)), a `stage`, `Type` or `useContext` child on the requirement or the Questionnaire. `pre`, `preauth`, `pre-auth`, `pre-authorisation`, `admission` read as `pre`; `post`, `claim`, `discharge`, `final`, `settlement` read as `post`.
+2. Otherwise the requirement's own wording, its display and the questionnaire's title: a word from the first list anywhere in it gives `pre`; `post`, `discharge`, `intra`, `during`, `after`, `final bill`, `invoice` give `post` (PMJAY's masters name "Post procedure photograph", "Intra operative photograph", "Discharge summary" and "Final bill" without a structured stage [PAYER](../references/PAYERS.md#markers)).
+3. Otherwise `pre`: an unclassified requirement is asked for at the pre-authorisation, the earlier leg, and the claim lists it again if it was not attached then, so nothing is dropped. (Before 1.7.0 this case was a third value, `both`; a stored `both` is read as `pre`.)
+The classification is a chip on every requirement table (S7.1, S8.2, S9, S11): "Pre-auth" or "Post (claim)", one of the two. The pre-authorisation leg offers `pre`; the claim leg offers `post`, and any `pre` document not yet attached. It is a reading aid and a default, not a gate: a desk may still attach any document on either leg.
+
 
 #### D11C. COLUMNS
 | column | type | null/default | meaning (and allowed values) |
@@ -55,12 +63,12 @@ Reads:
 | requirement | TEXT | null | Approach 2 `benefit.requirement` |
 | conditions | TEXT | null | JSON object: claim-condition name to value, for example `{"IsDayCare": "Y"}` |
 | extras | TEXT | null | JSON list of tiers paid over the rate: `{type, code, label, rate, currency}`, `type` one of `Stratification`, `Implant`, `Limit`. Added by migration |
-| supporting_info | TEXT | null | JSON list of document requirements: `{code, display, category, category_display, form}`, where `form` is the Questionnaire url when the requirement is a form. Added by migration |
+| supporting_info | TEXT | null | JSON list of document requirements: `{code, display, category, category_display, form, stage}`, where `form` is the Questionnaire url when the requirement is a form and `stage` is `pre` or `post` (the rule above; a `both` stored before 1.7.0 reads as `pre`). Added by migration |
 
 #### D11K. KEYS AND INDEXES
 - Primary key `id` (integer).
 - `plan_id` references D10. claim_plan (in nhcx-coverage) `id`, `ON DELETE CASCADE`.
-- No unique constraint. The parser keeps `code` unique per plan.
+- Unique: `(plan_id, category_code, code)`. The same code under another speciality is another row.
 - Index: `ix_claim_plan_benefit (plan_id, seq)`.
 - `supporting_info[].form` names a [D12. claim_plan_form](D12-claim-plan-form.md) `url` (no foreign key).
 
@@ -68,4 +76,4 @@ Reads:
 - Screens: [S11. Claim Submission](../screens/S11-claim-submission.md)
 - APIs: [A17. Claim State](../apis/A17-claim-state.md)
 - FHIR: [F8. Claim](../fhir/F8-claim.md)
-- Database: [D12. claim_plan_form](D12-claim-plan-form.md), [D16. claim_line](D16-claim-line.md), [D28. claim_document](D28-claim-document.md)
+- Database: [D12. claim_plan_form](D12-claim-plan-form.md), [D15. claim_auth_requirement](D15-claim-auth-requirement.md), [D16. claim_line](D16-claim-line.md), [D28. claim_document](D28-claim-document.md)

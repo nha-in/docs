@@ -1,13 +1,13 @@
 # Screens
 
-Each file has ROUTE (R), DESCRIPTION (D), LAYOUT (L) and ACTIONS (A) sections. DESCRIPTION and ACTIONS are required behaviour; LAYOUT is the reference implementation's arrangement [REF](../references/PAYERS.md#markers) and follows the target's own conventions. S13 to S16 are screens most HMIS already have: only their NHCX additions are built.
+Each file has ROUTE (R), DESCRIPTION (D), LAYOUT (L) and ACTIONS (A) sections. DESCRIPTION and ACTIONS are required behaviour; LAYOUT is the reference implementation's arrangement [REF](../references/PAYERS.md#markers) and follows the target's own conventions. S13 to S16 are screens most HMIS already have: only their NHCX additions are built, and the ABHA additions are left out when the HMIS's ABDM module already has them ([SCAFFOLDING 4a](../references/SCAFFOLDING.md)). S19 is the facility's NHCX settings, the one screen an administrator needs to onboard the facility and rotate its key without a developer.
 
 ## Claims
 
 | # | Screen | Route | File |
 |---|---|---|---|
-| [S4](S4-claim-creation-form.md) | Claim Creation Form | `claims/view/:caseid/validate`, `claims/view/:caseid/preauth` | [S4-claim-creation-form.md](S4-claim-creation-form.md) |
-| [S5](S5-claim-master.md) | Claim Master | `claims/list` | [S5-claim-master.md](S5-claim-master.md) |
+| [S4](S4-claim-creation-form.md) | Claim Creation Form | `claims/view/:caseid/preauth` | [S4-claim-creation-form.md](S4-claim-creation-form.md) |
+| [S5](S5-claim-master.md) | Claim Master | `claims`, `claims/list` | [S5-claim-master.md](S5-claim-master.md) |
 | [S6](S6-claim-detail.md) | Claim Detail | `claims/view/:caseid` | [S6-claim-detail.md](S6-claim-detail.md) |
 | [S7](S7-insurance-plan.md) | Insurance Plan | `claims/view/:caseid/plan` | [S7-insurance-plan.md](S7-insurance-plan.md) |
 | [S8](S8-line-items.md) | Line Items | `claims/view/:caseid/lines` | [S8-line-items.md](S8-line-items.md) |
@@ -28,6 +28,12 @@ Each file has ROUTE (R), DESCRIPTION (D), LAYOUT (L) and ACTIONS (A) sections. D
 |---|---|---|---|
 | [S16](S16-practitioner-master.md) | Practitioner Master | `practitioners/list` | [S16-practitioner-master.md](S16-practitioner-master.md) |
 
+## Facility
+
+| # | Screen | Route | File |
+|---|---|---|---|
+| [S19](S19-nhcx-settings.md) | NHCX Settings | `settings/nhcx` | [S19-nhcx-settings.md](S19-nhcx-settings.md) |
+
 ## Flow
 
-S5 Claim Master, then S1 Search Policy and S2 Select Policy, then S6 Claim Detail. The tabs of S6 run in episode order: S3 Eligibility, S7 Insurance plan, S8 Line items, S8.2 Validate (auth requirements), S18 Verification, S4 and S9 Pre-authorisation, S10 Communication, S11 Claim, S12 Payments. S4 links the case to an admission found through S13 and S15, and picks the treating team from S16. Screens this skill does not hold are specified in the skill named beside them.
+The Claims module has two entries, the Claim dashboard (S5) and Claim management, a stepper of S1 Search Policy (steps Patient and Search policy, shaped by the two S19 settings), S2 Select Policy (with "None of these" to S17) and then S6 Claim Detail. The tabs of S6 run in episode order: S3 Eligibility, S7 Insurance plan, S8 Line items (with the optional benefits check and the S8.2 auth-requirements ruling under the lines; there is no Validate tab), S18 Verification, S4 and S9 Pre-authorisation, S10 Communication, S11 Discharge and Claim (two tabs, one screen spec; a Discharge intimation tab when the integration asks for it), S12 Payments. The questions the integration must settle before building, and where each answer lands, are L1.A in [L1 Discovery](../steps/L1-discovery.md). S4 links the case to an admission found through S13 and S15, and picks the treating team from S16. Screens this skill does not hold are specified in the skill named beside them.

@@ -33,7 +33,7 @@ Relationship is always `self`: the beneficiary is the subscriber [REF](../refere
 | `status` | `active` | constant |
 | `type.coding[0]` | `http://terminology.hl7.org/CodeSystem/v3-ActCode` `HIP` "health insurance plan policy" | constant |
 | `subscriber` | `{reference: "https://nhcx.abdm.gov.in/patient"}` | F15 |
-| `subscriberId` | the member id (table above) | |
+| `subscriberId` | the member id (table above); left out on a discovery by policy number, which names no member (A2) | |
 | `beneficiary` | `{reference: "https://nhcx.abdm.gov.in/patient"}` | F15 |
 | `relationship.coding[0]` | `http://terminology.hl7.org/CodeSystem/subscriber-relationship` `self` | no display |
 | `payor[0]` | `{reference: "https://nhcx.abdm.gov.in/payer"}` | F17 |
@@ -54,6 +54,7 @@ The eligibility builder writes `status` and `type` before `identifier`; the clai
 Empty values are not written. Coverages in ClaimResponse, Task and communication bundles are not read.
 
 #### F18U. USED BY
+- Screens: [S17. Beneficiary Discovery](../screens/S17-beneficiary-discovery.md)
 - APIs: [A2. Coverage Eligibility Check](../apis/A2-coverage-eligibility-check.md), [A4. Pre-auth Submit](../apis/A4-preauth-submit.md), [A5. Claim Submit](../apis/A5-claim-submit.md), [A7. Communication Reply](../apis/A7-communication-on-request.md)
 - Callbacks: [C2. Coverage Eligibility Verdict](../callbacks/C2-coverage-eligibility-on-check.md), [C3. Authorisation Requirements Ruling](../callbacks/C3-auth-requirements-on-check.md), [C5. Pre-auth Reply](../callbacks/C5-preauth-on-submit.md), [C6. Claim Reply](../callbacks/C6-claim-on-submit.md), [C7. Cancel Reply](../callbacks/C7-cancel-on-submit.md), [C9. Payer Communication](../callbacks/C9-communication-request.md)
 - FHIR: [F2. CoverageEligibilityRequest](F2-coverage-eligibility-request.md), [F8. Claim](F8-claim.md), [F12. Communication](F12-communication.md)

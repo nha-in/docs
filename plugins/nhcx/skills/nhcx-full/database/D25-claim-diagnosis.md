@@ -1,19 +1,19 @@
 # D25. claim_diagnosis
 
 #### D25T. TABLE
-One row is one diagnosis quoted on a claim's pre-authorisation draft, held in both SNOMED and ICD-10. Primary key `id`. Parent table: `claim` (D9).
+One row is one diagnosis quoted on a claim's pre-authorisation draft, held in ICD-10 with its mapped SNOMED CT. Primary key `id`. Parent table: `claim` (D9).
 
 #### D25D. DESCRIPTION
 **Written.** Only by saving the pre-authorisation draft (S4), which needs a linked admission. The save runs in one transaction: every D25, D26 and D27 row of the claim is deleted, then the new sets are inserted with `seq` 1, 2, 3 in order. There is no single-row edit or delete.
 
 Where the diagnoses come from:
 
-1. The linked admission first. Every `condition` (D5) on the claim's encounter (D4) with category `diagnosis` and clinical status other than `resolved` is taken, in id order. A condition whose SNOMED code is in the `diagnosis` terminology (D8) is quoted through that term; one that is not but has an ICD-10 code is quoted as recorded (its SNOMED and ICD-10 codes and displays, the condition text standing in for a missing display).
+1. The linked admission first. Every `condition` (D5) on the claim's encounter (D4) with category `diagnosis` and clinical status other than `resolved` is taken, in id order. A condition whose ICD-10 code is in the `diagnosis` terminology (D8) is quoted through that term (ICD-10 and the term's SNOMED mapping); one that is not but has an ICD-10 code is quoted as recorded (its ICD-10 and SNOMED codes and displays, the condition text standing in for a missing display). A condition with no ICD-10 code at all is skipped, with the note "<text> has no ICD-10 code and was not quoted." on the saved draft.
 2. Only when the admission has recorded none are the diagnoses picked on the form used; each must be a `diagnosis` term.
 
-For a term: `snomed_code` and `snomed_display` are the term's code and display; `icd10_code` and `icd10_display` are its secondary coding (`alt_code`, `alt_display`), falling back to the primary code and display. At least one diagnosis is required; with none, the save is refused and the desk is told to record the diagnosis on the admission or pick one on the form, because the payer needs an ICD-10 code.
+For a term: `icd10_code` and `icd10_display` are the term's code and display; `snomed_code` and `snomed_display` are its secondary coding (`alt_code`, `alt_display`), empty when the term has none. The desk picks ICD-10 ([S4. Claim Creation Form](../screens/S4-claim-creation-form.md)); the SNOMED CT is mapped, never typed, and its absence never refuses a save. At least one diagnosis is required; with none, the save is refused and the desk is told to record the diagnosis on the admission or pick one on the form.
 
-**Read.** Every pre-authorisation, enhancement, predetermination and claim bundle requires at least one row ("Quote at least one ICD-10 diagnosis.") and sends each row's ICD-10 code and display as a Claim diagnosis, in `seq` order.
+**Read.** Every pre-authorisation, enhancement, predetermination and claim bundle requires at least one row ("Quote at least one ICD-10 diagnosis.") and sends each row as one Claim diagnosis in `seq` order, with the ICD-10 coding first and the SNOMED CT coding second when the row has one ([F8. Claim](../fhir/F8-claim.md)).
 
 **Deleted.** On every draft save (replaced), by cascade with the claim, or when the transactional store is cleared. There is no status column.
 
@@ -23,9 +23,9 @@ For a term: `snomed_code` and `snomed_display` are the term's code and display; 
 | id | INTEGER | primary key | Row id |
 | claim_id | INTEGER | NOT NULL | The claim (D9) |
 | seq | INTEGER | NOT NULL, default 1 | Order on the draft, from 1 |
-| snomed_code | TEXT | null | SNOMED CT code (empty string when the admission recorded only ICD-10) |
+| snomed_code | TEXT | null | SNOMED CT code mapped from the ICD-10 term (empty when the term has no mapping); sent as the second coding when set |
 | snomed_display | TEXT | null | SNOMED CT display |
-| icd10_code | TEXT | NOT NULL | ICD-10 code the payer reads |
+| icd10_code | TEXT | NOT NULL | ICD-10 code the desk picked; the payer adjudicates on it; sent as the first coding |
 | icd10_display | TEXT | null | ICD-10 display |
 
 #### D25K. KEYS AND INDEXES

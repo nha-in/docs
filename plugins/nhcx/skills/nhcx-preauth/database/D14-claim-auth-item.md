@@ -44,4 +44,5 @@ Lifecycle:
 - Screens: [S8. Line Items](../screens/S8-line-items.md)
 - APIs: [A2. Coverage Eligibility Check](../apis/A2-coverage-eligibility-check.md)
 - Callbacks: [C3. Authorisation Requirements Ruling](../callbacks/C3-auth-requirements-on-check.md)
+- FHIR: [F3. CoverageEligibilityResponse](../fhir/F3-coverage-eligibility-response.md)
 - Database: [D13. claim_auth](D13-claim-auth.md), [D16. claim_line](D16-claim-line.md)

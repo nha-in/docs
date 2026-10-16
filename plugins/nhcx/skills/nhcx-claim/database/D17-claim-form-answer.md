@@ -12,7 +12,7 @@ The payer's forms arrive with its insurance plan (D12). The forms a leg must car
 - a row exists and the answer is non-blank: `answer` and `stage` are overwritten;
 - the answer is blank: the existing row is deleted (a blank answer clears the question).
 
-A file question is answered by uploading the file: it is stored as a supporting document (D28) at the same leg's stage, labelled with the question's text, and the answer holds that document's id as text. A file field posted empty is left out of the save, so re-saving a form without touching its file question keeps the file attached.
+A file question is answered by uploading the file, or by picking a health record of the HMIS (D28 "From records"): either way it is stored as a supporting document (D28) at the same leg's stage, labelled with the question's text, and the answer holds that document's id as text. A file field posted empty is left out of the save, so re-saving a form without touching its file question keeps the file attached.
 
 `stage` is `preauth` or `claim` (anything else is saved as `preauth`). The unique index does not include `stage`, so one question holds one answer per claim: saving the same form on the other leg overwrites the answer and moves the row to that leg. When the answers are read for a leg, a row with no `stage` counts as `preauth`.
 

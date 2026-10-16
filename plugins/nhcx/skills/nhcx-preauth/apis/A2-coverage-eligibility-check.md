@@ -38,19 +38,21 @@ Refused before any call, auth-requirements:
 - no lines: "Choose the line items first, this checks the procedure set, so there has to be one."
 - "Set the facility's HFR ID and NHCX participant code under Settings before checking requirements."
 
-**Additional information on a discovery.** A discovery sent from the discovery page (S17. Beneficiary Discovery (in nhcx-coverage)) may carry what else the desk knows about the person, so the payer has more than one handle to match on. Each is optional and is left out of the bundle when empty ([F15. Patient](../fhir/F15-patient.md)):
+**The handle of a discovery.** A discovery sent from the discovery page (S17. Beneficiary Discovery (in nhcx-coverage)) names the policy by **one of two handles**, `id_type` `PolicyNo` or `MemberId` with `id_value`: a policy number goes out as the Coverage identifier typed `NH` ([F18. Coverage](../fhir/F18-coverage.md)) and the bundle names no member (no `subscriberId`, no `MB` identifier); a member id goes out as `subscriberId` and the Patient identifier typed `MB` ([F15. Patient](../fhir/F15-patient.md)). Neither given: "Enter the policy number or the member id to ask about". Older callers that named the person by `AbhaNumber` or `MobileNo` are still read: the value becomes that additional handle below.
+
+**Additional information on a discovery.** The request may also carry what else the desk knows about the person, so the payer has more than one handle to match on. Each is optional and is left out of the bundle when empty ([F15. Patient](../fhir/F15-patient.md)):
 
 | Field | Rule | In the bundle |
 |---|---|---|
 | Aadhaar number | 12 digits once spaces and hyphens are removed, else "An Aadhaar number has 12 digits" | Patient identifier typed `ADN` |
-| Mobile number | 10 digits, else "A mobile number has 10 digits" | Patient `telecom`, system `phone` |
-| Member ID | free text | becomes the member the bundle names (the `PMJAY` and `MB` identifiers and `Coverage.subscriberId`); the identifier searched on then rides beside it: an ABHA number as an identifier typed `ABHA`, a mobile as the phone |
+| Mobile number | 10 digits once spaces, hyphens and a leading +91 are removed, else "A mobile number has 10 digits" | Patient `telecom`, system `phone` |
+| ABHA number | 14 digits once spaces and hyphens are removed, else "An ABHA number has 14 digits" | Patient identifier typed `ABHA`; also the `x-hcx-ben-abha-id` header |
 
 The Aadhaar number is sent to the payer and kept in the stored bundle; screens that list a check show its last four digits only.
 
 **A discovery needs a case to land on.** C2 matches the verdict by correlation id against a D9 row, and a discovery started from S17. Beneficiary Discovery (in nhcx-coverage) has none yet. So `discover()` opens a draft case for the patient and the chosen payer first (D9: `status` `draft`, `purpose` `discovery`, `patient_id`, `payer_id`, `processing_id` = the payer code, `member_id` the identifier given, no policy yet), then sends on it; the cover the desk picks from the answer is applied to that same case (policy code, member id, product). The facility guard (HFR id and participant code set) is checked **before** the case is created, so a refusal leaves no orphan case.
 
-The bundle builder itself refuses a bundle without a member id ("A coverage check needs the member id to ask about."), without the facility registry id ("A coverage check needs the facility's registry id.") or without a payer code ("A coverage check needs the payer's participant code.").
+The bundle builder itself refuses a bundle without a member id ("A coverage check needs the member id to ask about."; a discovery that carries a policy number is the one exception), without the facility registry id ("A coverage check needs the facility's registry id.") or without a payer code ("A coverage check needs the payer's participant code.").
 
 #### A2Q. REQUEST
 

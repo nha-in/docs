@@ -14,6 +14,8 @@ The one leg the payer starts: it posts a notice when money moves, often twice pe
 
 **Acknowledgement is best-effort.** The notice is recorded first, then acknowledged through A8. A failed acknowledgement is kept on the row and the result is still `settled`, so G8 accepts the message; failing it would only have NHCX deliver it again.
 
+**Posting to billing is best-effort too.** After the acknowledgement, a notice that counts towards the paid total is posted to the HMIS's bill through `billing.post_payer_payment` ([D21. claim_payment](../database/D21-claim-payment.md)): the receipt, and the shortfall adjustment on the clearing notice of a decided claim. A failed posting is kept on the row (`billing_status = 'error'`) for S12 to retry, and the result is still `settled`.
+
 #### C10Q. REQUEST
 `fhir` is an F1 Bundle carrying a Task (what happened, in prose), an F13 PaymentNotice (amount and `paymentStatus`) and a PaymentReconciliation (date, UTR and the `detail[]` breakdown), usually with F17 Organizations. Some payers send only the PaymentNotice and PaymentReconciliation.
 

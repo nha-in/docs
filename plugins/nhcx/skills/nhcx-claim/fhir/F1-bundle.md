@@ -79,4 +79,4 @@ Received (read):
 #### F1U. USED BY
 - APIs: [A5. Claim Submit](../apis/A5-claim-submit.md), [A6. Task Submit (cancel, status, reprocess, release)](../apis/A6-task-submit.md), [A12. Transaction FHIR](../apis/A12-txn-fhir.md)
 - Callbacks: [C1. Callback Door](../callbacks/C1-callback-door.md), [C6. Claim Reply](../callbacks/C6-claim-on-submit.md), [C8. Enquiry Reply](../callbacks/C8-enquiry-on-submit.md)
-- FHIR: [F8. Claim](F8-claim.md), [F10. Task (claim actions)](F10-task-claim-actions.md)
+- FHIR: [F3. CoverageEligibilityResponse](F3-coverage-eligibility-response.md), [F8. Claim](F8-claim.md), [F10. Task (claim actions)](F10-task-claim-actions.md)

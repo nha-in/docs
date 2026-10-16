@@ -6,7 +6,7 @@ In-process: `gateway.send("v1/insuranceplan/request", envelope)`, [G7. Send](../
 #### A3D. DESCRIPTION
 Asks the payer for its package master (the InsurancePlan) for this policy and this facility: every empanelled speciality, the packages under it, their rates, ward and implant tiers, claim conditions, the documents each package needs and the questionnaires those documents point at. It is the only exchange whose request carries no clinical content: a discovery `Task` naming a policy number and the facility's HFR ID.
 
-A master belongs to a facility and a policy, not to one case. So on a first fetch the app first looks for a `ready` master already held on another case with the same payer, the same policy code and the same facility HFR ID. When there is one, the newest is copied onto this case with its packages and forms and no request goes out. "Fetch again" (refresh) always asks the payer. A full scheme master runs to tens of megabytes [PAYER](../references/PAYERS.md#markers).
+The master is held per case ([D10. claim_plan](../database/D10-claim-plan.md)): the payer may answer the same policy and facility differently for different beneficiaries, so what one case was priced on is never assumed to hold for another. On a first fetch the app first looks for a `ready` master already held on another case with the same payer, the same policy code and the same facility HFR ID. When there is one, the newest is copied onto this case with its packages and forms and no request goes out. "Fetch again" (refresh) always asks the payer. A full scheme master runs to tens of megabytes [PAYER](../references/PAYERS.md#markers).
 
 JWE headers: the app sets only these three; G7 generates the rest ([G5. Protocol Headers](../gateway/G5-protocol-headers.md)).
 - `x-hcx-sender_code`: the facility's NHCX participant code.
@@ -76,6 +76,7 @@ function SEND(path, envelope, case):
 
 function request_plan(case_id, refresh = false):
     case = claim[case_id]                  or refuse "Claim not found."
+    if case.beneficiary_pending: refuse "Choose which member of the policy is the patient on the Eligibility tab first."
     if not refresh and reuse_plan(case_id): return          // no request goes out
 
     org = default organization
@@ -118,7 +119,8 @@ function reuse_plan(case_id):
     in one transaction:
         copy every source column except id and claim_id onto this case's claim_plan
             (INSERT, or DELETE its claim_plan_benefit and claim_plan_form rows and UPDATE)
-        copy every claim_plan_benefit and claim_plan_form row of source onto this plan
+        copy every claim_plan_benefit and claim_plan_form row of source onto this plan,
+            in one bulk insert per table (a master is thousands of rows; never row by row)
     return true
 ```
 
@@ -127,5 +129,5 @@ function reuse_plan(case_id):
 - APIs: [A10. Transaction Related](A10-txn-related.md), [A11. Transaction Dispatch](A11-txn-dispatch.md), [A13. Transaction List](A13-txn-list.md)
 - Callbacks: [C4. Insurance Plan Reply](../callbacks/C4-insuranceplan-on-request.md)
 - FHIR: [F4. Task (InsurancePlan discovery)](../fhir/F4-task-insuranceplan.md)
-- Database: [D10. claim_plan](../database/D10-claim-plan.md)
+- Database: [D10. claim_plan](../database/D10-claim-plan.md), [D11. claim_plan_benefit](../database/D11-claim-plan-benefit.md)
 - Tests: [T4. IRDAI Insurance Plan and Authorisation Requirements](../tests/T4-irdai-plan-and-auth-requirements.md), [T13. PMJAY Eligibility, Package Master and Ruling](../tests/T13-pmjay-eligibility-and-package-master.md)

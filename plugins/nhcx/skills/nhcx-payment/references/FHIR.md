@@ -8,6 +8,12 @@ Every FHIR resource the application builds for NHCX or reads back, in one list. 
 |---|---|---|---|---|
 | [F1](../fhir/F1-bundle.md) | Bundle | both | The envelope of every NHCX message: bundle id, profile, anchor entry first and a fixed entry order, absolute URLs under `https://nhcx.abdm.gov.in` as references. | [A8](../apis/A8-paymentnotice-on-request.md), [A12](../apis/A12-txn-fhir.md), [C1](../callbacks/C1-callback-door.md), [C10](../callbacks/C10-paymentnotice-request.md) |
 
+## Eligibility and plan
+
+| # | Resource | Direction | What it is | Used by |
+|---|---|---|---|---|
+| [F3](../fhir/F3-coverage-eligibility-response.md) | CoverageEligibilityResponse | received | The payer's verdict (in force, wallet, pre-auth needed) or its ruling on each quoted item with the documents and forms required. | none |
+
 ## Payer communication and payment
 
 | # | Resource | Direction | What it is | Used by |

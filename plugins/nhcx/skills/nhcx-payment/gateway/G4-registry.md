@@ -11,6 +11,7 @@ In-process, on the ABDM client of one profile (`identity_for(code).client`, G2):
 | `client.forget_certificate(code)` | nothing; drops one cache entry |
 | `client.own_key()` | this profile's own public key, or none |
 | `client.fetch_participant(code)` | the participant's registry record |
+| `client.fetch_participants(role, entity_type, from_date, to_date)` | every participant of one role listed in a registration window, narrowed to government or private; the rows of the participant master [D32. participant](../database/D32-participant.md) |
 | `client.post_registry(path, body)` | status and raw body of any other registry call |
 
 HTTP routes the gateway calls, all `POST` with the session token (G3 `post_with_token`), base `urls.participant`:
@@ -19,6 +20,7 @@ HTTP routes the gateway calls, all `POST` with the session token (G3 `post_with_
 |---|---|---|
 | certificate | `<urls.participant>/fetch/certs` | `{"participantid": "<code>@hcx"}` |
 | record | `<urls.participant>/participant/search` | `{"participant_code": c, "participantcode": c, "participantid": c}` (all three spellings [REF](../references/PAYERS.md#markers)) |
+| list | `<urls.participant>/fetch/participants/list` | `{"role": "PAYER" \| "PROVIDER" \| "TPA", "fromdate": "dd/MM/yyyy", "todate": "dd/MM/yyyy", "entitytype": "Gov" \| "Pvt"}` |
 | other | `<urls.participant>/<path>` | the caller's body, unchanged |
 
 Sandbox base: `https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice`. Production base: `https://apis.abdm.gov.in/pmjay/hcx/participanthcxservice`.
@@ -38,6 +40,8 @@ NHCX messages are encrypted to the recipient's registered encryption certificate
 **`own_key`** is the public half of the profile's private key; the startup check (G11) compares it with what `fetch_certificate` returns for our own code.
 
 **`fetch_participant`** accepts either answer shape: the record itself, or `{"participants": [...]}`, in which case the entry whose code matches is used, else the first entry.
+
+**`fetch_participants`** (nha:A1) is the participant list behind the participant master ([D32. participant](../database/D32-participant.md)). The registry has no name search: it lists one role at a time for a registration window, dates `dd/MM/yyyy` only (any other format is a 400 or an empty list), and `entitytype` `Gov` narrows to government schemes and `Pvt` to private participants; **sent without an entity type it answers the private list only** [SANDBOX](../references/PAYERS.md#markers), so the master is filled with two calls per role. The window is the caller's; the participant master ([D32. participant](../database/D32-participant.md)) passes `participant.windowYears` back from today, 1 by default and 10 in the sandbox, whose test payers were registered years ago [SANDBOX](../references/PAYERS.md#markers). The answer arrives as `{"participantdetails": [...]}`, `{"participants": [...]}` or a bare array, each row `participantcode`, `participantname`, `address`, `state` (no status, endpoint or roles: those come per code from `fetch_participant`). Rows without a code are dropped and codes are normalised. In the sandbox the payer list holds 49 government and 201 private payers, the provider list over 12,000 rows [SANDBOX](../references/PAYERS.md#markers); the call is a read, repeated safely, and is made by the default participant's client on a schedule, not per search.
 
 **`post_registry`** exists for registry calls the gateway does not model (policy search and the ABHA link calls, G10). It adds the token handling, the refresh on 401 and the timeout, and interprets nothing: the caller gets the status and body as the registry sent them. Registry error bodies look like `{"error": {"code": "NHCX-1016", "message": "..."}}` or carry a top-level `message`.
 
@@ -83,6 +87,8 @@ Errors (shape in G3S):
 | `PARTICIPANT_HTTP_<status>` | `participant registry refused the search for <code>` | when status >= 500 or 429 |
 | `PARTICIPANT_BAD_JSON` | `registry response is not JSON` | no |
 | `PARTICIPANT_NOT_FOUND` | `registry has no record for <code>` | no |
+| `PARTICIPANT_ROLE` | `unknown participant role '<role>'` | no |
+| `PARTICIPANT_HTTP_<status>` | `participant registry refused the <role> list` | when status >= 500 or 429 |
 | `CERT_FETCH_UNREACHABLE`, `CERT_FETCH_READ_ERROR`, `CERT_FETCH_REQUEST`, `MARSHAL_ERROR`, `TOKEN_*` | from `post_with_token` (G3). The `CERT_FETCH_` prefix is used for every registry call, including the participant search and `post_registry` [REF](../references/PAYERS.md#markers) | see G3 |
 
 Upstream status and the clipped upstream body travel with the `_HTTP_` and `_BAD_JSON` errors. A send that fails with one of these reports it to the application as is (G7).
@@ -141,6 +147,7 @@ client.post_registry(path, body):
 ```
 
 #### G4U. USED BY
+- Screens: [S19. NHCX Settings](../screens/S19-nhcx-settings.md)
 - FHIR: [F17. Organization](../fhir/F17-organization.md)
-- Database: [D9. claim](../database/D9-claim.md)
+- Database: [D9. claim](../database/D9-claim.md), [D32. participant](../database/D32-participant.md)
 - Gateway: [G1. Embedding](G1-embedding.md), [G2. Configuration and Participants](G2-configuration.md), [G3. Session Token](G3-session-token.md), [G6. Encryption](G6-encryption.md), [G7. Send](G7-send.md), [G11. Startup Checks and Health](G11-startup-checks.md)

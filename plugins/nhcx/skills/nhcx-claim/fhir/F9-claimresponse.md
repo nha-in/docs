@@ -81,3 +81,4 @@ In a Task reply (F10) the same fields are read, then used by the Task's rules th
 - APIs: [A17. Claim State](../apis/A17-claim-state.md)
 - Callbacks: [C6. Claim Reply](../callbacks/C6-claim-on-submit.md), [C8. Enquiry Reply](../callbacks/C8-enquiry-on-submit.md)
 - FHIR: [F1. Bundle](F1-bundle.md), [F10. Task (claim actions)](F10-task-claim-actions.md)
+- Database: [D21. claim_payment](../database/D21-claim-payment.md)
