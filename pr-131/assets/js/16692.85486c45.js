@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["16692"],{55583(e,t,s){s.r(t),s.d(t,{__iconNode:()=>d,default:()=>h});var a=s(34438);let d=[["rect",{width:"18",height:"18",x:"3",y:"3",rx:"2",key:"afitv7"}],["path",{d:"M3 15h18",key:"5xshup"}]],h=(0,a.A)("panel-bottom",d)}}]);
