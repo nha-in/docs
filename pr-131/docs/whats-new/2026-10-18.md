@@ -6,7 +6,7 @@
 
 Install them with your agent, alongside the others. [Build with AI](/docs/pr-131/docs/hiecm/v3/getting-started/build-with-ai).
 
-### The nhcx plugin is 1.0.10
+### The nhcx plugin is 1.0.11
 
 Reinstall to move from 1.0.9. [Build with AI](/docs/pr-131/docs/hiecm/v3/getting-started/build-with-ai).
 

@@ -7,7 +7,7 @@ Changes that affect what you can build against, newest first. Each entry links t
 4 changes
 
 - [Seven skills published: hiecm-m2-test, hiecm-m3-test, hiecm-m4-test, hiecm-p1-test, hiecm-p2-test, hiecm-p3-test, hiecm-p4-test](/docs/pr-131/docs/whats-new/2026-10-18#seven-skills-published-hiecm-m2-test-hiecm-m3-test-hiecm-m4-test-hiecm-p1-test-hiecm-p2-test-hiecm-p3-test-hiecm-p4-test)
-- [The nhcx plugin is 1.0.10](/docs/pr-131/docs/whats-new/2026-10-18#the-nhcx-plugin-is-1010)
+- [The nhcx plugin is 1.0.11](/docs/pr-131/docs/whats-new/2026-10-18#the-nhcx-plugin-is-1011)
 - [The abdm-integrators-assistant plugin is 0.10.4](/docs/pr-131/docs/whats-new/2026-10-18#the-abdm-integrators-assistant-plugin-is-0104)
 - [The uhi-integrators-assistant plugin is 0.1.3](/docs/pr-131/docs/whats-new/2026-10-18#the-uhi-integrators-assistant-plugin-is-013)
 
