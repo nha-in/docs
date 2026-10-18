@@ -8,11 +8,17 @@ Every FHIR resource the application builds for NHCX or reads back, in one list. 
 |---|---|---|---|---|
 | [F1](../fhir/F1-bundle.md) | Bundle | both | The envelope of every NHCX message: bundle id, profile, anchor entry first and a fixed entry order, absolute URLs under `https://nhcx.abdm.gov.in` as references. | [A7](../apis/A7-communication-on-request.md), [A12](../apis/A12-txn-fhir.md), [C1](../callbacks/C1-callback-door.md), [C9](../callbacks/C9-communication-request.md) |
 
+## Eligibility and plan
+
+| # | Resource | Direction | What it is | Used by |
+|---|---|---|---|---|
+| [F3](../fhir/F3-coverage-eligibility-response.md) | CoverageEligibilityResponse | received | The payer's verdict (in force, wallet, pre-auth needed) or its ruling on each quoted item with the documents and forms required. | none |
+
 ## Pre-authorisation and claim
 
 | # | Resource | Direction | What it is | Used by |
 |---|---|---|---|---|
-| [F8](../fhir/F8-claim.md) | Claim | sent | One document for every leg: pre-auth, enhancement, predetermination, claim and query answers; items, diagnoses, care team, supportingInfo documents, total. | [A7](../apis/A7-communication-on-request.md), [A17](../apis/A17-claim-state.md) |
+| [F8](../fhir/F8-claim.md) | Claim | sent | One document for every leg: pre-auth, enhancement, claim and query answers (predetermination retired); items, diagnoses, care team, supportingInfo documents, total. | [A7](../apis/A7-communication-on-request.md), [A17](../apis/A17-claim-state.md) |
 | [F10](../fhir/F10-task-claim-actions.md) | Task (claim actions) | sent and received | A follow-up on a case: cancel, status, reprocess or release, and the payer's Task answers to them. | [A7](../apis/A7-communication-on-request.md) |
 
 ## Payer communication and payment

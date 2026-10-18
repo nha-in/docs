@@ -94,7 +94,8 @@ function file_predetermination(in, submission):     // called by C6; submission 
     render(current) = F9 bundle(in.payer, in.recipient, current, cover, use = "predetermination",
                                 claim_ref = submission.claim_ref, recipient = in.sender,
                                 findings = evaluation.findings)
-    headers = ANSWER_HEADERS(in)                       // A1; the ask's workflow id echoed
+    headers = ANSWER_HEADERS(in, predetermination) with x-hcx-workflow_id = in.workflow_id when set
+                                                       // A1; the ask's workflow id echoed as sent, not filtered [REF](../references/PAYERS.md#markers)
     result = dispatch(case, render, headers, "v1/preauth/on_submit")   // A19 faults, else one SEND
     if result failed:
         on Refused r:     return rejected("The gateway refused the answer: " + r.message)

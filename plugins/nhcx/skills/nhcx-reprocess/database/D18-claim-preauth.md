@@ -4,15 +4,15 @@
 One row is the pre-authorisation leg of one claim: the last send (first request, query answer, enhancement), the payer's verdict on it and any cancellation. Primary key `id`. Parent table: `claim` (D9), one row per claim.
 
 #### D18D. DESCRIPTION
-The draft itself lives on `claim` (D9) and its child tables (D16, D25, D26, D27, D28, D17). This row is the exchange. There is only ever one per claim: every later send, and the cancellation, overwrites it.
+The draft itself lives on `claim` (D9) and its child tables (D16, D25, D26, D28, D17; D27 only on rows written before custom lines were retired). This row is the exchange. There is only ever one per claim: every later send, and the cancellation, overwrites it.
 
-**Created.** The first "Send" on Pre-authorisation (S9), allowed only when the claim's eligibility status is `eligible`. The row is inserted with `status` `submitting`. If [G7. Send](../gateway/G7-send.md) reports the send failed after naming the ids it went out under, the row is still written under those ids, marked as a refusal (below), and the error is shown.
+**Created.** The first "Send" on Pre-authorisation (S9), allowed only while the policy is in force on the case (D9: the validation answered eligible; a benefits check waiting or failed does not withdraw it), else "Submit a preauth only after the payer has confirmed the policy is eligible.". No linked patient or admission is needed: a pre-authorisation may be drafted and sent before admission. The row is inserted with `status` `submitting`. If [G7. Send](../gateway/G7-send.md) reports the send failed after naming the ids it went out under, the row is still written under those ids, marked as a refusal (below), and the error is shown.
 
 **What each send writes.** `status` `submitting`, `txn_id` and `correlation_id` from the [G7. Send](../gateway/G7-send.md) result, `submitted_at` now, `claim_ref` the claim number the bundle went under, `requested_amount` the sum of the lines (D16), `submission_kind`, `workflow_id`, `reply_text`, `request_json`; it clears `settled_at`, `error_message`, `preauth_ref`, `outcome`, `disposition`, `approved_amount`, `eligible_amount`, `submitted_amount`, `items_json` and `response_json`. An enhancement or a query answer then puts the earlier `preauth_ref` back, and keeps `enhancement_no` (an `enhancement` adds 1 to it). **Exception, enhancements.** An `enhancement` or `enhancement_resubmit` send does not clear the approval's columns (`approved_amount`, `eligible_amount`, `submitted_amount`, `outcome`, `adjudication`, `disposition`, `items_json`, `settled_at`): the approval stands until the payer answers, and C5 overwrites them only on an approval (workflow 22). When the enhancement does not get through (the send fails or is refused at the door, A4, or the payer denies it, C5), those columns are therefore still the approval's; a door refusal writes only the failed send's `txn_id`, `correlation_id`, `submitted_at`, `error_message`, `submission_kind`, `workflow_id` and `enhancement_no`, and keeps `request_json` as the last accepted send's bundle. The approved pre-authorisation stands, in the data as on the screen.
 
 **Which send it is** (`submission_kind`, chosen from the current row):
 
-| Current row | Next send | Workflow id (PMJAY adapter, see [PAYERS.md](../references/PAYERS.md)) [PAYER](../references/PAYERS.md#markers) |
+| Current row | Next send | Workflow id (`gov` adapter, PMJAY, see [PAYERS.md](../references/PAYERS.md)) [PAYER](../references/PAYERS.md#markers) |
 |---|---|---|
 | none, `cancelled` or `error` | `preauth` | 12 |
 | `rejected` | `preauth` (a fresh pre-authorisation) [REF](../references/PAYERS.md#markers) | 12 |
@@ -22,18 +22,22 @@ The draft itself lives on `claim` (D9) and its child tables (D16, D25, D26, D27,
 | `approved` / `partial`, nothing added | refused: "The pre-authorisation is already decided; add a line to ask for an enhancement." | |
 | `submitting` / `cancelling` | refused: "The pre-authorisation is with the payer; wait for its answer before sending again." | |
 
-A query answer and an enhancement query answer require the desk's reply text; it is stored in `reply_text` and carried as the `CQD` note [PAYER](../references/PAYERS.md#markers).
+**Read only once the claim is with the payer** ([CORE.md](../references/CORE.md) Instruction 14): while D20 is `submitting`, `queried`, `approved`, `partial` or `rejected`, every send on this leg is refused before the table above is read: "The claim has gone to the payer, so the pre-authorisation is read only: no enhancement or change can be made. It can only be cancelled while the payer is deciding the claim." A claim still a draft, or `error` (refused at the door), leaves it open.
+
+A query answer and an enhancement query answer require the desk's reply text ("Write the reply to the payer's query before answering it."); it is stored in `reply_text` and carried as the `CQD` note [PAYER](../references/PAYERS.md#markers). Every send on this leg, a query answer included, travels as `x-hcx-status: request.initiated` (NHCX refuses `response.complete` on the submit path with NHCX-1011) [SANDBOX](../references/PAYERS.md#markers). **A query answer refused at the door leaves the leg `queried`**: only `status` (`queried`) and `error_message` are written, the payer's question and decision stay as they were, and the desk can answer again.
+
+The correlation id of every send is also added to the case's thread list (D9 `correlation_ids`).
 
 **Statuses** (exact strings): `submitting`, `approved`, `partial`, `queried`, `rejected`, `cancelling`, `cancelled`, `error`.
 
-**The payer's reply** (C5, or the poll through A10 to A12 when the case is opened) is read from the ClaimResponse's `outcome` and claim-level `adjudication` reason together [PAYER](../references/PAYERS.md#markers):
+**The payer's reply** (C5, or the poll through A10 to A12 when the case is opened) is read from the reply's payer-side `x-hcx-workflow_id` when it is one of the codes C5 lists (20 acknowledgement, 21 or 22 approved, 23 or 231 rejected, 24 or 241 queried; an approval the bundle marks `partial` stays `partial`), after an error on the envelope or in the ClaimResponse, which always wins; otherwise from the ClaimResponse's `outcome` and claim-level `adjudication` reason together [PAYER](../references/PAYERS.md#markers):
 
 | outcome / reason | status |
 |---|---|
 | outcome `queued` or `acknowledged`, or reason `submitted` or `acknowledged` | `submitting` (not a decision; `settled_at` stays null) |
 | reason `cancelled`, `rejected` or `denied` | `rejected` (the `rejected` and `denied` reasons are a correction: the reference implementation read them as `queried`) |
 | reason `queried` | `queried` |
-| outcome `error` | `rejected` |
+| outcome `error`, or the reply carries errors | `error` (not a decision; an enhancement goes back to `approved`, C5) |
 | outcome `partial`, reason `approved` | `partial` |
 | outcome `partial`, any other reason | `queried` |
 | outcome `complete`, reason `approved` or none | `approved` |
@@ -41,11 +45,11 @@ A query answer and an enhancement query answer require the desk's reply text; it
 
 Applying a reply writes `outcome`, `adjudication`, `disposition`, `preauth_ref` (kept when the reply carries none), the three totals, `items_json`, `query_note`, `api_call_id`, `settled_at` (when it is a decision), `response_json`, clears `error_message`, and copies the current `correlation_id` into `thread_correlation_id`. A reply is applied several times on one thread (acknowledgement, query, decision); one whose `x-hcx-api_call_id` equals `api_call_id` is a redelivery and is ignored. Without an api_call_id, a reply with the same `outcome` and `adjudication` as the row is treated as the same message.
 
-**Refusals.** A ProtocolResponse on the thread, a peer or protocol error found by polling, or a send failure sets `status` `error` with the message, except that a refused `enhancement` or `enhancement_resubmit` goes back to `approved` with the message kept in `error_message` (the approved pre-authorisation stands). Either way `correlation_id` is put back to `thread_correlation_id` when there is one. A ledger that no longer has the transaction (404), or a failed dispatch, sets `error`.
+**Refusals.** A ProtocolResponse on the thread, a peer or protocol error found by polling, or a send failure sets `status` `error` with the message, except that a refused `enhancement` or `enhancement_resubmit` goes back to `approved` with the message kept in `error_message` (the approved pre-authorisation stands), and a refused query answer stays `queried` (above). Either way `correlation_id` is put back to `thread_correlation_id` when there is one. A ledger that no longer has the transaction (404), or a failed dispatch, sets `error`.
 
 **Revival.** A row on record as a failed send (`error`, or `approved` / `partial` / `queried` with an error message other than a refused cancellation) goes back to `submitting` when the payer answers on its thread, and the answer is then applied.
 
-**Cancellation.** Allowed from `submitting`, `approved`, `partial` or `queried`. It writes `pre_cancel_status` (the status it had), `status` `cancelling`, `cancel_txn_id`, `cancel_correlation_id`, `cancel_requested_at`, `cancel_reason` (a key: `treatmentplanchanged`, `patientrequest`, `financialconstraints`, `alternativetreatment`, `duplicateclaim`, `administrativeerror`, `other`; `other` requires a note), `cancel_note`, and clears `error_message` (`error` when the send failed). The payer's Task reply (C7, or polling) then:
+**Cancellation.** Allowed from `submitting`, `approved`, `partial` or `queried`, and only until the payer decides the claim (D20 `approved`, `partial` or `rejected`: "The payer has decided the claim; the pre-authorisation can no longer be cancelled.", [CORE.md](../references/CORE.md) Instruction 14). It writes `pre_cancel_status` (the status it had), `status` `cancelling`, `cancel_txn_id`, `cancel_correlation_id`, `cancel_requested_at`, `cancel_reason` (a key: `treatmentplanchanged`, `patientrequest`, `financialconstraints`, `alternativetreatment`, `duplicateclaim`, `administrativeerror`, `other`; `other` requires a note), `cancel_note`, and clears `error_message` (`error` when the send failed). The payer's Task reply (C7, or polling) then:
 
 - accepted (Task status none, `completed` or `accepted`, and outcome not `error`): `status` `cancelled`, `settled_at`, `outcome`, `disposition`, `response_json`, and the claim is given a fresh claim number from the counter (D30). The withdrawn number stays here in `claim_ref`.
 - refused: `status` back to `pre_cancel_status` (`approved` when none was recorded) with `error_message` "The payer did not accept the cancellation.". The reference implementation always set `approved`, even for a cancel sent from `submitting` or `queried`; restoring the earlier status is a correction. For 15 minutes after that, polling still looks for an acceptance on the thread [REF](../references/PAYERS.md#markers).

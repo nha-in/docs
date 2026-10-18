@@ -13,8 +13,8 @@ Every FHIR resource the application builds for NHCX or reads from a hospital's m
 | # | Resource | Direction | What it is | Used by |
 |---|---|---|---|---|
 | [F4](../fhir/F4-task-insuranceplan.md) | Task (InsurancePlan request) | received | The hospital's plan request: a Task naming a policy number and the asking provider. | [C1](../callbacks/C1-callback-door.md) |
-| [F5](../fhir/F5-insuranceplan.md) | InsurancePlan | sent | The package master this payer publishes: the product, its coverage clauses with benefits and limits, each covered procedure with its rate, documents per phase and treatment-guideline form, exclusions and sub-limits; or an empty plan. | none |
-| [F6](../fhir/F6-questionnaire.md) | Questionnaire | sent | The treatment-guideline form hung off each package: one required free-text item per clinical question, or one yes/no item per document wanted at pre-authorisation. | none |
+| [F5](../fhir/F5-insuranceplan.md) | InsurancePlan | sent | The package master this payer publishes: the product, its coverage clauses with benefits and limits, each covered procedure with its rate, documents per leg and its own forms, the policy forms, proof of identity when biometric is required, exclusions and sub-limits; or an empty plan. | none |
+| [F6](../fhir/F6-questionnaire.md) | Questionnaire | sent | A form the plan ships, the policy's or a procedure's, in one shape: a title, a description and typed questions, published at /questionnaire/<owner>/<form id> and named Questionnaire. | none |
 
 ## Pre-authorisation and claim
 

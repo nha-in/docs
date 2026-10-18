@@ -6,13 +6,13 @@ In-process: `gateway.send("v1/communication/request", envelope)`, [G7. Send](../
 On the hospital's side it arrives as a payer communication (its callback for `communication/request`), is filed on the case as a query, and is answered with a Communication on `communication/on_request`, which reaches this payer as [C9. Communication](../callbacks/C9-communication.md).
 
 #### A5D. DESCRIPTION
-Sent by [A13. Adjudicate](A13-adjudicate.md) when an adjudicator queries a case (action `query`, with remarks, and any line marked `queried` with its query remarks). The hospital is told what is wanted on a thread of its own; the submission's thread stays open, unanswered, until the reply has been read and a decision made, and the ClaimResponse then goes on it ([A3. Pre-auth Answer](A3-preauth-answer.md), [A4. Claim Answer](A4-claim-answer.md)). Sending a `queued` ClaimResponse first would have the hospital's desk settle on a non-answer and would mark the thread answered here before it was.
+Sent by [A13. Adjudicate](A13-adjudicate.md) in two cases: the desk's **Raise Query** (`POST cases/:id/query`), a question on the case before anything is decided; and a case `query` with **no line queried** (or on a claim reopened by a reprocess, whose own thread is closed). The hospital is told what is wanted on a thread of its own; the submission's thread stays open, unanswered, until the reply has been read and a decision made, and the ClaimResponse then goes on it ([A3. Pre-auth Answer](A3-preauth-answer.md), [A4. Claim Answer](A4-claim-answer.md)).
 
-This is the `communication` query mode. A scheme that asks inside its ClaimResponse and takes the answer as a fresh submission (PMJAY, `resubmit` mode) sends no CommunicationRequest: the query is [A3. Pre-auth Answer](A3-preauth-answer.md) with `outcome` `partial` and reason `queried`, and the answer arrives as a resubmission on [C4. Pre-auth Submit](../callbacks/C4-preauth-submit.md) under workflow 19 or 131 [PAYER](../references/PAYERS.md#markers). Which mode this payer speaks is a scheme setting (see [PAYERS.md](../references/PAYERS.md)); the reference speaks `communication` [REF](../references/PAYERS.md#markers).
+A query on **lines** is not this: it rides back on the submission's own thread as a ClaimResponse, `outcome` `partial`, reason `queried`, the way PMJAY sends one, and the hospital answers it by resubmitting the pre-authorisation (workflow 19 or 131) or the claim (151) as `request.initiated` ([A3. Pre-auth Answer](A3-preauth-answer.md), [A4. Claim Answer](A4-claim-answer.md), [C4. Pre-auth Submit](../callbacks/C4-preauth-submit.md), [C5. Claim Submit](../callbacks/C5-claim-submit.md)) [PAYER](../references/PAYERS.md#markers). The reference speaks both: the PMJAY shape for lines and this request for the case as a whole [REF](../references/PAYERS.md#markers). A scheme profile that speaks only `resubmit` sends no CommunicationRequest at all (see [PAYERS.md](../references/PAYERS.md)).
 
 **What is asked** ([F11. CommunicationRequest](../fhir/F11-communicationrequest.md)): one payload per thing wanted, in order: the adjudicator's case remarks, then each queried line as "`<line description>`: `<query remarks>`". The request is `about` the Claim (the hospital's claim number: the claim's submission reference, else the pre-authorisation's), addressed from this payer to the hospital, with the case's Patient, both Organizations and the Coverage beside it.
 
-**Resend.** `POST cases/:id/query/resend` sends the open query again, for when the gateway was down the first time. Refusals, in order: "Only an adjudicator can send a query" (role), "No case with that id", "This case is not under query", "This case did not come off the exchange, so there is nobody to ask", "No gateway is configured" [REF](../references/PAYERS.md#markers), and "The gateway could not queue the query" when the send still fails. A resend opens a fresh thread and replaces the old one on the case.
+**Resend.** `POST cases/:id/query/resend` sends the open query again as a CommunicationRequest, for when the gateway was down the first time. It is offered on any `queried` case; on a case queried on its lines it sends the question as a CommunicationRequest too, since there is no resend of the line-item ClaimResponse itself [REF](../references/PAYERS.md#markers). Refusals, in order: "Only an adjudicator can send a query" (role), "No case with that id", "This case is not under query", "This case did not come off the exchange, so there is nobody to ask", "No gateway is configured" [REF](../references/PAYERS.md#markers), and "The gateway could not queue the query" when the send still fails. A resend opens a fresh thread and replaces the old one on the case.
 
 **Headers set by the application.**
 
@@ -24,7 +24,8 @@ This is the `communication` query mode. A scheme that asks inside its ClaimRespo
 | `x-hcx-workflow_id` | From the table below |
 | `x-hcx-status` | `request.initiated` |
 
-Workflow ids, per scheme dialect (see [PAYERS.md](../references/PAYERS.md)) [PAYER](../references/PAYERS.md#markers):
+Workflow ids, per scheme dialect (see [PAYERS.md](../references/PAYERS.md)) [PAYER](../references/PAYERS.md#markers). A Raise Query uses the same table: it names the leg the case is on.
+
 
 | Case being queried | `pmjay` | `kyrocare` (Sandbox Payer) | `generic` | `x-hcx-status` |
 |---|---|---|---|---|
@@ -83,7 +84,8 @@ function query_workflow(case):                      // [PAYER](../references/PAY
     if case.enhancement_count > 0: return "241"
     return "24"
 
-// called by A13 answer_verdict when the decision was "query"
+// called by A13 answer_verdict when the decision was "query" and no line is queried,
+// and by A13 RAISE_QUERY
 function send_query(case):
     if case.nhcx_sender_code empty: return case        // not from the exchange
     if case.adjudication_status != queried: return case

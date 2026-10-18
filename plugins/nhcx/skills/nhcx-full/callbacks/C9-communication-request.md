@@ -65,9 +65,10 @@ record_query(body, corr, sender, workflow):
                      received_at: now, status: "open",
                      remarks: questions joined by newline, questions: JSON list,
                      request_json: body}
-    if kind == "query":
-        restamp the case stage                                   # open query -> sub_stage "queried"
-    else:
+    restamp the case stage                                       # an open query -> sub_stage "queried"
+    (the same request inserted twice at once: the second insert fails on the unique
+     correlation id and answers "ignored")
+    if kind == "notification":                                   # after the row is committed
         try: send the acknowledgement through A7
              write D23: status "acknowledged", error_message null, reply_txn_id,
                         reply_correlation_id, acknowledged_at, reply_json
@@ -114,7 +115,7 @@ The pre-authorisation (D18) and claim (D20) legs themselves are not written.
 #### C9U. USED BY
 - Screens: [S10. Communication](../screens/S10-communication.md)
 - APIs: [A7. Communication Reply](../apis/A7-communication-on-request.md)
-- Callbacks: [C1. Callback Door](C1-callback-door.md)
+- Callbacks: [C1. Callback Door](C1-callback-door.md), [C5. Pre-auth Reply](C5-preauth-on-submit.md), [C6. Claim Reply](C6-claim-on-submit.md)
 - FHIR: [F11. CommunicationRequest](../fhir/F11-communicationrequest.md)
 - Database: [D23. claim_query](../database/D23-claim-query.md)
 - Gateway: [G7. Send](../gateway/G7-send.md)

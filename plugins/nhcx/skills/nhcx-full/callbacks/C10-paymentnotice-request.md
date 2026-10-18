@@ -14,6 +14,8 @@ The one leg the payer starts: it posts a notice when money moves, often twice pe
 
 **Acknowledgement is best-effort.** The notice is recorded first, then acknowledged through A8. A failed acknowledgement is kept on the row and the result is still `settled`, so G8 accepts the message; failing it would only have NHCX deliver it again.
 
+**Posting to billing is best-effort too.** Once the notice is recorded and before the acknowledgement, a notice that reports money that moved (D21: a `paid`, `cleared`, `complete` or `completed` status, or an amount with a UTR and a status other than `initiated`, `pending`, `queued`) is posted to the HMIS's bill through `billing.post_payer_payment` ([D21. claim_payment](../database/D21-claim-payment.md)): one payment record for the amount, against the admission's account, updated rather than doubled when the same row is posted again. A failed posting is kept on the row (`billing_status = 'failed'`, `billing_error`) for S12 to post again; the acknowledgement still goes, and the result is still `settled`.
+
 #### C10Q. REQUEST
 `fhir` is an F1 Bundle carrying a Task (what happened, in prose), an F13 PaymentNotice (amount and `paymentStatus`) and a PaymentReconciliation (date, UTR and the `detail[]` breakdown), usually with F17 Organizations. Some payers send only the PaymentNotice and PaymentReconciliation.
 
@@ -39,8 +41,11 @@ C10(envelope, corr):
             payment = earlier
         else:
             payment = insert D21 values                      # ack_status defaults to "pending"
-            restamp the case stage                           # stage "payment"
         insert D22 per detail {payment_id, seq, reference, type_code, type_display, date, amount}
+        restamp the case stage                               # stage "payment"
+    if the payment reports money that moved:                 # after the commit, best-effort (D21)
+        try: billing.post_payer_payment(payment)             # a failure kept on the row
+        catch any error: log it                              # (billing_status "failed"), never raised
     try:
         send the acknowledgement through A8
         leg_write(D21, payment, {ack_status: "sent", ack_txn_id, ack_correlation_id,

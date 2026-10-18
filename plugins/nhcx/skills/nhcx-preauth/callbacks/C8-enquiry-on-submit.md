@@ -26,16 +26,19 @@ C8(envelope, corr):
     if body.type == "ProtocolResponse":
         write D29: status = "error", error_message = rejection(body)
         return "settled"
-    revive(D29, row, "asking")
     values = {status: "answered", answered_at: now, error_message: null, response_json: body}
     if row.kind == "status":
         values += status_answer(envelope, body)
     else:                                               # reprocess and release
-        parsed = read_task_reply(body)                  # C7; rejected when no Task
+        parsed = read_task_reply(body)                  # C7; rejected when no Task, before any write
         reopened = parsed.task_status in {"completed", "accepted", "in-progress"}
         values.answer = "reopened" if reopened else "refused"
         values.detail = parsed.disposition or the Task's description or ""
-        if reopened and the case has a D20 row:
+        if not reopened:
+            values.detail = task_reason(body, values.detail) or ""   # C7 "The Task's own error"
+    revive(D29, row, "asking")                          # a rejected reply leaves the enquiry as it was
+    if row.kind != "status" and values.answer == "reopened":
+        if the case has a D20 row:                      # a reprocess reopens a rejected claim
             leg_write(D20, {status: "submitting", settled_at: null, error_message: null})
             # the new verdict arrives on the claim's own thread (C6)
     write D29: values

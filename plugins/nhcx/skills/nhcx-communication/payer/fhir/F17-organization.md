@@ -67,5 +67,5 @@ Received (read):
 
 #### F17U. USED BY
 - APIs: [A5. Query Request](../apis/A5-query-request.md)
-- FHIR: [F1. Bundle](F1-bundle.md), [F11. CommunicationRequest](F11-communicationrequest.md), [F18. Coverage](F18-coverage.md)
+- FHIR: [F1. Bundle](F1-bundle.md), [F9. ClaimResponse](F9-claimresponse.md), [F11. CommunicationRequest](F11-communicationrequest.md), [F18. Coverage](F18-coverage.md)
 - Database: [D1. payer](../database/D1-payer.md), [D19. case](../database/D19-case.md)

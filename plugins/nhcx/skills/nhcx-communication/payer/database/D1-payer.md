@@ -47,5 +47,5 @@ Delete:
 #### D1U. USED BY
 - APIs: [A5. Query Request](../apis/A5-query-request.md), [A12. Transaction FHIR](../apis/A12-txn-fhir.md), [A15. Case Exchange Log](../apis/A15-case-exchange.md)
 - Callbacks: [C1. Callback Door](../callbacks/C1-callback-door.md)
-- FHIR: [F1. Bundle](../fhir/F1-bundle.md), [F17. Organization](../fhir/F17-organization.md)
+- FHIR: [F1. Bundle](../fhir/F1-bundle.md), [F9. ClaimResponse](../fhir/F9-claimresponse.md), [F17. Organization](../fhir/F17-organization.md)
 - Database: [D2. staff](D2-staff.md)

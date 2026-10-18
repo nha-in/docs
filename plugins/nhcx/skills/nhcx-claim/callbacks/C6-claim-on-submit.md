@@ -1,10 +1,12 @@
 # C6. Claim Reply
 
 #### C6E. ENDPOINT
-Delivered in-process by [G8. Receive](../gateway/G8-receive.md) for NHCX route `v1/claim/on_submit`, passed to `C1.receive` with `delivery.type` `claim`. Answers A5 (a claim, a query answer, a resubmission).
+Delivered in-process by [G8. Receive](../gateway/G8-receive.md) for NHCX route `v1/claim/on_submit`, passed to `C1.receive` with `delivery.type` `claim`. Answers A5 (a claim, or a claim query answer; a decided claim is never sent again, so a rejected one comes back for another look through a reprocess Task, C8).
 
 #### C6D. DESCRIPTION
 The payer's verdict on the claim, read exactly as a pre-authorisation reply (C5): the same ClaimResponse reading, the same verdict mapping, several replies per thread (PMJAY acknowledges under workflow `25`, decides under `26` [PAYER](../references/PAYERS.md#markers)). The status follows the reply's workflow id when it is a payer-side code (25 acknowledgement, 26 approved, 27 queried, 291 rejected) and the bundle otherwise, as in C5.
+
+**A query on the claim.** A verdict `queried` is answered by resubmitting the claim from the Claim tab (A5 `claim_query_response`, still `request.initiated`); a standalone CommunicationRequest query is C9.
 
 **Errors.** A reply that is an error (`response.error`, `ClaimResponse.error`, or an `error` outcome that is not a rejection, [F9. ClaimResponse](../fhir/F9-claimresponse.md)) decides nothing: the leg goes to `error` with the payer's words, and the claim can be sent again as the same kind.
 

@@ -1,0 +1,97 @@
+[
+  {
+    "id": "26dcab1ba1e3",
+    "date": "2026-10-18",
+    "kind": "plugin-version",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": null,
+    "count": 1,
+    "items": [
+      {
+        "name": "nhcx",
+        "from": "1.0.9",
+        "to": "1.0.11"
+      }
+    ]
+  },
+  {
+    "id": "546b4fc9c1e1",
+    "date": "2026-10-18",
+    "kind": "artefact-added",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": "/docs/hiecm/v3/getting-started/build-with-ai",
+    "count": 7,
+    "items": [
+      {
+        "artefact": "skill",
+        "name": "hiecm-m2-test"
+      },
+      {
+        "artefact": "skill",
+        "name": "hiecm-m3-test"
+      },
+      {
+        "artefact": "skill",
+        "name": "hiecm-m4-test"
+      },
+      {
+        "artefact": "skill",
+        "name": "hiecm-p1-test"
+      },
+      {
+        "artefact": "skill",
+        "name": "hiecm-p2-test"
+      },
+      {
+        "artefact": "skill",
+        "name": "hiecm-p3-test"
+      },
+      {
+        "artefact": "skill",
+        "name": "hiecm-p4-test"
+      }
+    ]
+  },
+  {
+    "id": "f7b945ed2958",
+    "date": "2026-10-18",
+    "kind": "plugin-version",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": null,
+    "count": 1,
+    "items": [
+      {
+        "name": "abdm-integrators-assistant",
+        "from": "0.10.3",
+        "to": "0.10.4"
+      }
+    ]
+  },
+  {
+    "id": "bad4d6f38be6",
+    "date": "2026-10-18",
+    "kind": "plugin-version",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": null,
+    "count": 1,
+    "items": [
+      {
+        "name": "uhi-integrators-assistant",
+        "from": "0.1.2",
+        "to": "0.1.3"
+      }
+    ]
+  }
+]

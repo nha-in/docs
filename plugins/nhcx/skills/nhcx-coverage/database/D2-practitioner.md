@@ -4,7 +4,7 @@
 One row is one doctor or staff member of the facility; primary key `id`; no parent table.
 
 #### D2D. DESCRIPTION
-The practitioner master. The claim flow reads it for the treating team: the consultant on the admission ([D4. encounter](D4-encounter.md) `practitioner_id`) becomes the treating doctor of the pre-authorisation, and each care-team member (D26. claim_care_team (in nhcx-preauth)) is sent as a Practitioner with `identifier_value` as the HPR id, `qualification_display` as the degree, and `specialty_code` / `specialty_display` as the specialty.
+The practitioner master. The claim flow reads it for the treating team: the doctors the desk names on the pre-authorisation (the consultant on a linked admission, [D4. encounter](D4-encounter.md) `practitioner_id`, only pre-fills a form not yet saved), and each care-team member (D26. claim_care_team (in nhcx-preauth)) is sent as a Practitioner with `identifier_value` as the HPR id, `qualification_display` as the degree, and `specialty_code` / `specialty_display` as the specialty.
 
 Lifecycle:
 - Created by seeding and from the practitioner master screen (S16). Save refuses a blank `name` ("a practitioner needs a name") or a blank `identifier_value` ("a practitioner needs a registration or HPID number").

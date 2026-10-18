@@ -6,7 +6,7 @@ Every call the application makes for NHCX, in one list. Each row links to its fu
 
 | # | API | Call | What it does | Replies | Screens |
 |---|---|---|---|---|---|
-| [A6](../apis/A6-task-submit.md) | Task Submit (cancel, status, reprocess, release) | `gateway.send("v1/task/submit")` | Sends a Task for a follow-up: cancel the pre-authorisation, ask the status of a leg, ask for a decided claim to be reprocessed, or ask for the unpaid balance to be released. | [C1](../callbacks/C1-callback-door.md), [C8](../callbacks/C8-enquiry-on-submit.md) | [S11](../screens/S11-claim-submission.md) |
+| [A6](../apis/A6-task-submit.md) | Task Submit (cancel, status, reprocess, release) | `gateway.send("v1/task/submit")` | Sends a Task for a follow-up: cancel the pre-authorisation, ask the status of a leg, ask for a rejected claim to be reprocessed, or ask for the unpaid balance to be released. | [C1](../callbacks/C1-callback-door.md), [C8](../callbacks/C8-enquiry-on-submit.md) | [S11](../screens/S11-claim-submission.md) |
 
 ## Ledger queries (polling)
 

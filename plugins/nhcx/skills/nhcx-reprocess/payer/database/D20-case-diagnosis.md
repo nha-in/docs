@@ -7,7 +7,7 @@ One row is one diagnosis on one case ([D19. case](D19-case.md)); primary key `(c
 The diagnoses as the hospital declared them: the ICD-10 code, its description and whether it is the primary or a secondary diagnosis. "At most one primary diagnosis per case" is carried as a partial unique index, because it is the rule the whole adjudication hangs off.
 
 Create:
-- Written with the case by C4. Pre-auth Submit (in nhcx-preauth/payer) from `Claim.diagnosis[]` ([F8. Claim](../fhir/F8-claim.md)): the code and display of the coding, the type from `diagnosis.type` (`principal` read as `primary`, anything else `secondary`), in the order sent; or from the desk's own case form ([S3. Case Desk](../screens/S3-case-desk.md)) [SANDBOX](../references/PAYERS.md#markers). A second primary is refused by the index.
+- Written with the case by C4. Pre-auth Submit (in nhcx-preauth/payer) from `Claim.diagnosis[]` ([F8. Claim](../fhir/F8-claim.md)): the code and display of the ICD-10 coding (the coding on `http://hl7.org/fhir/sid/icd-10`, else the first), the SNOMED CT coding beside it when the hospital sent one, the type from `diagnosis.type` (`principal` read as `primary`, anything else `secondary`), in the order sent; or from the desk's own case form ([S3. Case Desk](../screens/S3-case-desk.md)) [SANDBOX](../references/PAYERS.md#markers). A second primary is refused by the index.
 
 Update, delete:
 - Never on their own; the desk shows them ([S3. Case Desk](../screens/S3-case-desk.md)) and the ClaimResponse ([F9. ClaimResponse](../fhir/F9-claimresponse.md)) does not echo them. Cascade with the case.
@@ -18,6 +18,8 @@ Update, delete:
 | case_id | VARCHAR(24) | primary key part | the case ([D19. case](D19-case.md)) |
 | code | VARCHAR(16) | primary key part | the ICD-10 code |
 | description | VARCHAR(300) | NOT NULL | the coding's display |
+| snomed_code | VARCHAR(32) | null | the SNOMED CT coding sent beside the ICD-10, when any; shown, never adjudicated on |
+| snomed_display | VARCHAR(300) | null | its display |
 | type | VARCHAR(32) | NOT NULL | `primary`, `secondary` |
 | position | INTEGER | NOT NULL, default 0 | order as sent |
 

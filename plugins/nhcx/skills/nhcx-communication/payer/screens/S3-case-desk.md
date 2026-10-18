@@ -10,6 +10,7 @@ In the reference the desk is a pane the Cases list S2 swaps in for the selected 
 | `GET cases/:id` | The case with its lines, documents, timeline and exchange routing slip |
 | `PATCH cases/:id/line-items/:lineId` | One line's decision (S3.1) |
 | `POST cases/:id/adjudicate` | Approve, reject or query the case (S3.2) |
+| `POST cases/:id/query` | Raise Query: ask the hospital about the case before any decision (S3.2) |
 | `POST cases/:id/documents` | File a document on the case by hand (S3.3) |
 | `GET cases/:id/documents/:docId/file` | The bytes of a document that arrived inline (S3.3) |
 | `GET cases/:id/forms` | The questionnaires the hospital answered, per submission |
@@ -21,7 +22,7 @@ In the reference the desk is a pane the Cases list S2 swaps in for the selected 
 Breadcrumb: Cases (S2) > `<claim number>`
 
 #### S3D. DESCRIPTION
-The one screen where a person decides. A case arrives filed by C4. Pre-auth Submit (in nhcx-preauth/payer) (a pre-authorisation), gains its final bill from C5. Claim Submit (in nhcx-claim/payer) (the claim), and every decision taken here goes back to the hospital through [A13. Adjudicate](../apis/A13-adjudicate.md): the verdict as a ClaimResponse (A3. Pre-auth Answer (in nhcx-preauth/payer) on the pre-authorisation thread, A4. Claim Answer (in nhcx-claim/payer) on the claim thread, A9. Task Answer (in nhcx-preauth/payer) on a reprocess thread), or a query as a CommunicationRequest ([A5. Query Request](../apis/A5-query-request.md)). Nothing is decided by rules: the case waits for a person, and the verdict that goes out is theirs.
+The one screen where a person decides. A case arrives filed by C4. Pre-auth Submit (in nhcx-preauth/payer) (a pre-authorisation), gains its final bill from C5. Claim Submit (in nhcx-claim/payer) (the claim), and every decision taken here goes back to the hospital through [A13. Adjudicate](../apis/A13-adjudicate.md): the verdict as a ClaimResponse (A3. Pre-auth Answer (in nhcx-preauth/payer) on the pre-authorisation thread, A4. Claim Answer (in nhcx-claim/payer) on the claim thread, A9. Task Answer (in nhcx-preauth/payer) on a reprocess thread), a line-item query as a ClaimResponse on the submission's own thread (A3. Pre-auth Answer (in nhcx-preauth/payer), A4. Claim Answer (in nhcx-claim/payer)), or a question on the case as a whole as a CommunicationRequest ([A5. Query Request](../apis/A5-query-request.md)). Nothing is decided by rules: the case waits for a person, and the verdict that goes out is theirs.
 
 **Header.** A "Back" button to S2, the claim number as the title (monospace), "Patient: `<name>` | Hospital: `<name>`", and on the right "Stage: `<stage>`" (settled green, rejected red, otherwise purple) and "| Status: `<adjudication status>`".
 
@@ -34,7 +35,7 @@ The one screen where a person decides. A case arrives filed by C4. Pre-auth Subm
 3. **Treating Doctors & Clinical Team (n)**: Doctor Name & Role, Specialty, Qualification, HFR Registration ID (the practitioner's HPR id as the hospital sent it, D22. case_doctor (in nhcx-preauth/payer)). Empty: "No treating doctors listed".
 4. **ICD-10 Clinical Diagnoses (n)**: ICD-10 Code, Diagnosis Description, Classification Type (`primary` or `secondary`, at most one primary, D20. case_diagnosis (in nhcx-preauth/payer)). Empty: "No diagnoses recorded".
 5. **Surgical & Clinical Procedures (n)**, only when the case has any: Procedure Code, Procedure Name, Category, SNOMED CT, ICD-10-PCS (PCS10) (D21. case_procedure (in nhcx-preauth/payer)).
-6. **Questionnaire Answers (n)**: what the hospital answered on the plan's forms (F7. QuestionnaireResponse (in nhcx-preauth/payer)), per submission that carried any, newest first: "With the Pre-authorisation · received `<time>`" (or "With the Claim"), then each form's title and category ("Treatment guideline" for STG, "Information" for INF) and a two-column table of question and answer, an attachment shown with its title, content type and size. Empty: "The hospital answered no questionnaire on this case. A plan only asks for one on the packages it has a treatment guideline for."
+6. **Questionnaire Answers (n)**: what the hospital answered on the plan's forms (F7. QuestionnaireResponse (in nhcx-preauth/payer)), per submission that carried any, newest first: "With the Pre-authorisation · received `<time>`" (or "With the Claim"), then each form's title and category ("Information" for INF, which every form this payer publishes is; "Treatment guideline" for an STG a hospital still sends) and a two-column table of question and answer, an attachment shown with its title, content type and size. Empty: "The hospital answered no questionnaire on this case. A plan asks for one only when the policy or a quoted procedure carries a questionnaire."
 7. **Submitted Proof Documents (n)**: S3.3.
 8. **Line-Item Adjudication Workspace**: S3.1 and S3.2.
 9. **NHCX Exchange**: S3.4, only for a case that came off the exchange.
@@ -71,9 +72,11 @@ API: [A13. Adjudicate](../apis/A13-adjudicate.md)
 
 | Lines | Allowed |
 |---|---|
-| any line `queried` | "Raise Dossier Query" and "Reject Case"; the note reads "A line item is under query, the dossier can be put to the hospital or refused, not approved." |
+| any line `queried` | "Send Line-item Query" and "Reject Case"; the note reads "A line item is under query, the dossier can be put to the hospital or refused, not approved." |
 | every line `rejected` | "Reject Case" only; "Every line item was rejected, the dossier can only be rejected." |
 | otherwise | "Approve & Advance Stage" (primary) and "Reject Case" (danger) |
+
+Beside them, while the case is open for decision and its status is `pending` or `queried`, **"Raise Query"** (outline, tooltip "Ask the hospital a question before deciding. Goes out as a CommunicationRequest."): it takes the question from the same textarea ("Write the question in the Master Adjudicator Decision & Remarks field first." when empty), posts `cases/:id/query` with no confirm dialog, and toasts "Query raised and sent to the hospital". No line is touched and nothing is decided ([A13. Adjudicate](../apis/A13-adjudicate.md)). Enabled only for a user who may adjudicate. The tooltip on "Send Line-item Query" reads "Send the queried lines back on the submission's own thread (on_submit), as PMJAY does."
 
 Screen refusals before the confirm dialog: "A line item is still under query, raise the query or reject the case.", "Every line item was rejected, this case can only be rejected.", "Please enter query remarks in the Master Adjudicator Decision & Remarks field.", "Please enter rejection reason in the Master Adjudicator Decision & Remarks field." The server repeats the last two as "Record why, so the hospital knows what to do next" and the first two as "A line item is still under query, raise the query or reject the case" and "Every line item was rejected, this case can only be rejected".
 
@@ -83,7 +86,8 @@ Screen refusals before the confirm dialog: "A line item is still under query, ra
 
 - Approve: every `pending` line becomes `approved` in full, the totals are recomputed, the case moves on (`preauth` to `claim`, `claim` to `payment`) with `adjudication_status = 'approved'`. Approving a claim debits the approved amount from the enrolment's wallet (D6. subscription (in nhcx-coverage/payer), D8. wallet_entry (in nhcx-coverage/payer)); "There is not enough cover left on this policy" refuses it. The verdict goes out: A3. Pre-auth Answer (in nhcx-preauth/payer) on a pre-authorisation, A4. Claim Answer (in nhcx-claim/payer) on a claim, A9. Task Answer (in nhcx-preauth/payer) on a claim reopened at the hospital's asking. Toast: "Pre-Authorization approved! Advanced to Claim stage." or "Final Claim approved! Transferred to Payment Disbursement queue."
 - Reject: stage `rejected`, status `rejected`; the verdict goes out with outcome error. Toast: "Claim dossier rejected".
-- Query: the stage stays, status `queried`; a CommunicationRequest goes to the hospital ([A5. Query Request](../apis/A5-query-request.md)) and no ClaimResponse is sent, so the hospital's submission stays open with the question. Toast: "Query successfully raised and dispatched to hospital!"
+- Query (Send Line-item Query): the stage stays, status `queried`; the queried lines go back on the submission's own thread as a ClaimResponse, outcome `partial`, each queried line `Queried` with its question (A3. Pre-auth Answer (in nhcx-preauth/payer) or A4. Claim Answer (in nhcx-claim/payer)), and the thread is not marked answered, so the hospital's submission stays open and the decision on its resubmission is still owed. On a claim reopened by a reprocess, whose own thread is closed, the question goes as a CommunicationRequest instead ([A5. Query Request](../apis/A5-query-request.md)). Toast: "Query successfully raised and dispatched to hospital!"
+- Raise Query: status `queried`, the question as the remarks, timeline "Query Raised"; a CommunicationRequest goes to the hospital on a thread of its own ([A5. Query Request](../apis/A5-query-request.md)) and nothing goes on the submission's thread.
 
 Timeline events: "Pre-Authorization Approved", "Claim Approved for Disbursement", "Claim Rejected", "Additional Information Requested", each with the remarks.
 
@@ -196,7 +200,7 @@ The arrangement below is the reference desk's [REF](../references/PAYERS.md#mark
 |  v] | [Remarks_____]                                             |
 |  Master Adjudicator Decision & Remarks                           |
 |  [textarea______________________________________________________]|
-|                [Raise Dossier Query] [Reject Case] [Approve &    |
+|  [Raise Query] [Send Line-item Query] [Reject Case] [Approve &   |
 |                                                  Advance Stage]  |
 |------------------------------------------------------------------|
 | [NHCX Exchange  <facility code>]              [Resend query]     |
@@ -220,10 +224,11 @@ The arrangement below is the reference desk's [REF](../references/PAYERS.md#mark
 2. Approved amount: type, then leave the field; the line is committed with the decision the figure implies.
 3. Decision select: Approve, Query or Reject the line; Query needs remarks first.
 4. Remarks: type, then leave the field; committed on its own when changed.
-5. Raise Dossier Query: confirm, then query the case; the CommunicationRequest goes out ([A5. Query Request](../apis/A5-query-request.md)).
-6. Reject Case: confirm, then reject; the verdict goes out.
-7. Approve & Advance Stage: confirm, then approve; pending lines are recorded in full, the case moves on, a claim approval debits the wallet, and the verdict goes out.
-8. Open (document): view the document inline, or follow its link.
-9. Send query / Resend query: send the open query again ([A5. Query Request](../apis/A5-query-request.md)).
-10. Timeline and exchange log: read only; a message opens on S11.
-11. Lifecycle stand-ins (S3.6): forms the target may add over the endpoints listed [SANDBOX](../references/PAYERS.md#markers).
+5. Send Line-item Query: confirm, then query the case; the ClaimResponse with the queried lines goes back on the submission's thread (A3. Pre-auth Answer (in nhcx-preauth/payer), A4. Claim Answer (in nhcx-claim/payer)).
+6. Raise Query: no confirm; the question in the remarks goes out at once as a CommunicationRequest ([A5. Query Request](../apis/A5-query-request.md)), before any decision.
+7. Reject Case: confirm, then reject; the verdict goes out.
+8. Approve & Advance Stage: confirm, then approve; pending lines are recorded in full, the case moves on, a claim approval debits the wallet, and the verdict goes out.
+9. Open (document): view the document inline, or follow its link.
+10. Send query / Resend query: send the open query again ([A5. Query Request](../apis/A5-query-request.md)).
+11. Timeline and exchange log: read only; a message opens on S11.
+12. Lifecycle stand-ins (S3.6): forms the target may add over the endpoints listed [SANDBOX](../references/PAYERS.md#markers).

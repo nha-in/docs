@@ -7,50 +7,52 @@ Optional query: `patient` (the patient the check is about) and `case` (the case 
 
 Breadcrumb: Claims (claims/list, S5) > Discovery
 
-Reached from the navigation ("Discovery", under Claims), from the policy search S1 when the registry finds nothing, and from the Eligibility tab S3.
+Reached from "None of these" on the policy results [S2. Select Policy](S2-select-policy.md) (always offered, whatever the registry answered), and from "Discovery" in the Claim management header ([S5. Claim Master](S5-claim-master.md)). It is not an item of the navigation: the Claims module's two entries are Dashboard and Management. Optional query `id_type` and `id_value` carry the identifier from S2 into its own field.
 
 #### S17D. DESCRIPTION
-Discovery asks a payer directly who a person is to it: a coverage eligibility check with the purpose `discovery` ([A2. Coverage Eligibility Check](../apis/A2-coverage-eligibility-check.md)). It has a page of its own because the request names the person by one identifier and the desk usually knows more than one thing about them. Whatever else it knows goes with the request as additional information, so the payer has more than one handle to match on.
+Discovery asks a payer directly who a person is to it: a coverage eligibility check with the purpose `discovery` ([A2. Coverage Eligibility Check](../apis/A2-coverage-eligibility-check.md)). It has a page of its own because the request names the policy by one handle and the desk usually knows more than one thing about the person. Whatever else it knows goes with the request as additional information, so the payer has more than one handle to match on.
 
 The page is a stack of cards, in this order:
-1. Patient
+1. Patient (optional)
 2. Discovery request
 3. Cover returned (only once the payer has answered)
 4. Discoveries sent (only when there are any)
 
-**Patient card.** The patient picker until one is chosen; then the name, UHID, age and gender, mobile and ABHA number, with "Change patient" (hidden when the page was opened for a case).
+**Patient card** (title "Patient (optional)"). A discovery needs no patient. Until one is chosen the card reads "Not needed for a discovery. Leave it empty to ask the payer on the policy number or member id alone, or pick an HMIS patient to link the case now." above the host's type-ahead over the facility's patients by name (2 letters or more; each option the name, age and gender, mobile; "no patients found" when none). Once chosen: the name, UHID, age and gender, mobile and ABHA number, with "Change patient" (hidden when the page was opened for a case).
 
 **Discovery request card.**
 
 | Field | Control | Default | Notes |
 |---|---|---|---|
-| Payer (required) | one typeahead over every payer on the exchange, government and private in one list | the only payer, when there is one | typing a name or a participant code narrows the list; there is no choice of payer kind first; a code typed in full that is not in the list is taken as typed |
-| Search by (required) | dropdown: ABHA number, Mobile number, Member ID | ABHA number when the patient has one, else Mobile number | the identifier the request names the person by |
-| Identifier value (required) | text | the patient's own value for the chosen kind | |
+| Payer (required) | one type-ahead (placeholder "Type a name or a participant code", help "Every payer on the exchange, government and private; type a name or a participant code.") over every payer and TPA on the exchange from the participant master ([D32. participant](../database/D32-participant.md)), government and private in one list; the list has three columns, Name, Kind (a chip "Government" or "Private") and Participant code; the chosen payer is then shown **by name**, with its code and kind beside it, and "Change payer" | the only payer, when there is one; the case's payer when the page was opened for a case (then not changeable) | typing a name or a participant code narrows the list; there is no choice of payer kind first, though a target may offer a kind filter; a code typed in full that is not in the list is taken as typed. The master refreshes itself when older than a day, so a fresh install lists every payer on its first search |
+
+**On the network.** As soon as a payer is chosen the page asks the application what this hospital already holds of it (`GET claims/payers/check?code=`, read from its own cases, matched on the code's part before `@`; provisional rows are not counted) and shows a block "On the network" with one line, ticked or crossed: "This hospital already holds <n> policy(s) of <name> on <m> patient(s); the last case was opened <date>.", else "This hospital holds no policy of <name> yet. The discovery can still be sent." While it looks: "Looking up this hospital's policies with the payer...". The block informs only and never blocks Discover; a lookup failure shows in red and blocks nothing. It is a convenience for the desk, never a protocol step: the send fetches the payer's certificate regardless ([G7. Send](../gateway/G7-send.md)).
+
+**The policy.** A block titled "The policy" with the note "Name the policy by its number or by the member id on the card, whichever the person has.": two fields side by side, **Policy number** and **Member ID**, and the line "Enter the policy number, the member id, or both. At least one is required." The policy number, when given, names the policy: it goes out as the Coverage identifier ([F18. Coverage](../fhir/F18-coverage.md)), and a member id typed beside it rides as `subscriberId` and the Patient identifier typed `MB` ([F15. Patient](../fhir/F15-patient.md)). With the member id alone, it is the handle. Member ID is prefilled with the member id the desk already knows for the patient (the case's, else their latest case's); an identifier carried in the URL from [S2. Select Policy](S2-select-policy.md) lands in its own field (a policy number or member id here, an ABHA or mobile number below).
 
 Then a block titled "Additional information", with the note "Sent with the discovery so the payer has more than one handle to match on. All optional.":
 
 | Field | Control | Default | Rule |
 |---|---|---|---|
 | Aadhaar number | text, numeric | empty; never prefilled | 12 digits once spaces and hyphens are removed, else "An Aadhaar number has 12 digits" |
-| Mobile number | text, numeric | the patient's mobile | 10 digits, else "A mobile number has 10 digits"; hidden when searching by mobile |
-| Member ID | text | the patient's member id | hidden when searching by member id |
+| Mobile number | text, numeric | the patient's mobile | 10 digits once spaces, hyphens and a leading +91 are removed, else "A mobile number has 10 digits" |
+| ABHA number | text, numeric | the patient's ABHA number | 14 digits once spaces and hyphens are removed, else "An ABHA number has 14 digits" |
 
-A field that repeats the identifier searched on is hidden and not sent.
-
-Validation before anything is sent, each as a red message: "Select a patient first", "Choose the payer to ask", "Enter the <identifier> to ask about", then the two digit rules above.
+Validation before anything is sent, in this order, each as a red flash: "Choose the payer to ask", "Enter the policy number or the member id; at least one is required.", then the three digit rules above (each only when that field is filled).
 
 API: [A2. Coverage Eligibility Check](../apis/A2-coverage-eligibility-check.md) (purpose `discovery`, with the additional information)
 
-FHIR: [F2. CoverageEligibilityRequest](../fhir/F2-coverage-eligibility-request.md), [F15. Patient](../fhir/F15-patient.md) (the Aadhaar as an identifier typed `ADN`, the mobile as the phone, the member id as the member the bundle names)
+FHIR: [F2. CoverageEligibilityRequest](../fhir/F2-coverage-eligibility-request.md), [F15. Patient](../fhir/F15-patient.md), [F18. Coverage](../fhir/F18-coverage.md) (the policy number as the Coverage identifier, the member id as `subscriberId` and the identifier typed `MB`, the Aadhaar as an identifier typed `ADN`, the ABHA as one typed `ABHA`, the mobile as the phone)
 
-**Waiting for the reply (async).** After a queued send the button gives way to "Waiting for <payer code> to answer" with the correlation id beneath it and "Stop waiting". The page polls for the reply every few seconds.
+**Waiting for the reply (async).** After a queued send the button gives way to "Waiting for <payer code> to answer" and "Stop waiting". The page reads the reply every few seconds until it is in [REF](../references/PAYERS.md#markers); it does not reset what is typed. A failed read shows "Could not poll the gateway: <error>" under the covers.
 
 Callback: [C2. Coverage Eligibility Verdict](../callbacks/C2-coverage-eligibility-on-check.md)
 
-**Cover returned card.** One tile per policy the payer returned: the product or payer name, the policy number and member id, then sum insured, valid until and status. No policy: "The payer answered with no cover for this person. Check the identifiers and ask again, or ask another payer." A refusal is shown as an error and stops the wait.
+**Cover returned card.** One tile per policy the payer returned, each a button: the person's photo from the reply (else an avatar of their initials), the name (else "Unnamed member"), gender, "born <dob>" and relationship, the member id and ABHA number, the address; then the product or payer name, the policy number (with "<n> members on this cover" when more than one), and three figures: Sum insured, Valid until, Status. No policy: "The payer answered with no cover for this person. Check the identifiers and ask again, or ask another payer." A refusal is shown in red and stops the wait.
 
-**Discoveries sent card.** Every discovery sent for the patient, newest first: the status chip (waiting, answered, failed), the payer code, the time, then the correlation id, the API call id and the transaction id, each copied on a click. Under them the additional information the request carried: Aadhaar (the last four digits only, as `XXXX XXXX 1234`), Mobile, Member ID. Opening a row shows the exchange legs.
+Choosing a tile fills that cover's policy (policy code, member id, product and plan name, name) into the case the discovery ran on, marks it provisional and sends the validation, then goes to the validation gate ([S2. Select Policy](S2-select-policy.md), S2.1) with the flash "Validating the policy with the payer." (or "The validation was not sent: <reason>"). The case is a case only once that answer puts it in force.
+
+**Discoveries sent card.** Shown with a patient chosen: every discovery sent for the patient, newest first: "Discovery" (a link to that case's Overview tab), the status chip (waiting, answered, failed), the payer code, the time, the error when it failed, and the additional information the request carried: Aadhaar (the last four digits only, as `XXXX XXXX 1234`), Mobile, Member ID. No correlation id, API call id or transaction id is shown here: they are on the case's Logs tab ([S6. Claim Detail](S6-claim-detail.md)) only.
 
 Data: [D9. claim](../database/D9-claim.md)
 
@@ -61,15 +63,19 @@ The arrangement below is the reference implementation's [REF](../references/PAYE
 |------------------------------------------------------------------|
 | Discovery                                             [< Back]   |
 |------------------------------------------------------------------|
-| [Card] Patient                                                   |
+| [Card] Patient (optional)                                        |
 |  Asha Devi   <UHID> · 42y F · 98xxxxxx10 · ABHA 91-xxxx-xxxx-xx  |
 |------------------------------------------------------------------|
 | [Card] Discovery request                                         |
-|  Payer *            [type a name or a participant code        ]  |
-|  Search by *        [ABHA number v]   [91703412374240         ]  |
+|  Payer *            [SHA HP  <payer code>  [Government]  Change payer]|
+|   (type-ahead rows: NAME         KIND          PARTICIPANT CODE) |
+|  On the network                                                  |
+|   ✓ This hospital already holds 4 policy(s) of SHA HP on 3 ...   |
+|  The policy                                                      |
+|   Policy number [____________]   Member ID [MD5SLS4X5_____]      |
 |  Additional information                                          |
-|  Aadhaar number     Mobile number     Member ID                  |
-|  [1234 5678 9012]   [98xxxxxx10  ]    [MD5SLS4X5   ]             |
+|  Aadhaar number     Mobile number     ABHA number                |
+|  [1234 5678 9012]   [98xxxxxx10  ]    [91703412374240]           |
 |                                                 [Discover]       |
 |------------------------------------------------------------------|
 | [Card] Cover returned                                            |
@@ -77,13 +83,13 @@ The arrangement below is the reference implementation's [REF](../references/PAYE
 |------------------------------------------------------------------|
 | [Card] Discoveries sent                                          |
 |  Discovery [answered] <payer code> 12:00:05                      |
-|  Correlation id ...   API call id ...   Transaction ...          |
 |  Additional information  Aadhaar XXXX XXXX 9012  Mobile ...      |
 |------------------------------------------------------------------|
 ```
 
 #### S17A. ACTIONS
-1. Discover: validate, open a draft case for the patient and payer when the page was not opened for a case (A2 `discover`: the facility guard is checked first, so a refusal creates no case), send the discovery (A2) on it with the additional information, and wait for the reply on this page.
+1. Discover: validate, open a **provisional** draft case for the payer (hidden from every list, count and payer filter of [S5. Claim Master](S5-claim-master.md), so a discovery that finds no policy never shows as a case) (and the patient, when one is chosen) when the page was not opened for a case (A2 `discover`: the facility guard is checked first, so a refusal creates no case), send the discovery (A2) on it with the policy handle and the additional information, and wait for the reply on this page.
+1a. Change payer: drop the chosen payer and reopen the type-ahead (not offered when the page was opened for a case).
 2. Stop waiting: stop polling; the check stays in the list and can still be opened.
-3. Choose a policy tile: fill the policy in on the case the discovery ran on (the draft case `discover` opened, or the case the page was opened for) and land on its Eligibility tab S3.
-4. Back: to the case's Eligibility tab when the page was opened for a case, else to the claim list S5.
+3. Choose a policy tile: fill the policy in on the case the discovery ran on (the draft case `discover` opened, or the case the page was opened for), send the validation and go to the validation gate (S2.1), which opens its Overview tab S3 once in force.
+4. Back: to the case's Overview tab when the page was opened for a case, else to the claim list S5.

@@ -4,18 +4,15 @@
 One row is one doctor on the treating team quoted on a claim's pre-authorisation draft, with the role they play. Primary key `id`. Parent tables: `claim` (D9) and `practitioner` (D2).
 
 #### D26D. DESCRIPTION
-**Written.** Only by saving the pre-authorisation draft (S4), in the same transaction that replaces the claim's D25 and D27 rows: every D26 row of the claim is deleted, then the new team is inserted with `seq` 1, 2, 3 in order. There is no single-row edit or delete.
+**Written.** Only by saving the pre-authorisation details (S4) on the Pre-authorisation tab, in the same transaction that replaces the claim's D25 rows (and deletes any retired D27 row): every D26 row of the claim is deleted, then the new team is inserted with `seq` 1, 2, 3 in order. There is no single-row edit or delete. Once the claim is with the payer the save is refused before anything else is checked ([CORE.md](../references/CORE.md) Instruction 14): "The claim has gone to the payer, so the pre-authorisation is read only: no enhancement or change can be made. It can only be cancelled while the payer is deciding the claim."
 
-Where the team comes from:
+Where the team comes from: the treating doctor(s) the desk names on the form, each with a role. The pre-authorisation owns its team, so no linked admission is needed; when an admission is linked and the form has never been saved, its consultant pre-fills one row with role `treating`, which the desk may change. A row whose doctor is not an active practitioner (D2 `active = 1`) is skipped. A row with no role gets `treating`; a role outside the list below is refused ("Choose a valid care team role.").
 
-1. The linked admission first. When the claim's encounter (D4) names a consultant (`encounter.practitioner_id`), the team is that one doctor with role `treating`, and the form's rows are ignored.
-2. Only when the admission names none are the doctors picked on the form used. A row whose doctor is not an active practitioner (D2 `active = 1`) is skipped. A row with no role gets `treating`; a role outside the list below is refused ("Choose a valid care team role.").
-
-At least one doctor is required; with none the save is refused and the desk is told to set the consultant on the admission or add a doctor on the form.
+At least one doctor is required ("Add the treating doctor - the payer needs one.").
 
 Roles (`role`, exact keys and their labels): `admitting` Admitting physician, `treating` Treating doctor, `surgeon` Surgeon, `anaesthetist` Anaesthetist, `nurse` Nursing lead.
 
-**Read.** Every pre-authorisation, enhancement, predetermination and claim bundle requires at least one row ("Add at least one doctor to the care team.") and sends a Practitioner for each row whose practitioner still exists, built from D2: id, name, HPR id (`identifier_value`), qualification (as an HL7 v2-0360 degree coding) and specialty. The rows are read joined to D2 for the doctor's name.
+**Read.** Every pre-authorisation, enhancement and claim bundle requires at least one row ("Add at least one doctor to the care team.") and sends a Practitioner for each row whose practitioner still exists, built from D2: id, name, HPR id (`identifier_value`), qualification (as an HL7 v2-0360 degree coding) and specialty. The rows are read joined to D2 for the doctor's name.
 
 **Deleted.** On every draft save (replaced), by cascade with the claim, or when the transactional store is cleared. A practitioner referenced here cannot be deleted while the row exists (the foreign key has no cascade); practitioners are deactivated rather than deleted. There is no status column.
 
@@ -35,6 +32,7 @@ Roles (`role`, exact keys and their labels): `admitting` Admitting physician, `t
 - Index `ix_claim_team` on `(claim_id, seq)`.
 
 #### D26U. USED BY
-- Screens: [S4. Claim Creation Form](../screens/S4-claim-creation-form.md), [S16. Practitioner Master](../screens/S16-practitioner-master.md)
+- Screens: [S4. Pre-authorisation Details and Admission Link](../screens/S4-claim-creation-form.md), [S16. Practitioner Master](../screens/S16-practitioner-master.md)
+- APIs: [A4. Pre-auth Submit](../apis/A4-preauth-submit.md)
 - FHIR: [F8. Claim](../fhir/F8-claim.md), [F16. Practitioner and PractitionerRole](../fhir/F16-practitioner.md)
-- Database: [D2. practitioner](D2-practitioner.md), [D9. claim](D9-claim.md), [D18. claim_preauth](D18-claim-preauth.md), [D19. claim_predetermination](D19-claim-predetermination.md), [D25. claim_diagnosis](D25-claim-diagnosis.md), [D27. claim_item](D27-claim-item.md)
+- Database: [D2. practitioner](D2-practitioner.md), [D4. encounter](D4-encounter.md), [D9. claim](D9-claim.md), [D18. claim_preauth](D18-claim-preauth.md), [D19. claim_predetermination](D19-claim-predetermination.md), [D25. claim_diagnosis](D25-claim-diagnosis.md), [D27. claim_item](D27-claim-item.md)

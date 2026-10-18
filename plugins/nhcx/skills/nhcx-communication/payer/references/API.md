@@ -8,7 +8,7 @@ Answers to a hospital's message travel on its correlation id; a query and a paym
 
 | # | API | Call | What it does | Answers | Screens |
 |---|---|---|---|---|---|
-| [A5](../apis/A5-query-request.md) | Query Request | `gateway.send("v1/communication/request")` | Asks the hospital for more on a queried case: a CommunicationRequest on a thread of its own, one payload per thing wanted, the minted correlation id kept on the case; resend when the first attempt did not leave. | [C1](../callbacks/C1-callback-door.md), [C9](../callbacks/C9-communication.md) | [S3](../screens/S3-case-desk.md) |
+| [A5](../apis/A5-query-request.md) | Query Request | `gateway.send("v1/communication/request")` | Asks the hospital about the case as a whole (the desk's Raise Query, or a query with no line queried): a CommunicationRequest on a thread of its own, the minted correlation id kept on the case; resend when the first attempt did not leave. | [C1](../callbacks/C1-callback-door.md), [C9](../callbacks/C9-communication.md) | [S3](../screens/S3-case-desk.md) |
 
 ## Ledger queries (polling)
 
@@ -23,5 +23,5 @@ Polling is the fallback when a callback is missed. Opening a case runs these for
 
 | # | API | Call | What it does | Answers | Screens |
 |---|---|---|---|---|---|
-| [A13](../apis/A13-adjudicate.md) | Adjudicate | `PATCH cases/:id/line-items/:lineId`, `POST cases/:id/adjudicate` | The desk's decision service: decide each line (approved, partial, rejected, queried), then approve, reject or query the case; approving a claim debits the wallet; every decision triggers the answer (A3, A4, A5, A9). | none | [S2](../screens/S2-cases.md), [S3](../screens/S3-case-desk.md) |
+| [A13](../apis/A13-adjudicate.md) | Adjudicate | `PATCH cases/:id/line-items/:lineId`, `POST cases/:id/adjudicate`, `POST cases/:id/query` | The desk's decision service: decide each line (approved, partial, rejected, queried), then approve, reject or query the case, or raise a query before any decision; approving a claim debits the wallet; every decision triggers the answer (A3, A4, A5, A9). | none | [S2](../screens/S2-cases.md), [S3](../screens/S3-case-desk.md) |
 | [A15](../apis/A15-case-exchange.md) | Case Exchange Log | `GET cases/:id/exchange`, `GET cases/:id/exchange/:msgId`, `GET cases/:id/fhir`, `GET cases/:id/forms` | What went over the exchange about a case, in both directions with the bundles, the forms the hospital answered, and what this payer would send now; the state drivers and tests read. | none | [S3](../screens/S3-case-desk.md) |

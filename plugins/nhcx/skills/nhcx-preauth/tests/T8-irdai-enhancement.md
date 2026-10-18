@@ -6,7 +6,7 @@ An enhancement is a pre-authorisation send ([A4. Pre-auth Submit](../apis/A4-pre
 
 #### T8S. SETUP
 
-A claim with an approved pre-authorisation, as [T5. IRDAI Pre-authorisation Approved](T5-irdai-preauth-approved.md) leaves it.
+A claim with an approved pre-authorisation, as [T5. IRDAI Pre-authorisation Approved](T5-irdai-preauth-approved.md) leaves it, and no claim sent yet: once the claim has gone to the payer the pre-authorisation is read only and an enhancement is refused (T10. IRDAI Claim Approved, Part-approved and Rejected (in nhcx-claim)).
 
 #### T8G. GUI
 

@@ -72,7 +72,7 @@ Pure functions. Builders take a plain input object assembled by a service from t
 |---|---|---|
 | `bundle` | F1 | Bundle ids per message kind, profiles, the anchor-first entry order, absolute references; wraps built answers into a Bundle and unwraps a hospital's bundle. |
 | `build/eligibility_response` | F3 | In force with the wallet as benefit, lapsed with the reason, no cover; the per-item ruling for auth-requirements with rate, documents and forms. |
-| `build/insurance_plan` | F5, F6 | The package master from the product and its procedures: plan, coverage clauses, benefits and limits, procedure costs, documents per phase, exclusions, sub-limits, aliases; the treatment-guideline Questionnaire per package; the empty plan. |
+| `build/insurance_plan` | F5, F6 | The package master from the product and its procedures: plan, coverage clauses, benefits and limits, procedure costs, documents per leg in the nested PMJAY shape, exclusions, sub-limits, aliases; one Questionnaire per published form (each priced procedure's, pointed at from its `plan.specificCost` benefit, and the policy's, pointed at from `coverage[0].extension`); POI / ADN only when the product requires biometric; the empty plan. |
 | `build/claim_response` | F9 | The acknowledgement (queued) and the verdict: outcome and adjudication from the case decision, per-item adjudication from the line decisions, totals, the case number as preAuthRef, process notes. |
 | `build/task_answer` | F10 | The completed Task answering a cancel, reprocess, release or status, with the ClaimResponse or the status on its output. |
 | `build/communication_request` | F11 | The query: one payload per thing wanted, about the Claim. |
@@ -96,14 +96,14 @@ One file per API. Each follows its spec's pseudocode (AnP): the refusals with th
 |---|---|---|---|
 | `eligibility` | A1 | Find the enrolment by every handle; answer in force, lapsed or no cover; the auth-requirements ruling per item. | C2 |
 | `plan` | A2 | Serve the package master by product id, UIN, alias or enrolment id; the empty plan. | C3 |
-| `preauth` | A3, A10 | The queued acknowledgement at filing; the verdict on decision, with the enhancement's own workflow ids; the predetermination quote priced by rules. | C4, C6, A13 |
-| `claim` | A4 | The claim acknowledgement and verdict on the claim's thread. | C5, A13 |
-| `query` | A5 | The CommunicationRequest on a fresh thread, its correlation id kept on the case; resend. | A13, S3 |
+| `preauth` | A3, A10 | The queued acknowledgement at filing; the verdict on decision, with the enhancement's own workflow ids; the line-item query on the pre-auth thread (24 or 241, the thread left unanswered); the predetermination quote priced by rules. | C4, C6, A13 |
+| `claim` | A4 | The claim acknowledgement, the line-item query (27) and the verdict on the claim's thread. | C5, A13 |
+| `query` | A5 | The question on the case as a whole (Raise Query, or a query with no line queried): the CommunicationRequest on a fresh thread, its correlation id kept on the case; resend. | A13, S3 |
 | `payment_notice` | A6, A7 | The notice when a payment is raised and again with the UTR; the reconciliation answering a hospital's enquiry. | A14, C10 |
 | `status` | A8 | The thread's state as the status header and a Task bundle, on the route the ask came in on. | C8 |
 | `task` | A9 | Cancel accomplished; reprocess and release acknowledged, then decided on that thread. | C7, A13 |
 | `polling` | A11, A12 | For each thread still waiting on the hospital (an open query, an unacknowledged notice): find the reply in the ledger and apply it through its callback handler. | S3 on open, A15 |
-| `adjudicate` | A13 | Line decisions, the case decision, the wallet debit on a claim approval and its refusal when cover is short; triggers the answer. | S3 |
+| `adjudicate` | A13 | Line decisions, the case decision, Raise Query before any decision, the wallet debit on a claim approval and its refusal when cover is short; triggers the answer (a line-item query on the leg's thread, or the CommunicationRequest). | S3 |
 | `disburse` | A14 | Raise, complete (one step or later) and fail a payment; settle the case; triggers A6. | S10 |
 | `exchange` | A15 | The exchange log, the forms and the FHIR preview of a case, for drivers and tests. | S3, S11, A15 route |
 | `abha` | A16 | Link and delink through G10; every attempt recorded; local when no gateway. | S5 |
@@ -123,7 +123,7 @@ Called only by G8 (inbound) and by `services/polling` (a reply found in the ledg
 | `eligibility` | C2 | Hands the question to A1 and answers at once. |
 | `plan` | C3 | Hands the plan request to A2 and answers at once. |
 | `preauth` | C4, C6 | Opens the case, or files an enhancement or a query resubmission on the case it comes back to; acknowledges through A3. Prices a predetermination through A10. |
-| `claim` | C5 | Files the final bill, discharge and documents on the pre-authorised case; acknowledges through A4. |
+| `claim` | C5 | Files the final bill, discharge and documents on the pre-authorised case, or a claim sent again as the answer to a line-item query; refuses a claim on a decided case; acknowledges through A4. |
 | `task` | C7, C8 | Cancel, reprocess, release through A9; status through A8. |
 | `communication` | C9 | Files the hospital's reply and its documents, puts the queried lines back with the adjudicator. |
 | `payment` | C10, C11 | Answers a payment enquiry through A7; marks a notice acknowledged. |
@@ -165,7 +165,7 @@ C1 archives every inbound envelope, and services archive every outbound one, bes
 | Members | S4, D5 | The ABHA number, canonical 14 digits, unique; it is one of the handles a hospital's message is matched on. |
 | Subscriptions | S5, D6 to D9 | Cover period, wallet balance with its ledger, ABHA link state and its events, dependants. |
 | Products | S6, S7, D12 to D18 | UIN, plan and insurance plan type codes, covered procedures, SNOMED coverage clauses with benefits and limits, exclusions, sub-limits, aliases: what the InsurancePlan is rendered from. |
-| Procedures | S8, S9, D10, D11 | Package rate, treatment-guideline questions, required documents per phase: what the ruling and the plan quote. |
+| Procedures | S8, S9, D10, D11 | Package rate, the procedure's own questionnaires, required documents per phase: what the ruling and the plan quote. |
 | Payer settings | S12, D1 | NHCX participant code and processing code, IRDAI registration, ROHINI id. |
 | Navigation | L3 | "Cases" and "Payments" entries on the home screen, sidebar or navbar, opening S2 and S10. |
 

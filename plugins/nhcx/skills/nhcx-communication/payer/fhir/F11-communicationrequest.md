@@ -1,12 +1,12 @@
 # F11. CommunicationRequest
 
 #### F11R. RESOURCE
-`CommunicationRequest`, `meta.profile` `https://nrces.in/ndhm/fhir/r4/StructureDefinition/CommunicationRequest`, inside a bundle profiled `.../TaskBundle` with `security` `V` (F1). Direction: sent on `v1/communication/request` by [A5. Query Request](../apis/A5-query-request.md) when a case is queried on the desk ([A13. Adjudicate](../apis/A13-adjudicate.md)). It opens a thread of its own: no correlation id goes in, [G7. Send](../gateway/G7-send.md) mints one, and the hospital's Communication (F12) comes back under it ([C9. Communication](../callbacks/C9-communication.md)).
+`CommunicationRequest`, `meta.profile` `https://nrces.in/ndhm/fhir/r4/StructureDefinition/CommunicationRequest`, inside a bundle profiled `.../TaskBundle` with `security` `V` (F1). Direction: sent on `v1/communication/request` by [A5. Query Request](../apis/A5-query-request.md) when the desk raises a query on the case as a whole ([A13. Adjudicate](../apis/A13-adjudicate.md) Raise Query, or a query with no line queried). It opens a thread of its own: no correlation id goes in, [G7. Send](../gateway/G7-send.md) mints one, and the hospital's Communication (F12) comes back under it ([C9. Communication](../callbacks/C9-communication.md)).
 
 Entries, all at `urn:uuid:` addresses: the Task (profile `.../Task`), the CommunicationRequest, the Claim as this payer holds it (profile `.../Claim`), the Patient (F15), the payer Organization and the hospital Organization (F17), one Practitioner per doctor on the case (profile `.../Practitioner`), and the Coverage (F18). This is the IG's TaskBundle for a communication request, the shape a hospital's communication handler already reads [PAYER](../references/PAYERS.md#markers).
 
 #### F11D. DESCRIPTION
-The scheme payer asks inside its ClaimResponse and takes the answer as a fresh submission; this payer asks on the communication API instead, in `communication` query mode ([PAYERS.md](../references/PAYERS.md)) [PAYER](../references/PAYERS.md#markers). The hospital tells the two apart by the adapter it holds for this payer's code, so nothing in the message says which mode it is.
+A query on lines rides inside the ClaimResponse on the submission's thread and is answered by a resubmission ([F9. ClaimResponse](F9-claimresponse.md)), as the scheme payer asks; a question on the case as a whole comes here, on the communication API ([PAYERS.md](../references/PAYERS.md)) [PAYER](../references/PAYERS.md#markers). The hospital tells the two apart by the message: a ClaimResponse with queried items is answered by resubmitting from the leg's own screen, this request is answered with a Communication.
 
 **The Task.** `status` `requested`, `intent` `order`, `code` `poll` (`http://terminology.hl7.org/CodeSystem/financialtaskcode`), `reasonCode` `additionalinfo` "Additional Information Request" (`https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-reason-code`), `description` every payload line joined by spaces, `requester` the payer, `owner` the hospital, and one `input` typed `include` (`http://terminology.hl7.org/CodeSystem/financialtaskinputtype`) pointing at the CommunicationRequest. A hospital reads `intent` `order` as a query and `proposal` as a notification, and switches on the reason code [PAYER](../references/PAYERS.md#markers): this payer sends notifications through no other shape, so every request it sends is a query.
 
@@ -43,6 +43,6 @@ The scheme payer asks inside its ClaimResponse and takes the answer as a fresh s
 
 #### F11U. USED BY
 - APIs: [A5. Query Request](../apis/A5-query-request.md), [A13. Adjudicate](../apis/A13-adjudicate.md), [A15. Case Exchange Log](../apis/A15-case-exchange.md)
-- FHIR: [F1. Bundle](F1-bundle.md), [F12. Communication](F12-communication.md), [F15. Patient](F15-patient.md), [F17. Organization](F17-organization.md), [F18. Coverage](F18-coverage.md)
+- FHIR: [F1. Bundle](F1-bundle.md), [F9. ClaimResponse](F9-claimresponse.md), [F12. Communication](F12-communication.md), [F15. Patient](F15-patient.md), [F17. Organization](F17-organization.md), [F18. Coverage](F18-coverage.md)
 - Database: [D25. case_line_item](../database/D25-case-line-item.md)
 - Tests: [T8. Pre-auth Queried and Answered](../tests/T8-preauth-queried.md)

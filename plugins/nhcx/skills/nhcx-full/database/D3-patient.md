@@ -4,13 +4,13 @@
 One row is one registered patient; primary key `id`; parent table [D1. organization](D1-organization.md) (`managing_org_id`).
 
 #### D3D. DESCRIPTION
-The patient register. A claim is linked to a patient through the admission: the claim's ABHA number is compared digits-only with `abha_number` here, and the patient of the chosen current IPD stay is written to [D9. claim](D9-claim.md) `patient_id`.
+The patient register. **The ABHA number is the patient key across the exchange**: a claim is linked to a patient through the admission (the claim's ABHA number is compared digits-only with `abha_number` here, and the patient of the chosen current IPD stay is written to [D9. claim](D9-claim.md) `patient_id`), and the health records a claim may attach ([D28. claim_document](D28-claim-document.md) "From records") are those of every patient holding the case's ABHA digits, whether or not a patient is linked. When the HMIS already has an ABDM (M1) module, its ABHA is the one read; it is reused without asking.
 
-Once linked, the claim-side bundles take the patient from this row, falling back to what the payer returned on the claim:
-- eligibility check: `given_name` (else the claim's `beneficiary_name`), `family_name`, `gender`, `birth_date`, `mrn` (as `patientRefId`, else `NA`), `district`, `state`, `phone`.
-- pre-auth and claim: `name`, `gender`, `birth_date`, `phone`.
+Once linked, the pre-authorisation and claim bundles take `name`, `gender`, `birth_date` and `phone` from this row, each falling back to what the case holds from the search and the payer (D9), and the ABHA number from the case, else from this row ([F15. Patient](../fhir/F15-patient.md)). The eligibility check reads nothing from this row: it sends identifiers only. Before a patient is linked (a pre-authorisation sent before admission) the bundles are built from the case alone.
 
 `abha_number` and `abha_address` are written by hand on the form, or, better, by the ABHA service through [A19. ABHA Create and Verify (ABDM M1)](../apis/A19-abha-m1.md): a verified or newly created ABHA, with the name, gender, date of birth and mobile the service holds filling what the form left blank. The ABHA number is unique across patients, so a second registration under the same ABHA is refused ("Another patient is already registered with that ABHA number").
+
+**When the HMIS has an ABDM module** that already holds the ABHA (its own ABHA model, or an identifier configuration under its own system URL), these two columns are not added: NHCX reads and writes the ABHA through that record, under that system, and the claim's admission match reads the same value ([SCAFFOLDING.md](../references/SCAFFOLDING.md), section 4a). One patient has one ABHA in the HMIS, visible to the module and to NHCX alike.
 
 Lifecycle:
 - Created from the registration form (S14). `name` and `phone` are mandatory ("Name and mobile number are mandatory."). On create the application allocates `mrn` from the `mrn` counter as `MRN` plus five digits (`MRN00001`) [REF](../references/PAYERS.md#markers), stamps `created_at` and `updated_at`, and sets `managing_org_id` to the facility row. `gender` falls back to `unknown`; `country` is always written as `India`.
@@ -57,7 +57,7 @@ Lifecycle:
 - Indexes: `ix_patient_name (name)`, `ix_patient_phone (phone)`.
 
 #### D3U. USED BY
-- Screens: [S4. Claim Creation Form](../screens/S4-claim-creation-form.md), [S13. Patient List](../screens/S13-patient-list.md), [S14. Patient Registration Form](../screens/S14-patient-registration-form.md), [S15. Patient Detail](../screens/S15-patient-detail.md), [S18. Beneficiary Verification](../screens/S18-beneficiary-verification.md)
+- Screens: [S4. Pre-authorisation Details and Admission Link](../screens/S4-claim-creation-form.md), [S13. Patient List](../screens/S13-patient-list.md), [S14. Patient Registration Form](../screens/S14-patient-registration-form.md), [S15. Patient Detail](../screens/S15-patient-detail.md), [S18. Beneficiary Verification](../screens/S18-beneficiary-verification.md)
 - APIs: [A18. Biometric Authentication](../apis/A18-biometric-authentication.md), [A19. ABHA Create and Verify (ABDM M1)](../apis/A19-abha-m1.md)
 - FHIR: [F15. Patient](../fhir/F15-patient.md)
-- Database: [D1. organization](D1-organization.md), [D4. encounter](D4-encounter.md), [D5. condition](D5-condition.md), [D6. observation](D6-observation.md), [D7. allergy](D7-allergy.md), [D9. claim](D9-claim.md), [D30. counter](D30-counter.md), [D31. biometric_auth](D31-biometric-auth.md)
+- Database: [D1. organization](D1-organization.md), [D4. encounter](D4-encounter.md), [D5. condition](D5-condition.md), [D6. observation](D6-observation.md), [D7. allergy](D7-allergy.md), [D9. claim](D9-claim.md), [D12. claim_plan_form](D12-claim-plan-form.md), [D30. counter](D30-counter.md), [D31. biometric_auth](D31-biometric-auth.md)

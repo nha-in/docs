@@ -3,7 +3,7 @@
 #### A1E. ENDPOINT
 In-process: `gateway.send("v1/coverageeligibility/on_check", envelope)`, [G7. Send](../gateway/G7-send.md), which encrypts it and posts it to NHCX for the hospital, on the thread the hospital's check arrived on: `POST {nhcx}/v1/coverageeligibility/on_check`. No answer to it is awaited: NHCX's acceptance, returned by G7, settles it.
 
-It answers [C2. Coverage Eligibility Check](../callbacks/C2-coverage-eligibility-check.md) in every purpose. On the hospital's side the same route carries two things, told apart by the correlation id: the eligibility verdict (`validation`, `benefits`, `discovery`) and the authorisation-requirements ruling (`auth-requirements`). Both are this one send.
+It answers [C2. Coverage Eligibility Check](../callbacks/C2-coverage-eligibility-check.md) in every purpose. **A payer built from this skill always answers `benefits` and `auth-requirements`**, with items, not only `validation` and `discovery`: the hospital's Pre-authorisation tab offers both (the Coverage benefits check and the Authorisation requirements cards) once a line is quoted, and a scheme hospital sends the ruling unasked before each pre-authorisation, and a payer that ignores either leaves the hospital's desk waiting on a check it offered. [T4. Auth-requirements Ruling Answered](../tests/T4-auth-requirements-ruled.md) proves the ruling; the benefits answer with items follows the same path. On the hospital's side the same route carries two things, told apart by the correlation id: the eligibility verdict (`validation`, `benefits`, `discovery`) and the authorisation-requirements ruling (`auth-requirements`). Both are this one send.
 
 #### A1D. DESCRIPTION
 Sent at once, inside the callback that took the check in, by the application itself; no person is involved. A check that cannot be answered is not filed and waited on: an eligibility question has an answer the moment it is asked, and a hospital's desk polls its thread until one comes.
@@ -20,9 +20,9 @@ A lapsed enrolment is answered with its reason rather than as "no such person", 
 
 **Per purpose** (the `purpose[]` of the request; none means `validation`):
 
-- `validation` and `benefits` without items: one item for the admission with the sum insured (`allowedMoney` of the plan, `usedMoney` what has gone) and the wallet balance as the `benefit` typed benefit; `authorizationRequired` true. Used is the product's sum assured minus the wallet balance ([D12. policy](../database/D12-policy.md) `total_assured`, [D6. subscription](../database/D6-subscription.md) `wallet_balance`).
+- `validation` and `benefits` without items: one item for the admission with the sum insured (`allowedMoney` of the plan, `usedMoney` what has gone) and the wallet balance as the `benefit` typed benefit; `authorizationRequired` true. Used is the product's sum assured minus the wallet balance ([D12. policy](../database/D12-policy.md) `total_assured`, [D6. subscription](../database/D6-subscription.md) `wallet_balance`), never below zero. These two rows on the admission item are where a hospital reads the wallet (sum insured, utilised, balance) from; a package's rate is never a wallet figure ([F3. CoverageEligibilityResponse](../fhir/F3-coverage-eligibility-response.md)).
 - `discovery`: the cover alone, no items.
-- `benefits` or `auth-requirements` with items: one item per package the hospital quoted. A package on the policy's schedule ([D13. policy_procedure](../database/D13-policy-procedure.md), matched by the registry code first, then the SNOMED or ICD-10-PCS code) answers with the registry's own name and category, the package rate as a `Procedure` benefit when priced ([D10. procedure_rule](../database/D10-procedure-rule.md) `package_rate`) and, as `authorizationSupporting`, the documents due at pre-authorisation ([D11. procedure_rule_doc](../database/D11-procedure-rule-doc.md), phase `preauth`). An `auth-requirements` ask also lists the discharge and claim documents as stage `post` and the treatment-guideline form by its url ([F6. Questionnaire](../fhir/F6-questionnaire.md)) [PAYER](../references/PAYERS.md#markers). A package not on the schedule is answered `excluded` true, so the hospital learns it before the pre-authorisation rather than from a rejection. The disposition gains a sentence: "All `<n>` requested items are covered; pre-authorisation is required and the documents listed must accompany it.", "None of the `<n>` requested items is covered by this policy." or "`<c>` of `<n>` requested items are covered; the rest are not on this policy's schedule."
+- `benefits` or `auth-requirements` with items: one item per package the hospital quoted. A package on the policy's schedule ([D13. policy_procedure](../database/D13-policy-procedure.md), matched by the registry code first, then the SNOMED or ICD-10-PCS code) answers with the registry's own name and category, the package rate as a `Procedure` benefit when priced ([D10. procedure_rule](../database/D10-procedure-rule.md) `package_rate`) and, as `authorizationSupporting`, the documents due at pre-authorisation ([D11. procedure_rule_doc](../database/D11-procedure-rule-doc.md), phase `preauth`). An `auth-requirements` ask also lists the discharge and claim documents as stage `post` and each of the procedure's own forms by its url ([F6. Questionnaire](../fhir/F6-questionnaire.md)) [PAYER](../references/PAYERS.md#markers). A package not on the schedule is answered `excluded` true, so the hospital learns it before the pre-authorisation rather than from a rejection. The disposition gains a sentence: "All `<n>` requested items are covered; pre-authorisation is required and the documents listed must accompany it.", "None of the `<n>` requested items is covered by this policy." or "`<c>` of `<n>` requested items are covered; the rest are not on this policy's schedule."
 
 The text convention on each supporting requirement (`Type: pre`, `Procedure Code:<code>`, `fullUrl: <url>`) is the PMJAY dialect the hospital's reader parses [PAYER](../references/PAYERS.md#markers); see [F3. CoverageEligibilityResponse](../fhir/F3-coverage-eligibility-response.md).
 
@@ -33,10 +33,12 @@ The text convention on each supporting requirement (`Type: pre`, `Procedure Code
 | `x-hcx-sender_code` | The check's `x-hcx-recipient_code`: the code the hospital addressed, which is this payer's participant code (or the processing code when a TPA processes for the insurer, [D1. payer](../database/D1-payer.md)) |
 | `x-hcx-recipient_code` | The check's `x-hcx-sender_code`: the hospital |
 | `x-hcx-correlation_id` | The check's own, verbatim. It is what the hospital's poll matches the answer on |
-| `x-hcx-workflow_id` | The check's own `x-hcx-workflow_id`, echoed; left off when the check carried none |
+| `x-hcx-workflow_id` | The check's own `x-hcx-workflow_id`, echoed only when it has the shape of a published workflow code (`^[A-Z]{0,2}[0-9]{1,4}$`: `11`, `121`, `PC01`); left off when the check carried none or carried something else, such as the hospital's case number |
 | `x-hcx-status` | `response.complete` |
 
-No scheme table applies: an answer echoes the question's workflow id, whatever adapter the hospital used (see [PAYERS.md](../references/PAYERS.md)). G7 completes the rest ([G5. Protocol Headers](../gateway/G5-protocol-headers.md)).
+No scheme table applies: an answer echoes the question's workflow id, whatever adapter the hospital used, when it is a published code; a case number or any other value is never repeated (see [PAYERS.md](../references/PAYERS.md)). The insurance plan answer ([A2. Insurance Plan Answer](A2-insurance-plan-answer.md)) falls back to `1` instead of leaving it off. G7 completes the rest ([G5. Protocol Headers](../gateway/G5-protocol-headers.md)).
+
+**The member's photo.** The Patient on every answer about a member carries a photo: one of N fixed images picked by a hash of the member id, base64-encoded once ([F15. Patient](../fhir/F15-patient.md)). A hospital shows it on the cards the desk chooses the patient from.
 
 **Checks before sending.** The callback door ([C1. Callback Door](../callbacks/C1-callback-door.md)) has already refused an envelope without sender, recipient or correlation id. This send refuses nothing of its own: every check is answered, with cover or without. A gateway that is not configured is a deployment fault, reported to the exchange as a retryable failure: "No gateway is configured, so the enquiry cannot be answered" [REF](../references/PAYERS.md#markers).
 
@@ -110,13 +112,21 @@ function SEND(path, envelope, case):
                   request_id: result.request_id}
 
 // an answer travels back the way the question came
-function ANSWER_HEADERS(in):                        // in: the inbound delivery C1 built
+function ANSWER_HEADERS(in, what):                        // in: the inbound delivery C1 built
     h = {x-hcx-sender_code:    in.recipient,         // the code the hospital addressed
          x-hcx-recipient_code: in.sender,
          x-hcx-correlation_id: in.correlation_id,
          x-hcx-status:         "response.complete"}
-    if in.workflow_id: h[x-hcx-workflow_id] = in.workflow_id
+    wf = ECHO_WORKFLOW(in.workflow_id, what)
+    if wf: h[x-hcx-workflow_id] = wf
     return h
+
+// the question's workflow id, only when it is a published code
+function ECHO_WORKFLOW(asked, what):
+    asked = trim(asked)
+    if asked matches ^[A-Z]{0,2}[0-9]{1,4}$: return asked     // 11, 1, 121, PC01, R15
+    if what == insurance plan: return "1"                   // a plan is the hospital's and the policy's, never a case's
+    return ""                                                 // left off; a case number is not repeated
 
 function answer_eligibility(in, ask):               // called by C2; ask is the parsed F2
     payer = D1 payer row
@@ -138,7 +148,7 @@ function answer_eligibility(in, ask):               // called by C2; ask is the 
         status = "no_cover"; action = "eligibility.no_cover"
 
     ack = SEND("v1/coverageeligibility/on_check",
-               {jwe_headers: ANSWER_HEADERS(in), fhir: bundle}, none)
+               {jwe_headers: ANSWER_HEADERS(in, eligibility), fhir: bundle}, none)
         on Refused r:     return rejected("The gateway refused the answer: " + r.message)
         on Unreachable u: return error("The gateway could not queue the answer")
     INSERT D31 audit {action, entity_type: "nhcx_txn", entity_id: in.txn_id,

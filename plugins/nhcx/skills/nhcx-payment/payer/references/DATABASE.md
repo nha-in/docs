@@ -8,7 +8,7 @@ Every table behind the desk, the registry, the products and the payments, in one
 |---|---|---|---|---|---|---|
 | [D1](../database/D1-payer.md) | payer | The insurer this deployment is: name, IRDAI registration, ROHINI id, NHCX participant and processing codes, contact details. | none | [A6](../apis/A6-payment-notice.md), [A7](../apis/A7-payment-enquiry-answer.md), [A12](../apis/A12-txn-fhir.md), [A15](../apis/A15-case-exchange.md) | [C1](../callbacks/C1-callback-door.md) | [F1](../fhir/F1-bundle.md), [F5](../fhir/F5-insuranceplan.md), [F9](../fhir/F9-claimresponse.md), [F10](../fhir/F10-task-claim-actions.md), [F17](../fhir/F17-organization.md) |
 | [D2](../database/D2-staff.md) | staff | A desk account's half: which payer it works for and its role (adjudicator decides, finance disburses, admin both). | none | none | none | none |
-| [D3](../database/D3-document-type.md) | document_type | The NHCX document taxonomy a policy may demand and a case document is filed under. | [S3](../screens/S3-case-desk.md) | none | [C1](../callbacks/C1-callback-door.md) | [F5](../fhir/F5-insuranceplan.md), [F6](../fhir/F6-questionnaire.md) |
+| [D3](../database/D3-document-type.md) | document_type | The NHCX document taxonomy a policy may demand and a case document is filed under. | [S3](../screens/S3-case-desk.md) | none | [C1](../callbacks/C1-callback-door.md) | [F5](../fhir/F5-insuranceplan.md) |
 | [D4](../database/D4-terminology-code.md) | terminology_code | The published value sets the configurator picks codes from (plan types, SNOMED clauses, categories). | none | none | none | [F5](../fhir/F5-insuranceplan.md) |
 | [D31](../database/D31-audit-log.md) | audit_log | Every write and every exchange receipt, by whom and when. | none | [A6](../apis/A6-payment-notice.md), [A7](../apis/A7-payment-enquiry-answer.md), [A14](../apis/A14-disburse.md) | [C1](../callbacks/C1-callback-door.md), [C10](../callbacks/C10-payment-enquiry.md), [C11](../callbacks/C11-payment-acknowledgement.md) | [F4](../fhir/F4-task-insuranceplan.md), [F13](../fhir/F13-paymentnotice.md) |
 
@@ -17,14 +17,15 @@ Every table behind the desk, the registry, the products and the payments, in one
 | # | Table | What one row is | Screens | APIs | Callbacks | FHIR |
 |---|---|---|---|---|---|---|
 | [D6](../database/D6-subscription.md) | subscription | One enrolment of a member on a product: cover period, wallet balance, status, ABHA link state. | [S1](../screens/S1-overview.md), [S3](../screens/S3-case-desk.md) | none | [C1](../callbacks/C1-callback-door.md) | [F4](../fhir/F4-task-insuranceplan.md), [F5](../fhir/F5-insuranceplan.md), [F10](../fhir/F10-task-claim-actions.md), [F15](../fhir/F15-patient.md), [F18](../fhir/F18-coverage.md) |
+| [D33](../database/D33-participant.md) | participant | The participant master: every provider, payer and TPA on the exchange, government and private, pulled from the registry's participant list over a configured window (one year by default, ten in the sandbox) and refreshed daily. Primary key `code`. No parent table. | none | none | none | none |
 
 ## Products and procedures
 
 | # | Table | What one row is | Screens | APIs | Callbacks | FHIR |
 |---|---|---|---|---|---|---|
-| [D10](../database/D10-procedure-rule.md) | procedure_rule | One procedure in the registry: codes, category, package rate, treatment-guideline questions. | none | none | none | [F5](../fhir/F5-insuranceplan.md), [F6](../fhir/F6-questionnaire.md) |
-| [D11](../database/D11-procedure-rule-doc.md) | procedure_rule_doc | Which document a procedure wants at which phase. | none | none | none | [F5](../fhir/F5-insuranceplan.md), [F6](../fhir/F6-questionnaire.md) |
-| [D12](../database/D12-policy.md) | policy | One product: name, UIN, type, plan type, sum assured, status. | [S1](../screens/S1-overview.md) | none | none | [F4](../fhir/F4-task-insuranceplan.md), [F5](../fhir/F5-insuranceplan.md), [F9](../fhir/F9-claimresponse.md), [F10](../fhir/F10-task-claim-actions.md), [F18](../fhir/F18-coverage.md) |
+| [D10](../database/D10-procedure-rule.md) | procedure_rule | One procedure in the registry: codes, category, package rate, and the procedure's own questionnaires. | none | none | none | [F5](../fhir/F5-insuranceplan.md), [F6](../fhir/F6-questionnaire.md) |
+| [D11](../database/D11-procedure-rule-doc.md) | procedure_rule_doc | Which document a procedure wants at which phase. | none | none | none | [F5](../fhir/F5-insuranceplan.md) |
+| [D12](../database/D12-policy.md) | policy | One product: name, UIN, type, plan type, sum assured, status. | [S1](../screens/S1-overview.md) | none | none | [F4](../fhir/F4-task-insuranceplan.md), [F5](../fhir/F5-insuranceplan.md), [F6](../fhir/F6-questionnaire.md), [F9](../fhir/F9-claimresponse.md), [F10](../fhir/F10-task-claim-actions.md), [F18](../fhir/F18-coverage.md) |
 | [D13](../database/D13-policy-procedure.md) | policy_procedure | A procedure a policy covers. | none | none | none | [F5](../fhir/F5-insuranceplan.md) |
 | [D14](../database/D14-policy-coverage-clause.md) | policy_coverage_clause | A SNOMED coverage clause of a policy. | none | none | none | [F5](../fhir/F5-insuranceplan.md) |
 | [D15](../database/D15-policy-clause-benefit.md) | policy_clause_benefit | A benefit under a clause, with its limit. | none | none | none | [F5](../fhir/F5-insuranceplan.md) |

@@ -2,7 +2,7 @@
 
 The tables behind the desk, registry, configuration and payment screens. Screens (S), APIs (A) and callbacks (C) refer to these by D number. Each file has TABLE (T), DESCRIPTION (D), COLUMNS (C), KEYS AND INDEXES (K) and USED BY (U) sections.
 
-D1 to D18 are tables most payer systems already have: the insurer's own record, staff and roles, the document taxonomy, members, enrolments and their wallets, products and the procedures they cover. They are extended only where NHCX needs a column (the participant codes on the payer, the ABHA number and link state on an enrolment, the package rate, treatment-guideline questions and per-phase document rules on a procedure, the SNOMED clauses and exclusions the InsurancePlan is rendered from). D19 to D32 are new for the exchange: the case and its children, the messages and deliveries, the quotes, the payments and the numbering.
+D1 to D18 are tables most payer systems already have: the insurer's own record, staff and roles, the document taxonomy, members, enrolments and their wallets, products and the procedures they cover. They are extended only where NHCX needs a column (the participant codes on the payer, the ABHA number and link state on an enrolment, the package rate, treatment-guideline questions and per-phase document rules on a procedure, the SNOMED clauses and exclusions the InsurancePlan is rendered from). D19 to D33 are new for the exchange: the case and its children, the messages and deliveries, the quotes, the payments, the numbering, and the participant master pulled from the registry.
 
 Table names are written without the reference implementation's `payer_` prefix [REF](../references/PAYERS.md#markers). Primary keys are the business identifiers the desk reads out (a case id, a claim number, a payment number), allocated from [D32. id_sequence](D32-id-sequence.md) so the prefix and width are decided in one place [REF](../references/PAYERS.md#markers). Child rows that are never quoted (line items, documents, timeline entries) take short random ids [REF](../references/PAYERS.md#markers). Money is a fixed-point decimal with two places; timestamps carry a time zone and are stored in UTC.
 
@@ -23,12 +23,13 @@ Table names are written without the reference implementation's `payer_` prefix [
 | [D5](D5-member.md) | member | One beneficiary: name, gender, date of birth, mobile, ABHA number. | [D5-member.md](D5-member.md) |
 | [D6](D6-subscription.md) | subscription | One enrolment of a member on a product: cover period, wallet balance, status, ABHA link state. | [D6-subscription.md](D6-subscription.md) |
 | [D8](D8-wallet-entry.md) | wallet_entry | One movement of an enrolment's wallet with the balance after it. | [D8-wallet-entry.md](D8-wallet-entry.md) |
+| [D33](D33-participant.md) | participant | The participant master: every provider, payer and TPA on the exchange, government and private, pulled from the registry's participant list over a configured window (one year by default, ten in the sandbox) and refreshed daily. Primary key `code`. No parent table. | [D33-participant.md](D33-participant.md) |
 
 ## Products and procedures
 
 | # | Table | What one row is | File |
 |---|---|---|---|
-| [D10](D10-procedure-rule.md) | procedure_rule | One procedure in the registry: codes, category, package rate, treatment-guideline questions. | [D10-procedure-rule.md](D10-procedure-rule.md) |
+| [D10](D10-procedure-rule.md) | procedure_rule | One procedure in the registry: codes, category, package rate, and the procedure's own questionnaires. | [D10-procedure-rule.md](D10-procedure-rule.md) |
 | [D11](D11-procedure-rule-doc.md) | procedure_rule_doc | Which document a procedure wants at which phase. | [D11-procedure-rule-doc.md](D11-procedure-rule-doc.md) |
 | [D12](D12-policy.md) | policy | One product: name, UIN, type, plan type, sum assured, status. | [D12-policy.md](D12-policy.md) |
 | [D13](D13-policy-procedure.md) | policy_procedure | A procedure a policy covers. | [D13-policy-procedure.md](D13-policy-procedure.md) |

@@ -24,3 +24,4 @@ A payment is started by the payer: the notice arrives on `v1/paymentnotice/reque
 - Each notice is matched to the claim by the claim number it carries (CORE instruction 5) and acknowledged once ([A8. Payment Notice Acknowledgement](../apis/A8-paymentnotice-on-request.md) accepted, NHCX 202).
 - [S12. Payments](../screens/S12-payments.md) shows each payment with its amount, TDS, net paid and UTR; the claim shows paid once the instalments cover the approved amount.
 - The second instalment is recorded beside the first, never over it: two payments, two UTRs, and a total that adds them.
+- The Payments tab carries a dot after each notice until it is opened.

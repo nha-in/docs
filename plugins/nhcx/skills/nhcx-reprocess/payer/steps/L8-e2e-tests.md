@@ -34,6 +34,6 @@ The test files ([T2. Test Runners](../tests/T2-test-runners.md) gives the layout
 Record in `nhcx-plan/progress.json` and regenerate `nhcx-plan/progress.md`, as [LOG.md](LOG.md) describes. One entry per sub-step, and one per test attempt and runner (the test id as `item`) with its correlation and ledger ids and result. A fix made because of a failure is logged as its own entry naming the files changed, then the re-run of L6 and L7 for them.
 
 #### L8X. EXIT
-- Every test in SCOPE is written for both runners, and passes in both, is `skipped` for a reason the scheme profile gives (for example the resubmission query mode), or is `blocked` with a sandbox, setup or configuration cause the user has seen.
+- Every test in SCOPE is written for both runners, and passes in both, is `skipped` for a reason the scheme profile gives (for example a scheme profile that sends no CommunicationRequest), or is `blocked` with a sandbox, setup or configuration cause the user has seen.
 - The ledger ids recorded for each test exist in G9.
 - Every sub-step of L8 has its `started` and closing entries in progress.json, and every file changed is named in one.

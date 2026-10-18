@@ -44,7 +44,7 @@ Polling is the fallback when a callback is missed. Opening a case runs these for
 
 | # | API | Call | File |
 |---|---|---|---|
-| [A13](A13-adjudicate.md) | Adjudicate | `PATCH cases/:id/line-items/:lineId`, `POST cases/:id/adjudicate` | [A13-adjudicate.md](A13-adjudicate.md) |
+| [A13](A13-adjudicate.md) | Adjudicate | `PATCH cases/:id/line-items/:lineId`, `POST cases/:id/adjudicate`, `POST cases/:id/query` | [A13-adjudicate.md](A13-adjudicate.md) |
 | [A14](A14-disburse.md) | Disburse | `POST payments`, `POST payments/:id/complete`, `POST payments/:id/fail` | [A14-disburse.md](A14-disburse.md) |
 | [A15](A15-case-exchange.md) | Case Exchange Log | `GET cases/:id/exchange`, `GET cases/:id/exchange/:msgId`, `GET cases/:id/fhir`, `GET cases/:id/forms` | [A15-case-exchange.md](A15-case-exchange.md) |
 | [A16](A16-abha-policy-link.md) | ABHA Policy Link | `registry.abha_link(body)`, `registry.abha_delink(body)` | [A16-abha-policy-link.md](A16-abha-policy-link.md) |

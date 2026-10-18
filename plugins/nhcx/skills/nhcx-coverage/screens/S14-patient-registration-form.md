@@ -1,6 +1,8 @@
 # S14. Patient Registration Form Screen
 
-> **Existing HMIS screen.** Most HMIS already have this screen. Do not rebuild it: add only what NHCX needs (the fields and actions marked for NHCX below, such as ABHA number and address, HPR id, registration and qualification) to the target's own screen, and record anything else as `found` in discovery.
+> **Existing HMIS screen.** Most HMIS already have this screen. Do not rebuild it: add only what NHCX needs (the fields and actions marked for NHCX below, such as ABHA number and address, HPR id, registration and qualification) to the target's own screen, built from the host's own components, and record anything else as `found` in discovery.
+>
+> **ABHA additions are reused, never asked.** When the HMIS already has an ABDM (M1) module (ABHA create, link or verify, the ABHA number on the patient, its session token), L1.3 finds it, L2 maps to it, and the ABHA additions on this screen are not built: the module's own screens and data are used as they are. This is never an L1.A question. Only an HMIS without such a module builds them ([A19. ABHA Create and Verify (ABDM M1)](../apis/A19-abha-m1.md)).
 
 #### S14R. ROUTE
 patients/new (create mode)
@@ -74,7 +76,7 @@ Rules:
 - There is no format check on mobile number, ABHA number or PIN code.
 
 NHCX use:
-- ABHA number is the key that joins a claim to a hospital patient. A confirmed policy is matched to a current inpatient stay whose patient has the same ABHA number, digits only, so "91-7034-1237-4240" and "91703412374240" match (S4). Without it the claim cannot be linked.
+- ABHA number is the key that joins a claim to a hospital patient. The claim's IPD stay, and the health records attached "From records", are found by the case's ABHA number, digits only, so "91-7034-1237-4240" and "91703412374240" match (S4). Without it the claim's admission cannot be linked.
 
 API: A4. Pre-auth Submit (in nhcx-preauth), A5. Claim Submit (in nhcx-claim)
 
@@ -118,4 +120,4 @@ The arrangement below is the reference implementation's [REF](../references/PAYE
 4. Breadcrumb "Patients": go to S13. In edit mode, the patient name crumb goes to S15.
 5. Expand or collapse a section: show or hide its fields. Values in a collapsed section are still submitted.
 6. Verify or create an ABHA: run the ABHA dialog (A19) and fill the form from its profile; the form is not saved until Register patient or Save changes.
-7. Under PMJAY, the beneficiary is verified biometrically before registration where the scheme asks for it; the verification lives on the case's Verification tab ([S18. Beneficiary Verification](S18-beneficiary-verification.md), [A18. Biometric Authentication](../apis/A18-biometric-authentication.md), stage Preauth) and is recorded against the patient and read by the sends.
+7. Under PMJAY, the beneficiary is verified biometrically where the scheme asks for it; the verification is the proof of presence at the top of the case's Pre-authorisation tab (stage Preauth) and Claim tab (stage Discharge) ([S18. Beneficiary Verification](S18-beneficiary-verification.md), [A18. Biometric Authentication](../apis/A18-biometric-authentication.md)). Made before admission it belongs to the case alone, and moves to the patient when the admission is linked.

@@ -17,9 +17,11 @@ Written inside the transaction of the change it describes, one event per change,
 | the case approved ([A13. Adjudicate](../apis/A13-adjudicate.md)) | Pre-Authorization Approved, or Claim Approved for Disbursement | success |
 | rejected | Claim Rejected | error |
 | queried | Additional Information Requested | warning |
+| a query raised before any decision ([A13. Adjudicate](../apis/A13-adjudicate.md) Raise Query) | Query Raised, with the question | warning |
+| a line-item query sent on the leg's thread ([A13. Adjudicate](../apis/A13-adjudicate.md)), by "NHCX" | Line-item Query Sent over NHCX | warning |
 | an enhancement (C4. Pre-auth Submit (in nhcx-preauth/payer)) | Enhancement `<n>` Requested | warning |
 | withdrawn ([C7. Task Submit](../callbacks/C7-task-submit.md) cancel) | Pre-Authorization Withdrawn | warning |
-| a query answered (C9. Communication (in nhcx-communication/payer), C4. Pre-auth Submit (in nhcx-preauth/payer) resubmission) | Query Answered | info |
+| a query answered (C9. Communication (in nhcx-communication/payer), C4. Pre-auth Submit (in nhcx-preauth/payer) resubmission, [C5. Claim Submit](../callbacks/C5-claim-submit.md) claim sent again) | Query Answered | info |
 | the discharge recorded | Patient Discharged | info |
 | the claim filed ([C5. Claim Submit](../callbacks/C5-claim-submit.md)) | Claim Submitted | info |
 | reopened ([C7. Task Submit](../callbacks/C7-task-submit.md) reprocess or release) | Claim Reopened for Reprocessing (round `<n>`) | warning |

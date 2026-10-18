@@ -23,9 +23,8 @@ C3(envelope, corr):
     if body.type == "ProtocolResponse":
         write D13: status = "error", error_message = rejection(body)
         return "settled"
-    revive(D13, row, "checking")
     adapter = payer adapter of the case's payer (D9.payer_id)
-    verdict = LAST CoverageEligibilityResponse in body.entry
+    verdict = LAST CoverageEligibilityResponse in body.entry     # read and validate before any write
     if none: raise Rejected("The payer reply carries no CoverageEligibilityResponse.")
     ins = verdict.insurance[0]
     items = []; requirements = []; seen = {}
@@ -36,14 +35,17 @@ C3(envelope, corr):
         for each support in item.authorizationSupporting:
             s = adapter.read_supporting(support)
                 # "fullUrl: <url>" in text -> kind form, else document
-                # "Type: <stage>" -> stage (a document with none is "pre"; a form with none is "") [REF](../references/PAYERS.md#markers)
+                # "Type: <stage>" -> stage; none -> D11 stage rule on the display (pre or post,
+                #     never both; pre when the wording says neither) [REF](../references/PAYERS.md#markers)
                 # "Procedure Code:<code>" -> for_code
-                # at_preauth = kind is form, or stage in adapter.preauth_stages
+                # at_preauth = stage in adapter.preauth_stages or the stage names the pre leg
+                #     (a claim-stage form is not due at pre-authorisation for being a form)
             key = (s.kind, s.code, s.form_url)
             if key in seen: continue
             seen += key
             requirements += {kind, code, display, form_url, stage,
                              for_code (else the item's code), at_preauth (1/0)}
+    revive(D13, row, "checking")             # a rejected reply leaves the ruling exactly as it was
     in one transaction:
         write D13: outcome, disposition, inforce, status = "ready", settled_at = now,
                    error_message = null, response_json = body

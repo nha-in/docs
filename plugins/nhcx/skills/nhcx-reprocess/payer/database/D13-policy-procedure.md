@@ -7,7 +7,7 @@ One row is one procedure ([D10. procedure_rule](D10-procedure-rule.md)) covered 
 The list of packages a product pays for. The document rules and the rate come from the registry ([D10. procedure_rule](D10-procedure-rule.md), [D11. procedure_rule_doc](D11-procedure-rule-doc.md)); this row only says the policy covers the procedure, and in what order the plan lists it.
 
 What NHCX reads from the rows:
-- Each covered procedure is rendered on the InsurancePlan ([F5. InsurancePlan](../fhir/F5-insuranceplan.md)) as a benefit in its own right, with its rate under `plan.specificCost`, its documents per phase and its treatment-guideline form ([F6. Questionnaire](../fhir/F6-questionnaire.md)).
+- Each covered procedure is rendered on the InsurancePlan ([F5. InsurancePlan](../fhir/F5-insuranceplan.md)) as a benefit in its own right, with its rate under `plan.specificCost`, its required documents per leg and, from that `plan.specificCost` entry, pointers to its own forms ([F6. Questionnaire](../fhir/F6-questionnaire.md)).
 - An auth-requirements ruling (A1. Eligibility Answer (in nhcx-coverage/payer), [F3. CoverageEligibilityResponse](../fhir/F3-coverage-eligibility-response.md)) answers each quoted item as covered when the item's code is a procedure the member's product covers, with the package rate as the allowed amount; an item whose code is not covered is answered excluded [PAYER](../references/PAYERS.md#markers).
 
 Create, update, delete:

@@ -173,4 +173,5 @@ target_url(base, path):
 #### G5U. USED BY
 - APIs: [A3. Pre-auth Answer](../apis/A3-preauth-answer.md), [A8. Status Answer](../apis/A8-status-answer.md)
 - FHIR: [F1. Bundle](../fhir/F1-bundle.md)
+- Database: [D33. participant](../database/D33-participant.md)
 - Gateway: [G2. Configuration and Participants](G2-configuration.md), [G4. Registry and Certificates](G4-registry.md), [G6. Encryption](G6-encryption.md), [G7. Send](G7-send.md), [G8. Receive](G8-receive.md), [G9. Ledger](G9-ledger.md)

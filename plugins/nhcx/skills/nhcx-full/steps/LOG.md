@@ -49,6 +49,7 @@ Entries are appended, never rewritten. A mistake in an entry is fixed by a new `
 - `lines` is the changed range after the change.
 - `commit` is filled when the change is committed (L5.5 commits per batch).
 - `status` is recomputed from `entries` after each append.
+- Ids in the JSON stay bare (`"step": "L5"`); the name is added wherever a person reads them (LOGN).
 
 #### LOGM. progress.md
 
@@ -70,10 +71,21 @@ Regenerated from progress.json:
 ## Changes
 | Id | Time | Sub-step | Action | Summary | Files |
 |---|---|---|---|---|---|
-| LOG-0042 | 2026-09-22 10:14 | L5.2 | done | Pre-auth send service (A4) | `src/claims/preauth.py` created 1-188; `nhcx-plan/code.json` |
+| LOG-0042 | 2026-09-22 10:14 | L5.2 Write it | done | Pre-auth send service (A4) | `src/claims/preauth.py` created 1-188; `nhcx-plan/code.json` |
 ```
 
 One section per step, in step order, with a checkbox per sub-step; the changes table lists every entry, newest last.
+
+#### LOGN. EVERY ID WITH ITS NAME
+A person reading the log, the report or a message must not have to look an id up. Every step, sub-step, test and spec id shown to a person is written with its name beside it, taken from the skill's own indexes and spec titles, never made up:
+- a step: `L3 Integration Planning`, never `L3` alone;
+- a sub-step: `L5.2 Write it`;
+- a test: `T3 IRDAI Policy Search and Eligibility`, never `T3` alone; a result is the id, the name, the runner and the result: `T3 IRDAI Policy Search and Eligibility (CLI): pass`;
+- a spec: `A4 Pre-auth Submit`; an NHA use case: `nha:B3 Pre-authorisation`.
+
+This holds in `progress.md`, in every table of `report.html` (an id column shows the name in the same cell, or has a Name column beside it), and in every message to the user that reports progress, a step, a test run or an error ("L8 End-to-end Tests: T14 PMJAY Pre-authorisation Through the Payer Service (GUI) failed", not "L8: T14 failed"). Pass and fail stay one word; the name is what is added.
+
+The names come from `nhcx-plan/names.json`, written at L1.2 with the report builder from the skill's indexes (`steps/INDEX.md`, `tests/INDEX.md` and each spec's `title`): `{"L3": "Integration Planning", "L5.2": "Write it", "T3": "...", "A4": "..."}`, every id in SCOPE. The report builder and the agent both read it, so the page and the messages use the same words. An id missing from it is shown as `<id> (unnamed)` and logged as an error to fix, never left bare.
 
 #### LOGH. report.html
 
@@ -83,7 +95,7 @@ Rebuilt as the last action of every prompt, however the prompt ended: after a st
 
 **Wrapper scripts, one per platform.** Beside it, `nhcx-plan/make-report.sh` (POSIX shell, executable) and `nhcx-plan/make-report.bat` (Windows), both doing the same thing: run the report builder, wait 10 seconds, run it again, and keep doing so until stopped (Ctrl-C). One line of output per rebuild, with the time. So a person opens `report.html` once, leaves `make-report.sh` running, and the page is at most 10 seconds behind the plan files; its refresh button (below) shows the latest build. Both scripts resolve the builder relative to their own location, so they work from any working directory, and they exit with the builder's status when a single run is asked for (`make-report.sh once`).
 
-**Reads:** every file under `nhcx-plan/`: `progress.json`, `knowledge.json`, `discovery.json`, `mapping.json`, `plan.json`, `code-plan.json`, `code.json`, `validation.json`, `dry-run.json`, `e2e.json`, and `progress.md`. A file that does not exist yet is shown as "not yet written", never as a pass. A file that does not parse is shown with its parse error, and the rest of the page still builds.
+**Reads:** every file under `nhcx-plan/`: `names.json` (the name beside every id, LOGN), `progress.json`, `knowledge.json`, `discovery.json`, `mapping.json`, `plan.json`, `code-plan.json`, `code.json`, `validation.json`, `dry-run.json`, `e2e.json`, and `progress.md`. A file that does not exist yet is shown as "not yet written", never as a pass. A file that does not parse is shown with its parse error, and the rest of the page still builds.
 
 **One page, tabs.** Everything is on one page, one tab per source, with the Overview first:
 
@@ -101,7 +113,7 @@ Rebuilt as the last action of every prompt, however the prompt ended: after a st
 | E2E | `e2e.json`: setup checks, then one row per test and runner (GUI, CLI) with result, cause and attempts; blocked tests with their reason. |
 | Log | Every `progress.json` entry, newest first: time, sub-step, action, item, summary, files. |
 
-Each tab renders its file's records as tables, with the fields that file's spec names as columns. Any structure the builder does not know is still shown, as pretty-printed JSON, so nothing in a plan file is invisible. Long text is not cut short.
+Each tab renders its file's records as tables, with the fields that file's spec names as columns, and every step, sub-step, test and spec id written with its name (LOGN). Any structure the builder does not know is still shown, as pretty-printed JSON, so nothing in a plan file is invisible. Long text is not cut short.
 
 **Minimal, self-contained HTML.** One file that opens from disk in any browser and needs nothing else: no external stylesheets, fonts, images or scripts, no framework. Plain semantic tags (`h1`, `h2`, `table`, `ul`, `pre`) with a few lines of inline CSS for the tab bar, table borders and a colour for the result words (pass, fail, blocked, skipped). A few lines of inline script, and no more: the tab bar shows one tab's section and hides the others (the current tab kept in the URL hash, so a reload stays on it), and a **Refresh** button at the top reloads the page (`location.reload()`), which shows whatever the last rebuild wrote. Without script the page still reads top to bottom, every section visible. No secrets: configuration values are shown as `set` or `missing`, as [T1. Test Configuration](../tests/T1-test-configuration.md) does.
 
@@ -124,11 +136,11 @@ table{border-collapse:collapse}td,th{border:1px solid #ccc;padding:.3em .6em;tex
 <button data-tab="code">Code</button><button data-tab="validation">Validation</button><button data-tab="dry-run">Dry-run</button>
 <button data-tab="e2e">E2E</button><button data-tab="log">Log</button>
 </nav>
-<section id="overview"><h2>Errors</h2><ul><li>T14 cli: no pre-auth decision within 120 s; correlation 5b1f0c1e, ledger 7UQ2P0AB</li></ul></section>
+<section id="overview"><h2>Errors</h2><ul><li>L8 End-to-end Tests: T14 PMJAY Pre-authorisation Through the Payer Service (CLI) failed: no pre-auth decision within 120 s; correlation 5b1f0c1e, ledger 7UQ2P0AB</li></ul></section>
 <section id="progress"><table><tr><th>Step</th><th>State</th><th>Sub-steps</th><th>Exit checked</th></tr>
 <tr><td>L5 Write Code</td><td>in progress</td><td>3 / 5</td><td>no</td></tr></table></section>
 <section id="e2e"><table><tr><th>Test</th><th>Runner</th><th>Result</th><th>Cause</th><th>Attempts</th></tr>
-<tr><td>T14</td><td>cli</td><td class="fail">fail</td><td>ours</td><td>2</td></tr></table></section>
+<tr><td>T14 PMJAY Pre-authorisation Through the Payer Service</td><td>CLI</td><td class="fail">fail</td><td>ours</td><td>2</td></tr></table></section>
 <section id="log"><table><tr><th>Time</th><th>Sub-step</th><th>Action</th><th>Summary</th></tr></table></section>
 <script>
 const show=id=>{document.querySelectorAll('section').forEach(s=>s.classList.toggle('on',s.id===id));
@@ -169,5 +181,6 @@ The builder and the two wrapper scripts are written in L1 (before any other plan
 - Every sub-step of a finished step has a `started` and a closing entry.
 - Every file named in code.json, and every file changed in the target, appears in at least one entry's `files`.
 - progress.md matches progress.json.
+- No step, sub-step, test or spec id appears in progress.md, report.html or a progress message without its name; `names.json` holds every id in SCOPE.
 - report.html was rebuilt at the end of the last prompt by the report builder, and its counts match the plan files.
 - `nhcx-plan/make-report.sh once` and `make-report.bat once` rebuild it and exit 0.

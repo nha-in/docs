@@ -13,7 +13,7 @@
 Breadcrumb: Procedures (S8) > `<procedure name>` or "New Procedure"
 
 #### S9D. DESCRIPTION
-One procedure and the three things the exchange reads from it. Saving uses "Save" (header) or "Create Procedure" / "Save Procedure" (foot); "Cancel" returns to S8.
+One procedure and the three things the exchange reads from it: the package rate, the questionnaires and the document rules. Saving uses "Save" (header) or "Create Procedure" / "Save Procedure" (foot); "Cancel" returns to S8.
 
 **1. Procedure Identity**
 
@@ -26,9 +26,12 @@ One procedure and the three things the exchange reads from it. Saving uses "Save
 | Category | select: Surgical, Medical, Emergency, Day Care, Diagnostic, Critical Care | "Choose a category" |
 | Package Rate (₹) | number, blank means unpriced; "What the policy pays for the package. It is quoted on the InsurancePlan a hospital fetches and allowed per item on an auth-requirements ruling. Blank leaves it unpriced." | "A package rate cannot be negative"; screen: "Enter the package rate as a non-negative amount, or leave it blank" |
 | Clinical Description | textarea | |
-| Standard Treatment Guideline, questions asked at pre-authorisation | textarea, one question per line; "These become the STG questionnaire the InsurancePlan publishes with the package; the hospital answers them in words on the pre-authorisation. Leave blank to ask only whether the pre-auth documents are attached." | blank lines dropped; "Keep each question to 300 characters"; "A guideline asks at most 25 questions" |
 
-The questions become one required free-text item each on the questionnaire ([F6. Questionnaire](../fhir/F6-questionnaire.md)) with `linkId` `<code>/stg/<n>`; a procedure with none gets one yes/no item per document wanted at pre-authorisation, never the discharge summary or the final bill, which nobody has at that stage.
+There is no Standard Treatment Guideline field: the STG questionnaire is no longer published. A procedure's clinical questions are its own questionnaires, below.
+
+**Questionnaires (n).** "Forms asked of every case quoting this procedure: a clinical history, findings, fitness for surgery. Each goes out on the InsurancePlan as a Questionnaire beside the package; the hospital answers it with the pre-authorisation. Forms for every case on a plan are set on the policy." The same form editor as the policy's ([S7. Policy Configurator](S7-policy-configurator.md) section 5, the host's own component reused, not a second one): one card per form with Title, Description and a Questions list (question text, answer type select, Required checkbox, remove), "Add Question" and "Add Questionnaire", a saved form's id shown as a chip. The same screen refusals and server rules, all on `questionnaires`: "Every questionnaire needs a title", "Each questionnaire title can only be used once", "`<question>` asks in a type the hospital cannot answer in: `<type>`", "`<question>` is a choice and needs at least two answers to choose between" (screen: "... needs at least two answers"), "`<title>` asks nothing; give it a question or remove it". Empty: "No questionnaires for this procedure."
+
+Each form is published at `<base>/questionnaire/<procedure code>/<form id>` ([F6. Questionnaire](../fhir/F6-questionnaire.md)) and pointed at from the package's `plan.specificCost` benefit ([F5. InsurancePlan](../fhir/F5-insuranceplan.md)), so it is published only while the procedure has a package rate; a form on an unpriced procedure is reported on the plan preview ([S11. FHIR Preview](S11-fhir-preview.md)) instead. An auth-requirements ruling names each form by url ([F3. CoverageEligibilityResponse](../fhir/F3-coverage-eligibility-response.md)). A procedure carried over from the old guideline questions opens with one form, "Clinical details" ([D10. procedure_rule](../database/D10-procedure-rule.md)).
 
 **2. Document Requirements.** A matrix of every NHCX document type ([D3. document_type](../database/D3-document-type.md)) against the three phases:
 
@@ -40,7 +43,7 @@ The questions become one required free-text item each on the questionnaire ([F6.
 
 Each cell is a checkbox; a document may be required at more than one phase. A stage summary above the matrix shows the count per phase with a clear button. A toolbar filters the matrix by search (name, code, category), by document category (Identity, Clinical, Financial, Administrative, Legal, Transport) and "Selected only". "Showing `<n>` of `<total>` NHCX document types". A new procedure opens with Pre-Auth: POI, CER, EST; Discharge: HDS, MB; Claim: HDS, MB, FCF [REF](../references/PAYERS.md#markers). Server rules: "Every document rule needs a document code", "Each document can only be listed once per stage"; a code not in the taxonomy: "This refers to a member, policy, procedure or document type that does not exist". Screen refusal when every phase is empty: "Select at least one document requirement".
 
-These rules are what the InsurancePlan publishes per package and phase ([F5. InsurancePlan](../fhir/F5-insuranceplan.md)), what an auth-requirements ruling names as due at each stage ([F3. CoverageEligibilityResponse](../fhir/F3-coverage-eligibility-response.md)), and what the plan's questionnaire asks about ([F6. Questionnaire](../fhir/F6-questionnaire.md)).
+These rules are what the InsurancePlan publishes per package and leg ([F5. InsurancePlan](../fhir/F5-insuranceplan.md)) and what an auth-requirements ruling names as due at each stage ([F3. CoverageEligibilityResponse](../fhir/F3-coverage-eligibility-response.md)). No form is built from them.
 
 **3. Review.** Three columns, one per phase, listing the chosen documents as chips (each removable) or "No documents required at this stage".
 
@@ -68,8 +71,11 @@ The arrangement below is the reference desk's [REF](../references/PAYERS.md#mark
 |  SNOMED CT Code [______]  ICD-10-PCS [______]  Category [Surg v] |
 |  Package Rate (₹) [______]                                       |
 |  Clinical Description [________________________________]         |
-|  Standard Treatment Guideline, questions asked at pre-auth       |
-|  [one question per line_________________________________]        |
+|------------------------------------------------------------------|
+| [Card] Questionnaires (1)                                        |
+|  [QNR-7K2P] Title [Clinical details___] Description [_______]    |
+|  Question [Grade of stenosis__] [Short answer v] [x] Required [x]|
+|  [+ Add Question]                         [+ Add Questionnaire]  |
 |------------------------------------------------------------------|
 | [Card] Document Requirements                                     |
 |  [Pre-Auth 3 x] [Discharge 2 x] [Claim 3 x]                      |
@@ -87,7 +93,7 @@ The arrangement below is the reference desk's [REF](../references/PAYERS.md#mark
 |------------------------------------------------------------------|
 ```
 
-- Three cards in order; save and cancel appear in the header and again at the foot.
+- Four cards in order (identity, questionnaires, documents, review); save and cancel appear in the header and again at the foot.
 - The matrix scrolls inside its card with a sticky header; on small screens each document is a card with three toggle buttons.
 
 #### S9A. ACTIONS
@@ -97,3 +103,4 @@ The arrangement below is the reference desk's [REF](../references/PAYERS.md#mark
 4. Clear (per phase): remove every document from that phase.
 5. Search, category, Selected only: filter the matrix; "Reset filters" clears them.
 6. Remove a chip in Review: the same as unticking it.
+7. Add Questionnaire / Add Question / remove: manage the procedure's own forms; checked on save as S7's are.
