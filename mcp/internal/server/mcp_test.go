@@ -377,15 +377,17 @@ func TestSixToolsAndTheirAliases(t *testing.T) {
 	} {
 		tl, ok := byName[old]
 		if !ok {
-			t.Errorf("alias %s is gone; it must stay for one release", old)
+			t.Errorf("alias %s is gone; published skills still call it", old)
 			continue
 		}
-		if want := "Deprecated alias for `" + repl + "`;"; !strings.HasPrefix(tl.Description, want) {
-			t.Errorf("%s description does not start with %q", old, want)
+		// One short line pointing at the replacement: every client loads
+		// every description into its model's context on every request.
+		if want := "Deprecated: use `" + repl + "`"; !strings.HasPrefix(tl.Description, want) || len(tl.Description) > 80 {
+			t.Errorf("%s description is %q, want one short line starting %q", old, tl.Description, want)
 		}
 	}
 	if len(res.Tools) != 17 {
-		t.Errorf("registered %d tools, want 17 (6 new, 11 aliases) for this release", len(res.Tools))
+		t.Errorf("registered %d tools, want 17 (6 tools, 11 aliases; skill only with skills)", len(res.Tools))
 	}
 }
 

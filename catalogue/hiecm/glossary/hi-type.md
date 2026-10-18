@@ -24,7 +24,7 @@ sources:
   - url: https://nrces.in/ndhm/fhir/r4/index.html
     status: docs-only
     note: The NRCeS guide, which defines one composition profile per type.
-  - file: site/docs/hiecm/v3/concepts/fhir.md
+  - file: site/docs/hiecm/v3/resources/standards/fhir/index.mdx
     status: reference
     note: >
       The published FHIR page: eight record types, Invoice included, and

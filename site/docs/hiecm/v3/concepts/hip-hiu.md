@@ -67,8 +67,8 @@ Five things have to work.
 1. **Health records in the right format.** A [FHIR](/docs/hiecm/v3/getting-started/glossary#fhir) R4 bundle following
    the NRCES profiles at <https://nrces.in/ndhm/fhir/r4/index.html>, either simple with a PDF or
    image attachment or structured with coded information. There are eight record types, all
-   mandatory for an HMIS. See [FHIR and health record
-   formats](/docs/hiecm/v3/concepts/fhir).
+   mandatory for an HMIS. See [FHIR health
+   records](/docs/hiecm/v3/resources/standards/fhir).
 2. **Care contexts.** The unit that attaches to an ABHA address. The
    [HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm) is data blind and holds two fields per care context: your
    internal reference ID, and a display name with nothing clinical in it. Use one per

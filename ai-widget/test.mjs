@@ -12,7 +12,7 @@ await build({
                export {readStream, failureMessage, UNREACHABLE} from './src/sse';
                export {revealStep, THINKING_HOLD, THINKING_BURST} from './src/pacing';
                export {say, answer, wantsTools, needsAgent, TOOLS, AGENTS} from './src/install';
-               export {titleOf, remember, whenSaid, forgetOne, resumable} from './src/history';
+               export {titleOf, remember, whenSaid, askedAgo, forgetOne, resumable} from './src/history';
                export {ABOUT, isAboutQuestion} from './src/about';
                export {startersFrom, DEFAULT_STARTERS} from './src/starters';
                export {forModel, memoryOf, sentFrom} from './src/transcript';
@@ -39,7 +39,7 @@ await build({
 const {
   toBlocks, absolute, headings, linkFor, readStream, failureMessage, UNREACHABLE, revealStep, THINKING_HOLD, THINKING_BURST,
   say, answer, wantsTools, needsAgent, TOOLS, AGENTS,
-  titleOf, remember, whenSaid, forgetOne, resumable, ABOUT, isAboutQuestion, memoryOf, sentFrom,
+  titleOf, remember, whenSaid, askedAgo, forgetOne, resumable, ABOUT, isAboutQuestion, memoryOf, sentFrom,
   startersFrom, DEFAULT_STARTERS, forModel, parseLlms, searchPages, pageUrl, markdownUrl, isHtmlDocument,
   moduleLabel, skillNote, COMMANDS, slashMatches, CLOSED, offering, related, shownOf, trayKey,
 } = await import(out);
@@ -157,6 +157,11 @@ assert.equal(remember([one], {id: 'b', at: 2, title: 'b', turns: []})[0].id, 'b'
 const many = Array.from({length: 60}, (_, i) => ({id: String(i), at: i, title: String(i), turns: []}));
 assert.equal(many.reduce((list, s) => remember(list, s), []).length, 50, 'capped');
 assert.equal(whenSaid(0, 30_000), 'just now');
+assert.equal(askedAgo(0, 30_000), 'just now');
+assert.equal(askedAgo(0, 60_000), '1 minute ago');
+assert.equal(askedAgo(0, 7 * 60_000), '7 minutes ago');
+assert.equal(askedAgo(0, 3600_000), '1 hour ago');
+assert.equal(askedAgo(0, 2 * 86_400_000), '2 days ago');
 assert.equal(whenSaid(0, 7 * 60_000), '7m ago');
 assert.equal(whenSaid(0, 3 * 3600_000), '3h ago');
 assert.equal(whenSaid(0, 2 * 86400_000), '2d ago');
@@ -179,6 +184,10 @@ assert.equal(revealStep(600, 0, false, true), 600, 'reduced motion shows it all'
 assert.deepEqual(toBlocks('one\ntwo'), [{kind: 'p', text: 'one two'}]);
 assert.deepEqual(toBlocks('- a\n- b'), [{kind: 'ul', items: ['a', 'b']}]);
 assert.deepEqual(toBlocks('1. a\n2. b'), [{kind: 'ol', items: ['a', 'b']}]);
+assert.deepEqual(toBlocks('1. a\n\n2. b\n\n3. c'), [{kind: 'ol', items: ['a', 'b', 'c']}]);
+assert.deepEqual(toBlocks('1. a\n\nthen\n\n2. b'), [
+  {kind: 'ol', items: ['a']}, {kind: 'p', text: 'then'}, {kind: 'ol', items: ['b']},
+]);
 assert.deepEqual(toBlocks('```json\n{"a":1}'), [
   {kind: 'code', text: '{"a":1}', lang: 'json', closed: false},
 ]);

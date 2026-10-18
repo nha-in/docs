@@ -89,7 +89,7 @@ func TestChatEndpointStreams(t *testing.T) {
 	}
 	svc := &chat.Service{Model: fm, Tools: server.ChatTools(server.NewTools(servertest.Reader(t), nil).Defs()), MaxTokens: 100}
 	h := testHandler(t, svc, chat.NewLimiter(100, 1000))
-	body := `{"turns":[{"role":"user","text":"what is the timestamp format?"}]}`
+	body := `{"turns":[{"role":"user","text":"why is my timestamp rejected?"}]}`
 	rec := httptest.NewRecorder()
 	h.ServeHTTP(rec, httptest.NewRequest("POST", "/api/chat", strings.NewReader(body)))
 	if rec.Code != 200 {

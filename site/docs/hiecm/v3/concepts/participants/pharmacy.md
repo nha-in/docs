@@ -3,7 +3,7 @@ title: Pharmacy
 sidebar_label: Pharmacy
 sidebar_position: 5
 description: A pharmacy takes the same roles as a hospital, with a narrower record surface. What differs, and what runs on another gateway.
-source: site/docs/hiecm/v3/registries/nhpr/hfr.md, site/docs/hiecm/v3/concepts/hip-hiu.md, site/docs/hiecm/v3/concepts/fhir.md, site/docs/hiecm/v3/registries/nhpr/hpr.md
+source: site/docs/hiecm/v3/registries/nhpr/hfr.md, site/docs/hiecm/v3/concepts/hip-hiu.md, site/docs/hiecm/v3/resources/standards/fhir/index.mdx, site/docs/hiecm/v3/registries/nhpr/hpr.md
 sidebar_class_name: sidebar-icon sidebar-icon--pill
 ---
 
@@ -60,4 +60,4 @@ sits with the rest of their records instead of in a paper bag.
 ## Next
 
 [Hospital, lab and pharmacy systems](/docs/hiecm/v3/concepts/hip-hiu) is the
-build guide, and [FHIR](/docs/hiecm/v3/concepts/fhir) has the record formats.
+build guide, and [FHIR](/docs/hiecm/v3/resources/standards/fhir) has the record formats.

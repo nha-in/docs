@@ -1,0 +1,12 @@
+{/* Shared standards partial: the ways to validate a bundle against the
+    ABDM FHIR implementation guide. Every fact here comes from nrces.in. */}
+
+The [Implementation Guide for Adoption of FHIR in ABDM and NHCX](https://www.nrces.in/download/files/pdf/Implementation_Guide_for_Adoption_of_FHIR_in_ABDM_and_NHCX.pdf) gives three ways to validate.
+
+| Way | How |
+| --- | --- |
+| Command line | `java -jar validator_cli.jar <file_name> -ig ndhm.in#6.5.0` |
+| Browser | Open [validator.fhir.org](https://validator.fhir.org) and select the `ndhm.in` guide |
+| In your code | Load `package.tgz` into the HAPI FHIR validator from your classpath |
+
+The validator checks structure, profile conformance and coding. Every coding must carry the correct system URL, code and display.

@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
 import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import {Check, Copy, Database, Sparkles, SquareArrowOutUpRight} from 'lucide-react';
+import {Check, Copy, Database, Sparkles} from 'lucide-react';
 import {cn} from '@site/src/lib/utils';
 import {AGENTS, AgentId, guarded} from './agents';
+import AgentLogo from './AgentLogo';
 
 /**
  * The Build with AI page's opening move. Each agent gets its shortest path:
@@ -148,6 +149,7 @@ export default function AgentSetup({set = 'abdm'}: {set?: keyof typeof SETS}): R
               setActive(agent.id);
               setCopied(false);
             }}>
+            <AgentLogo id={agent.id} />
             {agent.label}
           </button>
         ))}
@@ -193,7 +195,7 @@ export default function AgentSetup({set = 'abdm'}: {set?: keyof typeof SETS}): R
 
             {surface.link && (
               <a className="skill-launch" href={surface.link(ctx)}>
-                <SquareArrowOutUpRight className="size-3.5" aria-hidden="true" />
+                <AgentLogo id={agent.id === 'any' ? 'chatgpt' : agent.id} />
                 Open in {agent.id === 'any' ? 'ChatGPT' : agent.label}
               </a>
             )}

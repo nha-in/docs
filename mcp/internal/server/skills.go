@@ -43,6 +43,7 @@ var sectionLabel = map[string]string{
 	"integrate": "The calls, hosts, headers and request bodies",
 	"debug":     "From a failed call to a named fix, and every recorded error code",
 	"test":      "The test matrix for the module",
+	"design":    "What the journey around the calls must do: the screens, the consent and the failure states",
 	"generate":  "Builds conformant FHIR bundles",
 	"audit":     "Checks bundles an existing FHIR store emits",
 }

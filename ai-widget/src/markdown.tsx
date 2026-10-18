@@ -288,8 +288,11 @@ export function toBlocks(text: string): Block[] {
       continue;
     }
     if (line.trim() === '') {
+      // A blank line inside a list does not end it: the model separates
+      // numbered steps with blank lines, and closing the list here made each
+      // step its own list, every one numbered 1. The next line that is not an
+      // item closes it.
       flushPara();
-      flushList();
       continue;
     }
     // A wrapped continuation of the previous list item, or plain prose.

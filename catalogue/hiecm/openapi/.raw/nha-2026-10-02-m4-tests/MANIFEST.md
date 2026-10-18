@@ -5,7 +5,7 @@ The M4 functional test case sets, sent with NHA's review of 2 October 2026 for t
 - `HFR_Test_Cases.xlsx`, sent as `HFR_Test Cases (2).xlsx`. Four tabs: Search facility (HFR-001 to HFR-009), Registration (HFR-010 to HFR-063), Facility update (HFR-064 to HFR-117) and Bridge linkage (HFR-118 to HFR-123, twice). Columns S.No, Function, Applicable To, Mandatory/Optional, Test Case ID, Functionality, Actual Name of data fields on HFR portal, Steps, Expected Result, APIs, Status, Remarks, Suggestions for the Functional Tester.
 - `HPR_Test_Cases.xlsx`, sent as `HPR_Test_Cases (4).xlsx`. One tab, HPR-002 to HPR-080. Columns S.No, Function, Applicable To, Mandatory/Optional, Test Case ID, Feature, Functionality, Test Case, Steps, Expected Result, APIs, Status, Remarks, Suggestions for the Functional Tester.
 
-Neither carries personal data: the only identifier is the placeholder `XXXXXXXXXXXX@hpr.abdm`. They are the source of `site/docs/hiecm/v3/resources/test-cases/m4.mdx`, written by `scripts/build-test-cases.py`.
+Neither carries personal data: the only identifier is the placeholder `XXXXXXXXXXXX@hpr.abdm`. They are the source of `site/docs/hiecm/v3/resources/test-cases/m4.mdx`, written by `scripts/build-test-cases.py`, and of `skills-src/hiecm-m4-test/SKILL.md`.
 
 What the sheets say that the page renders as written, kept here:
 

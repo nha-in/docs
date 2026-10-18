@@ -1449,6 +1449,17 @@ func TestSourcesComeFromTheNewToolNames(t *testing.T) {
 	}
 }
 
+func TestFlowsFirstOnlyForAFlowQuestion(t *testing.T) {
+	src := []Source{{ID: "a", kind: "concept"}, {ID: "b", kind: "flow"}, {ID: "c", kind: "callback"}}
+	got := flowsFirst(src, "what is the step by step flow for m1 or m2")
+	if got[0].ID != "b" || got[1].ID != "a" || got[2].ID != "c" {
+		t.Errorf("flow question order = %v", got)
+	}
+	if got := flowsFirst(src, "how do I link a care context"); got[0].ID != "a" {
+		t.Errorf("a non-flow question was reordered: %v", got)
+	}
+}
+
 // "thanks" used to match the greeting and got "Hi. What are you building?"
 // back, so a reader closing a conversation was greeted as if they had just
 // arrived. It now gets its own fixed line, still with no lookup and no model.

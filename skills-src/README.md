@@ -18,8 +18,8 @@ format, so installing is one copy for every target. Two kinds live here:
   functional test cases as one loop each, folded into the module skill as
   `references/test.md`. Each case names the evidence a reviewer can check
   against the gateway, and the loop ends in a manifest of case ids to
-  request ids. Only `hiecm-m1-test` exists so far; a module with no test
-  source ships no test section.
+  request ids. `hiecm-m1-test` to `hiecm-m4-test` and `hiecm-p1-test` to
+  `hiecm-p4-test` exist; a module with no test source ships no test section.
 - **Hand-authored** (`fhir-generate`, `fhir-audit`): agent-agnostic
   procedures for building or auditing NRCES compliant FHIR bundles. They
   assume the abdm-docs MCP server is connected, since every step calls

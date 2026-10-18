@@ -1,7 +1,7 @@
 import {Fragment, render} from 'preact';
 import {useEffect, useRef, useState} from 'preact/hooks';
 import ChatMarkdown, {CopyButton, absolute, headings} from './markdown';
-import {ArrowUp, ChevronRight, FileText, Paperclip, Plus, Sparkles, X, ChevronDown} from './icons';
+import {ArrowUp, ChevronRight, FileText, Paperclip, PenLine, Plus, RotateCcw, Sparkles, X, ChevronDown} from './icons';
 import {readStream, UNREACHABLE, type Source, type Link, type Suggestion, failureMessage} from './sse';
 import {
   AGENTS,
@@ -26,6 +26,7 @@ import {
   save as saveHistory,
   setCurrentId,
   titleOf,
+  askedAgo,
   type Session,
 } from './history';
 import {ABOUT, isAboutQuestion} from './about';
@@ -56,6 +57,9 @@ type Turn = {
   suggestions?: Suggestion[];
   /** The file that went with this question, kept so a follow-up still has it. */
   file?: Attached;
+  /** When the reader asked it, in epoch milliseconds. Absent on turns saved
+      before the panel recorded it, which then show no time. */
+  at?: number;
   /**
    * Where the install flow had got to when this turn was written. Present
    * only on the panel's own scripted turns, which is also what marks them as
@@ -382,6 +386,20 @@ function Panel({
   // because only the newest step is ever interactive.
   const [naming, setNaming] = useState('');
   const [asking, setAsking] = useState(false);
+  // The question being rewritten in place, by its index in the thread, and
+  // the words in its field. Sending it drops everything after that question,
+  // the way an edit does in Claude: the old answer was to a different one.
+  const [editing, setEditing] = useState<number | null>(null);
+  const [edited, setEdited] = useState('');
+  // What "now" is for the time under each question. It moves on a minute at
+  // a time while the panel is open, so "just now" does not stay just now.
+  const [now, setNow] = useState(Date.now());
+  useEffect(() => {
+    if (!open) return;
+    setNow(Date.now());
+    const id = window.setInterval(() => setNow(Date.now()), 30000);
+    return () => window.clearInterval(id);
+  }, [open]);
   // Past conversations, read from this browser once the panel is built, and
   // the list of them that the head can drop down.
   const [history, setHistory] = useState<Session<Turn>[]>([]);
@@ -662,6 +680,7 @@ function Panel({
     stick.current = true;
     conversation.current = session.id;
     setTurns(session.turns);
+    setEditing(null);
     setView('chat');
     setDraft('');
     setChosen(null);
@@ -677,6 +696,7 @@ function Panel({
     keep(turns);
     conversation.current = newId();
     clearCurrentId();
+    setEditing(null);
     setView('chat');
     setMenu('closed');
     abort.current?.abort();
@@ -815,7 +835,7 @@ function Panel({
     if (!file && !command && isAboutQuestion(asked)) {
       setTurns([
         ...base,
-        {from: 'you', text: asked},
+        {from: 'you', text: asked, at: Date.now()},
         {from: 'assistant', text: ABOUT, local: true},
       ]);
       return;
@@ -831,7 +851,7 @@ function Panel({
     ]);
     setTurns((prior) => [
       ...(opts.base ?? prior),
-      {from: 'you', text: asked, file: file ?? undefined},
+      {from: 'you', text: asked, file: file ?? undefined, at: Date.now()},
       {from: 'assistant', text: ''},
     ]);
 
@@ -953,6 +973,23 @@ function Panel({
     void ask(question.text, {module, base: turns.slice(0, at), file: question.file ?? null});
   };
 
+  /** Asks the question at `index` again, in place of it and its answer. */
+  const retry = (index: number) => {
+    const question = turns[index];
+    if (!question || question.from !== 'you') return;
+    void ask(question.text, {base: turns.slice(0, index), file: question.file ?? null});
+  };
+
+  /** Sends the question at `editing` as rewritten, in place of the original. */
+  const resend = () => {
+    if (editing === null) return;
+    const at = editing;
+    const asked = edited.trim();
+    setEditing(null);
+    if (!asked) return;
+    void ask(asked, {base: turns.slice(0, at), file: turns[at].file ?? null});
+  };
+
   /** Attaches a page found in the page search, the same way the host would. */
   const attachFromSearch = async (entry: PageEntry) => {
     setAttaching(entry.title);
@@ -1072,6 +1109,7 @@ function Panel({
           {/* An answer with nothing in it yet is not a bubble. The thinking
               indicator below stands in its place until the first word. */}
           {turn.from === 'assistant' && turn.text === '' ? null : (
+          <div class={`ask-ai__unit ask-ai__unit--${turn.from}`}>
           <div
             class={`ask-ai__turn ask-ai__turn--${turn.from}${
               phase === 'streaming' && index === turns.length - 1
@@ -1094,6 +1132,40 @@ function Panel({
             )}
             {turn.from === 'assistant' ? (
               <ChatMarkdown text={turn.text} docsOrigin={docsOrigin} links={turn.links} />
+            ) : editing === index ? (
+              <form
+                class="ask-ai__edit"
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  resend();
+                }}>
+                <textarea
+                  class="ask-ai__edit-field"
+                  value={edited}
+                  autoFocus
+                  rows={Math.min(6, edited.split('\n').length + 1)}
+                  aria-label="Edit your question"
+                  onInput={(event) => setEdited((event.target as HTMLTextAreaElement).value)}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Escape') {
+                      event.preventDefault();
+                      event.stopPropagation();
+                      setEditing(null);
+                    } else if (event.key === 'Enter' && !event.shiftKey && !event.isComposing) {
+                      event.preventDefault();
+                      resend();
+                    }
+                  }}
+                />
+                <span class="ask-ai__edit-actions">
+                  <button type="button" class="ask-ai__edit-cancel" onClick={() => setEditing(null)}>
+                    Cancel
+                  </button>
+                  <button type="submit" class="ask-ai__edit-send" disabled={edited.trim() === ''}>
+                    Send
+                  </button>
+                </span>
+              </form>
             ) : (
               turn.text
             )}
@@ -1296,6 +1368,49 @@ function Panel({
                 <Sparkles />
                 Install AI tools
               </button>
+            )}
+          </div>
+          {/* Under the reader's own question, on hover, as Claude's chat has
+              it: when it was asked, then retry, edit and copy. Retry is on the
+              newest question only, because asking an older one again would
+              fork the thread rather than replace one answer. The install
+              flow's chosen chips are the reader's turns too, but they answered
+              the panel rather than asked anything, so they carry none of this. */}
+          {turn.from === 'you' &&
+            editing !== index &&
+            !turns[index + 1]?.install &&
+            !turns[index + 1]?.local && (
+              <div class="ask-ai__ask-actions">
+                {turn.at ? (
+                  <time class="ask-ai__ask-time" dateTime={new Date(turn.at).toISOString()}>
+                    {askedAgo(turn.at, now)}
+                  </time>
+                ) : null}
+                {!busy && editing === null && index === turns.length - 2 && (
+                  <button
+                    type="button"
+                    class="ask-ai__ask-action"
+                    aria-label="Retry"
+                    title="Retry"
+                    onClick={() => retry(index)}>
+                    <RotateCcw />
+                  </button>
+                )}
+                {!busy && (
+                  <button
+                    type="button"
+                    class="ask-ai__ask-action"
+                    aria-label="Edit question"
+                    title="Edit"
+                    onClick={() => {
+                      setEdited(turn.text);
+                      setEditing(index);
+                    }}>
+                    <PenLine />
+                  </button>
+                )}
+                <CopyButton text={turn.text} label="Copy question" className="ask-ai__ask-action" />
+              </div>
             )}
           </div>
           )}

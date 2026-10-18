@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import {Check, Copy, Lock, Plug, SquareArrowOutUpRight} from 'lucide-react';
+import {Check, Copy, Lock, Plug} from 'lucide-react';
 import {cn} from '@site/src/lib/utils';
 import {Button} from '@site/src/components/ui/button';
 import {AGENTS, AgentId, MCP_NAME, guarded} from './agents';
+import AgentLogo from './AgentLogo';
 
 /**
  * The Docs MCP server, and the one click that installs it.
@@ -27,19 +28,19 @@ const CAPABILITIES = [
   {
     label: 'Search',
     detail:
-      'Hybrid keyword and semantic search over every page here, so an agent retrieves the paragraph it needs instead of loading the site.',
+      'Finds the paragraph it needs on any page.',
     tools: 'search_docs, get_atom, related_atoms, list_atoms',
   },
   {
     label: 'Decode',
     detail:
-      'Turn an error code you just received into what it means and what to do, without you finding the right table.',
+      'Turns an error code into its cause and fix.',
     tools: 'decode_error',
   },
   {
     label: 'Validate',
     detail:
-      'Check a request body against the specification before you send it, and list or read any operation.',
+      'Checks a request body before you send it.',
     tools: 'validate_request, list_operations, get_operation',
   },
 ];
@@ -207,6 +208,7 @@ export default function McpInstall({set = 'abdm'}: {set?: 'abdm' | 'nhcx'}): Rea
               agent.id === active && 'skill-install__target--active',
             )}
             onClick={() => setActive(agent.id)}>
+            <AgentLogo id={agent.id} />
             {agent.label}
           </button>
         ))}
@@ -229,7 +231,7 @@ export default function McpInstall({set = 'abdm'}: {set?: 'abdm' | 'nhcx'}): Rea
                 {url ? (
                   <Button asChild variant="outline" size="sm">
                     <a href={surface.link(url)}>
-                      <SquareArrowOutUpRight className="size-3.5" aria-hidden="true" />
+                      <AgentLogo id={agent.id} />
                       Add to {agent.label}
                     </a>
                   </Button>

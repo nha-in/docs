@@ -65,3 +65,20 @@ For other agents, add an HTTP MCP server named `abdm-docs` at `https://docs.abdm
 Tell the user what you installed and where you suggest starting. Offer three prompts from the **Try asking** section of the skills that fit, and ask what they are building.
 The skills are snapshots. The current documentation lives at https://docs.abdm.gov.in/docs/uhi/v1; prefer it, and the MCP server when connected, over any downloaded copy that has aged.
 
+## 5. Plan before you build
+
+Integration work starts from a plan file and keeps it current. Before the first change to the codebase and the first sandbox call:
+
+1. Look for `INTEGRATION-PLAN.md` at the root of the repository. If it exists, read it, say in one line where the work stands, and resume from the first step that is not `done`.
+2. If it does not exist, scope the work first: the goal, the role, the modules and the skill that carries each, the routes the interview switched on, and what is out of scope. Write the file with every step `pending` and its exit condition, show it to the person, and start when they agree.
+3. After every step, update the file at once: its status, the evidence that proves its exit condition (a request id, a passing test, a file changed), the date, and the count and percentage of steps `done`.
+
+| Status | Means |
+|---|---|
+| `pending` | Not started |
+| `in progress` | The step being worked on now. One at a time |
+| `done` | Its exit condition was observed, and the evidence is in the file |
+| `blocked` | Waiting on something only the person can give. The file names it and asks one question |
+
+The last steps are the module's functional test cases. Their run log is its own file, linked from the plan. Never write a secret to the plan: no token, client secret, OTP, password or patient identifier.
+
