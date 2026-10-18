@@ -4,9 +4,11 @@
 One row is one charge-master item on a custom-line-items pre-authorisation draft: a fixed-price item and the quantity chosen. Primary key `id`. Parent table: `claim` (D9).
 
 #### D27D. DESCRIPTION
+**Retired.** Custom line items are gone: every line is quoted from the payer's insurance plan ([D16](D16-claim-line.md)), and `claim.case_type` is always `package`. No screen writes this table any more; saving the pre-authorisation details deletes the case's rows and inserts none. It is kept only so rows written earlier can be read; a new build need not create it. What follows describes those rows.
+
 A custom-line-items case (`claim.case_type` `nonpackage`, shown as "Custom line items") is quoted item by item from the local charge master (D8 terminology kind `charge`, whose `extra` holds `price|type`).
 
-**Written.** Only by saving the pre-authorisation draft (S4) with case type `nonpackage`, in the same transaction that replaces the claim's D25 and D26 rows: every D27 row of the claim is deleted, then the new items are inserted with `seq` 1, 2, 3 in order.
+**Written** (before retirement). Only by saving the pre-authorisation draft (S4) with case type `nonpackage`, in the same transaction that replaces the claim's D25 and D26 rows: every D27 row of the claim is deleted, then the new items are inserted with `seq` 1, 2, 3 in order.
 
 - An item whose code is not in the charge master is skipped.
 - `code`, `display` and `unit_price` are re-read from the master at save time; the form supplies only the quantity.
@@ -40,5 +42,5 @@ Saving a `package` draft deletes every D27 row and inserts none.
 - `code` is not a foreign key; it is copied from `terminology` (D8).
 
 #### D27U. USED BY
-- Screens: [S4. Claim Creation Form](../screens/S4-claim-creation-form.md)
+- FHIR: [F8. Claim](../fhir/F8-claim.md)
 - Database: [D8. terminology](D8-terminology.md), [D9. claim](D9-claim.md), [D18. claim_preauth](D18-claim-preauth.md), [D25. claim_diagnosis](D25-claim-diagnosis.md), [D26. claim_care_team](D26-claim-care-team.md)

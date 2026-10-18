@@ -33,5 +33,5 @@ Delete:
 #### D3U. USED BY
 - Screens: [S3. Case Desk](../screens/S3-case-desk.md)
 - Callbacks: [C1. Callback Door](../callbacks/C1-callback-door.md), [C5. Claim Submit](../callbacks/C5-claim-submit.md)
-- FHIR: [F3. CoverageEligibilityResponse](../fhir/F3-coverage-eligibility-response.md), [F5. InsurancePlan](../fhir/F5-insuranceplan.md), [F6. Questionnaire](../fhir/F6-questionnaire.md), [F8. Claim](../fhir/F8-claim.md), [F12. Communication](../fhir/F12-communication.md)
+- FHIR: [F3. CoverageEligibilityResponse](../fhir/F3-coverage-eligibility-response.md), [F5. InsurancePlan](../fhir/F5-insuranceplan.md), [F8. Claim](../fhir/F8-claim.md), [F12. Communication](../fhir/F12-communication.md)
 - Database: [D4. terminology_code](D4-terminology-code.md), [D10. procedure_rule](D10-procedure-rule.md), [D11. procedure_rule_doc](D11-procedure-rule-doc.md), [D23. case_document](D23-case-document.md)

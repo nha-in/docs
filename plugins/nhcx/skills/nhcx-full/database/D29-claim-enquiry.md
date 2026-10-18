@@ -10,11 +10,11 @@ Each ask is its own Task on `task/submit` with its own correlation id, so each i
 
 | kind | Where | Allowed when | stage | Workflow id | Extra columns |
 |---|---|---|---|---|---|
-| `status` | S9 (pre-authorisation card) or S11 (claim card) | the leg has been sent (D18 exists; D20 not `draft`) and the payer's adapter answers status enquiries [PAYER](../references/PAYERS.md#markers) | `preauth` or `claim` | the leg's own `correlation_id`, else `13` [REF](../references/PAYERS.md#markers) | none |
-| `reprocess` | S11 | D20 is `rejected`, `partial` or `approved` and the claim is not paid in full (D21 paid total below D20 `requested_amount`) | `claim` | adapter's `reprocess` (see [PAYERS.md](../references/PAYERS.md)) [PAYER](../references/PAYERS.md#markers) | `reason` (required text), `reason_code`, `document_ids` |
-| `release` | S11 | D20 is `approved` or `partial` and not paid in full; the amount must be above 0 | `claim` | adapter's `release` (see [PAYERS.md](../references/PAYERS.md)) [PAYER](../references/PAYERS.md#markers) | `reason` (the optional note) |
+| `status` | "Ask where it stands": on the pre-authorisation only while it is `submitting`; once it is decided, on the claim once the claim is raised | the leg has been sent (D18 exists, "No pre-authorisation has been sent yet."; D20 not `draft`, "The claim has not been submitted yet.") and the payer's adapter answers status enquiries [PAYER](../references/PAYERS.md#markers) | `preauth` or `claim` | always `1`: no NHCX workflow code names a status check, so never the leg's correlation id nor a stage code | none |
+| `reprocess` | S11 | D20 is `rejected`, never `partial` or `approved` ("Only a claim the payer has rejected can be sent back for reprocessing."; a claim is never resubmitted, D20), and the claim is not paid in full (D21 paid total below D20 `requested_amount`; "A claim that has been paid in full cannot be reprocessed.") | `claim` | adapter's `reprocess` (see [PAYERS.md](../references/PAYERS.md)) [PAYER](../references/PAYERS.md#markers) | `reason` (required text), `reason_code`, `document_ids` |
+| `release` | S11 | D20 is `approved` or `partial` and not paid in full; the amount must be above 0 | `claim` | adapter's `release` (see [PAYERS.md](../references/PAYERS.md)) [PAYER](../references/PAYERS.md#markers) | `reason` (the optional note), `amount` (the amount asked for, two decimals) |
 
-`reason_code` must be one the adapter allows: `claimrejected` (the default), `partialpayment`, `rejectiondisputed` [PAYER](../references/PAYERS.md#markers). The reprocess Task carries the chosen D28 documents; `document_ids` records their ids. `reason_code` and `document_ids` are written by an update right after the insert.
+A reprocess is checked in this order: the claim is `rejected`; not paid in full; a reason text ("Say why the claim should be looked at again."); the facility's HFR ID and participant code; a `reason_code` both adapters allow, `claimrejected` or `rejectiondisputed` ("Choose why the claim is being sent back.") [PAYER](../references/PAYERS.md#markers). `partialpayment` is no reprocess reason, since a partly paid claim is not rejected: its unpaid part is asked for as a `release`. The reprocess Task carries the chosen D28 documents (each must be on this claim, "That document is not on this claim."; a repeated id counts once); `document_ids` records their ids. `reason_code` and `document_ids` (reprocess) and `amount` (release) are written with the row.
 
 **Statuses** (exact strings): `asking`, `answered`, `error`.
 
@@ -24,8 +24,6 @@ Each ask is its own Task on `task/submit` with its own correlation id, so each i
 - `asking` to `error`: a ProtocolResponse on the thread, a peer, protocol or own dispatch error found by polling, or a ledger 404 (the message tells the desk to ask again).
 - `error` to `asking` to `answered`: an `error` row is revived when the payer answers on its thread anyway.
 - An `answered` row ignores further replies.
-
-`amount` exists in the schema but no code path writes it; the release amount travels only in `request_json`.
 
 **Deleted.** Never by the application; by cascade with the claim or when the transactional store is cleared.
 
@@ -42,9 +40,9 @@ Each ask is its own Task on `task/submit` with its own correlation id, so each i
 | status | TEXT | NOT NULL, default `asking` | `asking`, `answered`, `error` |
 | answer | TEXT | null | Status: entity status, claim status, `not-found` or `unknown`. Reprocess and release: `reopened` or `refused` |
 | detail | TEXT | null | What the payer said, in words |
-| amount | REAL | null | An amount the answer carried; not written by the current code |
+| amount | REAL | null | Release only: the amount asked for, as entered (two decimals); it also travels in `request_json` |
 | reason | TEXT | null | Reprocess: why it was asked for. Release: the note |
-| reason_code | TEXT | null | Reprocess only: `claimrejected`, `partialpayment`, `rejectiondisputed`. Migration also adds it |
+| reason_code | TEXT | null | Reprocess only: `claimrejected` or `rejectiondisputed` (`partialpayment` only on rows written before reprocess was limited to rejected claims). Migration also adds it |
 | document_ids | TEXT | null | Reprocess only: JSON list of D28 ids sent with it. Migration also adds it |
 | error_message | TEXT | null | Why the ask failed |
 | request_json | TEXT | null | The Task bundle as sent |

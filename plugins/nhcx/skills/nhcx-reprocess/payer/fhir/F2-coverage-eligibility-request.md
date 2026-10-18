@@ -13,7 +13,7 @@ The question "is this person covered", and for one purpose "what do you need wit
 | `validation` | is the cover in force | the enrolment in force, lapsed, or no cover |
 | `benefits` | what does the cover pay | the same, with the wallet as the benefit |
 | `discovery` | which plan is this person on (the Coverage identifier is `NONE`) | the same, found by ABHA, mobile or member id |
-| `auth-requirements` | what is needed for these packages | one item per asked item: the package rate, the documents per phase and the treatment-guideline form |
+| `auth-requirements` | what is needed for these packages | one item per asked item: the package rate, the documents per phase and the procedure's own forms by url |
 
 A request with no purpose at all is answered as a validation [REF](../references/PAYERS.md#markers).
 

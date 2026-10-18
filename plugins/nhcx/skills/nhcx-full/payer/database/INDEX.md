@@ -31,7 +31,7 @@ Table names are written without the reference implementation's `payer_` prefix [
 
 | # | Table | What one row is | File |
 |---|---|---|---|
-| [D10](D10-procedure-rule.md) | procedure_rule | One procedure in the registry: codes, category, package rate, treatment-guideline questions. | [D10-procedure-rule.md](D10-procedure-rule.md) |
+| [D10](D10-procedure-rule.md) | procedure_rule | One procedure in the registry: codes, category, package rate, and the procedure's own questionnaires. | [D10-procedure-rule.md](D10-procedure-rule.md) |
 | [D11](D11-procedure-rule-doc.md) | procedure_rule_doc | Which document a procedure wants at which phase. | [D11-procedure-rule-doc.md](D11-procedure-rule-doc.md) |
 | [D12](D12-policy.md) | policy | One product: name, UIN, type, plan type, sum assured, status. | [D12-policy.md](D12-policy.md) |
 | [D13](D13-policy-procedure.md) | policy_procedure | A procedure a policy covers. | [D13-policy-procedure.md](D13-policy-procedure.md) |

@@ -81,7 +81,7 @@ function answer_payment_notice(in, enquiry):        // called by C10; enquiry is
     claim_ref = case.nhcx_claim_submission_ref or case.nhcx_claim_ref or enquiry.claim_ref
     bundle = F14 reconciliation bundle(payer = in.payer, payer code = in.recipient, case, payments,
                                        claim_ref, recipient = in.sender)
-    ack = SEND("v1/paymentnotice/on_request", {jwe_headers: ANSWER_HEADERS(in), fhir: bundle}, case)   // A1
+    ack = SEND("v1/paymentnotice/on_request", {jwe_headers: ANSWER_HEADERS(in, payment reconciliation), fhir: bundle}, case)   // A1
         on Refused r:     return rejected("The gateway refused the answer: " + r.message)
         on Unreachable u: return error("The gateway could not queue the answer")
     INSERT D31 audit {action: "paymentnotice.answered", entity_type: "nhcx_txn", entity_id: in.txn_id,
@@ -98,7 +98,7 @@ function answer_unknown_payment(in, enquiry):
     log "payment notice for <ref> from <sender> matched no case (correlation <corr>)"
     bundle = F14 error bundle(in.payer, in.recipient, enquiry.claim_ref,
                               "No claim numbered " + enquiry.claim_ref + " is on record with this payer.")
-    ack = SEND("v1/paymentnotice/on_request", {jwe_headers: ANSWER_HEADERS(in), fhir: bundle}, none)
+    ack = SEND("v1/paymentnotice/on_request", {jwe_headers: ANSWER_HEADERS(in, payment reconciliation), fhir: bundle}, none)
         on Refused r:     return rejected("The gateway refused the answer: " + r.message)
         on Unreachable u: return error("The gateway could not queue the answer")
     INSERT D31 audit {action: "paymentnotice.unknown", entity_type: "nhcx_txn", entity_id: in.txn_id,

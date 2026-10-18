@@ -4,16 +4,13 @@
 One row is one diagnosis quoted on a claim's pre-authorisation draft, held in ICD-10 with its mapped SNOMED CT. Primary key `id`. Parent table: `claim` (D9).
 
 #### D25D. DESCRIPTION
-**Written.** Only by saving the pre-authorisation draft (S4), which needs a linked admission. The save runs in one transaction: every D25, D26 and D27 row of the claim is deleted, then the new sets are inserted with `seq` 1, 2, 3 in order. There is no single-row edit or delete.
+**Written.** Only by saving the pre-authorisation details (S4) on the Pre-authorisation tab. The pre-authorisation owns its diagnoses: it may be written before the patient is admitted, so no linked admission is needed, and nothing is taken from or fixed by one. The save runs in one transaction: every D25 and D26 row of the claim is deleted (and any retired D27 row), then the new sets are inserted with `seq` 1, 2, 3 in order. There is no single-row edit or delete. Once the claim is with the payer the save is refused before anything else is checked ([CORE.md](../references/CORE.md) Instruction 14): "The claim has gone to the payer, so the pre-authorisation is read only: no enhancement or change can be made. It can only be cancelled while the payer is deciding the claim."
 
-Where the diagnoses come from:
+Where the diagnoses come from: the ICD-10 diagnoses the desk picks on the form, each a `diagnosis` term (D8); a code that is not a term is skipped, and one picked twice is kept once. When an admission is linked and the form has never been saved, the form is pre-filled from the admission's unresolved conditions (D5, category `diagnosis`) that carry an ICD-10 code; the desk may change them, and only what is saved counts.
 
-1. The linked admission first. Every `condition` (D5) on the claim's encounter (D4) with category `diagnosis` and clinical status other than `resolved` is taken, in id order. A condition whose ICD-10 code is in the `diagnosis` terminology (D8) is quoted through that term (ICD-10 and the term's SNOMED mapping); one that is not but has an ICD-10 code is quoted as recorded (its ICD-10 and SNOMED codes and displays, the condition text standing in for a missing display). A condition with no ICD-10 code at all is skipped, with the note "<text> has no ICD-10 code and was not quoted." on the saved draft.
-2. Only when the admission has recorded none are the diagnoses picked on the form used; each must be a `diagnosis` term.
+For a term: `icd10_code` and `icd10_display` are the term's code and display; `snomed_code` and `snomed_display` are its mapped SNOMED CT concept (the terminology's mapping, else the term's `alt_code`, `alt_display`), empty when there is none. The desk picks ICD-10 ([S4. Pre-authorisation Details and Admission Link](../screens/S4-claim-creation-form.md)); the SNOMED CT is mapped, never typed, and its absence never refuses a save. At least one diagnosis is required ("Pick at least one ICD-10 diagnosis - the payer needs it.").
 
-For a term: `icd10_code` and `icd10_display` are the term's code and display; `snomed_code` and `snomed_display` are its secondary coding (`alt_code`, `alt_display`), empty when the term has none. The desk picks ICD-10 ([S4. Claim Creation Form](../screens/S4-claim-creation-form.md)); the SNOMED CT is mapped, never typed, and its absence never refuses a save. At least one diagnosis is required; with none, the save is refused and the desk is told to record the diagnosis on the admission or pick one on the form.
-
-**Read.** Every pre-authorisation, enhancement, predetermination and claim bundle requires at least one row ("Quote at least one ICD-10 diagnosis.") and sends each row as one Claim diagnosis in `seq` order, with the ICD-10 coding first and the SNOMED CT coding second when the row has one ([F8. Claim](../fhir/F8-claim.md)).
+**Read.** Every pre-authorisation, enhancement and claim bundle requires at least one row ("Quote at least one ICD-10 diagnosis.") and sends each row as one Claim diagnosis in `seq` order, with the ICD-10 coding first and the SNOMED CT coding second when the row has one ([F8. Claim](../fhir/F8-claim.md)).
 
 **Deleted.** On every draft save (replaced), by cascade with the claim, or when the transactional store is cleared. There is no status column.
 
@@ -32,9 +29,10 @@ For a term: `icd10_code` and `icd10_display` are the term's code and display; `s
 - Primary key `id` (integer).
 - Foreign key `claim_id` references `claim (id)` (D9), `ON DELETE CASCADE`.
 - Index `ix_claim_dx` on `(claim_id, seq)`.
-- The codes are not foreign keys; they are copied from `condition` (D5) or `terminology` (D8).
+- The codes are not foreign keys; they are copied from `terminology` (D8).
 
 #### D25U. USED BY
-- Screens: [S4. Claim Creation Form](../screens/S4-claim-creation-form.md)
+- Screens: [S4. Pre-authorisation Details and Admission Link](../screens/S4-claim-creation-form.md)
+- APIs: [A4. Pre-auth Submit](../apis/A4-preauth-submit.md)
 - FHIR: [F8. Claim](../fhir/F8-claim.md)
-- Database: [D5. condition](D5-condition.md), [D9. claim](D9-claim.md), [D18. claim_preauth](D18-claim-preauth.md), [D19. claim_predetermination](D19-claim-predetermination.md), [D26. claim_care_team](D26-claim-care-team.md), [D27. claim_item](D27-claim-item.md)
+- Database: [D4. encounter](D4-encounter.md), [D5. condition](D5-condition.md), [D9. claim](D9-claim.md), [D18. claim_preauth](D18-claim-preauth.md), [D19. claim_predetermination](D19-claim-predetermination.md), [D26. claim_care_team](D26-claim-care-team.md)

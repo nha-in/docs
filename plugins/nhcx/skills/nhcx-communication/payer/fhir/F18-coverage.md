@@ -1,7 +1,7 @@
 # F18. Coverage
 
 #### F18R. RESOURCE
-`Coverage`. **Received** in the eligibility request (F2. CoverageEligibilityRequest (in nhcx-coverage/payer)) and the Claim bundles (F8. Claim (in nhcx-preauth/payer)), where it names the policy the hospital thinks the person is on. **Sent** in the eligibility answer (F3. CoverageEligibilityResponse (in nhcx-coverage/payer)) and beside every answer about a case (F9. ClaimResponse (in nhcx-coverage/payer), F10. Task (claim actions and answers) (in nhcx-coverage/payer), [F11. CommunicationRequest](F11-communicationrequest.md), F13. PaymentNotice (in nhcx-payment/payer), F14. PaymentReconciliation (in nhcx-payment/payer)), where it is the enrolment (D6. subscription (in nhcx-coverage/payer)) the case is filed under. No profile is checked on the way in; on the way out it carries no profile and is tagged `SUBSETTED` [PAYER](../references/PAYERS.md#markers).
+`Coverage`. **Received** in the eligibility request (F2. CoverageEligibilityRequest (in nhcx-coverage/payer)) and the Claim bundles (F8. Claim (in nhcx-preauth/payer)), where it names the policy the hospital thinks the person is on. **Sent** in the eligibility answer (F3. CoverageEligibilityResponse (in nhcx-coverage/payer)) and beside every answer about a case ([F9. ClaimResponse](F9-claimresponse.md), F10. Task (claim actions and answers) (in nhcx-coverage/payer), [F11. CommunicationRequest](F11-communicationrequest.md), F13. PaymentNotice (in nhcx-payment/payer), F14. PaymentReconciliation (in nhcx-payment/payer)), where it is the enrolment (D6. subscription (in nhcx-coverage/payer)) the case is filed under. No profile is checked on the way in; on the way out it carries no profile and is tagged `SUBSETTED` [PAYER](../references/PAYERS.md#markers).
 
 #### F18D. DESCRIPTION
 **Received.** Two things are read and both are hints, never keys: the first identifier's value as the policy code the hospital quotes, ignored when it is `NONE` (the discovery value, "which plan is the question") or the older `UNDEFINED`; and `subscriberId`, what the hospital's desk actually typed, folded into whichever handle is still empty by its shape (F2. CoverageEligibilityRequest (in nhcx-coverage/payer)). On a Claim the `period` gives the admission and expected discharge until the Claim's own dates override it, because the period is the cover, which a hospital may send as the policy year. `relationship`, `status`, `type`, `payor` and `class` are not read. The policy code is not used to find the enrolment: the enrolment is found by the person, and a hospital quoting the wrong plan still gets the cover the person actually has.
@@ -37,4 +37,4 @@ Sent:
 
 #### F18U. USED BY
 - APIs: [A5. Query Request](../apis/A5-query-request.md)
-- FHIR: [F1. Bundle](F1-bundle.md), [F11. CommunicationRequest](F11-communicationrequest.md)
+- FHIR: [F1. Bundle](F1-bundle.md), [F9. ClaimResponse](F9-claimresponse.md), [F11. CommunicationRequest](F11-communicationrequest.md)

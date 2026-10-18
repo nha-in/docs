@@ -19,9 +19,9 @@ On a LAMA or DAMA claim discharged before or during surgery the claim lines coll
 
 **Location.** The facility as the place of service, referenced by `CoverageEligibilityRequest.facility` (F2). Fixed shape: the facility name and a pointer to the provider Organization. Same for every eligibility purpose. It is not sent in claim bundles.
 
-**DocumentReference.** One per D28 row of the leg with `source = record` and `content_type` `application/fhir+json`: the patient's health record, picked from the HMIS's ABDM module, sent as the structured M2 bundle it already is rather than as a scan. This is the shape the live PMJAY provider sends and PMJAY adjudicates [PAYER](../references/PAYERS.md#markers); a payer whose adapter does not take records as FHIR gets the record as a PDF `valueAttachment` instead (PAYERS.md "Health records as FHIR").
+**DocumentReference.** One per D28 row of the leg (the claim's discharge summary included) with `source = record` and `content_type` `application/fhir+json`: the patient's health record, picked from the HMIS's ABDM module, sent as the structured M2 bundle it already is rather than as a scan. This is the shape the live PMJAY provider sends and PMJAY adjudicates [PAYER](../references/PAYERS.md#markers); a payer whose adapter does not take records as FHIR gets the record as a PDF `valueAttachment` instead (PAYERS.md "Health records as FHIR").
 
-- fullUrl `https://nhcx.abdm.gov.in/documentreference/<n>`, `id` `<n>`, n from 1 in D28 `id` order, after the QuestionnaireResponses (F8 entries table).
+- fullUrl `https://nhcx.abdm.gov.in/documentreference/<n>`, `id` `<n>`, n from 1 in D28 `id` order (on the claim, a discharge summary picked from records comes last), after the QuestionnaireResponses (F8 entries table).
 - `status` `current`.
 - `content[0].attachment`: `contentType` `application/fhir+json`, `data` base64 of the D28 `data` (the record's bundle JSON, the same encoding the leg uses for a PDF attachment), `title` the D28 label else filename.
 - The Claim refers to it from `supportingInfo[]` (F8): category D28 `category` else `INV`, code D28 `code` else `ODN` under the document code system, `valueReference {reference: <fullUrl>, display: <label>}`. Nothing else on the resource: no `subject`, `type` or `date`, which the bundle inside carries.

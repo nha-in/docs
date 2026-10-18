@@ -33,7 +33,7 @@ Descriptions by stage: "Pre-authorisation `<status>`", "Claim `<status>`", "Appr
 
 Not found: the Task `rejected`, coded `reject`, description "No submission on that thread is on record with this payer.", no ClaimResponse, and the header `entity_status` `not-found`. A thread this payer does not hold is answered too: "not found" is where it stands.
 
-**Headers set by the application.** As every answer (A1. Eligibility Answer (in nhcx-coverage/payer)): sender and recipient swapped, the ask's correlation id verbatim, its workflow id echoed, `x-hcx-status` `response.complete`, plus `x-hcx-status_response` as a JSON object (a header G7 passes through as it is, [G5. Protocol Headers](../gateway/G5-protocol-headers.md)). No scheme table [PAYER](../references/PAYERS.md#markers).
+**Headers set by the application.** As every answer (A1. Eligibility Answer (in nhcx-coverage/payer)): sender and recipient swapped, the ask's correlation id verbatim, its workflow id echoed when it is a published code (the hospital sends `1` on every status enquiry, so the answer goes under `1`; a correlation id or case number in that header is not repeated), `x-hcx-status` `response.complete`, plus `x-hcx-status_response` as a JSON object (a header G7 passes through as it is, [G5. Protocol Headers](../gateway/G5-protocol-headers.md)). No scheme table [PAYER](../references/PAYERS.md#markers).
 
 **Checks before sending.** None of its own.
 
@@ -55,7 +55,7 @@ Envelope, a claim approved and part paid, asked on the task route:
   "jwe_headers": {"x-hcx-sender_code": "<payer code>",
                   "x-hcx-recipient_code": "<facility code>",
                   "x-hcx-correlation_id": "9c1d2e3f-4a5b-4c6d-8e7f-0a1b2c3d4e5f",
-                  "x-hcx-workflow_id": "13",
+                  "x-hcx-workflow_id": "1",
                   "x-hcx-status": "response.complete",
                   "x-hcx-status_response": {"entity_type": "claim", "correlation_id": "0b398fdf-...",
                                             "entity_status": "payment-partial", "claim_no": "CL/26/0SE0000V9",
@@ -107,7 +107,7 @@ function answer_status(in, task, arrived_on):       // called by C8; task is the
     bundle = F10 Task answer bundle(answer)
     path = "v1/task/on_submit" if arrived_on names the task route (or the delivery type is task)
            else "v1/on_status"
-    headers = ANSWER_HEADERS(in) + {x-hcx-status_response: header}        // A1
+    headers = ANSWER_HEADERS(in, status answer) + {x-hcx-status_response: header}        // A1
     ack = SEND(path, {jwe_headers: headers, fhir: bundle}, case)
         on Refused r:     return rejected("The gateway refused the answer: " + r.message)
         on Unreachable u: return error("The gateway could not queue the answer")

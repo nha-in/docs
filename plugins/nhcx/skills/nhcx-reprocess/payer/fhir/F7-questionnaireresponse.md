@@ -4,7 +4,7 @@
 `QuestionnaireResponse`, received as entries of a hospital's Claim bundle ([F8. Claim](F8-claim.md)) on `v1/preauth/submit` and `v1/claim/submit`. No profile is checked. It is not filed in columns of its own: the answers are read out of the bundles the exchange log keeps ([D27. case_exchange_message](../database/D27-case-exchange-message.md)), so a case filed before the reader existed shows its answers too [REF](../references/PAYERS.md#markers). The desk reads them through [A15. Case Exchange Log](../apis/A15-case-exchange.md) (`GET cases/:id/forms`) and shows them on [S3. Case Desk](../screens/S3-case-desk.md).
 
 #### F7D. DESCRIPTION
-A payer's plan ships the forms it wants filled ([F6. Questionnaire](F6-questionnaire.md)): a treatment guideline per package, a consent. The hospital answers them on its own screen and each rides in the submission as a QuestionnaireResponse entry, which the Claim names on `supportingInfo` by reference. That reference is how the response is labelled: the reference's `display` is the form's title and its `category` says whether it is a treatment guideline (`STG`) or anything else (`INF`).
+A payer's plan ships the forms it wants filled ([F6. Questionnaire](F6-questionnaire.md)): the policy's, asked of every case (a consent, a declaration), and each quoted procedure's own (a clinical history, fitness for surgery). The hospital answers them on its own screen and each rides in the submission as a QuestionnaireResponse entry, which the Claim names on `supportingInfo` by reference. That reference is how the response is labelled: the reference's `display` is the form's title and its `category` is read as sent. This payer's forms are all `INF`; a hospital that still files a form as `STG` (the treatment guideline this payer no longer publishes) is read the same way, its category shown as "Treatment guideline" [REF](../references/PAYERS.md#markers).
 
 **Which responses count.** Every `QuestionnaireResponse` entry of the bundle, in bundle order. A response with nothing answered says nothing and is dropped: the hospital's builder never sends one, and one from elsewhere is not worth a card on the desk.
 
@@ -37,8 +37,8 @@ An answer that yields neither a value nor an attachment is dropped.
 | `QuestionnaireResponse.authored` | `forms[].answered_at` | as sent |
 | entry `fullUrl`, else `QuestionnaireResponse/<id>` | the key the Claim's pointer is matched on | |
 | `Claim.supportingInfo[].valueReference.display` (matching pointer) | `forms[].title` | else the url's last segment, else "Questionnaire" |
-| `Claim.supportingInfo[].category.coding[0].code` (matching pointer) | `forms[].category` | `STG` or `INF` |
-| `item[].linkId` | `answers[].link_id` | `<code>/stg/<n>` for a treatment guideline this payer built |
+| `Claim.supportingInfo[].category.coding[0].code` (matching pointer) | `forms[].category` | `INF` for this payer's forms; `STG` read when sent |
+| `item[].linkId` | `answers[].link_id` | `<form id>/<n>` for a form this payer built ([F6. Questionnaire](F6-questionnaire.md)) |
 | `item[].text` | `answers[].question` | the `linkId` when empty |
 | the enclosing group's `text` chain | `answers[].group` | joined with a middle dot |
 | `item[].answer[].value[x]` | `answers[].value`, or `answers[].attachment` (`title`, `content_type`, `bytes`) | table above |

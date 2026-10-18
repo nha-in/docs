@@ -14,7 +14,7 @@ The claim leg is answered exactly as the pre-authorisation leg (A3. Pre-auth Ans
 
 **Which thread.** A claim decided for the first time is answered here. A claim the hospital had reopened with a reprocess or release Task ([C7. Task Submit](../callbacks/C7-task-submit.md)) is answered on the Task's thread instead, as a completed Task with the ClaimResponse on its output ([A9. Task Answer](A9-task-answer.md)): the claim's own thread was completed by the verdict that was disputed, and the exchange refuses anything more on it (a 400) [SANDBOX](../references/PAYERS.md#markers). [A13. Adjudicate](A13-adjudicate.md) decides which by whether [D19. case](../database/D19-case.md) `nhcx_reprocess_correlation_id` is set.
 
-**A query** goes out as A5. Query Request (in nhcx-communication/payer) on a thread of its own, and nothing on this one. **A withdrawal** of a case whose claim was still unanswered closes this thread with a ClaimResponse adjudicated `cancelled` ([C7. Task Submit](../callbacks/C7-task-submit.md)).
+**A query** on lines goes out on this thread as on the pre-authorisation (A3. Pre-auth Answer (in nhcx-preauth/payer)): a ClaimResponse with `outcome` `partial`, reason `queried`, the queried lines `Queried` with their questions and the `eligible` total kept, on `v1/claim/on_submit` under workflow 27, `x-hcx-status` `response.complete` [REF](../references/PAYERS.md#markers), the thread **not** marked answered (`nhcx_claim_answer_txn_id` untouched). The hospital answers by sending the claim again (workflow 151, or 161 on the SHA sandbox [SANDBOX](../references/PAYERS.md#markers), `request.initiated`, [C5. Claim Submit](../callbacks/C5-claim-submit.md)): the resubmission puts the queried lines back with the adjudicator, re-points the claim thread at its correlation id with the answer cleared, and is acknowledged (25). Recorded as on the pre-authorisation, the audit as `claim.queried`. A query on the case alone, with no line queried, goes out as A5. Query Request (in nhcx-communication/payer) on a thread of its own, and nothing on this one; so does any query on a claim reopened by a reprocess, whose own thread is closed. **A withdrawal** of a case whose claim was still unanswered closes this thread with a ClaimResponse adjudicated `cancelled` ([C7. Task Submit](../callbacks/C7-task-submit.md)).
 
 **What the verdict says** ([F9. ClaimResponse](../fhir/F9-claimresponse.md) with `use: claim`): as A3. Pre-auth Answer (in nhcx-preauth/payer), with "Claim" in the dispositions ("Claim approved for `<INR>`.", "Claim approved for `<INR approved>` of `<INR claimed>` claimed.", "Claim rejected.", "The claim was withdrawn."). A claim query keeps the `eligible` total that a pre-authorisation query drops, as PMJAY's does [PAYER](../references/PAYERS.md#markers). `preAuthRef` is left off the claim verdict [PAYER](../references/PAYERS.md#markers).
 
@@ -36,6 +36,7 @@ Workflow ids, per scheme dialect (see [PAYERS.md](../references/PAYERS.md)) [PAY
 | Approved | 26 | 26 | 26 | `response.complete` |
 | Rejected | 291 | 291 | 291 | `response.complete` |
 | Withdrawn | PC02 | PC02 | PC02 | `response.complete` |
+| Line-item query (a line queried) [REF](../references/PAYERS.md#markers) | 27 | 27 | 27 | `response.complete` |
 
 **Checks before sending.** The case must carry a claim thread (`nhcx_claim_correlation_id`): a bill entered on the desk has nobody to tell. An answered thread is left alone. No gateway: logged, the decision stands. Nothing refuses the adjudication.
 
@@ -82,7 +83,7 @@ For the acknowledgement: the [D27. case_exchange_message](../database/D27-case-e
 
 Data: [D19. case](../database/D19-case.md), [D25. case_line_item](../database/D25-case-line-item.md), [D27. case_exchange_message](../database/D27-case-exchange-message.md), [D31. audit_log](../database/D31-audit-log.md), [D1. payer](../database/D1-payer.md), [D5. member](../database/D5-member.md), [D6. subscription](../database/D6-subscription.md), [D12. policy](../database/D12-policy.md)
 
-Reply: none on this thread. What follows: a reprocess or release Task ([C7. Task Submit](../callbacks/C7-task-submit.md)), a payment enquiry (C10. Payment Enquiry (in nhcx-payment/payer)), a status enquiry (C8. Status Enquiry (in nhcx-preauth/payer)); and this payer's own payment notice when finance pays (A6. Payment Notice (in nhcx-payment/payer)).
+Reply: none on this thread for a verdict; after a line-item query, the claim sent again under 151 ([C5. Claim Submit](../callbacks/C5-claim-submit.md)). A decided claim is never sent again: what follows a verdict is a reprocess Task (the hospital asks for one only on a rejected claim) or a release Task ([C7. Task Submit](../callbacks/C7-task-submit.md)), a payment enquiry (C10. Payment Enquiry (in nhcx-payment/payer)), a status enquiry (C8. Status Enquiry (in nhcx-preauth/payer)); and this payer's own payment notice when finance pays (A6. Payment Notice (in nhcx-payment/payer)).
 
 #### A4P. PSEUDOCODE
 
@@ -100,7 +101,10 @@ function answer_claim(case): return send_verdict(case, claim)       // A3 send_v
 
 // in A13, after the decision is stored:
 function answer_verdict(decided_stage, case):
-    if case.adjudication_status == queried: return send_query(case)     // A5; nothing on this thread
+    if case.adjudication_status == queried:
+        if a line is queried and case.nhcx_reprocess_correlation_id not set:
+            return line_query(decided_stage, case)                      // A13 LINE_QUERY: on this thread, workflow 27
+        return send_query(case)                                         // A5; nothing on this thread
     if decided_stage == preauth: txn = answer_preauth(case)             // A3
     if decided_stage == claim:
         if case.nhcx_reprocess_correlation_id set: txn = answer_reprocess(case)   // A9: the Task's thread

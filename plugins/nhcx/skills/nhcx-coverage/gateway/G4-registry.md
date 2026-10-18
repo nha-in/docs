@@ -13,6 +13,7 @@ In-process, on the ABDM client of one profile (`identity_for(code).client`, G2):
 | `client.fetch_participant(code)` | the participant's registry record |
 | `client.fetch_participants(role, entity_type, from_date, to_date)` | every participant of one role listed in a registration window, narrowed to government or private; the rows of the participant master [D32. participant](../database/D32-participant.md) |
 | `client.post_registry(path, body)` | status and raw body of any other registry call |
+| `client.update_participant(fields, roles = none)` | the registry's answer to `participant/update` for this profile's own record: the record is fetched first and sent back in the registry's sample shape (name, email, mobile, an empty `signing_cert_path`, the endpoint, the roles, `scheme_code`) with `fields` laid over it, because the sandbox refuses a body carrying only the changed field [SANDBOX](../references/PAYERS.md#markers). An `encryption_cert` field is sent base64-encoded (a raw PEM is accepted but then breaks `/fetch/certs`, NHCX-1062 [SANDBOX](../references/PAYERS.md#markers)). Used only by [S19. NHCX Settings](../screens/S19-nhcx-settings.md): registering the `endpoint_url` and publishing a staged certificate ([G2. Configuration and Participants](G2-configuration.md) `rotate_key`). A non-2xx answer fails `PARTICIPANT_UPDATE_HTTP_<status>` "participant registry refused the update of <field names>" (with the registry's reason when it gives one); a success drops the cached certificate |
 
 HTTP routes the gateway calls, all `POST` with the session token (G3 `post_with_token`), base `urls.participant`:
 
@@ -21,9 +22,10 @@ HTTP routes the gateway calls, all `POST` with the session token (G3 `post_with_
 | certificate | `<urls.participant>/fetch/certs` | `{"participantid": "<code>@hcx"}` |
 | record | `<urls.participant>/participant/search` | `{"participant_code": c, "participantcode": c, "participantid": c}` (all three spellings [REF](../references/PAYERS.md#markers)) |
 | list | `<urls.participant>/fetch/participants/list` | `{"role": "PAYER" \| "PROVIDER" \| "TPA", "fromdate": "dd/MM/yyyy", "todate": "dd/MM/yyyy", "entitytype": "Gov" \| "Pvt"}` |
+| update | `<urls.participant>/participant/update` | this profile's record with the changed fields laid over it |
 | other | `<urls.participant>/<path>` | the caller's body, unchanged |
 
-Sandbox base: `https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice`. Production base: `https://apis.abdm.gov.in/pmjay/hcx/participanthcxservice`.
+Sandbox base: `https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice`. Production base: `https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice` ([G2. Configuration and Participants](G2-configuration.md), [CORE.md](../references/CORE.md) section 1).
 
 #### G4D. DESCRIPTION
 
@@ -147,7 +149,7 @@ client.post_registry(path, body):
 ```
 
 #### G4U. USED BY
-- Screens: [S2. Select Policy](../screens/S2-select-policy.md), [S17. Beneficiary Discovery](../screens/S17-beneficiary-discovery.md), [S19. NHCX Settings](../screens/S19-nhcx-settings.md)
+- Screens: [S2. Select Policy](../screens/S2-select-policy.md), [S19. NHCX Settings](../screens/S19-nhcx-settings.md)
 - APIs: [A1. Policy Search](../apis/A1-policy-search.md)
 - FHIR: [F17. Organization](../fhir/F17-organization.md)
 - Database: [D9. claim](../database/D9-claim.md), [D32. participant](../database/D32-participant.md)

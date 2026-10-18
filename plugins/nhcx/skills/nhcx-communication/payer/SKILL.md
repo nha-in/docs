@@ -6,7 +6,7 @@ metadata:
   version: "1.1.0"
 ---
 
-**Version 1.1.0**, built 2026-10-16, checked against NHA's NHCX package 1.0.0.
+**Version 1.1.0**, built 2026-10-18, checked against NHA's NHCX package 1.0.0.
 
 # READ FIRST: CORE
 Before anything else, read [references/CORE.md](references/CORE.md) and keep it in mind for the whole task. Its **Instructions** are binding: follow them strictly in every step and every file, and re-read them at the start of each step (L1 to L8). Its **Confusions** settle what easily mixed-up terms mean; when a word is ambiguous, CORE.md decides. It also holds the base URLs and, for every exchange, the route it arrives on, the bundle, the callback that takes it in, the answer and the workflow id the answer travels under.
@@ -49,7 +49,7 @@ Follow [steps/INDEX.md](steps/INDEX.md) in order. Each step writes one file unde
 [references/SCAFFOLDING.md](references/SCAFFOLDING.md) is the shape the code takes in the target payer system. Read it before L3 and keep it open through L5.
 
 - **One NHCX module** (`nhcx/`) holding `gateway/` (G, in-process), `fhir/` (F, pure builders and parsers), `services/` (A), `callbacks/` (C), `models/` and `migrations/` (D), `screens/` and `routes` (S), and the message `archive`.
-- **Existing payer modules** change only for the fields NHCX needs: member ABHA number (D5), product UIN and plan type codes (D12), procedure package rate, treatment-guideline questions and document rules per phase (D10, D11), the payer's own participant and processing codes (D1), and the "Cases" and "Payments" navigation entries.
+- **Existing payer modules** change only for the fields NHCX needs: member ABHA number (D5), product UIN and plan type codes, the biometric setting and the policy's own questionnaires (D12), procedure package rate, the procedure's own questionnaires and document rules per phase (D10, D11), the payer's own participant and processing codes (D1), and the "Cases" and "Payments" navigation entries.
 - **Dependency rules:** screens call services and read models; only services and callbacks write case tables; FHIR builders never touch the database or the gateway; the gateway knows nothing about cases; a reply found by polling is applied by the same callback handler.
 - **Outside the repository:** the gateway config, client secret, private key, ledger and archive directories.
 - **Tests** under `tests/nhcx/` (dry-run and end-to-end), and **plan files** under `nhcx-plan/`.
@@ -63,7 +63,7 @@ The specs this skill holds:
 - **Screens** (3): [S1](screens/S1-overview.md), [S2](screens/S2-cases.md), [S3](screens/S3-case-desk.md)
 - **APIs** (5): [A5](apis/A5-query-request.md), [A11](apis/A11-txn-related.md), [A12](apis/A12-txn-fhir.md), [A13](apis/A13-adjudicate.md), [A15](apis/A15-case-exchange.md)
 - **Callbacks** (2): [C1](callbacks/C1-callback-door.md), [C9](callbacks/C9-communication.md)
-- **FHIR** (7): [F1](fhir/F1-bundle.md), [F11](fhir/F11-communicationrequest.md), [F12](fhir/F12-communication.md), [F15](fhir/F15-patient.md), [F16](fhir/F16-practitioner.md), [F17](fhir/F17-organization.md), [F18](fhir/F18-coverage.md)
+- **FHIR** (8): [F1](fhir/F1-bundle.md), [F9](fhir/F9-claimresponse.md), [F11](fhir/F11-communicationrequest.md), [F12](fhir/F12-communication.md), [F15](fhir/F15-patient.md), [F16](fhir/F16-practitioner.md), [F17](fhir/F17-organization.md), [F18](fhir/F18-coverage.md)
 - **Database** (13): [D1](database/D1-payer.md), [D2](database/D2-staff.md), [D3](database/D3-document-type.md), [D19](database/D19-case.md), [D23](database/D23-case-document.md), [D24](database/D24-case-document-file.md), [D25](database/D25-case-line-item.md), [D26](database/D26-case-timeline.md), [D27](database/D27-case-exchange-message.md), [D28](database/D28-nhcx-delivery.md), [D31](database/D31-audit-log.md), [D32](database/D32-id-sequence.md), [D33](database/D33-participant.md)
 - **Gateway** (11): [G1](gateway/G1-embedding.md), [G2](gateway/G2-configuration.md), [G3](gateway/G3-session-token.md), [G4](gateway/G4-registry.md), [G5](gateway/G5-protocol-headers.md), [G6](gateway/G6-encryption.md), [G7](gateway/G7-send.md), [G8](gateway/G8-receive.md), [G9](gateway/G9-ledger.md), [G10](gateway/G10-beneficiary-registry.md), [G11](gateway/G11-startup-checks.md)
 - **Tests** (3): [T1](tests/T1-test-configuration.md), [T2](tests/T2-test-runners.md), [T8](tests/T8-preauth-queried.md)
@@ -77,7 +77,7 @@ Other skills built from the same source:
 - **nhcx-payment/payer**: disbursement, payment notices, their acknowledgement and payment enquiries.
 
 # VERSION
-This is nhcx-payer-communication version 1.1.0, built on 2026-10-16. Its protocol tables (workflow ids, statuses, base URLs) were checked against NHA's NHCX package 1.0.0 ([github.com/nha-in/nhcx-package](https://github.com/nha-in/nhcx-package)).
+This is nhcx-payer-communication version 1.1.0, built on 2026-10-18. Its protocol tables (workflow ids, statuses, base URLs) were checked against NHA's NHCX package 1.0.0 ([github.com/nha-in/nhcx-package](https://github.com/nha-in/nhcx-package)).
 
 - Record it when the work starts: `nhcx-plan/knowledge.json` and the `target` of `nhcx-plan/progress.json` carry `skill` and `skill_version`, and the header of `nhcx-plan/report.html` shows them.
 - If a later prompt runs with a different version of this skill than the one recorded, say so to the user before continuing, log it as a `corrected` entry naming both versions, and re-check the steps already done against the specs that changed.

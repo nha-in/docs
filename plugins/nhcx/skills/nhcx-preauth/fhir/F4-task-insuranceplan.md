@@ -10,8 +10,8 @@ Asks the payer for its package master for one policy and this facility. The paye
 - The Task carries no `id`, no `authoredOn`, no `requester`, no `owner` and no `description`. The facility is named only by the `providerId` input.
 - Inputs carry no display.
 - At least one input is required. Both go when both are known, which is the more precise lookup. With neither the send is refused: "A plan request needs a policy code or the facility's HFR ID."
-- The case number is not in the bundle. It travels as `x-hcx-workflow_id` (A3) [REF](../references/PAYERS.md#markers).
-- A master already held by this facility for the same payer and policy is copied onto the case instead of asking again. Only "Fetch again" always sends this Task.
+- The case number is not in the bundle, nor in the headers: the plan is the hospital's under the policy, never a case's, so the request travels with `x-hcx-workflow_id` `1` (A3), as the live PMJAY provider sends it and PMJAY answers it [PAYER](../references/PAYERS.md#markers).
+- The request goes out by itself when a validation opens a case that holds no plan ([D10. claim_plan](../database/D10-claim-plan.md)). A master already held by this facility for the same payer and policy is copied onto the case instead of asking again. Only "Refetch" always sends this Task.
 
 #### F4F. FIELDS
 

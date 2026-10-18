@@ -38,7 +38,7 @@ Then a block **"How a claim starts"** with two switches, both on by default ([D1
 
 | Switch | Help text |
 |---|---|
-| A claim needs a registered patient | "On, the desk picks a patient from the register before searching a policy. Off, it may also start a claim for a walk-in on the identifiers alone." |
+| A claim needs a registered patient | "On, the desk picks a patient from the register before searching a policy. Off, it may also start a claim for a walk-in on the identifiers alone." The switch sets the wording of [S1. Search Policy](S1-search-policy.md)'s Patient card; the desk may always press Skip there, because the admission is linked later, before the claim. |
 | Ask for the member id at the start | "On, the member id is offered as an identifier beside the ABHA number and the mobile number. Off, the search starts from the ABHA number or the mobile number only." |
 
 Save rules, each a red flash: "Enter the facility name.", "Enter the facility's HFR id." (only when editable here), "Enter the NHCX participant code.", "A participant code is digits followed by @hcx." Success: "NHCX settings saved."
@@ -73,7 +73,7 @@ How rotation runs, in order:
 
 Messages, each a red flash: "That is not an RSA private key.", "The certificate does not belong to that private key.", "A key is already staged; retire or replace it first.", and the Activate refusal above. Success flashes: "New key staged. Download its certificate and upload it to the registry.", "Key activated. The previous key still opens messages until it is retired.", "Previous key retired."
 
-**Card 4: Participants on the exchange.** The participant master ([D32. participant](../database/D32-participant.md)): "Every payer, provider and TPA registered on NHCX in the last <windowYears> years, government and private, pulled from the participant registry and refreshed every 24 hours. The payer picker reads from this list." (the window is [D32. participant](../database/D32-participant.md)'s setting: 1 in production, 10 in the sandbox) Three tiles (Payers, Providers, TPAs), each with the active count and "<n> government · <n> private" under it; the line "Last refreshed <when>." with an amber chip "Older than a day" when stale, or "Not pulled yet. The list fills on the first payer search, or on Refresh now."; then a Role dropdown and a Find box over a scrollable table (Name, Participant code, Kind as a chip, State) of up to 200 rows. Header action "Refresh now" posts to `settings/nhcx/participants/refresh`, pulls every role for both kinds ([G4. Registry and Certificates](../gateway/G4-registry.md) `fetch_participants`) and flashes "Participant list refreshed: <n> payers, <n> providers, <n> TPAs."; a registry failure flashes red and changes nothing. The schedule ([SCAFFOLDING.md](../references/SCAFFOLDING.md), section 7) does the same daily.
+**Card 4: Participants on the exchange.** The participant master ([D32. participant](../database/D32-participant.md)): "Every payer and TPA registered on NHCX in the last <windowYears> years, government and private, pulled from the participant registry and refreshed every 24 hours. The payer picker reads from this list." (the window is [D32. participant](../database/D32-participant.md)'s setting: 1 in production, 10 in the sandbox). The master holds payers and TPAs only: providers are never pulled, and rows of any other role left from an earlier pull are dropped on refresh. Two tiles (Payers, TPAs), each with the active count and "<n> government · <n> private" under it; the line "Last refreshed <when>." with an amber chip "Older than a day" when stale, or "Not pulled yet. The list fills on the first payer search, or on Refresh now."; then a Role select and a Find box over a scrollable table (Name, Participant code, Kind as a chip, State) of up to 200 rows. Header action "Refresh now" posts to `settings/nhcx/participants/refresh`, pulls the payer and TPA roles for both kinds ([G4. Registry and Certificates](../gateway/G4-registry.md) `fetch_participants`) and flashes "Participant list refreshed: <n> payers, <n> TPAs."; a registry failure flashes red and changes nothing. The schedule ([SCAFFOLDING.md](../references/SCAFFOLDING.md), section 7) does the same daily.
 
 **Card 5: Hosted participants**, only when [G2. Configuration and Participants](../gateway/G2-configuration.md) lists `participants`: one read-only row per extra hosted code (code, name, whether it shares the default key), with G11 check 4's outcome. Hosted participants are configuration; the screen shows them and does not edit them.
 
@@ -107,9 +107,9 @@ The arrangement below is the reference implementation's [REF](../references/PAYE
 |  Checks: token ok · record ok · certificate match · endpoint ok  |
 |------------------------------------------------------------------|
 | [Card] Participants on the exchange             [(refresh) Refresh now]
-|  PAYERS          PROVIDERS          TPAS                         |
-|  250             12,927             29                           |
-|  49 gov · 201 pvt 10,380 gov · 2,547 pvt  0 gov · 29 pvt         |
+|  PAYERS                     TPAS                                 |
+|  250                        29                                   |
+|  49 government · 201 private  0 government · 29 private          |
 |  Last refreshed 16 Oct 2026 13:32.                               |
 |  Role [Payers v]  Find [sha        ]                             |
 |  SHA HP          <payer code> [Government]   Himachal Pradesh    |
@@ -121,6 +121,7 @@ The arrangement below is the reference implementation's [REF](../references/PAYE
 |------------------------------------------------------------------|
 ```
 
+- Every control is the host's own component of that kind (card, switch, select, table, chip, dialog, flash), as L1 records it; the screen sits among the host's own facility settings.
 - Fingerprints are shown in pairs of hex with colons; a click copies them.
 - Users without the facility-settings permission see every field read-only and no buttons except Re-check.
 
@@ -131,5 +132,5 @@ The arrangement below is the reference implementation's [REF](../references/PAYE
 4. Download certificate (staged or active): the certificate PEM only.
 5. Activate: after the registry check passes, rotate the slots and reload the gateway.
 6. Retire: after the confirm, empty the previous slot.
-7. Refresh now: pull the participant list for every role and kind, upsert the master, flash the counts.
+7. Refresh now: pull the payer and TPA lists for both kinds, upsert the master, drop rows of other roles, flash the counts.
 8. Breadcrumb "Settings": back to the HMIS's settings page.

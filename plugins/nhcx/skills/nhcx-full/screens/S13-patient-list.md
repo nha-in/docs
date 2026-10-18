@@ -1,6 +1,8 @@
 # S13. Patient List Screen
 
-> **Existing HMIS screen.** Most HMIS already have this screen. Do not rebuild it: add only what NHCX needs (the fields and actions marked for NHCX below, such as ABHA number and address, HPR id, registration and qualification) to the target's own screen, and record anything else as `found` in discovery.
+> **Existing HMIS screen.** Most HMIS already have this screen. Do not rebuild it: add only what NHCX needs (the fields and actions marked for NHCX below, such as ABHA number and address, HPR id, registration and qualification) to the target's own screen, built from the host's own components, and record anything else as `found` in discovery.
+>
+> **ABHA additions are reused, never asked.** When the HMIS already has an ABDM (M1) module (ABHA create, link or verify, the ABHA number on the patient, its session token), L1.3 finds it, L2 maps to it, and the ABHA additions on this screen are not built: the module's own screens and data are used as they are. This is never an L1.A question. Only an HMIS without such a module builds them ([A19. ABHA Create and Verify (ABDM M1)](../apis/A19-abha-m1.md)).
 
 #### S13R. ROUTE
 patients/list
@@ -10,7 +12,7 @@ Optional query parameter: `q` (the search term). Example: `patients/list?q=9876`
 Page title: Patient directory. It is the landing screen of the Patients menu.
 
 #### S13D. DESCRIPTION
-The hospital's patient directory. The front desk uses it to find a registered patient, open the chart, or start a visit or admission. It is also where a patient is found before an admission is created, and an admission is what a claim is later linked to (S4).
+The hospital's patient directory. The front desk uses it to find a registered patient, open the chart, or start a visit or admission. It is also where a patient is found before an admission is created, and an admission is what a claim is later linked to, on the case's Claim tab ([S4. Pre-authorisation Details and Admission Link](S4-claim-creation-form.md)).
 
 Search:
 - One free text box. The term is trimmed and matched as a "contains" match against five fields: full name, MRN, mobile number, ABHA number and ABHA address.
@@ -34,9 +36,9 @@ Card title: "<n> patient(s)", where n is the number of rows shown.
 
 Empty state (no rows): "No patient matches that search."
 
-NHCX use: a "Register with ABHA" button beside the register button runs the ABHA service first ([A19. ABHA Create and Verify (ABDM M1)](../apis/A19-abha-m1.md): verify an existing ABHA by its number or mobile OTP, or create one from an Aadhaar OTP) and opens the registration form S14 filled from the profile; a person already on the register under that ABHA is opened instead. Each row also offers "Link ABHA" (none on file) or "Verify ABHA" (one on file), which writes the verified ABHA number and address onto the row; **"Search insurance policy"**, which opens the policy search [S1. Search Policy](S1-search-policy.md) prefilled with the patient's ABHA number (else the mobile number; the desk may switch to Member ID) and carries the patient through [S2. Select Policy](S2-select-policy.md), so the case that opens is linked to the patient from the start; and **"Claims"**, which opens the claim list [S5. Claim Master](S5-claim-master.md) filtered to the patient's cases. Opening a case for a patient needs no admission yet: the admission is linked later on S4.
+NHCX use: a "Register with ABHA" button beside the register button runs the ABHA service first ([A19. ABHA Create and Verify (ABDM M1)](../apis/A19-abha-m1.md): verify an existing ABHA by its number or mobile OTP, or create one from an Aadhaar OTP) and opens the registration form S14 filled from the profile; a person already on the register under that ABHA is opened instead. Each row also offers "Link ABHA" (none on file) or "Verify ABHA" (one on file), which writes the verified ABHA number and address onto the row; **"Search insurance policy"**, which opens the policy search [S1. Search Policy](S1-search-policy.md) prefilled with the patient's ABHA number (else the mobile number; the desk may switch to Member ID) and carries the patient through [S2. Select Policy](S2-select-policy.md), so the case that opens (after the validation gate of [S2. Select Policy](S2-select-policy.md)) carries the patient from the start; and **"Claims"**, which opens the claim list [S5. Claim Master](S5-claim-master.md) filtered to the patient's cases. Opening a case for a patient needs no admission yet: a pre-authorisation may be sent before admission, and the IPD admission is linked later on the Claim tab (S4).
 
-The ABHA column matters for claims. When a payer confirms a policy, the claim is linked to a current inpatient stay of a patient whose ABHA number matches the policy's ABHA, compared on digits only (S4). A patient registered without an ABHA number cannot be matched, so the operator can scan this column to see whether the ABHA was captured at registration.
+The ABHA column matters for claims. ABHA is the patient key across the exchange: the IPD stays offered for a claim, and the health records offered as its documents, are those of the patients whose ABHA number has the case's digits, compared on digits only (S4). A patient registered without an ABHA number cannot be matched, so the operator can scan this column to see whether the ABHA was captured at registration.
 
 Data: [D3. patient](../database/D3-patient.md)
 
@@ -75,4 +77,4 @@ The arrangement below is the reference implementation's [REF](../references/PAYE
 3. Register patient: go to the Patient Registration Form S14 in create mode.
 4. Patient name link: go to the Patient Detail screen S15 for that patient.
 5. OPD: open the new OPD visit form with this patient preselected.
-6. Admit: open the new IPD admission form with this patient preselected. An admission created here is what the Claim Creation Form S4 later links a claim to.
+6. Admit: open the new IPD admission form with this patient preselected. An admission created here is what the Claim tab (S4) later links a claim to.

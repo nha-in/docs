@@ -13,6 +13,7 @@ PMJAY pays with a payment notice ([C10. Payment Notice](../callbacks/C10-payment
 
 1. [S12. Payments](../screens/S12-payments.md) on the approved claim: wait for the payment notice.
 2. [S9. Pre-authorisation](../screens/S9-preauthorisation.md) on the pending claim: ask for the status; wait; then cancel with a reason; wait.
+3. [S9. Pre-authorisation](../screens/S9-preauthorisation.md) on the approved claim of [T17. PMJAY Claim Through the Role Walk](T17-pmjay-claim-adjudicated.md): try to cancel its pre-authorisation.
 
 #### T18L. CLI
 
@@ -20,9 +21,11 @@ PMJAY pays with a payment notice ([C10. Payment Notice](../callbacks/C10-payment
 2. [A6. Task Submit (cancel, status, reprocess, release)](../apis/A6-task-submit.md) status on the pending leg; wait for the refusal.
 3. [A14. Adjudicator User Role](../apis/A14-adjudicator-user-role.md) on the same leg, as the source of its state.
 4. [A6. Task Submit (cancel, status, reprocess, release)](../apis/A6-task-submit.md) cancel on the pending leg; wait for [C7. Cancel Reply](../callbacks/C7-cancel-on-submit.md).
+5. [A6. Task Submit (cancel, status, reprocess, release)](../apis/A6-task-submit.md) cancel on the pre-authorisation of the [T17. PMJAY Claim Through the Role Walk](T17-pmjay-claim-adjudicated.md) claim, whose claim is decided.
 
 #### T18X. EXPECT
 
 - The payment notice is matched by its claim number and acknowledged under PMJAY's acknowledgement workflow id; [S12. Payments](../screens/S12-payments.md) shows it. PMJAY's sandbox pays on its own schedule [SANDBOX](../references/PAYERS.md#markers): a notice that does not arrive within the wait is `blocked`, cause `sandbox`, not a failure.
-- The status enquiry is refused as PAYERS.md says, and the refusal is recorded as the expected answer (a pass), with the role from [A14. Adjudicator User Role](../apis/A14-adjudicator-user-role.md) shown as the case's state.
+- The status enquiry goes out under workflow id `1`; it is refused as PAYERS.md says, and the refusal is recorded as the expected answer (a pass), with the role from [A14. Adjudicator User Role](../apis/A14-adjudicator-user-role.md) shown as the case's state.
 - The cancel is answered and the pending leg ends `cancelled`.
+- A cancel of the approved claim's pre-authorisation ([T17. PMJAY Claim Through the Role Walk](T17-pmjay-claim-adjudicated.md), its claim decided) is refused before any call with "The payer has decided the claim; the pre-authorisation can no longer be cancelled."

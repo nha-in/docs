@@ -22,6 +22,8 @@ Two claims with a pre-authorisation sent and still pending (no decision taken).
 
 #### T9X. EXPECT
 
+- The status enquiry goes out under workflow id `1`, never the leg's correlation id, and is offered on [S9. Pre-authorisation](../screens/S9-preauthorisation.md) only while the pre-authorisation is `submitting`.
 - The status answer names the case's stage and is shown on [S9. Pre-authorisation](../screens/S9-preauthorisation.md) without changing the leg's status.
 - The cancel is answered and the second leg ends `cancelled`.
+- A cancel is refused by the application only once a claim on the case has been decided by the payer ("The payer has decided the claim; the pre-authorisation can no longer be cancelled.", T10. IRDAI Claim Approved, Part-approved and Rejected (in nhcx-claim), T18. PMJAY Payment Notice, Status Refusal and Cancel (in nhcx-payment)); with no claim sent, or a claim still with the payer, it goes out.
 - Where the payer refuses the cancel of a decided case, the first leg returns to the status it had before the cancel (`approved`), and the refusal is shown. Where the sandbox payer accepts it instead, record that as `skipped` for this check with the reason, never as a pass.

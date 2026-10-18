@@ -12,16 +12,16 @@ This is the one leg the payer starts. It posts a payment notice when money moves
 2. A notice whose correlation id is already on a row is a redelivery and is ignored.
 3. The claim number is read from the `CLN`-typed identifier on the PaymentNotice, else the PaymentReconciliation, else the Task, else the first entry's untyped identifier. It is matched against `claim.claim_no`, then against the `claim_ref` of D20 and D18 (a cancellation retires numbers). No match: the notice is `unmatched` and nothing is stored.
 4. If a row on the same claim has the same `notice_id` (the payer sends one notice when the transfer is initiated and one when it clears [PAYER](../references/PAYERS.md#markers)), that row is updated with the new notice, its acknowledgement is reset (`ack_status` `pending`, `ack_txn_id`, `ack_correlation_id`, `acknowledged_at`, `ack_error` cleared) and its D22 rows are replaced. Otherwise a new row is inserted.
-5. The acknowledgement is sent at once (below). A failed acknowledgement does not fail the callback.
+5. The acknowledgement is sent at once (below), right after the billing posting of step 6. A failed acknowledgement does not fail the callback.
+6. Before the acknowledgement, a notice that reports money that moved is **posted to the HMIS's billing** (below). A failed posting does not fail the callback either, and the acknowledgement still goes.
 
-6. The payment is **posted to the HMIS's billing** (below). A failed posting does not fail the callback either.
+**Posting to the HMIS's billing.** A payment notice is money the hospital has received; recording it on the claim alone leaves the admission's bill unpaid in the HMIS and the finance desk reconciling by hand. So a notice that reports money that moved is posted to the HMIS's own billing or accounts module through one service hook, `billing.post_payer_payment(claim, payment)`, which the L2 mapping binds to the HMIS's payment records (L1.3 `billing` in `discovery.json`; [SCAFFOLDING.md](../references/SCAFFOLDING.md), section 4, Billing).
+- **Money that moved:** `payment_status` (case ignored) is `paid`, `cleared`, `complete` or `completed`; or the row has an `amount` and a `utr` and its status is not `initiated`, `pending` or `queued`. Anything else, or no amount, is refused: "Nothing has been paid on this notice yet; there is no payment to post."
+- **The account:** the billing account of the linked admission (D9 `encounter_id`), else the patient's open account at the facility. None: `billing_status` `failed` with "The case is not on an encounter with a billing account; open the account first." and that refusal.
+- **What is posted:** one payment record on that account for `amount`, issuer the insurer, reference = `utr`, dated when the notice was received, narration the payer's disposition (else "NHCX payment on claim `<claim number>`") and a note naming the claim number; the account is then rebalanced. The record is tagged with this row's id, so a second posting of the same row (a notice about the same payment, a second click) updates that record instead of adding money twice. Nothing else is posted: the shortfall between billed and approved is not written to the bill.
+- **Outcome:** `posted` with `billing_ref` (the HMIS record's id) and `billing_posted_at`, flash "Posted to the hospital bill (account `<account name>`)."; a failure writes `failed` with `billing_error` and refuses "The payment could not be posted to the bill: `<error>`".
 
-**Posting to the HMIS's billing.** A payment notice is money the hospital has received; recording it on the claim alone leaves the admission's bill unpaid in the HMIS and the finance desk reconciling by hand. So every `paid` or `cleared` notice that counts towards `paid_total` is posted to the HMIS's own billing or accounts module through one service hook, `billing.post_payer_payment(claim, payment)`, which the L2 mapping binds to the HMIS's receipt and adjustment records (L1.3 `billing` in `discovery.json`; [SCAFFOLDING.md](../references/SCAFFOLDING.md), section 4, Billing). What it posts, against the bill or account of the linked admission (D9 `encounter_id`):
-- a **receipt** for `amount` on `payment_date`, mode "insurer" or the HMIS's equivalent, payer = the claim's `payer_name`, reference = `utr`, narration = the claim number and the payer's disposition;
-- when the claim is decided and this is the clearing notice, an **adjustment** for the shortfall: the claim's billed amount (D20 `requested_amount`) minus the sum approved (D20 `approved_amount`), as the HMIS's payer-deduction or write-off type, with the payer's deduction reasons (F9. ClaimResponse (in nhcx-preauth) per-item `deduction_reason`) in the narration. The hospital decides on its own screens whether the shortfall is charged to the patient; the posting records it, it does not bill anyone.
-A notice that updates an earlier one (same `notice_id`) reverses the earlier receipt and posts again, so the bill never carries two receipts for one UTR. An HMIS with no billing module (`billing` absent in discovery) binds the hook to a no-op that writes `billing_status = 'none'`, and S12 says so.
-
-**Billing statuses** (`billing_status`): `pending` (not posted yet), `posted` (with `billing_ref`, the HMIS receipt id), `error` (with `billing_error`), `none` (no billing module). `error` to `posted` by "Post to billing" on S12.
+**Billing statuses** (`billing_status`): empty (nothing posted yet), `posted`, `failed`. S12 "Post to bill" posts the row again, whatever its status.
 
 **Acknowledgement statuses** (`ack_status`, exact strings): `pending`, `sent`, `error`.
 
@@ -56,10 +56,10 @@ A notice that updates an earlier one (same `notice_id`) reverses the earlier rec
 | acknowledged_at | TEXT | null | When the acknowledgement went |
 | ack_error | TEXT | null | Why the acknowledgement failed |
 | notice_id | TEXT | null | `PaymentNotice.id`; a later notice with the same id updates this row. Migration only |
-| billing_status | TEXT | NOT NULL, default `pending` | `pending`, `posted`, `error`, `none`: whether the payment reached the HMIS's billing. Added by migration |
-| billing_ref | TEXT | null | The HMIS receipt (and adjustment) ids the posting created, as the HMIS shows them. Added by migration |
+| billing_status | TEXT | null | empty (not posted yet), `posted`, `failed`: whether the payment reached the HMIS's billing. Added by migration |
+| billing_ref | TEXT | null | The id of the HMIS payment record the posting created or updated. Added by migration |
 | billing_error | TEXT | null | Why the posting failed. Added by migration |
-| posted_at | TEXT | null | When the posting succeeded. Added by migration |
+| billing_posted_at | TEXT | null | When the posting succeeded. Added by migration |
 
 #### D21K. KEYS AND INDEXES
 - Primary key `id` (integer).

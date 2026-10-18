@@ -8,6 +8,12 @@ Every FHIR resource the application builds for NHCX or reads from a hospital's m
 |---|---|---|---|---|
 | [F1](../fhir/F1-bundle.md) | Bundle | both | The envelope of every message: ids, profiles, entry order and absolute references; what this payer wraps its answers in and how it unwraps a hospital's bundle. | [A5](../apis/A5-query-request.md), [A12](../apis/A12-txn-fhir.md), [A15](../apis/A15-case-exchange.md), [C1](../callbacks/C1-callback-door.md), [C9](../callbacks/C9-communication.md) |
 
+## Pre-authorisation and claim
+
+| # | Resource | Direction | What it is | Used by |
+|---|---|---|---|---|
+| [F9](../fhir/F9-claimresponse.md) | ClaimResponse | sent | This payer's acknowledgement and verdict: outcome and claim-level adjudication from the decision, per-item adjudication from the line decisions, totals, the case number as preAuthRef, the remarks in the disposition. | [A13](../apis/A13-adjudicate.md), [A15](../apis/A15-case-exchange.md) |
+
 ## Queries and payment
 
 | # | Resource | Direction | What it is | Used by |

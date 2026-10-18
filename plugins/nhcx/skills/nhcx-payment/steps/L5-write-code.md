@@ -15,6 +15,8 @@ Pick the lowest `order` not yet `written`. Open every spec it implements, the sp
 - Take field sources from mapping.json, never from guesses.
 - Take NHCX facts (paths, headers, profiles, codes, workflow ids) from the knowledge source; when it contradicts a spec on protocol, follow it and log a `corrected` entry.
 - Match the target's conventions recorded in code-plan.json.
+- Build every screen from the host components its `host_components` names: the host's type-ahead for a search-as-you-type field, its select, table, chip, card, accordion, dialog, date picker, file input, flash or toast, and its tabs with a dot badge. Never write a second component for a kind the host has; for a kind it lacks, write the smallest one that does the job, styled with the host's tokens, and record it in code.json. The result looks and behaves the same in every HMIS because each spec's behaviour is the same and only the parts are the host's.
+- Use the HMIS's own M1 when discovery found one: its ABHA field and lookup, its ABHA screens and its session token. A19 code is written only when `abdm.m1` is false.
 - Database changes go through the target's migration tool, never by editing the schema by hand.
 - Secrets (client secret, private key, api keys) come from configuration, never from code.
 

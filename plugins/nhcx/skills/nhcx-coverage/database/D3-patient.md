@@ -4,11 +4,9 @@
 One row is one registered patient; primary key `id`; parent table [D1. organization](D1-organization.md) (`managing_org_id`).
 
 #### D3D. DESCRIPTION
-The patient register. A claim is linked to a patient through the admission: the claim's ABHA number is compared digits-only with `abha_number` here, and the patient of the chosen current IPD stay is written to [D9. claim](D9-claim.md) `patient_id`.
+The patient register. **The ABHA number is the patient key across the exchange**: a claim is linked to a patient through the admission (the claim's ABHA number is compared digits-only with `abha_number` here, and the patient of the chosen current IPD stay is written to [D9. claim](D9-claim.md) `patient_id`), and the health records a claim may attach ([D28. claim_document](D28-claim-document.md) "From records") are those of every patient holding the case's ABHA digits, whether or not a patient is linked. When the HMIS already has an ABDM (M1) module, its ABHA is the one read; it is reused without asking.
 
-Once linked, the claim-side bundles take the patient from this row, falling back to what the payer returned on the claim:
-- eligibility check: `given_name` (else the claim's `beneficiary_name`), `family_name`, `gender`, `birth_date`, `mrn` (as `patientRefId`, else `NA`), `district`, `state`, `phone`.
-- pre-auth and claim: `name`, `gender`, `birth_date`, `phone`.
+Once linked, the pre-authorisation and claim bundles take `name`, `gender`, `birth_date` and `phone` from this row, each falling back to what the case holds from the search and the payer (D9), and the ABHA number from the case, else from this row ([F15. Patient](../fhir/F15-patient.md)). The eligibility check reads nothing from this row: it sends identifiers only. Before a patient is linked (a pre-authorisation sent before admission) the bundles are built from the case alone.
 
 `abha_number` and `abha_address` are written by hand on the form, or, better, by the ABHA service through [A19. ABHA Create and Verify (ABDM M1)](../apis/A19-abha-m1.md): a verified or newly created ABHA, with the name, gender, date of birth and mobile the service holds filling what the form left blank. The ABHA number is unique across patients, so a second registration under the same ABHA is refused ("Another patient is already registered with that ABHA number").
 

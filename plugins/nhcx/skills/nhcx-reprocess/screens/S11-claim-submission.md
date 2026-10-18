@@ -3,42 +3,47 @@
 #### S11R. ROUTE
 claims/view/:caseid/claim
 
-This is the Claim tab of the Claim Detail shell S6. Its route is `claims/view/:caseid/claim`. Every form posts to its own endpoint and redirects back to this tab with a flash message. A success message shows green. A failure shows red with the error text.
+The Claim tab of the Claim Detail shell S6. It appears only once a pre-authorisation has been raised; before that a link to it opens the Pre-authorisation tab. Every action posts to its own endpoint, re-reads the case and leaves a flash above the tabs (S6): green with the message, red with the refusal verbatim.
 
 | Endpoint | Purpose |
 |---|---|
+| `POST claims/:caseid/link` / `unlink` | Link or detach the IPD admission (S4. Pre-authorisation Details and Admission Link (in nhcx-preauth)) |
 | `POST claims/:caseid/discharge` | Record how the stay ended |
-| `POST claims/:caseid/claim/documents` | Attach files against the discharge summary and the claim-stage codes (multipart) |
+| `POST claims/:caseid/documents/required` with `stage=claim` | Attach files against the discharge summary and the claim-stage codes (multipart) |
+| `POST claims/:caseid/documents/dismiss` with `stage=claim` | Take a named document off the claim's list |
 | `POST claims/:caseid/documents` with `stage=claim` | Attach any files for the claim (multipart) |
+| `POST claims/:caseid/records/attach` with `stage=claim` | Attach health records found by ABHA (S9. Pre-authorisation (in nhcx-preauth)'s picker) |
 | `POST claims/:caseid/documents/:did/delete` | Remove a document |
 | `POST claims/:caseid/forms` with `stage=claim` | Save one claim-stage form's answers (multipart) |
 | `POST claims/:caseid/claim` | Send the claim, or a query answer (optional field `reply`) |
 | `POST claims/:caseid/status` with `stage=claim` | Ask the payer where the claim stands |
-| `POST claims/:caseid/reprocess` | Send a decided claim back for another look |
-| `POST claims/:caseid/release` | Ask for the unpaid balance of a partly paid claim |
+| `POST claims/:caseid/reprocess` | Send a rejected claim back for another look |
+| `POST claims/:caseid/release` | Ask for the unpaid balance of a part-paid claim |
 
-Breadcrumb: Claims (claims/list, S5) > `<claim number>`
+Breadcrumb: Claims (claims/list, S5) > <case number>
 
 #### S11D. DESCRIPTION
-The claim is filed once the patient has left. This spec covers two tabs of S6: the **Discharge** tab records the discharge against the admission the case is on, shows the discharge summary record filed against the stay (the HDS attachment the claim carries; without one the final diagnosis and discharge notes stand in), and leads on to the discharge verification (S18) and the claim; the **Claim** tab shows the recorded discharge read-only (with a "Record the discharge" button back to the Discharge tab while the stay is open), collects the documents and forms the payer deferred to the claim, and sends the claim. It then shows the payer's verdict, along with the claim's follow-up requests: status, reprocess and balance release. A case not yet on an admission shows, on the Discharge tab, "This episode is not on an admission yet. Pick the stay on the pre-authorisation tab, or admit the patient under IPD first; the discharge is recorded against the stay." with a "Pick the admission" button.
+The claim is filed once the patient has left, against the stay it bills.
 
-**Admission is mandatory for a claim**, unlike the pre-authorisation (S9. Pre-authorisation (in nhcx-preauth)): the claim bills a stay, so without a linked admission the send is refused with "This claim is not on an admission. Link the stay on the pre-authorisation tab first." and the Discharge tab says so (below). The integration decision `claim.admissionRequired` (L1.A) defaults to yes; only a hospital that bills day-care with no HMIS admission answers no, and the claim then goes against the pre-authorisation alone.
+**When the claim can start.** The claim needs a pre-authorisation with status `approved` or `queried`. Until one exists the tab shows a single card titled "Claim": "A claim goes in against an **approved** pre-authorisation, once the patient has left. Get the pre-authorisation answered on the previous tab first." (the proof of presence card, when needed, still shows above it). A `partial` pre-authorisation does not open the claim.
 
-**Discharge intimation (optional tab).** When `claim.dischargeIntimation` (L1.A) is yes, S6 gains a tab **Discharge intimation** before Discharge: it records the discharge (the Discharge card below moves here) and sends the payer a discharge intimation, as the adapter defines it ([PAYERS.md](../references/PAYERS.md): an A6 Task on the pre-authorisation thread, or the payer's own form), shows its acknowledgement, and only then opens the Claim tab. When no, there is no such tab and the discharge is recorded on the Discharge tab as below. The desk is asked for this at integration, never guessed.
+**What the tab shows**, top to bottom:
+1. **Proof of presence** (S18. Beneficiary Verification (in nhcx-coverage), stage `Discharge`), only when the payer or its plan asks for it: a fresh capture whose token rides on the claim. The pre-authorisation's token never serves the claim. Without one, a payer that requires proof of presence gets the Discharge Consent form answered in the bundle instead.
+2. **Link the IPD admission**, or **Linked admission** once linked (S4. Pre-authorisation Details and Admission Link (in nhcx-preauth)): the stay found by the case's ABHA number. The claim needs it.
+3. **Discharge**.
+4. **Documents for the claim**.
+5. **Forms for the claim**.
+6. **Claim**, the send card. **Once the claim has been sent (its status is anything but `draft`) it moves to the top** (under the proof of presence card): the payer's verdict is the first thing to read.
 
-**Queries, by level.** As on the pre-authorisation (S9. Pre-authorisation (in nhcx-preauth)): a line-item query is answered by resubmitting the claim (where the adapter takes one), an order-level query by a Communication on S10. Communication (in nhcx-communication).
+**The admission is mandatory for a claim**, unlike the pre-authorisation (S9. Pre-authorisation (in nhcx-preauth)): the send is refused without a linked admission. The S6 next action "Link the IPD admission" opens this tab once the pre-authorisation is approved and nothing is linked. The integration decision `claim.admissionRequired` (L1.A) defaults to yes; only a hospital that bills day-care with no HMIS admission answers no. When `claim.dischargeIntimation` (L1.A) is yes, the tab gains a "Discharge intimation" step that sends the payer the intimation the adapter defines ([PAYERS.md](../references/PAYERS.md)) before the claim; by default there is none.
 
-**Discharge verification** is on the Verification tab, S18: once the admission is discharged that tab turns into the discharge verification (A18. Biometric Authentication (in nhcx-coverage), stage Discharge), and the fresh token it takes rides on the claim. The admission's token does not serve the claim, whatever its life. Without one, a payer that requires proof of presence gets the Discharge Consent form answered in the bundle instead.**When the claim can start.** The claim needs a pre-authorisation with status `approved` or `queried`. Until one exists, the tab shows a single card titled "Claim": "A claim goes in against an **approved** pre-authorisation, once the patient has left. Get the pre-authorisation answered on the previous tab first." A `partial` pre-authorisation does not open this tab.
+**Queries, by level.** As on the pre-authorisation (S9. Pre-authorisation (in nhcx-preauth)): a query inside the payer's claim verdict, or any query from a payer that takes answers by resubmission, is answered from this tab; a standalone query (a CommunicationRequest) on S10. Communication (in nhcx-communication).
 
-Once open, the tab shows four cards:
-1. Discharge
-2. Documents for the claim
-3. Forms for the claim (only when a form applies)
-4. Claim
+**A claim is never sent again once decided.** No adapter offers a claim resubmission. A decided claim goes back for another look only as a reprocess request, and only when the payer has **rejected** it; an approved or part-approved claim with money still owed asks for its balance instead. A claim refused at the door (it never reached the payer, status `error`) may still be sent again.
 
-**Once the claim has been sent (its status is anything but `draft`), the Claim card moves to the top.** The payer's verdict is the first thing to read, and the rest is the record behind it.
+**The claim locks the pre-authorisation.** Once the claim has gone to the payer (sent, queried or decided; a draft or a claim refused at the door does not count), the Pre-authorisation tab is read only: no enhancement, no change, no send, only Cancel until the payer decides the claim (S9. Pre-authorisation (in nhcx-preauth), core rule). This tab's own cards are never locked by it.
 
-**Polling.** Each load of S6 checks the claim while it is `submitting`, and any status, reprocess or release request still `asking`. S6's header shows "Refresh" while anything is awaited.
+**Polling.** Each load of S6 checks the claim while it is `submitting`, and any status, reprocess or release request still `asking`.
 
 API: [A10. Transaction Related](../apis/A10-txn-related.md), [A11. Transaction Dispatch](../apis/A11-txn-dispatch.md) (poll)
 
@@ -46,23 +51,23 @@ Callback: C6. Claim Reply (in nhcx-claim)
 
 Callback: [C8. Enquiry Reply](../callbacks/C8-enquiry-on-submit.md)
 
-Money shows as `₹12,345`. A missing value shows as `-`.
+Money shows as `₹12,345`; a missing value as `-`. No card shows a correlation id or a transaction id (they are on the Logs tab of [S6. Claim Detail](S6-claim-detail.md)).
 
 ---
 
-**Discharge card.** One form in a two-column grid:
+**Discharge card.** Title "Discharge". One form in a two-column grid:
 
-| Field | Control | Rules / help |
+| Field | Control | Help |
 |---|---|---|
-| Discharge type (required) | Select, blank "Select": `normal` Normal discharge, `lama` LAMA, `dama` DAMA, `death` Death | "Normal discharge, LAMA, DAMA or death in hospital." |
-| Stage (required) | Select, blank "Select": Before Surgery, During Surgery, After Surgery | "Whether that was before, during or after surgery." |
-| Discharge date (required) | Date | |
-| Surgery date | Date | "Leave blank for a conservative case." |
-| Date and time of death | Date and time | "Required when the discharge type is death." |
+| Discharge type (required) | select, blank "Select": `normal` Normal discharge, `lama` LAMA, `dama` DAMA, `death` Death | "Normal discharge, LAMA, DAMA or death in hospital." |
+| Stage (required) | select, blank "Select": Before Surgery, During Surgery, After Surgery | "Whether that was before, during or after surgery." |
+| Discharge date (required) | date picker | |
+| Surgery date | date picker | "Leave blank for a conservative case." |
+| Date and time of death | date and time picker | "Required when the discharge type is death." |
 
-**LAMA / DAMA rule.** When the type is LAMA or DAMA and the stage is Before Surgery or During Surgery, an amber badge "Claimed as LM100 only" appears [PAYER](../references/PAYERS.md#markers). It reads: "The payer accepts only **LM100** for a LAMA / DAMA case that ended before or during surgery, and disqualifies everything the pre-authorisation approved. The claim below quotes it in their place." The claim then quotes the single procedure `LM100` at the plan's rate, quantity the number of days admitted (admission to discharge, at least 1), in place of every pre-authorised line. The display name falls back to "LAMA / DAMA procedure", and the rate falls back to 0 when the plan has no such package.
+**LAMA / DAMA rule.** When the type is LAMA or DAMA and the stage is Before Surgery or During Surgery, a warning chip "Claimed as LM100 only" appears with: "The payer accepts only **LM100** for a LAMA / DAMA case that ended before or during surgery, and disqualifies everything the pre-authorisation approved. The claim below quotes it in their place." [PAYER](../references/PAYERS.md#markers) The claim then quotes the single procedure `LM100` at the plan's rate, quantity the number of days admitted (admission to discharge, at least 1), in place of every pre-authorised line. Its name falls back to "LAMA / DAMA procedure", its rate to 0 when the plan has no such package.
 
-"Save discharge" (primary, save icon) is hidden while the claim is `submitting`. The server refuses the save then too. Validation, each shown as a red flash:
+"Save discharge" (primary, save icon), right-aligned, is hidden while the claim is `submitting`; the server refuses the save then too. Checks, in order, each a red flash:
 - "The claim is with the payer; wait for its answer before changing the discharge."
 - "Choose how the patient was discharged."
 - "Choose whether that was before, during or after surgery."
@@ -73,42 +78,33 @@ Money shows as `₹12,345`. A missing value shows as `-`.
 - "Enter the date and time of death." (type Death with no time of death)
 - "Enter the time of death as well as the date." (a date with no time)
 
-For any type other than Death, the death time is cleared. Success: "Discharge recorded." Saving opens the claim in `draft` when none exists. An `error` claim goes back to `draft`.
+For any type other than Death the death time is cleared. Success: "Discharge recorded." Saving opens the claim in `draft` when none exists; an `error` claim goes back to `draft`. Recording the discharge changes which conditional forms the Forms card lists.
 
-**Documents for the claim card.** It ends with the same "Additional document" row as the pre-authorisation's (S9. Pre-authorisation (in nhcx-preauth)) when `documents.additional` is yes, and it shows the payer's documents (the settlement letter and any attachment of the ClaimResponse, C6. Claim Reply (in nhcx-claim)) in a "From the payer" list once the verdict is in.
+**Documents for the claim card.** Title "Documents for the claim". The same parts and rules as the pre-authorisation's (S9. Pre-authorisation (in nhcx-preauth)), filed at `stage=claim`:
 
-*Requirements form* (posts to `claims/:caseid/claim/documents`). The table has the columns Code, Document (with the package code as a sub-line), Stage (chip), Attached (a link, or "not attached yet"), Choose a PDF (file input `req_<code>`) and "From records" (S9's health-record picker, opened on that requirement; the discharge summary row offers the admission's DischargeSummary record first, so the summary the HMIS already filed is attached as structured data without a scan).
-- The first row is always `HDS` Hospital discharge summary.
-- The other rows are the documents the payer deferred to the claim:
-  - With an auth-requirements ruling, the ruling's requirements that are not due at pre-authorisation.
-  - Without one, the package master's documents for the quoted packages whose stage is `post` (D11's stage rule), and any `pre` document that was not attached at the pre-authorisation stage. Each row carries the stage chip ("Post (claim)", "Both" or "Pre-auth").
+*Requirements.* Table columns: Code, Document (the package code as a muted sub-line), Stage (chip, **only once the authorisation-requirements ruling has been asked**; the discharge summary reads "Post (claim)"), Attached (the newest file under that code, a record opening on its own HMIS page, or "not attached yet"), Choose a PDF (file input `req_<code>`), From records (the records picker opened for that code; on the discharge summary row the admission's DischargeSummary record comes first, so the summary the HMIS already filed goes as structured data without a scan), and an X "Not needed: take it off the list" on every row but the discharge summary.
+- The first row is always `HDS` Hospital discharge summary; it cannot be taken off the list.
+- The other rows are the documents the payer deferred to the claim: with a ruling, its requirements not due at pre-authorisation; without one, the plan's documents for the quoted packages whose stage is `post` (D11's stage rule) and any `pre` document not attached at the pre-authorisation stage. A row the desk took off the list stays off (stored as `claim:<code>`).
 
-The note beside the "Attach chosen files" button reads "The discharge summary is always wanted; the rest are the requirements the payer's ruling deferred to this stage." When nothing else is listed and no summary is attached, it reads "Only the discharge summary is listed, run the authorisation-requirements check on the pre-authorisation tab to learn what else this payer wants with the claim."
+Under the table, the note "The discharge summary is always wanted; the rest are the requirements the payer's ruling deferred to this stage." (when nothing else is listed and no summary is attached: "Only the discharge summary is listed, run the authorisation-requirements check on the pre-authorisation tab to learn what else this payer wants with the claim."), the records picker button and the primary "Attach chosen files". Each code keeps one file; a new one replaces the old. The summary is filed under code and category `HDS`, labelled "Hospital discharge summary". Refusals: "Choose a PDF for at least one of them." and "That is not a document this claim was asked for." The X's flashes and refusal are S9's.
 
-Each code keeps one file, and a new file replaces the old one. The summary is filed under code and category `HDS` with the label "Hospital discharge summary". Other files are filed under their code at the claim stage. Errors: "Choose a PDF for at least one of them." and "That is not a document this claim was asked for." The S9 upload rules also apply: PDF, JPEG, PNG or WebP, at most 10 MB, not empty. A failure part way through adds " (N attached before the failure.)". Success: "N document(s) attached."
+*Everything attached for the claim.* Columns: File (opens in a new tab, a record on its own HMIS page), Filed as (label, code as a muted sub-line), Size, Uploaded, and "Remove" with the confirm "Remove this document from the claim?" (flash "Document removed."). Empty: "Nothing beyond the requirements yet." Below it the upload row: "Files (PDF or image)" (several, required marker), "Filed as" (only the NHCX document codes of S9. Pre-authorisation (in nhcx-preauth), each "<code> - <label>", `CD` by default; never a plan's own codes), "Label", and "Attach". The upload rules of S9 apply: PDF, JPEG, PNG or WebP, at most 10 MB, not empty; " (<n> attached before the failure.)" on a failure part way through; success "<n> document(s) attached."
 
-*Everything attached for the claim.* A table of the claim-stage documents. Columns: File (opens inline in a new tab), Filed as (label with code sub-line), Size, Uploaded, and a "Remove" button with the confirm "Remove this document from the claim?". Empty text: "Nothing beyond the requirements yet." Below it is the upload row: "Files (PDF or image)" (multiple, required), "Filed as" (the ruling's codes, then the common codes listed on S9, default `CD`), "Label", "Attach" and "From records" (S9's picker, filing at `stage=claim`). Hidden field `stage=claim`. Errors: "Choose a PDF or image to attach." plus the upload rules. Success: "N document(s) attached."
+**Forms for the claim card.** Title "Forms for the claim". The payer's questionnaires for the claim leg (D12's rule); with none to show, "The payer lists no forms for the quoted packages yet. Quote the line items first; the forms the package master attaches to them appear here." The forms listed:
+- With a ruling: every form the plan carries for the quoted packages and the policy that the ruling did not name (the ruling's forms were the pre-authorisation's; the rest are answered at discharge).
+- Without a ruling: the quoted packages' forms whose stage is `post` (their claim-stage treatment guideline checklists, PMJAY's claim STQ) and the policy's own forms; the pre-authorisation's forms already answered on S9 are not asked again [PAYER](../references/PAYERS.md#markers).
+- On either: the scheme's Discharge Consent form when the plan carries one, never the Authentication Consent form. Conditional forms only when they apply: the LAMA or DAMA questionnaire once that discharge type is recorded above; the Death questionnaire when the discharge type is Death or the HMIS has the patient declared dead.
+- Sorted by title.
 
-**Forms for the claim card.** The payer's questionnaires to answer for the claim leg (the rule is D12's). The card is left out when no form applies. The forms listed are:
-- With an auth-requirements ruling: every form the master carries for the quoted packages and the policy that the ruling did not name (D12: the ruling's forms were the pre-authorisation's, the rest are answered at discharge), each with the chip "Post (claim)".
-- Without a ruling: the quoted packages' own forms whose stage is `post` (their claim-stage standard treatment guideline checklists, PMJAY's claim STQ; D12 `stage`) and the policy's own forms; the pre-authorisation STQ already answered on S9 is not asked again [PAYER](../references/PAYERS.md#markers).
-- Conditional forms (D12): the LAMA or DAMA questionnaire only once that discharge type is recorded in the Discharge card above; the Death questionnaire only when the discharge type is Death or the HMIS has the patient declared dead. Recording the discharge therefore changes which forms this card lists.
-- Without a stage-Discharge token on the Verification tab (S18), the scheme's Discharge Consent form, even when nothing lists it; its question is an attachment (the signed declaration), so the desk uploads it here, and the claim is refused PAYR-1363 without it [PAYER](../references/PAYERS.md#markers).
+Without a stage `Discharge` token held (S18. Beneficiary Verification (in nhcx-coverage)), the application answers the Discharge Consent form by itself for a payer that requires proof of presence; the claim is refused PAYR-1363 without one or the other [PAYER](../references/PAYERS.md#markers).
 
-Each form is one accordion item titled `<form title> - <answered>/<total> answered`, and several can be open at once. Inside it, the questions sit in a two-column grid. Each question uses the same typed controls and help text as S9. Every form posts multipart to `claims/:caseid/forms` with hidden `form_url` and `stage=claim`. Its own "Save answers" button sits right-aligned under the grid.
-
-Saving follows the same rules as on S9:
-- A blank answer clears the saved answer.
-- A chosen file is attached at the claim stage, labelled with the question text.
-- A file question left empty keeps its earlier file.
-
-The flash reads "Answers saved.", adding " N file(s) attached." when files went, and the page returns to S11.
-
-Answers are kept once per claim, form and question, and each answer is filed against the leg it was last saved on. The counter and prefilled values on this card show only the answers saved on the claim leg. Saving a policy form here moves that answer to the claim leg.
+Each form is an accordion item "<form title> - <answered>/<total> answered", the stage chip beside it only once the ruling has been asked, the questions in a two-column grid with S9's typed controls and help texts, and its own "Save answers". Saving follows S9's rules (blank clears, a chosen file is attached at the claim stage labelled with the question text, a file question left empty keeps its file); flash "Answers saved.", with " <n> file(s) attached." when files went. Answers are kept once per case, form and question, each filed against the leg it was last saved on.
 
 API: A5. Claim Submit (in nhcx-claim) (answered forms)
 
-**Claim card.** Status labels:
+---
+
+**Claim card.** Title "Claim", with the status chip once a claim row exists.
 
 | Status | Label | Tone |
 |---|---|---|
@@ -120,75 +116,74 @@ API: A5. Claim Submit (in nhcx-claim) (answered forms)
 | `rejected` | Rejected | danger |
 | `error` | Error | danger |
 
+Header actions: "Ask where it stands" (help icon, secondary) once the claim is `submitting` or decided (`approved`, `partial`, `rejected`, `queried`), only for a payer that answers a status Task; and the send button when the claim has a send left (none while `submitting` or `queried`).
+
 States of the card:
 
-1. **Not sent** (not yet started, or `draft`). The card shows what the claim will quote. Table columns: Kind (chip: Procedure info, Implant warning), Item (display with code sub-line), Rate, Quantity, Amount. A bold "Total ₹X" line sits right-aligned under it. With a LAMA / DAMA discharge before or during surgery, the table shows only `LM100`. Empty text: "Nothing to claim, quote the line items on the pre-authorisation tab first." Header action: "Submit claim" (primary, send icon), with the confirm "Send this claim to the payer?".
-2. **`submitting`.** The card reads "Claim submitted; awaiting the payer's `on_submit` reply. Use Refresh to check for it, or ask the payer where it stands." Once the payer has acknowledged it (workflow 25, or a `queued` ClaimResponse, C6) it reads "Acknowledged by the payer. The claim is under adjudication." Below it: Sent at, Claimed, Transaction, Correlation. It also shows the Communication pointer (S10) when there is an open query on the claim, the status enquiry rows, and the reprocess rows. Header action: "Ask where it stands" only.
-3. **`error`.** The error text in red, or "The exchange failed.". Header action: the send button. A send the exchange refused is sent again as the same kind. An error the payer answered with (`ClaimResponse.error`, a `response.error` reply, a failed Task's reason) is shown line by line with its process notes and an "Open <title> (PDF)" link when the reply carries a `form`. It is shown, never obeyed: nothing is decided and the claim can be sent again.
+1. **Not sent** (no claim yet, or `draft`). What the claim will quote, a table: Kind (chip: Procedure info, Implant warning), Item (name, code as a sub-line), Rate, Quantity, Amount, then a bold right-aligned "Total ₹<sum>". With a LAMA / DAMA discharge before or during surgery the table shows only `LM100`. Empty: "Nothing to claim, quote the line items on the pre-authorisation tab first." Header: primary "Submit claim" (send icon), behind the confirm "Send this claim to the payer?".
+2. **`submitting`.** "Claim submitted; awaiting the payer's `on_submit` reply. Use Refresh to check for it, or ask the payer where it stands." Once the payer has acknowledged it (workflow 25, or a `queued` ClaimResponse, C6. Claim Reply (in nhcx-claim)): "Acknowledged by the payer. The claim is under adjudication." Then Sent at and Claimed, the status enquiry rows and the reprocess rows.
+3. **`error`.** The error text in the danger colour, or "The exchange failed.", and "What the payer said" when the payer answered with an error (its `ClaimResponse.error` entries, process notes, an "Open <title> (PDF)" link for a `form`). Shown, never obeyed. Header: the send button, the same kind as the send that failed ("Submit claim", or "Answer the query (<workflow>)").
 4. **Decided or queried** (`approved`, `partial`, `rejected`, `queried`):
-   - Three stat tiles: "Claimed"; "Approved" (green when `approved`, amber otherwise); "Status" (the label above).
-   - Detail list: Disposition; Outcome (`<outcome> · <adjudication>`); Claimed under (the claim number sent); Settled at; Correlation; Sent as (button words of the last send); Our reply; and Submitted / eligible, when the payer gave an eligible amount.
-   - The per-item verdict table, as on S9. Columns: Item, Status chip, Eligible, Eligible %, Deducted, The payer's note.
-   - "What the payer says", the payer's query as a code block (S10, query note).
-   - When `queried`, how to reply (below). Otherwise the Communication pointer, when an open query exists.
-   - The status enquiry rows, the reprocess form, and the balance release form.
-   - Header actions: "Ask where it stands", plus the send button when one applies. There is no send button while `queried`.
+   - Three stat tiles: "Claimed"; "Approved" (success tone when `approved`, warning otherwise); "Status" (the label above).
+   - Detail grid: Disposition; Outcome (`<outcome> · <adjudication>`); Claimed under (the claim number sent); Settled at; Sent as (the button words of the last send); Our reply; Submitted / eligible (only when the payer gave an eligible amount).
+   - "What the payer said", as in the `error` state, when the reply carries any.
+   - The per-item verdict table of S9: Item, Status chip, Eligible, Eligible %, Deducted, The payer's note.
+   - On `queried`: the payer's query as a code block, then the reply form when the query is answered here, else the Communication pointer.
+   - Otherwise, the Communication pointer when a standalone query is open on the claim: "The payer has asked <n> question(s) on this leg by CommunicationRequest. The answer goes back as a Communication on the request's own thread, with the documents it asked for, from the Communication tab."
+   - The status enquiry rows.
+   - On `rejected`, not paid in full: the **Reprocess** section (below).
+   - On `approved` or `partial` with something paid and a balance still owed: the **Balance release** section (below).
 
-**Send kinds.** A send button appears only when the claim has a send left. Where the payer takes no resubmission, there is no button.
+**Send kinds.**
 
 | Where the claim stands | Button label |
 |---|---|
 | Not sent / `draft` | Submit claim |
-| `queried` | Answer the query (N) |
-| `approved` / `partial` / `rejected` | Resubmit the claim (16); none for PMJAY [PAYER](../references/PAYERS.md#markers) |
+| `queried` | Answer the query (<workflow id>) [PAYER](../references/PAYERS.md#markers) |
 | `error` | the label of the kind that failed |
+| `approved` / `partial` / `rejected` | no button; refused: "The payer has decided this claim; it goes back for another look as a reprocess request, not as a claim sent again." |
 | `submitting` | refused: "The claim is with the payer; wait for its answer before sending again." |
 
-A decided PMJAY claim goes back only as a reprocess request [PAYER](../references/PAYERS.md#markers). A direct post there is refused with "The payer has decided this claim; it goes back for another look as a reprocess request, not as a claim sent again."
+**Replying to a query** (status `queried`, answered here). A form with the required multi-line field "Reply to the payer's query", the help text "Goes to the payer as the claim query detail, with everything attached and answered on this tab since the query.", and the small primary button "Answer the query (<workflow id>)" (151, or 161 under the sandbox override [SANDBOX](../references/PAYERS.md#markers)). The question being answered is kept, so the card still shows it while the answer is out. A standalone query shows only the Communication pointer with "Open the Communication tab", and the claim is not sent again.
 
-**Replying to a query** (status `queried`). The reply form depends on how the payer raises queries:
-- *Query inside the payer's verdict* (`resubmit` mode, PMJAY, see [PAYERS.md](../references/PAYERS.md)) [PAYER](../references/PAYERS.md#markers). An inline form with a required textarea, "Reply to the payer's query". Help text: "Goes to the payer as the claim query detail, with everything attached and answered on this tab since the query." The small primary button "Answer the query (<workflow id>)" (151, or 161 under the sandbox override [SANDBOX](../references/PAYERS.md#markers)) posts to `claims/:caseid/claim` with `reply`. The question being answered is kept, so the card can still show it while the answer is out.
-- *Query on a separate communication thread* (`communication` mode). Only the pointer to S10, with the button "Open the Communication tab". The claim is not submitted again.
-
-**Submit validation**, in order, each shown as a red flash:
+**Submit checks**, on the server in this order, each a red flash:
 - The send-kind refusals above.
-- On a query answer without text: "Write the reply to the payer's query before answering it."
+- On a query answer with no reply text: "Write the reply to the payer's query before answering it."
+- "Link the patient's IPD admission on the Claim tab before sending the claim."
 - "Record how the patient was discharged before claiming."
 - "A claim goes in against an approved pre-authorisation."
 - "Set the facility's HFR ID and NHCX participant code under Settings before submitting."
-- "Link the admitted patient before submitting."
-- "Enter the admission date on the preauth draft."
+- "Enter the planned admission date on the pre-authorisation."
 - "Quote at least one ICD-10 diagnosis."
 - "Add at least one doctor to the care team."
 - "Add at least one line, the procedure being done."
 
-**Submit call.** API: A5. Claim Submit (in nhcx-claim) (claim, query answer, resubmission)
+The send carries the proof of presence token of stage `Discharge` when one is held. A query answer travels as `x-hcx-status: request.initiated` (NHCX refuses `response.complete` on a submit path with NHCX-1011); a query answer refused at the door leaves the claim `queried`.
 
-The claim becomes `submitting`, and the flash reads "Claim submitted to the payer."
+API: A5. Claim Submit (in nhcx-claim) (claim, query answer)
+
+The claim becomes `submitting`; flash "Claim submitted to the payer."
 
 **Reading the verdict.** Callback: C6. Claim Reply (in nhcx-claim)
 
-**Status enquiry.** "Ask where it stands" behaves as on S9, with `stage=claim`, and is hidden for PMJAY [PAYER](../references/PAYERS.md#markers). Its error when nothing has been sent is "The claim has not been submitted yet." Success: "Status enquiry sent to the payer."
+**Status enquiry.** "Ask where it stands" as on S9, with `stage=claim`, hidden for a payer that answers no status Task (PMJAY) [PAYER](../references/PAYERS.md#markers); a direct post is refused with S9's text. With nothing sent: "The claim has not been submitted yet." Success: "Status enquiry sent to the payer." The Task travels with `x-hcx-workflow_id` `1`.
 
 API: [A6. Task Submit](../apis/A6-task-submit.md) (status)
 
 Callback: [C8. Enquiry Reply](../callbacks/C8-enquiry-on-submit.md)
 
-**Enquiry rows.** Each kind of request (status, reprocess, release) shows under its section in a table with three columns: Asked, The payer said, Answered. Newest is first, at most 5 rows.
-- `asking`: chip "Asking, use Refresh" (info).
-- `error`: chip "Failed" (danger), followed by the error.
-- Otherwise, a chip with the answer: approved or reopened green; partial or queried amber; rejected, refused or not-found red; anything else info. The amount and a muted detail follow the chip.
+**Enquiry rows.** Each kind of request (status, reprocess, release) shows in its own table: Asked, The payer said, Answered; newest first, at most 5. `asking`: chip "Asking, use Refresh" (info). `error`: chip "Failed" (danger) and the error. Otherwise a chip with the answer (approved or reopened success; partial or queried warning; rejected, refused or not-found danger; anything else info), the amount and a muted detail.
 
-**Reprocess form.** Shown when the claim is `rejected`, `partial` or `approved` and has not been paid in full (paid total below the claimed amount).
+**Reprocess** (a section under a rule, heading "Reprocess"). Shown only when the claim is `rejected` and not paid in full. The S6 next action "Ask for a reprocess" appears only on a rejected claim.
 
 | Field | Control |
 |---|---|
-| Why (required) | Select: `claimrejected` Reprocess request due to claim rejected by payer; `partialpayment` Reprocess request due to partial payment by payer; `rejectiondisputed` Rejection disputed, additional evidence provided. Default `partialpayment` when anything was paid or the claim is `partial`, else `claimrejected` |
-| Ask the payer to reprocess the claim | 2-row textarea. Help: "A Task coded reprocess under workflow 36. The payer reopens the claim for a person, and the new verdict arrives on the claim's own thread." [PAYER](../references/PAYERS.md#markers) |
-| Evidence to send with it | One checkbox per document on the claim (label or filename, code muted). Help: "Each rides on the Task as a supportingDocument input." Shown only when documents exist |
+| Why (required) | select: `claimrejected` Reprocess request due to claim rejected by payer (default); `rejectiondisputed` Rejection disputed, additional evidence provided |
+| Ask the payer to reprocess the claim | multi-line text, 2 rows. Help: "A Task coded reprocess under workflow 36. The payer reopens the claim for a person, and the new verdict arrives on the claim's own thread." [PAYER](../references/PAYERS.md#markers) |
+| Evidence to send with it | one checkbox per document on the claim (label or file name, code muted). Help: "Each rides on the Task as a supportingDocument input." Shown only when there are documents |
 
-Button: "Send reprocess request" (primary). The reprocess enquiry rows sit below it. Errors:
-- "Only a claim the payer has decided can be sent back for reprocessing."
+Button: primary "Send reprocess request"; the reprocess rows sit under it. Refusals, in order:
+- "Only a claim the payer has rejected can be sent back for reprocessing."
 - "A claim that has been paid in full cannot be reprocessed."
 - "Say why the claim should be looked at again."
 - "Choose why the claim is being sent back." (a reason the payer's adapter does not allow)
@@ -201,27 +196,22 @@ API: [A6. Task Submit](../apis/A6-task-submit.md) (reprocess)
 
 Callback: [C8. Enquiry Reply](../callbacks/C8-enquiry-on-submit.md)
 
-The row reads `reopened` when the payer accepts, and the claim goes back to `submitting` and waits for the new verdict on its own thread. Otherwise it reads `refused`, with the payer's disposition or description as detail.
+The row reads `reopened` when the payer accepts, and the claim goes back to `submitting` and waits for the new verdict on its own thread; otherwise `refused`, with the payer's disposition or description as detail.
 
-**Balance release form.** Shown when the claim is `approved` or `partial`, something has been paid, and a balance is still owed. The balance is the claimed amount minus the paid total.
+**Balance release** (a section under a rule, heading "Balance release"). Shown when the claim is `approved` or `partial`, something has been paid and a balance is still owed (the claimed amount minus the paid total).
 
 | Field | Control |
 |---|---|
-| Balance to release (₹) (required) | Number, step 0.01, min 0.01, max the balance, prefilled with the balance. Help: "₹X paid of ₹Y." |
-| Note to the payer | 2-row textarea. Help: "A Task coded release, reason partialpayment, under the arbitration workflow (36). The payer reopens the claim for the balance; the payment notice follows on the claim's own thread." [PAYER](../references/PAYERS.md#markers) |
+| Balance to release (₹) (required) | number, step 0.01, min 0.01, max the balance, prefilled with the balance. Help: "₹<paid> paid of ₹<claimed>." |
+| Note to the payer | multi-line text, 2 rows. Help: "A Task coded release, reason partialpayment, under the arbitration workflow (36). The payer reopens the claim for the balance; the payment notice follows on the claim's own thread." [PAYER](../references/PAYERS.md#markers) |
 
-Button: "Ask for the balance" (primary). The release enquiry rows sit below it. Errors:
-- "Say how much of the claim is still owed." (blank, zero, or not a number)
-- "Only a decided claim can have its balance asked for."
-- "A claim that has been paid in full has no balance."
-
-Success: "Balance release request sent to the payer."
+Button: primary "Ask for the balance"; the release rows sit under it. Refusals: "Only a decided claim can have its balance asked for.", "A claim that has been paid in full has no balance.", "Say how much of the claim is still owed." (blank, zero, or not a number). Success: "Balance release request sent to the payer."
 
 API: [A6. Task Submit](../apis/A6-task-submit.md) (release)
 
 Callback: [C8. Enquiry Reply](../callbacks/C8-enquiry-on-submit.md)
 
-The money itself arrives as a payment notice (S12).
+The money itself arrives as a payment notice (S12. Payments (in nhcx-payment)).
 
 Data: [D9. claim](../database/D9-claim.md)
 
@@ -251,62 +241,67 @@ The arrangement below is the reference implementation's [REF](../references/PAYE
 
 ```
 |------------------------------------------------------------------|
-| Claims > NM-000123                                               |
-| <Beneficiary name>   [NM-000123] [Claim: Partially approved]     |
-|                      [Paid ₹40,000]                              |
+| Claims > NM-26-0SE000001                                         |
+| Asha Devi        [NM-26-0SE000001] [Claim: Rejected]             |
 | Next: [Ask for a reprocess]                                      |
 |------------------------------------------------------------------|
-| ... | Pre-authorisation | Communication | *Claim* | Payments     |
+| Overview | Pre-authorisation | *Claim* | Communication | Payments | Logs |
 |------------------------------------------------------------------|
-| [Card] Claim                             [(?) Ask where it stands]|
-|  [Claimed ₹50,000]  [Approved ₹40,000]  [Status Partially appr.] |
-|  Disposition  Outcome  Claimed under  Settled at  Correlation ...|
+| [Card] Discharge verification (S18, stage Discharge; when needed)|
+|------------------------------------------------------------------|
+| [Card] Claim [Rejected]                  [(?) Ask where it stands]|
+|  [Claimed ₹50,000]  [Approved ₹0]  [Status Rejected]             |
+|  DISPOSITION  OUTCOME  CLAIMED UNDER  SETTLED AT  SENT AS        |
 |  Item | Status | Eligible | Eligible % | Deducted | Payer's note |
 |  Asked | The payer said | Answered                               |
-|  Why [Reprocess request due to partial...v]  Ask the payer [___] |
+|  --------------------------------------------------------------  |
+|  Reprocess                                                       |
+|  Why [Reprocess request due to claim rejected v]                 |
+|  Ask the payer to reprocess the claim [______________]           |
 |  Evidence: [ ] Discharge summary  HDS                            |
 |                                        [Send reprocess request]  |
-|  Balance to release (₹) [10000.00]   Note to the payer [______]  |
-|                                          [Ask for the balance]   |
+|------------------------------------------------------------------|
+| [Card] Linked admission (S4)                         [Unlink]    |
 |------------------------------------------------------------------|
 | [Card] Discharge                                                 |
 |  Discharge type [v]            Stage [v]                         |
 |  Discharge date [date]         Surgery date [date]               |
-|  Date and time of death [datetime]                               |
+|  Date and time of death [date time]                              |
 |  [Claimed as LM100 only]  (LAMA / DAMA before or during surgery) |
 |                                             [Save discharge]     |
 |------------------------------------------------------------------|
 | [Card] Documents for the claim                                   |
-|  Code | Document | Stage | Attached | Choose a PDF | From records |
+|  Code | Document | Stage | Attached | Choose a PDF | From records | X |
 |  HDS  | Hospital discharge summary | not attached yet | [file]   |
-|  <note>                                  [Attach chosen files]   |
+|  <note>                     [From records] [Attach chosen files] |
 |  Everything attached for the claim                               |
 |  File | Filed as | Size | Uploaded | [Remove]                    |
-|  [Files...] [Filed as v] [Label____] [Attach] [From records]     |
+|  [Files...] [CD - Clinical document v] [Label____] [Attach]      |
 |------------------------------------------------------------------|
 | [Card] Forms for the claim                                       |
-|  > Authentication consent - 0/2 answered                         |
+|  > Discharge consent - 0/2 answered                              |
 |------------------------------------------------------------------|
 ```
 
-- Before the claim is sent, the order is Discharge, Documents for the claim, Forms for the claim, Claim. After it is sent, the Claim card comes first, as drawn.
-- Stat tiles use two columns on small screens and three on large ones. Detail lists use three columns.
-- The discharge and reprocess / release forms use a two-column grid. Their buttons are right-aligned.
-- The upload row wraps on narrow screens.
-- The Save discharge button disappears while the claim is with the payer.
+- Before the claim is sent the order is admission, Discharge, Documents, Forms, Claim. After it is sent the Claim card comes first, as drawn.
+- Stat tiles: one column on phones, two on small screens, three on large. Detail grids: three columns.
+- The discharge, reprocess and release forms use a two-column grid with the button right-aligned.
+- The Save discharge button is hidden while the claim is with the payer.
 
 #### S11A. ACTIONS
-1. Save discharge: validate and record the discharge, then reload S11.
-2. Attach chosen files: file one document per requirement (the summary under `HDS`), then reload S11.
-3. Attach: file any number of claim-stage documents, then reload S11.
-4. File links: open the document inline in a new browser tab.
-5. Remove: confirm and delete the document. The redirect lands on the Pre-authorisation tab S9, not on S11.
-6. Save answers: store one claim-stage form's answers and files, then reload S11.
-7. Submit claim / Answer the query / Resubmit the claim: confirm (Submit claim only), validate, send the claim, and reload S11 with the card awaiting the payer.
-8. Ask where it stands: send the status Task and reload S11.
-9. Send reprocess request: send the reprocess Task and reload S11. The answer appears in the reprocess rows.
-10. Ask for the balance: send the release Task and reload S11. The payment follows on S12.
-11. Open the Communication tab: go to Communication S10.
-12. Refresh (S6 header): reload S11, which polls the claim and every open request.
-13. Next buttons (S6 header): go to the tab the case waits on, for example "Record the discharge", "File the claim", "Answer the claim query", "Ask for a reprocess", "Send the claim again", "With the payer; ask where it stands", or "Await the payment notice" (S12).
-14. Breadcrumb "Claims": go to the Claim Master S5.
+1. Proof of presence: see S18 (stage Discharge).
+2. Link / Unlink the IPD admission: see S4.
+3. Save discharge: run the checks, record the discharge, re-read the case.
+4. Attach chosen files: file one document per requirement (the summary under `HDS`), re-read the case.
+5. X on a named document: take it off the claim's list.
+6. Attach: file any number of claim-stage documents; From records: attach records found by ABHA.
+7. File link: open the upload in a new tab, or a record on its own HMIS page.
+8. Remove: after the confirm, delete the document, re-read the case.
+9. Save answers: store one claim-stage form's answers and files.
+10. Submit claim / Answer the query: confirm (Submit claim from draft only), run the checks, send the claim, re-read the case with the card awaiting the payer.
+11. Ask where it stands: send the status Task; the answer appears in the enquiry rows.
+12. Send reprocess request (rejected claim only): send the reprocess Task; the answer appears in the reprocess rows.
+13. Ask for the balance: send the release Task; the payment follows on S12.
+14. Open the Communication tab: go to S10.
+15. Refresh (S6 header): re-read the case, polling the claim and every open request.
+16. Breadcrumb "Claims": go to S5.

@@ -44,13 +44,17 @@ read_plan(body):
     plan = first InsurancePlan                       # none -> the except branch above
     values = {plan_identifier (identifier[0].value, else id), plan_title (name),
               plan_type (type[0] display), sum_insured (first plan[].generalCost[].cost.value),
-              policy_documents (requirements on the InsurancePlan itself)}
+              policy_documents (requirements on the InsurancePlan itself and the forms pointed
+              at from coverage[].extension: a form pointed at from coverage is a policy form,
+              asked of every case, never one of the packages under that coverage)}
     benefits = packages from plan[].specificCost[].benefit[] (package master shape)
                merged on the pair (category code, package code) with coverage[].benefit[]
                (indemnity shape), specificCost winning, one row per speciality a code is
                listed under (F5); each with category, code, display, kind, rate,
-               currency, cost_type, conditions, extras (tiers), supporting_info
-    forms = each Questionnaire once per url
+               currency, cost_type, conditions, extras (tiers), supporting_info (a procedure's
+               own forms are pointed at from its plan.specificCost benefit)
+    forms = each Questionnaire once per url, with its D11 stage (pre or post, read from the
+            payer's word else its title; pre when neither says)
     return {values, benefits, forms}
 
 apply_plan(row, parsed, body):

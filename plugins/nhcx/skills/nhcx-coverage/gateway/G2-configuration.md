@@ -14,19 +14,19 @@ In-process:
 | `profiles.is_local(code)` | whether the code is one of the gateway's own |
 | `profiles.owns_key(public_key)` | whether a public key is one of the gateway's own |
 | `identity_for(code)` | the profile plus the ABDM client (G3, G4) acting as it, falling back to the default |
-| `reload()` | re-reads the config and the key store and rebuilds the profiles without a restart; a key that fails to parse leaves the old profiles in place and returns the error. Called by [S19. NHCX Settings](../screens/S19-nhcx-settings.md) after staging, activating or retiring a key |
-| `rotate_key(action, pem = none, cert = none)` | `stage` writes a new key and certificate to the staged slot, `activate` moves staged to active and active to previous, `retire` empties the previous slot; each then calls `reload`. The private key is written to the key store only, never returned, never logged |
+| `slots()` | the three key slots (active, staged, previous) as the settings screen shows them: each slot's fingerprint and since when, and whether the registry's certificate matches the active key |
+| `rotate_key(action, pem = none, cert = none)` | three steps the operator takes from [S19. NHCX Settings](../screens/S19-nhcx-settings.md), in this order, with no restart. `stage` parses the new key (and its certificate, which must carry the key's public half) and writes them to the staged slot; the staged key opens nothing and signs nothing. `register` publishes the staged certificate to the participant registry ([G4. Registry and Certificates](G4-registry.md), the participant's `encryption_cert`), so payers start encrypting with it. `activate` overwrites the active key file with the staged key, keeps the old key (and certificate) in the previous slot and switches every profile that shared the old key in memory; inbound messages then open with the active key first and the previous one second. `retire` deletes the previous slot. The private key is written to the key store only, never returned, never logged. Refusals (code `KEY_ROTATION`): "the staged certificate does not carry the staged key's public half", "that is the active key already", "no certificate is staged; stage the key with its certificate first", "no key is staged", "participant.privateKey is inline PEM, not an @file reference, so the active key cannot be replaced in place; move it to a file first", "no previous key is held" |
 
 Environment URLs (`env`), each overridable under `urls`:
 
 | | `sandbox` (default) | `production` |
 |---|---|---|
-| `urls.nhcx` (NHCX gateway base) | `https://apisbx.abdm.gov.in/hcx/v1` | not published by NHA: shared after sandbox exit; set it from the onboarding letter (one onboarded build was given `https://apisprod.nha.gov.in/hcx/v1`) |
+| `urls.nhcx` (NHCX gateway base) | `https://apisbx.abdm.gov.in/hcx/v1` | `https://apisprod.nha.gov.in/hcx/v1`, the address one onboarded build was given; NHA does not publish it, so confirm it from the onboarding letter [REF](../references/PAYERS.md#markers) |
 | `urls.participant` (participant registry base) | `https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice` | `https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice` |
 | `urls.sessions` (session token endpoint) | `https://dev.abdm.gov.in/api/hiecm/gateway/v3/sessions` | `https://apis.abdm.gov.in/api/hiecm/gateway/v3/sessions` (confirm in the onboarding letter) |
 | `cmId` (`X-CM-ID` on the session call) | `sbx` | `abdm` |
 
-The sandbox values are the verified ones [SANDBOX](../references/PAYERS.md#markers). The production values are the ones the knowledge source publishes (`baseurl.yaml`, `nhcx.sandbox.environments-and-base-urls`), the same table as [CORE.md](../references/CORE.md) section 1; they are **not** a host swap of the sandbox names (`apis.abdm.gov.in/hcx`, `apis.abdm.gov.in/pmjay/hcx` and `live.abdm.gov.in` are wrong). Production is never left to a default: every production URL is set explicitly under `urls` from the onboarding letter, and a production configuration with an unset `urls.nhcx` is a validation error. With `auth.mode` `get-session` and no `urls.sessions`, the session URL is `<urls.participant>/get/session`.
+The sandbox values are the verified ones [SANDBOX](../references/PAYERS.md#markers). The production values are the ones the knowledge source publishes (`baseurl.yaml`, `nhcx.sandbox.environments-and-base-urls`), the same table as [CORE.md](../references/CORE.md) section 1; they are **not** a host swap of the sandbox names (`apis.abdm.gov.in/hcx`, `apis.abdm.gov.in/pmjay/hcx` and `live.abdm.gov.in` are wrong). Each production URL falls back to the default above when `urls` leaves it unset; set every one explicitly from the onboarding letter all the same. Validation refuses only a URL that is not an absolute http(s) URL. With `auth.mode` `get-session` and no `urls.sessions`, the session URL is `<urls.participant>/get/session`.
 
 #### G2D. DESCRIPTION
 
@@ -62,9 +62,7 @@ Keys that matter to sending and receiving:
 | `participant.name` | none | log label |
 | `participant.clientId`, `participant.clientSecret` | required | ABDM credentials from onboarding. Usually `${NHCX_CLIENT_ID}`, `${NHCX_CLIENT_SECRET}` |
 | `participant.privateKey` | required | RSA private key matching the registered encryption certificate: PEM, base64 of PEM, or `@file` (G6 key parsing). The **active** key |
-| `participant.stagedPrivateKey` | none | a key staged for rotation ([S19. NHCX Settings](../screens/S19-nhcx-settings.md)): parsed and checked at load, opens nothing and signs nothing until it is activated |
-| `participant.previousPrivateKey` | none | the key active before the last rotation: tried second on inbound messages ([G8. Receive](G8-receive.md) `decrypt_for`) until it is retired. The three slots are rotated by S19 through `rotate_key`, which rewrites the `@file` targets in the key store and calls `reload` |
-| `keyStore` | the config file's directory | directory the three `@file` keys and their certificates live in; outside the repository, mode 700 |
+| key slots | beside the config file | not configuration keys: the staged and previous keys and certificates are files in the config file's directory (the key store, outside the repository), named by a small slots file there, so the config file itself is never rewritten. Activation needs `participant.privateKey` to be an `@file` reference, because that file is what is overwritten |
 | `participants[]` | `[]` | hosted identities; same fields as `participant`. `clientId` and `clientSecret` both set or both blank; blank key or credentials inherit the default's |
 | `guests` | absent (off) | present turns guests on; `gateway.open`'s `guests` option overrides |
 | `ledger.enabled` | `true` | record every message (G9) |
@@ -140,7 +138,7 @@ apply_defaults(cfg):
     ledger.enabled unset -> true;  ledger.storeBodies unset -> true;  ledger.dir "" -> "data/ledger"
     ledger.retentionDays < 0 -> 0;  log.level "" -> "info"
     defaults, cm = env_table(env)             // production table for "production", sandbox otherwise
-    urls.nhcx "" -> defaults.nhcx  (production: none; validation then fails "urls.nhcx: is required");  urls.participant "" -> defaults.participant
+    urls.nhcx "" -> defaults.nhcx;  urls.participant "" -> defaults.participant
     if urls.sessions == "":
         urls.sessions = auth.mode == "get-session" ? trim_right(urls.participant, "/") + "/get/session"
                                                    : defaults.sessions

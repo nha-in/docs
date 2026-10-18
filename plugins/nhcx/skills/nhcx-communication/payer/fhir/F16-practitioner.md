@@ -23,7 +23,7 @@ The treating team as the hospital declared it. These clinicians work for the pro
 | `Claim.careTeam[].role.coding[0].display` (else text) | D22. case_doctor (in nhcx-preauth/payer) `role` | |
 | position in `careTeam[]` | D22. case_doctor (in nhcx-preauth/payer) `position`; the first is `is_primary` | one doctor of record per case |
 
-Nothing is written back to the hospital about its practitioners: the verdict (F9. ClaimResponse (in nhcx-coverage/payer)) and the Task answers (F10. Task (claim actions and answers) (in nhcx-coverage/payer)) carry the two Organizations only.
+Nothing is written back to the hospital about its practitioners: the verdict ([F9. ClaimResponse](F9-claimresponse.md)) and the Task answers (F10. Task (claim actions and answers) (in nhcx-coverage/payer)) carry the two Organizations only.
 
 #### F16U. USED BY
 - Not referenced by any other spec in this skill.

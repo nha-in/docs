@@ -1,6 +1,6 @@
 # Database
 
-Every table behind the claim, patient and practitioner flows, in one list. Each row links to its full spec in [../database/](../database/INDEX.md), which gives the columns, keys and indexes. D1 to D8 are tables most HMIS already have (extended where NHCX needs a field); D9 to D30 are new for claims.
+Every table behind the claim, patient and practitioner flows, in one list. Each row links to its full spec in [../database/](../database/INDEX.md), which gives the columns, keys and indexes. D1 to D8 are tables most HMIS already have (extended where NHCX needs a field); D9 to D32 are new for claims. D19 (predetermination) and D27 (custom line items) are retired: no screen writes them, and they are kept only so rows written earlier are still read.
 
 ## Master and clinical data
 
@@ -10,7 +10,7 @@ Every table behind the claim, patient and practitioner flows, in one list. Each 
 | [D2](../database/D2-practitioner.md) | practitioner | Doctor or staff member of the facility. | none | none | none | [F8](../fhir/F8-claim.md), [F16](../fhir/F16-practitioner.md) |
 | [D3](../database/D3-patient.md) | patient | Registered patient. | none | none | none | [F15](../fhir/F15-patient.md) |
 | [D8](../database/D8-terminology.md) | terminology | Concept in one code list (a picker), for example one ICD-10 diagnosis with its SNOMED mapping, one department or one payer adapter mapping. | none | none | none | [F8](../fhir/F8-claim.md) |
-| [D32](../database/D32-participant.md) | participant | The participant master: every payer, provider and TPA on the exchange, government and private, pulled from the registry's participant list over a configured window (one year by default, ten in the sandbox) and refreshed daily. Primary key `code`. No parent table. | [S19](../screens/S19-nhcx-settings.md) | none | none | none |
+| [D32](../database/D32-participant.md) | participant | The participant master: every payer and TPA on the exchange, government and private, pulled from the registry's participant list over a configured window (one year by default, ten in the sandbox) and refreshed daily. Primary key `code`. No parent table. | [S19](../screens/S19-nhcx-settings.md) | none | none | none |
 
 ## Claim
 
@@ -51,8 +51,8 @@ The DnC tables give SQLite-style types (`TEXT`, `REAL`, `INTEGER`, `BLOB`). On a
 | `TEXT` holding an ISO instant the application writes (`created_at`, `submitted_at`, `settled_at`, `checked_at`, `requested_at`, `fetched_at`, `answered_at`, `received_at`, `acknowledged_at`, `*_at`) | an aware timestamp | stored in UTC, shown in the facility's zone |
 | `TEXT` holding a **payer-supplied FHIR date** (D9 `plan_period_start`, `plan_period_end`, `patient_dob`; D20 `discharge_date`, `surgery_date`, `death_date`; D21 `payment_date`; D22 `date`) | **text, as received** | a FHIR date may be partial (`2026`, `2026-09`) or carry a time; parsing it to a date column loses or refuses values |
 | `REAL` money | `DECIMAL(14, 2)` | never a float |
-| `INTEGER` used as 0/1 (`inforce`, `auth_required`, `required`, `at_preauth`) | boolean | |
-| `TEXT` named `*_json` | a JSON column | indexed only where a DnK says so |
+| `INTEGER` used as 0/1 (`inforce`, `auth_required`, `required`, `at_preauth`, `excluded`, `success`, `active`, D9 `provisional`) | boolean | |
+| `TEXT` named `*_json`, and the JSON list or object columns (D9 `correlation_ids`, `dismissed_documents`; D10 `policy_documents`; D11 `conditions`, `extras`, `supporting_info`; D12 `items`; D23 `questions`, `reply_documents`; D29 `document_ids`; D32 `raw`) | a JSON column | indexed only where a DnK says so; a list column with a default starts as `[]` |
 | `BLOB` (D28 `data`) | the database's binary type, or file storage with the path in the column | |
 | `TEXT` status columns | text with the DnD values as named constants | not an enum type: payers add statuses |
 

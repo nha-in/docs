@@ -47,7 +47,7 @@ Links inside the package's `docs/README.md` are absolute paths from the machine 
 
 ## ABHA, ABDM's M1
 
-The ABHA on the patient file is created or verified through ABDM's ABHA service ([A19. ABHA Create and Verify (ABDM M1)](../apis/A19-abha-m1.md)), and that is ABDM's HIE-CM milestone M1, not NHCX. The same MCP server serves it (the server is published as `nhcx-docs` and as `abdm-docs`; both answer `catalogue_info`), and it is the only source: the NHCX package has no M1 at all. Read M1 like this:
+The ABHA on the patient file is created or verified through ABDM's ABHA service, and that is ABDM's HIE-CM milestone M1, not NHCX. An HMIS that already has M1 (ABHA create, link and verify, the ABHA identifier, the session token) keeps it: L1.3 finds it, it is reused without asking, and nothing below is read. Only an HMIS without one builds [A19. ABHA Create and Verify (ABDM M1)](../apis/A19-abha-m1.md) from these atoms. The same MCP server serves it (the server is published as `nhcx-docs` and as `abdm-docs`; both answer `catalogue_info`), and it is the only source: the NHCX package has no M1 at all. Read M1 like this:
 
 | Need | Call |
 |---|---|
@@ -62,7 +62,7 @@ Without the MCP, open the same atoms on the ABDM developer portal at the `doc_ur
 
 ## Health records, ABDM's M2
 
-The documents a claim carries ([D28. claim_document](../database/D28-claim-document.md)) are, for the most part, records the HMIS already holds and that its ABDM module files as M2 health records: the discharge summary, the diagnostic reports, the prescriptions, the invoice. Reusing them ("From records" on S9, S10 and S11; SCAFFOLDING section 4a) needs M2's vocabulary, which is ABDM's HIE-CM, read from the same MCP server:
+The documents a claim carries ([D28. claim_document](../database/D28-claim-document.md)) are, for the most part, records the HMIS already holds, found by the case's ABHA number, and that its ABDM module files as M2 health records: the discharge summary, the diagnostic reports, the prescriptions, the invoice. Reusing them ("From records" on S9, S10 and S11; SCAFFOLDING section 4a) needs M2's vocabulary, which is ABDM's HIE-CM, read from the same MCP server:
 
 | Need | Call |
 |---|---|

@@ -1,7 +1,7 @@
 # S6. Claim Detail Screen
 
 #### S6R. ROUTE
-claims/view/:caseid (opens the Eligibility tab)
+claims/view/:caseid (opens the Overview tab)
 claims/view/:caseid/<tab key> (opens that tab; `?tab=<tab key>` is accepted as an alias)
 
 `:caseid` is the case's stable public id (D9 `external_id`, else the row id), **never the claim number**: an accepted cancellation replaces the claim number (C7), and a route keyed on it breaks at that moment.
@@ -10,82 +10,104 @@ Page title: Claim <case number>
 
 Breadcrumb: Claims (claims/list, S5) > <case number>
 
-Companion endpoint: claims/view/:caseid/state (GET, JSON).
+Companion endpoints: claims/view/:caseid/state (GET, JSON), and the case's message log for the Logs tab (GET, JSON).
 
 #### S6D. DESCRIPTION
-The shell for one claim case. It carries a header that says whose case it is and where it stands, a row of next-action buttons that say what the case is waiting for, and a tab bar that walks the episode in the order it happens. Every tab's content is rendered with the page; switching tabs happens in the browser without a reload. An unknown case id shows the standard "Claim" not-found page.
+The shell for one claim case. A header says whose case it is and where it stands, a row of next-action buttons says what the case is waiting for, and a tab bar walks the episode in the order it happens. Switching tabs happens without a reload, and a tab once opened keeps what was typed in it while another tab is shown. An unknown case id shows a "Claim" card reading "Claim not found." A case still provisional (its validation not yet answered in force) is hidden from the lists of [S5. Claim Master](S5-claim-master.md); the desk waits for it on the validation gate of S2. Select Policy (in nhcx-coverage), which opens this screen once the cover is in force.
 
-**Correlation id, everywhere.** Wherever a message or a thread of the exchange is on screen (an eligibility check, the ruling, the package master request, the pre-authorisation and claim legs and each reply on them, a payer's query or notification and the reply to it, a payment notice and its acknowledgement), its `x-hcx-correlation_id` is shown beside it, labelled "Correlation id", in full on hover and copied on a click. It is the one id the hospital, the payer, a capture and the exchange's own logs share, so no tab leaves it out.
+**Ids are shown on the Logs tab only.** Correlation ids and transaction ids appear nowhere on the case except the Logs tab, where the correlation id is shown bare (no label), in full, and copied on a click. No other card, chip, detail list or table of any tab shows either id. The adapter's name is never shown to the desk.
 
 **Polling on load.** NHCX answers every leg asynchronously. The payer's reply normally arrives by callback ([G8. Receive](../gateway/G8-receive.md) hands it to C1), and each load of this screen is the fallback: before anything is drawn, it reads [G9. Ledger](../gateway/G9-ledger.md) once for every leg that is still out with the payer.
 
-| Leg (tab) | Polled while | Poll failure shows |
+| Leg (where it shows) | Polled while | Poll failure shows |
 |---|---|---|
-| Eligibility check (S3) | case status `checking` | muted note "Could not poll the gateway: <error>" on the Eligibility tab |
-| Insurance plan fetch (S7) | plan status `fetching` | muted note "Could not poll the gateway: <error>" on the Insurance plan tab |
-| Auth-requirements ruling (Line items) | ruling status `checking` | nothing; the card keeps saying it is awaiting |
-| Claim submission (S11) | submission status `submitting` | nothing |
-| Predetermination quote (S9) | any quote status `asking` | nothing |
-| Pre-authorisation (S9) | status `submitting` (polls the reply) or `cancelling` (polls the cancellation) | nothing |
-| Status enquiries (S9, S11) | any enquiry status `asking` | nothing |
+| Eligibility check (Overview, S3. Policy Discovery (in nhcx-coverage)) | case status `checking` | muted note "Could not poll the gateway: <error>" on the Validation card |
+| Insurance plan fetch (Pre-authorisation, S7. Insurance Plan (in nhcx-preauth)) | plan status `fetching` | muted note "Could not poll the gateway: <error>" on the Insurance plan card |
+| Auth-requirements ruling (Pre-authorisation, S8. Line Items (in nhcx-preauth)) | ruling status `checking` | nothing; the card keeps saying it is awaiting |
+| Pre-authorisation (S9. Pre-authorisation (in nhcx-preauth)) | status `submitting` (polls the reply) or `cancelling` (polls the cancellation) | nothing |
+| Claim submission (S11. Claim Submission (in nhcx-claim)) | submission status `submitting` | nothing |
+| Status, reprocess and release enquiries (S9. Pre-authorisation (in nhcx-preauth), S11. Claim Submission (in nhcx-claim)) | any enquiry status `asking` | nothing |
 
-The page never reloads itself, because that would throw away whatever is being typed on another tab. The operator presses Refresh instead.
+How the desk learns of an answer is the integrator's decision `responses.check` ([L1.A](../steps/L1-discovery.md)). With `manual` (the default) the page never reloads itself, because that would throw away whatever is being typed on another tab: the operator presses Refresh. With a fixed interval, the case is re-read at that interval only while something is out with the payer (the conditions of the poll table), the Refresh button is not shown, and every form keeps what is typed across the re-read (each form is keyed on its saved values, never rebuilt by a re-read).
 
-**Header.** On the left, the beneficiary name as the heading (the member ID when there is no name yet). On the right, a wrapping row of chips:
+**Header.** One line that wraps on a narrow screen. On the left, the beneficiary name as the heading (the member ID when there is no name yet). On the right, a wrapping row of chips:
 
 1. The case number, info tone.
-2. The stage chip "<Stage>: <Sub-stage>" (values and tones in S5). The stage is recomputed on each load.
-3. When the payer has messages on the case whose status is not `answered`: "1 query awaiting reply" or "<n> queries awaiting reply", warning tone.
+2. The stage chip "<Stage>: <Sub-stage>" (values and tones in [S5. Claim Master](S5-claim-master.md)). The stage is recomputed on each load.
+3. When the payer has queries on the case that are open or whose reply failed: "1 query awaiting reply" or "<n> queries awaiting reply", warning tone.
 4. When money has settled: "Paid ₹<total>", success tone (thousands separators, no decimals).
-5. When any leg is still out with the payer (the same conditions as the poll table): a "Refresh" button with a refresh icon. It reloads this screen on the tab named in the current URL, which runs the polls again.
+5. When any leg is still out with the payer (the poll table) and `responses.check` is `manual`: a "Refresh" button with a refresh icon, spinning while the case is re-read. It reloads this screen on the current tab, which runs the polls again, and clears any flash.
 
-**Next actions.** Below the header, when the case is waiting on the desk, a muted "Next:" label and small buttons. The first button is primary, the rest secondary. Each one opens this screen on the tab where that action lives. They are worked out from the stage and sub-stage, so only a legal action is offered:
+**Next actions.** Below the header, when the case is waiting on the desk, a muted "Next:" label and small buttons. The first button is primary, the rest secondary. Each one opens this screen on the tab where that action lives. They are worked out on the server from the stage and sub-stage, so only a legal action is offered:
 
 | When | Button label | Opens tab |
 |---|---|---|
-| Any payer query unanswered or whose reply failed (always first) | Answer the payer (<n>) | Communication (S10) |
-| Stage `eligibility`, status `draft`, `error` or `not-eligible` | Check the cover | Eligibility (S3) |
-| Stage `eligibility`, eligible, no ready plan | Fetch the package master | Insurance plan (S7) |
-| Stage `eligibility`, plan ready, no line items | Quote the treatment | Line items (S8) |
-| Stage `eligibility`, line items present, draft not saved (`preauth_saved_at` null) | Save the preauth draft | Pre-authorisation (S4 on S9) |
-| Stage `eligibility`, line items present, draft saved | Send the pre-authorisation | Pre-authorisation (S9) |
-| Stage `preauth`/`enhancement`, `queried` | Answer the query (payer that takes answers by resubmission) | Pre-authorisation (S9) |
-| | Answer the payer's query (payer that takes a Communication, when no query is already listed first) | Communication (S10) |
-| Stage `preauth`/`enhancement`, `draft` or `refused` | Send the pre-authorisation | Pre-authorisation (S9) |
-| Stage `preauth`/`enhancement`, `rejected` | Send a fresh pre-authorisation | Pre-authorisation (S9) |
-| Stage `preauth`/`enhancement`, `approved`/`partial`, lines added since | Send the enhancement (<n> added) | Pre-authorisation (S9) |
-| Same, nothing added, no discharge recorded | Record the discharge | Discharge (S11, discharge card) |
-| Same, discharge recorded | File the claim | Claim (S11) |
-| Stage `preauth`/`enhancement`, `requested`/`answered`/`resubmitted` | With the payer; ask where it stands | Pre-authorisation (S9) |
-| Stage `claim`, `queried` | Answer the claim query (resubmission payer), else "Answer the payer's query" | Claim (S11) / Communication (S10) |
-| Stage `claim`, `rejected` or `partial` | Ask for a reprocess | Claim (S11) |
-| Stage `claim`, `requested`/`answered`/`resubmitted` | With the payer; ask where it stands | Claim (S11) |
-| Stage `claim`, `refused`, another send allowed | Send the claim again | Claim (S11) |
-| Stage `claim`, `refused`, no send left | Ask for a reprocess | Claim (S11) |
-| Stage `claim`, any other sub-stage (approved) | Await the payment notice | Payments (S12) |
-| Stage `payment`, a notice not yet acknowledged (or its acknowledgement failed) | Acknowledge the payment notice | Payments (S12) |
-| Stage `payment`, all acknowledged | Settled | Payments (S12) |
+| Any payer query open or whose reply failed (always first) | Answer the payer (<n>) | Communication ([S10. Communication](S10-communication.md)) |
+| Proof of presence required (S18. Beneficiary Verification (in nhcx-coverage)) and not held, while stage `eligibility`, or stage `preauth`/`enhancement` at `draft` or `refused` | Authenticate the beneficiary | Pre-authorisation |
+| Stage `eligibility`, status `draft`, `error` or `not-eligible` | Send the validation | Overview (S3. Policy Discovery (in nhcx-coverage)) |
+| Stage `eligibility`, eligible, no ready plan | Fetch the package master | Pre-authorisation (S7. Insurance Plan (in nhcx-preauth) fetch card) |
+| Stage `eligibility`, plan ready, no line items | Quote the treatment | Pre-authorisation (S8. Line Items (in nhcx-preauth)) |
+| Stage `eligibility`, line items present | Send the pre-authorisation | Pre-authorisation (S9. Pre-authorisation (in nhcx-preauth)) |
+| Stage `preauth`/`enhancement`, `queried`, and the payer takes answers by resubmission or no standalone query is open | Answer the query | Pre-authorisation (S9. Pre-authorisation (in nhcx-preauth)) |
+| Stage `preauth`/`enhancement`, `draft` or `refused` | Send the pre-authorisation | Pre-authorisation |
+| Stage `preauth`/`enhancement`, `rejected` | Send a fresh pre-authorisation | Pre-authorisation |
+| Stage `preauth`/`enhancement`, `approved`/`partial`, lines added since | Send the enhancement (<n> added) | Pre-authorisation |
+| Same, nothing added, no IPD admission linked | Link the IPD admission | Claim (S4. Pre-authorisation Details and Admission Link (in nhcx-preauth) link card) |
+| Same, admission linked, no discharge recorded | Record the discharge | Claim (S11. Claim Submission (in nhcx-claim)) |
+| Same, discharge recorded | File the claim | Claim |
+| Stage `preauth`/`enhancement`, `requested`/`answered`/`resubmitted` | With the payer; ask where it stands | Pre-authorisation |
+| Stage `claim`, `queried`, and the payer takes answers by resubmission or no standalone query is open | Answer the claim query | Claim |
+| Stage `claim`, `rejected` | Ask for a reprocess | Claim |
+| Stage `claim`, `requested`/`answered`/`resubmitted` | With the payer; ask where it stands | Claim |
+| Stage `claim`, `refused` (refused at the door, it never reached the payer), another send allowed | Send the claim again | Claim |
+| Stage `claim`, any other sub-stage (approved) | Await the payment notice | Payments (S12. Payments (in nhcx-payment)) |
+| Stage `payment`, a notice not yet acknowledged (or its acknowledgement failed) | Acknowledge the payment notice | Payments |
+| Stage `payment`, all acknowledged | Settled | Payments |
 
-**Tabs**, in this order. The tab key is the `tab` query value:
+A queried leg whose question came as a standalone query is answered on Communication, through the first button "Answer the payer (<n>)". "Ask for a reprocess" appears only on a rejected claim; a claim refused at the door offers only "Send the claim again", and nothing when no send is left.
 
-| # | Key | Label | Screen |
+Under the next actions sits the flash of the last action: green with the action's message, red with the refusal's text verbatim. Opening another tab clears it.
+
+**Tabs**, in this order. The tab key is the path segment (or the `tab` query value):
+
+| # | Key | Label | What it holds |
 |---|---|---|---|
-| 1 | `eligibility` | Eligibility | S3 |
-| 2 | `plan` | Insurance plan | S7 |
-| 3 | `lines` | Line items | S8 |
-| 5 | `verification` | Verification | S18 (the beneficiary authenticated against their ABHA, at the stage the stay is at) |
-| 6 | `preauth` | Pre-authorisation | S4 (link admission, draft form) and S9 (send, verdict, documents, forms) |
-| 7 | `communication` | Communication | S10 |
-| 8 | `discharge` | Discharge | S11 (the discharge card, the discharge summary on file for the stay, and the way on to Verification and Claim) |
-| 9 | `claim` | Claim | S11 (the bill, the send, the verdict and settlement) |
-| 10 | `payments` | Payments | S12 |
-
-Numbers 4 is kept free: the Validate tab was removed in 1.7.0 and its checks moved under the lines (S8. Line Items (in nhcx-preauth)). An optional tab **Discharge intimation** sits between Communication and Discharge when the integration decision `claim.dischargeIntimation` (L1.A) is yes (S11. Claim Submission (in nhcx-claim)).
+| 1 | `eligibility` | Overview | S3. Policy Discovery (in nhcx-coverage): beneficiary, policy, the validation with the wallet, and the insurance plan's refetch (S7. Insurance Plan (in nhcx-preauth)) |
+| 2 | `preauth` | Pre-authorisation | S18. Beneficiary Verification (in nhcx-coverage) at stage Preauth when the payer needs it, then S8. Line Items (in nhcx-preauth) (line items, coverage benefits check, authorisation requirements), S4. Pre-authorisation Details and Admission Link (in nhcx-preauth) (pre-authorisation details) and S9. Pre-authorisation (in nhcx-preauth) (forms, documents, the send and the verdict) |
+| 3 | `claim` | Claim | S18. Beneficiary Verification (in nhcx-coverage) at stage Discharge when the payer needs it, then S4. Pre-authorisation Details and Admission Link (in nhcx-preauth) (link the IPD admission) and S11. Claim Submission (in nhcx-claim) (discharge, documents, forms, the claim) |
+| 4 | `communication` | Communication | [S10. Communication](S10-communication.md) |
+| 5 | `payments` | Payments | S12. Payments (in nhcx-payment) |
+| 6 | `audit` | Logs | every message of the case, below |
 
 Tab rules:
-- No `tab`, or an unknown key, opens Eligibility.
-- Old key aliases: `procedure` opens `plan` (the plan tab's name before line items had their own tab) and `validate` opens `lines` (the Validate tab's checks now sit under the lines), so old bookmarks still land [REF](../references/PAYERS.md#markers).
-- The Pre-authorisation tab is always shown: the benefits check and the authorisation-requirements ruling on the Line items tab are optional and never gate it; a ruling that arrives later narrows the documents and forms it asks for.
+- No tab, or an unknown key, opens Overview.
+- Retired keys still land: `plan`, `procedure`, `lines`, `validate` and `verification` open Pre-authorisation [REF](../references/PAYERS.md#markers). There is no Line items, Insurance plan, Validate, Verification or Predetermination tab.
+- **Claim and Payments appear only once a pre-authorisation has been raised** (a pre-authorisation row exists, whatever its status). Before that the bar shows Overview, Pre-authorisation, Communication and Logs, and a link to `claim` or `payments` opens Pre-authorisation.
+- The Pre-authorisation tab is always shown. The benefits check and the authorisation-requirements ruling on it are optional and never gate the send; a ruling that arrives later narrows the documents and forms it asks for.
+- **The Pre-authorisation tab turns read only once the claim is with the payer** (the claim sent, queried or decided; a claim still a draft, or refused at the door, leaves it open). Nothing on it can change and nothing is sent from it; only Cancel stays, until the payer decides the claim (S9. Pre-authorisation (in nhcx-preauth)).
+- The active tab is underlined.
+
+**A dot beside a tab** when the payer has something to look at there, and the tab is not the one open:
+- Communication: a query is open (or its reply failed), or any message arrived since the tab was last open.
+- Pre-authorisation: the pre-authorisation is `queried`, or the payer's answer on it arrived since the tab was last open.
+- Claim: the claim is `queried`, or the payer's answer on it arrived since the tab was last open.
+- Payments: a payment notice arrived since the tab was last open.
+
+"Last open" is kept per case in the browser. The first open of a case counts as having seen everything so far, so only what arrives later (and every open query) gets a dot. The dot carries the accessible name "Something new from the payer". Where the browser cannot keep it (a private window), the dots fall back to the open queries and queried legs alone.
+
+**Logs tab.** One card, "Logs: every message on this case". It lists every NHCX message the case sent or received, on every thread the case has used, **newest first**. The case's threads are every correlation id it has sent on (each send records its id on the case, so the history builds up), the ids on its own legs (eligibility, plan, ruling, pre-authorisation and its cancel, claim, queries and their replies, enquiries, payments and their acknowledgements), and every message on any of those threads. Columns:
+
+| Column | Content |
+|---|---|
+| When | date and time |
+| Direction | "Sent" (an outward arrow) or "Received" (an inward arrow) |
+| Message | the NHCX path, for example `/preauth/submit`, in monospace |
+| Workflow | the `x-hcx-workflow_id`, or `-` |
+| Status | a chip of the gateway's status: accepted or delivered success, rejected or failed danger, delivery failed warning, anything else info |
+| Correlation ID | the bare correlation id, copied on a click |
+| Disposition / message | what the message said: the payer's disposition, a query's or notice's text, or the gateway's refusal |
+
+No transaction id is shown and there are no summary tiles. When any message was refused or not delivered, a red line above the table reads "<n> message(s) refused or not delivered." Empty: "No NHCX message has been sent or received on this case yet." A failed read shows the error text in red.
 
 API: [A17. Claim State](../apis/A17-claim-state.md)
 
@@ -115,36 +137,40 @@ The arrangement below is the reference implementation's [REF](../references/PAYE
 |------------------------------------------------------------------------------|
 | Claims > NM-26-0SE000001                                                     |
 |------------------------------------------------------------------------------|
-| Asha Devi                      [NM-26-0SE000001] [Pre-authorisation: Requested]|
-|                                [1 query awaiting reply] [Paid ₹45,000]        |
-|                                [(refresh) Refresh]                           |
+| Asha Devi        [NM-26-0SE000001] [Preauth: Submitted] [1 query awaiting    |
+|                  reply] [Paid ₹45,000] [(refresh) Refresh]                   |
 | Next: [Answer the payer (1)] [With the payer; ask where it stands]           |
+| [flash: Pre-authorisation submitted to the payer.]                           |
 |------------------------------------------------------------------------------|
-| Eligibility | Insurance plan | Line items | Verification | Pre-auth... |     |
-| Pre-authorisation | Communication | Discharge | Claim | Payments             |
+| Overview | *Pre-authorisation* | Claim | Communication (o) | Payments | Logs |
 |------------------------------------------------------------------------------|
 |                                                                              |
-|  <active tab content: S3, S7, S8, S8.2, S18, S4+S9, S10, S11 or S12>        |
+|  <active tab content>                                                        |
 |                                                                              |
 |------------------------------------------------------------------------------|
+
+Logs tab:
+| [Card] Logs: every message on this case                                      |
+|  2 message(s) refused or not delivered.                                      |
+|  When | Direction | Message | Workflow | Status | Correlation ID | Disposition / message |
+|  18 Oct 2026, 9:02 | <- Received | /preauth/on_submit | 2 | [delivered] | 6f1c...| Approved |
+|  18 Oct 2026, 8:41 | -> Sent     | /preauth/submit    | 2 | [accepted]  | 6f1c...| -     |
 ```
 
 - The heading and the chip row sit on one line and wrap on narrow screens; chips wrap among themselves.
 - The Refresh button sits among the chips and appears only while something is awaiting the payer.
 - The "Next:" row appears only when there is at least one action. Its buttons are small; the first is primary.
-- The tab bar underlines the active tab. Panes below are stacks of cards with a consistent vertical gap.
+- The tab bar scrolls sideways on a narrow screen; the dot is a small red circle after the label.
+- Panes below are stacks of cards with a consistent vertical gap.
 
 #### S6A. ACTIONS
-1. Tab "Eligibility": show S3.
-2. Tab "Insurance plan": show S7.
-3. Tab "Line items": show S8.
-4. (removed in 1.7.0; `validate` opens the Line items tab)
-5. Tab "Verification": show S18.
-6. Tab "Pre-authorisation": show S4 (admission link and pre-auth draft) above S9 (sending and the payer's verdict).
-7. Tab "Communication": show S10.
-8. Tab "Discharge": show the discharge part of S11: the stay, the discharge card (or the recorded discharge), the discharge summary on file, then buttons on to Verification (S18, stage Discharge) and Claim.
-9. Tab "Claim": show the rest of S11: the recorded discharge read-only (with a "Record the discharge" button back to the Discharge tab while the stay is open), the claim-stage requirements, the bill, the send and the settlement.
-9. Tab "Payments": show S12.
-10. Next-action button: reload this screen on the tab the action names (see the table in S6D).
-11. Refresh: reload this screen on the current URL's tab, polling every leg that is out with the payer.
-12. Breadcrumb "Claims": go to the Claim Master screen S5.
+1. Tab "Overview": show S3.
+2. Tab "Pre-authorisation": show S18 (stage Preauth, only when the payer needs it), then S8, S4's details card and S9, in the order S9 gives.
+3. Tab "Claim" (once a pre-authorisation exists): show S18 (stage Discharge, only when the payer needs it), then S4's link card and S11, in the order S11 gives.
+4. Tab "Communication": show S10.
+5. Tab "Payments" (once a pre-authorisation exists): show S12.
+6. Tab "Logs": read the case's messages and show them newest first.
+7. Next-action button: open the tab the action names and re-read the case.
+8. Refresh: re-read the case on the current tab, polling every leg that is out with the payer.
+9. Correlation ID (Logs): copy it.
+10. Breadcrumb "Claims": go to the Claim Master screen S5.

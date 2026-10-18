@@ -18,20 +18,20 @@ It is sent:
 | `x-hcx-recipient_code` | The notice's `x-hcx-sender_code`, else the case's processing id, else the claim's payer id, else the configured default payer code. A scheme can pay through a different participant than the one the claim went to, and the live sandbox does [SANDBOX](../references/PAYERS.md#markers) |
 | `x-hcx-workflow_id` | From the adapter's `payment_ack` [PAYER](../references/PAYERS.md#markers), else the notice's own `x-hcx-workflow_id`, else the notice's claim number, else the current claim number (the claim-number fallbacks are [REF](../references/PAYERS.md#markers)) |
 | `x-hcx-correlation_id` | The correlation id the notice arrived on |
+| `x-hcx-status` | `response.complete`: the one send on an `on_` path the payer waits on (see [PAYERS.md](../references/PAYERS.md)) |
 
 Per adapter (see [PAYERS.md](../references/PAYERS.md)) [PAYER](../references/PAYERS.md#markers):
 
 | Adapter | `payment_ack` | Workflow id sent |
 |---|---|---|
-| `pmjay` | 17 (PAYMENT_RECEIVED) | `17` |
-| `kyrocare` (Sandbox Payer) | none | the notice's own workflow id echoed back (for example `30`) |
-| `generic` | none | the notice's own workflow id echoed back |
+| `gov` | 17 (PAYMENT_RECEIVED) | `17` |
+| `generic` | none (echo) | the notice's own workflow id echoed back (for example `30`) |
 
 A per-environment override (a JSON object of kind to workflow id) can set `payment_ack` too; an empty value there means "echo the notice's own".
 
 G7 completes the other headers ([G5. Protocol Headers](../gateway/G5-protocol-headers.md)); when the correlation id is blank, G7 takes it from the newest inbound payment notice from the recipient in the [G9. Ledger](../gateway/G9-ledger.md).
 
-**Checks.** "Payment notice not found." (the route answers the not-found page when the notice is not on this claim); "Set the facility's HFR ID and NHCX participant code under Settings first."
+**Checks.** "Payment notice not found." (the route answers the not-found page when the notice is not on this claim); "Set the facility's HFR ID and NHCX participant code under Settings first." Neither writes anything on the row. Success flash: "Payment acknowledged to the payer."
 
 #### A8Q. REQUEST
 
@@ -39,26 +39,27 @@ The arguments passed to G7 Send:
 
 | Field | Type | Notes |
 |---|---|---|
-| `jwe_headers` | object | The four headers above |
+| `jwe_headers` | object | The five headers above |
 | `fhir` | Bundle | The payment acknowledgement Task, then the provider and payer Organizations |
 
 The claim number it names is the one the notice named, else the claim's current number.
 
 FHIR: [F1. Bundle](../fhir/F1-bundle.md), [F14. Payment acknowledgement](../fhir/F14-payment-acknowledgement.md), [F17. Organization](../fhir/F17-organization.md)
 
-Envelope, a real acknowledgement (PMJAY):
+Envelope, a real acknowledgement (a government payer):
 
 ```json
 {
   "jwe_headers": {"x-hcx-sender_code": "<facility code>",
                   "x-hcx-recipient_code": "<payer code>",
                   "x-hcx-workflow_id": "17",
+                  "x-hcx-status": "response.complete",
                   "x-hcx-correlation_id": "066d6860-3717-44fe-9c81-13c4e81928db"},
   "fhir": <F1 Bundle carrying F14 Payment acknowledgement Task (paymentack, claim NM-26-0SH00000R), F17 provider and payer Organizations>
 }
 ```
 
-The same notice from the Sandbox Payer is acknowledged with `"x-hcx-recipient_code": "<payer code>"` and `"x-hcx-workflow_id": "30"` (the notice's own) [SANDBOX](../references/PAYERS.md#markers).
+The same notice from a `generic` payer is acknowledged with `"x-hcx-recipient_code": "<payer code>"` and `"x-hcx-workflow_id": "30"` (the notice's own) [SANDBOX](../references/PAYERS.md#markers).
 
 #### A8S. RESPONSE
 
@@ -76,13 +77,14 @@ Reply: [C10. Payment Notice](../callbacks/C10-paymentnotice-request.md)
 
 ```
 // called by C10 right after a notice is recorded, or by hand from S12
-function acknowledge_payment(payment_id):
+function acknowledge_payment(payment_id, case_id = none):
     money = claim_payment[payment_id]      or refuse "Payment notice not found."
+    if case_id and money.claim_id != case_id: refuse "Payment notice not found."   // not on this claim
     case  = claim[money.claim_id]
 
     // build
-    org = default organization
-    if org missing or HFR ID or participant code empty:
+    org = the case's facility profile
+    if HFR ID or participant code empty:
         refuse "Set the facility's HFR ID and NHCX participant code under Settings first."
     bundle = F1 Bundle carrying F14 Payment acknowledgement Task
              (claim number = money.claim_ref or case.claim_no, authored now),
@@ -96,7 +98,8 @@ function acknowledge_payment(payment_id):
                 x-hcx-recipient_code: money.sender_code or case.processing_id or case.payer_id or default payer code,
                 x-hcx-workflow_id:    workflow_id(adapter, payment_ack)   // env override, else adapter; may be none
                                       or money.workflow_id or money.claim_ref or case.claim_no,
-                x-hcx-correlation_id: money.correlation_id or ""},
+                x-hcx-correlation_id: money.correlation_id or "",
+                x-hcx-status:         response.complete},
             fhir: bundle})
               (archived with the case)
         if not result.ok: fail with NHCX's refusal (APIs conventions)
@@ -113,9 +116,9 @@ function acknowledge_payment(payment_id):
 
 #### A8U. USED BY
 - Screens: [S12. Payments](../screens/S12-payments.md)
-- APIs: [A6. Task Submit (cancel, status, reprocess, release)](A6-task-submit.md)
+- APIs: [A4. Pre-auth Submit](A4-preauth-submit.md), [A6. Task Submit (cancel, status, reprocess, release)](A6-task-submit.md)
 - Callbacks: [C1. Callback Door](../callbacks/C1-callback-door.md), [C10. Payment Notice](../callbacks/C10-paymentnotice-request.md)
 - FHIR: [F1. Bundle](../fhir/F1-bundle.md), [F13. PaymentNotice](../fhir/F13-paymentnotice.md), [F14. Payment acknowledgement](../fhir/F14-payment-acknowledgement.md)
 - Database: [D21. claim_payment](../database/D21-claim-payment.md)
-- Gateway: [G1. Embedding](../gateway/G1-embedding.md), [G7. Send](../gateway/G7-send.md)
+- Gateway: [G1. Embedding](../gateway/G1-embedding.md), [G5. Protocol Headers](../gateway/G5-protocol-headers.md), [G7. Send](../gateway/G7-send.md)
 - Tests: [T11. IRDAI Payment Notice and Acknowledgement](../tests/T11-irdai-payment.md), [T18. PMJAY Payment Notice, Status Refusal and Cancel](../tests/T18-pmjay-payment-status-cancel.md)

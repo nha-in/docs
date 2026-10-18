@@ -10,6 +10,12 @@ Received resources are parsed as plain maps and never fail on a shape they merel
 |---|---|---|---|
 | [F1](F1-bundle.md) | Bundle | both | [F1-bundle.md](F1-bundle.md) |
 
+## Pre-authorisation and claim
+
+| # | Resource | Direction | File |
+|---|---|---|---|
+| [F9](F9-claimresponse.md) | ClaimResponse | sent | [F9-claimresponse.md](F9-claimresponse.md) |
+
 ## Queries and payment
 
 | # | Resource | Direction | File |

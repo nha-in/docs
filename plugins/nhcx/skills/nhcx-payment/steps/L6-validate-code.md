@@ -16,10 +16,10 @@ For every `symbols[].implements` entry, compare the code with the spec:
 - messages: every refusal and validation message verbatim
 - FHIR (F): every element in FnF filled from the mapped source, with the right system and code; profiles and bundle order as in F1; a bundle built by the file matches the knowledge source's example bundle for that exchange element by element (`get_fhir_example` on the MCP, or the package's `fhir/<use case>/` bundle), or passes the HL7 validator with the NRCeS package. The MCP's `validate_fhir` is not used here: it knows only ABDM's DocumentBundle family and reports false findings against a ClaimBundle, TaskBundle or CoverageEligibilityRequestBundle ([KNOWLEDGE.md](../references/KNOWLEDGE.md))
 - database (D): columns, types, nullability, defaults, keys and indexes as in DnC and DnK
-- screens (S): fields, options, columns, chips, empty states and actions as in SnD, SnL and SnA
+- screens (S): fields, options, columns, chips, empty states and actions as in SnD, SnL and SnA; every component kind is the host's own as code-plan.json `host_components` names it, and the file defines no component (a type-ahead, select, table, chip, card, accordion, dialog, date picker, file input, toast or tabs) that duplicates one the host provides. A duplicate is an `error` finding, fixed by switching to the host's component
 
 ### L6.3 Check the file as code
-Build, lint and type-check pass; no secret in code; errors surface as the spec says (for example a failed send keeps its ids); no dead code left from generation.
+Build, lint and type-check pass; no secret in code; no ABHA create, link or verify code, ABHA column or second session-token cache where discovery found an M1 (`abdm.m1`); errors surface as the spec says (for example a failed send keeps its ids); no dead code left from generation.
 
 ### L6.4 Record and fix
 Record each finding with the spec part, the lines and a severity. Fix `error` findings in the same pass, re-validate the file, and update code.json line ranges. At most 3 rounds per file; after that mark it `failed` with the open findings.

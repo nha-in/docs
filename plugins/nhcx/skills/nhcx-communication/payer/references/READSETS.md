@@ -16,7 +16,7 @@ Always read, whatever the task: [CORE.md](CORE.md) (addresses and the exchange t
 
 | To implement | What it is | Read with it |
 |---|---|---|
-| [A5](../apis/A5-query-request.md) | Query Request | [F1](../fhir/F1-bundle.md), [F11](../fhir/F11-communicationrequest.md), [F15](../fhir/F15-patient.md), [F17](../fhir/F17-organization.md), [F18](../fhir/F18-coverage.md), [D1](../database/D1-payer.md), [D19](../database/D19-case.md), [D25](../database/D25-case-line-item.md), [D26](../database/D26-case-timeline.md), [D27](../database/D27-case-exchange-message.md), [D31](../database/D31-audit-log.md), [G5](../gateway/G5-protocol-headers.md), [G7](../gateway/G7-send.md) |
+| [A5](../apis/A5-query-request.md) | Query Request | [F1](../fhir/F1-bundle.md), [F9](../fhir/F9-claimresponse.md), [F11](../fhir/F11-communicationrequest.md), [F15](../fhir/F15-patient.md), [F17](../fhir/F17-organization.md), [F18](../fhir/F18-coverage.md), [D1](../database/D1-payer.md), [D19](../database/D19-case.md), [D25](../database/D25-case-line-item.md), [D26](../database/D26-case-timeline.md), [D27](../database/D27-case-exchange-message.md), [D31](../database/D31-audit-log.md), [G5](../gateway/G5-protocol-headers.md), [G7](../gateway/G7-send.md) |
 | [A11](../apis/A11-txn-related.md) | Transaction Related | nothing else |
 | [A12](../apis/A12-txn-fhir.md) | Transaction FHIR | nothing else |
 | [A13](../apis/A13-adjudicate.md) | Adjudicate | nothing else |
@@ -27,7 +27,7 @@ Always read, whatever the task: [CORE.md](CORE.md) (addresses and the exchange t
 | To implement | What it is | Read with it |
 |---|---|---|
 | [C1](../callbacks/C1-callback-door.md) | Callback Door | nothing else |
-| [C9](../callbacks/C9-communication.md) | Communication | [F1](../fhir/F1-bundle.md), [F11](../fhir/F11-communicationrequest.md), [F12](../fhir/F12-communication.md), [D3](../database/D3-document-type.md), [D19](../database/D19-case.md), [D23](../database/D23-case-document.md), [D24](../database/D24-case-document-file.md), [D25](../database/D25-case-line-item.md), [D26](../database/D26-case-timeline.md), [D27](../database/D27-case-exchange-message.md), [D31](../database/D31-audit-log.md), [G7](../gateway/G7-send.md), [G8](../gateway/G8-receive.md) |
+| [C9](../callbacks/C9-communication.md) | Communication | [F1](../fhir/F1-bundle.md), [F9](../fhir/F9-claimresponse.md), [F11](../fhir/F11-communicationrequest.md), [F12](../fhir/F12-communication.md), [D3](../database/D3-document-type.md), [D19](../database/D19-case.md), [D23](../database/D23-case-document.md), [D24](../database/D24-case-document-file.md), [D25](../database/D25-case-line-item.md), [D26](../database/D26-case-timeline.md), [D27](../database/D27-case-exchange-message.md), [D31](../database/D31-audit-log.md), [G7](../gateway/G7-send.md), [G8](../gateway/G8-receive.md) |
 
 ## Gateway
 

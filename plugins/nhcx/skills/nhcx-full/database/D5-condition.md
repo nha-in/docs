@@ -4,7 +4,7 @@
 One row is one chief complaint, diagnosis or medical-history problem of a patient; primary key `id`; parent tables [D3. patient](D3-patient.md) and [D4. encounter](D4-encounter.md) (optional).
 
 #### D5D. DESCRIPTION
-The claim reads this table for its diagnoses. When a pre-authorisation draft is saved, the linked admission's rows with `category = 'diagnosis'` and `clinical_status != 'resolved'` (ordered by `id`) replace whatever the form sent. Each is resolved against the `diagnosis` kind of [D8. terminology](D8-terminology.md) by `icd10_code`. If it is found there, the ICD-10 and the terminology's SNOMED CT alt coding are quoted. If it is not found but `icd10_code` is set, the row's own ICD-10 and SNOMED codes are quoted as recorded. A row with no `icd10_code` is not quoted. The result is written to [D25. claim_diagnosis](D25-claim-diagnosis.md). An admission with no such rows leaves the form's own diagnoses in use.
+The claim reads this table only to pre-fill the pre-authorisation's diagnoses. When an admission is linked and the pre-authorisation details have never been saved, the admission's rows with `category = 'diagnosis'` and `clinical_status != 'resolved'` (ordered by `id`) that carry an `icd10_code` are offered on the form, with the terminology's SNOMED CT mapping or the row's own SNOMED code; a row with no `icd10_code` is not offered. The desk may change them; only what is saved goes to [D25. claim_diagnosis](D25-claim-diagnosis.md). The pre-authorisation owns its diagnoses, so an admission linked later never replaces them.
 
 Lifecycle:
 - `chief-complaint` and `diagnosis` rows are written by the OPD and IPD clinical record forms. Each save deletes that encounter's rows of that category and inserts the submitted rows again (replace, not update). A complaint is written with `clinical_status = 'active'`. A diagnosis takes the status chosen on the form (`active`, `recurrence`, `remission`, `resolved`), default `active`. Both get `verification_status = 'confirmed'` and `recorded_at` = now. A coded diagnosis copies ICD-10 from the terminology row's `code` / `display` and SNOMED CT from its `alt_code` / `alt_display`.
@@ -39,5 +39,5 @@ Lifecycle:
 - Index: `ix_condition_enc (encounter_id, category)`.
 
 #### D5U. USED BY
-- Screens: [S4. Claim Creation Form](../screens/S4-claim-creation-form.md), [S15. Patient Detail](../screens/S15-patient-detail.md)
+- Screens: [S4. Pre-authorisation Details and Admission Link](../screens/S4-claim-creation-form.md), [S15. Patient Detail](../screens/S15-patient-detail.md)
 - Database: [D3. patient](D3-patient.md), [D4. encounter](D4-encounter.md), [D25. claim_diagnosis](D25-claim-diagnosis.md)

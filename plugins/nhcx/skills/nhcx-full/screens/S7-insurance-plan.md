@@ -1,45 +1,33 @@
 # S7. Insurance Plan Screen
 
 #### S7R. ROUTE
-claims/view/:caseid/plan
+No tab and no page of its own. There is no Insurance plan tab: the retired keys `plan` and `procedure` open the Pre-authorisation tab of S6. The plan shows in two places:
+- the **Insurance plan card**, in place of the Line items card on the Pre-authorisation tab ([S8. Line Items](S8-line-items.md)) while the plan is not `ready`;
+- the **insurance plan row** at the foot of the Validation card on the Overview tab ([S3. Policy Discovery](S3-policy-discovery.md)), whenever the case is in force.
 
-Breadcrumb: Claims (claims/list, S5) > <case number> (S6)
+| Endpoint | Purpose |
+|---|---|
+| `POST claims/:caseid/plan/fetch` | Fetch (`refresh` false: reuse a held plan, else ask the payer) or refetch (`refresh` true: always ask the payer) |
+| `GET claims/:caseid/plan` | The plan's summary (S7.2's form count among it) |
+| `GET claims/:caseid/plan/benefits` | The plan's packages, filtered by text, category and type (the Code type-ahead of [S8. Line Items](S8-line-items.md)) |
+| `GET claims/:caseid/plan/benefits/:benefitid` | One package in full (S7.1) |
+| `GET claims/:caseid/plan/forms` and `GET claims/:caseid/plan/forms/:formid` | The plan's questionnaires (S7.2, S7.3) |
 
-Sub-pages in this file:
-- S7.1 Package Detail: claims/view/:caseid/plan/:benefitid
-- S7.2 Plan Forms: claims/view/:caseid/plan/forms
-- S7.3 Form Detail: claims/view/:caseid/plan/forms/:formid
+Breadcrumb (from S6): Claims (claims/list, S5) > <case number>
 
 #### S7D. DESCRIPTION
-The payer's package master for this policy and this facility: every empanelled speciality, the packages under it, their rates, the tiers paid on top, their claim conditions, the documents they need and the questionnaires the payer ships with them. Line Items (S8) quotes only from this master, so it has to be fetched before a pre-authorisation can be priced.
+The payer's package master for this policy and this facility: every empanelled category, the packages under it, their rates, the tiers paid on top, their claim conditions, the documents they need and the questionnaires the payer ships with them. The line items of [S8. Line Items](S8-line-items.md) are quoted only from this master, so a pre-authorisation cannot be priced until it is `ready`. The plan's grouping of packages (PMJAY calls it a speciality) is labelled **Category** on every screen and in every message the desk reads.
 
-Intro text on the card: "The payer's **package master** for this policy and this facility: every empanelled speciality, the packages under it and their rates. The app asks for it with an InsurancePlan discovery Task - a lookup that carries no clinical content, only the policy code and the facility's HFR ID - and the payer answers asynchronously, exactly like the eligibility check."
+**Fetched by itself.** Whenever a validation leaves an open case in force and the case holds no plan row (the case was just created on the validation gate of [S2. Select Policy](S2-select-policy.md), or the desk chose the patient among several members on [S3. Policy Discovery](S3-policy-discovery.md)), the plan is fetched without the desk asking: first a `ready` plan already held on another case of the same policy code, the same facility HFR ID and the same payer is copied onto this case (nothing is sent); only when there is none is the payer asked. This never raises: a refusal (no HFR ID, a request already outstanding) is logged, and the desk can still fetch. Whether this happens is the integration decision `plan.trigger` ([L1.A](../steps/L1-discovery.md)), automatic by default; with `manual` the desk presses "Fetch insurance plan". Whether a stored master is refreshed on a schedule is `plan.refresh`: manual by default, only the desk's refetch refreshes it. The fetch runs beside the validation's acknowledgement, never inside it, so the payer's callback is answered at once.
 
-**Fetching.** "Fetch insurance plan" (first time) or "Fetch again" (refresh). Before any call:
-- The facility must have an HFR ID: "Set the facility's HFR ID under Settings before fetching a package master."
-- The facility must have an NHCX participant code: "Set the facility's NHCX participant code under Settings before fetching a package master."
+**Insurance plan card** (Pre-authorisation tab, in place of the Line items card while the plan is not `ready`). Title "Insurance plan", with the plan's status chip beside it once there is a plan row. Intro: "The payer's **package master** for this policy and this facility: every empanelled category, the packages under it and their rates. The app asks for it with an InsurancePlan discovery Task - a lookup that carries no clinical content, only the policy code and the facility's HFR ID - and the payer answers asynchronously, exactly like the eligibility check."
 
-**Check for an existing master first.** On opening the tab the application looks for a `ready` master for the same payer, the same policy code and the same facility HFR ID on any case. Found: it is copied onto this case **and shown at once, without any fetch button being pressed**; "Fetch again" is the only call offered, and nothing asks the payer. The desk is never shown "Fetch insurance plan" for a master the facility already holds. Not found: what happens next is the integration decision `plan.trigger` (L1.A): **manual**, the tab shows the intro and the "Fetch insurance plan" button and nothing else until the desk presses it; **automatic**, the fetch is sent when the tab is first opened (the same guards apply, a refusal is shown instead). Whether a stored master is refreshed on a schedule is `plan.refresh`: manual, only "Fetch again" refreshes it; automatic, a job refetches masters older than the chosen period and the tab shows "Refreshed automatically <when>". Until a master is held the tab offers no other action: no packages, no forms, no line items ([S8. Line Items](S8-line-items.md) says "fetch the plan first").
-
-Reuse before asking: on the first fetch (not on "Fetch again"), if another case already holds a `ready` master for the same payer, the same policy code and the same facility HFR ID, the newest one is copied onto this case and no request goes out. Flash: "Using the package master already held for this policy - Fetch again asks the payer for a new one." The master is held per case ([D10. claim_plan](../database/D10-claim-plan.md)) because the payer may answer differently for different beneficiaries; a full PMJAY master is tens of megabytes [SANDBOX](../references/PAYERS.md#markers).
-
-Before the master is fetched, the tab refuses while the beneficiary is still to be chosen ([S3. Policy Discovery](S3-policy-discovery.md)): "Choose which member of the policy is the patient on the Eligibility tab first."
-
-API: [A3. Insurance Plan Request](../apis/A3-insurance-plan-request.md)
-
-**The reader must carry every field the payer sends.** The InsurancePlan the sandbox returns is checked against the knowledge package's InsurancePlan example ([F5. InsurancePlan](../fhir/F5-insuranceplan.md)): every element the example holds (plan, coverage, benefits, limits, specific costs, the questionnaire extension, the document requirements) has a column or a JSON field in [D10. claim_plan](../database/D10-claim-plan.md) to [D12. claim_plan_form](../database/D12-claim-plan-form.md), and L6 fails the build when the reader drops one. A field the hospital does not show is still stored, so a later screen can read it without a refetch.
-
-With neither a policy code nor an HFR ID the request is refused: "A plan request needs a policy code or the facility's HFR ID." Flash: "Insurance plan requested from the payer." A refetch clears the case's packages before the new answer lands, so a stale package cannot survive it.
-
-**Waiting for the answer.** There is no timer: every load of the claim screen polls once while the plan is `fetching`. A failure of the poll itself shows as a muted line "Could not poll the gateway: <error>" on the waiting card.
-
-Callback: [C4. Insurance Plan Reply](../callbacks/C4-insuranceplan-on-request.md)
-
-API: [A10. Transaction Related](../apis/A10-txn-related.md) (poll)
-
-API: [A11. Transaction Dispatch](../apis/A11-txn-dispatch.md) (poll, dispatch status)
-
-The case header shows a "Refresh" button while any exchange is outstanding (S6); pressing it reloads and polls.
+| Plan state | Header button | Body under the intro |
+|---|---|---|
+| no plan row | primary "Fetch insurance plan" (download icon) | nothing |
+| `fetching` | secondary "Fetch again" (refresh icon), behind the confirm "The payer has not returned the plan yet. Send the discovery Task again?" | "Discovery Task sent to the payer; awaiting the on_request reply. Use Refresh to check for it.", the muted poll note "Could not poll the gateway: <error>" when the last poll failed, then Sent at |
+| `error` | primary "Fetch again", behind the confirm "Fetch the insurance plan again? The packages stored for this claim are replaced by whatever the payer returns." | the error in the danger colour, or "The exchange failed." |
+| `empty` | secondary "Fetch again", the same confirm | nothing |
 
 Plan statuses:
 
@@ -50,7 +38,35 @@ Plan statuses:
 | `empty` | No plan returned | warning |
 | `error` | Error | danger |
 
-A reply that carries no InsurancePlan at all (only the payer's Organization) settles as `empty` with the F5 message "The payer reply carries no InsurancePlan. The payer has no package master filed under this policy." shown on the card, as C4 and D10 say; it is a legitimate answer, not an error. A reply with a plan but zero packages is `empty` too. Only a `ProtocolResponse` or a transport failure is `error`.
+Once the plan is `ready` the card gives way to the Line items card of [S8. Line Items](S8-line-items.md).
+
+**Insurance plan row** (Overview, foot of the Validation card, only while the case is in force): "Insurance plan: fetched <date and time>", "Insurance plan: being fetched from the payer…" or "Insurance plan: not fetched yet", and a small outline button "Refetch insurance plan" (refresh icon; a refetch, `refresh` true) when the case holds a plan row, else "Fetch insurance plan" (a first fetch). The button is disabled, its icon spinning, while the plan is `fetching`.
+
+**Fetching**, by the desk or by itself. Checked before any call (red flash, verbatim):
+- The patient still to choose among several members ([S3. Policy Discovery](S3-policy-discovery.md)): "Choose which member of the policy is the patient on the Overview tab first."
+- On a first fetch (not a refetch), a `ready` plan of the same policy code, facility HFR ID and payer held on another case is copied onto this case with its packages and forms, the newest one; no request goes out. Flash: "Using the package master already held for this policy - Fetch again asks the payer for a new one."
+- The facility must have an HFR ID: "Set the facility's HFR ID under Settings before fetching a package master."
+- The facility must have an NHCX participant code: "Set the facility's NHCX participant code under Settings before fetching a package master."
+- With neither a policy code nor an HFR ID: "A plan request needs a policy code or the facility's HFR ID."
+- A payer that refuses a second request while one is outstanding (PMJAY answers in 15 to 60 minutes and refuses another for the same policy meanwhile, PAYR-1406 [SANDBOX](../references/PAYERS.md#markers)): while a request for the same payer, policy and HFR ID is still `fetching` and was sent less than an hour ago, none is sent, on a first fetch or a refetch: "The package master of <policy code> was already requested at <date and time>; the payer refuses a second request meanwhile (PAYR-1406), so none is sent." Re-sending would overwrite the outstanding correlation id and leave the real answer unmatched. Which payers behave so is in [PAYERS.md](../references/PAYERS.md).
+
+The request carries the policy code and the facility's HFR ID, and travels with `x-hcx-workflow_id` `1`: the plan is the hospital's, never a case's, so it never carries the case number. Flash: "Insurance plan requested from the payer." A send clears every earlier result and the case's packages before the new answer lands, so a stale package cannot survive it. A failed send leaves the plan `error` and flashes the error in red.
+
+API: [A3. Insurance Plan Request](../apis/A3-insurance-plan-request.md)
+
+The plan is the hospital's for the policy, not the case's: a row is kept on each case ([D10. claim_plan](../database/D10-claim-plan.md)) so the case reads its own copy, but a ready plan of the same policy code, HFR ID and payer is reused rather than requested again (`plan.scope`, once and reused by default). A full PMJAY master is tens of megabytes [SANDBOX](../references/PAYERS.md#markers).
+
+**The reader must carry every field the payer sends.** The InsurancePlan the sandbox returns is checked against the knowledge package's InsurancePlan example ([F5. InsurancePlan](../fhir/F5-insuranceplan.md)): every element the example holds (plan, coverage, benefits, limits, specific costs, the questionnaire extension, the document requirements) has a column or a JSON field in [D10. claim_plan](../database/D10-claim-plan.md) to [D12. claim_plan_form](../database/D12-claim-plan-form.md), and L6 fails the build when the reader drops one. A field the hospital does not show is still stored, so a later screen can read it without a refetch.
+
+**Waiting for the answer.** There is no timer: every load of the claim screen polls once while the plan is `fetching` (the S6 Refresh button reloads and polls). A failure of the poll itself shows as the poll note on the Insurance plan card.
+
+Callback: [C4. Insurance Plan Reply](../callbacks/C4-insuranceplan-on-request.md)
+
+API: [A10. Transaction Related](../apis/A10-txn-related.md) (poll)
+
+API: [A11. Transaction Dispatch](../apis/A11-txn-dispatch.md) (poll, dispatch status)
+
+A reply that carries no InsurancePlan at all (only the payer's Organization) settles as `empty` with the F5 message "The payer reply carries no InsurancePlan. The payer has no package master filed under this policy.", as C4 and D10 say; it is a legitimate answer, not an error. A reply with a plan but zero packages is `empty` too. Only a `ProtocolResponse` or a transport failure is `error`.
 
 Data: [D10. claim_plan](../database/D10-claim-plan.md)
 
@@ -58,216 +74,75 @@ Data: [D11. claim_plan_benefit](../database/D11-claim-plan-benefit.md)
 
 Data: [D12. claim_plan_form](../database/D12-claim-plan-form.md)
 
-**What the tab shows per state:**
-
-- No plan yet: card "Insurance plan" with the intro and a primary "Fetch insurance plan" button (download icon).
-- `fetching`: card "Insurance plan" with the intro, then "Discovery Task sent to the payer; awaiting the on_request reply. Use Refresh to check for it.", the poll note if any, and Sent at, Transaction, Correlation. Header action "Fetch again" (refresh icon) with the confirm "The payer has not returned the plan yet. Send the discovery Task again?"
-- `error`: card "Insurance plan" with the error in the danger colour (or "The exchange failed.") and the "Fetch again" button.
-- `empty`: the summary card, then a card reading "The payer returned no plan for this policy and facility. That is a legitimate answer, not a transport failure - it means no coverage matches this policy-provider pair, so the pre-authorisation falls back to the local HBP package master."
-- `ready`: the summary card, the filter row and the packages table.
-
-Summary card "Insurance plan", three columns: Plan, Plan identifier, Plan type, Overall sum insured (`₹` whole rupees), Asked with (policy code and HFR ID, comma separated), Fetched at, Correlation. Header actions: "All forms" (clipboard-list icon, only when the plan carries questionnaires, goes to S7.2) and "Fetch again" (refresh icon, primary) with the confirm "Fetch the insurance plan again? The packages stored for this claim are replaced by whatever the payer returns."
-
-**Filter row** (its own row above the table, a GET form so the result can be bookmarked):
-
-| Field | Control | Behaviour |
-|---|---|---|
-| Search | text, at least 18rem | Substring match on the package code or name, any case |
-| Speciality | select, blank "All specialities" | Options are the plan's specialities as `<name> (<package count>)`, sorted by name |
-| Type | select, blank "Any type" | `Procedure`, `Implant` |
-
-A primary "Search" button (search icon). "Clear" (x icon) appears when any filter is set and resets all three.
-
-**Packages table.** Card title "<n> package(s)" where n is the filtered count of rows, one row per package **per speciality** (Dengue `MG004A` appears three times on a PMJAY master, under Cardiology, General Medicine and Paediatric medical management, each a row [PAYER](../references/PAYERS.md#markers)). Rows keep the payer's order. Columns:
-
-| Column | Content |
-|---|---|
-| Code | Package code |
-| Package | Package name, or the code |
-| Speciality | Speciality name, or code, or `-` |
-| Type | Chip: `Procedure` info, anything else (`Implant`) warning, `-` if none |
-| Rate | The package rate, with "+<k> tier(s), up to ₹<max>" underneath when ward or ICU tiers are priced over it; "tiers only" when the rate is 0 and tiers exist; "open" when the plan names no rate |
-| (action) | "View" small secondary button, opens S7.1 in a modal for that (speciality, package) row |
-
-Every package is listed: there is no row limit, whatever the size of the plan. A large plan is paged, 100 rows a page with "Previous" and "Next" and "Page <p> of <q>" under the table [REF](../references/PAYERS.md#markers), and search and filters narrow it across all its packages, not just the page shown. Empty state: "Nothing matches that search."
-
-Cell helpers available for a denser table (defined but not in the default column set): a rate cell showing the package rate with "+<k> tier(s), up to ₹<max>" underneath; a conditions cell with up to three chips (key conditions first, in the order GovtReserved, Standalone, IsDayCare, ApprovalNotRequired, ImplantApplicable, StratificationAllowed, ProcedureType [PAYER](../references/PAYERS.md#markers); a true flag shows just its name, others `<name>: <value>`) and "+<k> more"; and a documents cell "<n> required" with the first document's name underneath.
-
 #### S7L. LAYOUT
 The arrangement below is the reference implementation's [REF](../references/PAYERS.md#markers): follow the target HMIS's own screen conventions. What is required is in DESCRIPTION and ACTIONS: the fields, options, columns, statuses, messages and actions.
 
 
 ```
+Pre-authorisation tab, plan not ready:
 |------------------------------------------------------------------|
-| [Card] Insurance plan               [All forms] [(o) Fetch again]|
-|  PLAN               PLAN IDENTIFIER      PLAN TYPE               |
-|  OVERALL SUM INSURED  ASKED WITH         FETCHED AT              |
-|  CORRELATION                                                     |
+| [Card] Insurance plan [Awaiting payer]          [(o) Fetch again]|
+|  The payer's package master for this policy and this facility:   |
+|  every empanelled category, the packages under it and ...        |
+|  Discovery Task sent to the payer; awaiting the on_request       |
+|  reply. Use Refresh to check for it.                             |
+|  SENT AT                                                         |
+|  18 Oct 2026, 8:43 am                                            |
 |------------------------------------------------------------------|
-| Search              Speciality          Type                     |
-| [______________]    [All specialities v] [Any type v] [Search] [x Clear]
-|------------------------------------------------------------------|
-| [Card] 975 package(s)                                            |
-|  Code     | Package              | Speciality | Type       |     |
-|  SB039A   | Appendicectomy       | General    | [Procedure]| View|
-|  ...                                                             |
-|  [Previous]  Page 1 of 10  [Next]                                |
-|------------------------------------------------------------------|
+
+Overview tab, foot of the Validation card:
+|  +------------------------------------------------------------+  |
+|  | Insurance plan: fetched 18 Oct 2026, 8:43 am               |  |
+|  |                               [(o) Refetch insurance plan] |  |
+|  +------------------------------------------------------------+  |
 ```
 
-- The filter fields sit side by side and wrap on narrow screens.
-- "View" opens one shared modal filled on demand (the master can run to a thousand packages, so there is not one dialog per row). The modal shows "Loading…", then the package body; it has a "Close" button in its footer. If the fragment fails to load, the browser goes to the full S7.1 page instead. With scripts off, "View" is a plain link to S7.1.
-
 #### S7A. ACTIONS
-1. Fetch insurance plan: reuse a held master or send the discovery Task, then return to this tab with a flash.
-2. Fetch again: after the confirm, always ask the payer; the case's packages are replaced by the answer.
-3. Refresh (case header, S6): reload and poll once for the `on_request` reply.
-4. Search / change Speciality / change Type: filter the table.
-5. Clear: remove all filters.
-6. View (on a row): open S7.1 in the modal.
-7. All forms: open S7.2.
-8. Line Items tab: go to S8 once the plan is `ready`.
-9. Breadcrumb "Claims": S5. Case number: S6.
+1. Fetch insurance plan (no plan row, either place): reuse a held plan or send the discovery Task, then re-read the case with a flash.
+2. Fetch again (Insurance plan card) / Refetch insurance plan (Overview): after the confirm where the card has one, always ask the payer; the case's packages are replaced by the answer.
+3. Refresh (case header, S6): re-read and poll once for the `on_request` reply.
+4. Once `ready`: the Line items card of [S8. Line Items](S8-line-items.md) replaces the Insurance plan card, and the line items are quoted from the plan.
 
 ---
 
 ## S7.1 Package Detail
 
 #### S7.1R. ROUTE
-claims/view/:caseid/plan/:benefitid
-
-Breadcrumb: Claims (S5) > <case number> (S7) > <package code>
+No page of its own: `GET claims/:caseid/plan/benefits/:benefitid` returns one package in full. There is no package browser on the claim screen.
 
 #### S7.1D. DESCRIPTION
-Everything the payer published about one package under one speciality. It serves both as the modal body on S7 (fragment mode, with the package name as a heading) and as a full page with the package name as the card title. The body is loaded from `GET claims/:caseid/plan/benefits/:benefitid`, which returns the whole D11 row (tiers, conditions and documents included, which the claim state A17 leaves out for size). A package id that does not belong to this case gives a "Package" not-found page.
+Everything the payer published about one package under one category: the whole D11 row, including the tiers, the claim conditions and the documents, which the claim state ([A17. Claim State](../apis/A17-claim-state.md)) leaves out for size. A package id that does not belong to this case is "not found".
 
-Header, three columns: Code, Type, Speciality (with "also under: <other specialities>" when the master lists the same code elsewhere, each a link to that row), Package rate (`₹`; "tiers only" when 0 with tiers; "open, priced by the hospital" when none), Currency, Requirement, Plan.
+What reads it:
+- the Line items card of [S8. Line Items](S8-line-items.md): the implants the plan approves for a quoted procedure and the ward or ICU tiers priced over it are offered under the lines table, and a tier's price is the one its procedure lists;
+- the documents and forms of [S9. Pre-authorisation](S9-preauthorisation.md) and [S11. Claim Submission](S11-claim-submission.md): the documents a quoted package requires, with their stage (D11's stage rule: "Pre-auth" or "Post (claim)"), and the questionnaires they name.
 
-Below it, an accordion (several sections open at once). For a Procedure:
-
-1. "Implants allowed (<n>)": columns Code, Implant, Rate (the rate quoted for this package), and a "View" button that opens the implant's own entry, or "not in this plan" when the implant has no entry. Empty: "No implant is approved for this package." Under the table, chips for `ImplantApplicable`, `MultipleImplantsAllowed` and `MaximumImplantsAllowed` when the payer set them, as `<name>: <value>` [PAYER](../references/PAYERS.md#markers).
-2. "Ward & ICU tiers (<n>)": every non-implant tier. Columns Tier (label with code underneath), Kind (for example `Stratification`), Rate. Empty: "No ward or ICU tier is payable over the package rate."
-
-For an Implant, instead of those two:
-
-1. "Allowed with (<n>)": the packages that list this implant. Columns Code, Package, Speciality, "View". Every such package is listed, with no row limit, paged as the package list is. Empty: "No package in this plan lists this implant."
-
-Then for both:
-
-- "Claim conditions (<n>)": columns Condition, Value (`Yes` for a true flag). Empty: "The payer published no conditions for this package." A PMJAY Dengue package carries some eighteen [SANDBOX](../references/PAYERS.md#markers); every one is listed.
-- "Documents required (<n>)": columns Code, Document, Category, Stage (a chip: "Pre-auth", "Post (claim)" or "Both", D11's stage rule), Form (the questionnaire title, "form not sent" when the document names a form the plan did not include, `-` when none). Empty: "No documents are listed as mandatory here."
-- "Forms to complete (<n>)", only when the documents name questionnaires the plan carries: an inner accordion, one panel per form titled "<form title> (<question count>)", each a read-only table as in S7.3.
+The fields a package carries (code, type, category, rate, currency, requirement; implants allowed, ward and ICU tiers, claim conditions such as GovtReserved, Standalone, IsDayCare, ApprovalNotRequired, ImplantApplicable, StratificationAllowed, ProcedureType [PAYER](../references/PAYERS.md#markers), documents required) are all stored, whether or not a screen shows them.
 
 Data: [D11. claim_plan_benefit](../database/D11-claim-plan-benefit.md)
 
 Data: [D12. claim_plan_form](../database/D12-claim-plan-form.md)
-
-#### S7.1L. LAYOUT:
-
-```
-|------------------------------------------------------------------|
-| Appendicectomy                                                   |
-|  CODE        TYPE          SPECIALITY                            |
-|  PACKAGE RATE  CURRENCY    REQUIREMENT                           |
-|  PLAN                                                            |
-|  > Implants allowed (0)                                          |
-|  > Ward & ICU tiers (3)                                          |
-|  > Claim conditions (7)                                          |
-|  > Documents required (4)                                        |
-|  > Forms to complete (1)                                         |
-|                                                    [Close]       |
-|------------------------------------------------------------------|
-```
-
-#### S7.1A ACTIONS:
-1. View (implant or package row): load that entry into the same modal, or open its page.
-2. Close: close the modal and stay on S7.
-3. Breadcrumb case number (full page): back to S7.
 
 ---
 
 ## S7.2 Plan Forms
 
 #### S7.2R. ROUTE
-claims/view/:caseid/plan/forms
-
-Breadcrumb: Claims (S5) > <case number> (S7) > Forms
+No page of its own: `GET claims/:caseid/plan/forms` lists the plan's questionnaires, matched by title or form id as a substring.
 
 #### S7.2D. DESCRIPTION
-Every questionnaire the payer shipped with the plan, searchable. Reached from "All forms" on S7. With no plan on the case, an "Insurance plan" not-found page.
-
-Card title "<n> form(s)". Header action is a search form: "Search" text field (at least 16rem, parameter kept in the URL) and a primary "Search" button. The search matches the form title or form id as a substring.
-
-Columns:
-
-| Column | Content |
-|---|---|
-| Form | Title, with the form id underneath |
-| Kind | Chip `STG` (warning) for a url under `/stgquestionnaire/`, a standard treatment guideline checklist [PAYER](../references/PAYERS.md#markers); otherwise `Policy` (info) |
-| Questions | Number of questions, nested ones included |
-| (action) | "View", opens S7.3 in the modal |
-
-Sorted by title. Every form is listed, with no row limit, paged the same way as the packages. Empty: "Nothing matches that search."
+Every questionnaire the payer shipped with the plan. A form pointed at from the policy's coverage is a policy form; a form pointed at from a package is that package's form, never confused with the policy's. The forms are answered where the leg needs them: the pre-authorisation forms on [S9. Pre-authorisation](S9-preauthorisation.md), the claim forms on [S11. Claim Submission](S11-claim-submission.md). There is no "All forms" browser.
 
 Data: [D12. claim_plan_form](../database/D12-claim-plan-form.md)
-
-#### S7.2L. LAYOUT:
-
-```
-|------------------------------------------------------------------|
-| Claims > <case number> > Forms                                   |
-|------------------------------------------------------------------|
-| [Card] 991 form(s)              Search [__________] [(search)Search]
-|  Form                 | Kind     | Questions |                   |
-|  Consent form         | [Policy] | 12        | View              |
-|  frm-123                                                         |
-|------------------------------------------------------------------|
-```
-
-#### S7.2A ACTIONS:
-1. Search: filter the forms list.
-2. View: open S7.3 in the modal.
-3. Breadcrumb case number: back to S7.
 
 ---
 
 ## S7.3 Form Detail
 
 #### S7.3R. ROUTE
-claims/view/:caseid/plan/forms/:formid
-
-Breadcrumb: Claims (S5) > Forms (S7.2) > <form id>
+No page of its own: `GET claims/:caseid/plan/forms/:formid` returns one questionnaire with its questions. A form id that does not belong to this case is "not found".
 
 #### S7.3D. DESCRIPTION
-One questionnaire, read-only, as the modal body (with the title as a heading) or a full page (title as card title). A form id that does not belong to this case gives a "Form" not-found page. Answering happens on S9 and S11, not here.
-
-Columns:
-
-| Column | Content |
-|---|---|
-| Question | Question text (or the question id), indented by its nesting depth; a red `*` when required |
-| Answer type | Label for the answer type, see below |
-| Options | One info chip per answer option, or `-` |
-
-Answer type labels: `attachment` File, `choice` Choice, `datetime` Date & time, `date` Date, `time` Time, `string` Text, `text` Long text, `boolean` Yes / no, `integer` / `decimal` / `quantity` Number, `url` Link. Any other type shows as sent.
-
-Empty: "This form carries no questions."
+One questionnaire: its title, description and typed questions, nested ones included, each with whether it is required and its answer options. The forms cards of [S9. Pre-authorisation](S9-preauthorisation.md) and [S11. Claim Submission](S11-claim-submission.md) read it to draw the answer fields. Answer types: `attachment` File, `choice` Choice, `datetime` Date & time, `date` Date, `time` Time, `string` Text, `text` Long text, `boolean` Yes / no, `integer` / `decimal` / `quantity` Number, `url` Link; any other type shows as sent.
 
 Data: [D12. claim_plan_form](../database/D12-claim-plan-form.md)
-
-#### S7.3L. LAYOUT:
-
-```
-|------------------------------------------------------------------|
-| Consent form                                                     |
-|  Question                    | Answer type | Options             |
-|  Was consent obtained? *     | Yes / no    | -                   |
-|    Date of consent           | Date        | -                   |
-|  Type of anaesthesia         | Choice      | [GA] [SA] [LA]      |
-|                                                    [Close]       |
-|------------------------------------------------------------------|
-```
-
-#### S7.3A ACTIONS:
-1. Close: close the modal.
-2. Breadcrumb "Forms": back to S7.2.

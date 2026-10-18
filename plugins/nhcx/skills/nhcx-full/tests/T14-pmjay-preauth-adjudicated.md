@@ -12,7 +12,7 @@ A PMJAY claim with a package and its ruling, as [T13. PMJAY Eligibility, Package
 
 #### T14G. GUI
 
-1. [S4. Claim Creation Form](../screens/S4-claim-creation-form.md), [S9. Pre-authorisation](../screens/S9-preauthorisation.md): save the draft, then send the pre-authorisation; wait for PMJAY's acknowledgement on [S9. Pre-authorisation](../screens/S9-preauthorisation.md).
+1. [S4. Pre-authorisation Details and Admission Link](../screens/S4-claim-creation-form.md), [S9. Pre-authorisation](../screens/S9-preauthorisation.md): save the draft, then send the pre-authorisation; wait for PMJAY's acknowledgement on [S9. Pre-authorisation](../screens/S9-preauthorisation.md).
 2. Payer side, through the payer driver: read the role; run the `approve` cycle. When [S9. Pre-authorisation](../screens/S9-preauthorisation.md) already shows the decision or [A14. Adjudicator User Role](../apis/A14-adjudicator-user-role.md) finds no case, record the step as skipped (sandbox auto-decided).
 3. Wait on [S9. Pre-authorisation](../screens/S9-preauthorisation.md) for the decision.
 

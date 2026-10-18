@@ -15,7 +15,7 @@ For the payer's own record, staff roles, document types and terminology: pair ea
 Member with the ABHA number the exchange matches on (D5); the enrolment with its cover period, wallet balance and status (D6); dependants (D7); the wallet ledger (D8); ABHA link attempts (D9). Note how the target marks cover as in force today and how it keeps what is left of the sum assured.
 
 ### L2.3 Map products and procedures (D10 to D18)
-The procedure registry with package rate, treatment-guideline questions and document rules per phase (D10, D11); the product with UIN, plan type and sum assured (D12) and its covered procedures, coverage clauses, benefits, aliases, exclusions and sub-limits (D13 to D18). These feed the InsurancePlan (F5) and the ruling (F3); record where the target keeps tariffs and coverage wording today.
+The procedure registry with package rate, the procedure's own questionnaires and document rules per phase (D10, D11); the product with UIN, plan type, sum assured, the biometric setting and its own questionnaires (D12) and its covered procedures, coverage clauses, benefits, aliases, exclusions and sub-limits (D13 to D18). These feed the InsurancePlan (F5) and the ruling (F3); record where the target keeps tariffs and coverage wording today.
 
 ### L2.4 Map case and payment data (D19 to D32)
 Most case tables are new in a target without NHCX. Mark each as `new`, or pair it with an existing claim, intimation or settlement table when one exists. Record where the target keeps the hospital's claim number, the adjudication decision per line, documents, disbursements and UTRs today.

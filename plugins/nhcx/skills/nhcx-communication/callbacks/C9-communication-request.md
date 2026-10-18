@@ -65,9 +65,10 @@ record_query(body, corr, sender, workflow):
                      received_at: now, status: "open",
                      remarks: questions joined by newline, questions: JSON list,
                      request_json: body}
-    if kind == "query":
-        restamp the case stage                                   # open query -> sub_stage "queried"
-    else:
+    restamp the case stage                                       # an open query -> sub_stage "queried"
+    (the same request inserted twice at once: the second insert fails on the unique
+     correlation id and answers "ignored")
+    if kind == "notification":                                   # after the row is committed
         try: send the acknowledgement through A7
              write D23: status "acknowledged", error_message null, reply_txn_id,
                         reply_correlation_id, acknowledged_at, reply_json

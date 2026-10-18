@@ -33,7 +33,7 @@ Recipient resolution, for an encrypted message:
 1. Read `x-hcx-recipient_code` from the JWE protected header without decrypting.
 2. A code the gateway hosts (default participant, `participants`, or a code added with the host option, G2) is local. A non-empty code that is not local is a guest.
 3. A guest with guests not enabled (G2) is refused `WRONG_RECIPIENT` before decryption.
-4. Decrypt with the addressed participant's active private key first, then its previous key when one is kept after a rotation ([G2. Configuration and Participants](G2-configuration.md) `previousPrivateKey`, [S19. NHCX Settings](../screens/S19-nhcx-settings.md)), then every other hosted participant's keys, each distinct key once. Hosted codes that share the default's certificate share its key, so this is one attempt in the common case. A staged key is never tried.
+4. Decrypt with the addressed participant's active private key first, then its previous key when one is kept after a rotation ([G2. Configuration and Participants](G2-configuration.md) key slots, [S19. NHCX Settings](../screens/S19-nhcx-settings.md)), then every other hosted participant's keys, each distinct key once. Hosted codes that share the default's certificate share its key, so this is one attempt in the common case. A staged key is never tried.
 5. No key opens it: a guest is refused `WRONG_RECIPIENT` (it was never meant for here); anything else is `DECRYPT_FAILED`.
 6. `participant` for the delivery is the guest's own code for a guest, else the code of the profile whose key was addressed (or the first profile whose key opened it). For a protocol message it is its `x-hcx-recipient_code`, as sent.
 

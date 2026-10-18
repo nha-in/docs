@@ -16,8 +16,8 @@ Two roles, one builder:
 Both identifiers carry `system` `https://nhcx.abdm.gov.in` (not the facility's own identifier system on D1). The provider is always first, the payer second.
 
 **Where they come from.**
-- Provider: the default facility (`D1 organization` with `is_default`). Every send refuses without its HFR id and participant code ("Set the facility's HFR ID and NHCX participant code under Settings ...").
-- Payer: the claim's payer (`D9 claim.payer_id`, `D9 claim.payer_name`), else the configured default payer code and name (the reference implementation defaults to the PMJAY payer, see [PAYERS.md](../references/PAYERS.md)) [REF](../references/PAYERS.md#markers). `D9 claim.payer_name` is set when the claim is opened: the payer's registered name on the participant registry (G4), cached; never the search row's name or the adapter's.
+- Provider: the case's facility (`D1 organization`; the default row where the HMIS has one facility). Every send refuses without its HFR id and participant code ("Set the facility's HFR ID and NHCX participant code under Settings ...").
+- Payer: the claim's payer (`D9 claim.payer_id`, `D9 claim.payer_name`), or the payer chosen for a discovery on an existing case (named by its registered name), else the configured default payer code (the reference implementation defaults to the PMJAY payer, see [PAYERS.md](../references/PAYERS.md)) [REF](../references/PAYERS.md#markers). `D9 claim.payer_name` is set when the claim is opened: the payer's registered name on the participant registry (G4), cached; never the search row's name or the adapter's.
 - Exception: when a notification is acknowledged and the payer named no Organization as the facility's, the payer Organization built there takes its code from the notification's `x-hcx-sender_code` (F12).
 
 **`id` by bundle.**

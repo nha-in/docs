@@ -6,7 +6,7 @@ One row is one line of the bill on one case ([D19. case](D19-case.md)): what was
 #### D25D. DESCRIPTION
 The itemised bill, and the only place an approved rupee is decided. The case's totals ([D19. case](D19-case.md) `total_claimed`, `total_approved`) are sums over these rows, recomputed inside every transaction that touches one.
 
-**What a line holds from the wire.** `code` is the `productOrService` the line was billed under (F8. Claim (in nhcx-preauth/payer) `item[]`): a package code, a SNOMED concept, an implant code; it is what a ClaimResponse (F9. ClaimResponse (in nhcx-coverage/payer)) and a query ([F11. CommunicationRequest](../fhir/F11-communicationrequest.md)) name the line by. `modifier_code` and `modifier_display` are the ward or ICU tier the line was billed under (`Claim.item.modifier`), which the scheme prices over the package rate [PAYER](../references/PAYERS.md#markers); it arrives as a modifier with its rate already inside the item's `net`, not as a line of its own, and the desk shows it as a column ([S3. Case Desk](../screens/S3-case-desk.md)). `claimed_amount` is the item's `net`, else quantity times unit cost. `enhancement_no` is the round the line arrived in: zero for the original submission, one and up for each enhancement.
+**What a line holds from the wire.** `code` is the `productOrService` the line was billed under (F8. Claim (in nhcx-preauth/payer) `item[]`): a package code, a SNOMED concept, an implant code; it is what a ClaimResponse ([F9. ClaimResponse](../fhir/F9-claimresponse.md)) and a query ([F11. CommunicationRequest](../fhir/F11-communicationrequest.md)) name the line by. `modifier_code` and `modifier_display` are the ward or ICU tier the line was billed under (`Claim.item.modifier`), which the scheme prices over the package rate [PAYER](../references/PAYERS.md#markers); it arrives as a modifier with its rate already inside the item's `net`, not as a line of its own, and the desk shows it as a column ([S3. Case Desk](../screens/S3-case-desk.md)). `claimed_amount` is the item's `net`, else quantity times unit cost. `enhancement_no` is the round the line arrived in: zero for the original submission, one and up for each enhancement.
 
 **Created:**
 - With the case by C4. Pre-auth Submit (in nhcx-preauth/payer) (C5. Claim Submit (in nhcx-claim/payer) for a direct claim): every `Claim.item[]` as `pending` with `approved_amount` 0, in order. A short random `LI-` id [REF](../references/PAYERS.md#markers).
@@ -24,9 +24,9 @@ The itemised bill, and the only place an approved rupee is decided. The case's t
 
 `query_remarks` is kept only on a `queried` line. Each decision appends a timeline event ([D26. case_timeline](D26-case-timeline.md)) "Line Item Approved", "Partially Approved", "Rejected" or "Queried" with the amounts.
 
-**Moved by the case:** approving the case ([A13. Adjudicate](../apis/A13-adjudicate.md)) approves every `pending` line in full first, and is refused while any line is `queried` or when every line is `rejected`; a query reply ([C9. Communication](../callbacks/C9-communication.md), C4. Pre-auth Submit (in nhcx-preauth/payer) resubmission) puts every `queried` line back to `pending` and clears `query_remarks`; a reprocess (C7. Task Submit (in nhcx-preauth/payer)) puts every line back to `pending` with `approved_amount` 0 and remarks cleared.
+**Moved by the case:** approving the case ([A13. Adjudicate](../apis/A13-adjudicate.md)) approves every `pending` line in full first, and is refused while any line is `queried` or when every line is `rejected`; a query reply ([C9. Communication](../callbacks/C9-communication.md), C4. Pre-auth Submit (in nhcx-preauth/payer) resubmission, C5. Claim Submit (in nhcx-claim/payer) claim sent again) puts every `queried` line back to `pending` and clears `query_remarks`; a reprocess (C7. Task Submit (in nhcx-preauth/payer)) puts every line back to `pending` with `approved_amount` 0 and remarks cleared.
 
-**Read into the wire:** each row is one `ClaimResponse.item[]` (F9. ClaimResponse (in nhcx-coverage/payer)) with its `itemSequence`, an `eligible` adjudication of `approved_amount`, a status adjudication from `status`, and `remarks` or `query_remarks` as the reason; and one payload of a query ([F11. CommunicationRequest](../fhir/F11-communicationrequest.md)) when queried.
+**Read into the wire:** each row is one `ClaimResponse.item[]` ([F9. ClaimResponse](../fhir/F9-claimresponse.md)) with its `itemSequence`, an `eligible` adjudication of `approved_amount`, a status adjudication from `status`, and `remarks` or `query_remarks` as the reason; and one payload of a query ([F11. CommunicationRequest](../fhir/F11-communicationrequest.md)) when queried.
 
 Delete: never on their own; by replacement of the bill, or cascade with the case.
 
@@ -59,5 +59,5 @@ Delete: never on their own; by replacement of the bill, or cascade with the case
 - Screens: [S2. Cases](../screens/S2-cases.md), [S3. Case Desk](../screens/S3-case-desk.md)
 - APIs: [A5. Query Request](../apis/A5-query-request.md), [A13. Adjudicate](../apis/A13-adjudicate.md)
 - Callbacks: [C9. Communication](../callbacks/C9-communication.md)
-- FHIR: [F11. CommunicationRequest](../fhir/F11-communicationrequest.md), [F12. Communication](../fhir/F12-communication.md)
+- FHIR: [F9. ClaimResponse](../fhir/F9-claimresponse.md), [F11. CommunicationRequest](../fhir/F11-communicationrequest.md), [F12. Communication](../fhir/F12-communication.md)
 - Database: [D19. case](D19-case.md)

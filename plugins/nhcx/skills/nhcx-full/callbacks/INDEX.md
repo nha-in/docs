@@ -5,7 +5,7 @@ Every message NHCX delivers to the application. NHCX posts it to the application
 | # | Callback | NHCX route | Answers | File |
 |---|---|---|---|---|
 | [C1](C1-callback-door.md) | Callback Door | every route | [A2](../apis/A2-coverage-eligibility-check.md), [A6](../apis/A6-task-submit.md), [A7](../apis/A7-communication-on-request.md), [A8](../apis/A8-paymentnotice-on-request.md), [A10](../apis/A10-txn-related.md), [A13](../apis/A13-txn-list.md) | [C1-callback-door.md](C1-callback-door.md) |
-| [C2](C2-coverage-eligibility-on-check.md) | Coverage Eligibility Verdict | `v1/coverageeligibility/on_check` | [A2](../apis/A2-coverage-eligibility-check.md) | [C2-coverage-eligibility-on-check.md](C2-coverage-eligibility-on-check.md) |
+| [C2](C2-coverage-eligibility-on-check.md) | Coverage Eligibility Verdict | `v1/coverageeligibility/on_check` | [A2](../apis/A2-coverage-eligibility-check.md), [A3](../apis/A3-insurance-plan-request.md) | [C2-coverage-eligibility-on-check.md](C2-coverage-eligibility-on-check.md) |
 | [C3](C3-auth-requirements-on-check.md) | Authorisation Requirements Ruling | `v1/coverageeligibility/on_check` | [A2](../apis/A2-coverage-eligibility-check.md) | [C3-auth-requirements-on-check.md](C3-auth-requirements-on-check.md) |
 | [C4](C4-insuranceplan-on-request.md) | Insurance Plan Reply | `v1/insuranceplan/on_request` | [A3](../apis/A3-insurance-plan-request.md) | [C4-insuranceplan-on-request.md](C4-insuranceplan-on-request.md) |
 | [C5](C5-preauth-on-submit.md) | Pre-auth Reply | `v1/preauth/on_submit` | [A4](../apis/A4-preauth-submit.md) | [C5-preauth-on-submit.md](C5-preauth-on-submit.md) |

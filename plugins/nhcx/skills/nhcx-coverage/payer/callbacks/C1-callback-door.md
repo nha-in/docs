@@ -163,6 +163,12 @@ payload(envelope):
     if envelope.fhir is not an object: raise Rejected("The callback carried no readable payload.")
     return envelope.fhir
 
+echo_workflow(asked, kind):                               # the workflow id an answer goes back under
+    asked = trim(asked)
+    if asked matches ^[A-Z]{0,2}[0-9]{1,4}$: return asked     # a published code: 1, 11, 121, PC01, R15
+    if kind == insurance plan: return "1"                   # a plan is hospital-level, never a case's
+    return ""                                                 # anything else (a case number) is not repeated
+
 answer(in, bundle, path, workflow, status, what):        # every answer on the hospital's thread
     headers = {x-hcx-sender_code: in.recipient, x-hcx-recipient_code: in.sender,
                x-hcx-correlation_id: in.corr,

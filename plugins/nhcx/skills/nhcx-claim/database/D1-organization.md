@@ -4,13 +4,13 @@
 One row is the healthcare facility this installation represents; primary key `id`; no parent table.
 
 #### D1D. DESCRIPTION
-The facility row is the provider on every NHCX message. Its `participant_code` is the `x-hcx-sender_code` on every outbound send. Its `identifier_value` (the HFR / facility ID) is the `providerId` on the eligibility check, the InsurancePlan discovery Task and the pre-auth and claim bundles. `name` and `phone` fill the provider Organization.
+The facility row is the provider on every NHCX message. Its `participant_code` is the `x-hcx-sender_code` on every outbound send. Its `identifier_value` (the HFR / facility ID) is the `providerId` on the eligibility check, the InsurancePlan discovery Task and the pre-auth and claim bundles. `name` fills the provider Organization (the phone and address are not sent).
 
 **Where the HFR id comes from.** When the HMIS has an ABDM module with a facility record (for example a `HealthFacility.hf_id`), that record is the HFR id: `identifier_value` is read from it through the function the mapping names, and the NHCX settings screen ([S19. NHCX Settings](../screens/S19-nhcx-settings.md)) shows it read-only with its source. Only an HMIS without such a record edits `identifier_value` on S19. The two are never both editable, so the facility's registry id lives in one place ([SCAFFOLDING.md](../references/SCAFFOLDING.md), section 4a). The participant code is NHCX's own and is always edited on S19.
 
 Lifecycle:
 - Created once, by seeding, when the table is empty. The seeded row has `is_default = 1`, `type_code = 'prov'` and no `participant_code`.
-- The application reads "the facility" as the first row ordered by `is_default DESC, id`. No screen adds a second row.
+- The application reads "the facility" as the first row ordered by `is_default DESC, id`. No screen adds a second row. An HMIS that already runs several facilities keeps one such profile per facility instead, and every case (D9) reads the profile of the facility it belongs to: its HFR id, its participant code and its name.
 - Updated from the NHCX settings screen ([S19. NHCX Settings](../screens/S19-nhcx-settings.md)): every column except `id` and `is_default` is overwritten on save, and `identifier_value` only when no ABDM module supplies it. The two claim-start switches (`registration_required`, `capture_member_id`) are saved from the same screen and read by the policy search (S1. Search Policy (in nhcx-coverage)) through the options the claim screens load. `name` and `identifier_value` are required. `identifier_type_code` defaults to `NHRR`, `identifier_system` to `https://facility.abdm.gov.in`, `type_code` to `prov`, `country` to `India`.
 - Never deleted. It is a master table and survives the "clear transactional data" reset.
 
@@ -35,7 +35,7 @@ Payers are not rows in this table. A claim carries its payer on [D9. claim](D9-c
 | capture_member_id | INTEGER | NOT NULL, default 1 | 1: the member id is offered as an identifier at the start beside the ABHA number and the mobile number; 0: the search starts from those two only |
 | type_code | TEXT | NOT NULL, default `'prov'` | HL7 organization-type: `prov`, `dept`, `team`, `ins`, `other` |
 | type_display | TEXT | NOT NULL, default `'Healthcare Provider'` | display of `type_code` |
-| phone | TEXT | null | facility phone; provider telecom on the eligibility check |
+| phone | TEXT | null | facility phone; not sent |
 | email | TEXT | null | facility email |
 | address_line | TEXT | null | street address |
 | city | TEXT | null | city |

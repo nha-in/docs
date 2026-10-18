@@ -15,8 +15,8 @@ Read from each `authorizationSupporting` entry of every item in the payer's `aut
 Entries are de-duplicated on (`kind`, `code`, `form_url`) across the whole reply.
 
 How it is used, when the ruling is `ready`:
-- Pre-authorisation (S9): the documents with `at_preauth = 1` are required, and the forms with `at_preauth = 1` are looked up in D12 (in nhcx-coverage) by `form_url`.
-- Claim (S11): the documents and forms with `at_preauth = 0` are required, and any `at_preauth = 1` document that was not attached at the pre-authorisation is listed again.
+- Pre-authorisation (S9): the documents with `at_preauth = 1` are required, and every form the ruling names (whatever its `at_preauth`) is looked up in D12 (in nhcx-coverage) by `form_url` (D12. claim_plan_form (in nhcx-coverage)'s rule).
+- Claim (S11): the documents with `at_preauth = 0` are required; the forms are every form of the master not named by the ruling. A ruling-named document is not listed again on the claim.
 - Requirements are listed ordered by `kind, seq`.
 
 Lifecycle:
