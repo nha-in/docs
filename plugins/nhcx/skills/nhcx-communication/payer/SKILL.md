@@ -3,13 +3,26 @@ name: nhcx-payer-communication
 description: >-
   Build NHCX (India's National Health Claims Exchange) payer-side queries into an existing payer system: raising a query on a case as a CommunicationRequest, taking the hospital's Communication with its documents back onto the case, and the resubmission mode some schemes use instead, with the embedded NHCX gateway it needs. Use when a payer system must ask a hospital for more over NHCX.
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
-**Version 1.1.0**, built 2026-10-18, checked against NHA's NHCX package 1.0.0.
+**Version 1.2.0**, built 2026-10-18, checked against NHA's NHCX package 1.0.0.
 
 # READ FIRST: CORE
 Before anything else, read [references/CORE.md](references/CORE.md) and keep it in mind for the whole task. Its **Instructions** are binding: follow them strictly in every step and every file, and re-read them at the start of each step (L1 to L8). Its **Confusions** settle what easily mixed-up terms mean; when a word is ambiguous, CORE.md decides. It also holds the base URLs and, for every exchange, the route it arrives on, the bundle, the callback that takes it in, the answer and the workflow id the answer travels under.
+
+# UPDATE FIRST
+At the start of every task, before L1, and at the start of every later prompt that continues the work, check whether the NHCX package carries a newer build of this skill, and if it does, install it and work from it.
+
+**Independent of the MCP and of the knowledge source.** The check always reads the package on GitHub, whichever knowledge source L1.0 chose: a connected nhcx-docs MCP neither answers it nor skips it, and the MCP's `catalogue_info` version is never compared with the skill's. The skill's version is its own: it is not the package's release tag, nor the catalogue's version, nor `1.0.0`; only the version in `skills/manifest.json` is compared with it.
+
+1. **Read the package's skills manifest.** The package (github.com/nha-in/nhcx-package) keeps a copy of the built skills under `skills/`, with `skills/manifest.json` naming their version (`version` for the provider skills, `companion.version` for the payer skills under `skills/payer/`) and `skills/CHECKSUMS.sha256` the hash of every file. Read it from `https://raw.githubusercontent.com/nha-in/nhcx-package/main/skills/manifest.json`; else from the latest release zip (`nhcx-package/skills/manifest.json`) (the zip of `https://api.github.com/repos/nha-in/nhcx-package/releases/latest`). A package already downloaded as the knowledge source is not read for this: it may be older than `main`.
+2. **Compare** its `companion.version` with this build's `1.2.0`, part by part as numbers (1.10.0 is newer than 1.9.2).
+3. **Newer in the package: pull and install it.** Download the package (the release zip whose skills manifest carries that version, else the `main` archive `https://codeload.github.com/nha-in/nhcx-package/zip/refs/heads/main`) into a new empty folder outside the target repository, and check every file under `skills/` against `CHECKSUMS.sha256`. Then replace the folder this SKILL.md was loaded from, and every sibling NHCX skill folder installed beside it (`nhcx-payer-full`, `nhcx-payer-coverage`, `nhcx-payer-preauth`, `nhcx-payer-claim`, `nhcx-payer-communication`, `nhcx-payer-payment`), with the package's copy of the same name, whole: no file of the old build is left behind. A skill installed by a plugin manager is updated through it when it offers that version, else its skills folder is replaced the same way. Nothing in the target repository or `nhcx-plan/` is touched by the install. Tell the user in one line ("Updated the NHCX skills from 1.8.0 to 1.9.0 from the NHCX package."), log it, then re-read this SKILL.md and CORE.md from the installed copy and carry on from them; VERSION then re-checks the finished steps against what changed.
+4. **Same or older:** carry on with this build.
+5. **Not reachable, or a checksum fails:** carry on with this build, say so to the user in one line, and log the reason. A copy that fails its checksums is never installed, not even in part.
+
+Every check is recorded in `nhcx-plan/knowledge.json` under `skill_update` (`checked_at`, `source`, `package_skill_version`, `installed_version`, `result`: `current`, `updated`, `unreachable` or `checksum_failed`) and logged in `nhcx-plan/progress.json` (step `L0`, item `skill update`).
 
 # WHICH SIDE
 This folder is the **payer side** of the skill above it: [../SKILL.md](../SKILL.md) is the provider side, for a hospital's HMIS. Use this folder when L1 discovery found the target is an insurer, TPA or scheme system, the participant that answers eligibility, files and decides pre-authorisations and claims, and pays. Every link below stays inside this folder; nothing at the root applies, and its ids are not these. If the target turns out to be a hospital system after all, log a `corrected` entry and go back to [../SKILL.md](../SKILL.md).
@@ -77,11 +90,16 @@ Other skills built from the same source:
 - **nhcx-payment/payer**: disbursement, payment notices, their acknowledgement and payment enquiries.
 
 # VERSION
-This is nhcx-payer-communication version 1.1.0, built on 2026-10-18. Its protocol tables (workflow ids, statuses, base URLs) were checked against NHA's NHCX package 1.0.0 ([github.com/nha-in/nhcx-package](https://github.com/nha-in/nhcx-package)).
+This is nhcx-payer-communication version 1.2.0, built on 2026-10-18. Its protocol tables (workflow ids, statuses, base URLs) were checked against NHA's NHCX package 1.0.0 ([github.com/nha-in/nhcx-package](https://github.com/nha-in/nhcx-package)).
 
 - Record it when the work starts: `nhcx-plan/knowledge.json` and the `target` of `nhcx-plan/progress.json` carry `skill` and `skill_version`, and the header of `nhcx-plan/report.html` shows them.
+- UPDATE FIRST may have installed a newer build from the NHCX package at the start of the prompt; the version recorded is then the old one.
 - If a later prompt runs with a different version of this skill than the one recorded, say so to the user before continuing, log it as a `corrected` entry naming both versions, and re-check the steps already done against the specs that changed.
 - A knowledge source newer than 1.0.0 wins on the protocol, as KNOWLEDGE SOURCE says; note the difference in `knowledge.json`.
+
+Changes in 1.2.0, to re-check against when an earlier build is continued:
+- UPDATE FIRST: every prompt starts by reading the NHCX package's skills manifest (`skills/manifest.json`) and installs the package's build when it is newer, checked against `skills/CHECKSUMS.sha256`.
+- Every step, sub-step, test and spec id shown to a person carries its name (`L3 Integration Planning`, `T3 ... (CLI): pass`), from `nhcx-plan/names.json`, written at L1.2 (LOG.md, LOGN).
 
 # REFERENCES
 - [references/CORE.md](references/CORE.md): base URLs, and every exchange from the payer's side with its route, bundles, callback, answer and workflow id, on one page.
@@ -102,4 +120,4 @@ This is nhcx-payer-communication version 1.1.0, built on 2026-10-18. Its protoco
 In the target repository:
 - **Code** in the NHCX module and the changed payer modules, as laid out in SCAFFOLDING.
 - **Tests** under `tests/nhcx/`: dry-run (L7) and end-to-end (L8), the end-to-end ones with a GUI runner and a CLI runner (`nhcx-payer-e2e`).
-- **Plan files** under `nhcx-plan/`: `knowledge.json`, `discovery.json`, `mapping.json`, `plan.json`, `code-plan.json`, `code.json`, `validation.json`, `dry-run.json`, `e2e.json`, the log `progress.json` with `progress.md`, and `report.html`, rebuilt at the end of every prompt by the report builder (`report.py` or the target language's equivalent) with its `make-report.sh` and `make-report.bat` beside it.
+- **Plan files** under `nhcx-plan/`: `knowledge.json`, `discovery.json`, `mapping.json`, `plan.json`, `code-plan.json`, `code.json`, `validation.json`, `dry-run.json`, `e2e.json`, `names.json` (the name of every id), the log `progress.json` with `progress.md`, and `report.html`, rebuilt at the end of every prompt by the report builder (`report.py` or the target language's equivalent) with its `make-report.sh` and `make-report.bat` beside it.
