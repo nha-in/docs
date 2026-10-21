@@ -1,0 +1,38 @@
+[
+  {
+    "id": "395bf28caf2e",
+    "date": "2026-10-19",
+    "kind": "plugin-version",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": null,
+    "count": 1,
+    "items": [
+      {
+        "name": "nhcx",
+        "from": "1.0.11",
+        "to": "1.0.12"
+      }
+    ]
+  },
+  {
+    "id": "e189cd7374ac",
+    "date": "2026-10-19",
+    "kind": "plugin-version",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": null,
+    "count": 1,
+    "items": [
+      {
+        "name": "nhcx",
+        "from": "1.0.11",
+        "to": "1.0.12"
+      }
+    ]
+  }
+]
