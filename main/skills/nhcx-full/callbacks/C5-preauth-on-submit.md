@@ -1,12 +1,12 @@
 # C5. Pre-auth Reply
 
 #### C5E. ENDPOINT
-Delivered in-process by [G8. Receive](../gateway/G8-receive.md) for NHCX route `v1/preauth/on_submit`, passed to `C1.receive` with `delivery.type` `preauth`. Answers A4 in all its sends: a pre-authorisation, a query answer, an enhancement, an enhancement query answer, and a predetermination (quote).
+Delivered in-process by [G8. Receive](../gateway/G8-receive.md) for NHCX route `v1/preauth/on_submit`, passed to `C1.receive` with `delivery.type` `preauth`. Answers A4 in all its sends: a pre-authorisation, a query answer, an enhancement and an enhancement query answer. A quote row (predetermination, retired in A4) written before is still answered here.
 
 #### C5D. DESCRIPTION
 A pre-authorisation is answered several times on one correlation id: an acknowledgement (PMJAY workflow `20`, `outcome: queued`), sometimes a query, then the decision (workflow `21`) [PAYER](../references/PAYERS.md#markers). Every reply the leg has not already taken in is applied; a guard that refused anything after the first reply would throw the approval away.
 
-**Matching.** By `x-hcx-correlation_id` against the pre-authorisation (D18 `correlation_id`, newest row). When none matches, against the predetermination quotes (D19 `correlation_id`, newest row). Neither: `unmatched`.
+**Matching.** By `x-hcx-correlation_id` against the pre-authorisation (D18 `correlation_id`, newest row). When none matches, against the quote rows written before predetermination was retired (D19 `correlation_id`, newest row). Neither: `unmatched`.
 
 **Redelivery.** On the pre-authorisation, the same `x-hcx-api_call_id` as the last applied reply is a redelivery (`ignored`). The `redelivery` flag G8 takes from [G9. Ledger](../gateway/G9-ledger.md) is not used for this: the leg's own `api_call_id` decides. Without an api_call_id, a reply with the same outcome and adjudication as the leg already holds is treated as the same message, unless the leg is still `submitting`. On a quote, anything after the first answer is `ignored`.
 
@@ -16,9 +16,11 @@ A pre-authorisation is answered several times on one correlation id: an acknowle
 
 **Status by workflow id.** The reply's `x-hcx-workflow_id` gives the status when it is one of the payer-side codes (20 acknowledgement, 21 or 22 approved, 23 or 231 rejected, 24 or 241 queried, see [PAYERS.md](../references/PAYERS.md)) [PAYER](../references/PAYERS.md#markers); otherwise the bundle does. So a reply under 20 is an acknowledgement whatever its ClaimResponse restates, and the screen shows the case as under adjudication.
 
+**A query on the pre-authorisation.** A reply that settles the leg `queried` (a line-item query: outcome `partial` with queried items, or a query adjudication) is answered by resubmitting the pre-authorisation from its tab (A4 `preauth_query_response`), never on the Communication tab; the payer's question is the leg's `query_note`. A standalone CommunicationRequest query is C9.
+
 **Failed sends.** A leg whose send was reported failed (C1 `failed_send`) is reopened as `submitting` when the payer answers it, then the reply applied.
 
-**A denied enhancement.** A rejection that answers an enhancement leg denies the enhancement only: the approved pre-authorisation keeps its status, its approved amount and every other approval column (`request_json` of the last accepted send, `eligible_amount`, `outcome`, `adjudication`, `disposition`, `preauth_ref`, `items_json`, `settled_at`); the payer's reason is recorded in `error_message`, the reply in `response_json`, and nothing is added to the approved total (D18, A4). Only a rejection of the pre-authorisation itself ends the leg `rejected`.
+**A denied enhancement.** A rejection that answers an enhancement leg denies the enhancement only: the pre-authorisation goes back to `approved` and keeps its approved amount and every other approval column (`request_json` of the last accepted send, `eligible_amount`, `outcome`, `adjudication`, `disposition`, `preauth_ref`, `items_json`, `settled_at`); the payer's reason (its query note, else the disposition, else the error text) is recorded in `error_message`, the reply in `response_json`, `settled_at` is now, and nothing is added to the approved total (D18, A4). Only a rejection of the pre-authorisation itself ends the leg `rejected`.
 
 #### C5Q. REQUEST
 `fhir` is an F1 Bundle carrying the payer's F9 ClaimResponse (`use: preauthorization`, or `predetermination` for a quote), usually beside F15 Patient, F17 Organizations and F18 Coverage; some payers send the ClaimResponse alone.
@@ -58,10 +60,11 @@ C5(envelope, corr):
         # pre-authorisation and its amounts stand. The denial is kept as the
         # payer's reason, and the enhancement's amount is not added.
         # the approval's own columns were not cleared by the enhancement send (D18), so
-        # they are not touched here; the status goes back to what those columns say
-        leg_write(D18, row, {status: "partial" if (row.outcome == "partial" and row.adjudication == "approved") else "approved",
-                             error_message: parsed.reason or disposition,
+        # they are not touched here
+        leg_write(D18, row, {status: "approved",
+                             error_message: parsed.query_note or disposition or error_text(parsed),
                              api_call_id: api_call_id or null,
+                             settled_at: now,
                              response_json: body})      # the denial lives in error_message; D18 has no enhancement_status column
         return "settled"
     values = parsed, dropping preauth_ref when the reply carries none (the stored one stays)
@@ -87,8 +90,8 @@ quote(envelope, corr):
     if body.type == "ProtocolResponse":
         write D19: status = "error", error_message = rejection(body)
         return "settled"
+    parsed = read_claim_response(body)                 # read before the revive: a rejected reply writes nothing
     revive(D19, row, "asking")
-    parsed = read_claim_response(body)
     write D19: status = "answered", answered_at = now, error_message = null,
                outcome, adjudication, disposition,
                allowed_amount = parsed.approved_amount, response_json = body

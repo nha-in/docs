@@ -1,38 +1,41 @@
 # F6. Questionnaire
 
 #### F6R. RESOURCE
-`Questionnaire`, `status: active`, inside the InsurancePlan bundle (F5), one per covered procedure that has anything to ask. Direction: sent by A2. Insurance Plan Answer (in nhcx-coverage/payer). It is also pointed at from an `auth-requirements` ruling (F3) as `fullUrl: <url>`, so a hospital that never fetched the plan still learns which form to answer. No profile is declared [REF](../references/PAYERS.md#markers). The hospital's answers come back as F7.
+`Questionnaire`, `status: active`, inside the InsurancePlan bundle (F5), one per published form. Direction: sent by A2. Insurance Plan Answer (in nhcx-coverage/payer). A procedure's forms are also pointed at from an `auth-requirements` ruling (F3) as `fullUrl: <url>`, so a hospital that never fetched the plan still learns which forms to answer. No profile is declared [REF](../references/PAYERS.md#markers). The hospital's answers come back as F7.
 
 #### F6D. DESCRIPTION
-The standard treatment guideline (STG) as the questions a clinician answers at pre-authorisation. It belongs to the procedure ([D10. procedure_rule](../database/D10-procedure-rule.md)), not the policy, so one guideline serves every product that covers the procedure; that is why it is a resource of its own addressed by `url`, and the benefit in F5 points at it through a `Claim-SupportingInfoRequirement` (category `INF`, code `STG`, `documentationUrl`).
+A form the payer wants filled. There are two owners and one shape:
 
-**Which items.** Two sources, the first that yields anything:
-1. The procedure's own guideline questions (`D10.stg_questions`, a JSON list of strings): one item per non-blank question, `linkId` `<package code>/stg/<n>` counting from 1, `text` the question, `type` `string`, `required` `true`. Free text, because a grade, a finding or a fitness assessment is not a yes or a no.
-2. Otherwise one item per **required** document wanted at pre-authorisation whose document type has an NDHM supporting-information category ([D11. procedure_rule_doc](../database/D11-procedure-rule-doc.md) phase `preauth`, [D3. document_type](../database/D3-document-type.md)): `linkId` `<package code>/preauth/<doc code>`, `prefix` the document name, `text` "Is the <document name> attached?", `type` `choice`, `required` `true`, `answerOption` `Yes` and `No`. Documents wanted at discharge or claim are never asked about: nobody has them at pre-authorisation.
+- **A policy form** ([D12. policy](../database/D12-policy.md) questionnaires, set on S7. Policy Configurator (in nhcx-coverage/payer)): asked of every case on the product, whatever the package; a consent, a declaration, a pre-existing disease history.
+- **A procedure form** ([D10. procedure_rule](../database/D10-procedure-rule.md) `questionnaires`, set on S9. Procedure Configurator (in nhcx-coverage/payer)): asked of every case quoting that procedure; a clinical history, findings, fitness for surgery. It belongs to the registry entry, so one form serves every product that covers the procedure.
 
-A procedure with neither gets no Questionnaire, no STG requirement on its benefit, and no `fullUrl:` concept in a ruling.
+Both are a title, an optional description ("shown to the hospital above the questions") and a list of typed questions, and both render the same way. They replace the standard treatment guideline (STG) questionnaire, which is no longer published: no `STG` code, no `/stgquestionnaire/` path, no form built from the documents a procedure wants [REF](../references/PAYERS.md#markers).
 
-**The url.** `<payer base>/Questionnaire/<package code>`; the resource `id` is a deterministic UUID v5 of `Questionnaire/<D10.id>` [REF](../references/PAYERS.md#markers). The hospital reads the kind of form from the path segment before the id: this payer's forms therefore count as policy forms on the provider side, not `stgquestionnaire` guidelines, which is a spelling difference and changes nothing about what is answered [PAYER](../references/PAYERS.md#markers).
+**The url.** `<payer base>/questionnaire/<owner>/<form id>`, the owner being the policy id or the procedure code, the form id the one the server issued when the form was first saved (`QNR-...`, or `form-<n>` for a form saved without one). Keying on the form id rather than the title means a retitled form keeps its url and the answers already filed against it. The url is only an address: it never tells a policy form from a procedure form, and `name` is `Questionnaire` for both. A hospital tells them apart by where the pointer sits on the plan: under `coverage[0].extension` for a policy form, under the package's `plan.specificCost` benefit for a procedure form (F5). The resource `id` is a deterministic UUID v5 of `Questionnaire/<policy id>/<form id>` or `Questionnaire/procedure/<procedure id>/<form id>` [REF](../references/PAYERS.md#markers).
 
-`answerOption[].initialSelected` is written even when false, so an option nobody decided about reads differently from one deliberately left unselected.
+**Items.** One per question with wording, in order: `linkId` `<form id>/<n>` counting from 1 (stable: answers come back under it), `text` the question, `type` the question's type (`string` when none was saved), `required` as configured, and for a `choice` one `answerOption.valueString` per non-blank answer. The types a form may ask in are the ones a hospital's form builder can render: `string`, `text`, `boolean`, `choice`, `date`, `dateTime`, `integer`, `decimal`, `attachment` (S7. Policy Configurator (in nhcx-coverage/payer) lists the labels).
+
+**What is not published.** A form with no question that has wording is skipped and reported on the render ("Questionnaire "`<title>`" on `<owner>` asks no question, so it is not published. Give it a question, or remove it."); the configurator refuses to save one, so one here was edited behind its back. A procedure form of a procedure with no package rate is not published either, because the procedure has no `plan.specificCost` entry to point at it from (F5).
+
+**Carried over.** When the procedure forms arrived, each procedure's old guideline questions were moved into one form of its own, id `clinical-details`, title "Clinical details", one required `string` question per old question; the old `stg_questions` column is kept and no longer read ([D10. procedure_rule](../database/D10-procedure-rule.md)).
 
 #### F6F. FIELDS
 | Element written | From | Notes |
 |---|---|---|
-| `id` | UUID v5 of `Questionnaire/<D10.id>` | |
+| `id` | UUID v5 of the owner and the form id | deterministic |
 | `meta.versionId` | `1` | |
-| `url` | `<payer base>/Questionnaire/<D10.code>` | the key the answer (F7) and the ruling (F3) name |
-| `name` | `STG Questionnaire` | constant [REF](../references/PAYERS.md#markers) |
-| `title` | `<D10.name>` followed by "Standard Treatment Guidelines" | |
+| `url` | `<payer base>/questionnaire/<D12.id or D10.code>/<form id>` | the key the answer (F7), the pointer (F5) and the ruling (F3) name |
+| `name` | `Questionnaire` | constant, for policy and procedure forms alike |
+| `title` | the form's title | |
+| `description` | the form's description | when set |
 | `status` | `active` | |
-| `item[].linkId` | `<D10.code>/stg/<n>` or `<D10.code>/preauth/<D11.doc_code>` | stable; answers come back under it |
-| `item[].text` | the question, or "Is the <D3.name> attached?" | |
-| `item[].prefix` | `D3.name` | document items only |
-| `item[].type` | `string` or `choice` | |
-| `item[].required` | `true` | |
-| `item[].answerOption[]` | `Yes`, `No`, each with `initialSelected: false` | document items only |
+| `item[].linkId` | `<form id>/<n>` | |
+| `item[].text` | the question, trimmed | |
+| `item[].type` | the question's type, else `string` | |
+| `item[].required` | the question's required flag | |
+| `item[].answerOption[].valueString` | the answers on offer | `choice` only |
 | bundle entry `fullUrl` | the `url` | after the InsurancePlan and the Organization |
 
 #### F6U. USED BY
 - FHIR: [F1. Bundle](F1-bundle.md), [F3. CoverageEligibilityResponse](F3-coverage-eligibility-response.md), [F4. Task (InsurancePlan request)](F4-task-insuranceplan.md), [F5. InsurancePlan](F5-insuranceplan.md), [F7. QuestionnaireResponse](F7-questionnaireresponse.md)
-- Database: [D10. procedure_rule](../database/D10-procedure-rule.md), [D11. procedure_rule_doc](../database/D11-procedure-rule-doc.md), [D13. policy_procedure](../database/D13-policy-procedure.md)
+- Database: [D10. procedure_rule](../database/D10-procedure-rule.md), [D12. policy](../database/D12-policy.md), [D13. policy_procedure](../database/D13-policy-procedure.md)

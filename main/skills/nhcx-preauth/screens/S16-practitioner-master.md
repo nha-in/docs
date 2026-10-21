@@ -1,6 +1,6 @@
 # S16. Practitioner Master Screen
 
-> **Existing HMIS screen.** Most HMIS already have this screen. Do not rebuild it: add only what NHCX needs (the fields and actions marked for NHCX below, such as ABHA number and address, HPR id, registration and qualification) to the target's own screen, and record anything else as `found` in discovery.
+> **Existing HMIS screen.** Most HMIS already have this screen. Do not rebuild it: add only what NHCX needs (the fields and actions marked for NHCX below, such as the HPR id, registration and qualification) to the target's own screen, built from the host's own components, and record anything else as `found` in discovery.
 
 #### S16R. ROUTE
 practitioners/list
@@ -58,7 +58,7 @@ On success: "Practitioner saved." Retire or Reinstate: "Practitioner updated."
 
 How practitioners are chosen elsewhere:
 - Every doctor picker (OPD visit, IPD admission consultant, appointment, billing doctor, and the claim care team) lists only active practitioners, sorted by name, each shown as "<name> - <department>".
-- Pre-authorisation care team (on the Claim Creation Form S4): when the linked admission names a consultant, the form shows that doctor as "<name> - treating doctor" with the hint "The consultant on the admission; change it there." and a link to the admission. When the admission names no consultant, it shows the hint "The admission names no consultant yet, set one on the admission, or add the doctor here." and a repeating row of "Doctor" (dropdown, blank option "Select doctor") and "Role" (Admitting physician, Treating doctor, Surgeon, Anaesthetist, Nursing lead; default Treating doctor), with an "Add doctor" button.
+- Pre-authorisation care team ("Treating doctor" in the Pre-authorisation details on the Pre-authorisation tab, [S4. Pre-authorisation Details and Admission Link](S4-claim-creation-form.md)): the hint "The doctor treating the patient (planned, if not yet admitted)." and repeating rows of "Doctor" (a select, blank option "Select doctor", active practitioners sorted by name as `<name> - <specialty>`) and "Role" (Admitting physician, Treating doctor, Surgeon, Anaesthetist, Nursing lead; default Treating doctor), with an "Add doctor" button. A linked admission's consultant pre-fills the first row of an unsaved form only; the desk may change it.
 - Care team validation messages: "Choose a valid care team role.", "Set the consultant on the admission (or add a doctor here) - the payer needs a treating doctor." at save, and "Add at least one doctor to the care team." at submission. A retired practitioner in the team is skipped.
 
 API: [A4. Pre-auth Submit](../apis/A4-preauth-submit.md), A5. Claim Submit (in nhcx-claim) (care team)
@@ -111,6 +111,6 @@ The arrangement below is the reference implementation's [REF](../references/PAYE
 1. Edit: reload S16 with `?edit=<id>`, opening the form prefilled for that practitioner.
 2. Add practitioner or Save practitioner: validate, save, and reload S16 with the result message.
 3. Cancel (editing only): reload S16 with the form cleared.
-4. Retire: mark the practitioner inactive and reload S16. They disappear from every doctor picker, including the claim care team on S4.
+4. Retire: mark the practitioner inactive and reload S16. They disappear from every doctor picker, including the pre-authorisation care team (S4).
 5. Reinstate: mark the practitioner active again and reload S16.
 6. Breadcrumb "Masters": go to the masters index.

@@ -4,9 +4,11 @@
 One row is one predetermination ask on a claim: the pre-authorisation bundle sent with `use: predetermination` and the payer's non-binding quote. Primary key `id`. Parent table: `claim` (D9), many rows per claim.
 
 #### D19D. DESCRIPTION
+**Retired.** No screen asks for a quote any more: the predetermination card is gone from the Pre-authorisation tab, and the coverage benefits check and the authorisation requirements ruling ([D13](D13-claim-auth.md)) answer what it was used for. The table is kept so rows written before, and a quote still arriving on their thread, are read and shown; a new build need not offer the ask. What follows describes those rows.
+
 A predetermination asks "what would the policy pay for this?" before anything is committed. The payer answers with a ClaimResponse that binds nobody and opens no case, so each ask is its own row rather than a state of the pre-authorisation (D18).
 
-**Created.** "Ask for a quote" on Pre-authorisation (S9). Allowed only when the claim's eligibility status is `eligible` and no earlier ask on the claim is still `asking` ("A quote is already with the payer; wait for its answer before asking again."). The bundle is the pre-authorisation's (lines D16, diagnoses D25, care team D26, the leg's documents D28) under its own anchor. It goes out on the pre-authorisation route with `x-hcx-workflow_id` `12` (see [PAYERS.md](../references/PAYERS.md)) [PAYER](../references/PAYERS.md#markers). The row is inserted with `status` `asking`, `txn_id`, `correlation_id`, `requested_at`, `requested_amount` (the lines total) and `request_json`. When [G7. Send](../gateway/G7-send.md) reports the send failed after naming its ids, the row is inserted with `status` `error` and the message, and the error is shown.
+**Created** (before retirement). "Ask for a quote" on Pre-authorisation (S9). Allowed only while the policy was in force on the case and no earlier ask on the claim is still `asking` ("A quote is already with the payer; wait for its answer before asking again."). The bundle is the pre-authorisation's (lines D16, diagnoses D25, care team D26, the leg's documents D28) under its own anchor. It goes out on the pre-authorisation route with `x-hcx-workflow_id` `12` (see [PAYERS.md](../references/PAYERS.md)) [PAYER](../references/PAYERS.md#markers). The row is inserted with `status` `asking`, `txn_id`, `correlation_id`, `requested_at`, `requested_amount` (the lines total) and `request_json`. When [G7. Send](../gateway/G7-send.md) reports the send failed after naming its ids, the row is inserted with `status` `error` and the message, and the error is shown.
 
 **Statuses** (exact strings): `asking`, `answered`, `error`.
 
@@ -46,5 +48,5 @@ A predetermination asks "what would the policy pay for this?" before anything is
 - Screens: [S6. Claim Detail](../screens/S6-claim-detail.md), [S9. Pre-authorisation](../screens/S9-preauthorisation.md)
 - APIs: [A4. Pre-auth Submit](../apis/A4-preauth-submit.md), [A10. Transaction Related](../apis/A10-txn-related.md), [A11. Transaction Dispatch](../apis/A11-txn-dispatch.md), [A13. Transaction List](../apis/A13-txn-list.md), [A17. Claim State](../apis/A17-claim-state.md)
 - Callbacks: [C1. Callback Door](../callbacks/C1-callback-door.md), [C5. Pre-auth Reply](../callbacks/C5-preauth-on-submit.md)
-- FHIR: [F9. ClaimResponse](../fhir/F9-claimresponse.md)
-- Database: [D9. claim](D9-claim.md), [D16. claim_line](D16-claim-line.md)
+- FHIR: [F1. Bundle](../fhir/F1-bundle.md), [F8. Claim](../fhir/F8-claim.md), [F9. ClaimResponse](../fhir/F9-claimresponse.md)
+- Database: [D9. claim](D9-claim.md)

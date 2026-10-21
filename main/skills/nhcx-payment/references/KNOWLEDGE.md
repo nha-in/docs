@@ -47,7 +47,7 @@ Links inside the package's `docs/README.md` are absolute paths from the machine 
 
 ## ABHA, ABDM's M1
 
-The ABHA on the patient file is created or verified through ABDM's ABHA service (A19. ABHA Create and Verify (ABDM M1) (in nhcx-coverage)), and that is ABDM's HIE-CM milestone M1, not NHCX. The same MCP server serves it (the server is published as `nhcx-docs` and as `abdm-docs`; both answer `catalogue_info`), and it is the only source: the NHCX package has no M1 at all. Read M1 like this:
+The ABHA on the patient file is created or verified through ABDM's ABHA service, and that is ABDM's HIE-CM milestone M1, not NHCX. An HMIS that already has M1 (ABHA create, link and verify, the ABHA identifier, the session token) keeps it: L1.3 finds it, it is reused without asking, and nothing below is read. Only an HMIS without one builds A19. ABHA Create and Verify (ABDM M1) (in nhcx-coverage) from these atoms. The same MCP server serves it (the server is published as `nhcx-docs` and as `abdm-docs`; both answer `catalogue_info`), and it is the only source: the NHCX package has no M1 at all. Read M1 like this:
 
 | Need | Call |
 |---|---|
@@ -58,7 +58,21 @@ The ABHA on the patient file is created or verified through ABDM's ABHA service 
 | The encryption certificate and what it seals | `get m1_get_v3_profile_public_certificate` |
 | Why a call failed | `decode_error` with the `ABDM-` code; the troubleshooting atoms `everything-returns-401` and `otp-never-arrives` |
 
-Without the MCP, open the same atoms on the ABDM developer portal at the `doc_url` an earlier `search` returned, and record `"m1": "portal"` in `knowledge.json`. The biometric service (A18. Biometric Authentication (in nhcx-coverage)) is in both sources: the package's `apis/14-biometric/` and its chapter `docs/03-Building a Provider/03-Biometric Authentication.md`, and the MCP's `nhcx.endpoint.abha-biometric-*` atoms.
+Without the MCP, open the same atoms on the ABDM developer portal at the `doc_url` an earlier `search` returned, and record `"m1": "portal"` in `knowledge.json`.
+
+## Health records, ABDM's M2
+
+The documents a claim carries (D28. claim_document (in nhcx-coverage)) are, for the most part, records the HMIS already holds, found by the case's ABHA number, and that its ABDM module files as M2 health records: the discharge summary, the diagnostic reports, the prescriptions, the invoice. Reusing them ("From records" on S9, S10 and S11; SCAFFOLDING section 4a) needs M2's vocabulary, which is ABDM's HIE-CM, read from the same MCP server:
+
+| Need | Call |
+|---|---|
+| The router for the milestone | the `abdm-m2` prompt |
+| What M2 is and what a HIP holds | `get hiecm.glossary.m2`, `get hiecm.concept.playbook-hip-software` |
+| The eight record types (`hiType`) and the NRCES profile each one's Composition declares | `get shared.fhir.document-bundles`, `get hiecm.glossary.hi-type` |
+| The envelope every record travels in, and where its attachment sits | `get shared.fhir.document-bundle`, `get shared.fhir.bundle-weight-and-narrative` |
+| A care context (one per admission) and how it is linked to the patient | `search` with `milestone: M2`, `type: flow` |
+
+What the claim takes from a record is the M2 bundle itself, as structured data: it rides in the claim bundle as a `DocumentReference` entry with an `application/fhir+json` attachment, pointed at by `supportingInfo.valueReference` (F8, F19). That is how the live PMJAY provider sends the hospital's own records (OP consultation, prescription, diagnostic report, discharge summary, invoice and the rest) and PMJAY adjudicates them [PAYER](PAYERS.md#markers); a payer that does not take records as FHIR (PAYERS.md "Health records as FHIR") gets the record's own PDF or image, or the HMIS's rendering, as a `valueAttachment`. The bundle is sent as the module built it, never rebuilt by this skill (`validate_fhir` checks M2's bundles and may be run on a record before it is attached; it is not for the claim bundle). Without the MCP, record `"m2": "portal"` in `knowledge.json` and read the same atoms on the portal. The biometric service (A18. Biometric Authentication (in nhcx-coverage)) is in both sources: the package's `apis/14-biometric/` and its chapter `docs/03-Building a Provider/03-Biometric Authentication.md`, and the MCP's `nhcx.endpoint.abha-biometric-*` atoms.
 
 ## Which lookup for which question
 
@@ -114,3 +128,7 @@ The package and the MCP catalogue number things by NHA's own use-case codes (A1 
 ```
 
 Only the block for the chosen source is filled. Choosing, downloading, checking and replacing the source are logged in `nhcx-plan/progress.json` like any other sub-step.
+
+## Not the skill's own update
+
+The knowledge source answers NHCX facts only. Whether a newer build of this skill exists is read from `skills/manifest.json` in the NHCX package on GitHub, always, even when the MCP is the knowledge source (SKILL.md, UPDATE FIRST). The skill's version, the package's release tag and the MCP catalogue's version are three separate numbers and never compared with one another.

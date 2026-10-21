@@ -13,6 +13,7 @@ The FHIR resources the application builds for NHCX and reads back from it. APIs 
 | # | Resource | Direction | File |
 |---|---|---|---|
 | [F2](F2-coverage-eligibility-request.md) | CoverageEligibilityRequest | sent | [F2-coverage-eligibility-request.md](F2-coverage-eligibility-request.md) |
+| [F3](F3-coverage-eligibility-response.md) | CoverageEligibilityResponse | received | [F3-coverage-eligibility-response.md](F3-coverage-eligibility-response.md) |
 | [F4](F4-task-insuranceplan.md) | Task (InsurancePlan discovery) | sent | [F4-task-insuranceplan.md](F4-task-insuranceplan.md) |
 | [F5](F5-insuranceplan.md) | InsurancePlan | received | [F5-insuranceplan.md](F5-insuranceplan.md) |
 | [F6](F6-questionnaire.md) | Questionnaire | received | [F6-questionnaire.md](F6-questionnaire.md) |

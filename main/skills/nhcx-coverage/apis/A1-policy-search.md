@@ -11,12 +11,16 @@ G10 attaches the default participant's ABDM session token from [G3. Session Toke
 The app validates before calling:
 - identifier type not one of the three below: "Choose what kind of identifier you are searching with."
 - empty value after trimming: "Enter an identifier value to search for."
+- an ABHA number that is not 14 digits once spaces and hyphens are removed: "An ABHA number has 14 digits."
+- a mobile number that is not 10 digits once spaces, hyphens and a leading +91 are removed: "A mobile number has 10 digits."
+
+The cleaned digits are what goes to the registry; a member id is sent as typed. The ABHA number is the patient's key across the exchange: the case keeps it, and the records the desk attaches and the admission it links are found by it later ([D28. claim_document](../database/D28-claim-document.md), A5).
 
 Identifier types, in the order offered (Member ID is the default because it is printed on the beneficiary's card and the payer's directory is keyed on it) [REF](../references/PAYERS.md#markers):
 
 | `identifiertype` | Label |
 |---|---|
-| `MemberId` | Member ID |
+| `MemberId` | Member id |
 | `MobileNo` | Mobile number |
 | `AbhaNumber` | ABHA number |
 
@@ -54,7 +58,7 @@ How the reply is read:
 | `policy_code` | `policy_number`, `policyNumber`, `policyno`, `policyNo`, `policycode`, `productid` |
 | `payer_id` | `payerid`, `payerId`, `insurer_code` |
 | `processing_id` | `processingid`, `processingId`, `processingID`. The participant that processes the policy on NHCX, which may differ from the payer (for example a state health agency or a TPA). It is the `x-hcx-recipient_code` of every exchange on the case; the payer id only picks the payer adapter. Using the payer id as recipient is refused with NHCX-1003 (receiver not registered). |
-| `payer_name` | **not read from the row.** The payer's registered name is fetched from the participant registry ([G4. Registry and Certificates](../gateway/G4-registry.md)) by `payer_id` when the row is shown (S2) and when the case is opened (D9), and cached; the row's own `payerName` / `payername` / `insurer_name`, a configuration label, the adapter's name and any default name are never used. A payer whose lookup failed is shown by its code |
+| `payer_name` | **not read from the row.** The payer's registered name is read from the participant master ([D32. participant](../database/D32-participant.md)), else fetched from the participant registry ([G4. Registry and Certificates](../gateway/G4-registry.md)), by `payer_id` when the row is shown (S2) and when the case is opened (D9), and cached; the row's own `payerName` / `payername` / `insurer_name`, a configuration label, the adapter's name and any default name are never used. A payer whose lookup failed is shown by its code |
 | `product_id` | `productid`, `productId` |
 | `product_name` | `productname`, `productName` |
 | `abha_number` | `abhanumber`, `abhaNumber`, `abha_number` |
@@ -78,6 +82,12 @@ function search_policies(id_type, id_value):
     id_value = trim(id_value)
     if id_value is empty:
         refuse "Enter an identifier value to search for."
+    if id_type == AbhaNumber:
+        id_value = id_value without spaces and hyphens
+        if not 14 digits: refuse "An ABHA number has 14 digits."
+    if id_type == MobileNo:
+        id_value = id_value without spaces, hyphens and a leading +91
+        if not 10 digits: refuse "A mobile number has 10 digits."
 
     // the call (in-process, synchronous; no bundle, no headers, no ledger row, nothing archived)
     try:

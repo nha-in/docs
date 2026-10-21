@@ -25,7 +25,7 @@ C10(in, enquiry):                                         # enquiry = F13 parse:
     if none:
         bundle = A7.unknown_claim({payer: in.payer, payer_code: in.recipient, claim_ref: enquiry.claim_ref,
                                    reason: "No claim numbered <enquiry.claim_ref> is on record with this payer."})
-        answer(in, bundle, "v1/paymentnotice/on_request", workflow = in.workflow_id,
+        answer(in, bundle, "v1/paymentnotice/on_request", workflow = echo_workflow(in.workflow_id, payment reconciliation),
                status = "response.complete", what = "paymentnotice.unknown")
         D31 detail: "<sender> asked about <claim_ref>, correlation <corr>, no case matched"
         return "unmatched"                                 # outcome {status: unknown_claim, txn_id}
@@ -34,7 +34,7 @@ C10(in, enquiry):                                         # enquiry = F13 parse:
     claim_ref = case.exchange.claim_submission_ref or case.exchange.claim_ref or enquiry.claim_ref
     bundle = A7.reconciliation({payer: in.payer, payer_code: in.recipient, case, payments,
                                 claim_ref, recipient: in.sender})
-    ack = answer(in, bundle, "v1/paymentnotice/on_request", workflow = in.workflow_id,
+    ack = answer(in, bundle, "v1/paymentnotice/on_request", workflow = echo_workflow(in.workflow_id, payment reconciliation),
                  status = "response.complete", what = "paymentnotice.answered")
     D31 detail: "<sender> asked about <enquiry.claim_ref>, correlation <corr>, case <case.id>, paid <total_paid>"
     exchange_message(case, "in",  "paymentnotice", in.corr, in.ledger_id, in.sender,

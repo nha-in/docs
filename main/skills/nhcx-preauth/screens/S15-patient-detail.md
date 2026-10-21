@@ -1,6 +1,8 @@
 # S15. Patient Detail Screen
 
-> **Existing HMIS screen.** Most HMIS already have this screen. Do not rebuild it: add only what NHCX needs (the fields and actions marked for NHCX below, such as ABHA number and address, HPR id, registration and qualification) to the target's own screen, and record anything else as `found` in discovery.
+> **Existing HMIS screen.** Most HMIS already have this screen. Do not rebuild it: add only what NHCX needs (the fields and actions marked for NHCX below, such as ABHA number and address, HPR id, registration and qualification) to the target's own screen, built from the host's own components, and record anything else as `found` in discovery.
+>
+> **ABHA additions are reused, never asked.** When the HMIS already has an ABDM (M1) module (ABHA create, link or verify, the ABHA number on the patient, its session token), L1.3 finds it, L2 maps to it, and the ABHA additions on this screen are not built: the module's own screens and data are used as they are. This is never an L1.A question. Only an HMIS without such a module builds them ([A19. ABHA Create and Verify (ABDM M1)](../apis/A19-abha-m1.md)).
 
 #### S15R. ROUTE
 patients/view/:id
@@ -70,9 +72,9 @@ Behaviour worth keeping:
 - A new problem is saved as medical history. A coded pick fills the SNOMED and ICD-10 codes and its display wins over the typed description.
 - A new allergy takes the typed description, or the allergen's display if none was typed. Category falls back to the allergen's own category. Status is saved as active.
 
-Claims: two actions in the header, beside "Admit": **"Search insurance policy"** opens the policy search S1. Search Policy (in nhcx-coverage) prefilled with the patient's ABHA number (else the mobile number; the desk may switch to Member ID) and carries the patient through S2. Select Policy (in nhcx-coverage), so the case opens linked to this patient (the case-opening API already takes `patient`); **"Claims"** opens the claim list [S5. Claim Master](S5-claim-master.md) filtered to this patient's cases. The admission is still linked on the Claim Creation Form S4, and the claim screens (S4, S6) link back here by the patient's name.
+Claims: two actions in the header, beside "Admit": **"Search insurance policy"** opens the policy search S1. Search Policy (in nhcx-coverage) prefilled with the patient's ABHA number (else the mobile number; the desk may switch to Member ID) and carries the patient through S2. Select Policy (in nhcx-coverage), so the case (once the validation gate of S2. Select Policy (in nhcx-coverage) opens it) carries this patient (the case-opening API already takes `patient`); **"Claims"** opens the claim list [S5. Claim Master](S5-claim-master.md) filtered to this patient's cases. The IPD admission is linked on the case's Claim tab (S4), and the claim screens link back here by the patient's name.
 
-NHCX use: the header's ABHA chip is the quickest check that the patient can be matched to a policy. The IPD admissions in the Encounters tab are what a claim links to. The diagnoses recorded on that admission and its consultant become the pre-authorisation's diagnoses and treating doctor, so a diagnosis added to the admission (it shows here with that admission as Source) is what the payer sees.
+NHCX use: the header's ABHA chip is the quickest check that the patient can be matched to a policy. The IPD admissions in the Encounters tab are what a claim links to. The diagnoses recorded on a linked admission and its consultant pre-fill the pre-authorisation details while they are unsaved; they never fix them, because a pre-authorisation may be drafted and sent before admission. What the desk saves on the Pre-authorisation tab is what the payer sees.
 
 API: [A4. Pre-auth Submit](../apis/A4-preauth-submit.md), A5. Claim Submit (in nhcx-claim) (diagnoses, treating doctor)
 
@@ -128,7 +130,7 @@ The arrangement below is the reference implementation's [REF](../references/PAYE
 #### S15A. ACTIONS
 1. Edit: go to the Patient Registration Form S14 in edit mode for this patient.
 2. New OPD visit (header or Encounters tab): open the new OPD visit form with this patient preselected.
-3. Admit (header or Encounters tab): open the new IPD admission form with this patient preselected. That admission is what S4 links a claim to.
+3. Admit (header or Encounters tab): open the new IPD admission form with this patient preselected. That admission is what the Claim tab (S4) links a claim to.
 4. Switch tab: show the chosen tab. The open tab can also be set with `?tab=`.
 5. Record vitals: post the readings, then reload S15 on the Overview tab with the result message.
 6. Add to problem list: post the problem, then reload S15 on the Problems & allergies tab.

@@ -4,7 +4,7 @@
 One row is one message the payer started on a claim over the communication route: a query for the desk to answer, a notification to acknowledge, or a note to read. Primary key `id`. Parent table: `claim` (D9), many rows per claim.
 
 #### D23D. DESCRIPTION
-A payer asks for more in one of two ways, set per payer by its adapter's query mode. A `resubmit` payer (PMJAY, see [PAYERS.md](../references/PAYERS.md)) queries inside the ClaimResponse [PAYER](../references/PAYERS.md#markers); that query lives on the leg (D18 or D20 `query_note`) and is answered by sending the leg again. It never creates a row here. A `communication` payer (generic NHCX, IRDAI payers) sends a CommunicationRequest on a thread of its own, and that is a row here.
+A payer asks for more in one of two ways, set per payer by its adapter's query mode. A `resubmit` payer (PMJAY, see [PAYERS.md](../references/PAYERS.md)) queries inside the ClaimResponse [PAYER](../references/PAYERS.md#markers); that query lives on the leg (D18 or D20 `query_note`) and is answered by sending the leg again from its own tab (Pre-authorisation or Claim). It never creates a row here. A **line-item query** from any payer, a ClaimResponse on the pre-authorisation's `on_submit` with outcome `partial` and queried items, is the same: it lives on the leg and is answered by resubmitting from the Pre-authorisation tab, never on Communication. A `communication` payer (generic NHCX, IRDAI payers) sends a CommunicationRequest on a thread of its own, and that is a row here, answered on the Communication tab; a payer may raise one before any decision on the leg.
 
 **Created.** By the communication callback (C9):
 

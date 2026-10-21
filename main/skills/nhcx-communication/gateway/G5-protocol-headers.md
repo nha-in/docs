@@ -30,7 +30,7 @@ Header names (protected header of the JWE, G6):
 | recipient | `x-hcx-recipient_code` |
 | workflow id | `x-hcx-workflow_id` |
 
-`target_url` builds the NHCX URL: with sandbox `urls.nhcx` `https://apisbx.abdm.gov.in/hcx/v1` and path `v1/preauth/submit` it is `https://apisbx.abdm.gov.in/hcx/v1/preauth/submit`; production is `https://apis.abdm.gov.in/hcx/v1/preauth/submit`.
+`target_url` builds the NHCX URL: with sandbox `urls.nhcx` `https://apisbx.abdm.gov.in/hcx/v1` and path `v1/preauth/submit` it is `https://apisbx.abdm.gov.in/hcx/v1/preauth/submit`. The production base has no published address: it is set from the onboarding letter, never made by swapping the sandbox host ([CORE.md](../references/CORE.md) section 1).
 
 #### G5D. DESCRIPTION
 
@@ -40,7 +40,7 @@ Every NHCX message carries its routing and tracking headers in the JWE protected
 - Caller values win, trimmed. Empty strings and nulls are dropped. Non-string values (objects, numbers) are kept as given.
 - Sender and recipient are normalised to the `@hcx` spelling; a blank or non-string one is removed. The sender is filled with the default participant's code afterwards by the send (G7), not here.
 - `x-hcx-correlation_id`, `x-hcx-request_id` and `x-hcx-api_call_id` are kept only when each is a plain UUID (36 characters, 8-4-4-4-12). Anything else, including a missing value, is replaced by a fresh random UUID. NHCX accepts no other spelling, so a caller-supplied non-UUID id is silently lost; the ids actually used come back in the send result (G7) and must be stored from there.
-- `x-hcx-status` defaults by path: `response.complete` for `on_` APIs, `request.initiated` otherwise. The default is only a fallback: a query answer goes on a request path (`v1/preauth/submit`, `v1/claim/submit`) yet travels as `response.complete`, so the sending API sets the status itself (A4, A5, [PAYERS.md](../references/PAYERS.md)).
+- `x-hcx-status` defaults by path: `response.complete` for `on_` APIs, `request.initiated` otherwise. The default is only a fallback: the sending API sets the status itself (A2 to A8, [PAYERS.md](../references/PAYERS.md)). A query answer goes on a request path (`v1/preauth/submit`, `v1/claim/submit`) and travels as `request.initiated` like every submission there (NHCX refuses `response.complete` on it with NHCX-1011 [SANDBOX](../references/PAYERS.md#markers)); only a send on an `on_` path (the payment acknowledgement, a communication reply) is `response.complete`.
 - `x-hcx-timestamp` defaults to now.
 - `x-hcx-workflow_id` is removed when blank; it is never generated.
 - Any other header the caller passes (for example `x-hcx-error_details`, or the `x-hcx-use_case` every pre-authorisation and claim send sets) goes through unchanged. `alg`, `enc` and `typ` are dropped later by encryption (G6).
@@ -173,4 +173,5 @@ target_url(base, path):
 #### G5U. USED BY
 - APIs: [A7. Communication Reply](../apis/A7-communication-on-request.md)
 - FHIR: [F1. Bundle](../fhir/F1-bundle.md)
+- Database: [D32. participant](../database/D32-participant.md)
 - Gateway: [G2. Configuration and Participants](G2-configuration.md), [G4. Registry and Certificates](G4-registry.md), [G6. Encryption](G6-encryption.md), [G7. Send](G7-send.md), [G8. Receive](G8-receive.md), [G9. Ledger](G9-ledger.md)

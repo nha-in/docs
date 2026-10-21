@@ -9,7 +9,9 @@ Outbound, application to the payer side. Asks which role is holding a case in th
 | Payer service | `POST https://apisbx.abdm.gov.in/pmjay/sbxhcx/nhcxpayerservice/v1/get/user-role` (the URL can be overridden per deployment), with a bearer token (a configured payer service token, else the [G3. Session Token](../gateway/G3-session-token.md) through A16) | The desk is `nhcx-payer-service`. |
 | IRDAI payer desk | Token login, `POST https://nhcxai.abdm.gov.in/api/payer/auth/token/login`, then `GET https://nhcxai.abdm.gov.in/api/payer/cases?search=<case number>`. The desk is fixed, not a setting: its screens are at `https://nhcxai.abdm.gov.in/uat/`, its API at `/api/payer` on the same origin [SANDBOX](../references/PAYERS.md#markers) | The desk is `irdai-payer`. |
 
-A payer whose adapter has no desk is refused before any call with "`<payer name>` has no adjudication desk this EMR can drive; the decision is taken on the payer's own console." A blank case number is refused with "A case number is needed to read who is holding it."
+Of the two adapters, `gov` carries the `nhcx-payer-service` desk and `generic` carries none, so the IRDAI payer desk is named by no adapter today; it stays described here for the IRDAI test payer [REF](../references/PAYERS.md#markers). A payer whose adapter has no desk is refused before any call with "`<payer name>` has no adjudication desk this EMR can drive; the decision is taken on the payer's own console." (`<payer name>` is the case's payer name, else the name the participant registry gives, else "This payer"; never the adapter's name). A blank case number is refused with "A case number is needed to read who is holding it." A leg never sent (no pre-authorisation, or a claim still a draft) is refused with "That case was never sent from here."
+
+The desk is for sandbox testing and is off unless the deployment switches it on (a module setting, off by default) [REF](../references/PAYERS.md#markers). While it is off the case state reports it off, the screen offers no desk, its routes answer not found, and the services refuse with "The sandbox adjudicator desk is switched off (<name of the setting>)." before any other check.
 
 #### A14D. DESCRIPTION
 
@@ -60,7 +62,7 @@ The application reduces every transport to one reply object:
 - Payer service, 2xx: an `errorMessage`, `error`, `errorDesc` or `errorDescription` in the body is still set as `error`. A bare `message` on a 2xx is not an error, because the service says "processed" in that field when it succeeds [SANDBOX](../references/PAYERS.md#markers).
 - Payer service host unreachable: refused with "`<url>` is unreachable, `<reason>`".
 - No token: the A16 failure is the lookup's failure.
-- IRDAI: a failed sign-in gives "The IRDAI payer desk refused the sign-in (HTTP `<status>`): ...". A failed case list gives "The IRDAI payer desk could not list cases (HTTP `<status>`): ...", and the kept sign-in token is dropped. No matching row gives "The IRDAI payer holds no case under `<case number>`."
+- IRDAI: a failed sign-in gives "The IRDAI payer desk refused the token sign-in (HTTP `<status>`): ...". A failed case list gives "The IRDAI payer desk could not list cases (HTTP `<status>`): ...", and the kept sign-in token is dropped. No matching row gives "The IRDAI payer holds no case under `<case number>`."
 
 **Legal actions by role.** The role decides which actions A15 may send; the roles and actions below are the PMJAY workflow's [PAYER](../references/PAYERS.md#markers). Names are matched loosely (`ppd-trust` and `CPD Trust` both match), but the action is always sent spelled as below.
 

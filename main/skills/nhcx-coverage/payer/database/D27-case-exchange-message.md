@@ -15,7 +15,7 @@ The evidence. The timeline ([D26. case_timeline](D26-case-timeline.md)) says wha
 | `in` | `communication` | C9. Communication (in nhcx-communication/payer) |
 | `in` | `task` | C7. Task Submit (in nhcx-preauth/payer), C8. Status Enquiry (in nhcx-preauth/payer), C11. Payment Acknowledgement (in nhcx-payment/payer) |
 | `in` | `paymentnotice` | C10. Payment Enquiry (in nhcx-payment/payer) |
-| `out` | `claimresponse` | A3. Pre-auth Answer (in nhcx-preauth/payer), A4. Claim Answer (in nhcx-claim/payer): the acknowledgement and the verdict, one row each; a dropped or delayed answer is recorded with a note and the bundle that was withheld [SANDBOX](../references/PAYERS.md#markers) |
+| `out` | `claimresponse` | A3. Pre-auth Answer (in nhcx-preauth/payer), A4. Claim Answer (in nhcx-claim/payer): the acknowledgement, a line-item query ("Line-item query sent: `<asks>`") and the verdict, one row each; a dropped or delayed answer is recorded with a note and the bundle that was withheld [SANDBOX](../references/PAYERS.md#markers) |
 | `out` | `communicationrequest` | A5. Query Request (in nhcx-communication/payer) |
 | `out` | `task` | A9. Task Answer (in nhcx-preauth/payer), the reprocess verdict included; A8. Status Answer (in nhcx-preauth/payer) as `status` |
 | `out` | `paymentnotice` | A6. Payment Notice (in nhcx-payment/payer) |

@@ -66,7 +66,7 @@ Read into the pre-authorisation leg (D18 `claim_preauth`) or the claim leg (D20 
 | (item) | `sequence` | `itemSequence` |
 | `eligible` | `eligible` | `amount.value` |
 | `status` | `status` | `reason.coding[0].code`, else display (for example `Approved`, `Queried`, `Requested`, `Rejected`) |
-| `reason` | `reason` | `reason.coding[0].display`, else code, cleaned as described |
+| `reason` | `reason` | `reason.coding[0].display`, else code, else `reason.text`, cleaned as described; the kept pieces joined with " · " |
 | `eligpercent` | `percent` | `value` |
 | `eligquant` | `quantity` | `value` |
 | `deductible` | `deductible`, `deduction_reason` | `amount.value`; `reason` code and display joined with ", " |
@@ -81,3 +81,4 @@ In a Task reply (F10) the same fields are read, then used by the Task's rules th
 - APIs: [A17. Claim State](../apis/A17-claim-state.md)
 - Callbacks: [C5. Pre-auth Reply](../callbacks/C5-preauth-on-submit.md), [C7. Cancel Reply](../callbacks/C7-cancel-on-submit.md), [C8. Enquiry Reply](../callbacks/C8-enquiry-on-submit.md)
 - FHIR: [F1. Bundle](F1-bundle.md), [F10. Task (claim actions)](F10-task-claim-actions.md)
+- Database: [D20. claim_submission](../database/D20-claim-submission.md)

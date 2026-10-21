@@ -4,7 +4,7 @@
 Delivered in-process by [G8. Receive](../gateway/G8-receive.md) for NHCX route `v1/communication/on_request`, passed to `C1.receive`, classified `communication` because the bundle holds a `Communication` ([F12. Communication](../fhir/F12-communication.md)), bare or behind a Task coded `poll`. It answers [A5. Query Request](../apis/A5-query-request.md), the CommunicationRequest this payer sent when a person queried the case. Nothing goes back: the verdict that follows the reply (A3. Pre-auth Answer (in nhcx-preauth/payer), A4. Claim Answer (in nhcx-claim/payer)) is the answer.
 
 #### C9D. DESCRIPTION
-When an adjudicator queries a case, the hospital is asked on a thread of its own ([A5. Query Request](../apis/A5-query-request.md)): the gateway mints the correlation id and it is written on the case ([D19. case](../database/D19-case.md) `nhcx_query_correlation_id`), because the Communication comes back under it. This callback files that reply the way the desk's own query response is filed: the documents attached, the text on the timeline, the queried lines back to pending, the case back in front of an adjudicator.
+When the desk asks about the case as a whole (Raise Query, or a query with no line queried), the hospital is asked on a thread of its own ([A5. Query Request](../apis/A5-query-request.md)): the gateway mints the correlation id and it is written on the case ([D19. case](../database/D19-case.md) `nhcx_query_correlation_id`), because the Communication comes back under it. This callback files that reply the way the desk's own query response is filed: the documents attached, the text on the timeline, the queried lines back to pending, the case back in front of an adjudicator.
 
 **Matching is forgiving**, because a reply that reaches the wrong case is bad and a reply that reaches no case is worse:
 
@@ -21,7 +21,7 @@ None: "No case is waiting on this communication" (`rejected`; the same envelope 
 
 **A CommunicationRequest from a hospital** (a hospital asking this payer for something) is classified `communicationrequest` by C1 and ignored with a log line: the reference did not answer one [REF](../references/PAYERS.md#markers).
 
-**PMJAY mode.** Under the `resubmit` query mode a hospital does not send a Communication: it submits the leg again with the answer riding on the Claim, which C4. Pre-auth Submit (in nhcx-preauth/payer) and C5. Claim Submit (in nhcx-claim/payer) take as the query answer [PAYER](../references/PAYERS.md#markers). Both modes lead to the same case state.
+**A line-item query is not answered here.** A query on lines rides in the ClaimResponse on the submission's thread (A3. Pre-auth Answer (in nhcx-preauth/payer), A4. Claim Answer (in nhcx-claim/payer)) and the hospital answers it by submitting the leg again with the answer riding on the Claim, which C4. Pre-auth Submit (in nhcx-preauth/payer) and C5. Claim Submit (in nhcx-claim/payer) take as the query answer [PAYER](../references/PAYERS.md#markers); the same holds for every query under a scheme that speaks only `resubmit`. Both roads lead to the same case state, and a Communication that does arrive on a line-queried case is filed here all the same.
 
 **Redelivery.** C1 drops a repeat by api call id. A repeat that slips through finds the case no longer under query and files its documents again only if they are not already on the case under the same code, title and size.
 
@@ -75,7 +75,7 @@ State changes:
 
 #### C9U. USED BY
 - Screens: [S3. Case Desk](../screens/S3-case-desk.md)
-- APIs: [A5. Query Request](../apis/A5-query-request.md), [A11. Transaction Related](../apis/A11-txn-related.md), [A12. Transaction FHIR](../apis/A12-txn-fhir.md), [A15. Case Exchange Log](../apis/A15-case-exchange.md)
+- APIs: [A5. Query Request](../apis/A5-query-request.md), [A11. Transaction Related](../apis/A11-txn-related.md), [A12. Transaction FHIR](../apis/A12-txn-fhir.md), [A13. Adjudicate](../apis/A13-adjudicate.md), [A15. Case Exchange Log](../apis/A15-case-exchange.md)
 - Callbacks: [C1. Callback Door](C1-callback-door.md)
 - FHIR: [F1. Bundle](../fhir/F1-bundle.md), [F11. CommunicationRequest](../fhir/F11-communicationrequest.md), [F12. Communication](../fhir/F12-communication.md)
 - Database: [D3. document_type](../database/D3-document-type.md), [D19. case](../database/D19-case.md), [D23. case_document](../database/D23-case-document.md), [D24. case_document_file](../database/D24-case-document-file.md), [D25. case_line_item](../database/D25-case-line-item.md), [D26. case_timeline](../database/D26-case-timeline.md), [D27. case_exchange_message](../database/D27-case-exchange-message.md), [D31. audit_log](../database/D31-audit-log.md)

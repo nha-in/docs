@@ -61,7 +61,7 @@ C2(in, ask):                                         # ask = F2 parse: purposes,
         detail = "<sender> asked, correlation <corr>, no enrolment matched"
 
     ack = answer(in, bundle, "v1/coverageeligibility/on_check",
-                 workflow = in.workflow_id, status = "response.complete", what = action)
+                 workflow = echo_workflow(in.workflow_id, eligibility), status = "response.complete", what = action)
     return "settled"                                 # delivery outcome {status, subscription_id, txn_id}
 ```
 

@@ -21,7 +21,7 @@ Every NHCX message is one Bundle wrapped in an envelope:
  "fhir": { "resourceType": "Bundle", ... }}
 ```
 
-The application sets only the three headers shown. [G7. Send](../gateway/G7-send.md) adds the api call id, request id, correlation id, timestamp and status ([G5. Protocol Headers](../gateway/G5-protocol-headers.md)), then encrypts ([G6. Encryption](../gateway/G6-encryption.md)). The workflow id rules belong to each API (A2 to A8).
+The application sets the three headers shown, plus `x-hcx-status` (the sending API sets it: `request.initiated` on a request path, query answers included, `response.complete` only on an `on_` path), `x-hcx-correlation_id` when it answers or continues a thread, and, where its API says so, `x-hcx-use_case`, `x-hcx-ben-abha-id` and the beneficiary's user token. [G7. Send](../gateway/G7-send.md) adds the api call id, request id, a correlation id when none was given, the timestamp and a status by path only when none was given ([G5. Protocol Headers](../gateway/G5-protocol-headers.md)), then encrypts ([G6. Encryption](../gateway/G6-encryption.md)). The workflow id rules belong to each API (A2 to A8).
 
 **Sent bundles.** The application builds each one itself. In the coverage, claim-side and Task bundles every intra-bundle reference is an absolute URL under `https://nhcx.abdm.gov.in`, never a `urn:uuid` (the communication bundles of F12 differ) [REF](../references/PAYERS.md#markers). `entry[0]` is always the focal resource (its "anchor"), and the other entries follow in a fixed order.
 
@@ -30,7 +30,7 @@ The application sets only the three headers shown. [G7. Send](../gateway/G7-send
 | Coverage check (F2) | `coverage-<purpose without hyphens>-request-generic`, for example `coverage-authrequirements-request-generic` | CoverageEligibilityRequestBundle | `/coverage-eligibility/request` | `/patient`, `/provider`, `/payer`, `/location`, `/coverage`, `/practitioner-role` |
 | Insurance plan request (F4) | `insurance-request-generic` | TaskBundle | `/insurance/request` | none |
 | Pre-authorisation (F8) | `preauth-request-generic`, `preauth-enhancement-request-generic`, `preauth-queryupdate-request-generic` | ClaimBundle | `/preauth/request`, `/preauth/enhancement`, `/preauth/queryupdate` | `/patient`, `/provider`, `/payer`, `/coverage`, `/practitioner` (`/practitioner/2`, ...), `/procedure/1..n`, `/questionnaireresponse/1..n` |
-| Predetermination (F8) | `predetermination-request-generic` | ClaimBundle | `/predetermination/request` | as pre-authorisation, with no QuestionnaireResponse |
+| Predetermination (F8; retired, no screen sends it, D19) | `predetermination-request-generic` | ClaimBundle | `/predetermination/request` | as pre-authorisation, with no QuestionnaireResponse |
 | Claim (F8) | `claim-request-generic`, `claim-queryupdate-request-generic` | ClaimBundle | `/claim/request`, `/claim/queryupdate` | as pre-authorisation |
 | Cancel (F10) | `preauth-cancel-request-generic` | TaskBundle | `/preauth/cancel` | `/provider`, `/payer` |
 | Status (F10) | `preauth-status-request-generic` or `claim-status-request-generic` | TaskBundle | `/preauth/status` or `/claim/status` | `/provider`, `/payer` |
@@ -79,4 +79,4 @@ Received (read):
 #### F1U. USED BY
 - APIs: [A5. Claim Submit](../apis/A5-claim-submit.md), [A6. Task Submit (cancel, status, reprocess, release)](../apis/A6-task-submit.md), [A12. Transaction FHIR](../apis/A12-txn-fhir.md)
 - Callbacks: [C1. Callback Door](../callbacks/C1-callback-door.md), [C6. Claim Reply](../callbacks/C6-claim-on-submit.md), [C8. Enquiry Reply](../callbacks/C8-enquiry-on-submit.md)
-- FHIR: [F8. Claim](F8-claim.md), [F10. Task (claim actions)](F10-task-claim-actions.md)
+- FHIR: [F3. CoverageEligibilityResponse](F3-coverage-eligibility-response.md), [F8. Claim](F8-claim.md), [F10. Task (claim actions)](F10-task-claim-actions.md)

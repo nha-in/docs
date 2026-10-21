@@ -16,9 +16,9 @@ Sent at once, inside the callback that took the request in. The hospital's reque
 
 Nothing found is answered, not refused: an **empty plan**, a bundle carrying this payer's Organization and no InsurancePlan. The specification allows an empty plan when no product matches the policy and provider, and silence would leave the hospital's poll running until it timed out.
 
-**What the plan says** ([F5. InsurancePlan](../fhir/F5-insuranceplan.md)): the product's name, UIN, type and plan type, its period (the enrolment's, else the calendar year of today, noted as assumed), the SNOMED coverage clauses with their benefits and limits ([D14. policy_coverage_clause](../database/D14-policy-coverage-clause.md), [D15. policy_clause_benefit](../database/D15-policy-clause-benefit.md)), each covered procedure as a benefit carrying its package rate, its document requirements per phase and its treatment-guideline questionnaire ([D13. policy_procedure](../database/D13-policy-procedure.md), [D10. procedure_rule](../database/D10-procedure-rule.md), [D11. procedure_rule_doc](../database/D11-procedure-rule-doc.md), [F6. Questionnaire](../fhir/F6-questionnaire.md)), the exclusions and sub-limits as extensions ([D17. policy_exclusion](../database/D17-policy-exclusion.md), [D18. policy_sub_limit](../database/D18-policy-sub-limit.md)), and the priced procedures again as specific costs on the plan. A product with neither a clause nor a covered procedure still goes out, with an issue logged: the profile wants at least one coverage.
+**What the plan says** ([F5. InsurancePlan](../fhir/F5-insuranceplan.md)): the product's name, UIN, type and plan type, its period (the enrolment's, else the calendar year of today, noted as assumed), the SNOMED coverage clauses with their benefits and limits ([D14. policy_coverage_clause](../database/D14-policy-coverage-clause.md), [D15. policy_clause_benefit](../database/D15-policy-clause-benefit.md)), each covered procedure as a benefit carrying its package rate and its required documents in PMJAY's nested shape (`<package>/<preauth|claim>/<code>`) ([D13. policy_procedure](../database/D13-policy-procedure.md), [D10. procedure_rule](../database/D10-procedure-rule.md), [D11. procedure_rule_doc](../database/D11-procedure-rule-doc.md)), the priced procedures again as specific costs on the plan, each carrying pointers to the procedure's own forms, the policy's own forms pointed at from `coverage[0].extension` ([D12. policy](../database/D12-policy.md), [F6. Questionnaire](../fhir/F6-questionnaire.md)), the exclusions and sub-limits as extensions ([D17. policy_exclusion](../database/D17-policy-exclusion.md), [D18. policy_sub_limit](../database/D18-policy-sub-limit.md)), and the POI / ADN proof of identity only when the product requires biometric authentication ([D12. policy](../database/D12-policy.md) `require_biometric`). Every form is a Questionnaire at `/questionnaire/<owner>/<form id>` named "Questionnaire"; no standard treatment guideline questionnaire is published. An unpriced procedure's forms are not published and the render reports it. A product with neither a clause nor a covered procedure still goes out, with an issue logged: the profile wants at least one coverage.
 
-**Headers set by the application.** As every answer: sender and recipient swapped, the request's correlation id verbatim, the request's own workflow id echoed, `x-hcx-status` `response.complete` (see [A1. Eligibility Answer](A1-eligibility-answer.md)). No scheme table applies [PAYER](../references/PAYERS.md#markers).
+**Headers set by the application.** As every answer: sender and recipient swapped, the request's correlation id verbatim, `x-hcx-status` `response.complete` (see [A1. Eligibility Answer](A1-eligibility-answer.md)). The workflow id is the request's when it is a published code (`^[A-Z]{0,2}[0-9]{1,4}$`); the hospital sends `1`, because a plan request is hospital-level and never about one case. Anything else, such as a hospital that sent its own case number, is not repeated, and the plan goes back under `1`, as the live PMJAY provider asks [PAYER](../references/PAYERS.md#markers). The empty plan follows the same rule. No scheme table applies.
 
 **Checks before sending.** None of its own beyond the door's ([C1. Callback Door](../callbacks/C1-callback-door.md)). A missing gateway is reported as a retryable failure, "No gateway is configured, so the enquiry cannot be answered" [REF](../references/PAYERS.md#markers).
 
@@ -31,7 +31,7 @@ The arguments passed to G7 Send:
 | `jwe_headers` | object | Sender, recipient, correlation id, workflow id, status |
 | `fhir` | Bundle | The InsurancePlan bundle, or the empty plan |
 
-FHIR: [F1. Bundle](../fhir/F1-bundle.md), [F5. InsurancePlan](../fhir/F5-insuranceplan.md), [F6. Questionnaire](../fhir/F6-questionnaire.md) (one per procedure with questions or required documents), [F17. Organization](../fhir/F17-organization.md) (this payer, as `ownedBy` and `administeredBy`; a TPA deployment points `administeredBy` at a second Organization [REF](../references/PAYERS.md#markers))
+FHIR: [F1. Bundle](../fhir/F1-bundle.md), [F5. InsurancePlan](../fhir/F5-insuranceplan.md), [F6. Questionnaire](../fhir/F6-questionnaire.md) (one per published form: each priced procedure's, then the policy's), [F17. Organization](../fhir/F17-organization.md) (this payer, as `ownedBy` and `administeredBy`; a TPA deployment points `administeredBy` at a second Organization [REF](../references/PAYERS.md#markers))
 
 Envelope, a product found:
 
@@ -40,9 +40,9 @@ Envelope, a product found:
   "jwe_headers": {"x-hcx-sender_code": "<payer code>",
                   "x-hcx-recipient_code": "<facility code>",
                   "x-hcx-correlation_id": "0b398fdf-0516-4935-9ebb-a0dc90a06bb6",
-                  "x-hcx-workflow_id": "NM-26-0SE000001",
+                  "x-hcx-workflow_id": "1",
                   "x-hcx-status": "response.complete"},
-  "fhir": <F1 Bundle (InsurancePlanBundle profile, security V): F5 InsurancePlan, F17 Organization, then one F6 Questionnaire per package, addressed by the url the plan's benefits point at>
+  "fhir": <F1 Bundle (InsurancePlanBundle profile, security V): F5 InsurancePlan, F17 Organization, then one F6 Questionnaire per published form, addressed by the url its pointer names>
 }
 ```
 
@@ -80,7 +80,7 @@ function answer_insurance_plan(in, ask):            // called by C3; ask is the 
     if none:
         bundle = F5 empty plan bundle(payer)         // Organization only
         ack = SEND("v1/insuranceplan/on_request",
-                   {jwe_headers: ANSWER_HEADERS(in), fhir: bundle}, none)   // A1: SEND, ANSWER_HEADERS
+                   {jwe_headers: ANSWER_HEADERS(in, insurance plan), fhir: bundle}, none)   // A1: SEND, ANSWER_HEADERS
             on Refused r:     return rejected("The gateway refused the answer: " + r.message)
             on Unreachable u: return error("The gateway could not queue the answer")
         INSERT D31 audit {action: "insuranceplan.no_plan", entity_type: "nhcx_txn", entity_id: in.txn_id,
@@ -91,7 +91,7 @@ function answer_insurance_plan(in, ask):            // called by C3; ask is the 
                           D16 aliases, D17 exclusions, D18 sub-limits
     bundle = F5 plan bundle(payer, policy, enrolment)   // enrolment gives period and plan type; else the year of today, issue noted
     ack = SEND("v1/insuranceplan/on_request",
-               {jwe_headers: ANSWER_HEADERS(in), fhir: bundle}, none)
+               {jwe_headers: ANSWER_HEADERS(in, insurance plan), fhir: bundle}, none)
         on Refused r:     return rejected("The gateway refused the answer: " + r.message)
         on Unreachable u: return error("The gateway could not queue the answer")
     INSERT D31 audit {action: "insuranceplan.answered", entity_type: "nhcx_txn", entity_id: in.txn_id,
@@ -101,6 +101,7 @@ function answer_insurance_plan(in, ask):            // called by C3; ask is the 
 
 #### A2U. USED BY
 - Screens: [S6. Policies](../screens/S6-policies.md), [S7. Policy Configurator](../screens/S7-policy-configurator.md), [S8. Procedures](../screens/S8-procedures.md), [S9. Procedure Configurator](../screens/S9-procedure-configurator.md), [S11. FHIR Preview](../screens/S11-fhir-preview.md)
+- APIs: [A1. Eligibility Answer](A1-eligibility-answer.md)
 - Callbacks: [C2. Coverage Eligibility Check](../callbacks/C2-coverage-eligibility-check.md), [C3. Insurance Plan Request](../callbacks/C3-insurance-plan-request.md)
 - FHIR: [F1. Bundle](../fhir/F1-bundle.md), [F4. Task (InsurancePlan request)](../fhir/F4-task-insuranceplan.md), [F5. InsurancePlan](../fhir/F5-insuranceplan.md), [F6. Questionnaire](../fhir/F6-questionnaire.md)
 - Database: [D12. policy](../database/D12-policy.md), [D16. policy_alias](../database/D16-policy-alias.md), [D31. audit_log](../database/D31-audit-log.md)

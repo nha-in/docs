@@ -21,11 +21,19 @@ NHCX posts `{"payload": "<compact JWE>"}` for every message addressed to a parti
 
 A body without `payload` is not encrypted: a `ProtocolResponse` or error notice carries its protocol headers as top-level `x-hcx-*` keys. It is handed to C1 as it is, kind `protocol` (or `json` when it has no `x-hcx-*` key and no `type`).
 
+**Large messages.** A package master reply (C4. Insurance Plan Reply (in nhcx-preauth)) is tens of megabytes: the PMJAY sandbox posts a JWE of about 45 MB that decrypts to about 33 MB [SANDBOX](../references/PAYERS.md#markers), and a claim dossier carries its documents inline as base64. The inbound route has to take these whole, and each layer between NHCX and C1 has its own cap that a small fixture never reaches. The build checks every one of them, and L7 proves it with a 50 MB fixture ([G8. Receive](G8-receive.md) is the spec that owns this list):
+- **Transfer encoding.** NHCX may post the body chunked, with no `Content-Length`. The route reads the raw stream to `maxBodyBytes` whatever the framing; it never relies on `Content-Length` being present and never rejects a chunked request. A framework that refuses chunked bodies by default (Django's `request.body` against WSGI without a length, for one) is given a middleware or the raw stream read instead.
+- **Framework body limits.** The web framework's own caps are raised to `maxBodyBytes` for the NHCX routes only (Django `DATA_UPLOAD_MAX_MEMORY_SIZE`, Spring `max-http-post-size`, Express `limit`, and the like), by name in `code-plan.json`. A 413 from the framework is the same failure as `BODY_TOO_LARGE` and is logged as such.
+- **The proxy.** The reverse proxy in front of the application (nginx `client_max_body_size`, the load balancer's request limit) is raised to the same figure; this is deployment configuration, recorded in [OPERATIONS.md](../references/OPERATIONS.md) and checked by the endpoint probe's notes ([G11. Startup Checks and Health](G11-startup-checks.md)).
+- **Decryption.** The JOSE library must open a JWE whose ciphertext is tens of megabytes ([G6. Encryption](G6-encryption.md)); several cap a segment at a few hundred kilobytes.
+- **Memory.** The body is read once, decrypted once, parsed once, and handed to C1; no copy is logged, pretty-printed or echoed in an error body (`upstream_body` and refusal bodies carry at most the first 120 characters). Development conveniences that format every SQL statement or every request body are off on this path: one build was killed by the memory used to pretty-print the 33 MB `response_json` insert.
+- **Time.** The handler finishes within NHCX's delivery timeout; decryption and parsing of a 33 MB bundle must take seconds, not minutes, so C1's plan handler stores the bundle and parses it in one pass rather than resource by resource through a generic FHIR object model.
+
 Recipient resolution, for an encrypted message:
 1. Read `x-hcx-recipient_code` from the JWE protected header without decrypting.
 2. A code the gateway hosts (default participant, `participants`, or a code added with the host option, G2) is local. A non-empty code that is not local is a guest.
 3. A guest with guests not enabled (G2) is refused `WRONG_RECIPIENT` before decryption.
-4. Decrypt with the addressed participant's private key first, then every other hosted participant's key, each distinct key once. Hosted codes that share the default's certificate share its key, so this is one attempt in the common case.
+4. Decrypt with the addressed participant's active private key first, then its previous key when one is kept after a rotation ([G2. Configuration and Participants](G2-configuration.md) key slots, [S19. NHCX Settings](../screens/S19-nhcx-settings.md)), then every other hosted participant's keys, each distinct key once. Hosted codes that share the default's certificate share its key, so this is one attempt in the common case. A staged key is never tried.
 5. No key opens it: a guest is refused `WRONG_RECIPIENT` (it was never meant for here); anything else is `DECRYPT_FAILED`.
 6. `participant` for the delivery is the guest's own code for a guest, else the code of the profile whose key was addressed (or the first profile whose key opened it). For a protocol message it is its `x-hcx-recipient_code`, as sent.
 
@@ -36,7 +44,7 @@ From NHCX (HTTP):
 
 | Part | Value |
 |---|---|
-| body | `{"payload": "<compact JWE>"}` (JSON object), or a plain protocol JSON object. Limit `maxBodyBytes`, default 100 MiB |
+| body | `{"payload": "<compact JWE>"}` (JSON object), or a plain protocol JSON object. Limit `maxBodyBytes`, default 100 MiB. Read as a raw stream whatever the transfer encoding (chunked or with `Content-Length`), gzip `Content-Encoding` accepted and inflated to the same limit |
 | peer address | the TCP peer; `X-Forwarded-For` is not trusted |
 
 To C1 (in-process). `envelope`:
@@ -167,9 +175,10 @@ receive(path, body, ip):
 decrypt_for(code, jwe):
     tried = {}
     for profile in [hosted profile for code] + all hosted profiles in order:
-        if profile has no key or its key is in tried: continue
-        add key to tried
-        if decrypt(jwe, profile.key) succeeds: return profile, plaintext     // G6
+        for key in [profile.key, profile.previous_key]:                       // active, then previous (G2); never the staged key
+            if key is none or key in tried: continue
+            add key to tried
+            if decrypt(jwe, key) succeeds: return profile, plaintext         // G6
     raise DECRYPT_FAILED "payload could not be decrypted with any configured participant's private key"
 
 normalise(h):  drop null values; give sender_code and recipient_code the "@hcx" suffix
@@ -227,7 +236,7 @@ acceptance(in):
 ```
 
 #### G8U. USED BY
-- Screens: [S6. Claim Detail](../screens/S6-claim-detail.md)
+- Screens: [S6. Claim Detail](../screens/S6-claim-detail.md), [S19. NHCX Settings](../screens/S19-nhcx-settings.md)
 - APIs: [A2. Coverage Eligibility Check](../apis/A2-coverage-eligibility-check.md), [A10. Transaction Related](../apis/A10-txn-related.md), [A12. Transaction FHIR](../apis/A12-txn-fhir.md), [A13. Transaction List](../apis/A13-txn-list.md)
 - Callbacks: [C1. Callback Door](../callbacks/C1-callback-door.md), [C2. Coverage Eligibility Verdict](../callbacks/C2-coverage-eligibility-on-check.md)
 - FHIR: [F1. Bundle](../fhir/F1-bundle.md)

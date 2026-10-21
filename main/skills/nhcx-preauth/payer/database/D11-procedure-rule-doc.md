@@ -7,9 +7,9 @@ One row is one document a procedure ([D10. procedure_rule](D10-procedure-rule.md
 One row per (procedure, phase, document), so "is the pre-authorisation dossier complete" is a join rather than a walk over a JSON blob. The same document may be demanded at pre-authorisation and again at claim; listing it twice in one phase says nothing extra, and the key forbids it.
 
 What NHCX reads from the rows:
-- The InsurancePlan ([F5. InsurancePlan](../fhir/F5-insuranceplan.md)) carries each covered procedure's documents per phase as supporting-information requirements, with the document's name and NDHM category from [D3. document_type](D3-document-type.md).
+- The InsurancePlan ([F5. InsurancePlan](../fhir/F5-insuranceplan.md)) carries each covered procedure's required documents as one nested supporting-information requirement per package, a child per document at `<package>/<preauth|claim>/<doc code>` (phases `discharge` and `claim` both under `claim`), with the document's name and NDHM category from [D3. document_type](D3-document-type.md).
 - An auth-requirements ruling ([F3. CoverageEligibilityResponse](../fhir/F3-coverage-eligibility-response.md), A1. Eligibility Answer (in nhcx-coverage/payer)) lists, per quoted package, the documents due at each stage, the `pre` ones in the dialect the hospital reads as due at pre-authorisation [PAYER](../references/PAYERS.md#markers).
-- The treatment-guideline form of a procedure with no `stg_questions` ([F6. Questionnaire](../fhir/F6-questionnaire.md)) asks one yes/no question per `preauth` document here.
+- No form is built from these rows: the yes/no "is the document attached?" form that once stood in for a missing treatment guideline is not published.
 
 Phases, exact strings: `preauth`, `discharge`, `claim`. `required` false marks a document the plan lists as optional.
 
@@ -33,5 +33,5 @@ Create, update, delete:
 
 #### D11U. USED BY
 - APIs: [A10. Predetermination Quote](../apis/A10-predetermination-quote.md)
-- FHIR: [F3. CoverageEligibilityResponse](../fhir/F3-coverage-eligibility-response.md), [F5. InsurancePlan](../fhir/F5-insuranceplan.md), [F6. Questionnaire](../fhir/F6-questionnaire.md)
+- FHIR: [F3. CoverageEligibilityResponse](../fhir/F3-coverage-eligibility-response.md), [F5. InsurancePlan](../fhir/F5-insuranceplan.md)
 - Database: [D3. document_type](D3-document-type.md), [D10. procedure_rule](D10-procedure-rule.md), [D13. policy_procedure](D13-policy-procedure.md)

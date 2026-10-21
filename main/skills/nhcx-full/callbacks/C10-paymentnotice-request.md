@@ -4,7 +4,7 @@
 Delivered in-process by [G8. Receive](../gateway/G8-receive.md) for NHCX route `v1/paymentnotice/request`, passed to `C1.receive` with `delivery.type` `payment`. Payer-initiated; acknowledged by A8 automatically.
 
 #### C10D. DESCRIPTION
-The one leg the payer starts: it posts a notice when money moves, often twice per payment (initiated, then cleared) [PAYER](../references/PAYERS.md#markers). For payment notice the provider exposes `paymentnotice/request` and calls `paymentnotice/on_request`, the opposite way round from every other exchange.
+The one leg the payer starts: it posts a notice when money moves, often twice per payment: initiated on workflow `30` (`paid`, every amount, no UTR), then completed on workflow `31` (`cleared`, with the UTR), under one PaymentNotice id [PAYER](../references/PAYERS.md#markers). For payment notice the provider exposes `paymentnotice/request` and calls `paymentnotice/on_request`, the opposite way round from every other exchange.
 
 **Matching by claim number, not correlation id.** Nothing of ours was sent, so the notice is matched by the case number it carries. The number is read, in order, from the PaymentNotice, the PaymentReconciliation, the Task, then the first entry's own resource; on each resource an identifier typed `CLN` wins, and an untyped identifier is taken rather than ignored (the live payer sends the number with no type) [SANDBOX](../references/PAYERS.md#markers). The bundle identifier is never tried: live it is a message uuid [SANDBOX](../references/PAYERS.md#markers). The number is looked up against the case (D9 `claim_no`), then the number each leg went out under (D20 `claim_ref`, then D18 `claim_ref`), because a cancel retires a number. Nothing matching: `unmatched`.
 
@@ -13,6 +13,8 @@ The one leg the payer starts: it posts a notice when money moves, often twice pe
 **Same payment, further along.** A notice whose `PaymentNotice.id` is already on a payment row of the same case updates that row instead of adding one (the IRDAI sandbox payer keeps the id) [SANDBOX](../references/PAYERS.md#markers), and is acknowledged again on its new thread.
 
 **Acknowledgement is best-effort.** The notice is recorded first, then acknowledged through A8. A failed acknowledgement is kept on the row and the result is still `settled`, so G8 accepts the message; failing it would only have NHCX deliver it again.
+
+**Posting to billing is best-effort too.** Once the notice is recorded and before the acknowledgement, a notice that reports money that moved (D21: a `cleared` status; a `paid`, `complete` or `completed` status with a UTR; or an amount with a UTR and a status other than `initiated`, `pending`, `queued`. A `paid` notice without a UTR is the initiation and is not posted) is posted to the HMIS's bill through `billing.post_payer_payment` ([D21. claim_payment](../database/D21-claim-payment.md)): one payment record for the amount, against the admission's account, updated rather than doubled when the same row is posted again. A failed posting is kept on the row (`billing_status = 'failed'`, `billing_error`) for S12 to post again; the acknowledgement still goes, and the result is still `settled`.
 
 #### C10Q. REQUEST
 `fhir` is an F1 Bundle carrying a Task (what happened, in prose), an F13 PaymentNotice (amount and `paymentStatus`) and a PaymentReconciliation (date, UTR and the `detail[]` breakdown), usually with F17 Organizations. Some payers send only the PaymentNotice and PaymentReconciliation.
@@ -39,8 +41,11 @@ C10(envelope, corr):
             payment = earlier
         else:
             payment = insert D21 values                      # ack_status defaults to "pending"
-            restamp the case stage                           # stage "payment"
         insert D22 per detail {payment_id, seq, reference, type_code, type_display, date, amount}
+        restamp the case stage                               # stage "payment"
+    if the payment reports money that moved:                 # after the commit, best-effort (D21)
+        try: billing.post_payer_payment(payment)             # a failure kept on the row
+        catch any error: log it                              # (billing_status "failed"), never raised
     try:
         send the acknowledgement through A8
         leg_write(D21, payment, {ack_status: "sent", ack_txn_id, ack_correlation_id,

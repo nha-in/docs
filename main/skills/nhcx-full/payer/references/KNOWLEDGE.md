@@ -114,3 +114,7 @@ The package and the MCP catalogue number things by NHA's own use-case codes (A1 
 ```
 
 Only the block for the chosen source is filled. Choosing, downloading, checking and replacing the source are logged in `nhcx-plan/progress.json` like any other sub-step.
+
+## Not the skill's own update
+
+The knowledge source answers NHCX facts only. Whether a newer build of this skill exists is read from `skills/manifest.json` in the NHCX package on GitHub, always, even when the MCP is the knowledge source (SKILL.md, UPDATE FIRST). The skill's version, the package's release tag and the MCP catalogue's version are three separate numbers and never compared with one another.

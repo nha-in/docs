@@ -2,7 +2,7 @@
 
 The NHCX gateway runs inside the application process, not as a separate service. It is the only part of the application that talks to NHCX and the ABDM registry: it holds the participant keys and session tokens, builds the protocol headers, encrypts and decrypts, dispatches, receives, and records every message in its ledger. APIs (A) and callbacks (C) call it in-process and refer to it by G number.
 
-Only what the application needs is specified. Left out: the operator panel, terminal configurator, self-update, certificate generation and upload, registry endpoint updates, callback fan-out, and the payer-adjudicator relay (the payer service is called directly).
+Only what the application needs is specified. Left out (the registry endpoint and certificate updates are in [G4. Registry and Certificates](G4-registry.md), driven from the settings screen): the operator panel, terminal configurator, self-update, certificate generation, callback fan-out, and the payer-adjudicator relay (the payer service is called directly).
 
 Each file has ENTRY (E), DESCRIPTION (D), INPUT (Q), OUTPUT (S), PSEUDOCODE (P) and USED BY (U) sections.
 

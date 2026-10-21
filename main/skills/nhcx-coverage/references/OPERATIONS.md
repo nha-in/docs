@@ -41,6 +41,8 @@ Record each of these as a step in `nhcx-plan/plan.json` (L3) with its owner, and
 
 ## Several desks on one participant
 
+**Body size at the edge.** Whatever sits in front of the application (nginx, a cloud load balancer, an API gateway) has its own request-size cap, and a package master reply is about 45 MB [SANDBOX](PAYERS.md#markers). Raise it to the gateway's `maxBodyBytes` on the inbound path (`client_max_body_size 100m;` in nginx, the equivalent elsewhere), allow chunked requests through, and record the setting here at cutover. A 413 from the edge never reaches the application's log, so a missing plan that polling later finds is the usual symptom ([G8. Receive](../gateway/G8-receive.md)).
+
 In the sandbox, and sometimes in production, several applications (desks) share one participant code: NHCX delivers every message for the code to the one registered `endpoint_url`, and a fan-out proxy in front of it posts the message to every desk and returns the **first** response it gets from any of them. Each desk then sees every message of every desk, and a slow or wrong answer from one desk is the answer NHCX records for all. The rules below keep a desk from spoiling another's exchange; [G8. Receive](../gateway/G8-receive.md) and [C1. Callback Door](../callbacks/C1-callback-door.md) implement them.
 
 1. **A message this desk does not own ends `unmatched`, fast.** When no leg here waits on the correlation id and no case here carries the claim number, C1 answers `unmatched` without writing a row, without sending anything (C9 never acknowledges a notification it does not own, C10 never acknowledges a payment notice for a claim number it does not hold) and with only the `unmatched` archive entry. NHCX gets 202 at once.

@@ -14,7 +14,7 @@ Polling is the fallback to the callback ([C1. Callback Door](../callbacks/C1-cal
 | Insurance plan (A3) | plan `fetching` | the plan's `txn_id` | newest inbound carrying an `InsurancePlan` | C4. Insurance Plan Reply (in nhcx-preauth) |
 | Auth-requirements ruling (A2) | ruling `checking` | the ruling's `txn_id` | newest inbound carrying a `CoverageEligibilityResponse` | C3. Authorisation Requirements Ruling (in nhcx-preauth) |
 | Pre-authorisation (A4) | `submitting` | the pre-authorisation's `txn_id` | newest inbound carrying a `ClaimResponse` | C5. Pre-auth Reply (in nhcx-preauth) |
-| Predetermination (A4) | each quote `asking` | that quote's `txn_id` | newest inbound carrying a `ClaimResponse` | C5. Pre-auth Reply (in nhcx-preauth) |
+| Predetermination (A4, retired: quote rows written before) | each quote `asking` | that quote's `txn_id` | newest inbound carrying a `ClaimResponse` | C5. Pre-auth Reply (in nhcx-preauth) |
 | Claim (A5) | `submitting` | the submission's `txn_id` | newest inbound carrying a `ClaimResponse`; when that reply is already applied the leg keeps waiting (after a reprocess the old verdict is still on the thread) | C6. Claim Reply (in nhcx-claim) |
 | Cancellation (A6) | pre-authorisation `cancelling`, or a refused cancel within 15 minutes of the refusal | the `cancel_txn_id` | every `Task` reply on the thread, both directions (see below) | C7. Cancel Reply (in nhcx-preauth) |
 | Status, reprocess, release (A6) | each enquiry `asking` | that enquiry's `txn_id` | newest inbound carrying a `Task` | C8. Enquiry Reply (in nhcx-preauth) |
@@ -70,18 +70,18 @@ Errors:
 
 When: once per leg on every load of S6 Claim Detail (and its Refresh) and on every A17 read. No timer. One pass, no retry inside a poll.
 
-Rows: `claim` ([D9](../database/D9-claim.md)), `claim_plan` (D10 (in nhcx-coverage)), `claim_auth` (D13 (in nhcx-coverage)), `claim_preauth` (D18 (in nhcx-preauth)), `claim_predetermination` (D19 (in nhcx-preauth)), `claim_submission` ([D20](../database/D20-claim-submission.md)), `claim_enquiry` (D29 (in nhcx-preauth)).
+Rows: `claim` ([D9](../database/D9-claim.md)), `claim_plan` (D10 (in nhcx-coverage)), `claim_auth` ([D13](../database/D13-claim-auth.md)), `claim_preauth` (D18 (in nhcx-preauth)), `claim_predetermination` (D19 (in nhcx-preauth)), `claim_submission` ([D20](../database/D20-claim-submission.md)), `claim_enquiry` (D29 (in nhcx-preauth)).
 
 ```text
 LEGS (row, waiting status, reply resource, applied as, protocol-scan type, send time):
-  eligibility      claim                   "checking"    CoverageEligibilityResponse  C2  coverage   checked_at
-  plan             claim_plan              "fetching"    InsurancePlan                C4  insurance  requested_at
-  ruling           claim_auth              "checking"    CoverageEligibilityResponse  C3  coverage   requested_at
+  eligibility      claim                   "checking"    CoverageEligibilityResponse  C2  coverageeligibility  checked_at
+  plan             claim_plan              "fetching"    InsurancePlan                C4  insuranceplan        requested_at
+  ruling           claim_auth              "checking"    CoverageEligibilityResponse  C3  coverageeligibility  requested_at
   preauth          claim_preauth           "submitting"  ClaimResponse                C5  preauth    submitted_at
   predetermination claim_predetermination  "asking"      ClaimResponse                C5  preauth    requested_at   (every row)
   claim            claim_submission        "submitting"  ClaimResponse                C6  claim      submitted_at
-  enquiry          claim_enquiry           "asking"      Task                         C8  task *     requested_at   (every row)
-  (* "status" instead when a status enquiry's send route ends in /status; it goes out on the task route, so "task")
+  enquiry          claim_enquiry           "asking"      Task                         C8  task       requested_at   (every row)
+  (a status enquiry goes out on the task route, so its scan type is "task" too)
 
 POLL(leg, row):
   if row is missing or row.status != leg.waiting status or row.txn_id is blank:

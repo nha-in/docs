@@ -39,6 +39,8 @@ Anything found in or written to the target is located as `{"file": "<path from t
 - Treat marked statements as [PAYERS.md](../references/PAYERS.md) says: [REF](../references/PAYERS.md#markers) may be chosen differently (record it in plan.json), [PAYER](../references/PAYERS.md#markers) values come from the payer adapter and are never hard-coded, [SANDBOX](../references/PAYERS.md#markers) behaviour is not relied on in production.
 - Take NHCX facts from the knowledge source recorded in `nhcx-plan/knowledge.json` ([KNOWLEDGE.md](../references/KNOWLEDGE.md)), never from memory.
 - Work from the target's source as it is. Record what exists before proposing anything new.
+- No step assumes a framework. The specs say what a screen shows and does, what is stored, what is sent and what is refused; L1 records the target's stack and L2 to L4 map each spec onto it. A reference implementation's names appear in a spec only as an example, never as an instruction.
+- Reuse before writing: the host's UI component for each kind L1.2 records, and the HMIS's own M1 when L1.3 finds one. Neither is an L1.A question.
 - One JSON file per step, pretty-printed, stable key order, committed with the code it describes.
 - Every item carries a `status`. A step may not finish with an item whose status is `unknown`.
 - When a step finds that an earlier step's file is wrong, fix that file first and note it under `corrections` in the current one.

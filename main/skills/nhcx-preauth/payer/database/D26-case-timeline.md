@@ -17,9 +17,11 @@ Written inside the transaction of the change it describes, one event per change,
 | the case approved ([A13. Adjudicate](../apis/A13-adjudicate.md)) | Pre-Authorization Approved, or Claim Approved for Disbursement | success |
 | rejected | Claim Rejected | error |
 | queried | Additional Information Requested | warning |
+| a query raised before any decision ([A13. Adjudicate](../apis/A13-adjudicate.md) Raise Query) | Query Raised, with the question | warning |
+| a line-item query sent on the leg's thread ([A13. Adjudicate](../apis/A13-adjudicate.md)), by "NHCX" | Line-item Query Sent over NHCX | warning |
 | an enhancement ([C4. Pre-auth Submit](../callbacks/C4-preauth-submit.md)) | Enhancement `<n>` Requested | warning |
 | withdrawn ([C7. Task Submit](../callbacks/C7-task-submit.md) cancel) | Pre-Authorization Withdrawn | warning |
-| a query answered (C9. Communication (in nhcx-communication/payer), [C4. Pre-auth Submit](../callbacks/C4-preauth-submit.md) resubmission) | Query Answered | info |
+| a query answered (C9. Communication (in nhcx-communication/payer), [C4. Pre-auth Submit](../callbacks/C4-preauth-submit.md) resubmission, C5. Claim Submit (in nhcx-claim/payer) claim sent again) | Query Answered | info |
 | the discharge recorded | Patient Discharged | info |
 | the claim filed (C5. Claim Submit (in nhcx-claim/payer)) | Claim Submitted | info |
 | reopened ([C7. Task Submit](../callbacks/C7-task-submit.md) reprocess or release) | Claim Reopened for Reprocessing (round `<n>`) | warning |
@@ -48,7 +50,7 @@ Delete: never; cascade with the case.
 
 #### D26U. USED BY
 - Screens: [S3. Case Desk](../screens/S3-case-desk.md)
-- APIs: [A11. Transaction Related](../apis/A11-txn-related.md), [A13. Adjudicate](../apis/A13-adjudicate.md), [A15. Case Exchange Log](../apis/A15-case-exchange.md)
+- APIs: [A3. Pre-auth Answer](../apis/A3-preauth-answer.md), [A11. Transaction Related](../apis/A11-txn-related.md), [A13. Adjudicate](../apis/A13-adjudicate.md), [A15. Case Exchange Log](../apis/A15-case-exchange.md)
 - Callbacks: [C4. Pre-auth Submit](../callbacks/C4-preauth-submit.md), [C7. Task Submit](../callbacks/C7-task-submit.md)
 - FHIR: [F8. Claim](../fhir/F8-claim.md), [F10. Task (claim actions and answers)](../fhir/F10-task-claim-actions.md), [F12. Communication](../fhir/F12-communication.md)
 - Database: [D3. document_type](D3-document-type.md), [D19. case](D19-case.md), [D23. case_document](D23-case-document.md), [D25. case_line_item](D25-case-line-item.md), [D27. case_exchange_message](D27-case-exchange-message.md)

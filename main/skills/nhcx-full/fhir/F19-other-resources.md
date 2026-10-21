@@ -3,6 +3,7 @@
 #### F19R. RESOURCE
 - `Procedure`, profile `https://nrces.in/ndhm/fhir/r4/StructureDefinition/Procedure`: **sent**, one per package, in the claim-side bundles (F8).
 - `Location`, no `meta.profile`: **sent**, once, in the eligibility bundle (F2).
+- `DocumentReference`, profile `https://nrces.in/ndhm/fhir/r4/StructureDefinition/DocumentReference`: **sent**, one per health record attached as structured data, in the claim-side bundles (F8).
 - Nothing else. Every other resource the bundles carry has its own file (list at the end).
 
 #### F19D. DESCRIPTION
@@ -18,7 +19,14 @@ On a LAMA or DAMA claim discharged before or during surgery the claim lines coll
 
 **Location.** The facility as the place of service, referenced by `CoverageEligibilityRequest.facility` (F2). Fixed shape: the facility name and a pointer to the provider Organization. Same for every eligibility purpose. It is not sent in claim bundles.
 
-**Not carried.** The claim-side bundles carry no Encounter, Condition, DocumentReference, Binary or Observation. Diagnoses ride on `Claim.diagnosis` (ICD-10 codings, F8); documents ride inline as base64 attachments on `Claim.supportingInfo` (F8) and `Communication.payload` (F12); admission, surgery and discharge dates ride on `Claim.supportingInfo` scalars (F8).
+**DocumentReference.** One per D28 row of the leg (the claim's discharge summary included) with `source = record` and `content_type` `application/fhir+json`: the patient's health record, picked from the HMIS's ABDM module, sent as the structured M2 bundle it already is rather than as a scan. This is the shape the live PMJAY provider sends and PMJAY adjudicates [PAYER](../references/PAYERS.md#markers); a payer whose adapter does not take records as FHIR gets the record as a PDF `valueAttachment` instead (PAYERS.md "Health records as FHIR").
+
+- fullUrl `https://nhcx.abdm.gov.in/documentreference/<n>`, `id` `<n>`, n from 1 in D28 `id` order (on the claim, a discharge summary picked from records comes last), after the QuestionnaireResponses (F8 entries table).
+- `status` `current`.
+- `content[0].attachment`: `contentType` `application/fhir+json`, `data` base64 of the D28 `data` (the record's bundle JSON, the same encoding the leg uses for a PDF attachment), `title` the D28 label else filename.
+- The Claim refers to it from `supportingInfo[]` (F8): category D28 `category` else `INV`, code D28 `code` else `ODN` under the document code system, `valueReference {reference: <fullUrl>, display: <label>}`. Nothing else on the resource: no `subject`, `type` or `date`, which the bundle inside carries.
+
+**Not carried.** The claim-side bundles carry no Encounter, Condition, Binary or Observation. Diagnoses ride on `Claim.diagnosis` (an ICD-10 coding with the SNOMED CT coding beside it, F8); uploaded documents ride inline as base64 attachments on `Claim.supportingInfo` (F8) and `Communication.payload` (F12), health records as the DocumentReference above; admission, surgery and discharge dates ride on `Claim.supportingInfo` scalars (F8).
 
 **Received.** Neither Procedure nor Location is read from any payer bundle. The payer's eligibility reply repeats the request's Location; it is ignored.
 
@@ -48,6 +56,8 @@ Not sent: `performer`, `reasonCode`, `bodySite`, `encounter`, `outcome`, `note`.
 No `id`, `meta`, `identifier`, `address` or `type`.
 
 #### F19U. USED BY
+- Screens: [S9. Pre-authorisation](../screens/S9-preauthorisation.md), [S10. Communication](../screens/S10-communication.md)
 - APIs: [A2. Coverage Eligibility Check](../apis/A2-coverage-eligibility-check.md), [A4. Pre-auth Submit](../apis/A4-preauth-submit.md), [A5. Claim Submit](../apis/A5-claim-submit.md)
 - Callbacks: [C2. Coverage Eligibility Verdict](../callbacks/C2-coverage-eligibility-on-check.md)
 - FHIR: [F1. Bundle](F1-bundle.md), [F2. CoverageEligibilityRequest](F2-coverage-eligibility-request.md), [F8. Claim](F8-claim.md)
+- Database: [D28. claim_document](../database/D28-claim-document.md)

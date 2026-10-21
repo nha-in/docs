@@ -31,10 +31,10 @@ After the polls the case stage is worked out again and stored on the claim, so `
 |---|---|---|---|
 | `next_send` | A4 (`preauth_send_kind`), A5 (`claim_send_kind`) | `(case_id) -> kind or {"refused": "<reason>"}` | the kind the next send would be, or the verbatim refusal the send would meet; never raises |
 | `enhancement_lines` | A4 | `(case_id) -> [line rows]` | the D16 lines whose code is not in the last sent bundle (F8 "Read back"); `[]` when nothing is decided or nothing was added |
-| `required_documents` | A4 (`preauth`), A5 (`claim`) | `(case_id, stage) -> [{code, display, category, package_code, attached_document_id}]` | the ruling's requirements due at the stage, else the package master's, as S9 and S11 list them |
-| `required_forms` | A4 (`preauth`), A5 (`claim`) | `(case_id, stage) -> [{url, title, questions}]` | the forms the stage has to carry by the D12 rule (ruling, packages' STG forms, policy-wide forms, the consent form when no token is held) |
+| `required_documents` | A4 (`preauth`), A5 (`claim`) | `(case_id, stage) -> [{code, display, for_code, stage}]` | the ready ruling's document requirements due at the stage, else the package master's documents of the quoted packages for that stage (on the claim also a `pre` one never attached at pre-authorisation), unique by code, less those the desk took off the leg's list (D9 `dismissed_documents`, `<stage>:<code>`), as S9 and S11 list them; `[]` without a ready plan |
+| `required_forms` | A4 (`preauth`), A5 (`claim`) | `(case_id, stage) -> [{url, title, questions}]` | the forms the stage has to carry by the D12 rule (the ruling's forms, the quoted packages' own forms, the policy's forms, the leg's consent form; a LAMA, DAMA or Death form only when it applies); `[]` without a ready plan |
 
-Before a hook exists (phase order, L3), A17 answers `next_send` as `{"refused": "not available yet"}`, `enhancement_lines` as `[]`, and `required_documents` and `required_forms` as `{"preauth": [], "claim": []}`, so drivers written against the shape keep working and a missing hook is visible rather than a crash.
+Before a hook exists (phase order, L3), A17 answers `next_send` as `{"refused": "This step is not available yet."}`, `enhancement_lines` as `[]`, and `required_documents` and `required_forms` as `{"preauth": [], "claim": []}`, so drivers written against the shape keep working and a missing hook is visible rather than a crash.
 
 #### A17Q. REQUEST
 
@@ -53,22 +53,22 @@ Row objects are the stored rows with every column, or `null` when the row does n
 | Key | Type | Content |
 |---|---|---|
 | `claim` | object | The claim row (after the polls). |
-| `plan` | object or null | The claim's insurance plan (package master) row. |
-| `benefits` | array | The plan's packages, in order, a subset of each D11 row (see A17P). Empty when there is no plan. |
-| `admissions` | array | Current inpatient stays of patients registered with the claim's ABHA number (compared on digits only). |
-| `lines` | array | The claim's line item rows, by kind then sequence. |
+| `plan` | object or null | The claim's insurance plan (package master) row (D10), without `response_json`. |
+| `benefits` | array | The plan's rows, in order, a subset of each D11 row (see A17P), cover benefits (kind `Benefit`) included. Tiers, conditions and documents are not part of the state: they come from `GET claims/:caseid/plan/benefits/:id` ([S7.1](../screens/S7-insurance-plan.md)). Empty when there is no plan. |
+| `admissions` | array | Current inpatient stays of patients registered with the case's ABHA number (compared on digits only), each with the HMIS patient's `name`, `gender`, `dob` and `same_person` (`true` when gender and date of birth equal the beneficiary's). The application never links one of these by itself. The member chooser (`members`, `beneficiary_pending`) is on the claim page's own document (S6), not here. |
+| `lines` | array | The claim's line item rows, by kind then sequence, each with its `cycle`, `benefit_id` and `open_price`. |
 | `ruling` | object or null | The auth requirements ruling row. |
 | `required_documents` | object | `preauth` and `claim`: arrays of the documents the payer named for that stage. |
 | `forms` | object | `preauth` and `claim`: arrays of `{"url", "title", "questions"}`, the questionnaires that stage has to carry, with each form's stored questions. |
 | `documents` | array | Attachments without their payloads, a subset of each D28 row (see A17P). |
 | `stage` | string | Where the case stands: `eligibility`, `preauth`, `enhancement`, `claim` or `payment`. |
 | `sub_stage` | string | What was last done with it: `draft`, `checking`, `eligible`, `not-eligible`, `requested`, `resubmitted`, `answered`, `queried`, `approved`, `partial`, `rejected`, `cancelling`, `cancelled`, `refused`, `noticed` or `paid`. |
-| `preauth` | object or null | The pre-authorisation row. |
+| `preauth` | object or null | The pre-authorisation row. Whether it is read only is worked out from `submission.status` by the core rule ([CORE.md](../references/CORE.md), Instruction 14): locked while the claim is `submitting`, `queried`, `approved`, `partial` or `rejected`; cancellable unless it is `approved`, `partial` or `rejected`. The claim page's own document (S6) carries the two flags as `preauth_locked` and `preauth_cancellable`; this state document does not. |
 | `preauth_items` | array | The payer's per-item verdict on the pre-authorisation (see below). |
-| `next_send` | object | `preauth` and `claim`: the kind of the next send, or `{"refused": "<reason>"}` when nothing may be sent. Pre-authorisation kinds: `preauth`, `preauth_query_response`, `enhancement`, `enhancement_resubmit`. Claim kinds: `claim`, `claim_query_response`, `claim_resubmit`. |
-| `adapter` | string | The payer adapter's key (for example `pmjay`, `kyrocare`, `generic`). |
-| `desk` | string or null | Where the payer's decision is taken: `nhcx-payer-service`, `irdai-payer`, or `null` for none (see A14). |
-| `predeterminations` | array | Quote rows, newest first. |
+| `next_send` | object | `preauth` and `claim`: the kind of the next send, or `{"refused": "<reason>"}` when nothing may be sent. Pre-authorisation kinds: `preauth`, `preauth_query_response`, `enhancement`, `enhancement_resubmit`. Claim kinds: `claim`, `claim_query_response` (a decided claim is refused: it is never sent again). |
+| `adapter` | string | The payer adapter's key: `gov` or `generic`. |
+| `desk` | string or null | Where the payer's decision is taken: `nhcx-payer-service` under `gov`, `null` under `generic` (see A14). |
+| `predeterminations` | array | Quote rows written before predetermination was retired, newest first. |
 | `enhancement_lines` | array | Lines quoted since the pre-authorisation was decided. Empty when nothing was added or nothing is decided yet. |
 | `queries` | array | Everything the payer has said on the claim (queries, notifications, notes), newest first, each row with a `questions` array of the payer's lines. |
 | `submission` | object or null | The claim submission row. |
@@ -96,7 +96,7 @@ Each per-item verdict (`preauth_items`, `submission_items`) is `{"sequence", "st
   "preauth": {"id": 7, "claim_id": 42, "status": "submitting"},
   "preauth_items": [],
   "next_send": {"preauth": {"refused": "<reason>"}, "claim": {"refused": "<reason>"}},
-  "adapter": "pmjay",
+  "adapter": "gov",
   "desk": "nhcx-payer-service",
   "predeterminations": [],
   "enhancement_lines": [],
@@ -143,13 +143,15 @@ STATE(caseid):
 
   respond 200 {
     claim:              claim row,
-    plan:               plan row or null,
+    plan:               the claim's claim_plan row, minus response_json, or null,
     benefits:           claim_plan_benefit rows of the plan ordered by seq, columns
                         id, kind, code, display, category_code, category_display, rate
-                        ([] when no plan),
-    admissions:         current IPD encounters (status not "finished") of patients whose ABHA
+                        ([] when no plan); tiers, conditions and supporting_info are fetched per row
+    admissions:         [] when the claim has no ABHA digits, else
+                        current IPD encounters (status not "finished") of patients whose ABHA
                         number has the same digits as claim.abha_number, newest period_start
-                        first ([] when the claim has no ABHA digits),
+                        first, each with the patient's name, gender, dob and
+                        same_person = (gender == claim.patient_gender and dob == claim.patient_dob),
     lines:              claim_line rows,
     ruling:             claim_auth row or null,
     required_documents: {preauth: [...], claim: [...]}      # the documents the payer named per stage
@@ -170,17 +172,23 @@ STATE(caseid):
     submission:         claim_submission row or null,
     submission_items:   claim_submission.items_json as a list, else [],
     payments:           claim_payment rows,
-    paid_total:         claim_payment rows in id order whose payment_status is "paid" or
-                        "cleared" (case ignored), leaving out rows with no utr whose
-                        disposition contains "initiat" [PAYER](../references/PAYERS.md#markers); the last amount per utr (row id when
-                        no utr) wins; summed and rounded to 2 places,
+    paid_total:         claim_payment rows in id order whose payment_status is "cleared", or
+                        "paid" with a utr (case ignored); a "paid" row with no utr is the
+                        workflow-30 initiation and is left out [PAYER](../references/PAYERS.md#markers); the last amount per utr
+                        (row id when no utr) wins; summed and rounded to 2 places,
+    payment_approved:   the claim leg's approved_amount, or null before the claim is approved,
+    payment_accounted:  per notice (newest row of each notice_id, else each row) the sum of
+                        its claim_payment_detail amounts (payment, TDS, every deduction), else its
+                        amount when it has no lines; summed; null before any notice,
+    payment_shortfall:  null while either of the two is null; 0 when accounted equals
+                        approved; else max(approved - accounted, 0); rounded to 2 places,
     enquiries:          claim_enquiry rows,
     poll_notes:         poll_notes
   }
 ```
 
 #### A17U. USED BY
-- Screens: [S6. Claim Detail](../screens/S6-claim-detail.md)
-- APIs: [A10. Transaction Related](A10-txn-related.md), [A11. Transaction Dispatch](A11-txn-dispatch.md), [A12. Transaction FHIR](A12-txn-fhir.md)
+- Screens: [S6. Claim Detail](../screens/S6-claim-detail.md), [S7. Insurance Plan](../screens/S7-insurance-plan.md), [S12. Payments](../screens/S12-payments.md)
+- APIs: [A4. Pre-auth Submit](A4-preauth-submit.md), [A5. Claim Submit](A5-claim-submit.md), [A10. Transaction Related](A10-txn-related.md), [A11. Transaction Dispatch](A11-txn-dispatch.md), [A12. Transaction FHIR](A12-txn-fhir.md)
 - FHIR: [F6. Questionnaire](../fhir/F6-questionnaire.md)
-- Database: [D9. claim](../database/D9-claim.md)
+- Database: [D9. claim](../database/D9-claim.md), [D11. claim_plan_benefit](../database/D11-claim-plan-benefit.md), [D22. claim_payment_detail](../database/D22-claim-payment-detail.md)

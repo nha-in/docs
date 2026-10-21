@@ -6,14 +6,14 @@ An eligibility check with purpose `auth-requirements` and items arrives on [C2. 
 
 #### T4S. SETUP
 
-One member under the [T1. Test Configuration](T1-test-configuration.md) prefix enrolled on the default product. A procedure in the registry ([S8. Procedures](../screens/S8-procedures.md), [S9. Procedure Configurator](../screens/S9-procedure-configurator.md)) with a package rate, four documents wanted at pre-authorisation and two at claim, and treatment-guideline questions, and covered by the product ([S7. Policy Configurator](../screens/S7-policy-configurator.md)).
+One member under the [T1. Test Configuration](T1-test-configuration.md) prefix enrolled on the default product. A procedure in the registry ([S8. Procedures](../screens/S8-procedures.md), [S9. Procedure Configurator](../screens/S9-procedure-configurator.md)) with a package rate, four documents wanted at pre-authorisation and two at claim, and one questionnaire of its own with two questions ([S9. Procedure Configurator](../screens/S9-procedure-configurator.md)), and covered by the product ([S7. Policy Configurator](../screens/S7-policy-configurator.md)).
 
 #### T4G. GUI
 
-1. [S9. Procedure Configurator](../screens/S9-procedure-configurator.md): open the procedure and read its rate, document rules per phase and questions.
-2. Hospital side, through the provider driver ([T2. Test Runners](T2-test-runners.md)): open a case for the member, fetch the plan, add the procedure as a line, and run the validate (auth-requirements) check.
+1. [S9. Procedure Configurator](../screens/S9-procedure-configurator.md): open the procedure and read its rate, document rules per phase and its questionnaire with its id.
+2. Hospital side, through the provider driver ([T2. Test Runners](T2-test-runners.md)): open a case for the member, fetch the plan, add the procedure as a line, and run the auth-requirements check.
 3. [S1. Overview](../screens/S1-overview.md): the activity shows the ruling answered.
-4. Hospital side: the validate tab lists the documents due at pre-authorisation and the treatment-guideline form.
+4. Hospital side: the pre-authorisation tab lists the documents due at pre-authorisation and the procedure's form.
 
 #### T4L. CLI
 
@@ -25,6 +25,6 @@ One member under the [T1. Test Configuration](T1-test-configuration.md) prefix e
 
 - The answer goes on `v1/coverageeligibility/on_check` with the request's correlation id and `response.complete`.
 - One `insurance[0].item` per item asked, with `authorizationRequired` true, the benefit typed `Procedure` and `allowedMoney` equal to the package rate ([F3. CoverageEligibilityResponse](../fhir/F3-coverage-eligibility-response.md)).
-- `authorizationSupporting` names each document wanted, with `Type: pre` on the four pre-authorisation documents and `Type: claim` on the two claim documents, and one entry carrying `fullUrl:` of the procedure's Questionnaire ([F6. Questionnaire](../fhir/F6-questionnaire.md)) [PAYER](../references/PAYERS.md#markers).
+- `authorizationSupporting` names each document wanted, with `Type: pre` on the four pre-authorisation documents and `Type: post` on the two claim documents, and one entry carrying `fullUrl:` of the procedure's Questionnaire, `<base>/questionnaire/<procedure code>/<form id>` ([F6. Questionnaire](../fhir/F6-questionnaire.md)) [PAYER](../references/PAYERS.md#markers). No `STG` entry and no policy form appear on the ruling.
 - The hospital's side lists the four documents and the one form on its pre-authorisation tab.
 - [D31. audit_log](../database/D31-audit-log.md) holds an `eligibility.auth_requirements` entry naming the item count.

@@ -87,4 +87,4 @@ Received (read):
 #### F1U. USED BY
 - APIs: [A5. Query Request](../apis/A5-query-request.md), [A12. Transaction FHIR](../apis/A12-txn-fhir.md), [A15. Case Exchange Log](../apis/A15-case-exchange.md)
 - Callbacks: [C1. Callback Door](../callbacks/C1-callback-door.md), [C9. Communication](../callbacks/C9-communication.md)
-- FHIR: [F11. CommunicationRequest](F11-communicationrequest.md), [F17. Organization](F17-organization.md)
+- FHIR: [F9. ClaimResponse](F9-claimresponse.md), [F11. CommunicationRequest](F11-communicationrequest.md), [F17. Organization](F17-organization.md)

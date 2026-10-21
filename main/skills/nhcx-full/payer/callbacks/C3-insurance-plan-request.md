@@ -20,7 +20,7 @@ The hospital wants the package master: which procedures a product covers, at wha
 **Redelivery.** C1 drops a repeat by api call id; a repeat that slips through is answered again with the same plan.
 
 #### C3Q. REQUEST
-`fhir` is an [F1. Bundle](../fhir/F1-bundle.md) Bundle carrying [F4. Task (InsurancePlan request)](../fhir/F4-task-insuranceplan.md) Task with inputs typed `policyNumber` and `providerId` (the NDHM task-input-type system), and usually the asking hospital's [F17. Organization](../fhir/F17-organization.md) Organization, whose name is read for the audit line. Headers read: `x-hcx-sender_code`, `x-hcx-recipient_code`, `x-hcx-correlation_id`, `x-hcx-workflow_id` (echoed).
+`fhir` is an [F1. Bundle](../fhir/F1-bundle.md) Bundle carrying [F4. Task (InsurancePlan request)](../fhir/F4-task-insuranceplan.md) Task with inputs typed `policyNumber` and `providerId` (the NDHM task-input-type system), and usually the asking hospital's [F17. Organization](../fhir/F17-organization.md) Organization, whose name is read for the audit line. Headers read: `x-hcx-sender_code`, `x-hcx-recipient_code`, `x-hcx-correlation_id`, `x-hcx-workflow_id` (the hospital sends `1`: a plan request is hospital-level, never case-specific; echoed when it is a published code, else the answer goes under `1`, never a case number, [A2. Insurance Plan Answer](../apis/A2-insurance-plan-answer.md)).
 
 #### C3P. PSEUDOCODE
 
@@ -37,14 +37,14 @@ C3(in, ask):                                         # ask = F4 parse: policy_nu
     if none:
         bundle = A2.empty_plan({payer: in.payer})
         ack = answer(in, bundle, "v1/insuranceplan/on_request",
-                     workflow = in.workflow_id, status = "response.complete",
+                     workflow = echo_workflow(in.workflow_id, insurance plan), status = "response.complete",
                      what = "insuranceplan.no_plan")
         D31 detail: "<asked> asked, correlation <corr>, no product matched <policy_number>"
         return "settled"                             # outcome {status: no_plan, txn_id}
 
     bundle = A2.insurance_plan({payer: in.payer, policy, enrolment})
     ack = answer(in, bundle, "v1/insuranceplan/on_request",
-                 workflow = in.workflow_id, status = "response.complete",
+                 workflow = echo_workflow(in.workflow_id, insurance plan), status = "response.complete",
                  what = "insuranceplan.answered")
     D31 detail: "<asked> asked, correlation <corr>, policy <policy.id>"
     return "settled"                                 # outcome {status: answered, policy_id, txn_id}

@@ -1,6 +1,8 @@
 # A19. ABHA Create and Verify (ABDM M1)
 
 #### A19E. ENDPOINT
+**Built only when the HMIS has no ABDM (M1) module of its own.** When L1.3 found one that already creates, verifies or links an ABHA, or holds the ABHA identifier on the patient and its session token (`discovery.json` `abdm.screens`), it is reused without asking: this is never a question for the integrator. This spec is then not implemented: the NHCX patient screens link to that module's entry point, the ABHA it records is the one NHCX reads, and L3 drops the ABHA additions of the patient screens ([SCAFFOLDING.md](../references/SCAFFOLDING.md), section 4a). The plan files log A19 as `reused` with the module's files.
+
 Not an NHCX exchange: ABDM's ABHA service, called **from the application's server**, never from the operator's browser. The server carries the ABDM session token from [G3. Session Token](../gateway/G3-session-token.md) on `Authorization: Bearer`, a fresh `REQUEST-ID` (UUID) and `TIMESTAMP` (UTC, ISO 8601 with milliseconds) on every call, plain JSON, no JWE and no ledger row. Sandbox base `https://abhasbx.abdm.gov.in/abha/api/v3`; production is published by ABDM and confirmed in the onboarding letter. The page talks only to the application's own endpoints (A19Q) and holds only the flow's `txn_id`: **the session token, the X-token and the T-token never reach the browser.** Handing the facility's session token to a page would let any operator act as the facility on every ABDM call for as long as the token lives, so it stays server-side; the flow's X-token and T-token are kept on the server for the flow's few minutes, keyed by `txnId` and the signed-in user, and discarded after. The identifiers the person types are still sealed in the page under the service's public certificate before they are posted, so an Aadhaar number or OTP never travels in clear (the server seals a value only when the page could not).
 
 **The calls, their bodies, headers, responses and errors are read from the MCP, not from this spec.** The `nhcx-docs` MCP server (also published as `abdm-docs`) serves the whole of ABDM's HIE-CM catalogue beside NHCX, and M1 is its first milestone: open its `abdm-m1` prompt (the M1 router), or read these directly with `get`:
@@ -21,7 +23,7 @@ Not an NHCX exchange: ABDM's ABHA service, called **from the application's serve
 `search` with `milestone: M1` lists the other M1 flows (demographic, face, fingerprint and iris creation, child ABHA, find ABHA, update mobile), none of which this skill builds. The GitHub package (knowledge source option 2) carries no M1 at all: M1 needs the MCP, or the same atoms read on the ABDM developer portal at the `doc_url` the MCP returns.
 
 #### A19D. DESCRIPTION
-The ABHA number is what links a claim to an admission ([S4. Claim Creation Form](../screens/S4-claim-creation-form.md), [D3. patient](../database/D3-patient.md)), and under PMJAY it is the account the beneficiary is authenticated against ([A18. Biometric Authentication](A18-biometric-authentication.md)). A number typed at the desk is a number nobody checked. This API puts a **verified** ABHA on the file, two ways, and fills the file from what the ABHA service says about the person: name, gender, date of birth, mobile, ABHA number and address.
+The ABHA number is the patient's key across the exchange: the admission linked to a claim and the health records attached to it are found by it (S11. Claim Submission (in nhcx-claim), [D3. patient](../database/D3-patient.md), [D28. claim_document](../database/D28-claim-document.md)), and under a government payer it is the account the beneficiary is authenticated against ([A18. Biometric Authentication](A18-biometric-authentication.md)). A number typed at the desk is a number nobody checked. This API puts a **verified** ABHA on the file, two ways, and fills the file from what the ABHA service says about the person: name, gender, date of birth, mobile, ABHA number and address.
 
 **Verify an existing ABHA.** By its number, or by the mobile it is registered against. The identifier is sealed under the service's certificate and sent with `scope ["abha-login", "mobile-verify"]`, `loginHint` `abha-number` or `mobile`, `otpSystem abdm`; the OTP goes to the mobile either way. Verifying the OTP by ABHA number answers the account and the X-token directly, and the profile is read with it. Verifying by mobile answers the accounts on that mobile (a shared family phone holds several) and a short-lived T-token: the desk picks the account, `verify/user` with the chosen `ABHANumber` and the same `txnId` under `T-token` answers the X-token, and then the profile. Always call `verify/user` on the mobile path, even with one account listed. The account list carries **masked** ABHA numbers (`xx-xxxx-xxxx-1234`, `m1_post_v3_profile_login_verify_mobile_otp`), so `verify/user` sends the listed value exactly as given, or a full 14-digit number whose last digits match it; never reformat the masked value as digits.
 
@@ -44,9 +46,13 @@ The application's endpoints, behind the session, one per step of the flow; each 
 | Endpoint | Body | Answers |
 |---|---|---|
 | `GET abha/certificate` | | `public_key` (the service's certificate, for the page to seal with), `expires_at` |
-| `POST abha/enrol/otp`, `/enrol/verify`, `GET abha/enrol/suggestions`, `POST abha/enrol/address`, `POST abha/login/otp`, `/login/verify`, `/login/select` | the function's inputs below, sealed values as sealed by the page | the function's answer below, never a token |
+| `GET abha/session` | | whether the server holds an ABDM session token (`ready`, `expires_at`, `expires_in`, the service's `base_url`, and `error` when no token could be had), never the token |
+| `POST abha/enrol/otp`, `/enrol/verify`, `GET abha/enrol/suggestions`, `POST abha/enrol/address`, `POST abha/login/otp`, `/login/verify`, `/login/select` | the function's inputs below, sealed values as sealed by the page | the function's answer below, never a token; a verified `profile` comes with `existing_patients`, the patients already on the register under that ABHA |
+| `GET abha/form_values?txn_id` | | the registration form's values from the profile this flow verified (name, gender, date of birth or year of birth, phone, address, PIN code, ABHA number and address as identifiers) and `existing_patients`, for the desk to confirm; "The login has lapsed; ask for the OTP again." when the flow verified nothing or has expired |
+| `POST abha/link` | `patient`, `txn_id` | writes the verified ABHA number and address onto that patient and fills its blank name, gender, date of birth, phone, address and PIN code (typed values kept); answers `{patient, abha_no, abha_address, filled}`. Refused: "The login has lapsed; ask for the OTP again.", "Another patient is already registered with that ABHA number", "Another patient is already registered with that ABHA address", "Patient not found." |
+| `GET abha/patients?abha` | | the patients registered under that ABHA number, digits compared |
 
-Each step writes one audit line (`enrol_otp_sent`, `enrolled`, `address_set`, `login_otp_sent`, `login_verified`, `login_selected`) on the server; the page cannot write the trail.
+The flow's state belongs to the user who started it: a `txn_id` of another user's flow reads as lapsed, and a step that names no `txn_id` is refused "Ask for the OTP first.". Each step writes one audit line (`enrol_otp_sent`, `enrolled`, `address_set`, `login_otp_sent`, `login_verified`, `login_selected`, `linked`) on the server; the page cannot write the trail.
 
 The server's ABHA client, which the endpoints call, exposes the flow as these functions; each makes the service call named in A19E.
 
@@ -134,7 +140,7 @@ function profile_with(x_token):  return profile_from(abha_call(GET, "/profile/ac
 ```
 
 #### A19U. USED BY
-- Screens: [S13. Patient List](../screens/S13-patient-list.md), [S14. Patient Registration Form](../screens/S14-patient-registration-form.md), [S18. Beneficiary Verification](../screens/S18-beneficiary-verification.md)
+- Screens: [S13. Patient List](../screens/S13-patient-list.md), [S14. Patient Registration Form](../screens/S14-patient-registration-form.md), [S15. Patient Detail](../screens/S15-patient-detail.md), [S18. Beneficiary Verification](../screens/S18-beneficiary-verification.md)
 - APIs: [A18. Biometric Authentication](A18-biometric-authentication.md)
 - Database: [D3. patient](../database/D3-patient.md)
 - Tests: [T19. PMJAY Beneficiary Verification and ABHA](../tests/T19-pmjay-biometric-and-abha.md)

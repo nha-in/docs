@@ -4,7 +4,7 @@
 One row is one OPD visit or one IPD admission of a patient; primary key `id`; parent tables [D3. patient](D3-patient.md) and [D2. practitioner](D2-practitioner.md).
 
 #### D4D. DESCRIPTION
-`kind` separates the OPD visit from the IPD admission. A claim links to an IPD row: the admissions offered for linking are rows with `kind = 'IPD'` and `status <> 'finished'` whose patient's ABHA number matches the claim's, newest `period_start` first. Linking writes this row's id to [D9. claim](D9-claim.md) `encounter_id` and, when the claim has no admission date yet, the first ten characters of `period_start` to `claim.admission_date`. The pre-authorisation then quotes the admission: its `diagnosis` conditions ([D5](D5-condition.md)) become the claim's diagnoses and its `practitioner_id` becomes the treating doctor.
+`kind` separates the OPD visit from the IPD admission. A claim links to an IPD row: the admissions offered for linking are rows with `kind = 'IPD'` and `status <> 'finished'` whose patient's ABHA number matches the claim's, newest `period_start` first. Linking writes this row's id to [D9. claim](D9-claim.md) `encounter_id` and, when the claim has no admission date yet, the first ten characters of `period_start` to `claim.admission_date`. The link is made on the Claim tab, which needs it; the pre-authorisation does not, and may be sent before admission. A linked admission only pre-fills pre-authorisation details not yet saved: its `diagnosis` conditions ([D5](D5-condition.md)) and its `practitioner_id` as the treating doctor are offered on the form, never fixed ([D25](D25-claim-diagnosis.md), [D26](D26-claim-care-team.md)).
 
 Lifecycle:
 - Created by "Admit" (IPD) or "New OPD visit" / checking in an appointment (OPD). `encounter_no` is allocated from the `encounter_IPD` or `encounter_OPD` counter as `IPD-00001` or `OPD-00001` [REF](../references/PAYERS.md#markers). `class_code` defaults to `IMP` for IPD and `AMB` for OPD, and `class_display` is looked up (`AMB` ambulatory, `IMP` inpatient encounter, `EMER` emergency). `type_system` and `service_type_system` default to SNOMED. `created_at` is stamped. Every screen creates it with `status = 'in-progress'` and `period_start` = now.
@@ -62,6 +62,6 @@ Lifecycle:
 - Indexes: `ix_encounter_patient (patient_id, period_start DESC)`, `ix_encounter_kind (kind, status)`.
 
 #### D4U. USED BY
-- Screens: [S4. Claim Creation Form](../screens/S4-claim-creation-form.md), [S15. Patient Detail](../screens/S15-patient-detail.md)
+- Screens: [S4. Pre-authorisation Details and Admission Link](../screens/S4-claim-creation-form.md), [S15. Patient Detail](../screens/S15-patient-detail.md)
 - APIs: [A17. Claim State](../apis/A17-claim-state.md)
-- Database: [D2. practitioner](D2-practitioner.md), [D3. patient](D3-patient.md), [D5. condition](D5-condition.md), [D6. observation](D6-observation.md), [D7. allergy](D7-allergy.md), [D9. claim](D9-claim.md), [D25. claim_diagnosis](D25-claim-diagnosis.md), [D26. claim_care_team](D26-claim-care-team.md), [D30. counter](D30-counter.md)
+- Database: [D2. practitioner](D2-practitioner.md), [D3. patient](D3-patient.md), [D5. condition](D5-condition.md), [D6. observation](D6-observation.md), [D7. allergy](D7-allergy.md), [D9. claim](D9-claim.md), [D30. counter](D30-counter.md)

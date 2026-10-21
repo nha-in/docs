@@ -27,7 +27,7 @@ Before the first test, both runners run the setup checks of [G11. Startup Checks
 - Read results off the screen (status chips, amounts, messages) as the S spec describes them, never off the database.
 - Run headless by default; `--headed` shows the browser, for a person watching the run, slowed by `NHCX_TEST_SLOWMO_MS` between actions.
 - When the test's patient is already on the patient master, start from it: "Search insurance policy" on the chart (S15. Patient Detail (in nhcx-coverage)) or the patient-list row (S13. Patient List (in nhcx-coverage)) opens S1. Search Policy (in nhcx-coverage) prefilled, so the case is linked to the patient when it opens.
-- Save the pre-authorisation draft (S4. Claim Creation Form (in nhcx-preauth)) before the first send; S9. Pre-authorisation (in nhcx-preauth) disables the send until it is saved.
+- Save the pre-authorisation draft (S4. Pre-authorisation Details and Admission Link (in nhcx-preauth)) before the first send; S9. Pre-authorisation (in nhcx-preauth) disables the send until it is saved.
 - Read a refusal off the red line under the tabs, and ignore toasts the step did not cause.
 - The payer's side is not a provider screen: no S spec drives A14. Adjudicator User Role (in nhcx-preauth) or A15. Adjudicator Process Case (in nhcx-preauth). The GUI runner takes the payer's decisions through the same payer driver as the CLI (`tests/nhcx/e2e/payer/`), between the screen steps, and reads their outcome back on the screens.
 

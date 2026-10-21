@@ -96,4 +96,5 @@ On the screens a code whose lookup found nothing is shown as the bare code, and 
 
 #### A17U. USED BY
 - Screens: [S12. Organisation](../screens/S12-organisation.md)
+- Database: [D33. participant](../database/D33-participant.md)
 - Gateway: [G4. Registry and Certificates](../gateway/G4-registry.md)

@@ -23,6 +23,6 @@ A claim ready for pre-authorisation, as [T4. IRDAI Insurance Plan and Authorisat
 
 #### T7X. EXPECT
 
-- The question arrives as C9. Payer Communication (in nhcx-communication) with the payer's text, matched to the claim, and shown on S10. Communication (in nhcx-communication).
+- The question arrives as C9. Payer Communication (in nhcx-communication) with the payer's text, matched to the claim, and shown on S10. Communication (in nhcx-communication); the Communication tab carries a dot while the question is open.
 - The reply goes out (NHCX 202) on the question's thread, with the document attached; the payer desk shows the reply against the case.
 - After approval the leg is `approved`; the question and the answer stay on S10. Communication (in nhcx-communication).

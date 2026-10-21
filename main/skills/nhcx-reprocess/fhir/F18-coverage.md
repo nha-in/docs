@@ -33,7 +33,7 @@ Relationship is always `self`: the beneficiary is the subscriber [REF](../refere
 | `status` | `active` | constant |
 | `type.coding[0]` | `http://terminology.hl7.org/CodeSystem/v3-ActCode` `HIP` "health insurance plan policy" | constant |
 | `subscriber` | `{reference: "https://nhcx.abdm.gov.in/patient"}` | F15 |
-| `subscriberId` | the member id (table above) | |
+| `subscriberId` | the member id (table above); left out on a discovery by policy number, which names no member (A2) | |
 | `beneficiary` | `{reference: "https://nhcx.abdm.gov.in/patient"}` | F15 |
 | `relationship.coding[0]` | `http://terminology.hl7.org/CodeSystem/subscriber-relationship` `self` | no display |
 | `payor[0]` | `{reference: "https://nhcx.abdm.gov.in/payer"}` | F17 |

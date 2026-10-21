@@ -31,13 +31,13 @@ Unmarked statements are the protocol or this application's own design, and are f
 | Document stages named in the ruling | `pre`, `discharge`, `claim` from the procedure rules ([D11. procedure_rule_doc](../database/D11-procedure-rule-doc.md)) | the same | none |
 | Publishes a package master (A2. Insurance Plan Answer (in nhcx-coverage/payer)) | yes | yes | yes |
 | Multiple-procedure factors applied when pricing a quote (A10. Predetermination Quote (in nhcx-preauth/payer)) | 1, 0.5, 0.25 (costliest in full, second at half, the rest at a quarter) | 1, 0.5, 0.25 | none |
-| How it asks for more (query mode) | `resubmit`: the query rides in a ClaimResponse on the case's thread and the answer comes as a fresh submit under 19 or 131 (C4. Pre-auth Submit (in nhcx-preauth/payer)) | `communication`: a CommunicationRequest on a thread of its own (A5. Query Request (in nhcx-communication/payer)), answered with a Communication (C9. Communication (in nhcx-communication/payer)) | `communication` |
+| How it asks for more (query mode) | `resubmit`: the query rides in a ClaimResponse on the case's thread and the answer comes as a fresh submit under 19 or 131 (C4. Pre-auth Submit (in nhcx-preauth/payer)), 151 on a claim ([C5. Claim Submit](../callbacks/C5-claim-submit.md)) | both: a query on lines rides in the ClaimResponse on the submission's thread, PMJAY's way, answered by a resubmission (A3. Pre-auth Answer (in nhcx-preauth/payer), [A4. Claim Answer](../apis/A4-claim-answer.md), C4. Pre-auth Submit (in nhcx-preauth/payer), [C5. Claim Submit](../callbacks/C5-claim-submit.md)); a question on the case as a whole (Raise Query, or no line queried) is a CommunicationRequest on a thread of its own (A5. Query Request (in nhcx-communication/payer)), answered with a Communication (C9. Communication (in nhcx-communication/payer)) | the same as `kyrocare` |
 | Acknowledges a filing at once (A3. Pre-auth Answer (in nhcx-preauth/payer), [A4. Claim Answer](../apis/A4-claim-answer.md)) | yes, `queued` on 20 or 25 | yes | yes |
 | Answers a status enquiry (A8. Status Answer (in nhcx-preauth/payer)) | no: the live scheme refuses the Task; this desk answers anyway [REF](PAYERS.md#markers) | yes | yes |
-| Reprocess reason codes it takes | `claimrejected`, `partialpayment`, `rejectiondisputed` | the same | the same |
-| Proof of presence on a send (C2. Coverage Eligibility Check (in nhcx-coverage/payer), C4. Pre-auth Submit (in nhcx-preauth/payer), [C5. Claim Submit](../callbacks/C5-claim-submit.md)) | required by the live scheme: the beneficiary's biometric user token on the headers, else the Authentication Consent (pre-authorisation) or Discharge Consent (claim) QuestionnaireResponse; this desk records which it found | optional: a token is recorded when sent, nothing is required | optional, the same |
+| Reprocess reason codes it takes | `claimrejected`, `partialpayment`, `rejectiondisputed`, read as the reason's words; no code is refused | the same | the same |
+| Proof of presence on a send (C2. Coverage Eligibility Check (in nhcx-coverage/payer), C4. Pre-auth Submit (in nhcx-preauth/payer), [C5. Claim Submit](../callbacks/C5-claim-submit.md)) | required by the live scheme: the beneficiary's biometric user token on the headers, else the Authentication Consent (pre-authorisation) or Discharge Consent (claim) QuestionnaireResponse; this desk records which it found | asked for on the plan only when the product requires biometric (per policy, [D12. policy](../database/D12-policy.md) `require_biometric`: the InsurancePlan then carries POI / ADN, [F5. InsurancePlan](../fhir/F5-insuranceplan.md)); a token is recorded when sent, and no send is refused without one | the same |
 
-The `kyrocare` profile is the reference desk's own: an IRDAI-style insurer that speaks the PMJAY dialect for plans and rulings and asks by CommunicationRequest. Replace it with the profile of the payer being built.
+The `kyrocare` profile is the reference desk's own: an IRDAI-style insurer that speaks the PMJAY dialect for plans, rulings and line-item queries and asks about a case as a whole by CommunicationRequest. Replace it with the profile of the payer being built.
 
 ## Workflow ids
 
@@ -53,18 +53,19 @@ The `x-hcx-workflow_id` each answer or send travels under, per profile, and the 
 | Claim acknowledged (`claim_ack`) | 25 | 25 | 25 | A4 | `response.partial` |
 | Claim approved (`claim_approved`) | 26 | 26 | 26 | A4 | `response.complete` |
 | Claim rejected (`claim_rejected`) | 291 | 291 | 291 | A4 | `response.complete` |
-| Query on a pre-authorisation (`preauth_query`) | 24 | 24 | 24 | A5 | `request.initiated` |
-| Query on an enhancement (`enhancement_query`) | 241 | 241 | 241 | A5 | `request.initiated` |
-| Query on a claim (`claim_query`) | 27 | 27 | 27 | A5 | `request.initiated` |
+| Query on a pre-authorisation (`preauth_query`), as a CommunicationRequest | 24 | 24 | 24 | A5 | `request.initiated` |
+| Query on an enhancement (`enhancement_query`), as a CommunicationRequest | 241 | 241 | 241 | A5 | `request.initiated` |
+| Query on a claim (`claim_query`), as a CommunicationRequest | 27 | 27 | 27 | A5 | `request.initiated` |
 | Cancellation accomplished (`cancel_done`) | PC02 | PC02 | PC02 | A9 | `response.complete` |
 | Reprocess or release acknowledged (`reprocess_ack`) | 37 | 37 | 37 | A9 | `response.complete` |
 | Reprocess approved (`reprocess_approved`) | 252 | 252 | 252 | A9 | `response.complete` |
 | Reprocess rejected (`reprocess_rejected`) | 253 | 253 | 253 | A9 | `response.complete` |
-| Payment notice, raised and completed (`payment_notice`) | 30 | 30 | 30 | A6 | `request.initiated` |
+| Payment notice, initiated (`paid`, no UTR) | 30 | 30 | 30 | A6 | `request.initiated` |
+| Payment notice, completed (`cleared`, with the UTR) | 31 | 31 | 31 | A6 | `request.initiated` |
 
 The reprocess or release acknowledgement on 37 is the one send where the reference departs from the sheet: it goes out as `response.partial`, because the exchange closes a thread on `response.complete` and the decision that follows on the same thread (252, 253) would then have nowhere to travel [REF](PAYERS.md#markers). NHA pairs 37 with `response.complete` only, as the table says; confirm the pairing with the scheme before going live.
 
-Answers that take no code of their own echo the request's `x-hcx-workflow_id`: the eligibility answer and ruling (A1), the insurance plan (A2), the predetermination quote (A10), the status answer (A8) and the payment-enquiry answer (A7), all as `response.complete`. NHA pairs 24, 241 and 27 with `request.initiated` because the query is a request this payer makes on the communication route; the scheme also lists 27 as `response.partial/complete` when the query rides in a ClaimResponse, which this skill does not send [REF](PAYERS.md#markers).
+Answers that take no code of their own echo the request's `x-hcx-workflow_id`, all as `response.complete`, but only when it has the shape of a published workflow code (`^[A-Z]{0,2}[0-9]{1,4}$`: `1`, `11`, `121`, `PC01`): the eligibility answer and ruling (A1), the status answer (A8) and the payment-enquiry answer (A7). Anything else, such as a hospital's case number or a correlation id, is never repeated and the header is left off. The insurance plan (A2) falls back to `1` instead, because a plan request is hospital-level and the hospital sends `1` on it. The predetermination quote (A10) echoes its ask's workflow id as sent. NHA pairs 24, 241 and 27 with `request.initiated` because the query is a request this payer makes on the communication route. A **line-item query** uses the same codes but rides in the ClaimResponse on the submission's own `on_submit` thread (24, or 241 after an enhancement, on `v1/preauth/on_submit` through A3. Pre-auth Answer (in nhcx-preauth/payer); 27 on `v1/claim/on_submit` through [A4. Claim Answer](../apis/A4-claim-answer.md)), and there it goes as `response.complete`, because it answers the submission's thread, as the scheme lists 27 and as the live PMJAY payer sends it [REF](PAYERS.md#markers). Like the reprocess acknowledgement, confirm the pairing with the scheme before going live.
 
 ## What arrives
 
@@ -72,17 +73,21 @@ The hospital's sends carry workflow ids of their own; nothing routes on them ([C
 
 | Arrives as | Hospital's workflow id | Status word | Taken in by |
 |---|---|---|---|
-| Eligibility check, ruling, plan request | 11, or the hospital's case number [REF](PAYERS.md#markers) | `request.initiated` | C2, C3 |
+| Eligibility check, ruling | 11; an older hospital sent its case number, which is not echoed [REF](PAYERS.md#markers) | `request.initiated` | C2 |
+| Insurance plan request | 1: hospital-level, never case-specific | `request.initiated` | C3 |
+| Status enquiry | 1 always: no NHCX code names a status check; an older hospital sent the leg's correlation id | `request.initiated` | C8 |
 | Pre-authorisation | 12 | `request.initiated` | C4 |
 | Pre-authorisation resubmitted after a rejection | 121 | `request.initiated` | C4 (a fresh case when the old one is closed) |
-| Query answer by resubmission (`resubmit` mode) [PAYER](PAYERS.md#markers) | 19, 131 | `response.complete` | C4 |
+| Line-item query answered by resubmitting the pre-authorisation [PAYER](PAYERS.md#markers) | 19, 131 | `request.initiated` (NHCX refuses `response.complete` on a submit route with NHCX-1011); not read | C4 |
 | Enhancement | 13 | `request.initiated` | C4 |
 | Cancel | PC01 | `request.initiated` | C7 |
 | Claim | 15 | `request.initiated` | C5 |
-| Claim query answer by resubmission [PAYER](PAYERS.md#markers) | 151, or 161 on the SHA sandbox [SANDBOX](PAYERS.md#markers) | `response.complete` | C5 |
+| Claim line-item query answered by sending the claim again [PAYER](PAYERS.md#markers) | 151, or 161 on the SHA sandbox [SANDBOX](PAYERS.md#markers) | `request.initiated`; not read | C5 |
 | Reprocess, release | 36 | `request.initiated` | C7 |
 | Payment acknowledgement | 17, or the notice's own | `response.complete` | C11 |
 | Query answer as a Communication | the query's own | `response.complete` | C9 |
+
+**A decided claim is never sent again.** A hospital does not resubmit a claim this payer has decided: a claim naming a case at `payment`, `rejected` or `settled` is refused ([C5. Claim Submit](../callbacks/C5-claim-submit.md)). The way back is a reprocess Task (36, [C7. Task Submit](../callbacks/C7-task-submit.md)), and the reference hospital offers one only for a claim this payer rejected (reasons `claimrejected`, `rejectiondisputed`); a release (36) asks for the balance on an approved claim and is separate. A claim refused at the door, which never reached this payer, may come again as a first filing. The claim sent again under 151 above is the answer to a line-item query on a claim still open, not a resubmission of a decision.
 
 ## Sandbox participant codes
 
