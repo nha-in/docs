@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["66273"],{8632(e,t,h){h.r(t),h.d(t,{__iconNode:()=>s,default:()=>a});var d=h(34438);let s=[["rect",{width:"14",height:"20",x:"5",y:"2",rx:"2",ry:"2",key:"1yt0o3"}],["path",{d:"M12.667 8 10 12h4l-2.667 4",key:"h9lk2d"}]],a=(0,d.A)("smartphone-charging",s)}}]);
