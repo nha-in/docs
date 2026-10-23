@@ -105,6 +105,8 @@ the HMIS and HPR sheets, `Optional / Mandatory` on the PHR sheet.
 | Blank | Mandatory, flagged not marked | Mandatory, flagged not marked |
 | Anything else, such as a note in the marking cell | Mandatory, flagged unrecognised | Mandatory, flagged unrecognised |
 
+A group's Applicable To comes first. When the row that heads a group names one entity type only, such as M1's demographic authentication group, `Government`, every case in it is not for the other entity type, whatever its own marking says: for a private entity, CRT_ABHA_301 to 309 are not mandatory.
+
 A mandatory case can have no meaning in a run type, such as a screen only case
 in an `ft` run, or be a conditional case your system does not offer. Record it
 `not-run` only after NHA agrees it does not apply, and say so in its remarks.
@@ -384,6 +386,30 @@ def iterations(text):
         return 0
 
 
+def group_applies(ws, top, cols):
+    """Each case row's group Applicable To, carried down from the row that heads the group."""
+    acol, icol = cols.get("Applicable To"), cols.get("Test Case ID")
+    if not acol or not icol:
+        return {}
+    out, current = {}, ""
+    for r in range(top + 1, ws.max_row + 1):
+        applies = norm(anchor(ws, r, acol).value)
+        if applies:
+            current = applies
+        if norm(ws.cell(r, icol).value):
+            out[r] = current
+    return out
+
+
+def restricted_to(applies):
+    """The one entity type a group is for, when it names only one: government or private."""
+    low = applies.lower()
+    gov, priv = "gov" in low, "priv" in low
+    if "all" in low or "both" in low or gov == priv:
+        return None
+    return "government" if gov else "private"
+
+
 def read_cases(path, run, entity):
     """Every case in sheet order, with its marking, the run's values and treatment."""
     wb = load(path)
@@ -392,8 +418,11 @@ def read_cases(path, run, entity):
     backup = path.with_name(path.stem + ".before-abdm-run" + path.suffix)
     original = load(backup) if backup.exists() else None
     out = []
+    applies_by = {}
     for case, (ws, row) in index(wb).items():
         top, cols = header_row(ws)
+        if ws.title not in applies_by:
+            applies_by[ws.title] = group_applies(ws, top, cols)
         mcol = marking_col(cols)
         marking = norm(anchor(ws, row, mcol).value) if mcol else ""
         tcol = find(cols, TITLE)
@@ -405,6 +434,7 @@ def read_cases(path, run, entity):
                "kind": kind, "label": label, "note": note, "pair": pair,
                "expected": norm(anchor(ws, row, ecol).value) if ecol else "",
                "function": (norm(anchor(ws, row, fcol).value) if fcol else "") or ws.title}
+        rec["applies"] = applies_by[ws.title].get(row, "")
         for key, names in COLUMNS[run].items():
             rec[key] = value(ws, row, top, cols, names, original)
         rec["status"] = rec["status"].upper()
@@ -422,6 +452,14 @@ def read_cases(path, run, entity):
                 other = [x for x in ids if x != i]
                 by_id[i].update(kind="pair", pair=ids, label="Either, with " + " or ".join(other),
                                 note="either rule: one of " + " or ".join(ids) + " must pass")
+    # A group the sheet marks for one entity type only, such as M1's demographic authentication
+    # for Government, is not for the other one, whatever its cases' own markings say.
+    for rec in out:
+        only = restricted_to(rec["applies"])
+        if only and only != entity:
+            rec.update(kind="optional", pair=None, label="Not for a " + entity + " entity",
+                       note="the group applies to " + rec["applies"] + " only: not for a " + entity + " entity")
+    groups = {k: v for k, v in groups.items() if any(by_id[i]["kind"] == "pair" for i in v if i in by_id)}
     return out, list(groups.values())
 
 
@@ -539,7 +577,7 @@ def shown(row, header=False):
             for c, text in enumerate(row)]
 
 
-def content(path, run, meta, evidence, recs, groups, manifest=None):
+def content(path, run, meta, evidence, recs, groups, manifest=None, draft=None):
     """What the report says, as a list of blocks. The DOCX and the PDF draw the same blocks."""
     dm = meta.get("document", {})
     dates = meta.get("test_dates", {})
@@ -547,6 +585,9 @@ def content(path, run, meta, evidence, recs, groups, manifest=None):
     entity = meta["entity_type"]
     label = RUN_NAME[run]
     title = milestone + " " + label + " report"
+    if draft:
+        # A draft carries the mark on every page, so it is never mistaken for the report to submit.
+        title = "Draft " + title
     rids = request_ids(manifest)
     safe = set()  # text printed unmasked: a list of REQUEST-IDs that are all UUIDs
     blocks = []
@@ -572,6 +613,9 @@ def content(path, run, meta, evidence, recs, groups, manifest=None):
                 str(len(agreed)) + " NA that NHA agreed not to run, listed in the results summary.")
     else:
         held = " All " + str(mandatory) + " mandatory cases that apply to a " + entity + " entity are PASS."
+    if draft:
+        held = (" This is a draft, not the report to submit: " + str(len(draft)) + " of the " + str(mandatory) +
+                " mandatory cases that apply to a " + entity + " entity are not yet PASS, listed below.")
 
     def reason(r):
         """Why a case failed, or what an earlier pass hit: the remark, else the response, with its codes."""
@@ -619,6 +663,11 @@ def content(path, run, meta, evidence, recs, groups, manifest=None):
         ". The workbook " + Path(path).name + " holds " + str(n) + " cases. " + str(passed) + " are PASS, " +
         str(failed) + " FAIL, " + str(na) + " NA and " + str(blank) + " have no result." + held + " " +
         str(len(retried)) + " cases took more than one pass.")
+    if draft:
+        add("callout", ["Draft. The report to submit is built only when every mandatory case below is PASS."])
+        add("h2", "Mandatory cases not yet passed")
+        table([line.split(": ", 1) if ": " in line else [line, ""] for line in draft],
+              header=["Test case ID", "Status"])
 
     # 3. ABDM details
     add("h1", SECTIONS[2])
@@ -787,6 +836,7 @@ def content(path, run, meta, evidence, recs, groups, manifest=None):
 
     return {
         "title": title, "label": label, "run": run, "milestone": milestone, "entity": entity, "safe": safe,
+        "draft": draft or [],
         "product": meta.get("product", ""), "organisation": meta.get("organisation", ""), "blocks": blocks,
         "cover": [["Product", meta.get("product", "")], ["Organisation", meta.get("organisation", "")],
                   ["Milestone", milestone], ["Report type", label + " (run type " + run + ")"],
@@ -1421,8 +1471,11 @@ def write_pdf(m, out, fonts_dir=None):
         c.setFillColor(C["orange"])
         c.rect(M, H - 26 * mm, 18 * mm, 2, stroke=0, fill=1)
         tracked(c, M, H - 33 * mm, "ABDM SANDBOX · FUNCTIONAL TEST REPORT", 7.8, "orange", 1.4)
+        if m.get("draft"):
+            tracked(c, M, H - 39 * mm, "DRAFT · " + str(len(m["draft"])) + " MANDATORY CASES NOT YET PASS", 7.8, "ice", 1.4)
         tail = MILESTONES.get(m["milestone"].upper(), m["milestone"])
-        head = (escape(clean(m["label"][:1].upper() + m["label"][1:] + " report, ")) +
+        lead = ("Draft " + m["label"]) if m.get("draft") else (m["label"][:1].upper() + m["label"][1:])
+        head = (escape(clean(lead + " report, ")) +
                 '<font color="' + INK["orange"] + '">' + escape(clean(tail)) + "</font>")
         title = Paragraph(head, S["cover"])
         _, th = title.wrap(TW * 0.86, H)
@@ -1470,9 +1523,9 @@ def write_pdf(m, out, fonts_dir=None):
     print("wrote " + str(out))
 
 
-def build(path, run, meta, evidence, out, recs, groups, manifest=None, fmt="both", fonts_dir=None):
+def build(path, run, meta, evidence, out, recs, groups, manifest=None, fmt="both", fonts_dir=None, draft=None):
     """Write the report: the PDF to submit and the DOCX to edit, beside each other."""
-    m = content(path, run, meta, evidence, recs, groups, manifest)
+    m = content(path, run, meta, evidence, recs, groups, manifest, draft)
     out = Path(out)
     out.parent.mkdir(parents=True, exist_ok=True)
     if fmt in ("docx", "both"):
@@ -1493,6 +1546,8 @@ def main():
     p.add_argument("--manifest")
     p.add_argument("--format", choices=["pdf", "docx", "both"], default="both")
     p.add_argument("--fonts")
+    p.add_argument("--draft", action="store_true",
+                   help="build even when mandatory cases are not PASS, marked Draft on every page")
     a = p.parse_args()
     meta = {}
     if a.action == "build" and not (a.meta and a.out):
@@ -1508,12 +1563,14 @@ def main():
     if entity not in ("government", "private"):
         sys.exit("--entity, or entity_type in meta.json, must be government or private")
     recs, groups, blocking = run_check(a.workbook, a.run, entity, agreed_cases(meta))
-    if blocking:
+    if blocking and not (a.action == "build" and a.draft):
         if a.action == "build":
-            print("no report: every mandatory case must be PASS first", file=sys.stderr)
+            print("no report: every mandatory case must be PASS first. --draft writes a draft marked as one",
+                  file=sys.stderr)
         sys.exit(1)
     if a.action == "build":
-        build(a.workbook, a.run, meta, a.evidence, a.out, recs, groups, a.manifest, a.format, a.fonts)
+        build(a.workbook, a.run, meta, a.evidence, a.out, recs, groups, a.manifest, a.format, a.fonts,
+              blocking if blocking else None)
 
 
 if __name__ == "__main__":
@@ -1530,7 +1587,13 @@ if __name__ == "__main__":
 
    `--meta` is optional for `check`: it is read for `agreed_not_run`. The script prints one `marking` line for every case whose marking is entity specific, conditional, an either rule, a field list, blank or unrecognised, with how it was treated, and one `agreed not run <id>: <agreement>` line per mandatory `NA` case `agreed_not_run` lets through. Then one `not passed <id>: <status>` line per mandatory case in the way, an either pair as `<id> or <id>: <status>, <status>`, and a count.
 
-2. If it exits `1`, the run is not finished. Rerun the cases it lists, as `open` in `shared.concept.test-workbook-write-back` does, and run `check` again. Do not run `build`.
+2. If it exits `1`, the run is not finished, but the tester still gets a PDF of where it stands. Build the draft:
+
+   ```bash
+   python3 abdm-ft/abdm_report.py build <workbook> --run ui --meta abdm-ft/meta.json --evidence abdm-ft/evidence --manifest abdm-ft/m1-<YYYYMMDD-HHMM>.json --out abdm-ft/draft-report-m1.pdf --draft
+   ```
+
+   The draft is the same report, marked Draft on the cover and in the header of every page, with the mandatory cases not yet passed listed first in the executive summary. It is never the report to submit. Then rerun the cases `check` listed, as `open` in `shared.concept.test-workbook-write-back` does, and run `check` again. Every run ends with a PDF: the report when `check` exits `0`, the draft when it does not.
 
 3. Only when `check` exits `0`, write the one line findings into `meta.json` under `findings`, keyed by case id. A case without one gets its Remarks value. Then build:
 

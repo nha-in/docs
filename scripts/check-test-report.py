@@ -240,6 +240,16 @@ def main():
     out = run(report, "build", m1, "--run", "ft", "--meta", meta_path, "--out", work / "refused.docx")
     ok(out.returncode == 1 and "not passed CRT_ABHA_105: FAIL" in out.stdout and not (work / "refused.docx").exists(),
        "M1 ft build refuses while the gate fails, with the same list")
+    out = run(report, "build", m1, "--run", "ft", "--meta", meta_path, "--out", work / "draft.pdf", "--draft",
+              "--format", "pdf")
+    draft_text = pdf_text(work / "draft.pdf") if (work / "draft.pdf").exists() else ""
+    ok(out.returncode == 0 and "Draft M1" in draft_text and "Mandatory cases not yet passed" in draft_text
+       and "CRT_ABHA_105" in draft_text and "MANDATORY CASES NOT YET PASS" in draft_text,
+       "M1 ft build --draft writes a PDF marked Draft that lists the mandatory cases not yet passed")
+    gov = run(report, "check", m1, "--run", "ft", "--entity", "government")
+    priv = run(report, "check", m1, "--run", "ft", "--entity", "private")
+    ok("CRT_ABHA_301" not in priv.stdout.split("not passed")[-1] and "not for a private entity" in priv.stdout,
+       "M1 demographic authentication group, Applicable To Government, is not mandatory for a private entity")
 
     # The either rule, on the ui columns.
     cases = [
