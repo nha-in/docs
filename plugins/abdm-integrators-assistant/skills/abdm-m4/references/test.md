@@ -113,7 +113,7 @@ Walks the ABDM M4 functional test cases, facility and professional registration,
 | Your `bridgeId`, and a facility id for the bridge cases | The bridge from your sandbox registration. The facility id from a submitted facility, or from a search |
 | Which registries your system integrates | HFR, HPR or both. Cases for a registry you do not integrate are recorded `not-run` with that reason |
 | A folder for the run log | Your repository. `abdm-ft/` unless you name another |
-| NHA's test case workbooks for this module, if results go into them | M4 has two, HFR and HPR. Copy each NHA sent you into `abdm-ft/`. Writing into them needs Python 3.9 or later with `openpyxl` and `Pillow` |
+| NHA's test case workbooks for this module, required: the results and the report are built from it | M4 has two, HFR and HPR. Both ship with this skill, in its `workbook/` folder (on the docs site, `/skills/abdm-m4/workbook/`): copy them into `abdm-ft/` before the run, and never use another copy, so the sheets match the cases below. Writing into them needs Python 3.9 or later with `openpyxl` and `Pillow` |
 | For a `ui` run: your application's URL | Your deployment, reachable from the browser on this machine |
 | For a `ui` run: a tester login for your application | A test account in your application, read from an environment variable you name or typed at a hidden prompt. It is never written to the run log, the evidence or the workbook |
 | For a `ui` run: Node 18 or later, the Playwright MCP server and a browser | The integrators plugin starts `@playwright/mcp@0.0.83`, which the first start downloads with `npx`. Install the browser the server reports missing, chrome or chromium. `/abdm-test-setup` lists what is missing. Without the plugin, the section "Running a case as a UI test" lists each install command |
@@ -139,7 +139,7 @@ The first question is the run type. `ft` is the API functional test: your system
 | People and devices | Each is named for this run: who receives the OTPs, who approves in the PHR app, which device scans |
 | Entity type and claimed capabilities | Answered, because they decide which cases are mandatory |
 | The run log | Its folder exists and can be written: `abdm-ft/` in your repository unless you name another |
-| The workbooks | For each of HFR and HPR, `python3 abdm-ft/abdm_workbook.py cases <workbook>` lists the case ids, and every case chosen from that registry is among them. Each workbook has its own results file. `not needed` when no workbook was given |
+| The workbooks | For each of HFR and HPR, `python3 abdm-ft/abdm_workbook.py cases <workbook>` lists the case ids, and every case chosen from that registry is among them. Each workbook has its own results file. Required: without it there are no results in the sheet and no report, so ask for it before the first case |
 | UI readiness, for a `ui` or `all` run | Every row of the readiness check in "Running a case as a UI test" is `ready`: Node, the Playwright tools, a browser, the application URL and the tester login. `not needed` for an `ft` run |
 
 A `missing` row that a mandatory case needs stops the run before the first call. Say what is missing and ask the one question that would fix it.
@@ -742,7 +742,7 @@ From `shared.concept.test-ui-run`.
 
 ## Writing results into NHA's workbook
 
-Ask for the workbook in the readiness check, and save the script below as `abdm-ft/abdm_workbook.py` before that check, because the check runs it. With a workbook, every case ends by writing its result into the sheet as below, after the run log row is updated. Without one, the run log and the manifest are the record, as before.
+Ask for the workbook in the readiness check, and save the script below as `abdm-ft/abdm_workbook.py` before that check, because the check runs it. Every case ends by writing its result into the sheet as below, after the run log row is updated. The workbook is required: the report is built from it.
 
 ### In plain words
 
@@ -769,7 +769,7 @@ overwrites the other:
 
 ### Before you start
 
-- The workbook for the module, as NHA published it, in your repository beside the run log, such as `abdm-ft/M1_ABHA_CREATION_VERIFICATION_SCAN_AND_SHARE.xlsx`. M4 has two, HFR and HPR: each is its own workbook with its own results file. The PHR workbook has no case ids: the script builds them from each tab and row, `PHR_ADDR_302` for row 3.2 of the ABHA address creation tab, exactly as the test case page shows them, and its first write adds a `Test Case ID` column holding them.
+- The workbook for the module, copied from the test skill's own `workbook/` folder into your repository beside the run log, such as `abdm-ft/M1_ABHA_CREATION_VERIFICATION_SCAN_AND_SHARE.xlsx`. The skill ships the sheet its cases come from, so use that copy rather than another. M4 has two, HFR and HPR: each is its own workbook with its own results file. The PHR workbook has no case ids: the script builds them from each tab and row, `PHR_ADDR_302` for row 3.2 of the ABHA address creation tab, exactly as the test case page shows them, and its first write adds a `Test Case ID` column holding them.
 - Python 3.9 or later with `openpyxl` and `Pillow`: `pip install openpyxl pillow`. Pillow is what keeps the sheet's logos when it is saved.
 - The script below, saved as `abdm-ft/abdm_workbook.py` before the readiness check, which runs it.
 
@@ -2706,7 +2706,7 @@ From `shared.concept.test-report`.
 
 ## When the last case is recorded
 
-Mark the run log finished, with the time and the count of each outcome. Then write the manifest beside it, with the same name and `.json`. It maps case ids to the identifiers the registry returned, nothing else. Those identifiers are the evidence a reviewer can check against the registry's own record. Secrets never appear in it: no tokens, no OTPs, no Aadhaar numbers, no passwords, no mobile numbers, no client secret. The run log and the manifest are written on every run. The manifest is not the final report: the section "Writing the test report" writes that, once its `check` exits 0.
+Mark the run log finished, with the time and the count of each outcome. Then write the manifest beside it, with the same name and `.json`. It maps case ids to the identifiers the registry returned, nothing else. Those identifiers are the evidence a reviewer can check against the registry's own record. Secrets never appear in it: no tokens, no OTPs, no Aadhaar numbers, no passwords, no mobile numbers, no client secret. The run log and the manifest are written on every run. The manifest is not the report. Every run ends with a PDF, written as the section "Writing the test report" sets out: run its `check`; when it exits 0, build the report; when it does not, build the draft with `--draft`. Never end a run without one, and say where it is in the three lines below.
 
 ```json
 {

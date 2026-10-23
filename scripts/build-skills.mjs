@@ -16,7 +16,7 @@
 // pages, not the skill.
 import {readFileSync, writeFileSync, mkdirSync, rmSync, readdirSync, existsSync, cpSync} from 'node:fs';
 import {execFileSync} from 'node:child_process';
-import {join, dirname} from 'node:path';
+import {join, dirname, basename} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {parse} from 'yaml';
 import {cleanDescription} from './lib/titles.mjs';
@@ -743,7 +743,7 @@ function writeBackSection() {
   return [
     "## Writing results into NHA's workbook",
     '',
-    'Ask for the workbook in the readiness check, and save the script below as `abdm-ft/abdm_workbook.py` before that check, because the check runs it. With a workbook, every case ends by writing its result into the sheet as below, after the run log row is updated. Without one, the run log and the manifest are the record, as before.',
+    'Ask for the workbook in the readiness check, and save the script below as `abdm-ft/abdm_workbook.py` before that check, because the check runs it. Every case ends by writing its result into the sheet as below, after the run log row is updated. The workbook is required: the report is built from it.',
     '',
     body.replace(/^## /gm, '### ').trim(),
     '',
@@ -857,6 +857,40 @@ function withHumanEntry(test) {
   const section = humanEntrySection();
   if (!/^# /.test(test) || nl === -1) return `${section}\n${test}`;
   return `${test.slice(0, nl + 1)}\n${section}${test.slice(nl + 1)}`;
+}
+
+// NHA's test case workbooks ship inside the test skills, in a workbook/
+// folder beside SKILL.md, so a run has the sheet its cases come from without
+// downloading anything. Which sheet feeds which page is set once, in the
+// PAGES table of scripts/build-test-cases.py; it is read from there so the
+// pages and the skills always carry the same sheets.
+const RAW_TESTS = join(root, 'catalogue', 'hiecm', 'openapi', '.raw');
+const WORKBOOK_PAGES = {m1: 'm1', m2: 'm2', m3: 'm3', m4: 'm4', p1: 'phr', p2: 'phr', p3: 'phr', p4: 'phr'};
+
+function workbooksByPage() {
+  const source = readFileSync(join(root, 'scripts', 'build-test-cases.py'), 'utf8');
+  const out = {};
+  let page = null;
+  for (const line of source.split('\n')) {
+    const key = line.match(/^ {4}"(m1|m2|m3|m4|phr)": \{/);
+    if (key) page = key[1];
+    const sheet = line.match(/RAW \/ "([^"]+)" \/ "([^"]+\.xlsx)"/);
+    if (page && sheet) (out[page] ??= []).push(join(RAW_TESTS, sheet[1], sheet[2]));
+  }
+  return out;
+}
+
+/** Copies a module's workbooks into its skill folder, in both places that ship it. */
+function emitWorkbooks(slug, moduleId) {
+  const sheets = workbooksByPage()[WORKBOOK_PAGES[moduleId]] ?? [];
+  for (const sheet of sheets) {
+    if (!existsSync(sheet)) throw new Error(`${sheet} is missing, and ${slug} ships it`);
+    for (const base of [outDir, pluginDir]) {
+      mkdirSync(join(base, slug, 'workbook'), {recursive: true});
+      cpSync(sheet, join(base, slug, 'workbook', basename(sheet)));
+    }
+  }
+  return sheets.map((sheet) => basename(sheet));
 }
 
 /** Which guided loop is which section of which skill. */
@@ -1050,6 +1084,7 @@ for (const module of MODULES) {
   const pluginFiles = {...files, 'SKILL.md': skillMd(head(wholeFrozen))};
 
   emit(module.slug, files, pluginFiles);
+  if (fold.test) emitWorkbooks(module.slug, module.id);
 
   manifest[module.slug] = entry;
 
