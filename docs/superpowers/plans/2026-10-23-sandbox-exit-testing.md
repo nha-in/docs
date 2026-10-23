@@ -93,20 +93,7 @@ The page, the workbook writer and the skills derive the same 200 ids by this rul
 
 - **Gate.** Runs only when every mandatory case applicable to the run type is PASS, otherwise lists the cases in the way.
 - **Type.** A `ui` report is the exit report NHA asked for. An `ft` report has the same structure with request and response excerpts in place of screenshots. Whether NHA accepts an `ft` report alone is question 9.
-- **Structure**, the common ground of the nine sample reports:
-  1. Cover: product, milestone, report type, release date
-  2. Document control: document id (`FT-M1` and on), version, prepared, reviewed, approved, change history, distribution
-  3. Executive summary
-  4. ABDM table: entity, product, milestone, API version, test dates and days, executed by
-  5. Scope: applications and URLs tested, role, entity type
-  6. Test environment and tools: browser and version, Playwright, PHR app and version, emulator, model
-  7. Approach: agent run, iteration rule, human steps, PHR proof rule
-  8. Test data: ABHA numbers and addresses used, records per HI type, masked
-  9. Results summary: one row per case, id, title, marking, status, iterations
-  10. Evidence: one section per case, a one line finding and its screenshots
-  11. Failures and iterations log, including cases that later passed
-  12. Conclusion
-  13. Annexures: recordings, the completed workbook
+- **Structure.** Our own format, built on 23 October 2026 from a section by section study of all nine agency reports (Nangia, Avasure and Code Decode, M1 to M3), keeping the best element of each and adding what none has: a cover, a contents list naming every case, document control, an executive summary from the counts, the ABDM details, a results summary by function and by case, scope and limitations, flow details, environment and tools, the test team, approach and methodology, masked test data, per case evidence (a fixed table of id, title, marking, expected, observed, status, iterations, failure reason with error code and request ids, then captioned screenshots), a failures and iterations log, conclusion and sign-off, and annexures. The section by section table, with which agency each element came from, is in `shared.concept.test-report`.
 - The model writes only the findings and the executive summary; every table comes from the workbook and the run log. DOCX and PDF. No credential appears, and Aadhaar numbers are masked in text and blurred in screenshots. The sample reports print the integrator's login in plain text; this one does not.
 
 ## 9. Phases
@@ -116,14 +103,14 @@ The page, the workbook writer and the skills derive the same 200 ids by this rul
 | 0 | NHA's 21 October M1, M2, M3 sheets stored, pages regenerated, this plan | `build-test-cases.py --check` current, site builds. This branch |
 | 1 | M1, M2, M3 test sections updated to the 21 October sets | Every case id on the pages has a loop in its skill section, `validate:skills` passes |
 | 2 | Shared workbook reader and writer, used by the page generator and the runner | A read then write of each sheet changes only result cells, tested in CI |
-| 3 | Run type `ft` writes back: today's loops fill the FT columns | One M1 `ft` run fills its workbook |
-| 4 | Run type `ui` and its install path | One M1 `ui` run fills NHA's columns, with screenshots, on a clean machine |
-| 5 | Report sub-skill | Both report types for the M1 runs follow section 8 |
-| 6 | M2, M3 (PHR proof), M4, then PHR ids and the emulator for P1 to P4 | Each workbook filled once |
+| 3 | Run type `ft` writes back: today's loops fill the FT columns | `check-workbook-writeback.py` writes every case of every sheet as an ft run, and only result cells change |
+| 4 | Run type `ui` and its install path | Every test section asks the run type and carries the UI run section, and `/abdm-test-setup` names every piece a run type needs |
+| 5 | Report sub-skill | `check-test-report.py` builds both report types in the section 8 format and the gate holds |
+| 6 | M2, M3 (PHR proof), M4, then PHR ids and the emulator for P1 to P4 | The PHR workbook is filled by the writer with the page's 200 ids |
 
 Each phase ends with the `adversarial-reviewer` agent before it ships.
 
-Status, 23 October 2026: every phase is built on this branch, and none has yet run against an integrator's system.
+Status, 23 October 2026: every phase is built on this branch.
 
 - Phases 0 and 1: NHA's 21 October M1 to M3 sheets, their pages, and the test sections that walk them.
 - Phases 2 and 3: `shared.concept.test-workbook-write-back`, the writer every test section folds in, checked against all six sheets by `scripts/check-workbook-writeback.py`. The page generator still reads the sheets its own way; the check holds the two to the same case ids.
@@ -132,20 +119,29 @@ Status, 23 October 2026: every phase is built on this branch, and none has yet r
 - Phase 6: PHR cases carry `PHR_ADDR_`, `PHR_APP_`, `PHR_HIU_` and `PHR_LOCKER_` ids, the writer fills the PHR workbook, and the PHR proof rule is in the UI run section.
 - CI installs openpyxl, Pillow and python-docx and runs both checks.
 
-Not done: a real `ft` and `ui` run of M1 against a sandbox-connected system, which needs that system and a person with an Aadhaar linked mobile; and NHA's answers to section 10.
+Open: NHA's answers to the questions still open in section 10.
 
-## 10. Questions for NHA
+## 10. Questions for NHA, and what is settled
 
-1. Which sample report is the reference format, and does a named auditor still fill Prepared, Reviewed and Approved?
-2. Iterations: passes within one run, or test cycles across fixes?
-3. Can integrators be required to give the runner their server log, for exceptions that never reach the screen?
-4. Can the sandbox issue test Aadhaar and mobile numbers with fixed OTPs, so a run needs no person?
-5. The 21 October M2 sheet drops `HIP_INTI_LINK_201` to `503`, which the Nangia M2 report still tests. Is the new sheet the one that counts?
-6. M3 `HIU_FLOW_107` to `114` have no Functionality title, only the HI type in the Test Case column. Can the sheet give them titles?
-7. Will NHA adopt the PHR ids in section 7?
-8. Are recordings mandatory, and where are they hosted?
-9. Is an `ft` report accepted for exit on its own, or only with the `ui` report?
-10. The HFR and HPR sheets in the 22 October zip are dated March 2024 and older than the ones NHA sent on 2 October. Which is current?
+Settled on 23 October 2026:
+
+| Question | Decision |
+|---|---|
+| Report format | Our own, built from the best of the three agencies' reports (section 8) |
+| Iterations | From NHA's request ("record how many iterations were performed for each failure case") and the Iterations column in the M1 to M3 workbooks. Recorded as the attempts a case took, at most 3 per run |
+| Server logs | Not required of integrators. Read only when the integrator offers a command for them; otherwise the reason comes from the screen, the network response and the ft replay |
+| Fixed test OTPs | None. A person gives every OTP at the moment the case needs it, as the cases are written |
+| CRT_ABHA_308 and 309 | Read as the set on the sandbox site marks them: 308 mandatory for private, and for government either 308 or 309, the same pattern as 114 and 115 |
+| HFR and HPR version | The sandbox site publishes the March 2024 sheets, the same files NHA sent on 22 October. Main carries the copies NHA sent on 2 October, the same text but for one HPR line. Open: which of the two the page and skills use |
+
+Still open:
+
+1. The 21 October M2 sheet drops `HIP_INTI_LINK_201` to `503` and the grant, revoke and expire consent groups, which the August 2022 sheet on the sandbox site and the Nangia M2 report still carry. Is the 21 October sheet the one that counts?
+2. M3 `HIU_FLOW_107` to `114` have no Functionality title, only the HI type in the Test Case column. Can the sheet give them titles?
+3. Will NHA put the PHR ids in section 7 into its own PHR workbook, so a report and the sheet quote the same id?
+4. Are recordings mandatory, and where are they hosted?
+5. Is an `ft` report accepted for exit on its own, or only with the `ui` report?
+6. The sandbox site still publishes the older M1, M2 and M3 sheets. When does it publish the 21 October ones?
 
 ## 11. Risks
 
