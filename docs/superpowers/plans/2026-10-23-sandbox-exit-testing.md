@@ -134,7 +134,7 @@ Each phase ends with the `adversarial-reviewer` agent before it ships.
 3. Can integrators be required to give the runner their server log, for exceptions that never reach the screen?
 4. Can the sandbox issue test Aadhaar and mobile numbers with fixed OTPs, so a run needs no person?
 5. The 21 October M2 sheet drops `HIP_INTI_LINK_201` to `503`, which the Nangia M2 report still tests. Is the new sheet the one that counts?
-6. M3 `HIU_FLOW_107` to `114` have no titles. Which HI type is each?
+6. M3 `HIU_FLOW_107` to `114` have no Functionality title, only the HI type in the Test Case column. Can the sheet give them titles?
 7. Will NHA adopt the PHR ids in section 7?
 8. Are recordings mandatory, and where are they hosted?
 9. Is an `ft` report accepted for exit on its own, or only with the `ui` report?

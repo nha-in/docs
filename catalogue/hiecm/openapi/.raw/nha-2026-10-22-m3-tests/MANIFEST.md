@@ -4,11 +4,11 @@ The M3 functional test case set, Building HIU, revised by NHA on 21 October 2026
 
 One tab, Building HIU, 16 cases. Columns S.No, Function, Applicable To, Mandatory/Optional, Test Case ID, Functionality, Test Case, Steps, Expected Result, Suggestions for the Functional Tester, Response of Request with Code, Status(PASS/FAIL), Iterations, Remark, APIs. The four result columns are empty; NHA asked for them to be filled by the test run. It carries no personal data; its two images are the NHA and ABDM logos.
 
-Against the 1 October set: `HIU_FLOW_101` is gone and `HIU_FLOW_114` is new.
+Against the 1 October set: `HIU_FLOW_101` is gone, `HIU_FLOW_114` (invoice) is new, the fetch cases are mandatory for private integrators rather than any one of them, and `HIU_FLOW_301` is now a request the patient never answers expiring, not a granted consent expiring.
 
 What the sheet says that the page renders as written, kept here:
 
-- `HIU_FLOW_107` to `114` have no Functionality, and all eight read the same: "HIU user should be able to view the health data of selected HI type", without saying which HI type each covers. The page titles each by its id.
+- `HIU_FLOW_107` to `114` have no Functionality. Each names its HI type in the Test Case column, diagnostic report to invoice, and `114` is the invoice. The page titles each by its id.
 - The groups are numbered 1, 3, 3, 4, 5: Consent Request Denied and Consent Request Granted are both 3.
 - `HIU_FLOW_107` to `114` are marked Mandatory for private.
 
