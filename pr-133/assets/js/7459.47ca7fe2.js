@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["7459"],{2894(e,a,d){d.r(a),d.d(a,{__iconNode:()=>t,default:()=>_});var s=d(34438);let t=[["path",{d:"m12 14 4-4",key:"9kzdfg"}],["path",{d:"M3.34 19a10 10 0 1 1 17.32 0",key:"19p75a"}]],_=(0,s.A)("gauge",t)}}]);
