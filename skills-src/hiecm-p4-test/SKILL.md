@@ -1,6 +1,6 @@
 ---
 name: hiecm-p4-test
-description: "Use when walking the ABDM P4 functional test cases (the health locker: setup, subscription, auto approval, uploads and the consent lists) against an integrator's own locker and PHR app and the sandbox: runs each case as a loop, records evidence the sandbox can vouch for, and writes the manifest that stands in for a screenshot report."
+description: "Use when walking the ABDM P4 functional test cases (the health locker: setup, subscription, auto approval, uploads and the consent lists) against an integrator's own locker and PHR app and the sandbox: runs each case as a loop, records evidence the sandbox can vouch for, and writes NHA's workbook, the manifest of request ids a reviewer checks against the gateway, and the final test report."
 ---
 # HIE-CM p4 test
 
@@ -75,7 +75,7 @@ Loop limit: 3 passes per test case. Hitting the limit is an escalation: state wh
 Every case names one of these. It decides what the manifest carries.
 
 - **sandbox.** A call or a callback the gateway sees. Evidence is the HTTP status, the body and the REQUEST-ID, pasted. For an asynchronous call it is the 202 and then the callback carrying the named field. A reviewer can check this against the gateway's own record, which is why it outranks the other two.
-- **screen.** A rule about what your locker or app shows or stores, which no call proves. Evidence is one screenshot or a short recording. A screen case is attested, not observed, and the manifest marks it so.
+- **screen.** A rule about what your locker or app shows or stores, which no call proves. Evidence is one screenshot or a short recording. A screen case is attested, not observed, and the manifest marks it so. In a `ui` run the agent observes the screen itself instead, as "Running a case as a UI test" sets out.
 - **human.** A step only a person can do. Evidence is the observation immediately before it and the outcome `needs-human` when nobody was there.
 
 ### Rules that hold for every case
@@ -203,7 +203,7 @@ Exit condition, both pasted.
 
 The sheet also names a long term linking token. That token is the M2 one in PHR_LOCKER_50303, not part of this exit condition.
 
-### PHR_LOCKER_301 to 3.8: records from a HIP into the locker
+### PHR_LOCKER_301 to PHR_LOCKER_308: records from a HIP into the locker
 
 Mandatory. The sheet has no row 3.5.
 
@@ -221,7 +221,7 @@ Loop limit: 3 passes per test case.
 | PHR_LOCKER_307 | not-run | The locker links the fetched record's care context to the consent manager | `not-run`: needs `m2_post_hip_v3_link_carecontext`. Once linked, the app side check is PHR_LOCKER_405 |
 | PHR_LOCKER_308 | `screen` | Fetched records can be viewed in the locker | The record in the locker. Attest on a record your locker already holds |
 
-### PHR_LOCKER_400 to 4.7: upload a document into the locker from the app
+### PHR_LOCKER_400 to PHR_LOCKER_407: upload a document into the locker from the app
 
 Mandatory. ABDM publishes no upload operation. The upload goes to your locker's own service, so those steps are attested.
 
@@ -238,7 +238,7 @@ Loop limit: 3 passes per test case.
 | PHR_LOCKER_406 | not-run | Get Data fetches the record into the app's Records tab | `not-run`: needs `m3_post_data_flow_v3_health_information_request` |
 | PHR_LOCKER_407 | `screen` | Tapping the record shows its details, and the attachment opens | The details and the opened attachment |
 
-### PHR_LOCKER_50101 to 5.1.4: the subscription, learning of a new record
+### PHR_LOCKER_50101 to PHR_LOCKER_50104: the subscription, learning of a new record
 
 Mandatory.
 
@@ -251,7 +251,7 @@ Loop limit: 3 passes per test case.
 | PHR_LOCKER_50103 | `sandbox`, `human` | The locker is notified of a new care context or new data | As PHR_LOCKER_301, with `event.category` `LINK` or `DATA` |
 | PHR_LOCKER_50104 | not-run | On the notification the locker fetches the new record | `not-run`: needs `m3_post_data_flow_v3_health_information_request`, and for a `LINK` event first `m3_post_consent_v3_request_init` |
 
-### PHR_LOCKER_50201 to 5.2.3: the auto approval policy
+### PHR_LOCKER_50201 to PHR_LOCKER_50203: the auto approval policy
 
 Mandatory.
 
@@ -263,7 +263,7 @@ Loop limit: 3 passes per test case.
 | PHR_LOCKER_50202 | `sandbox` | A consent request inside the policy is granted with no tap | As PHR_LOCKER_303 |
 | PHR_LOCKER_50203 | `sandbox`, `human` | The person disables the policy, and requests need a tap again | `p2_post_consent_v3_auto_approve_auto_approval_id_disable` returns 202 with `message`. The locker settings then show that `autoApprovals[]` entry with `isActive` `false`, and the next request shows `status` `REQUESTED` |
 
-### PHR_LOCKER_50301 to 5.3.4: the authorisation request, telling the consent manager the locker holds records
+### PHR_LOCKER_50301 to PHR_LOCKER_50304: the authorisation request, telling the consent manager the locker holds records
 
 Mandatory. The authorisation request and the linking token are M2 calls the locker makes as a HIP. No P specification publishes them.
 
@@ -276,7 +276,7 @@ Loop limit: 3 passes per test case.
 | PHR_LOCKER_50303 | not-run | The locker receives a linking token | `not-run`: needs `m2_post_v3_token_generate_token` and its `m2_post_v3_hip_token_on_generate_token` callback |
 | PHR_LOCKER_50304 | not-run | One locker token links several care contexts | `not-run`: needs `m2_post_hip_v3_link_carecontext` |
 
-### PHR_LOCKER_601 to 6.1.3: the Requests tab
+### PHR_LOCKER_601 to PHR_LOCKER_60103: the Requests tab
 
 Mandatory.
 
@@ -311,7 +311,7 @@ Loop limit: 3 passes per test case.
 | PHR_LOCKER_800 | `sandbox`, `human` | The person edits the locker's subscription | `p3_put_subscription_requests_v3_patients_subscription_id` returns 202 with `subscriptionId`, then `p3_get_subscription_requests_v3_subscription_id` returns 200 with `includedSources` as saved |
 | PHR_LOCKER_900 | `sandbox`, `human` | With auto approval disabled, every consent needs a tap | As PHR_LOCKER_50203 |
 
-### PHR_LOCKER_1001 to 10.5: what an HIU can fetch from the locker under each consent state
+### PHR_LOCKER_1001 to PHR_LOCKER_1005: what an HIU can fetch from the locker under each consent state
 
 Mandatory. Each case's result is data fetched or refused, which needs `m3_post_data_flow_v3_health_information_request`. No P specification publishes it.
 
@@ -333,7 +333,7 @@ Loop limit: 3 passes per test case.
 
 ## When the last case is recorded
 
-Mark the run log finished, with the time and the count of each outcome. Then write the manifest beside it, with the same name and `.json`. It is the whole report. Case names to request ids, nothing else, so a reviewer checks it against the gateway's own record rather than reading screenshots. Secrets never appear in it: no tokens, no documents, no client secret.
+Mark the run log finished, with the time and the count of each outcome. Then write the manifest beside it, with the same name and `.json`. It maps case names to request ids, nothing else. Those REQUEST-IDs are the evidence a reviewer can check against the gateway's own record. Secrets never appear in it: no tokens, no documents, no client secret. The run log and the manifest are written on every run. The manifest is not the final report: the section "Writing the test report" writes that, once its `check` exits 0.
 
 ```json
 {

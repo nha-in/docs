@@ -1,6 +1,6 @@
 ---
 name: hiecm-m4-test
-description: "Use when walking the ABDM M4 functional test cases (Health Facility Registry and Healthcare Professionals Registry) against an integrator's own system and the sandbox: runs each case as a loop, records evidence the registry can vouch for, and writes the manifest that stands in for a screenshot report."
+description: "Use when walking the ABDM M4 functional test cases (Health Facility Registry and Healthcare Professionals Registry) against an integrator's own system and the sandbox: runs each case as a loop, records evidence the registry can vouch for, and writes NHA's workbook, the manifest of request ids a reviewer checks against the gateway, and the final test report."
 ---
 # HIE-CM m4 test
 
@@ -30,7 +30,7 @@ Walks the ABDM M4 functional test cases, facility and professional registration,
 | NHA's test case workbooks for this module, if results go into them | M4 has two, HFR and HPR. Copy each NHA sent you into `abdm-ft/`. Writing into them needs Python 3.9 or later with `openpyxl` and `Pillow` |
 | For a `ui` run: your application's URL | Your deployment, reachable from the browser on this machine |
 | For a `ui` run: a tester login for your application | A test account in your application, read from an environment variable you name or typed at a hidden prompt. It is never written to the run log, the evidence or the workbook |
-| For a `ui` run: Node 18 or later, the Playwright MCP server and Chromium | The integrators plugin declares the Playwright MCP server, and `/abdm-test-setup` lists what is missing. Without the plugin, the section "Running a case as a UI test" lists each install command |
+| For a `ui` run: Node 18 or later, the Playwright MCP server and a browser | The integrators plugin starts `@playwright/mcp@0.0.83`, which the first start downloads with `npx`. Install the browser the server reports missing, chrome or chromium. `/abdm-test-setup` lists what is missing. Without the plugin, the section "Running a case as a UI test" lists each install command |
 
 ## Say one of these
 
@@ -78,7 +78,7 @@ Loop limit: 3 passes per test case. Hitting the limit is an escalation: state wh
 Every case names one or more of these. They decide what the manifest carries.
 
 - **sandbox.** A call the registry sees. Evidence is the HTTP status, the body and the identifier the registry returned: `txnId`, `trackingId`, `facilityId` or `hprId`. The exit condition is a literal in the body. A reviewer can check the identifier against the registry's own record, which is why this outranks the other two.
-- **screen.** A rule about what your form shows, refuses or sends, which no call proves. Evidence is one screenshot or a short recording and the rule it satisfies. Where a row says "the logged request carries" a path, paste that line of your request log too. A screen case is attested, not observed, and the manifest marks it so.
+- **screen.** A rule about what your form shows, refuses or sends, which no call proves. Evidence is one screenshot or a short recording and the rule it satisfies. Where a row says "the logged request carries" a path, paste that line of your request log too. A screen case is attested, not observed, and the manifest marks it so. In a `ui` run the agent observes the screen itself instead, as "Running a case as a UI test" sets out.
 - **human.** A step only a person can do. Evidence is the last observation before it and the outcome `needs-human` when nobody was there.
 
 Most HFR rows test one form field. They are `screen` for the rule your form enforces and `sandbox` for the call that saves the field. Both halves are needed for a pass.
@@ -547,7 +547,7 @@ Loop limit: 3 passes per test case.
 
 ## When the last case is recorded
 
-Mark the run log finished, with the time and the count of each outcome. Then write the manifest beside it, with the same name and `.json`. It is the whole report. Case ids to the identifiers the registry returned, nothing else, so a reviewer checks it against the registry's own record rather than reading screenshots. Secrets never appear in it: no tokens, no OTPs, no Aadhaar numbers, no passwords, no mobile numbers, no client secret.
+Mark the run log finished, with the time and the count of each outcome. Then write the manifest beside it, with the same name and `.json`. It maps case ids to the identifiers the registry returned, nothing else. Those identifiers are the evidence a reviewer can check against the registry's own record. Secrets never appear in it: no tokens, no OTPs, no Aadhaar numbers, no passwords, no mobile numbers, no client secret. The run log and the manifest are written on every run. The manifest is not the final report: the section "Writing the test report" writes that, once its `check` exits 0.
 
 ```json
 {

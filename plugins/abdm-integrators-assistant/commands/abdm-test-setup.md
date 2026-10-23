@@ -23,18 +23,18 @@ Then ask one more question for `ui` and `all`: is the application under test a P
 |---|---|---|
 | `node --version` | Prints `v18` or higher | Install the LTS release from https://nodejs.org |
 
-## 3. Python, for NHA's workbook
+## 3. Python, for NHA's workbook and the test report
 
 | Check | Ready when | Install command when missing |
 |---|---|---|
 | `python3 -c "import sys; print(sys.version_info >= (3, 9))"` | Prints `True` | Install Python 3.9 or later from https://www.python.org/downloads |
-| `python3 -c "import openpyxl, PIL; print('ok')"` | Prints `ok` | `pip install openpyxl pillow` |
+| `python3 -c "import openpyxl, PIL, docx; print('ok')"` | Prints `ok` | `pip install openpyxl pillow python-docx`. python-docx writes the final test report |
 
 ## 4. Playwright, for `ui`
 
 | Check | Ready when | Install command when missing |
 |---|---|---|
-| Your tool list | It holds `browser_navigate`, `browser_snapshot`, `browser_click`, `browser_type`, `browser_take_screenshot`, `browser_console_messages` and `browser_network_requests`, under whatever prefix your agent gives the `playwright` server | This plugin declares the server in its `.mcp.json`. Restart Claude Code and check again. Without the plugin: `claude mcp add playwright npx @playwright/mcp@latest` |
+| Your tool list | It holds `browser_navigate`, `browser_snapshot`, `browser_click`, `browser_type`, `browser_take_screenshot`, `browser_console_messages`, `browser_network_requests` and `browser_network_request`, under whatever prefix your agent gives the `playwright` server | This plugin declares the server in its `.mcp.json`. Restart Claude Code and check again. Without the plugin: `claude mcp add playwright npx @playwright/mcp@0.0.83` |
 | `browser_navigate` to `about:blank` | Returns a page, not an error naming a missing browser | `npx playwright install chromium`. When the error names Chrome, `npx playwright install chrome` |
 
 ## 5. A PHR app on Android, for `ui`

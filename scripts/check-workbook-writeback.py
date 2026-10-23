@@ -230,6 +230,23 @@ def main():
     if m4_ids != want_m4:
         fail(f"M4: the script finds {len(m4_ids)} ids across HFR and HPR, the page shows {len(want_m4)}")
 
+    # A workbook where someone had already typed PASS in NHA's own Status: a
+    # needs-human result goes in the "(run)" column and must stay open.
+    pre = work / "prefilled.xlsx"
+    shutil.copy2(RAW / SHEETS[0][0], pre)
+    wb = openpyxl.load_workbook(pre)
+    ws = wb.worksheets[0]
+    top, cols, _ = header(ws)
+    row = next(r for r in range(top + 1, ws.max_row + 1) if norm(ws.cell(r, cols["Test Case ID"]).value) == "CRT_ABHA_101")
+    ws.cell(row, cols["Status(PASS/FAIL)"]).value = "PASS"
+    wb.save(pre)
+    (work / "pre.json").write_text(json.dumps([{"id": "CRT_ABHA_101", "outcome": "needs-human", "remarks": "OTP"}]))
+    run("write", pre, "--run", "ui", "--results", work / "pre.json")
+    if "CRT_ABHA_101" not in run("open", pre, "--run", "ui").stdout.split():
+        fail("a needs-human case beside NHA's own PASS is not listed as open")
+    else:
+        print("ok   a needs-human case beside NHA's own PASS stays open")
+
     (work / "missing.json").write_text(json.dumps([{"id": "NOT_A_CASE", "outcome": "passed"}]))
     bad = run("write", work / Path(SHEETS[2][0]).name, "--run", "ft", "--results", work / "missing.json")
     if bad.returncode != 1 or "not in the workbook: NOT_A_CASE" not in bad.stderr:

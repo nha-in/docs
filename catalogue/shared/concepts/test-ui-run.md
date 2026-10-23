@@ -21,10 +21,14 @@ sources:
   - url: https://github.com/microsoft/playwright-mcp
     status: reference
     note: >
-      The Playwright MCP server, package @playwright/mcp, Apache 2.0. Needs
-      Node 18 or later. Publishes browser_navigate, browser_snapshot,
-      browser_click, browser_type, browser_take_screenshot,
-      browser_console_messages and browser_network_requests among its tools.
+      The Playwright MCP server, package @playwright/mcp, Apache 2.0, pinned
+      at 0.0.83 in the integrators plugin. Needs Node 18 or later. Publishes
+      browser_navigate, browser_snapshot, browser_click, browser_type,
+      browser_take_screenshot, browser_console_messages,
+      browser_network_requests and browser_network_request among its tools.
+      Its README says a relative filename resolves against the workspace
+      root, and browser_network_request returns one request's headers and
+      body.
   - url: https://maestro.mobile.dev
     status: reference
     note: >
@@ -49,7 +53,7 @@ A test section runs each case in one of three run types. The tester picks one at
 
 `all` runs `ft` first so a backend fault shows before the slower `ui` run starts. A case that has no meaning in a run type, such as a "Create ABHA option is visible" case in an `ft` run, is recorded `not-run` with the run type as the reason.
 
-In a `ui` run, a `screen` case is observed, not attested: the screenshot and the matching line of the page snapshot are its evidence.
+One rule above changes in a `ui` run, and only this one. In an `ft` run a `screen` case is attested: the tester answers `passed? y/n` and names the screenshot. In a `ui` run the agent observes the screen itself, and its screenshot plus the literal on-screen text it matched replace the tester's attestation. Every other rule above still holds in a `ui` run.
 
 ## Before you start
 
@@ -58,8 +62,8 @@ The `ui` readiness check runs before the first case. Check every row the chosen 
 | Need | Ready when | Install command to print when missing |
 |---|---|---|
 | Node 18 or later | `node --version` prints `v18` or higher | Install the LTS release from https://nodejs.org |
-| The Playwright MCP server, connected | Your tool list holds `browser_navigate`, `browser_snapshot`, `browser_click`, `browser_type`, `browser_take_screenshot`, `browser_console_messages` and `browser_network_requests`. These are the names the server publishes. Read your own tool list for the exact names, which some agents prefix with the server name | Claude Code with the integrators plugin: restart Claude Code, the plugin declares it. Claude Code without it: `claude mcp add playwright npx @playwright/mcp@latest`. Any other agent: an MCP server with command `npx` and argument `@playwright/mcp@latest` |
-| A browser | `browser_navigate` to the application URL returns a page, not an error naming a missing browser | `npx playwright install chromium`. When the error names Chrome, the server's default channel, `npx playwright install chrome` |
+| The Playwright MCP server, connected | Your tool list holds `browser_navigate`, `browser_snapshot`, `browser_click`, `browser_type`, `browser_take_screenshot`, `browser_console_messages`, `browser_network_requests` and `browser_network_request`. These are the names the server publishes. Read your own tool list for the exact names, which some agents prefix with the server name | Claude Code with the integrators plugin: restart Claude Code. The plugin starts `@playwright/mcp@0.0.83`, and the first start downloads that version with `npx`. Claude Code without it: `claude mcp add playwright npx @playwright/mcp@0.0.83`. Any other agent: an MCP server with command `npx` and argument `@playwright/mcp@0.0.83` |
+| A browser | `browser_navigate` to the application URL returns a page, not an error naming a missing browser | Install the browser the server's error names, and only that one: `npx playwright install chrome` when it names Chrome, `npx playwright install chromium` when it names Chromium |
 | The application URL | `browser_navigate` to it and `browser_snapshot` shows your application's first screen | Ask the tester for it |
 | A tester login | Read from an environment variable the tester names, or typed at a hidden prompt, and the login screen accepts it | Ask the tester for it |
 | The server log command, optional | The tester gave a command that prints your server's log for a time window, such as `docker logs --since <start> --until <end> <container>` | `not needed` when none is given |
@@ -81,11 +85,13 @@ For each chosen case, at most 3 passes. Record the number of passes the case too
 
    | Surface | Screenshot | Screen text |
    |---|---|---|
-   | Web | `browser_take_screenshot` with `filename` set to `abdm-ft/evidence/<case id>/<n>.png`, which the server resolves against your repository root | `browser_snapshot` output saved to `abdm-ft/evidence/<case id>/<n>.txt` |
+   | Web | `browser_take_screenshot` with `filename` `abdm-ft/evidence/<case id>/<n>.png`. The server resolves that name against its workspace root, which need not be your repository, so save or move the file to `abdm-ft/evidence/<case id>/<n>.png` and check that the file exists there | `browser_snapshot` output saved to `abdm-ft/evidence/<case id>/<n>.txt` |
    | PHR app | `- takeScreenshot: abdm-ft/evidence/<case id>/<n>` in the flow | `maestro hierarchy` output saved to `abdm-ft/evidence/<case id>/<n>.txt` |
 
+   The screen text shows what was typed into each field. Before saving it, replace the value of every field you typed an OTP, a password or an Aadhaar number into with `[redacted]`. For an OTP step, take the screenshot only after the field is submitted or cleared. Never save a snapshot or screenshot that shows an OTP, password or full Aadhaar number.
+
 4. An OTP, a password, a captcha or an approval stops the case and asks the tester in the terminal, as in every run type. Read it with input hidden, type it with `browser_type`, and hold it only for that step. The tool's reply repeats what was typed. Never paste that reply into the run log, the evidence or the workbook. Write `<OTP typed>` or `<password typed>` in its place.
-5. Judge the case. It is `passed` when the last step's screen text holds both the skill's exit condition and what the sheet's Expected Result names. Paste the matching line into the run log. When one holds and the other does not, the pass failed: say which one is missing.
+5. Judge the case. The pass condition is the case's exit condition and screen check in this skill, not the sheet's prose. The case is `passed` when the screen holds both. Paste into the run record the exact on-screen text or element you matched for each. When one holds and the other does not, the pass failed: say which one is missing. When the skill's case gives no literal for the screen, quote the on-screen text you believe satisfies the sheet's Expected Result, and record the case `needs-human` with `tester to confirm` in Remarks. Never record such a case `passed`.
 6. Write the result into the workbook, as `shared.concept.test-workbook-write-back` sets out, with `--run ui`. A `ui` run fills NHA's own columns:
 
    ```bash
@@ -109,7 +115,7 @@ Collect the reason in this order, and stop at the first one that names it. The R
 | Order | Look at | How | What it gives |
 |---|---|---|---|
 | 1 | The error on screen | `browser_snapshot` | The message your application shows |
-| 2 | Failed network responses | `browser_network_requests`, then the status and body of each response of 400 or above | The HTTP status and an ABDM error code such as `ABDM-1204` |
+| 2 | Failed network responses | `browser_network_requests` lists the requests. For each with a status of 400 or above, `browser_network_request` with its number shows the body. When it shows no body, take the error code from the on-screen message or from the `ft` replay at order 4 | The HTTP status and an ABDM error code such as `ABDM-1204` |
 | 3 | Browser console errors | `browser_console_messages` | A script error that stopped the screen |
 | 4 | One replay of the case's `ft` calls | The same skill's case, run once as `ft`, when the sandbox credentials are ready | The ABDM error code. Diagnosis only: the `ui` outcome stays as observed |
 | 5 | Your server log for the case's time window | The command from the readiness check, with the case's start and end times | A backend exception such as `NullPointerException`, which usually appears nowhere else |
@@ -121,9 +127,10 @@ Collect the reason in this order, and stop at the first one that names it. The R
 ## How you know it worked
 
 - `abdm-ft/evidence/<case id>/` holds one `<n>.png` and one `<n>.txt` for every step run, and `phr.png` for a case under the PHR proof rule.
-- The run log pastes, for every `passed` case, the snapshot line that matched.
+- The run log pastes, for every `passed` case, the exact on-screen text or element that matched the exit condition and the screen check.
+- A case whose screen check has no literal in the skill is `needs-human` with `tester to confirm`, never `passed`.
 - `write` exits `0`, and the workbook row shows `PASS`, `FAIL`, `NA` or blank in `Status(PASS/FAIL)`, a number from 1 to 3 in `Iterations`, and the reason in `Remarks`.
-- No OTP, password, token or Aadhaar number appears in the run log, the evidence text, the results file or the workbook.
+- No OTP, password, token or full Aadhaar number appears in the run log, a screenshot, the evidence text, the results file or the workbook. Every typed OTP, password or Aadhaar field in a `.txt` file reads `[redacted]`.
 
 ## When it goes wrong
 

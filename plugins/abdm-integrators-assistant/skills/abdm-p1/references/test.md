@@ -71,7 +71,7 @@ Loop limit: 3 passes per test case. Hitting the limit is an escalation: state wh
 Every case names one of these. It decides what the manifest carries.
 
 - **sandbox.** A call the gateway sees. Evidence is the HTTP status, the body and the REQUEST-ID, pasted. The exit condition is a literal in the body. A reviewer can check this against the gateway's own record, which is why it outranks the other two.
-- **screen.** A rule about what your app shows or stores, which no call proves. Evidence is one screenshot or a short recording. A screen case is attested, not observed, and the manifest marks it so.
+- **screen.** A rule about what your app shows or stores, which no call proves. Evidence is one screenshot or a short recording. A screen case is attested, not observed, and the manifest marks it so. In a `ui` run the agent observes the screen itself instead, as "Running a case as a UI test" sets out.
 - **human.** A step only a person can do. Evidence is the observation immediately before it and the outcome `needs-human` when nobody was there.
 
 ### Rules that hold for every case
@@ -169,7 +169,7 @@ NHA's PHR sheet numbers its rows but gives them no ids, so each case here has an
 
 The marks and the wording of each check are ABDM's, from the PHR mobile app test cases, ABHA address creation tab. The sections are grouped as the sheet groups them. Every operation id below is in the P1 or P2 specification, which carries the host, the headers and a full request.
 
-### PHR_ADDR_101 to 1.14: register an ABHA address with a mobile number, self declared
+### PHR_ADDR_101 to PHR_ADDR_114: register an ABHA address with a mobile number, self declared
 
 Mandatory unless marked. This is the group the ABHA number group repeats, so it is written in full and the other states what differs.
 
@@ -205,9 +205,9 @@ a dot cannot come first or last
 
 Nudge: the sheet prints a minimum of 8 here and 4 in PHR_ADDR_210 and PHR_ADDR_314. Do not make your form stricter than ABDM's own check. Let `isExists` and the enrol call refuse what they refuse, and show their message.
 
-### PHR_ADDR_201 to 2.14: register an ABHA address with an ABHA number
+### PHR_ADDR_201 to PHR_ADDR_214: register an ABHA address with an ABHA number
 
-Mandatory unless marked. Same as PHR_ADDR_101 to 1.14, with these differences. Run each as its counterpart and record the counterpart's evidence.
+Mandatory unless marked. Same as PHR_ADDR_101 to PHR_ADDR_114, with these differences. Run each as its counterpart and record the counterpart's evidence.
 
 Loop limit: 3 passes per test case.
 
@@ -230,7 +230,7 @@ Loop limit: 3 passes per test case.
 | PHR_ADDR_213 | `screen` | The congratulations screen names the created address, and Login works | The screen. The sheet's text reads `name@abdm`; in sandbox the suffix is `@sbx`. The login is the PHR_ADDR_112 exit condition |
 | PHR_ADDR_214 | `screen`, `human` | As PHR_ADDR_114 | As PHR_ADDR_114 |
 
-### PHR_ADDR_301 to 3.16: create an ABHA number with KYC inside the PHR app
+### PHR_ADDR_301 to PHR_ADDR_316: create an ABHA number with KYC inside the PHR app
 
 Mandatory unless the sheet leaves a case unmarked. Creating an ABHA number is an M1 enrolment. No P specification publishes the Aadhaar OTP, the enrolment or the card call, so the cases that need them are `not-run` here, each with its M1 counterpart named. Run those counterparts with `hiecm-m1-test` and quote both names in the report.
 
@@ -255,7 +255,7 @@ Loop limit: 3 passes per test case.
 | PHR_ADDR_315 | not-run, optional | Addresses are suggested and a taken one is refused | `not-run`: as PHR_ADDR_314, with `m1_get_v3_enrollment_enrol_suggestion_create_abha_aadhaar_otp`. If created through the ABHA number route, record the PHR_ADDR_211 evidence |
 | PHR_ADDR_316 | not-run | The ABHA number card downloads, with every field from the Aadhaar KYC | `not-run`: as PHR_ADDR_308 |
 
-### PHR_ADDR_402 to 4.5: log in with a mobile number
+### PHR_ADDR_402 to PHR_ADDR_405: log in with a mobile number
 
 Mandatory. The sheet numbers this group from 4.2.
 
@@ -268,7 +268,7 @@ Loop limit: 3 passes per test case.
 | PHR_ADDR_404 | `screen`, `sandbox` | As PHR_ADDR_105, on the login OTP | A second `p1_post_v3_phr_app_login_request_otp` 200 at least 60 seconds after the first, and PHR_ADDR_403 then passes |
 | PHR_ADDR_405 | `sandbox`, `screen` | Every address on the mobile is listed, and the chosen one logs in | The screen lists every entry in `users`. `p1_post_v3_phr_app_login_verify_user` with the chosen `abhaAddress`, the `txnId` and the verify's token in `T-token` returns 200 with `token` present |
 
-### PHR_ADDR_501 to 5.3: log in with an email address, optional
+### PHR_ADDR_501 to PHR_ADDR_503: log in with an email address, optional
 
 Loop limit: 3 passes per test case.
 
@@ -278,7 +278,7 @@ Loop limit: 3 passes per test case.
 | PHR_ADDR_502 | not-run, optional | Resend email OTP after 60 seconds | `not-run`: as PHR_ADDR_501 |
 | PHR_ADDR_503 | not-run, optional | Every address on the email is listed | `not-run`: as PHR_ADDR_501 |
 
-### PHR_ADDR_601 to 6.4: log in with an easy to remember ABHA address
+### PHR_ADDR_601 to PHR_ADDR_604: log in with an easy to remember ABHA address
 
 Mandatory.
 
@@ -291,7 +291,7 @@ Loop limit: 3 passes per test case.
 | PHR_ADDR_603 | `sandbox`, `human` | Login by OTP as the address's methods allow | `p1_post_v3_phr_app_login_request_otp` with `scope` `["abha-address-login","mobile-verify"]` and `loginHint` `abha-address` returns 200 with `txnId`. `p1_post_v3_phr_app_login_verify` then returns 200 with `authResult` `success`. The P1 specification publishes no email OTP or Aadhaar OTP login on an address; record which methods ran |
 | PHR_ADDR_604 | `screen`, `sandbox` | As PHR_ADDR_105, on the address OTP | As PHR_ADDR_404 |
 
-### PHR_ADDR_701 to 7.3: log in with the default ABHA address
+### PHR_ADDR_701 to PHR_ADDR_703: log in with the default ABHA address
 
 Mandatory. The default address is the 14 digit number with the suffix.
 
@@ -303,7 +303,7 @@ Loop limit: 3 passes per test case.
 | PHR_ADDR_702 | `sandbox`, `human` | Login by OTP | As PHR_ADDR_603. An Aadhaar OTP on an address is not in the P1 specification; to log in by Aadhaar OTP, the person uses the number, PHR_ADDR_802 |
 | PHR_ADDR_703 | `screen`, `sandbox` | As PHR_ADDR_105 | As PHR_ADDR_404 |
 
-### PHR_ADDR_801 to 8.3: log in with an ABHA number
+### PHR_ADDR_801 to PHR_ADDR_803: log in with an ABHA number
 
 Mandatory.
 
@@ -315,7 +315,7 @@ Loop limit: 3 passes per test case.
 | PHR_ADDR_802 | `sandbox`, `human` | The OTP logs in | `p1_post_v3_phr_app_login_verify` returns 200 with `authResult` `success` and `users`, then PHR_ADDR_405's verify user call returns 200 with `token`. A wrong mobile OTP returns 200 with `authResult` `failed` and `message` `Please enter a valid OTP. Entered OTP is either expired or incorrect.` |
 | PHR_ADDR_803 | `screen`, `sandbox` | As PHR_ADDR_105 | As PHR_ADDR_404 |
 
-### PHR_ADDR_901 to 9.3: log in with an Aadhaar number
+### PHR_ADDR_901 to PHR_ADDR_903: log in with an Aadhaar number
 
 Mandatory.
 
@@ -327,7 +327,7 @@ Loop limit: 3 passes per test case.
 | PHR_ADDR_902 | `sandbox`, `human` | The Aadhaar OTP logs in | `p1_post_v3_phr_app_login_verify` with the same scope returns 200 with `authResult` `success` and `users` |
 | PHR_ADDR_903 | `screen`, `sandbox` | After the OTP, the terms and conditions are shown with every address on the Aadhaar | The screen lists every entry in the PHR_ADDR_902 `users`. The sheet's check for this row is a resend after 60 seconds; record that as PHR_ADDR_404 evidence on the Aadhaar OTP |
 
-### PHR_ADDR_1001 to 10.5: reset the password
+### PHR_ADDR_1001 to PHR_ADDR_1005: reset the password
 
 Mandatory. The password change call is published in the P2 specification.
 
@@ -366,7 +366,7 @@ A test section runs each case in one of three run types. The tester picks one at
 
 `all` runs `ft` first so a backend fault shows before the slower `ui` run starts. A case that has no meaning in a run type, such as a "Create ABHA option is visible" case in an `ft` run, is recorded `not-run` with the run type as the reason.
 
-In a `ui` run, a `screen` case is observed, not attested: the screenshot and the matching line of the page snapshot are its evidence.
+One rule above changes in a `ui` run, and only this one. In an `ft` run a `screen` case is attested: the tester answers `passed? y/n` and names the screenshot. In a `ui` run the agent observes the screen itself, and its screenshot plus the literal on-screen text it matched replace the tester's attestation. Every other rule above still holds in a `ui` run.
 
 ### Before you start
 
@@ -375,8 +375,8 @@ The `ui` readiness check runs before the first case. Check every row the chosen 
 | Need | Ready when | Install command to print when missing |
 |---|---|---|
 | Node 18 or later | `node --version` prints `v18` or higher | Install the LTS release from https://nodejs.org |
-| The Playwright MCP server, connected | Your tool list holds `browser_navigate`, `browser_snapshot`, `browser_click`, `browser_type`, `browser_take_screenshot`, `browser_console_messages` and `browser_network_requests`. These are the names the server publishes. Read your own tool list for the exact names, which some agents prefix with the server name | Claude Code with the integrators plugin: restart Claude Code, the plugin declares it. Claude Code without it: `claude mcp add playwright npx @playwright/mcp@latest`. Any other agent: an MCP server with command `npx` and argument `@playwright/mcp@latest` |
-| A browser | `browser_navigate` to the application URL returns a page, not an error naming a missing browser | `npx playwright install chromium`. When the error names Chrome, the server's default channel, `npx playwright install chrome` |
+| The Playwright MCP server, connected | Your tool list holds `browser_navigate`, `browser_snapshot`, `browser_click`, `browser_type`, `browser_take_screenshot`, `browser_console_messages`, `browser_network_requests` and `browser_network_request`. These are the names the server publishes. Read your own tool list for the exact names, which some agents prefix with the server name | Claude Code with the integrators plugin: restart Claude Code. The plugin starts `@playwright/mcp@0.0.83`, and the first start downloads that version with `npx`. Claude Code without it: `claude mcp add playwright npx @playwright/mcp@0.0.83`. Any other agent: an MCP server with command `npx` and argument `@playwright/mcp@0.0.83` |
+| A browser | `browser_navigate` to the application URL returns a page, not an error naming a missing browser | Install the browser the server's error names, and only that one: `npx playwright install chrome` when it names Chrome, `npx playwright install chromium` when it names Chromium |
 | The application URL | `browser_navigate` to it and `browser_snapshot` shows your application's first screen | Ask the tester for it |
 | A tester login | Read from an environment variable the tester names, or typed at a hidden prompt, and the login screen accepts it | Ask the tester for it |
 | The server log command, optional | The tester gave a command that prints your server's log for a time window, such as `docker logs --since <start> --until <end> <container>` | `not needed` when none is given |
@@ -398,11 +398,13 @@ For each chosen case, at most 3 passes. Record the number of passes the case too
 
    | Surface | Screenshot | Screen text |
    |---|---|---|
-   | Web | `browser_take_screenshot` with `filename` set to `abdm-ft/evidence/<case id>/<n>.png`, which the server resolves against your repository root | `browser_snapshot` output saved to `abdm-ft/evidence/<case id>/<n>.txt` |
+   | Web | `browser_take_screenshot` with `filename` `abdm-ft/evidence/<case id>/<n>.png`. The server resolves that name against its workspace root, which need not be your repository, so save or move the file to `abdm-ft/evidence/<case id>/<n>.png` and check that the file exists there | `browser_snapshot` output saved to `abdm-ft/evidence/<case id>/<n>.txt` |
    | PHR app | `- takeScreenshot: abdm-ft/evidence/<case id>/<n>` in the flow | `maestro hierarchy` output saved to `abdm-ft/evidence/<case id>/<n>.txt` |
 
+   The screen text shows what was typed into each field. Before saving it, replace the value of every field you typed an OTP, a password or an Aadhaar number into with `[redacted]`. For an OTP step, take the screenshot only after the field is submitted or cleared. Never save a snapshot or screenshot that shows an OTP, password or full Aadhaar number.
+
 4. An OTP, a password, a captcha or an approval stops the case and asks the tester in the terminal, as in every run type. Read it with input hidden, type it with `browser_type`, and hold it only for that step. The tool's reply repeats what was typed. Never paste that reply into the run log, the evidence or the workbook. Write `<OTP typed>` or `<password typed>` in its place.
-5. Judge the case. It is `passed` when the last step's screen text holds both the skill's exit condition and what the sheet's Expected Result names. Paste the matching line into the run log. When one holds and the other does not, the pass failed: say which one is missing.
+5. Judge the case. The pass condition is the case's exit condition and screen check in this skill, not the sheet's prose. The case is `passed` when the screen holds both. Paste into the run record the exact on-screen text or element you matched for each. When one holds and the other does not, the pass failed: say which one is missing. When the skill's case gives no literal for the screen, quote the on-screen text you believe satisfies the sheet's Expected Result, and record the case `needs-human` with `tester to confirm` in Remarks. Never record such a case `passed`.
 6. Write the result into the workbook, as `shared.concept.test-workbook-write-back` sets out, with `--run ui`. A `ui` run fills NHA's own columns:
 
    ```bash
@@ -426,7 +428,7 @@ Collect the reason in this order, and stop at the first one that names it. The R
 | Order | Look at | How | What it gives |
 |---|---|---|---|
 | 1 | The error on screen | `browser_snapshot` | The message your application shows |
-| 2 | Failed network responses | `browser_network_requests`, then the status and body of each response of 400 or above | The HTTP status and an ABDM error code such as `ABDM-1204` |
+| 2 | Failed network responses | `browser_network_requests` lists the requests. For each with a status of 400 or above, `browser_network_request` with its number shows the body. When it shows no body, take the error code from the on-screen message or from the `ft` replay at order 4 | The HTTP status and an ABDM error code such as `ABDM-1204` |
 | 3 | Browser console errors | `browser_console_messages` | A script error that stopped the screen |
 | 4 | One replay of the case's `ft` calls | The same skill's case, run once as `ft`, when the sandbox credentials are ready | The ABDM error code. Diagnosis only: the `ui` outcome stays as observed |
 | 5 | Your server log for the case's time window | The command from the readiness check, with the case's start and end times | A backend exception such as `NullPointerException`, which usually appears nowhere else |
@@ -438,9 +440,10 @@ Collect the reason in this order, and stop at the first one that names it. The R
 ### How you know it worked
 
 - `abdm-ft/evidence/<case id>/` holds one `<n>.png` and one `<n>.txt` for every step run, and `phr.png` for a case under the PHR proof rule.
-- The run log pastes, for every `passed` case, the snapshot line that matched.
+- The run log pastes, for every `passed` case, the exact on-screen text or element that matched the exit condition and the screen check.
+- A case whose screen check has no literal in the skill is `needs-human` with `tester to confirm`, never `passed`.
 - `write` exits `0`, and the workbook row shows `PASS`, `FAIL`, `NA` or blank in `Status(PASS/FAIL)`, a number from 1 to 3 in `Iterations`, and the reason in `Remarks`.
-- No OTP, password, token or Aadhaar number appears in the run log, the evidence text, the results file or the workbook.
+- No OTP, password, token or full Aadhaar number appears in the run log, a screenshot, the evidence text, the results file or the workbook. Every typed OTP, password or Aadhaar field in a `.txt` file reads `[redacted]`.
 
 ### When it goes wrong
 
@@ -702,17 +705,23 @@ def status_of(ws, row, col):
 
 def still_open(path, run):
     """Cases that are not yet PASS or NA in this run type's status column."""
+    path = Path(path)
     wb = load(path)
+    backup = path.with_name(f"{path.stem}.before-abdm-run{path.suffix}")
+    original = load(backup) if backup.exists() else None
     for case, (ws, row) in index(wb).items():
         top, cols = header_row(ws)
         col = next((cols[n] for n in COLUMNS[run]["status"] if n in cols), None)
         if col is None:
             print(case)
             continue
-        status = status_of(ws, row, col)
+        cell = anchor(ws, row, col)
         run_col = cols.get(f"{norm(ws.cell(top, col).value)} (run)")
-        if run_col and status not in CLOSED:
+        if run_col and original is not None and norm(original[ws.title][cell.coordinate].value):
+            # NHA wrote in this cell, so the run's status is only in the "(run)" column.
             status = status_of(ws, row, run_col)
+        else:
+            status = norm(cell.value)
         if status not in CLOSED:
             print(case)
 
@@ -811,8 +820,8 @@ always agree.
 
 The report is written only when the run has passed. Its gate is every
 mandatory case that applies to your entity type, government or private, with
-status `PASS` in the run type's column. A mandatory case that is `FAIL`,
-`NA` or blank stops it.
+status `PASS` in the run type's column. A mandatory case that is `FAIL` or
+blank stops it, and so does one that is `NA` unless NHA agreed it is not run.
 
 | Run type | Report | Evidence per case |
 |---|---|---|
@@ -827,33 +836,41 @@ log, conclusion, annexures. Every table comes from the workbook or from
 `meta.json`; the executive summary and the conclusion are built from the
 counts.
 
-How the `Mandatory/ Optional` column is read:
+How the marking column is read. It is the first column whose name holds both
+`Mandatory` and `Optional`, in any case and spacing: `Mandatory/ Optional` on
+the HMIS and HPR sheets, `Optional / Mandatory` on the PHR sheet.
 
 | Marking in the sheet | Government entity | Private entity |
 |---|---|---|
 | `Mandatory`, `Yes` | Mandatory | Mandatory |
+| `Mandatory` then a list of mandatory and optional fields, as on PHR's profile cases | Mandatory | Mandatory |
 | `No`, `Optional`, `Non-Mandatory` | Optional | Optional |
 | `Mandatory for Private` | Optional | Mandatory |
 | `Mandatory for Government` | Mandatory | Optional |
 | `Mandatory for Private /Government (Optional only if ...)` | Mandatory, flagged conditional | Mandatory, flagged conditional |
 | `Either of the test cases X or Y is mandatory for Government` | X or Y must pass; one passing satisfies both | The row carrying it is optional; the other case keeps its own marking |
 | `Yes (if ...)`, `Yes, if ...`, `Yes(only if ...)` | Mandatory, flagged conditional | Mandatory, flagged conditional |
-| Blank or anything else | Mandatory, flagged unrecognised | Mandatory, flagged unrecognised |
+| Blank | Mandatory, flagged not marked | Mandatory, flagged not marked |
+| Anything else, such as a note in the marking cell | Mandatory, flagged unrecognised | Mandatory, flagged unrecognised |
 
-A conditional case your system does not offer still blocks the report until
-it is recorded. Record it `not-run` only after NHA agrees it does not apply,
-and say so in its remarks: the gate counts `NA` on a mandatory case as not
-passed, and the check prints every case it treated as conditional so the
-person signing off sees them.
+A mandatory case can have no meaning in a run type, such as a screen only case
+in an `ft` run, or be a conditional case your system does not offer. Record it
+`not-run` only after NHA agrees it does not apply, and say so in its remarks.
+Then add it to `agreed_not_run` in `meta.json`, with who at NHA agreed and
+when: `"agreed_not_run": {"<case id>": "<who at NHA agreed, and when>"}`. The gate passes a mandatory `NA` case only when it is listed there, and
+the report lists every such case with its agreement in the results summary and
+in the failures and iterations log. An unlisted mandatory `NA` still blocks.
+The check also prints every case it treated as conditional, so the person
+signing off sees them.
 
 ### Before you start
 
 - The workbook the run wrote into, with its results, as `shared.concept.test-workbook-write-back` leaves it.
 - For a `ui` report, the screenshots under `abdm-ft/evidence/<case id>/`, one folder per case id as `cases` prints it. They are placed in name order, so name them `01-consent.png`, `02-otp.png`. Blur any Aadhaar number, OTP or full mobile on a screenshot before it goes in the folder: the script masks text, not images.
-- Python 3.9 or later with `python-docx`, `openpyxl` and `Pillow`: `pip install python-docx openpyxl pillow`. All three are open source (MIT, MIT and the HPND licence).
+- Python 3.9 or later with `openpyxl`, `Pillow` and `python-docx`: `pip install openpyxl pillow python-docx`. All three are open source (MIT, the HPND licence and MIT).
 - LibreOffice, if you want a PDF beside the Word file. Without it, export the PDF from Word or LibreOffice yourself.
 - The script below, saved as `abdm-ft/abdm_report.py`.
-- A `meta.json` for the report, written by you, with placeholder values replaced. It carries no credential: the script refuses any field named like `password`, `secret`, `token` or `credentials`.
+- A `meta.json` for the report, written by you, with placeholder values replaced. It carries no credential: the script refuses any field named like `password`, `secret`, `token` or `credentials`, and any value that holds a token or a credential's label with its value, such as `client secret: ...`. `agreed_not_run` is only for mandatory cases NHA agreed are not run; leave it `{}` otherwise.
 
 ```json
 {
@@ -892,6 +909,7 @@ person signing off sees them.
     "distribution": [{"name": "<NAME>", "organisation": "<ORGANISATION>", "role": "<ROLE>"}]
   },
   "findings": {"CRT_ABHA_101": "The Create ABHA option opens the Aadhaar consent screen."},
+  "agreed_not_run": {},
   "recordings": [{"title": "M1 ui run, full trace", "link": "<LINK TO THE RECORDING>"}]
 }
 ```
@@ -899,13 +917,13 @@ person signing off sees them.
 ```python
 """Check that a functional test run may be reported, and write the report.
 
-  python3 abdm_report.py check WORKBOOK --run ft|ui --entity government|private
+  python3 abdm_report.py check WORKBOOK --run ft|ui --entity government|private [--meta meta.json]
   python3 abdm_report.py build WORKBOOK --run ft|ui --meta meta.json --evidence DIR --out REPORT.docx
 
 check lists every mandatory case not PASS for the run type and exits 1, or
 exits 0 when there is none. build refuses unless check passes, then writes the
-report. Needs python-docx, openpyxl and Pillow
-(pip install python-docx openpyxl pillow). With LibreOffice's soffice on PATH,
+report. A mandatory case NA passes only when meta.json's agreed_not_run names it.
+Needs openpyxl, Pillow and python-docx (pip install openpyxl pillow python-docx). With LibreOffice's soffice on PATH,
 build also writes a PDF.
 """
 import argparse, json, re, shutil, subprocess, sys
@@ -922,10 +940,28 @@ COLUMNS = {
     "ft": {"status": ["FT Status"], "response": ["FT Response with Code"],
            "iterations": ["FT Iterations"], "remarks": ["FT Remarks"]},
 }
-MARKING = ["Mandatory/ Optional", "Mandatory/Optional", "Mandatory / Optional"]
-TITLE = ["Functionality", "Feature"]
+# Header names vary by sheet and spacing: "Mandatory/ Optional" on HMIS and
+# HPR, "Optional / Mandatory" on PHR; "Functionality", "Feature" or "Test Title".
+TITLE = ["functionality", "feature", "test title"]
 OPTIONAL = ("no", "optional", "non-mandatory", "non mandatory", "not mandatory")
 FORBIDDEN = re.compile(r"pass(word|wd)|secret|token|credential|api[_ -]?key|private[_ -]?key", re.I)
+# A JWT: three base64url segments, the first a JSON header, so starting eyJ.
+JWT = re.compile(r"\beyJ[\w-]+\.[\w-]+\.[\w-]*")
+SECRET_WORDS = r"pass(?:word|wd)|secret|token|otp|credentials?|api[ _-]?key|private[ _-]?key"
+
+
+def labelled(words):
+    """A value after a label naming a secret: "client secret: x", "OTP 482913", "otp":"482913"."""
+    return re.compile(
+        r"(\b[\w-]*(?:" + words + r")[\w-]*['\"]?\s*[:=]\s*['\"]?)([^\s'\",;}]+)"
+        r"|(\b(?:" + words + r")\b\s+(?:is\s+)?)((?=[^\s,;]*\d)[^\s,;]{4,})", re.I)
+
+
+LABELLED = labelled(SECRET_WORDS)
+# What meta.json may never hold as a value. An OTP is masked, not refused: it
+# has expired by the time a report is written, and findings name the OTP step.
+LABELLED_CREDENTIAL = labelled(r"pass(?:word|wd)|secret|token|credentials?|api[ _-]?key|private[ _-]?key")
+LABEL = re.compile(r"\b(?:" + SECRET_WORDS + r")\b", re.I)
 IMAGES = (".png", ".jpg", ".jpeg", ".gif", ".bmp")
 RUN_NAME = {"ui": "UI functional test", "ft": "API functional test"}
 SECTIONS = ["Document control", "Executive summary", "ABDM details", "Scope",
@@ -938,9 +974,13 @@ def norm(text):
 
 
 def mask(text):
-    """ABHA numbers to XX-XXXX-XXXX-1234, any other 12 digit run to XXXX XXXX 1234."""
-    text = re.sub(r"(?<!\d)\d{2}[ -]?\d{4}[ -]?\d{4}[ -]?(\d{4})(?!\d)", r"XX-XXXX-XXXX-\1", str(text))
-    return re.sub(r"(?<!\d)\d{4}[ -]?\d{4}[ -]?(\d{4})(?!\d)", r"XXXX XXXX \1", text)
+    """A JWT to [token], a value after a secret's label to [redacted], ABHA numbers to
+    XX-XXXX-XXXX-1234, any other 12 digit run to XXXX XXXX 1234, a mobile to XXXXXX1234."""
+    text = JWT.sub("[token]", str(text))
+    text = LABELLED.sub(lambda m: (m.group(1) or m.group(3)) + "[redacted]", text)
+    text = re.sub(r"(?<!\d)\d{2}[ -]?\d{4}[ -]?\d{4}[ -]?(\d{4})(?!\d)", r"XX-XXXX-XXXX-\1", text)
+    text = re.sub(r"(?<!\d)\d{4}[ -]?\d{4}[ -]?(\d{4})(?!\d)", r"XXXX XXXX \1", text)
+    return re.sub(r"(?<!\d)[6-9]\d{4}[ -]?\d(\d{4})(?!\d)", r"XXXXXX\1", text)
 
 
 def load(path):
@@ -997,17 +1037,36 @@ def index(wb):
     return rows
 
 
-def value(ws, row, top, cols, names):
-    """The run's value: its "(run)" column when that holds one, else the column."""
+def find(cols, words):
+    """The first column, in sheet order, whose name holds one of the words."""
+    for word in words:
+        for name, col in sorted(cols.items(), key=lambda x: x[1]):
+            if word in name.lower() and not name.endswith(" (run)"):
+                return col
+    return None
+
+
+def marking_col(cols):
+    return next((col for name, col in sorted(cols.items(), key=lambda x: x[1])
+                 if "mandatory" in name.lower() and "optional" in name.lower()), None)
+
+
+def value(ws, row, top, cols, names, original):
+    """The run's value. Where NHA's own cell had text, the writer put the run's value
+    in "<column> (run)", and only that column is read for the row, even when blank."""
     col = next((cols[n] for n in names if n in cols), None)
     if col is None:
         return ""
+    cell = anchor(ws, row, col)
     run_col = cols.get(norm(ws.cell(top, col).value) + " (run)")
     if run_col:
-        got = norm(anchor(ws, row, run_col).value)
-        if got:
-            return got
-    return norm(anchor(ws, row, col).value)
+        if original is None:
+            sys.exit("the workbook has a (run) column but no .before-abdm-run copy beside it, so NHA's "
+                     "text cannot be told from the run's: restore the copy the writer made")
+        nha = original[ws.title][cell.coordinate].value if ws.title in original.sheetnames else None
+        if norm(nha):
+            return norm(anchor(ws, row, run_col).value)
+    return norm(cell.value)
 
 
 def classify(text, entity):
@@ -1015,7 +1074,7 @@ def classify(text, entity):
     t = norm(text)
     low = t.lower()
     if not t:
-        return "mandatory", "Mandatory", "no marking: treated as mandatory", None
+        return "mandatory", "Not marked, treated as mandatory", "no marking: treated as mandatory", None
     if low.startswith("either"):
         ids = [i.replace(" ", "") for i in re.findall(r"\b[A-Z][A-Z0-9]*(?: ?_[A-Z0-9]+)+\b", t)]
         gov, priv = "gov" in low, "priv" in low
@@ -1026,10 +1085,13 @@ def classify(text, entity):
         return "optional", "Optional", None, None
     m = re.match(r"(mandatory|yes)\b[\s,:]*(.*)$", low)
     if not m:
-        return "mandatory", "Mandatory", "unrecognised marking: treated as mandatory", None
+        return "mandatory", "Unrecognised, treated as mandatory", "unrecognised marking: treated as mandatory", None
     rest = m.group(2)
     if not rest:
         return "mandatory", "Mandatory", None, None
+    if rest.startswith("•"):
+        # PHR's profile cases: "Mandatory" then a bullet list of the mandatory and optional fields.
+        return "mandatory", "Mandatory", "lists mandatory and optional fields: the case is mandatory", None
     conditional = "(" in rest or re.search(r"\bif\b", rest) is not None
     who = re.match(r"for\s+(.*)$", rest)
     if who and m.group(1) == "mandatory":
@@ -1042,7 +1104,7 @@ def classify(text, entity):
         return "mandatory", "Mandatory", "mandatory for " + entity, None
     if conditional:
         return "mandatory", "Mandatory (conditional)", "conditional: treated as mandatory", None
-    return "mandatory", "Mandatory", "unrecognised marking: treated as mandatory", None
+    return "mandatory", "Unrecognised, treated as mandatory", "unrecognised marking: treated as mandatory", None
 
 
 def iterations(text):
@@ -1055,18 +1117,22 @@ def iterations(text):
 def read_cases(path, run, entity):
     """Every case in sheet order, with its marking, the run's values and treatment."""
     wb = load(path)
+    path = Path(path)
+    # The copy the writer made before its first write: what NHA's own cells held.
+    backup = path.with_name(path.stem + ".before-abdm-run" + path.suffix)
+    original = load(backup) if backup.exists() else None
     out = []
     for case, (ws, row) in index(wb).items():
         top, cols = header_row(ws)
-        mcol = next((cols[n] for n in MARKING if n in cols), None)
+        mcol = marking_col(cols)
         marking = norm(anchor(ws, row, mcol).value) if mcol else ""
-        tcol = next((cols[n] for n in TITLE if n in cols), None)
+        tcol = find(cols, TITLE)
         title = norm(anchor(ws, row, tcol).value) if tcol else ""
         kind, label, note, pair = classify(marking, entity)
         rec = {"id": case, "sheet": ws.title, "title": title or case, "marking": marking,
                "kind": kind, "label": label, "note": note, "pair": pair}
         for key, names in COLUMNS[run].items():
-            rec[key] = value(ws, row, top, cols, names)
+            rec[key] = value(ws, row, top, cols, names, original)
         rec["status"] = rec["status"].upper()
         rec["iterations"] = iterations(rec["iterations"])
         out.append(rec)
@@ -1085,28 +1151,45 @@ def read_cases(path, run, entity):
     return out, list(groups.values())
 
 
-def gate(recs, groups):
+def gate(recs, groups, agreed):
+    """Mandatory cases not PASS. NA passes only on a case NHA agreed not to run."""
     blocking = []
     by_id = {r["id"]: r for r in recs}
+
+    def through(r):
+        return r["status"] == "PASS" or (r["status"] == "NA" and r["id"] in agreed)
+
     for r in recs:
-        if r["kind"] == "mandatory" and r["status"] != "PASS":
+        if r["kind"] == "mandatory" and not through(r):
             blocking.append(r["id"] + ": " + (r["status"] or "blank"))
     for ids in groups:
         present = [by_id[i] for i in ids if i in by_id]
-        if present and not any(r["status"] == "PASS" for r in present):
+        if present and not any(through(r) for r in present):
             blocking.append(" or ".join(r["id"] for r in present) + ": " +
                             ", ".join(r["status"] or "blank" for r in present))
     return blocking
 
 
-def run_check(path, run, entity):
+def agreed_cases(meta):
+    """meta.json's agreed_not_run: case id to who at NHA agreed it is not run, and when."""
+    agreed = meta.get("agreed_not_run") or {}
+    if not isinstance(agreed, dict) or not all(isinstance(v, str) and v.strip() for v in agreed.values()):
+        sys.exit('agreed_not_run must map each case id to who at NHA agreed and when, such as '
+                 '{"CRT_ABHA_101": "<NAME>, NHA, email of 2026-10-21"}')
+    return {norm(k).replace(" ", ""): norm(v) for k, v in agreed.items()}
+
+
+def run_check(path, run, entity, agreed):
     recs, groups = read_cases(path, run, entity)
     if not recs:
         sys.exit("no Test Case ID column with ids in " + Path(path).name + ": nothing to report on")
     for r in recs:
         if r["note"]:
             print("marking " + r["id"] + ' "' + r["marking"] + '": ' + r["note"])
-    blocking = gate(recs, groups)
+        r["agreed"] = agreed.get(r["id"]) if r["status"] == "NA" and r["kind"] in ("mandatory", "pair") else None
+        if r["agreed"]:
+            print("agreed not run " + r["id"] + ": " + mask(r["agreed"]))
+    blocking = gate(recs, groups, agreed)
     for line in blocking:
         print("not passed " + line)
     mandatory = sum(1 for r in recs if r["kind"] == "mandatory") + len(groups)
@@ -1125,6 +1208,11 @@ def forbidden(meta, where="meta.json"):
     elif isinstance(meta, list):
         for n, v in enumerate(meta):
             found += forbidden(v, where + "[" + str(n) + "]")
+    elif isinstance(meta, str):
+        # A value holding a token, or a credential's label with its value, such as "client secret: x".
+        if JWT.search(meta) or LABELLED_CREDENTIAL.search(meta) or (
+                re.search(r"\bclient[ _-]?secret\b", meta, re.I)):
+            found.append(where + " (its value)")
     return found
 
 
@@ -1155,8 +1243,10 @@ def build(path, run, meta, evidence, out, recs, groups):
         t.style = "Table Grid"
         for n, row in enumerate(([header] if header else []) + rows):
             cells = t.add_row().cells
-            for cell, text in zip(cells, row):
-                cell.text = str(text if text is not None else "")
+            # A value beside a label naming a secret, such as "OTP used", is never shown.
+            secret = len(row) == 2 and not (header and n == 0) and LABEL.search(str(row[0] or ""))
+            for c, (cell, text) in enumerate(zip(cells, row)):
+                cell.text = "[redacted]" if secret and c == 1 and text else str(text if text is not None else "")
                 if header and n == 0:
                     for p in cell.paragraphs:
                         for r in p.runs:
@@ -1174,7 +1264,13 @@ def build(path, run, meta, evidence, out, recs, groups):
     mandatory = sum(1 for r in recs if r["kind"] == "mandatory") + len(groups)
     retried = [r for r in recs if r["iterations"] > 1]
     log = [r for r in recs if r["iterations"] > 1 or r["status"] != "PASS"]
+    agreed = [r for r in recs if r.get("agreed")]
     label = RUN_NAME[run]
+    if agreed:
+        held = (" All " + str(mandatory) + " mandatory cases that apply to a " + entity + " entity are PASS, except " +
+                str(len(agreed)) + " NA that NHA agreed not to run, listed in the results summary.")
+    else:
+        held = " All " + str(mandatory) + " mandatory cases that apply to a " + entity + " entity are PASS."
 
     # 1. Cover
     doc.add_heading(milestone + " " + label + " report", level=0)
@@ -1205,9 +1301,8 @@ def build(path, run, meta, evidence, out, recs, groups):
         meta.get("organisation", "") + " against ABDM " + milestone + ", API version " +
         meta.get("api_version", "V3") + ", from " + dates.get("start", "") + " to " + dates.get("end", "") +
         ". The workbook " + Path(path).name + " holds " + str(n) + " cases. " + str(passed) + " are PASS, " +
-        str(failed) + " FAIL, " + str(na) + " NA and " + str(blank) + " have no result. All " + str(mandatory) +
-        " mandatory cases that apply to a " + entity + " entity are PASS. " + str(len(retried)) +
-        " cases took more than one pass.")
+        str(failed) + " FAIL, " + str(na) + " NA and " + str(blank) + " have no result." + held + " " +
+        str(len(retried)) + " cases took more than one pass.")
 
     # 4. ABDM details
     heading(SECTIONS[2])
@@ -1246,8 +1341,9 @@ def build(path, run, meta, evidence, out, recs, groups):
         "result into the workbook as the case ended.",
         "Each case had at most three passes. Iterations is the number of passes a case took, whether it ended "
         "PASS or FAIL.",
-        "A person entered every OTP and gave every consent or approval the case needed. The agent waited for "
-        "each of these steps and did not perform them.",
+        "Every OTP and every consent or approval came from a person at the moment the case needed it. Where "
+        "a screen took a typed OTP, the agent entered the OTP the person gave it into that screen and never "
+        "stored it.",
         "For a case that passes through the PHR app, the proof is one PHR app screenshot showing the consent "
         "granted or the record visible. The agent checked the application side.",
         ("Run type ui: the agent drove the application's screens with Playwright and kept a screenshot per step."
@@ -1266,8 +1362,12 @@ def build(path, run, meta, evidence, out, recs, groups):
 
     # 9. Results summary
     heading(SECTIONS[7])
-    table([[r["id"], r["title"], r["label"], r["status"] or "Not recorded", r["iterations"] or ""] for r in recs],
+    table([[r["id"], r["title"], r["label"], (r["status"] or "Not recorded") + (" (agreed not run)" if r.get("agreed")
+            else ""), r["iterations"] or ""] for r in recs],
           header=["Test case ID", "Title", "Marking", "Status", "Iterations"])
+    if agreed:
+        doc.add_heading("Mandatory cases NHA agreed not to run", level=2)
+        table([[r["id"], r["title"], r["agreed"]] for r in agreed], header=["Test case ID", "Title", "Agreed by and when"])
 
     # 10. Evidence
     heading(SECTIONS[8])
@@ -1298,7 +1398,8 @@ def build(path, run, meta, evidence, out, recs, groups):
     # 11. Failures and iterations log
     heading(SECTIONS[9])
     if log:
-        table([[r["id"], r["status"] or "Not recorded", r["iterations"] or "", r["remarks"]] for r in log],
+        table([[r["id"], r["status"] or "Not recorded", r["iterations"] or "",
+                ("Agreed not run: " + r["agreed"] + ". " if r.get("agreed") else "") + r["remarks"]] for r in log],
               header=["Test case ID", "Status", "Iterations", "Remarks"])
     else:
         doc.add_paragraph("No case failed and no case took more than one pass.")
@@ -1306,8 +1407,8 @@ def build(path, run, meta, evidence, out, recs, groups):
     # 12. Conclusion
     heading(SECTIONS[10])
     doc.add_paragraph(
-        "All " + str(mandatory) + " mandatory cases that apply to a " + entity + " entity are PASS in the " +
-        run + " run of " + meta.get("product", "") + " for " + milestone + ". Of " + str(n) + " cases, " +
+        "In the " + run + " run of " + meta.get("product", "") + " for " + milestone + "," +
+        held.replace(" All", " all", 1) + " Of " + str(n) + " cases, " +
         str(passed) + " are PASS, " + str(failed) + " FAIL, " + str(na) + " NA and " + str(blank) +
         " have no result.")
 
@@ -1355,19 +1456,19 @@ def main():
     p.add_argument("--out")
     a = p.parse_args()
     meta = {}
-    if a.action == "build":
-        if not (a.meta and a.out):
-            sys.exit("build needs --meta and --out")
+    if a.action == "build" and not (a.meta and a.out):
+        sys.exit("build needs --meta and --out")
+    if a.meta:
         meta = json.loads(Path(a.meta).read_text())
         bad = forbidden(meta)
         if bad:
-            sys.exit("meta.json carries a field named like a credential, which never goes in a report: " +
-                     ", ".join(bad))
+            sys.exit("meta.json carries a credential, a field named like one or a value holding one, "
+                     "which never goes in a report: " + ", ".join(bad))
         meta["entity_type"] = a.entity or meta.get("entity_type")
     entity = a.entity or meta.get("entity_type")
     if entity not in ("government", "private"):
         sys.exit("--entity, or entity_type in meta.json, must be government or private")
-    recs, groups, blocking = run_check(a.workbook, a.run, entity)
+    recs, groups, blocking = run_check(a.workbook, a.run, entity, agreed_cases(meta))
     if blocking:
         if a.action == "build":
             print("no report: every mandatory case must be PASS first", file=sys.stderr)
@@ -1385,10 +1486,10 @@ if __name__ == "__main__":
 1. When the last case is recorded and written into the workbook, run the gate for the run type and your entity type:
 
    ```bash
-   python3 abdm-ft/abdm_report.py check <workbook> --run ui --entity private
+   python3 abdm-ft/abdm_report.py check <workbook> --run ui --entity private --meta abdm-ft/meta.json
    ```
 
-   It prints one `marking` line for every case whose marking is entity specific, conditional, an either rule or unrecognised, with how it was treated. Then one `not passed <id>: <status>` line per mandatory case in the way, an either pair as `<id> or <id>: <status>, <status>`, and a count.
+   `--meta` is optional for `check`: it is read for `agreed_not_run`. The script prints one `marking` line for every case whose marking is entity specific, conditional, an either rule, a field list, blank or unrecognised, with how it was treated, and one `agreed not run <id>: <agreement>` line per mandatory `NA` case `agreed_not_run` lets through. Then one `not passed <id>: <status>` line per mandatory case in the way, an either pair as `<id> or <id>: <status>, <status>`, and a count.
 
 2. If it exits `1`, the run is not finished. Rerun the cases it lists, as `open` in `shared.concept.test-workbook-write-back` does, and run `check` again. Do not run `build`.
 
@@ -1409,27 +1510,30 @@ if __name__ == "__main__":
 - `check` exits `0` and its last line reads `0 of <n> mandatory case(s) for a <entity> entity not PASS in the <run> run`.
 - `build` prints `wrote abdm-ft/report-m1.docx` and exits `0`.
 - The document opens with the cover, then the twelve headings from Document control to Annexures, in order. The results summary has one row per case in the workbook. Each case's evidence section holds its screenshots in name order, or its response for an `ft` report.
-- No 12 digit number appears anywhere in it: an Aadhaar number reads `XXXX XXXX 1234` and an ABHA number `XX-XXXX-XXXX-1234`, with the last four digits kept.
+- No 12 digit number appears anywhere in it: an Aadhaar number reads `XXXX XXXX 1234` and an ABHA number `XX-XXXX-XXXX-1234`, with the last four digits kept. A 10 digit mobile reads `XXXXXX1234`.
+- No token or secret appears in it: a JWT reads `[token]`, and a value after a label naming a password, secret, token, OTP, credential, API key or private key reads `[redacted]`. This covers the workbook's Response and Remarks values and the findings, as well as `meta.json`.
 
 ### When it goes wrong
 
 | Observed | Cause | Do |
 |---|---|---|
-| `ModuleNotFoundError: No module named 'docx'` | python-docx is not installed | `pip install python-docx openpyxl pillow` |
+| `ModuleNotFoundError: No module named 'docx'` | python-docx is not installed | `pip install openpyxl pillow python-docx` |
 | `not passed CRT_ABHA_105: FAIL` | A mandatory case failed | Fix the cause the Remarks name, rerun the case, write it back, run `check` again |
-| `not passed <id>: NA` | A mandatory case was recorded not run | Run it, or agree with NHA that it does not apply and keep the reason in its remarks. The gate still counts it until it is PASS |
+| `not passed <id>: NA` | A mandatory case was recorded not run, and `agreed_not_run` does not list it | Run it, or agree with NHA that it does not apply, keep the reason in its remarks, and add it to `agreed_not_run` with who agreed and when. Pass `--meta` to `check` |
+| `agreed_not_run must map each case id` | An entry has no agreement text | Write who at NHA agreed and when for every case listed |
 | `not passed <id>: blank` | The case needs a tester step, or never ran | Finish it with the tester, then write it back |
-| `marking <id> "...": unrecognised marking: treated as mandatory` | NHA used a marking the script does not know | Ask NHA what it means for your entity type. Never edit NHA's marking to pass the gate |
-| `meta.json carries a field named like a credential` | `meta.json` has a password, secret, token or credentials field | Delete the field. A report never carries a credential |
+| `marking <id> "...": unrecognised marking: treated as mandatory`, or `no marking` | NHA used a marking the script does not know, such as PHR's note on row P1 3.6, or left it blank | Ask NHA what it means for your entity type. Never edit NHA's marking to pass the gate |
+| `meta.json carries a credential` | `meta.json` has a password, secret, token or credentials field, or a value holding a JWT or a credential's label with its value | Delete the field or the value. A report never carries a credential |
+| `the workbook has a (run) column but no .before-abdm-run copy` | The writer's copy of NHA's workbook was moved or deleted | Put it back beside the workbook. Without it the script cannot tell NHA's text from the run's |
 | `case id on more than one tab` | Two tabs carry the same id | Ask NHA which one counts |
-| `no Test Case ID column with ids` | The workbook has no case ids, as the PHR workbook does not yet | Wait for the version of the workbook with ids. A report without them has nothing to stand on |
+| `no Test Case ID column with ids` | The workbook has no case ids, as NHA's PHR workbook does not, and no write has added them yet | Write the run's results with `shared.concept.test-workbook-write-back` first: its first write adds the `Test Case ID` column |
 | A screenshot is missing from the report | Its file is not under `<evidence>/<case id>/`, or its extension is not png, jpg, gif or bmp | Move it into the case's folder, named as `cases` prints the id, and build again |
 
 From `shared.concept.test-report`.
 
 ## When the last case is recorded
 
-Mark the run log finished, with the time and the count of each outcome. Then write the manifest beside it, with the same name and `.json`. It is the whole report. Case names to request ids, nothing else, so a reviewer checks it against the gateway's own record rather than reading screenshots. Secrets never appear in it: no tokens, no OTPs, no passwords, no mobile or Aadhaar numbers, no client secret.
+Mark the run log finished, with the time and the count of each outcome. Then write the manifest beside it, with the same name and `.json`. It maps case names to request ids, nothing else. Those REQUEST-IDs are the evidence a reviewer can check against the gateway's own record. Secrets never appear in it: no tokens, no OTPs, no passwords, no mobile or Aadhaar numbers, no client secret. The run log and the manifest are written on every run. The manifest is not the final report: the section "Writing the test report" writes that, once its `check` exits 0.
 
 ```json
 {

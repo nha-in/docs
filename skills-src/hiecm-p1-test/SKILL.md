@@ -1,6 +1,6 @@
 ---
 name: hiecm-p1-test
-description: "Use when walking the ABDM P1 functional test cases (PHR registration and login with an ABHA address) against an integrator's own PHR app and the sandbox: runs each case as a loop, records evidence the sandbox can vouch for, and writes the manifest that stands in for a screenshot report."
+description: "Use when walking the ABDM P1 functional test cases (PHR registration and login with an ABHA address) against an integrator's own PHR app and the sandbox: runs each case as a loop, records evidence the sandbox can vouch for, and writes NHA's workbook, the manifest of request ids a reviewer checks against the gateway, and the final test report."
 ---
 # HIE-CM p1 test
 
@@ -75,7 +75,7 @@ Loop limit: 3 passes per test case. Hitting the limit is an escalation: state wh
 Every case names one of these. It decides what the manifest carries.
 
 - **sandbox.** A call the gateway sees. Evidence is the HTTP status, the body and the REQUEST-ID, pasted. The exit condition is a literal in the body. A reviewer can check this against the gateway's own record, which is why it outranks the other two.
-- **screen.** A rule about what your app shows or stores, which no call proves. Evidence is one screenshot or a short recording. A screen case is attested, not observed, and the manifest marks it so.
+- **screen.** A rule about what your app shows or stores, which no call proves. Evidence is one screenshot or a short recording. A screen case is attested, not observed, and the manifest marks it so. In a `ui` run the agent observes the screen itself instead, as "Running a case as a UI test" sets out.
 - **human.** A step only a person can do. Evidence is the observation immediately before it and the outcome `needs-human` when nobody was there.
 
 ### Rules that hold for every case
@@ -173,7 +173,7 @@ NHA's PHR sheet numbers its rows but gives them no ids, so each case here has an
 
 The marks and the wording of each check are ABDM's, from the PHR mobile app test cases, ABHA address creation tab. The sections are grouped as the sheet groups them. Every operation id below is in the P1 or P2 specification, which carries the host, the headers and a full request.
 
-### PHR_ADDR_101 to 1.14: register an ABHA address with a mobile number, self declared
+### PHR_ADDR_101 to PHR_ADDR_114: register an ABHA address with a mobile number, self declared
 
 Mandatory unless marked. This is the group the ABHA number group repeats, so it is written in full and the other states what differs.
 
@@ -209,9 +209,9 @@ a dot cannot come first or last
 
 Nudge: the sheet prints a minimum of 8 here and 4 in PHR_ADDR_210 and PHR_ADDR_314. Do not make your form stricter than ABDM's own check. Let `isExists` and the enrol call refuse what they refuse, and show their message.
 
-### PHR_ADDR_201 to 2.14: register an ABHA address with an ABHA number
+### PHR_ADDR_201 to PHR_ADDR_214: register an ABHA address with an ABHA number
 
-Mandatory unless marked. Same as PHR_ADDR_101 to 1.14, with these differences. Run each as its counterpart and record the counterpart's evidence.
+Mandatory unless marked. Same as PHR_ADDR_101 to PHR_ADDR_114, with these differences. Run each as its counterpart and record the counterpart's evidence.
 
 Loop limit: 3 passes per test case.
 
@@ -234,7 +234,7 @@ Loop limit: 3 passes per test case.
 | PHR_ADDR_213 | `screen` | The congratulations screen names the created address, and Login works | The screen. The sheet's text reads `name@abdm`; in sandbox the suffix is `@sbx`. The login is the PHR_ADDR_112 exit condition |
 | PHR_ADDR_214 | `screen`, `human` | As PHR_ADDR_114 | As PHR_ADDR_114 |
 
-### PHR_ADDR_301 to 3.16: create an ABHA number with KYC inside the PHR app
+### PHR_ADDR_301 to PHR_ADDR_316: create an ABHA number with KYC inside the PHR app
 
 Mandatory unless the sheet leaves a case unmarked. Creating an ABHA number is an M1 enrolment. No P specification publishes the Aadhaar OTP, the enrolment or the card call, so the cases that need them are `not-run` here, each with its M1 counterpart named. Run those counterparts with `hiecm-m1-test` and quote both names in the report.
 
@@ -259,7 +259,7 @@ Loop limit: 3 passes per test case.
 | PHR_ADDR_315 | not-run, optional | Addresses are suggested and a taken one is refused | `not-run`: as PHR_ADDR_314, with `m1_get_v3_enrollment_enrol_suggestion_create_abha_aadhaar_otp`. If created through the ABHA number route, record the PHR_ADDR_211 evidence |
 | PHR_ADDR_316 | not-run | The ABHA number card downloads, with every field from the Aadhaar KYC | `not-run`: as PHR_ADDR_308 |
 
-### PHR_ADDR_402 to 4.5: log in with a mobile number
+### PHR_ADDR_402 to PHR_ADDR_405: log in with a mobile number
 
 Mandatory. The sheet numbers this group from 4.2.
 
@@ -272,7 +272,7 @@ Loop limit: 3 passes per test case.
 | PHR_ADDR_404 | `screen`, `sandbox` | As PHR_ADDR_105, on the login OTP | A second `p1_post_v3_phr_app_login_request_otp` 200 at least 60 seconds after the first, and PHR_ADDR_403 then passes |
 | PHR_ADDR_405 | `sandbox`, `screen` | Every address on the mobile is listed, and the chosen one logs in | The screen lists every entry in `users`. `p1_post_v3_phr_app_login_verify_user` with the chosen `abhaAddress`, the `txnId` and the verify's token in `T-token` returns 200 with `token` present |
 
-### PHR_ADDR_501 to 5.3: log in with an email address, optional
+### PHR_ADDR_501 to PHR_ADDR_503: log in with an email address, optional
 
 Loop limit: 3 passes per test case.
 
@@ -282,7 +282,7 @@ Loop limit: 3 passes per test case.
 | PHR_ADDR_502 | not-run, optional | Resend email OTP after 60 seconds | `not-run`: as PHR_ADDR_501 |
 | PHR_ADDR_503 | not-run, optional | Every address on the email is listed | `not-run`: as PHR_ADDR_501 |
 
-### PHR_ADDR_601 to 6.4: log in with an easy to remember ABHA address
+### PHR_ADDR_601 to PHR_ADDR_604: log in with an easy to remember ABHA address
 
 Mandatory.
 
@@ -295,7 +295,7 @@ Loop limit: 3 passes per test case.
 | PHR_ADDR_603 | `sandbox`, `human` | Login by OTP as the address's methods allow | `p1_post_v3_phr_app_login_request_otp` with `scope` `["abha-address-login","mobile-verify"]` and `loginHint` `abha-address` returns 200 with `txnId`. `p1_post_v3_phr_app_login_verify` then returns 200 with `authResult` `success`. The P1 specification publishes no email OTP or Aadhaar OTP login on an address; record which methods ran |
 | PHR_ADDR_604 | `screen`, `sandbox` | As PHR_ADDR_105, on the address OTP | As PHR_ADDR_404 |
 
-### PHR_ADDR_701 to 7.3: log in with the default ABHA address
+### PHR_ADDR_701 to PHR_ADDR_703: log in with the default ABHA address
 
 Mandatory. The default address is the 14 digit number with the suffix.
 
@@ -307,7 +307,7 @@ Loop limit: 3 passes per test case.
 | PHR_ADDR_702 | `sandbox`, `human` | Login by OTP | As PHR_ADDR_603. An Aadhaar OTP on an address is not in the P1 specification; to log in by Aadhaar OTP, the person uses the number, PHR_ADDR_802 |
 | PHR_ADDR_703 | `screen`, `sandbox` | As PHR_ADDR_105 | As PHR_ADDR_404 |
 
-### PHR_ADDR_801 to 8.3: log in with an ABHA number
+### PHR_ADDR_801 to PHR_ADDR_803: log in with an ABHA number
 
 Mandatory.
 
@@ -319,7 +319,7 @@ Loop limit: 3 passes per test case.
 | PHR_ADDR_802 | `sandbox`, `human` | The OTP logs in | `p1_post_v3_phr_app_login_verify` returns 200 with `authResult` `success` and `users`, then PHR_ADDR_405's verify user call returns 200 with `token`. A wrong mobile OTP returns 200 with `authResult` `failed` and `message` `Please enter a valid OTP. Entered OTP is either expired or incorrect.` |
 | PHR_ADDR_803 | `screen`, `sandbox` | As PHR_ADDR_105 | As PHR_ADDR_404 |
 
-### PHR_ADDR_901 to 9.3: log in with an Aadhaar number
+### PHR_ADDR_901 to PHR_ADDR_903: log in with an Aadhaar number
 
 Mandatory.
 
@@ -331,7 +331,7 @@ Loop limit: 3 passes per test case.
 | PHR_ADDR_902 | `sandbox`, `human` | The Aadhaar OTP logs in | `p1_post_v3_phr_app_login_verify` with the same scope returns 200 with `authResult` `success` and `users` |
 | PHR_ADDR_903 | `screen`, `sandbox` | After the OTP, the terms and conditions are shown with every address on the Aadhaar | The screen lists every entry in the PHR_ADDR_902 `users`. The sheet's check for this row is a resend after 60 seconds; record that as PHR_ADDR_404 evidence on the Aadhaar OTP |
 
-### PHR_ADDR_1001 to 10.5: reset the password
+### PHR_ADDR_1001 to PHR_ADDR_1005: reset the password
 
 Mandatory. The password change call is published in the P2 specification.
 
@@ -356,7 +356,7 @@ no more than 2 consecutive characters or keyboard keys
 
 ## When the last case is recorded
 
-Mark the run log finished, with the time and the count of each outcome. Then write the manifest beside it, with the same name and `.json`. It is the whole report. Case names to request ids, nothing else, so a reviewer checks it against the gateway's own record rather than reading screenshots. Secrets never appear in it: no tokens, no OTPs, no passwords, no mobile or Aadhaar numbers, no client secret.
+Mark the run log finished, with the time and the count of each outcome. Then write the manifest beside it, with the same name and `.json`. It maps case names to request ids, nothing else. Those REQUEST-IDs are the evidence a reviewer can check against the gateway's own record. Secrets never appear in it: no tokens, no OTPs, no passwords, no mobile or Aadhaar numbers, no client secret. The run log and the manifest are written on every run. The manifest is not the final report: the section "Writing the test report" writes that, once its `check` exits 0.
 
 ```json
 {

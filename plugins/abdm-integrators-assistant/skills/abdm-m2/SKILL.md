@@ -67,7 +67,7 @@ The last steps are the module's functional test cases. Their run log is its own 
 - **Design.** What the journey around the calls has to do, and what a screen is forbidden to claim. [references/design.md](references/design.md)
 - **Integrate.** 24 operations, with their hosts and headers. [references/integrate.md](references/integrate.md)
 - **Debug.** The loop from a failed call to a named fix, and 120 error codes from the specification's examples. [references/debug.md](references/debug.md)
-- **Test.** The functional test cases, one loop each, with the evidence the sandbox can vouch for and the manifest that replaces a screenshot report. [references/test.md](references/test.md)
+- **Test.** The functional test cases, one loop each, run as API or UI tests, with results written into NHA's workbook and the final test report once every mandatory case passes. [references/test.md](references/test.md)
 
 This file is the map. Each line above is a file beside it, opened one at a time rather than read through.
 

@@ -967,7 +967,7 @@ for (const module of MODULES) {
   if (test) {
     files['references/test.md'] = test;
     covers.push(
-      `- **Test.** The functional test cases, one loop each, with the evidence the sandbox can vouch for and the manifest that replaces a screenshot report. [references/test.md](references/test.md)`,
+      `- **Test.** The functional test cases, one loop each, run as API or UI tests, with results written into NHA's workbook and the final test report once every mandatory case passes. [references/test.md](references/test.md)`,
     );
   }
 

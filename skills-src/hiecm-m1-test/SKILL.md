@@ -1,6 +1,6 @@
 ---
 name: hiecm-m1-test
-description: "Use when walking the ABDM M1 functional test cases (ABHA creation and verification) against an integrator's own system and the sandbox: runs each case as a loop, records evidence the sandbox can vouch for, and writes the manifest that stands in for a screenshot report."
+description: "Use when walking the ABDM M1 functional test cases (ABHA creation and verification) against an integrator's own system and the sandbox: runs each case as a loop, records evidence the sandbox can vouch for, and writes NHA's workbook, the manifest of request ids a reviewer checks against the gateway, and the final test report."
 ---
 # HIE-CM m1 test
 
@@ -29,7 +29,7 @@ Walks the ABDM M1 functional test cases, ABHA creation and verification, against
 | NHA's test case workbook for this module, if results go into it | The workbook NHA sent you, copied into `abdm-ft/`. Writing into it needs Python 3.9 or later with `openpyxl` and `Pillow` |
 | For a `ui` run: your application's URL | Your deployment, reachable from the browser on this machine |
 | For a `ui` run: a tester login for your application | A test account in your application, read from an environment variable you name or typed at a hidden prompt. It is never written to the run log, the evidence or the workbook |
-| For a `ui` run: Node 18 or later, the Playwright MCP server and Chromium | The integrators plugin declares the Playwright MCP server, and `/abdm-test-setup` lists what is missing. Without the plugin, the section "Running a case as a UI test" lists each install command |
+| For a `ui` run: Node 18 or later, the Playwright MCP server and a browser | The integrators plugin starts `@playwright/mcp@0.0.83`, which the first start downloads with `npx`. Install the browser the server reports missing, chrome or chromium. `/abdm-test-setup` lists what is missing. Without the plugin, the section "Running a case as a UI test" lists each install command |
 
 ## Say one of these
 
@@ -77,7 +77,7 @@ Loop limit: 3 passes per test case. Hitting the limit is an escalation: state wh
 Every case names one of these. It decides what the manifest carries.
 
 - **sandbox.** A call the gateway sees. Evidence is the HTTP status, the body and the REQUEST-ID, pasted. The exit condition is a literal in the body. A reviewer can check this against the gateway's own record, which is why it outranks the other two.
-- **screen.** A rule about what your system shows or stores, which no call proves. Evidence is one screenshot or a short recording and the design rule it satisfies. A screen case is attested, not observed, and the manifest marks it so.
+- **screen.** A rule about what your system shows or stores, which no call proves. Evidence is one screenshot or a short recording and the design rule it satisfies. A screen case is attested, not observed, and the manifest marks it so. In a `ui` run the agent observes the screen itself instead, as "Running a case as a UI test" sets out.
 - **human.** A step only a person can do. Evidence is the observation just before it and the outcome `needs-human` when nobody was there.
 
 ### Rules that hold for every case
@@ -786,7 +786,7 @@ Exit condition: four steps, each with its share and on-share pasted and its scre
 
 ## When the last case is recorded
 
-Mark the run log finished, with the time and the count of each outcome. Then write the manifest beside it, with the same name and `.json`. It is the whole report. Case ids to request ids, nothing else, so a reviewer checks it against the gateway's own record rather than reading screenshots. Secrets never appear in it: no tokens, no OTPs, no Aadhaar numbers, no client secret.
+Mark the run log finished, with the time and the count of each outcome. Then write the manifest beside it, with the same name and `.json`. It maps case ids to request ids, nothing else. Those REQUEST-IDs are the evidence a reviewer can check against the gateway's own record. Secrets never appear in it: no tokens, no OTPs, no Aadhaar numbers, no client secret. The run log and the manifest are written on every run. The manifest is not the final report: the section "Writing the test report" writes that, once its `check` exits 0.
 
 ```json
 {

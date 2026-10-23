@@ -76,22 +76,18 @@ Playwright and Maestro are Apache 2.0; the workbook and report libraries are MIT
 
 ## 7. PHR case ids
 
-Main names PHR cases by milestone and row, such as `P1 1.1`, because the sheet carries no ids. NHA's HMIS sheets use a prefix, a flow and a three digit number. Proposed, written into an inserted Test Case ID column and kept beside the current name so existing links hold:
+Main names PHR cases by milestone and row, such as `P1 1.14`, because the sheet carries no ids. Each row gets an id from its tab and its row number, written into an inserted Test Case ID column and kept beside the current name so existing links hold. Four prefixes are used, one per PHR tab:
 
-| PHR tab or group | Prefix | Range |
-|---|---|---|
-| ABHA address creation | `PHR_ADDR_` | 101 to 163 |
-| Facility records linking | `PHR_LINK_` | 201 to 212 |
-| Health programme records linking | `PHR_PROG_` | 221 to 232 |
-| HIP initiated linking | `PHR_HIPLINK_` | 241 |
-| Sharing with consent to an HIU | `PHR_SHARE_` | 301 to 316 |
-| Scan QR code | `PHR_QR_` | 401 to 406 |
-| Profile, ABHA card, tabs | `PHR_PROFILE_`, `PHR_CARD_`, `PHR_TABS_` | 421, 431, 441 to 447 |
-| Subscriptions and auto approval | `PHR_SUBS_` | 501 to 524 |
-| HIU service for PHR | `PHR_HIU_` | 601 to 620 |
-| Locker | `PHR_LOCKER_` | 701 to 755 |
+| PHR tab | Skill | Prefix | Cases |
+|---|---|---|---|
+| ABHA address creation | P1 | `PHR_ADDR_` | 69 |
+| PHR App Functionality | P2 | `PHR_APP_` | 74 |
+| Building HIU Service for PHR | P3 | `PHR_HIU_` | 15 |
+| Locker | P4 | `PHR_LOCKER_` | 42 |
 
-The ranges were counted from a quick extraction of 218 PHR rows, while main's page counts 200 cases, so phase 6 reconciles the two before any id is fixed. The table goes to NHA to adopt into the sheet.
+The digits are the first part of the row number, followed by each later part zero padded to two digits. Row 1.14 of the ABHA address creation tab is `PHR_ADDR_114`. Row 6.1.3 of the Locker tab is `PHR_LOCKER_60103`.
+
+The page, the workbook writer and the skills derive the same 200 ids by this rule. The table goes to NHA to adopt into the sheet.
 
 ## 8. Sub-skill: the report
 

@@ -267,17 +267,23 @@ def status_of(ws, row, col):
 
 def still_open(path, run):
     """Cases that are not yet PASS or NA in this run type's status column."""
+    path = Path(path)
     wb = load(path)
+    backup = path.with_name(f"{path.stem}.before-abdm-run{path.suffix}")
+    original = load(backup) if backup.exists() else None
     for case, (ws, row) in index(wb).items():
         top, cols = header_row(ws)
         col = next((cols[n] for n in COLUMNS[run]["status"] if n in cols), None)
         if col is None:
             print(case)
             continue
-        status = status_of(ws, row, col)
+        cell = anchor(ws, row, col)
         run_col = cols.get(f"{norm(ws.cell(top, col).value)} (run)")
-        if run_col and status not in CLOSED:
+        if run_col and original is not None and norm(original[ws.title][cell.coordinate].value):
+            # NHA wrote in this cell, so the run's status is only in the "(run)" column.
             status = status_of(ws, row, run_col)
+        else:
+            status = norm(cell.value)
         if status not in CLOSED:
             print(case)
 

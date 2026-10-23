@@ -1,6 +1,6 @@
 ---
 name: hiecm-p2-test
-description: "Use when walking the ABDM P2 functional test cases (PHR consents management: linking records, sharing a profile, the consents tabs and the profile) against an integrator's own PHR app and the sandbox: runs each case as a loop, records evidence the sandbox can vouch for, and writes the manifest that stands in for a screenshot report."
+description: "Use when walking the ABDM P2 functional test cases (PHR consents management: linking records, sharing a profile, the consents tabs and the profile) against an integrator's own PHR app and the sandbox: runs each case as a loop, records evidence the sandbox can vouch for, and writes NHA's workbook, the manifest of request ids a reviewer checks against the gateway, and the final test report."
 ---
 # HIE-CM p2 test
 
@@ -74,7 +74,7 @@ Loop limit: 3 passes per test case. Hitting the limit is an escalation: state wh
 Every case names one of these. It decides what the manifest carries.
 
 - **sandbox.** A call or a callback the gateway sees. Evidence is the HTTP status, the body and the REQUEST-ID, pasted. For an asynchronous call it is the 202 and then the callback carrying the named field. A reviewer can check this against the gateway's own record, which is why it outranks the other two.
-- **screen.** A rule about what your app shows or stores, which no call proves. Evidence is one screenshot or a short recording. A screen case is attested, not observed, and the manifest marks it so.
+- **screen.** A rule about what your app shows or stores, which no call proves. Evidence is one screenshot or a short recording. A screen case is attested, not observed, and the manifest marks it so. In a `ui` run the agent observes the screen itself instead, as "Running a case as a UI test" sets out.
 - **human.** A step only a person can do. Evidence is the observation immediately before it and the outcome `needs-human` when nobody was there.
 
 ### Rules that hold for every case
@@ -177,7 +177,7 @@ The marks and the wording of each check are ABDM's, from the PHR mobile app test
 
 Fetching health data is the health information request, `m3_post_data_flow_v3_health_information_request`. No P specification publishes it, so every case whose result is records fetched is `not-run` here with that reason.
 
-### PHR_APP_101 to 1.11: link and view records from a health facility, user initiated
+### PHR_APP_101 to PHR_APP_111: link and view records from a health facility, user initiated
 
 Mandatory unless marked. The programme group repeats this one, so it is written in full.
 
@@ -199,9 +199,9 @@ Loop limit: 3 passes per test case.
 | PHR_APP_110 | `screen`, optional | A record shows facility name, visit type, prescriber, date and its attachment | The record screen. Record `not-run` if you do not claim it |
 | PHR_APP_111 | `screen`, optional | The attachment opens on the device | The opened record. Record `not-run` if you do not claim it |
 
-### PHR_APP_201 to 2.11: link and view records from a health programme, user initiated
+### PHR_APP_201 to PHR_APP_211: link and view records from a health programme, user initiated
 
-Same as PHR_APP_101 to 1.11, with these differences. Run each as its counterpart and record the counterpart's evidence.
+Same as PHR_APP_101 to PHR_APP_111, with these differences. Run each as its counterpart and record the counterpart's evidence.
 
 Loop limit: 3 passes per test case.
 
@@ -235,7 +235,7 @@ Mandatory. `not-run`: the HIU's fetch is `m3_post_data_flow_v3_health_informatio
 
 Loop limit: 3 passes per test case.
 
-### PHR_APP_50101 to 5.1.3: share the profile by QR from the app
+### PHR_APP_50101 to PHR_APP_50103: share the profile by QR from the app
 
 Mandatory.
 
@@ -247,7 +247,7 @@ Loop limit: 3 passes per test case.
 | PHR_APP_50102 | `sandbox`, `human` | Share sends the profile to the facility's system and a notification confirms it. Cancel sends nothing | Share: `p2_post_patient_share_v3_share` with `intent` `PROFILE_SHARE` and `metaData.hipId` returns 202, and the `p2_post_v3_hiu_patient_on_share` callback carries `acknowledgement.status` and `acknowledgement.abhaAddress`. Cancel: no share call in the log |
 | PHR_APP_50103 | `sandbox`, `human` | The person scans the facility's counter QR with Scan in Profile, confirms, and shares | The person scans. As PHR_APP_50102, with `metaData.context` from the QR, and the callback carries `acknowledgement.profile.tokenNumber`, which the screen shows |
 
-### PHR_APP_50201 to 5.2.11: share the profile when the QR is scanned with the phone camera
+### PHR_APP_50201 to PHR_APP_50211: share the profile when the QR is scanned with the phone camera
 
 Mandatory unless the sheet leaves a case unmarked. The camera, the app chooser and the store are the phone's, so each step is a person's.
 
@@ -287,7 +287,7 @@ Loop limit: 3 passes per test case.
 
 `p2_get_v3_phr_app_login_profile_phrcard` with `X-token` returns 202, as the specification states. Screen check: the card carries the photo, full name, ABHA address, mobile, and the ABHA number when one is linked, and it can be shared and saved.
 
-### PHR_APP_901 to 9.3: the Requests section of the Consents tab
+### PHR_APP_901 to PHR_APP_903: the Requests section of the Consents tab
 
 Mandatory. Each list covers consent, subscription and locker requests. `p4_get_subscription_requests_v3_patients_requests` with `X-AUTH-TOKEN` returns both consents and subscriptions, filtered by `status`.
 
@@ -312,7 +312,7 @@ Loop limit: 3 passes per test case.
 | PHR_APP_1001 | `sandbox`, `human` | A granted request shows under Granted | The person taps Approve. `p2_post_consent_v3_request_request_id_approve` returns 202 with `consentIds[].id`, then `p2_get_consent_v3_request_request_id` returns 200 with `status` `GRANTED`, and the screen lists it under Granted |
 | PHR_APP_1002 | `sandbox`, `human` | A revoked consent shows under Revoked | The person taps Revoke. `p2_post_consent_v3_revoke` returns 202 with `message`, then `p2_get_consent_v3_artefact_artefact_id` returns 200 with `status` `REVOKED`, and the screen lists it under Revoked |
 
-### PHR_APP_1101 to 11.3: the My Records tab
+### PHR_APP_1101 to PHR_APP_1103: the My Records tab
 
 Mandatory. Each needs a fetched record, which PHR_APP_108 cannot produce here. Attest on a record your app already holds.
 
@@ -345,7 +345,7 @@ Loop limit: 3 passes per test case.
 | PHR_APP_1300 | `sandbox`, `human` | A granted subscription's HI types, visit types and period can be edited and saved | The person edits and taps Save Changes. `p3_put_subscription_requests_v3_patients_subscription_id` returns 202 with `subscriptionId`, then `p3_get_subscription_requests_v3_subscription_id` returns 200 with `includedSources[].hiTypes` and `includedSources[].period` as saved |
 | PHR_APP_1400 | `sandbox`, `human` | A granted auto approval policy can be disabled | The person taps Disable. `p2_post_consent_v3_auto_approve_auto_approval_id_disable` returns 202 with `message`, then the next request from that HIU shows `status` `REQUESTED` until the person acts |
 
-### PHR_APP_1501 to 15.6: link an ABHA number to the ABHA address
+### PHR_APP_1501 to PHR_APP_1506: link an ABHA number to the ABHA address
 
 Mandatory.
 
@@ -371,7 +371,7 @@ Loop limit: 3 passes per test case.
 | PHR_APP_1701 | `sandbox`, `human` | The mobile is updated after an OTP on the new number | `p2_post_v3_phr_app_login_profile_request_otp` with `scope` `["abha-address-profile","mobile-verify"]` and `loginHint` `mobile-number` returns 200 with `txnId`. `p2_post_v3_phr_app_login_profile_verify` returns 200 with `message` `Mobile Number linked successfully` and `authResult` `success`. A wrong OTP returns 200 with `authResult` `failed` and `message` `Entered OTP is incorrect. Kindly re-enter valid OTP.` |
 | PHR_APP_1703 | `sandbox` | Address line, district, state and pin code are updated | `p2_post_v3_phr_app_login_profile_updateprofile` returns 200 with `address`, `districtName`, `stateName` and `pinCode` equal to the values sent |
 
-### PHR_APP_1801 to 18.7: edit a self declared profile
+### PHR_APP_1801 to PHR_APP_1807: edit a self declared profile
 
 Mandatory. The sheet has no 18.6.
 
@@ -386,7 +386,7 @@ Loop limit: 3 passes per test case.
 | PHR_APP_1805 | `sandbox`, `human` | As PHR_APP_1701 | As PHR_APP_1701 |
 | PHR_APP_1807 | `sandbox` | As PHR_APP_1703 | As PHR_APP_1703 |
 
-### PHR_APP_1901 to 19.8: the deep link flow
+### PHR_APP_1901 to PHR_APP_1908: the deep link flow
 
 Mandatory. The facility's notice and the SMS are not your app's calls.
 
@@ -401,7 +401,7 @@ Loop limit: 3 passes per test case.
 | PHR_APP_1905 | `screen`, `human` | App not installed: choosing it opens the store to install it | A recording from the list to the installed app |
 | PHR_APP_1906 | `sandbox`, `human` | After install, a new person registers an address and password | As PHR_APP_50210. The sheet also names registration by email, which the P1 specification does not publish |
 | PHR_APP_1907 | `sandbox`, `screen` | App installed: it launches into user initiated linking for that facility | The app opens on discovery, and `p2_post_user_initiated_linking_v3_patient_care_context_discover` returns 202 with `hip.id` equal to the HIP code in the link, followed by the on-discover callback as PHR_APP_105 |
-| PHR_APP_1908 | `sandbox`, `human` | Scanning the facility QR gets a token number, and the records link as in PHR_APP_101 to 1.11 | The person scans. As PHR_APP_50103, with `acknowledgement.profile.tokenNumber` shown. Then PHR_APP_105 and PHR_APP_106 on that facility |
+| PHR_APP_1908 | `sandbox`, `human` | Scanning the facility QR gets a token number, and the records link as in PHR_APP_101 to PHR_APP_111 | The person scans. As PHR_APP_50103, with `acknowledgement.profile.tokenNumber` shown. Then PHR_APP_105 and PHR_APP_106 on that facility |
 
 ### PHR_APP_2001: scan and share with no PHR app installed
 
@@ -415,7 +415,7 @@ The person scans the facility QR with the phone camera, installs the app and log
 
 ## When the last case is recorded
 
-Mark the run log finished, with the time and the count of each outcome. Then write the manifest beside it, with the same name and `.json`. It is the whole report. Case names to request ids, nothing else, so a reviewer checks it against the gateway's own record rather than reading screenshots. Secrets never appear in it: no tokens, no OTPs, no mobile or ABHA numbers, no client secret.
+Mark the run log finished, with the time and the count of each outcome. Then write the manifest beside it, with the same name and `.json`. It maps case names to request ids, nothing else. Those REQUEST-IDs are the evidence a reviewer can check against the gateway's own record. Secrets never appear in it: no tokens, no OTPs, no mobile or ABHA numbers, no client secret. The run log and the manifest are written on every run. The manifest is not the final report: the section "Writing the test report" writes that, once its `check` exits 0.
 
 ```json
 {
