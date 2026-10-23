@@ -27,7 +27,7 @@ Walks the ABDM M4 functional test cases, facility and professional registration,
 | Your `bridgeId`, and a facility id for the bridge cases | The bridge from your sandbox registration. The facility id from a submitted facility, or from a search |
 | Which registries your system integrates | HFR, HPR or both. Cases for a registry you do not integrate are recorded `not-run` with that reason |
 | A folder for the run log | Your repository. `abdm-ft/` unless you name another |
-| NHA's test case workbook for this module, if results go into it | The workbook NHA sent you, copied into `abdm-ft/`. Writing into it needs Python 3.9 or later with `openpyxl` and `Pillow` |
+| NHA's test case workbooks for this module, if results go into them | M4 has two, HFR and HPR. Copy each NHA sent you into `abdm-ft/`. Writing into them needs Python 3.9 or later with `openpyxl` and `Pillow` |
 
 ## Say one of these
 
@@ -49,7 +49,7 @@ These runs are API functional tests, the `ft` run type: your system against the 
 | People and devices | Each is named for this run: who receives the OTPs, who approves in the PHR app, which device scans |
 | Entity type and claimed capabilities | Answered, because they decide which cases are mandatory |
 | The run log | Its folder exists and can be written: `abdm-ft/` in your repository unless you name another |
-| The workbook | `python3 abdm-ft/abdm_workbook.py cases <workbook>` lists the case ids, and every case chosen is among them. `not needed` when no workbook was given |
+| The workbooks | For each of HFR and HPR, `python3 abdm-ft/abdm_workbook.py cases <workbook>` lists the case ids, and every case chosen from that registry is among them. Each workbook has its own results file. `not needed` when no workbook was given |
 
 A `missing` row that a mandatory case needs stops the run before the first call. Say what is missing and ask the one question that would fix it.
 
@@ -172,7 +172,7 @@ Asked for a test script, a test command or automated tests, build one interactiv
 | Before the first case, run the readiness check and create the run log | A run that starts without its credentials, people or devices fails cases for the wrong reason |
 | Every step in "Authentication is never skipped" is a terminal prompt, read with input hidden | A skipped login proves nothing, and a runner that never asks reaches no success path |
 | Update the run log after every case, then write the manifest beside it at the end | The person follows the run as it happens, and a stopped run resumes from the log |
-| Name every check by its case id from this skill, such as `HFR-010` or `HPR-011`. Never invent a numbering such as `TC01`. Mark the two bridge linkage runs as occurrence 1 and 2 | The functional testing report quotes these ids. A check with no case id answers nothing a reviewer asks |
+| Name every check by its case id from this skill, such as `HFR-010` or `HPR-011`. Never invent a numbering such as `TC01`. Mark the two bridge linkage runs as occurrence 1 and 2. In the HFR workbook the second occurrence's ids are `HFR-118#2` to `HFR-123#2`, as `cases` lists them; write its results under those ids | The functional testing report quotes these ids. A check with no case id answers nothing a reviewer asks |
 | At each `human` step, stop and prompt in the terminal. For Aadhaar authentication, print the `url` and wait for Enter once the person has finished there. For a mobile OTP, read it from stdin, encrypt it, send it | Every HPR success path passes through Aadhaar authentication and often an OTP. A runner that never asks never reaches one |
 | Never ask for the Aadhaar number in the terminal. Never write a typed value to disk, a log or the manifest, and never hard code one | The Aadhaar number belongs on the hosted page. An OTP or a password belongs to the person, not the run |
 | Run each `sandbox` row's success call and the refusal its exit condition names as separate checks | The case passes only when both are observed |
@@ -412,7 +412,7 @@ Loop limit: 3 passes per test case.
 
 ### HFR Bridge linkage, first occurrence
 
-The set lists the bridge linkage rows twice, with the same ids. The first occurrence links one bridge to a facility. The second, below, links a second bridge to the same facility and adds two uniqueness checks. Record both, marked occurrence 1 and occurrence 2.
+The set lists the bridge linkage rows twice, with the same ids. The first occurrence links one bridge to a facility. The second, below, links a second bridge to the same facility and adds two uniqueness checks. In the HFR workbook the second occurrence's rows are `HFR-118#2` to `HFR-123#2`. Record both, marked occurrence 1 and occurrence 2.
 
 Loop limit: 3 passes per test case.
 

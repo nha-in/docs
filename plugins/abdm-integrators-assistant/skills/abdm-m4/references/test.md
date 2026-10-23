@@ -23,7 +23,7 @@ Walks the ABDM M4 functional test cases, facility and professional registration,
 | Your `bridgeId`, and a facility id for the bridge cases | The bridge from your sandbox registration. The facility id from a submitted facility, or from a search |
 | Which registries your system integrates | HFR, HPR or both. Cases for a registry you do not integrate are recorded `not-run` with that reason |
 | A folder for the run log | Your repository. `abdm-ft/` unless you name another |
-| NHA's test case workbook for this module, if results go into it | The workbook NHA sent you, copied into `abdm-ft/`. Writing into it needs Python 3.9 or later with `openpyxl` and `Pillow` |
+| NHA's test case workbooks for this module, if results go into them | M4 has two, HFR and HPR. Copy each NHA sent you into `abdm-ft/`. Writing into them needs Python 3.9 or later with `openpyxl` and `Pillow` |
 
 ## Say one of these
 
@@ -45,7 +45,7 @@ These runs are API functional tests, the `ft` run type: your system against the 
 | People and devices | Each is named for this run: who receives the OTPs, who approves in the PHR app, which device scans |
 | Entity type and claimed capabilities | Answered, because they decide which cases are mandatory |
 | The run log | Its folder exists and can be written: `abdm-ft/` in your repository unless you name another |
-| The workbook | `python3 abdm-ft/abdm_workbook.py cases <workbook>` lists the case ids, and every case chosen is among them. `not needed` when no workbook was given |
+| The workbooks | For each of HFR and HPR, `python3 abdm-ft/abdm_workbook.py cases <workbook>` lists the case ids, and every case chosen from that registry is among them. Each workbook has its own results file. `not needed` when no workbook was given |
 
 A `missing` row that a mandatory case needs stops the run before the first call. Say what is missing and ask the one question that would fix it.
 
@@ -168,7 +168,7 @@ Asked for a test script, a test command or automated tests, build one interactiv
 | Before the first case, run the readiness check and create the run log | A run that starts without its credentials, people or devices fails cases for the wrong reason |
 | Every step in "Authentication is never skipped" is a terminal prompt, read with input hidden | A skipped login proves nothing, and a runner that never asks reaches no success path |
 | Update the run log after every case, then write the manifest beside it at the end | The person follows the run as it happens, and a stopped run resumes from the log |
-| Name every check by its case id from this skill, such as `HFR-010` or `HPR-011`. Never invent a numbering such as `TC01`. Mark the two bridge linkage runs as occurrence 1 and 2 | The functional testing report quotes these ids. A check with no case id answers nothing a reviewer asks |
+| Name every check by its case id from this skill, such as `HFR-010` or `HPR-011`. Never invent a numbering such as `TC01`. Mark the two bridge linkage runs as occurrence 1 and 2. In the HFR workbook the second occurrence's ids are `HFR-118#2` to `HFR-123#2`, as `cases` lists them; write its results under those ids | The functional testing report quotes these ids. A check with no case id answers nothing a reviewer asks |
 | At each `human` step, stop and prompt in the terminal. For Aadhaar authentication, print the `url` and wait for Enter once the person has finished there. For a mobile OTP, read it from stdin, encrypt it, send it | Every HPR success path passes through Aadhaar authentication and often an OTP. A runner that never asks never reaches one |
 | Never ask for the Aadhaar number in the terminal. Never write a typed value to disk, a log or the manifest, and never hard code one | The Aadhaar number belongs on the hosted page. An OTP or a password belongs to the person, not the run |
 | Run each `sandbox` row's success call and the refusal its exit condition names as separate checks | The case passes only when both are observed |
@@ -408,7 +408,7 @@ Loop limit: 3 passes per test case.
 
 ### HFR Bridge linkage, first occurrence
 
-The set lists the bridge linkage rows twice, with the same ids. The first occurrence links one bridge to a facility. The second, below, links a second bridge to the same facility and adds two uniqueness checks. Record both, marked occurrence 1 and occurrence 2.
+The set lists the bridge linkage rows twice, with the same ids. The first occurrence links one bridge to a facility. The second, below, links a second bridge to the same facility and adds two uniqueness checks. In the HFR workbook the second occurrence's rows are `HFR-118#2` to `HFR-123#2`. Record both, marked occurrence 1 and occurrence 2.
 
 Loop limit: 3 passes per test case.
 
@@ -538,7 +538,7 @@ Loop limit: 3 passes per test case.
 
 ## Writing results into NHA's workbook
 
-Ask for the workbook in the readiness check. With it, every case ends by writing its result into the sheet as below, after the run log row is updated. Without it, the run log and the manifest are the record, as before.
+Ask for the workbook in the readiness check, and save the script below as `abdm-ft/abdm_workbook.py` before that check, because the check runs it. With a workbook, every case ends by writing its result into the sheet as below, after the run log row is updated. Without one, the run log and the manifest are the record, as before.
 
 ### In plain words
 
@@ -554,7 +554,7 @@ overwrites the other:
 | Run type | What it tests | Columns it fills |
 |---|---|---|
 | `ft`, API functional test | Your system against the sandbox, judged on calls and callbacks | `FT Status`, `FT Response with Code`, `FT Iterations`, `FT Remarks`, added after the last column |
-| `ui`, UI test | Your screens, driven by an agent | NHA's own `Status(PASS/FAIL)`, `Response of Request with Code`, `Iterations`, `Remarks`. A sheet without one of them gets it added |
+| `ui`, UI test | Your screens, driven by an agent | NHA's own `Status(PASS/FAIL)`, `Response of Request with Code`, `Iterations`, `Remarks`, the first of each where a sheet has two. A sheet without one gets it added. Where NHA already wrote in that cell, such as the consent language in HPR's Remarks, NHA's text stays and the value goes in an added `<column> (run)` column |
 
 | Outcome | Status written | Remarks written |
 |---|---|---|
@@ -565,29 +565,30 @@ overwrites the other:
 
 ### Before you start
 
-- The workbook for the module, as NHA published it, in your repository beside the run log, such as `abdm-ft/M1_ABHA_CREATION_VERIFICATION_SCAN_AND_SHARE.xlsx`.
+- The workbook for the module, as NHA published it, in your repository beside the run log, such as `abdm-ft/M1_ABHA_CREATION_VERIFICATION_SCAN_AND_SHARE.xlsx`. M4 has two, HFR and HPR: each is its own workbook with its own results file.
 - Python 3.9 or later with `openpyxl` and `Pillow`: `pip install openpyxl pillow`. Pillow is what keeps the sheet's logos when it is saved.
-- The script below, saved as `abdm-ft/abdm_workbook.py`.
+- The script below, saved as `abdm-ft/abdm_workbook.py` before the readiness check, which runs it.
 
 ```python
 """Read NHA's functional test case workbook and write a run's results into it.
 
   python3 abdm_workbook.py cases  WORKBOOK
-  python3 abdm_workbook.py write  WORKBOOK --run ft|ui --results results.json
+  python3 abdm_workbook.py write  WORKBOOK --run ft|ui --results RESULTS.json
   python3 abdm_workbook.py open   WORKBOOK --run ft|ui
 
 Needs openpyxl and Pillow (pip install openpyxl pillow); Pillow keeps the
 sheet's logos when it is saved.
 """
 import argparse, json, re, shutil, sys
+from copy import copy
 from datetime import date
 from pathlib import Path
 
 import openpyxl
 
 # Where each result goes. A ui run fills NHA's own columns, an ft run its own
-# four, so neither overwrites the other. The first name found is used; a
-# column no name matches is added after the last header.
+# four, so neither overwrites the other. The first column a name matches is
+# used; a field no name matches gets a column added after the last header.
 COLUMNS = {
     "ui": {"status": ["Status(PASS/FAIL)", "Status"], "response": ["Response of Request with Code"],
            "iterations": ["Iterations"], "remarks": ["Remarks", "Remark"]},
@@ -595,6 +596,7 @@ COLUMNS = {
            "iterations": ["FT Iterations"], "remarks": ["FT Remarks"]},
 }
 STATUS = {"passed": "PASS", "failed": "FAIL", "needs-human": "", "not-run": "NA"}
+CLOSED = {"PASS", "NA"}
 HEADER_BLOCK = {"Test Executed by:": "executed_by", "Test Execution date:": "date",
                 "Application/ System Name:": "application"}
 
@@ -603,11 +605,21 @@ def norm(text):
     return re.sub(r"\s+", " ", str(text or "")).strip()
 
 
+def load(path):
+    # rich_text keeps the bold and coloured runs inside NHA's cells.
+    return openpyxl.load_workbook(path, rich_text=True)
+
+
 def header_row(ws):
+    """The header row and, for each name, the first column carrying it."""
     for row in ws.iter_rows(min_row=1, max_row=15):
         names = [norm(c.value) for c in row]
         if "Test Case ID" in names:
-            return row[0].row, {n: c.column for n, c in zip(names, row) if n}
+            cols = {}
+            for name, cell in zip(names, row):
+                if name:
+                    cols.setdefault(name, cell.column)
+            return row[0].row, cols
     return None, {}
 
 
@@ -618,10 +630,10 @@ def cases(ws):
         return {}
     found, col = {}, cols["Test Case ID"]
     for r in range(top + 1, ws.max_row + 1):
-        value = ws.cell(r, col).value
-        if not isinstance(value, str) or not value.strip():
+        value = norm(ws.cell(r, col).value)
+        if not value:
             continue
-        base = key = re.sub(r"\s+", "", value)
+        base = key = value.replace(" ", "")
         n = 2
         while key in found:
             key, n = base + "#" + str(n), n + 1
@@ -637,14 +649,36 @@ def anchor(ws, row, col):
     return ws.cell(row, col)
 
 
+def add_column(ws, top, cols, name):
+    last = max(cols.values())
+    new = last + 1
+    head = ws.cell(top, new, name)
+    model = ws.cell(top, last)
+    for attr in ("font", "fill", "border", "alignment"):
+        setattr(head, attr, copy(getattr(model, attr)))
+    letter = openpyxl.utils.get_column_letter
+    ws.column_dimensions[letter(new)].width = ws.column_dimensions[letter(last)].width or 18
+    cols[name] = new
+    return new
+
+
 def column(ws, top, cols, names):
     for name in names:
         if name in cols:
             return cols[name]
-    new = max(cols.values()) + 1
-    ws.cell(top, new, names[0])
-    cols[names[0]] = new
-    return new
+    return add_column(ws, top, cols, names[0])
+
+
+def index(wb):
+    rows, twice = {}, []
+    for ws in wb.worksheets:
+        for case, row in cases(ws).items():
+            if case in rows:
+                twice.append(case)
+            rows.setdefault(case, (ws, row))
+    if twice:
+        sys.exit("case id on more than one tab: " + ", ".join(twice))
+    return rows
 
 
 def write(path, run, results, meta):
@@ -652,22 +686,22 @@ def write(path, run, results, meta):
     backup = path.with_name(f"{path.stem}.before-abdm-run{path.suffix}")
     if not backup.exists():
         shutil.copy2(path, backup)
-    wb = openpyxl.load_workbook(path)
-    rows, where = {}, {}
+    original = load(backup)
+    wb = load(path)
+    rows = index(wb)
+    where = {}
     for ws in wb.worksheets:
-        found = cases(ws)
-        if not found:
-            continue
         top, cols = header_row(ws)
-        where[ws.title] = {k: column(ws, top, cols, names) for k, names in COLUMNS[run].items()}
-        for case, row in found.items():
-            rows.setdefault(case, (ws, row))
+        if top is None:
+            continue
+        where[ws.title] = (top, cols, {k: column(ws, top, cols, names) for k, names in COLUMNS[run].items()})
         # The header block above the table: tester, date, application.
         for line in ws.iter_rows(min_row=1, max_row=top - 1):
             for cell in line:
-                label = norm(cell.value)
-                if label in HEADER_BLOCK and meta.get(HEADER_BLOCK[label]):
-                    cell.value = f"{label} {meta[HEADER_BLOCK[label]]}"
+                text = norm(cell.value)
+                for label, key in HEADER_BLOCK.items():
+                    if text.startswith(label) and meta.get(key):
+                        cell.value = f"{label} {meta[key]}"
     missing = []
     for r in results:
         if r["id"] not in rows:
@@ -676,26 +710,42 @@ def write(path, run, results, meta):
         if r["outcome"] not in STATUS:
             sys.exit(f"{r['id']}: outcome must be one of {', '.join(STATUS)}")
         ws, row = rows[r["id"]]
+        top, cols, fields = where[ws.title]
         remarks = r.get("remarks", "")
         if r["outcome"] == "needs-human":
             remarks = f"Needs tester: {remarks}".strip()
         values = {"status": STATUS[r["outcome"]], "response": r.get("response", ""),
                   "iterations": r.get("iterations", ""), "remarks": remarks}
         for key, value in values.items():
-            anchor(ws, row, where[ws.title][key]).value = value
+            cell = anchor(ws, row, fields[key])
+            if norm(original[ws.title][cell.coordinate].value):
+                # NHA wrote in this cell. Its text stays; the value goes beside it.
+                name = f"{norm(ws.cell(top, fields[key]).value)} (run)"
+                cell = anchor(ws, row, cols.get(name) or add_column(ws, top, cols, name))
+            cell.value = value
     wb.save(path)
     return missing
 
 
+def status_of(ws, row, col):
+    return norm(anchor(ws, row, col).value)
+
+
 def still_open(path, run):
-    wb = openpyxl.load_workbook(path)
-    for ws in wb.worksheets:
+    """Cases that are not yet PASS or NA in this run type's status column."""
+    wb = load(path)
+    for case, (ws, row) in index(wb).items():
         top, cols = header_row(ws)
-        names = COLUMNS[run]["status"]
-        col = next((cols[n] for n in names if n in cols), None)
-        for case, row in cases(ws).items():
-            if col is None or anchor(ws, row, col).value != "PASS":
-                print(case)
+        col = next((cols[n] for n in COLUMNS[run]["status"] if n in cols), None)
+        if col is None:
+            print(case)
+            continue
+        status = status_of(ws, row, col)
+        run_col = cols.get(f"{norm(ws.cell(top, col).value)} (run)")
+        if run_col and status not in CLOSED:
+            status = status_of(ws, row, run_col)
+        if status not in CLOSED:
+            print(case)
 
 
 def main():
@@ -708,7 +758,7 @@ def main():
     p.add_argument("--application", default="")
     a = p.parse_args()
     if a.action == "cases":
-        wb = openpyxl.load_workbook(a.workbook)
+        wb = load(a.workbook)
         print(json.dumps({ws.title: list(cases(ws)) for ws in wb.worksheets}, indent=1))
     elif a.action == "open":
         still_open(a.workbook, a.run or sys.exit("--run is needed"))
@@ -737,23 +787,23 @@ if __name__ == "__main__":
 
    Run the cases in that list. A case id the skill carries that the workbook lacks is a different version of the set: say so before the run starts.
 
-2. After every case, append its result to `abdm-ft/<module>-<run type>-results.json`, one object per case:
+2. After every case, append its result to `abdm-ft/<workbook name>-<run type>-results.json`, one file per workbook, one object per case:
 
    ```json
    {"id": "CRT_ABHA_105", "outcome": "failed", "response": "POST /v3/enrollment/request/otp HTTP 400 ABDM-1204", "iterations": 3, "remarks": "Invalid OTP value; OTP read from the wrong field"}
    ```
 
-   `iterations` is the number of loop passes the case took, whether it ended passed or failed. Never put a token, OTP, Aadhaar number or full mobile in any field.
+   `id` is the id `cases` printed. A sheet that repeats an id lists the repeat as `<id>#2`, such as HFR's second bridge linkage, `HFR-118#2` to `HFR-123#2`, and the result for that row uses that id. `iterations` is the number of loop passes the case took, whether it ended passed or failed. Never put a token, OTP, Aadhaar number or full mobile in any field.
 
 3. Then write it into the workbook, so a stopped run loses nothing:
 
    ```bash
-   python3 abdm-ft/abdm_workbook.py write <workbook> --run ft --results abdm-ft/<module>-ft-results.json --executed-by "<tester>" --application "<your system>"
+   python3 abdm-ft/abdm_workbook.py write <workbook> --run ft --results abdm-ft/<workbook name>-ft-results.json --executed-by "<tester>" --application "<your system>"
    ```
 
-   The first write copies the workbook to `<name>.before-abdm-run.xlsx` beside it. Every write rewrites the result cells of every case in the file, so writing again is safe. The header block above the table gets the tester, the date and the application.
+   The first write copies the workbook to `<name>.before-abdm-run.xlsx` beside it, and every later write reads that copy to tell NHA's text from the run's. Every write rewrites the result cells of every case in the file, so writing again is safe. The header block above the table gets the tester, the date and the application, and a later write updates them. When NHA sends a new version of the workbook, delete the old `.before-abdm-run.xlsx` before the first write to it.
 
-4. To resume, list the cases that are not yet `PASS` for the run type, and run only those:
+4. To resume, list the cases whose status for the run type is neither `PASS` nor `NA`, and run only those:
 
    ```bash
    python3 abdm-ft/abdm_workbook.py open <workbook> --run ft
@@ -762,15 +812,16 @@ if __name__ == "__main__":
 ### How you know it worked
 
 - `write` exits `0` and prints nothing. It exits `1` and prints `not in the workbook: <id>` for any case id the workbook does not hold.
-- Opened again, each case's row shows the status, response, iterations and remark you wrote, the logos and merged cells are still there, and every other cell is as NHA sent it.
-- `open` lists exactly the cases whose status is not `PASS`.
+- Opened again, each case's row shows the status, response, iterations and remark you wrote. Every cell NHA filled holds what NHA put there, with its formatting, and the logos, merged cells, column widths and frozen panes are as NHA sent them. Two parts of the file are not kept: printer settings and SharePoint metadata, neither of which a reader sees.
+- `open` lists exactly the cases whose status is neither `PASS` nor `NA`.
 
 ### When it goes wrong
 
 | Observed | Cause | Do |
 |---|---|---|
 | `ModuleNotFoundError: No module named 'openpyxl'` | Not installed | `pip install openpyxl pillow` |
-| The logos are gone after a write | Pillow is missing, so the images were not read | Install Pillow and write again from the `.before-abdm-run.xlsx` copy |
+| The logos are gone after a write | Pillow is missing, so the images were not read | Install Pillow, copy `<name>.before-abdm-run.xlsx` back over the workbook, and write again |
+| `case id on more than one tab` | Two tabs carry the same id | Ask NHA which one counts. The script writes neither until it is resolved |
 | `not in the workbook: <id>` | The workbook is another version of the set, or the id was typed with a space | Check the id against `cases`. Never rename a case to fit |
 | `outcome must be one of` | An outcome outside the four | Use `passed`, `failed`, `needs-human` or `not-run` |
 | The workbook will not open in Excel while the run writes | Excel holds a lock on it | Close it in Excel; the next write catches up |
