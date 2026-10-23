@@ -40,10 +40,6 @@ ROOT = Path(__file__).resolve().parent.parent
 RAW = ROOT / "catalogue" / "hiecm" / "openapi" / ".raw"
 ROUTES = ROOT / "site" / "src" / "data" / "api-routes.json"
 OUT = ROOT / "site" / "docs" / "hiecm" / "v3" / "resources" / "test-cases"
-# NHA's workbooks, as stored, so a reader downloads the sheet the page shows.
-# The site build does not run this script, so the copies are committed and
-# --check holds them to the bytes under .raw/.
-DOWNLOADS = ROOT / "site" / "static" / "downloads" / "test-cases"
 
 PAGES = {
     "m1": {
@@ -78,8 +74,8 @@ PAGES = {
     },
     "m4": {
         "sources": [
-            {"sheet": RAW / "nha-2026-10-02-m4-tests" / "HFR_Test_Cases.xlsx", "tabs": "all", "section": "HFR {tab}"},
-            {"sheet": RAW / "nha-2026-10-02-m4-tests" / "HPR_Test_Cases.xlsx", "section": "HPR"},
+            {"sheet": RAW / "nha-2026-10-22-m4-tests" / "HFR_Test_Cases.xlsx", "tabs": "all", "section": "HFR {tab}"},
+            {"sheet": RAW / "nha-2026-10-22-m4-tests" / "HPR_Test_Cases.xlsx", "section": "HPR"},
         ],
         "title": "M4 UI test cases",
         "label": "M4 Registry Integration",
@@ -514,12 +510,8 @@ def render(spec, session, sections, routes):
         out.append("Each row keeps the case id the functional testing report uses, and links every API the case calls.")
     else:
         out.append("The sheet numbers its rows but gives them no ids, so each case here has an id built the way the HMIS ids are, from its PHR milestone and row: row P1 3.2 is `PHR_ADDR_302`, and P2, P3 and P4 are `PHR_APP_`, `PHR_HIU_` and `PHR_LOCKER_`. Quote the id when you report a result.")
-    sheets = list(dict.fromkeys(src["sheet"].name for src in spec["sources"]))
-    links = " and ".join(f"[{n}](pathname:///downloads/test-cases/{n})" for n in sheets)
     out += [
         "[How to read a case](/docs/hiecm/v3/resources/test-cases#how-to-read-a-case) explains the columns and markings.",
-        "",
-        f"Download the workbook{'s' if len(sheets) > 1 else ''}: {links}. The cases are run on your screens, and the result of each goes into the workbook, as [recording each result](/docs/hiecm/v3/resources/test-cases#recording-each-result-in-the-workbook) sets out.",
         "",
     ]
     if session:
@@ -555,15 +547,6 @@ def main():
     routes = load_routes()
     stale = False
     for name, spec in PAGES.items():
-        for src in spec["sources"]:
-            copy = DOWNLOADS / src["sheet"].name
-            same = copy.exists() and copy.read_bytes() == src["sheet"].read_bytes()
-            if check and not same:
-                stale = True
-                print(f"  {copy.relative_to(ROOT)}: OUT OF DATE")
-            elif not check and not same:
-                DOWNLOADS.mkdir(parents=True, exist_ok=True)
-                copy.write_bytes(src["sheet"].read_bytes())
         session, sections = sections_of(spec)
         text = render(spec, session, sections, routes)
         target = OUT / f"{name}.mdx"
