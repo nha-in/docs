@@ -1019,13 +1019,43 @@ blank stops it, and so does one that is `NA` unless NHA agreed it is not run.
 | `ui` | The exit report NHA asks for | The screenshots under `abdm-ft/evidence/<case id>/` |
 | `ft` | The same structure | The `FT Response with Code` value in place of screenshots |
 
-The report has thirteen sections, in this order: cover, document control,
-executive summary, ABDM details, scope, test environment and tools, approach
-and methodology, test data, results summary, evidence, failures and iterations
-log, conclusion, annexures. Every table comes from the workbook or from
-`meta.json`. The only prose you write is the one line finding per case, in
-`meta.json`; the executive summary and the conclusion are built from the
-counts.
+The report is a Word document. Every page carries the report title in its
+header and `Confidential, page N of M` in its footer. Its parts come in this
+order, each from a fixed source, so two reports for the same milestone read
+the same way.
+
+| Part | What it holds | Comes from |
+|---|---|---|
+| Cover | Title, product, organisation, milestone, run type, document id, version, release date, a confidentiality line | `meta.json`, `--run` |
+| Contents | A Word contents field over every section and every case id, which Word fills in on opening | The headings below |
+| 1. Document control | Document title, id, version, prepared, reviewed, approved and released by, release date; change history; distribution list by name, organisation and role | `meta.json` `document` |
+| 2. Executive summary | The run in one paragraph: cases, PASS, FAIL, NA, no result, whether every mandatory case holds, how many took more than one pass | The workbook's counts |
+| 3. ABDM details | Entity, product, category, role, entity type, milestone, API version, run type, dates, days, most passes any case took, executed by, recordings | `meta.json`, the workbook |
+| 4. Results summary | A counts table, a table by the workbook's Function column, and one row per case with marking, status and iterations; any mandatory case NHA agreed is not run, with the agreement | The workbook, `agreed_not_run` |
+| 5. Scope and limitations | Applications and URLs; role, entity type, run type, workbook, tabs, cases; optional cases not passed; the limitation that results hold for the build tested on those dates, and any `limitations` | `meta.json`, the workbook |
+| 6. Flow details | For linking and consent flows: the ABHA address used and the HI types created or tested | `meta.json` `flows` |
+| 7. Test environment and tools | Browser, Playwright, PHR app, emulator, the model that ran the agent, with versions | `meta.json` `environment` |
+| 8. Test team | Name, role and qualifications of each tester, reviewer and approver | `meta.json` `team` |
+| 9. Approach and methodology | How the agent ran cases, the three pass limit, how OTPs and consents were given, the run type, REQUEST-IDs, and what PASS, FAIL, NA and no result mean | Fixed text, `--run` |
+| 10. Test data | The ABHA numbers and addresses used, masked | `meta.json` `test_data` |
+| 11. Evidence | Per case, a heading with its id and title, then one table of test case ID, title, marking, expected result, observed, status, iterations, failure reason with any error code, and request ids; then the response with its code; then each screenshot with a numbered caption naming the case and step | The workbook, `findings`, `--manifest`, the evidence folder |
+| 12. Failures and iterations log | Every case not PASS or that took more than one pass, with its failure reason and error code | The workbook |
+| 13. Conclusion and sign-off | The result in one paragraph, then a sign-off table for preparer, reviewer and approver with date and signature | The counts, `meta.json` `document` |
+| 14. Annexures | Recording links, the completed workbook, the REQUEST-ID manifest, the evidence folder | `meta.json`, the arguments |
+
+The only prose you write is the one line finding per case, in `meta.json`.
+The observed value is that finding, else the Remarks value; the response
+with its code follows the table. A failure reason is the Remarks value, else the response,
+with any `ABDM-` or `MIS-` code, HTTP 4xx or 5xx status or exception named in them. Request
+ids come from the run's manifest JSON, the file the test skill writes beside
+the run log, given with `--manifest`. A request id that is a UUID is printed as
+it is, so a reviewer can look it up in the gateway's record; anything else in
+that field is masked like the rest of the report.
+
+What the report never holds: a login, password, client secret, token or OTP,
+an unmasked Aadhaar number, ABHA number or mobile, and anyone's email or phone
+number. The team and distribution tables take a name, a role and an
+organisation only.
 
 How the marking column is read. It is the first column whose name holds both
 `Mandatory` and `Optional`, in any case and spacing: `Mandatory/ Optional` on
@@ -1061,7 +1091,8 @@ signing off sees them.
 - Python 3.9 or later with `openpyxl`, `Pillow` and `python-docx`: `pip install openpyxl pillow python-docx`. All three are open source (MIT, the HPND licence and MIT).
 - LibreOffice, if you want a PDF beside the Word file. Without it, export the PDF from Word or LibreOffice yourself.
 - The script below, saved as `abdm-ft/abdm_report.py`.
-- A `meta.json` for the report, written by you, with placeholder values replaced. It carries no credential: the script refuses any field named like `password`, `secret`, `token` or `credentials`, and any value that holds a token or a credential's label with its value, such as `client secret: ...`. `agreed_not_run` is only for mandatory cases NHA agreed are not run; leave it `{}` otherwise.
+- A `meta.json` for the report, written by you, with placeholder values replaced. It carries no credential: the script refuses any field named like `password`, `secret`, `token` or `credentials`, and any value that holds a token or a credential's label with its value, such as `client secret: ...`. `agreed_not_run` is only for mandatory cases NHA agreed are not run; leave it `{}` otherwise. `flows` is for M2 and M3 linking and consent flows; leave it `[]` for M1. `team` and `distribution` carry no email or phone number.
+- For request ids in the report, the run's manifest JSON, which the test skill writes beside the run log at the end of the run. It is optional: without it each case reads `No manifest given`. The script refuses a manifest that holds a credential, as it does `meta.json`.
 
 ```json
 {
@@ -1099,6 +1130,9 @@ signing off sees them.
     "change_history": [{"version": "1.0", "date": "2026-10-24", "by": "<NAME>", "change": "First issue"}],
     "distribution": [{"name": "<NAME>", "organisation": "<ORGANISATION>", "role": "<ROLE>"}]
   },
+  "team": [{"name": "<TESTER NAME>", "role": "Tester", "qualifications": "<QUALIFICATIONS, OR LEAVE EMPTY>"}],
+  "flows": [{"name": "<FLOW, SUCH AS HIP INITIATED LINKING>", "abha_addresses": ["<TEST ABHA ADDRESS>@sbx"], "hi_types": ["<HI TYPE, SUCH AS PRESCRIPTION>"]}],
+  "limitations": [],
   "findings": {"CRT_ABHA_101": "The Create ABHA option opens the Aadhaar consent screen."},
   "agreed_not_run": {},
   "recordings": [{"title": "M1 ui run, full trace", "link": "<LINK TO THE RECORDING>"}]
@@ -1109,11 +1143,12 @@ signing off sees them.
 """Check that a functional test run may be reported, and write the report.
 
   python3 abdm_report.py check WORKBOOK --run ft|ui --entity government|private [--meta meta.json]
-  python3 abdm_report.py build WORKBOOK --run ft|ui --meta meta.json --evidence DIR --out REPORT.docx
+  python3 abdm_report.py build WORKBOOK --run ft|ui --meta meta.json --evidence DIR --out REPORT.docx [--manifest RUN.json]
 
 check lists every mandatory case not PASS for the run type and exits 1, or
 exits 0 when there is none. build refuses unless check passes, then writes the
 report. A mandatory case NA passes only when meta.json's agreed_not_run names it.
+--manifest is the run's manifest of case ids to REQUEST-IDs, printed per case.
 Needs openpyxl, Pillow and python-docx (pip install openpyxl pillow python-docx). With LibreOffice's soffice on PATH,
 build also writes a PDF.
 """
@@ -1155,9 +1190,17 @@ LABELLED_CREDENTIAL = labelled(r"pass(?:word|wd)|secret|token|credentials?|api[ 
 LABEL = re.compile(r"\b(?:" + SECRET_WORDS + r")\b", re.I)
 IMAGES = (".png", ".jpg", ".jpeg", ".gif", ".bmp")
 RUN_NAME = {"ui": "UI functional test", "ft": "API functional test"}
-SECTIONS = ["Document control", "Executive summary", "ABDM details", "Scope",
-            "Test environment and tools", "Approach and methodology", "Test data",
-            "Results summary", "Evidence", "Failures and iterations log", "Conclusion", "Annexures"]
+SECTIONS = ["Document control", "Executive summary", "ABDM details", "Results summary",
+            "Scope and limitations", "Flow details", "Test environment and tools", "Test team",
+            "Approach and methodology", "Test data", "Evidence", "Failures and iterations log",
+            "Conclusion and sign-off", "Annexures"]
+# The fixed fields of each case's evidence table, in order.
+CASE_FIELDS = ["Test case ID", "Title", "Marking", "Expected result", "Observed", "Status",
+               "Iterations", "Failure reason", "Request IDs"]
+# A REQUEST-ID is a UUID. Only a UUID is printed as it is; anything else is masked.
+UUID = re.compile(r"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}")
+# An error code or exception named in a response or remark.
+ERROR = re.compile(r"\b(?:ABDM|MIS|HIS|HIU|HIP|CM|PHR|UHI)-\d{3,5}\b|\bHTTP [45]\d{2}\b|\b[A-Z]\w*(?:Exception|Error)\b")
 
 
 def norm(text):
@@ -1319,9 +1362,13 @@ def read_cases(path, run, entity):
         marking = norm(anchor(ws, row, mcol).value) if mcol else ""
         tcol = find(cols, TITLE)
         title = norm(anchor(ws, row, tcol).value) if tcol else ""
+        ecol = find(cols, ["expected result"])
+        fcol = cols.get("Function")
         kind, label, note, pair = classify(marking, entity)
         rec = {"id": case, "sheet": ws.title, "title": title or case, "marking": marking,
-               "kind": kind, "label": label, "note": note, "pair": pair}
+               "kind": kind, "label": label, "note": note, "pair": pair,
+               "expected": norm(anchor(ws, row, ecol).value) if ecol else "",
+               "function": (norm(anchor(ws, row, fcol).value) if fcol else "") or ws.title}
         for key, names in COLUMNS[run].items():
             rec[key] = value(ws, row, top, cols, names, original)
         rec["status"] = rec["status"].upper()
@@ -1407,6 +1454,29 @@ def forbidden(meta, where="meta.json"):
     return found
 
 
+def request_ids(path):
+    """The run's manifest: case id to its REQUEST-IDs. Takes {"<id>": [..]}, {"<id>": "<rid>"},
+    {"<id>": {"request_ids": [..]}}, the same under "cases", or a list of {"id": .., "request_ids": [..]}."""
+    if not path:
+        return None
+    data = json.loads(Path(path).read_text())
+    bad = forbidden(data, "manifest")
+    if bad:
+        sys.exit("the manifest carries a credential, which never goes in a report: " + ", ".join(bad))
+    if isinstance(data, dict) and isinstance(data.get("cases"), (dict, list)):
+        data = data["cases"]
+    if isinstance(data, list):
+        data = {str(x.get("id") or x.get("case") or ""): x for x in data if isinstance(x, dict)}
+    out = {}
+    for case, ids in (data.items() if isinstance(data, dict) else []):
+        if isinstance(ids, dict):
+            ids = ids.get("request_ids") or ids.get("requestIds") or ids.get("request_id") or []
+        if isinstance(ids, str):
+            ids = [ids]
+        out[norm(case).replace(" ", "")] = [norm(i) for i in ids if norm(i)]
+    return out
+
+
 def days(start, end):
     try:
         return (date.fromisoformat(end) - date.fromisoformat(start)).days + 1
@@ -1414,9 +1484,11 @@ def days(start, end):
         return ""
 
 
-def build(path, run, meta, evidence, out, recs, groups):
+def build(path, run, meta, evidence, out, recs, groups, manifest=None):
     from docx import Document
     from docx.enum.text import WD_BREAK
+    from docx.oxml import OxmlElement
+    from docx.oxml.ns import qn
     from docx.shared import Pt
     from PIL import Image
 
@@ -1428,6 +1500,27 @@ def build(path, run, meta, evidence, out, recs, groups):
     dates = meta.get("test_dates", {})
     milestone = meta.get("milestone", "")
     entity = meta["entity_type"]
+    label = RUN_NAME[run]
+    title = milestone + " " + label + " report"
+    rids = request_ids(manifest)
+    safe = set()  # text printed unmasked: a list of REQUEST-IDs that are all UUIDs
+
+    def field(paragraph, code, placeholder=""):
+        """A Word field, such as PAGE or a TOC, that Word fills in when the document opens."""
+        def char(kind):
+            r = paragraph.add_run()
+            el = OxmlElement("w:fldChar")
+            el.set(qn("w:fldCharType"), kind)
+            r._r.append(el)
+        char("begin")
+        r = paragraph.add_run()
+        instr = OxmlElement("w:instrText")
+        instr.set(qn("xml:space"), "preserve")
+        instr.text = " " + code + " "
+        r._r.append(instr)
+        char("separate")
+        paragraph.add_run(placeholder)
+        char("end")
 
     def table(rows, header=None):
         t = doc.add_table(rows=0, cols=len(header or rows[0]))
@@ -1438,14 +1531,31 @@ def build(path, run, meta, evidence, out, recs, groups):
             secret = len(row) == 2 and not (header and n == 0) and LABEL.search(str(row[0] or ""))
             for c, (cell, text) in enumerate(zip(cells, row)):
                 cell.text = "[redacted]" if secret and c == 1 and text else str(text if text is not None else "")
-                if header and n == 0:
+                if (header and n == 0) or (len(row) == 2 and c == 0 and not header):
                     for p in cell.paragraphs:
                         for r in p.runs:
                             r.bold = True
+            if header and n == 0:
+                # The header row repeats on every page the table runs to.
+                tr = t.rows[0]._tr.get_or_add_trPr()
+                el = OxmlElement("w:tblHeader")
+                el.set(qn("w:val"), "true")
+                tr.append(el)
         return t
 
     def heading(text):
         doc.add_heading(text, level=1)
+
+    def page_break():
+        doc.add_paragraph().add_run().add_break(WD_BREAK.PAGE)
+
+    def codes(*texts):
+        found = []
+        for text in texts:
+            for c in ERROR.findall(text or ""):
+                if c not in found:
+                    found.append(c)
+        return ", ".join(found)
 
     n = len(recs)
     passed = sum(1 for r in recs if r["status"] == "PASS")
@@ -1456,26 +1566,70 @@ def build(path, run, meta, evidence, out, recs, groups):
     retried = [r for r in recs if r["iterations"] > 1]
     log = [r for r in recs if r["iterations"] > 1 or r["status"] != "PASS"]
     agreed = [r for r in recs if r.get("agreed")]
-    label = RUN_NAME[run]
+    findings = meta.get("findings", {})
     if agreed:
         held = (" All " + str(mandatory) + " mandatory cases that apply to a " + entity + " entity are PASS, except " +
                 str(len(agreed)) + " NA that NHA agreed not to run, listed in the results summary.")
     else:
         held = " All " + str(mandatory) + " mandatory cases that apply to a " + entity + " entity are PASS."
 
-    # 1. Cover
-    doc.add_heading(milestone + " " + label + " report", level=0)
+    def reason(r):
+        """Why a case failed, or what an earlier pass hit: the remark, else the response, with its codes."""
+        if r.get("agreed"):
+            return "Agreed not run: " + r["agreed"]
+        if r["status"] == "PASS" and r["iterations"] <= 1:
+            return "None"
+        text = r["remarks"] or r["response"] or "Not recorded"
+        if r["status"] == "PASS":
+            text = "Passed on pass " + str(r["iterations"]) + ". Earlier passes: " + text
+        return text
+
+    def rid_text(r):
+        if rids is None:
+            return "No manifest given"
+        ids = rids.get(r["id"], [])
+        if not ids:
+            return "None in the manifest"
+        text = ", ".join(ids)
+        if all(UUID.fullmatch(i) for i in ids):
+            safe.add(text)
+        return text
+
+    # Page header and footer on every page: the report title; Confidential and page N of M.
+    sec.header.paragraphs[0].text = title
+    foot = sec.footer.paragraphs[0]
+    foot.add_run("Confidential, page ")
+    field(foot, "PAGE", "1")
+    foot.add_run(" of ")
+    field(foot, "NUMPAGES", "1")
+
+    # Cover
+    doc.add_heading(title, level=0)
     table([["Product", meta.get("product", "")], ["Organisation", meta.get("organisation", "")],
            ["Milestone", milestone], ["Report type", label + " (run type " + run + ")"],
-           ["Document id", dm.get("id", "FT-" + milestone)], ["Release date", dm.get("release_date", "")]])
-    doc.add_paragraph().add_run().add_break(WD_BREAK.PAGE)
-
-    # 2. Document control
-    heading(SECTIONS[0])
-    table([["Document id", dm.get("id", "FT-" + milestone)], ["Version", dm.get("version", "")],
-           ["Prepared by", dm.get("prepared_by", "")], ["Reviewed by", dm.get("reviewed_by", "")],
-           ["Approved by", dm.get("approved_by", "")], ["Released by", dm.get("released_by", "")],
+           ["Document id", dm.get("id", "FT-" + milestone)], ["Version", dm.get("version", "")],
            ["Release date", dm.get("release_date", "")]])
+    doc.add_paragraph("Confidential. Aadhaar, ABHA and mobile numbers are masked, and the report "
+                      "holds no credential, token or OTP.")
+    page_break()
+
+    # Contents: a Word TOC field over the headings below.
+    p = doc.add_paragraph()
+    p.add_run("Contents").bold = True
+    field(doc.add_paragraph(), 'TOC \\o "1-2" \\h \\z \\u',
+          "Open in Word and update fields to build the contents.")
+    settings = doc.settings.element
+    upd = OxmlElement("w:updateFields")
+    upd.set(qn("w:val"), "true")
+    settings.append(upd)
+    page_break()
+
+    # 1. Document control
+    heading(SECTIONS[0])
+    table([["Document title", title], ["Document id", dm.get("id", "FT-" + milestone)],
+           ["Version", dm.get("version", "")], ["Prepared by", dm.get("prepared_by", "")],
+           ["Reviewed by", dm.get("reviewed_by", "")], ["Approved by", dm.get("approved_by", "")],
+           ["Released by", dm.get("released_by", "")], ["Release date", dm.get("release_date", "")]])
     doc.add_heading("Change history", level=2)
     history = dm.get("change_history", [])
     table([[h.get("version", ""), h.get("date", ""), h.get("by", ""), h.get("change", "")] for h in history]
@@ -1485,7 +1639,7 @@ def build(path, run, meta, evidence, out, recs, groups):
     table([[d.get("name", ""), d.get("organisation", ""), d.get("role", "")] if isinstance(d, dict)
            else [str(d), "", ""] for d in dist] or [["", "", ""]], header=["Name", "Organisation", "Role"])
 
-    # 3. Executive summary
+    # 2. Executive summary
     heading(SECTIONS[1])
     doc.add_paragraph(
         "This report records the " + label + " run of " + meta.get("product", "") + " by " +
@@ -1495,38 +1649,94 @@ def build(path, run, meta, evidence, out, recs, groups):
         str(failed) + " FAIL, " + str(na) + " NA and " + str(blank) + " have no result." + held + " " +
         str(len(retried)) + " cases took more than one pass.")
 
-    # 4. ABDM details
+    # 3. ABDM details
     heading(SECTIONS[2])
+    recordings = meta.get("recordings", [])
     table([["Entity name", meta.get("organisation", "")], ["Product name", meta.get("product", "")],
-           ["Category", meta.get("category", "")], ["Milestone", milestone],
-           ["API version", meta.get("api_version", "V3")],
+           ["Category", meta.get("category", "")], ["Role", meta.get("role", "")], ["Entity type", entity],
+           ["Milestone", milestone], ["API version", meta.get("api_version", "V3")],
+           ["Run type", run + ", " + label],
            ["Test execution dates", dates.get("start", "") + " to " + dates.get("end", "")],
            ["Number of days for testing", meta.get("test_days", days(dates.get("start"), dates.get("end")))],
            ["Most passes any case took", max([r["iterations"] for r in recs] or [0])],
-           ["Test executed by", meta.get("executed_by", "")]])
+           ["Test executed by", meta.get("executed_by", "")],
+           ["Recordings", str(len(recordings)) + " listed in the annexures" if recordings else "None"]])
 
-    # 5. Scope
+    # 4. Results summary: counts, then by function, then one row per case.
     heading(SECTIONS[3])
+    table([["Cases in the workbook", n], ["PASS", passed], ["FAIL", failed], ["NA", na], ["No result", blank],
+           ["Mandatory for a " + entity + " entity", mandatory], ["Took more than one pass", len(retried)]],
+          header=["Measure", "Count"])
+    doc.add_heading("Results by function", level=2)
+    functions = []
+    for r in recs:
+        if r["function"] not in functions:
+            functions.append(r["function"])
+    rows = []
+    for fn in functions:
+        these = [r for r in recs if r["function"] == fn]
+        rows.append([fn, len(these), sum(1 for r in these if r["status"] == "PASS"),
+                     sum(1 for r in these if r["status"] == "FAIL"), sum(1 for r in these if r["status"] == "NA"),
+                     sum(1 for r in these if r["kind"] == "mandatory" and r["status"] != "PASS" and not r.get("agreed"))])
+    table(rows, header=["Function", "Cases", "PASS", "FAIL", "NA", "Mandatory not PASS"])
+    doc.add_heading("Results by case", level=2)
+    table([[r["id"], r["title"], r["label"], (r["status"] or "Not recorded") + (" (agreed not run)" if r.get("agreed")
+            else ""), r["iterations"] or ""] for r in recs],
+          header=["Test case ID", "Title", "Marking", "Status", "Iterations"])
+    if agreed:
+        doc.add_heading("Mandatory cases NHA agreed not to run", level=2)
+        table([[r["id"], r["title"], r["agreed"]] for r in agreed], header=["Test case ID", "Title", "Agreed by and when"])
+
+    # 5. Scope and limitations
+    heading(SECTIONS[4])
     apps = meta.get("applications", [])
     table([[a.get("name", ""), a.get("url", "")] if isinstance(a, dict) else [str(a), ""] for a in apps]
           or [["", ""]], header=["Application", "URL"])
     doc.add_paragraph("")
     sheets = sorted(set(r["sheet"] for r in recs), key=[r["sheet"] for r in recs].index)
-    table([["Role", meta.get("role", "")], ["Entity type", entity],
+    table([["Role", meta.get("role", "")], ["Entity type", entity], ["Run type", run],
            ["Workbook", Path(path).name], ["Tabs", ", ".join(sheets)], ["Cases", n]])
+    skipped = [r for r in recs if r["kind"] == "optional" and r["status"] != "PASS"]
+    doc.add_heading("Optional cases not passed", level=2)
+    if skipped:
+        table([[r["id"], r["title"], r["status"] or "Not recorded"] for r in skipped],
+              header=["Test case ID", "Title", "Status"])
+    else:
+        doc.add_paragraph("Every optional case is PASS.")
+    doc.add_heading("Limitations", level=2)
+    for line in (["The results hold for the build and configuration tested from " + dates.get("start", "") +
+                  " to " + dates.get("end", "") + ". A later change to the code or the configuration can change them."]
+                 + [str(x) for x in meta.get("limitations", [])]):
+        doc.add_paragraph(line, style="List Bullet")
 
-    # 6. Test environment and tools
-    heading(SECTIONS[4])
+    # 6. Flow details
+    heading(SECTIONS[5])
+    flows = meta.get("flows", [])
+    if flows:
+        table([[f.get("name", ""), ", ".join(f.get("abha_addresses", [])), ", ".join(f.get("hi_types", []))]
+               for f in flows if isinstance(f, dict)],
+              header=["Flow", "ABHA address used", "HI types created or tested"])
+    else:
+        doc.add_paragraph("No linking or consent flow in this milestone.")
+
+    # 7. Test environment and tools
+    heading(SECTIONS[6])
     env = dict(meta.get("environment", {}))
     names = [("browser", "Browser"), ("browser_version", "Browser version"), ("playwright", "Playwright"),
              ("phr_app", "PHR app"), ("phr_app_version", "PHR app version"), ("emulator", "Emulator"),
              ("model", "Model that ran the agent")]
-    rows = [[title, env.pop(key, "Not used")] for key, title in names]
+    rows = [[name, env.pop(key, "Not used")] for key, name in names]
     rows += [[key, val] for key, val in env.items()]
     table(rows, header=["Tool", "Version or value"])
 
-    # 7. Approach and methodology
-    heading(SECTIONS[5])
+    # 8. Test team
+    heading(SECTIONS[7])
+    team = meta.get("team", [])
+    table([[m.get("name", ""), m.get("role", ""), m.get("qualifications", "")] for m in team if isinstance(m, dict)]
+          or [[meta.get("executed_by", ""), "Tester", ""]], header=["Name", "Role", "Qualifications"])
+
+    # 9. Approach and methodology
+    heading(SECTIONS[8])
     for line in [
         "An agent ran every case in the workbook's order, following the module's test skill, and wrote each "
         "result into the workbook as the case ended.",
@@ -1541,76 +1751,85 @@ def build(path, run, meta, evidence, out, recs, groups):
          if run == "ui" else
          "Run type ft: each case was judged on the calls to the ABDM sandbox and the callbacks received. The "
          "evidence for each case is the response with its code."),
+        "Every call carried a fresh REQUEST-ID. Where a manifest is given, each case lists its REQUEST-IDs, which "
+        "a reviewer can look up in the gateway's own record.",
     ]:
         doc.add_paragraph(line, style="List Bullet")
+    table([["PASS", "The case's expected result was observed."],
+           ["FAIL", "The expected result was not observed in three passes. The failure reason says what was."],
+           ["NA", "The case was not run: optional and not offered, or mandatory with NHA's agreement."],
+           ["Not recorded", "The case has no result in the workbook."]], header=["Status", "Meaning"])
 
-    # 8. Test data
-    heading(SECTIONS[6])
+    # 10. Test data
+    heading(SECTIONS[9])
     data = meta.get("test_data", [])
     if isinstance(data, dict):
         data = [{"item": k, "value": v} for k, v in data.items()]
     table([[d.get("item", ""), d.get("value", "")] for d in data] or [["", ""]], header=["Item", "Value"])
 
-    # 9. Results summary
-    heading(SECTIONS[7])
-    table([[r["id"], r["title"], r["label"], (r["status"] or "Not recorded") + (" (agreed not run)" if r.get("agreed")
-            else ""), r["iterations"] or ""] for r in recs],
-          header=["Test case ID", "Title", "Marking", "Status", "Iterations"])
-    if agreed:
-        doc.add_heading("Mandatory cases NHA agreed not to run", level=2)
-        table([[r["id"], r["title"], r["agreed"]] for r in agreed], header=["Test case ID", "Title", "Agreed by and when"])
-
-    # 10. Evidence
-    heading(SECTIONS[8])
-    findings = meta.get("findings", {})
+    # 11. Evidence: per case a fixed table, the response with its code, then captioned screenshots.
+    heading(SECTIONS[10])
+    figure = 0
     for r in recs:
         doc.add_heading(r["id"] + ": " + r["title"], level=2)
-        doc.add_paragraph("Status: " + (r["status"] or "Not recorded") + ". Finding: " +
-                          (findings.get(r["id"]) or r["remarks"] or "None recorded."))
+        observed = findings.get(r["id"]) or r["remarks"] or "None recorded."
+        err = codes(r["response"], r["remarks"]) if r["status"] != "PASS" or r["iterations"] > 1 else ""
+        values = [r["id"], r["title"], r["label"], r["expected"] or "Not given in the workbook", observed,
+                  (r["status"] or "Not recorded") + (" (agreed not run)" if r.get("agreed") else ""),
+                  r["iterations"] or "", reason(r) + (" Error code: " + err + "." if err else ""), rid_text(r)]
+        table([[k, v] for k, v in zip(CASE_FIELDS, values)], header=["Field", "Value"])
+        if r["response"]:
+            p = doc.add_paragraph()
+            p.add_run("Response with code: ").bold = True
+            code = p.add_run(r["response"])
+            code.font.name = "Courier New"
+            code.font.size = Pt(9)
         if run == "ft":
-            if r["response"]:
-                p = doc.add_paragraph()
-                code = p.add_run(r["response"])
-                code.font.name = "Courier New"
-                code.font.size = Pt(9)
             continue
         folder = Path(evidence) / r["id"]
         shots = sorted(f for f in folder.iterdir() if f.suffix.lower() in IMAGES) if folder.is_dir() else []
-        for shot in shots:
+        for step, shot in enumerate(shots, 1):
             with Image.open(shot) as im:
                 w, h = im.size
             # Page width, unless that makes a tall phone screenshot overrun the page.
-            if h * width > 0.85 * height * w:
-                doc.add_picture(str(shot), height=int(0.85 * height))
+            if h * width > 0.75 * height * w:
+                doc.add_picture(str(shot), height=int(0.75 * height))
             else:
                 doc.add_picture(str(shot), width=width)
-            doc.add_paragraph(shot.name)
+            figure += 1
+            doc.add_paragraph("Figure " + str(figure) + ": " + r["id"] + ", step " + str(step) + " (" + shot.name + ")",
+                              style="Caption")
 
-    # 11. Failures and iterations log
-    heading(SECTIONS[9])
+    # 12. Failures and iterations log
+    heading(SECTIONS[11])
     if log:
-        table([[r["id"], r["status"] or "Not recorded", r["iterations"] or "",
-                ("Agreed not run: " + r["agreed"] + ". " if r.get("agreed") else "") + r["remarks"]] for r in log],
-              header=["Test case ID", "Status", "Iterations", "Remarks"])
+        table([[r["id"], r["status"] or "Not recorded", r["iterations"] or "", reason(r),
+                codes(r["response"], r["remarks"]) or "None found"] for r in log],
+              header=["Test case ID", "Status", "Iterations", "Failure reason", "Error code"])
     else:
         doc.add_paragraph("No case failed and no case took more than one pass.")
 
-    # 12. Conclusion
-    heading(SECTIONS[10])
+    # 13. Conclusion and sign-off
+    heading(SECTIONS[12])
     doc.add_paragraph(
         "In the " + run + " run of " + meta.get("product", "") + " for " + milestone + "," +
         held.replace(" All", " all", 1) + " Of " + str(n) + " cases, " +
         str(passed) + " are PASS, " + str(failed) + " FAIL, " + str(na) + " NA and " + str(blank) +
         " have no result.")
+    table([["Prepared by", dm.get("prepared_by", ""), "", ""], ["Reviewed by", dm.get("reviewed_by", ""), "", ""],
+           ["Approved by", dm.get("approved_by", ""), "", ""]], header=["Sign-off", "Name", "Date", "Signature"])
 
-    # 13. Annexures
-    heading(SECTIONS[11])
-    recs_links = meta.get("recordings", [])
-    table([[x.get("title", ""), x.get("link", "")] if isinstance(x, dict) else [str(x), ""] for x in recs_links]
+    # 14. Annexures
+    heading(SECTIONS[13])
+    table([[x.get("title", ""), x.get("link", "")] if isinstance(x, dict) else [str(x), ""] for x in recordings]
           or [["", ""]], header=["Recording", "Link"])
-    doc.add_paragraph("The completed workbook: " + Path(path).name)
+    doc.add_paragraph("")
+    table([["Completed workbook", Path(path).name],
+           ["REQUEST-ID manifest", Path(manifest).name if manifest else "Not given"],
+           ["Evidence folder", (str(evidence) if run == "ui" else "Not used: the responses are the evidence")]],
+          header=["Annexure", "File"])
 
-    # Mask every run of text the document holds, tables included.
+    # Mask every run of text the document holds, tables, header and footer included.
     def paragraphs(container):
         for p in container.paragraphs:
             yield p
@@ -1619,10 +1838,13 @@ def build(path, run, meta, evidence, out, recs, groups):
                 for cell in row.cells:
                     for p in paragraphs(cell):
                         yield p
-    for p in paragraphs(doc):
-        for r in p.runs:
-            if r.text:
-                r.text = mask(r.text)
+    for part in (doc, sec.header, sec.footer):
+        for p in paragraphs(part):
+            for r in p.runs:
+                if r.text and r.text not in safe:
+                    masked = mask(r.text)
+                    if masked != r.text:
+                        r.text = masked
 
     out = Path(out)
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -1645,6 +1867,7 @@ def main():
     p.add_argument("--meta")
     p.add_argument("--evidence", default="abdm-ft/evidence")
     p.add_argument("--out")
+    p.add_argument("--manifest")
     a = p.parse_args()
     meta = {}
     if a.action == "build" and not (a.meta and a.out):
@@ -1665,7 +1888,7 @@ def main():
             print("no report: every mandatory case must be PASS first", file=sys.stderr)
         sys.exit(1)
     if a.action == "build":
-        build(a.workbook, a.run, meta, a.evidence, a.out, recs, groups)
+        build(a.workbook, a.run, meta, a.evidence, a.out, recs, groups, a.manifest)
 
 
 if __name__ == "__main__":
@@ -1687,20 +1910,24 @@ if __name__ == "__main__":
 3. Only when `check` exits `0`, write the one line findings into `meta.json` under `findings`, keyed by case id. A case without one gets its Remarks value. Then build:
 
    ```bash
-   python3 abdm-ft/abdm_report.py build <workbook> --run ui --meta abdm-ft/meta.json --evidence abdm-ft/evidence --out abdm-ft/report-m1.docx
+   python3 abdm-ft/abdm_report.py build <workbook> --run ui --meta abdm-ft/meta.json --evidence abdm-ft/evidence --manifest abdm-ft/m1-<YYYYMMDD-HHMM>.json --out abdm-ft/report-m1.docx
    ```
 
-   `entity_type` in `meta.json` is the entity type, unless `--entity` is given. `build` runs the gate again and refuses with the same list if it fails.
+   `entity_type` in `meta.json` is the entity type, unless `--entity` is given. `build` runs the gate again and refuses with the same list if it fails. `--manifest` is optional.
 
-4. For an `ft` report, use `--run ft` in both commands. The evidence for each case is its `FT Response with Code` value, and `--evidence` is not read.
+4. Open the report in Word or LibreOffice and accept the prompt to update fields. That fills in the contents and the page count. A screenshot that needs a highlight box gets it before it goes in the evidence folder.
 
-5. With `soffice` on PATH, `build` also writes `report-m1.pdf`. Otherwise it prints that the PDF can be exported from Word or LibreOffice.
+5. For an `ft` report, use `--run ft` in both commands. The evidence for each case is its `FT Response with Code` value, and `--evidence` is not read.
+
+6. With `soffice` on PATH, `build` also writes `report-m1.pdf`. Otherwise it prints that the PDF can be exported from Word or LibreOffice.
 
 ### How you know it worked
 
 - `check` exits `0` and its last line reads `0 of <n> mandatory case(s) for a <entity> entity not PASS in the <run> run`.
 - `build` prints `wrote abdm-ft/report-m1.docx` and exits `0`.
-- The document opens with the cover, then the twelve headings from Document control to Annexures, in order. The results summary has one row per case in the workbook. Each case's evidence section holds its screenshots in name order, or its response for an `ft` report.
+- The document opens with the cover and the contents, then the fourteen headings from Document control to Annexures, in order. Every page has the report title at the top and `Confidential, page N of M` at the bottom.
+- The results summary has one row per case in the workbook. Each case's evidence section starts with its nine row table, then its response, then its screenshots in name order, each captioned `Figure <n>: <case id>, step <k> (<file>)`.
+- With `--manifest`, each case's Request IDs row lists the REQUEST-IDs the manifest gives it, or reads `None in the manifest`.
 - No 12 digit number appears anywhere in it: an Aadhaar number reads `XXXX XXXX 1234` and an ABHA number `XX-XXXX-XXXX-1234`, with the last four digits kept. A 10 digit mobile reads `XXXXXX1234`.
 - No token or secret appears in it: a JWT reads `[token]`, and a value after a label naming a password, secret, token, OTP, credential, API key or private key reads `[redacted]`. This covers the workbook's Response and Remarks values and the findings, as well as `meta.json`.
 
@@ -1718,6 +1945,8 @@ if __name__ == "__main__":
 | `the workbook has a (run) column but no .before-abdm-run copy` | The writer's copy of NHA's workbook was moved or deleted | Put it back beside the workbook. Without it the script cannot tell NHA's text from the run's |
 | `case id on more than one tab` | Two tabs carry the same id | Ask NHA which one counts |
 | `no Test Case ID column with ids` | The workbook has no case ids, as NHA's PHR workbook does not, and no write has added them yet | Write the run's results with `shared.concept.test-workbook-write-back` first: its first write adds the `Test Case ID` column |
+| `the manifest carries a credential` | The manifest JSON holds a token, secret or password field or value | Write the manifest as the test skill does, case ids to request ids and nothing else |
+| The contents page reads `Open in Word and update fields` | The fields have not been updated since the script wrote them | Open the file in Word or LibreOffice and update fields, then save |
 | A screenshot is missing from the report | Its file is not under `<evidence>/<case id>/`, or its extension is not png, jpg, gif or bmp | Move it into the case's folder, named as `cases` prints the id, and build again |
 
 From `shared.concept.test-report`.

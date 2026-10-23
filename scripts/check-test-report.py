@@ -12,9 +12,16 @@ catalogue/shared/concepts/test-workbook-write-back.md, and checks:
   government entity, while a private entity needs CRT_ABHA_114 itself;
 - build refuses while the gate fails, and refuses a meta.json that carries a
   field named like a credential, a JWT or a client secret as a value;
-- the report has the cover and twelve section headings in order, a results
-  table with one row per case, one inline image per screenshot for a ui
+- the report has the cover, a contents field and the fourteen section
+  headings in order, the report title in the page header, Confidential and
+  page fields in the footer, header rows that repeat, a results table with
+  one row per case, one captioned inline image per screenshot for a ui
   report and none for an ft report, and no unmasked 12 digit number;
+- every case has one evidence table with the nine fixed fields in order,
+  carrying its status, iterations and a failure reason with its error code;
+- with --manifest, each case's REQUEST-IDs appear in its evidence table, a
+  case the manifest omits says so, a manifest holding a token is refused,
+  and without one every case reads "No manifest given";
 - where NHA's own status cell has text, only the "(run)" column is read, so
   NHA's PASS never stands in for a run's blank;
 - a JWT, a mobile number, a client secret and an OTP from a Response cell,
@@ -47,9 +54,16 @@ M1 = RAW / "nha-2026-10-22-m1-tests" / "M1_ABHA_CREATION_VERIFICATION_SCAN_AND_S
 HPR = RAW / "nha-2026-10-02-m4-tests" / "HPR_Test_Cases.xlsx"
 PHR = RAW / "nha-2026-10-01-phr-tests" / "PHR_MOBILE_APP_TEST_CASES.xlsx"
 PHR_PAGE = ROOT / "site" / "docs" / "hiecm" / "v3" / "resources" / "test-cases" / "phr.mdx"
-SECTIONS = ["Document control", "Executive summary", "ABDM details", "Scope",
-            "Test environment and tools", "Approach and methodology", "Test data",
-            "Results summary", "Evidence", "Failures and iterations log", "Conclusion", "Annexures"]
+SECTIONS = ["Document control", "Executive summary", "ABDM details", "Results summary",
+            "Scope and limitations", "Flow details", "Test environment and tools", "Test team",
+            "Approach and methodology", "Test data", "Evidence", "Failures and iterations log",
+            "Conclusion and sign-off", "Annexures"]
+CASE_FIELDS = ["Test case ID", "Title", "Marking", "Expected result", "Observed", "Status",
+               "Iterations", "Failure reason", "Request IDs"]
+RESULTS = ["Test case ID", "Title", "Marking", "Status", "Iterations"]
+LOG = ["Test case ID", "Status", "Iterations", "Failure reason", "Error code"]
+RID = ["6f1c2a4e-1b2c-4d3e-8f90-0a1b2c3d4e5f", "a02d7c11-9e8f-4a6b-b5c4-d3e2f1a0b9c8",
+       "b7a1e3d2-5c4b-4a39-8271-605f4e3d2c1b"]
 failures = []
 
 
@@ -70,6 +84,31 @@ def block(path):
     if not found:
         sys.exit(f"no python block in {path}")
     return found.group(1) + "\n"
+
+
+def header_of(table):
+    return [c.text for c in table.rows[0].cells]
+
+
+def evidence_tables(doc):
+    """Case id to its evidence table as {field: value}, for every table with the fixed fields."""
+    found = {}
+    for t in doc.tables:
+        if header_of(t) == ["Field", "Value"] and [r.cells[0].text for r in t.rows[1:]] == CASE_FIELDS:
+            values = {r.cells[0].text: r.cells[1].text for r in t.rows[1:]}
+            found[values["Test case ID"]] = values
+    return found
+
+
+def layout(doc, title):
+    """The contents field, the page header and footer, and repeating header rows."""
+    body = doc.element.body.xml
+    head = doc.sections[0].header
+    foot = doc.sections[0].footer._element.xml
+    repeat = all("w:tblHeader" in t.rows[0]._tr.xml for t in doc.tables if header_of(t)[:1] in
+                 (["Test case ID"], ["Field"], ["Version"], ["Name"], ["Tool"], ["Item"], ["Recording"]))
+    return {"toc": "TOC \\o" in body, "header": head.paragraphs[0].text == title,
+            "footer": "Confidential" in foot and " PAGE " in foot and " NUMPAGES " in foot, "repeat": repeat}
 
 
 def doc_text(doc):
@@ -114,8 +153,7 @@ def main():
         return run(report, "check", book, "--run", kind, "--entity", entity, *extra)
 
     def results_table(doc):
-        table = next((t for t in doc.tables if [c.text for c in t.rows[0].cells][:2] == ["Test case ID", "Title"]
-                      and len(t.rows[0].cells) == 5), None)
+        table = next((t for t in doc.tables if header_of(t) == RESULTS), None)
         return {row.cells[0].text: [c.text for c in row.cells] for row in table.rows[1:]} if table else {}
 
     m1 = work / M1.name
@@ -181,7 +219,7 @@ def main():
 
     # An optional failure does not block; its remark carries numbers to mask.
     fill(m1, "ui", results(ids, {"CRT_ABHA_103": "failed"},
-                           {"CRT_ABHA_103": "Aadhaar 234567890123 and ABHA 91234567890123 shown in clear"}))
+                           {"CRT_ABHA_103": "ABDM-1204 Aadhaar 234567890123 and ABHA 91234567890123 shown in clear"}))
     ok(check(m1, "ui", "government").returncode == 0, "an optional FAIL does not block the gate")
 
     evidence = work / "evidence"
@@ -191,17 +229,41 @@ def main():
         for n, dim in enumerate(dims):
             Image.new("RGB", dim, (200, 200, 200)).save(evidence / case / f"{n + 1:02d}-step.png")
         (evidence / case / "notes.txt").write_text("not an image")
+    manifest = work / "m1-run.json"
+    manifest.write_text(json.dumps({"CRT_ABHA_101": RID[:2], "CRT_ABHA_102": RID[2], "VRFY_ABHA_101": ["234567890123"]}))
     out_doc = work / "out" / "report-m1.docx"
-    out = run(report, "build", m1, "--run", "ui", "--meta", meta_path, "--evidence", evidence, "--out", out_doc)
+    out = run(report, "build", m1, "--run", "ui", "--meta", meta_path, "--evidence", evidence, "--out", out_doc,
+              "--manifest", manifest)
     ok(out.returncode == 0 and out_doc.exists(), f"M1 ui build writes the report: {out.stderr.strip()}")
     if out_doc.exists():
         doc = Document(str(out_doc))
         heads = [p.text for p in doc.paragraphs if p.style.name in ("Title", "Heading 1")]
-        ok(heads == ["M1 UI functional test report"] + SECTIONS, f"M1 ui: cover and 12 headings in order: {heads}")
-        table = next((t for t in doc.tables if [c.text for c in t.rows[0].cells][:2] == ["Test case ID", "Title"]), None)
+        ok(heads == ["M1 UI functional test report"] + SECTIONS, f"M1 ui: cover and 14 headings in order: {heads}")
+        parts = layout(doc, "M1 UI functional test report")
+        ok(all(parts.values()), f"M1 ui: contents field, page header, footer and repeating header rows: {parts}")
+        table = next((t for t in doc.tables if header_of(t) == RESULTS), None)
         ok(table is not None and len(table.rows) - 1 == len(ids),
            f"M1 ui: results table has one row per case ({len(ids)})")
         ok(len(doc.inline_shapes) == 4, f"M1 ui: 4 inline images, got {len(doc.inline_shapes)}")
+        captions = [p.text for p in doc.paragraphs if p.style.name == "Caption"]
+        ok(len(captions) == 4 and captions[0] == "Figure 1: CRT_ABHA_101, step 1 (01-step.png)"
+           and captions[3] == "Figure 4: VRFY_ABHA_101, step 1 (01-step.png)", f"M1 ui: one numbered caption per screenshot: {captions}")
+        ev = evidence_tables(doc)
+        ok(sorted(ev) == sorted(ids), f"M1 ui: one evidence table with the nine fields per case ({len(ev)} of {len(ids)})")
+        e101, e102, e103 = ev.get("CRT_ABHA_101", {}), ev.get("CRT_ABHA_102", {}), ev.get("CRT_ABHA_103", {})
+        ok(e101.get("Request IDs") == ", ".join(RID[:2]) and e102.get("Request IDs") == RID[2]
+           and ev.get("CRT_ABHA_104", {}).get("Request IDs") == "None in the manifest",
+           "M1 ui: the manifest's REQUEST-IDs appear per case, a case it omits says so")
+        ok(e101.get("Status") == "PASS" and e101.get("Iterations") == "1" and e101.get("Failure reason") == "None"
+           and e101.get("Expected result") not in ("", "Not given in the workbook"),
+           "M1 ui: a passed case carries status, iterations, the workbook's expected result and no failure reason")
+        ok(e103.get("Status") == "FAIL" and e103.get("Iterations") == "3" and "ABDM-1204" in e103.get("Failure reason", ""),
+           f"M1 ui: a failed case carries FAIL, 3 iterations and its error code: {e103}")
+        log = next((t for t in doc.tables if header_of(t) == LOG), None)
+        ok(log is not None and any(r.cells[0].text == "CRT_ABHA_103" and r.cells[4].text == "ABDM-1204" for r in log.rows),
+           "M1 ui: the failures log names the error code")
+        ok(any(r.cells[0].text == "Run type" and r.cells[1].text.startswith("ui") for t in doc.tables for r in t.rows
+               if len(r.cells) == 2), "M1 ui: ABDM details carry the run type")
         text = doc_text(doc)
         ok(not re.search(r"(?<!\d)\d{12}(?!\d)|\d{4} \d{4} \d{4}|\d{14}", text),
            "M1 ui: no 12 or 14 digit number unmasked")
@@ -224,6 +286,10 @@ def main():
         heads = [p.text for p in doc.paragraphs if p.style.name in ("Title", "Heading 1")]
         ok(heads == ["M1 API functional test report"] + SECTIONS and len(doc.inline_shapes) == 0
            and "HTTP 200 for CRT_ABHA_101" in doc_text(doc), "M1 ft report: same headings, responses, no images")
+        ok(all(layout(doc, "M1 API functional test report").values()), "M1 ft report: contents, page header and footer")
+        ev = evidence_tables(doc)
+        ok(len(ev) == len(ids) and all(v["Request IDs"] == "No manifest given" for v in ev.values()),
+           "M1 ft report: without --manifest every case reads No manifest given")
     else:
         fail(f"M1 ft build failed: {out.stderr.strip()}")
 
@@ -301,8 +367,7 @@ def main():
         doc = Document(str(agreed_doc))
         listed = next((t for t in doc.tables if [c.text for c in t.rows[0].cells] ==
                        ["Test case ID", "Title", "Agreed by and when"]), None)
-        log = next((t for t in doc.tables if [c.text for c in t.rows[0].cells] ==
-                    ["Test case ID", "Status", "Iterations", "Remarks"]), None)
+        log = next((t for t in doc.tables if header_of(t) == LOG), None)
         ok(listed is not None and [c.text for c in listed.rows[1].cells][0::2] == ["CRT_ABHA_101", agreement]
            and len(listed.rows) == 2, "agreed_not_run: the results summary lists the case with its agreement")
         ok(log is not None and any(r.cells[0].text == "CRT_ABHA_101" and agreement in r.cells[3].text for r in log.rows),
@@ -316,6 +381,8 @@ def main():
                            remarks={"CRT_ABHA_103": "client secret: Zx9SecretValue77 sent in the header"}))
     leak_meta = work / "leak.json"
     leak_meta.write_text(json.dumps(dict(meta, findings={"CRT_ABHA_101": "OTP 482913 accepted on the second screen"},
+                                         team=[{"name": "<TESTER>", "role": "Tester", "email": "tester@example.invalid",
+                                                "phone": "9123456780"}],
                                          test_data=meta["test_data"] + [{"item": "OTP used", "value": "771234"}])))
     leak_doc = work / "out" / "report-leak.docx"
     out = run(report, "build", m1, "--run", "ft", "--meta", leak_meta, "--out", leak_doc)
@@ -323,7 +390,8 @@ def main():
         text = doc_text(Document(str(leak_doc)))
         for secret, what in ((jwt, "the JWT"), ("eyJhbGci", "any part of the JWT"), ("9876543210", "the mobile"),
                              ("Zx9SecretValue77", "the client secret"), ("482913", "the OTP in findings"),
-                             ("771234", "the OTP in test data")):
+                             ("771234", "the OTP in test data"), ("tester@example.invalid", "a team email"),
+                             ("9123456780", "a team phone")):
             ok(secret not in text, f"leaks: {what} is not in the DOCX text")
         ok("[token]" in text and "XXXXXX3210" in text and "client secret: [redacted]" in text
            and "OTP [redacted]" in text, "leaks: masked as [token], XXXXXX3210 and [redacted]")
@@ -336,6 +404,13 @@ def main():
         out = run(report, "build", m1, "--run", "ft", "--meta", path, "--out", work / "secret.docx")
         ok(out.returncode == 1 and "meta.json carries a credential" in out.stderr and not (work / "secret.docx").exists(),
            f"a meta.json with {name} is refused")
+
+    bad_manifest = work / "bad-manifest.json"
+    bad_manifest.write_text(json.dumps({"CRT_ABHA_101": {"request_ids": RID[:1], "token": jwt}}))
+    out = run(report, "build", m1, "--run", "ft", "--meta", meta_path, "--manifest", bad_manifest,
+              "--out", work / "bad-manifest.docx")
+    ok(out.returncode == 1 and "manifest carries a credential" in out.stderr and not (work / "bad-manifest.docx").exists(),
+       "a manifest holding a token is refused")
 
     # PHR: "Optional / Mandatory" and "Test Title", ids added by the writer, markings as the page shows them.
     phr = work / PHR.name

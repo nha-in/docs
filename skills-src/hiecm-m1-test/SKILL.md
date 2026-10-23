@@ -457,7 +457,7 @@ As CRT_ABHA_113, matching `healthIdNumber` and `healthId` from CRT_ABHA_305.
 
 #### CRT_ABHA_308, the ABHA card can be viewed. Mandatory. `sandbox` and `screen`
 
-As CRT_ABHA_114, sent with the `token` from CRT_ABHA_305 as `X-token`. The card carries the ABHA number, the QR code, date of birth, gender and the ABHA address. The photo is optional. The set marks this case Mandatory and also marks CRT_ABHA_309 as the alternative to it for government. Record both as observed, and treat one of the two as required.
+As CRT_ABHA_114, sent with the `token` from CRT_ABHA_305 as `X-token`. The card carries the ABHA number, the QR code, date of birth, gender and the ABHA address. The photo is optional. The 21 October set marks this case Mandatory, and CRT_ABHA_309 as its alternative for government. The set published on the sandbox site marks it Mandatory for Private, the same pattern as CRT_ABHA_114 and 115, and that is how it is read: mandatory for a private integrator; for a government one, either this case or CRT_ABHA_309.
 
 #### CRT_ABHA_309, your own card carries the ABHA details. Mandatory for government, either this or CRT_ABHA_308. `screen`
 
