@@ -743,7 +743,7 @@ function writeBackSection() {
   return [
     "## Writing results into NHA's workbook",
     '',
-    'Ask for the workbook in the readiness check, and save the script below as `abdm-ft/abdm_workbook.py` before that check, because the check runs it. With a workbook, every case ends by writing its result into the sheet as below, after the run log row is updated. Without one, the run log and the manifest are the record, as before.',
+    'Ask for the workbook in the readiness check, and save the script below as `abdm-ft/abdm_workbook.py` before that check, because the check runs it. Every case ends by writing its result into the sheet as below, after the run log row is updated. The workbook is required: the report is built from it.',
     '',
     body.replace(/^## /gm, '### ').trim(),
     '',
