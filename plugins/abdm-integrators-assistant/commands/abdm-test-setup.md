@@ -28,7 +28,7 @@ Then ask one more question for `ui` and `all`: is the application under test a P
 | Check | Ready when | Install command when missing |
 |---|---|---|
 | `python3 -c "import sys; print(sys.version_info >= (3, 9))"` | Prints `True` | Install Python 3.9 or later from https://www.python.org/downloads |
-| `python3 -c "import openpyxl, PIL, docx; print('ok')"` | Prints `ok` | `pip install openpyxl pillow python-docx`. python-docx writes the final test report |
+| `python3 -c "import openpyxl, PIL, docx, reportlab; print('ok')"` | Prints `ok` | `pip install openpyxl pillow python-docx reportlab`. ReportLab draws the final test report as a PDF and python-docx writes its editable Word copy. On Python 3.9, when the check prints `reportlab requires 3.10+`, run `pip install "reportlab<5"` |
 
 ## 4. Playwright, for `ui`
 

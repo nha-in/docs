@@ -29,10 +29,16 @@ catalogue/shared/concepts/test-workbook-write-back.md, and checks:
 - agreed_not_run lets a mandatory NA through only when it lists the case, and
   the report then lists the case with its agreement;
 - PHR's "Optional / Mandatory" markings are read, agree with the PHR test case
-  page for every case, and only a mandatory PHR failure blocks.
+  page for every case, and only a mandatory PHR failure blocks;
+- build writes a PDF beside the DOCX that opens, and its text holds the cover
+  title, the fourteen section openers in order, every case id, the header
+  eyebrow, CONFIDENTIAL and the page count, with numbers masked and none of
+  the leak fixtures' secrets; --format docx writes no PDF and --format pdf no
+  DOCX.
 
 Usage: python3 scripts/check-test-report.py [path to an alternative atom]
-Needs python-docx, openpyxl and Pillow. Exits 0 when every check passes.
+Needs python-docx, openpyxl, Pillow and reportlab, and pypdf or pdftotext to
+read the PDF. Exits 0 when every check passes.
 """
 import json
 import re
@@ -109,6 +115,47 @@ def layout(doc, title):
                  (["Test case ID"], ["Field"], ["Version"], ["Name"], ["Tool"], ["Item"], ["Recording"]))
     return {"toc": "TOC \\o" in body, "header": head.paragraphs[0].text == title,
             "footer": "Confidential" in foot and " PAGE " in foot and " NUMPAGES " in foot, "repeat": repeat}
+
+
+def pdf_text(path):
+    """The PDF's text, with pypdf if it is installed, else with poppler's pdftotext."""
+    try:
+        from pypdf import PdfReader
+        return "\n".join(page.extract_text() or "" for page in PdfReader(str(path)).pages)
+    except ImportError:
+        pass
+    if not shutil.which("pdftotext"):
+        sys.exit("reading the PDF needs pypdf (pip install pypdf) or pdftotext on PATH")
+    out = subprocess.run(["pdftotext", "-layout", str(path), "-"], capture_output=True, text=True)
+    if out.returncode:
+        return ""
+    return out.stdout
+
+
+def pdf_checks(path, title, ids, label):
+    """The PDF opens; the section openers in order, every case id, header and footer in its text."""
+    ok(path.exists(), f"{label}: build writes {path.name} beside the DOCX")
+    if not path.exists():
+        return ""
+    text = pdf_text(path)
+    flat = re.sub(r"\s+", " ", text)
+    ok(path.read_bytes()[:5] == b"%PDF-" and len(flat) > 1000, f"{label}: the PDF opens and has text")
+    at, order = 0, True
+    for n, name in enumerate(SECTIONS, 1):
+        mark = "%02d \u00b7 %s" % (n, name.upper())
+        found = flat.find(mark, at)
+        if found < 0 or flat.find(name, found + len(mark)) < 0:
+            order = False
+            break
+        at = found + len(mark)
+    ok(order, f"{label}: the fourteen section openers and headings appear in order")
+    missing = [i for i in ids if i not in flat]
+    ok(not missing, f"{label}: every case id is in the PDF text ({len(ids)}): {missing[:5]}")
+    ok(flat.count(title.upper()) >= 3 and flat.count("CONFIDENTIAL") >= 3 and re.search(r"PAGE 3 OF \d+", flat),
+       f"{label}: header eyebrow, CONFIDENTIAL and PAGE N OF M on the inner pages")
+    ok("Contents" in flat and "functional test report," in flat, f"{label}: the cover title and the contents page")
+    ok(not re.search(r"(?<!\d)\d{12}(?!\d)|\d{4} \d{4} \d{4}|\d{14}", text), f"{label}: no 12 or 14 digit number unmasked")
+    return flat
 
 
 def doc_text(doc):
@@ -271,6 +318,19 @@ def main():
            and "XX-XXXX-XXXX-4321" in text, "M1 ui: Aadhaar and ABHA numbers masked with the last four kept")
         ok("The Create ABHA option opens the consent screen." in text and "run remark CRT_ABHA_102" in text,
            "M1 ui: findings from meta.json, else the Remarks value")
+    flat = pdf_checks(out_doc.with_suffix(".pdf"), "M1 UI functional test report", ids, "M1 ui PDF")
+    ok("XXXX XXXX 9012" in flat and "XX-XXXX-XXXX-4321" in flat and RID[0] in flat and "FIGURE 4" in flat,
+       "M1 ui PDF: numbers masked as in the DOCX, REQUEST-IDs printed, the four screenshots captioned")
+    only = work / "out" / "only-docx.docx"
+    out = run(report, "build", m1, "--run", "ui", "--meta", meta_path, "--evidence", evidence, "--out", only,
+              "--format", "docx")
+    ok(out.returncode == 0 and only.exists() and not only.with_suffix(".pdf").exists(),
+       "--format docx writes the DOCX and no PDF")
+    only = work / "out" / "only-pdf.pdf"
+    out = run(report, "build", m1, "--run", "ui", "--meta", meta_path, "--evidence", evidence, "--out", only,
+              "--format", "pdf")
+    ok(out.returncode == 0 and only.exists() and not only.with_suffix(".docx").exists(),
+       "--format pdf writes the PDF and no DOCX")
 
     bad = dict(meta, environment=dict(meta["environment"], password="x"))
     (work / "bad.json").write_text(json.dumps(bad))
@@ -395,6 +455,14 @@ def main():
             ok(secret not in text, f"leaks: {what} is not in the DOCX text")
         ok("[token]" in text and "XXXXXX3210" in text and "client secret: [redacted]" in text
            and "OTP [redacted]" in text, "leaks: masked as [token], XXXXXX3210 and [redacted]")
+        flat = pdf_checks(leak_doc.with_suffix(".pdf"), "M1 API functional test report", ids, "leaks PDF")
+        for secret, what in ((jwt, "the JWT"), ("eyJhbGci", "any part of the JWT"), ("9876543210", "the mobile"),
+                             ("Zx9SecretValue77", "the client secret"), ("482913", "the OTP in findings"),
+                             ("771234", "the OTP in test data"), ("tester@example.invalid", "a team email"),
+                             ("9123456780", "a team phone")):
+            ok(secret not in flat and secret not in flat.replace(" ", ""), f"leaks: {what} is not in the PDF text")
+        ok("[token]" in flat and "XXXXXX3210" in flat and "[redacted]" in flat,
+           "leaks: the PDF masks as the DOCX does")
     else:
         fail(f"leak build failed: {out.stderr.strip()}")
     for name, bad_meta in (("a client secret value", dict(meta, findings={"CRT_ABHA_101": "client secret: abc123x"})),
