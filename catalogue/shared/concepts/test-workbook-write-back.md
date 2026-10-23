@@ -50,7 +50,7 @@ overwrites the other:
 
 ## Before you start
 
-- The workbook for the module, as NHA published it, in your repository beside the run log, such as `abdm-ft/M1_ABHA_CREATION_VERIFICATION_SCAN_AND_SHARE.xlsx`. M4 has two, HFR and HPR: each is its own workbook with its own results file.
+- The workbook for the module, as NHA published it, in your repository beside the run log, such as `abdm-ft/M1_ABHA_CREATION_VERIFICATION_SCAN_AND_SHARE.xlsx`. M4 has two, HFR and HPR: each is its own workbook with its own results file. The PHR workbook has no case ids: the script builds them from each tab and row, `PHR_ADDR_302` for row 3.2 of the ABHA address creation tab, exactly as the test case page shows them, and its first write adds a `Test Case ID` column holding them.
 - Python 3.9 or later with `openpyxl` and `Pillow`: `pip install openpyxl pillow`. Pillow is what keeps the sheet's logos when it is saved.
 - The script below, saved as `abdm-ft/abdm_workbook.py` before the readiness check, which runs it.
 
@@ -82,6 +82,12 @@ COLUMNS = {
 }
 STATUS = {"passed": "PASS", "failed": "FAIL", "needs-human": "", "not-run": "NA"}
 CLOSED = {"PASS", "NA"}
+# NHA's PHR sheet numbers its rows but gives them no ids. Each tab is one PHR
+# milestone, and a case's id is built the way the HMIS ids are: row 3.2 of the
+# P1 tab is PHR_ADDR_302, row 5.1.1 of P2 is PHR_APP_50101, a row numbered 9
+# alone is 900. The test case page builds the same ids from the same rows.
+PHR_TABS = {"ABHA address creation": "ADDR", "PHR App Functionality": "APP",
+            "Building HIU Service for PHR": "HIU", "Locker": "LOCKER"}
 HEADER_BLOCK = {"Test Executed by:": "executed_by", "Test Execution date:": "date",
                 "Application/ System Name:": "application"}
 
@@ -99,7 +105,8 @@ def header_row(ws):
     """The header row and, for each name, the first column carrying it."""
     for row in ws.iter_rows(min_row=1, max_row=15):
         names = [norm(c.value) for c in row]
-        if "Test Case ID" in names:
+        if "Test Case ID" in names or (norm(ws.title) in PHR_TABS and any(
+                re.fullmatch(r"s\.\s*no", n.lower()) for n in names)):
             cols = {}
             for name, cell in zip(names, row):
                 if name:
@@ -108,11 +115,47 @@ def header_row(ws):
     return None, {}
 
 
+def lost_zero(number, last):
+    """A cell typed 2.10 is stored as 2.1, so after 2.9 a row reading 2.1 is 2.10."""
+    parts, before = number.split("."), last.split(".")
+    if len(parts) == 2 and len(before) == 2 and parts[0] == before[0]:
+        if before[1] == str(int(parts[1]) * 10 - 1):
+            return f"{parts[0]}.{int(parts[1]) * 10}"
+    return number
+
+
+def phr_cases(ws, top):
+    """PHR case ids, from the row numbers, by the same rules as the page."""
+    head = [norm(c.value).lower() for c in ws[top]]
+    number = next(i for i, n in enumerate(head) if re.fullmatch(r"s\.\s*no", n)) + 1
+    content = [i + 1 for i, n in enumerate(head)
+               if n.startswith(("test case", "test scenario")) or "steps" in n or "expected" in n]
+    down = {}  # a value merged down one column belongs to every row it spans
+    for rng in ws.merged_cells.ranges:
+        if rng.min_col == rng.max_col and rng.max_row > rng.min_row:
+            for r in range(rng.min_row + 1, rng.max_row + 1):
+                down[(r, rng.min_col)] = ws.cell(rng.min_row, rng.min_col).value
+    found, last = {}, ""
+    for r in range(top + 1, ws.max_row + 1):
+        # A number merged down marks one case over several rows: only its first row counts.
+        num = "" if (r, number) in down else norm(ws.cell(r, number).value)
+        filled = any(norm(down.get((r, c), ws.cell(r, c).value)) for c in content)
+        if filled and re.fullmatch(r"\d+(\.\d+)*", num):
+            num = lost_zero(num, last)
+            last = num
+            parts = num.split(".")
+            digits = parts[0] + ("".join(p.zfill(2) for p in parts[1:]) if len(parts) > 1 else "00")
+            found[f"PHR_{PHR_TABS[norm(ws.title)]}_{digits}"] = r
+    return found
+
+
 def cases(ws):
     """Case id to its first row. A repeated id gets #2, #3, as the page does."""
     top, cols = header_row(ws)
     if top is None:
         return {}
+    if "Test Case ID" not in cols:
+        return phr_cases(ws, top)
     found, col = {}, cols["Test Case ID"]
     for r in range(top + 1, ws.max_row + 1):
         value = norm(ws.cell(r, col).value)
@@ -179,6 +222,12 @@ def write(path, run, results, meta):
         top, cols = header_row(ws)
         if top is None:
             continue
+        if "Test Case ID" not in cols:
+            # The PHR sheet has no id column: add one, so the sheet carries the ids it is read by.
+            ids = cases(ws)
+            col = add_column(ws, top, cols, "Test Case ID")
+            for case, row in ids.items():
+                ws.cell(row, col).value = case
         where[ws.title] = (top, cols, {k: column(ws, top, cols, names) for k, names in COLUMNS[run].items()})
         # The header block above the table: tester, date, application.
         for line in ws.iter_rows(min_row=1, max_row=top - 1):

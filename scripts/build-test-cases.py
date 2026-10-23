@@ -15,7 +15,8 @@ names wherever it sits; a page can draw on several sheets and several tabs,
 each tab its own section; a group starts at a row with no case id, or at a
 case row whose Function cell names one; and a row with content but no id
 continues the case above it. The PHR sheet carries no case ids, so its cases
-are named by the tab's milestone and the sheet's row number, such as P1 1.1.
+get an id built from the tab's milestone and the row number, such as
+PHR_ADDR_302 for row P1 3.2, shown with that row under it.
 
 Each call a case names links to its endpoint page when the path is exactly
 one operation in site/src/data/api-routes.json. A path several operations
@@ -258,6 +259,20 @@ def marking_of(text):
     return {"yes": "Mandatory", "no": "Optional"}.get(word.lower(), re.sub(r"^Yes\b", "Mandatory", word))
 
 
+# The PHR sheet numbers its rows but gives them no ids. Each tab is one PHR
+# milestone, and a case's id is built the way NHA builds the HMIS ones, a
+# prefix and the row number as digits: P1 row 3.2 is PHR_ADDR_302, P2 row
+# 5.1.1 is PHR_APP_50101, a row numbered 9 alone is 900. The skills, the
+# workbook writer and this page derive the same id from the same row.
+PHR_CODES = {"P1": "ADDR", "P2": "APP", "P3": "HIU", "P4": "LOCKER"}
+
+
+def phr_id(prefix, number):
+    parts = number.split(".")
+    digits = parts[0] + ("".join(p.zfill(2) for p in parts[1:]) if len(parts) > 1 else "00")
+    return f"PHR_{PHR_CODES[prefix]}_{digits}"
+
+
 def lost_zero(number, last):
     """Put back the zero a spreadsheet drops from a row number.
 
@@ -321,6 +336,7 @@ def extract(path, tab=None, prefix=""):
             return row[index] if index is not None and index < len(row) else ""
 
         content = any(cell(k) for k in ("test", "steps", "expected"))
+        alias = ""
         if "id" in column:
             identifier = re.sub(r"\s+", "", cell("id"))
             if not identifier and content and cell("functionality") and previous is not None \
@@ -336,7 +352,8 @@ def extract(path, tab=None, prefix=""):
             if content and re.fullmatch(r"\d+(\.\d+)*", number):
                 number = lost_zero(number, last)
                 last = number
-                identifier = f"{prefix} {number}"
+                identifier = phr_id(prefix, number)
+                alias = f"{prefix} {number}"
 
         if not identifier:
             if content and previous is not None:
@@ -370,6 +387,7 @@ def extract(path, tab=None, prefix=""):
             start("Test cases")
         previous = {
             "id": identifier,
+            "alias": alias,
             "title": flat(cell("functionality")) or flat(cell("feature")) or identifier,
             "field": flat(cell("field")),
             "marking": marking_of(cell("marking")),
@@ -442,6 +460,8 @@ def row(case, routes, anchors, base, with_apis):
     # Link, not a literal <a>: only Link registers the id with the build's
     # broken anchor check, so a link to a case that is gone fails the build.
     ident = f'<Link id="{case["anchor"]}" to="#{case["anchor"]}">{case["id"]}</Link>'
+    if case.get("alias"):
+        ident += f"<br/>Row {case['alias']}"
     cells = [f"{ident}<br/>{marking(case['marking'], anchors)}", what, passes]
     if with_apis:
         cells.append("<br/>".join(call(u, routes, base) for u in case["apis"]) or "None. Checked on your screens or records.")
@@ -489,7 +509,7 @@ def render(spec, session, sections, routes):
     if with_apis:
         out.append("Each row keeps the case id the functional testing report uses, and links every API the case calls.")
     else:
-        out.append("The sheet numbers its rows but gives them no ids, so each case here is named by its PHR milestone and row, such as `P1 1.1`. Quote that name when you report a result.")
+        out.append("The sheet numbers its rows but gives them no ids, so each case here has an id built the way the HMIS ids are, from its PHR milestone and row: row P1 3.2 is `PHR_ADDR_302`, and P2, P3 and P4 are `PHR_APP_`, `PHR_HIU_` and `PHR_LOCKER_`. Quote the id when you report a result.")
     out += [
         "[How to read a case](/docs/hiecm/v3/resources/test-cases#how-to-read-a-case) explains the columns and markings.",
         "",
