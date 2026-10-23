@@ -42,17 +42,17 @@ OUT = ROOT / "site" / "docs" / "hiecm" / "v3" / "resources" / "test-cases"
 
 PAGES = {
     "m1": {
-        "sources": [{"sheet": RAW / "nha-2026-09-29-m1-tests" / "M1_ABHA_CREATION_AND_VERIFICATION_WITH_APIS_UPDATED_V1_1.xlsx"}],
+        "sources": [{"sheet": RAW / "nha-2026-10-22-m1-tests" / "M1_ABHA_CREATION_VERIFICATION_SCAN_AND_SHARE.xlsx"}],
         "title": "M1 test cases",
         "label": "M1 Identity",
         "position": 2,
         "milestone": "[M1 Identity](/docs/hiecm/v3/milestones/m1)",
-        "covers": "ABHA creation by Aadhaar OTP, Aadhaar biometric, demographic authentication and driving licence or PAN, then verification, profile update, one ABHA per patient record, and sharing a profile by QR code",
+        "covers": "ABHA creation by Aadhaar OTP, face authentication, Aadhaar biometric, demographic authentication and driving licence, then login by ABHA number, ABHA address, mobile and Aadhaar, profile update, one ABHA per patient record, and sharing a profile by QR code",
         "skill": "[M1 Identity skill](/docs/hiecm/v3/milestones/m1#build-m1-with-an-ai-coding-assistant)",
         "next": "[M2 test cases](/docs/hiecm/v3/resources/test-cases/m2)",
     },
     "m2": {
-        "sources": [{"sheet": RAW / "nha-2026-10-01-m2-tests" / "M2_BUILDING_HIP_WITH_APIS_UPDATED_AUG_22.xlsx"}],
+        "sources": [{"sheet": RAW / "nha-2026-10-22-m2-tests" / "M2_BUILDING_HIP_TEST_CASES.xlsx"}],
         "title": "M2 test cases",
         "label": "M2 Health Information Provider",
         "position": 3,
@@ -62,7 +62,7 @@ PAGES = {
         "next": "[M3 test cases](/docs/hiecm/v3/resources/test-cases/m3)",
     },
     "m3": {
-        "sources": [{"sheet": RAW / "nha-2026-10-01-m3-tests" / "M3_BUILDING_HIU_APIS_UPDATED_AUG_22.xlsx"}],
+        "sources": [{"sheet": RAW / "nha-2026-10-22-m3-tests" / "M3_BUILDING_HIU_TEST_CASES.xlsx"}],
         "title": "M3 test cases",
         "label": "M3 Health Information User",
         "position": 4,
@@ -353,6 +353,12 @@ def extract(path, tab=None, prefix=""):
                 # What follows the name is who the group applies to, its
                 # marking, or both, such as "PHR app Mandatory".
                 applies = " ".join(text[2:] if number else text[1:])
+                if "id" in column and number and not cell("function") \
+                        and current is not None and not current["cases"]:
+                    # A numbered row with no name under a banner, such as M2's
+                    # "Health Record Creation" then "1 HIP": the banner names
+                    # the group and the row says who it applies to.
+                    name, applies = current["label"], " ".join(text[1:])
                 # Three M1 sections share one label, so the sheet's section
                 # number is what tells them apart.
                 start(f"{number}. {name}" if number else name, applies)
