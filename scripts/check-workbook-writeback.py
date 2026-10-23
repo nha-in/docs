@@ -41,8 +41,8 @@ SHEETS = [
     ("nha-2026-10-22-m1-tests/M1_ABHA_CREATION_VERIFICATION_SCAN_AND_SHARE.xlsx", "m1"),
     ("nha-2026-10-22-m2-tests/M2_BUILDING_HIP_TEST_CASES.xlsx", "m2"),
     ("nha-2026-10-22-m3-tests/M3_BUILDING_HIU_TEST_CASES.xlsx", "m3"),
-    ("nha-2026-10-02-m4-tests/HFR_Test_Cases.xlsx", "m4"),
-    ("nha-2026-10-02-m4-tests/HPR_Test_Cases.xlsx", "m4"),
+    ("nha-2026-10-22-m4-tests/HFR_Test_Cases.xlsx", "m4"),
+    ("nha-2026-10-22-m4-tests/HPR_Test_Cases.xlsx", "m4"),
     ("nha-2026-10-01-phr-tests/PHR_MOBILE_APP_TEST_CASES.xlsx", "phr"),
 ]
 OUTCOMES = ["passed", "failed", "needs-human", "not-run"]
