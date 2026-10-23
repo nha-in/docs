@@ -18,7 +18,8 @@ Walks the ABDM M1 functional test cases, ABHA creation and verification, against
 | Your system running against the sandbox hosts | Your deployment or a local build. The skill drives your system, not the sandbox directly |
 | A way to trigger each journey in your system | A screen, an API or a script. Say which at the start |
 | A person with an Aadhaar linked mobile, for OTP cases | Present at the desk for the run. Every OTP is a human step and the skill stops for it |
-| A fingerprint or face device, for the biometric cases | Only if you claim those cases. Without one they are recorded as not run |
+| A fingerprint or face device, for the biometric cases | Only if you claim those cases. A claimed case with no device present is recorded `needs-human` |
+| A public callback URL and a facility QR code for each of two counters, for SHARE_PATIENT_PROFILE_701 and 702 | Your deployment, registered with the bridge. The profile share arrives there |
 | Whether you are a government or a private integrator | The set marks some cases mandatory for one and optional for the other |
 | A folder for the run log | Your repository. `abdm-ft/` unless you name another |
 
@@ -57,7 +58,7 @@ Loop limit: 3 passes per test case. Hitting the limit is an escalation: state wh
 |---|---|---|
 | `passed` | The exit condition is observed and the observation is pasted verbatim | The response was not pasted. A pass with no output is a fail |
 | `failed` | Three passes and the exit condition was not observed, or the sandbox returned the refusal the case expects you to handle and your system did not handle it | A human step was missing. That is `needs-human` |
-| `needs-human` | The case reached an OTP, a biometric scan, an operator's document check, or a person who was not there | Ever as a substitute for a fail you can see |
+| `needs-human` | The case reached an OTP, a biometric scan, an operator's document check, or a person or device that was not there | Ever as a substitute for a fail you can see |
 | `not-run` | The case does not apply to your entity, you do not claim the optional capability, or ABDM publishes no operation for it | To skip a mandatory case that applies to you |
 
 ### The three kinds of evidence
@@ -75,6 +76,7 @@ Every case names one of these. It decides what the manifest carries.
 - Two tokens. The gateway access token goes in `Authorization`. The user token an enrolment or a login returns goes in `X-token`. Profile calls need both.
 - Fresh `REQUEST-ID` on every call, logged before sending. A reused id is refused, and after a failure the id is the only handle on the call.
 - Paste the response. A step with no pasted output is not done.
+- The set decides the outcome. A refusal the set asks for, such as a wrong OTP where the case names one, is part of the pass. A refusal the set does not ask for is labelled "Extra check, not in the set" in the case: run it, log it, and never let it decide the outcome.
 - Sensitive values travel encrypted: Aadhaar, mobile, email, OTP. Read the algorithm from the certificate call rather than hard coding a padding.
 - One question when you escalate. The person is being interrupted.
 
@@ -107,9 +109,9 @@ Readiness: credentials ready; system ready; OTP person ready; biometric device n
 | Case | Outcome | Request ids | Observed |
 |---|---|---|---|
 | CRT_ABHA_101 | passed | 6f1c..., a02d... | exit condition matched, pasted below |
-| CRT_ABHA_102 | needs-human | b7a1... | OTP prompt shown, left blank |
-| CRT_ABHA_103 | running | | |
-| CRT_ABHA_104 | pending | | |
+| CRT_ABHA_105 | needs-human | b7a1... | OTP prompt shown, left blank |
+| CRT_ABHA_106 | running | | |
+| CRT_ABHA_107 | pending | | |
 ```
 
 ### Authentication is never skipped
@@ -138,7 +140,7 @@ Asked for a test script, a test command or automated tests, build one interactiv
 | Name every check by its case id from this skill, such as `CRT_ABHA_101`. Never invent a numbering such as `TC01` | The functional testing report quotes these ids. A check with no case id answers nothing a reviewer asks |
 | At each `human` step, stop and prompt in the terminal for the value: Aadhaar number, mobile, OTP, the chosen address. Read it from stdin, encrypt it, send it | Every M1 success path passes through an OTP. A runner that never asks never reaches one |
 | Never write a typed value to disk, a log or the manifest, and never hard code one | An Aadhaar number and an OTP belong to the person, not the run |
-| Run each `sandbox` case's success path and the refusal its exit condition names, as separate checks | The case passes only when both are observed |
+| Run each `sandbox` case's success path and each refusal its exit condition names, as separate checks. Run a refusal labelled "Extra check, not in the set" too, and log it on its own line | The outcome is decided only by what the set asks. An extra check is logged, and never passes or fails the case |
 | Compare the status and the body literal the exit condition names, such as `200` with `tokens.token` present, or `422` with `error.code` `ABDM-1204` | A status alone never passes a check |
 | A `4xx` passes only where the case's exit condition names that refusal | A `400` on a success path step is `failed` |
 | A blank answer at a prompt records the case `needs-human` and moves to the next case | Nobody present is neither a pass nor a fail |
@@ -258,7 +260,7 @@ After a creation or a verification, your system searches its own records by mobi
 
 Applies to every integrator. Optional, every case. The set lists no API for this group. ABDM publishes the face authentication creation flow, so the operation ids below are the ones that observe it. `hiecm.flow.m1-create-abha-face-auth`
 
-Face authentication is a `human` step on a device. The person scans a QR code from your screen with the ABHA app, logged out, and captures their face in the ABHA Face RD app on their phone. Without that phone and that person, record every case from CRT_ABHA_106_FA on `not-run`, with that reason.
+Face authentication is a `human` step on a device. The person scans a QR code from your screen with the ABHA app, logged out, and captures their face in the ABHA Face RD app on their phone. Without that phone and that person, record every case from CRT_ABHA_106_FA on that you claim as `needs-human`, with that reason. A case you do not claim is `not-run`, because the whole group is optional.
 
 Loop limit: 3 passes per test case.
 
@@ -292,7 +294,7 @@ The person opens the ABHA app logged out, taps the scanner at the top left of th
 
 #### CRT_ABHA_107_FA, the ABHA Face RD app is not installed. Optional. `human`
 
-On a phone without the ABHA Face RD app, the scan sends the person to the Play Store or App Store to install it, and they can then continue or restart. This is the ABHA app's behaviour, not your system's. Evidence: the phone screen at the store. Record `not-run` if no such phone is available.
+On a phone without the ABHA Face RD app, the scan sends the person to the Play Store or App Store to install it, and they can then continue or restart. This is the ABHA app's behaviour, not your system's. Evidence: the phone screen at the store. If you claim the case and no such phone is available, record `needs-human` with that reason.
 
 #### CRT_ABHA_108_FA, face authentication succeeds. Optional. `sandbox`, `human`
 
@@ -354,7 +356,7 @@ Applies to every integrator. Optional, every case. Each case runs as its counter
 
 The creation call is `m1_post_v3_enrollment_enrol_byaadhaar_fingerprint` or `m1_post_v3_enrollment_enrol_byaadhaar_iris`. The calls after it are the same flow's: for fingerprint `m1_post_v3_enrollment_request_otp_mobile_verify_create_ab_64b04e`, `m1_post_v3_enrollment_auth_byabdm_mobile_verify_create_ab_3b237a`, `m1_get_v3_enrollment_enrol_suggestion_create_abha_fingerprint` and `m1_post_v3_enrollment_enrol_abha_address_create_abha_fingerprint`; for iris `m1_post_v3_enrollment_request_otp_mobile_verify_create_abha_iris`, `m1_post_v3_enrollment_auth_byabdm_mobile_verify_create_abha_iris`, `m1_get_v3_enrollment_enrol_suggestion_create_abha_iris` and `m1_post_v3_enrollment_enrol_abha_address_create_abha_iris`.
 
-Without a registered fingerprint or iris device the whole group is `not-run`, with that reason.
+If you do not claim biometric creation, the whole group is `not-run`. If you claim it and no registered fingerprint or iris device is at hand, record each case that scans as `needs-human`, with that reason.
 
 Loop limit: 3 passes per test case.
 
@@ -538,7 +540,9 @@ Fewer than ten digits, more than ten, letters, special characters and blank inpu
 
 #### VRFY_ABHA_302, every ABHA on this mobile is listed. Mandatory. `sandbox` and `screen`
 
-Exit condition: the search returns 200 with a `txnId` and an `ABHA` array, each entry carrying `index`, `ABHANumber` and `name`.
+Exit condition: the search returns 200 with a top level array. `[0].txnId` is present, and `[0].ABHA[]` holds the accounts, each entry carrying `index`, `ABHANumber` and `name`. Paste it.
+
+The specification also carries a saved example without the `ABHA` array, an object with `txnId` and `message`, marked for confirmation with NHA. A run that sees that shape pastes it and records the difference in the run log.
 
 Screen checks: every account in the array is listed, with enough to tell them apart, such as the masked ABHA number and the name. No OTP is requested before the person picks one.
 
@@ -546,7 +550,7 @@ Nudge: read the array as plural. One mobile can hold up to six accounts, and a s
 
 #### VRFY_ABHA_303, no ABHA on this mobile. Mandatory. `sandbox`
 
-Exit condition: the search returns 404 with `error.code` `ABDM-1114`. Your screen says "ABHA details not found. We did not find any ABHA number linked to this mobile number. Please use an ABHA-linked mobile number.", offers to create one, and opens no OTP screen. The create offer is the point of the case; a dead end fails it. `hiecm.concept.m1-journey-completes-without-abha`
+Exit condition: the search returns 404 with `error.code` `ABDM-1114`. Your screen says "ABHA details not found. We did not find any ABHA number linked to this mobile number. Please use an ABHA-linked mobile number.", and opens no OTP screen. If your business flow supports creation, the screen also offers to create a new ABHA. `hiecm.concept.m1-journey-completes-without-abha`
 
 #### VRFY_ABHA_304, the chosen ABHA gets the OTP. Mandatory. `sandbox`, `human`
 
@@ -572,7 +576,7 @@ Pick an account already linked to one of your patients. After VRFY_ABHA_305 your
 
 Optional, every case. The set lists no API for this group. ABDM publishes the find by face flow: `m1_post_v3_profile_account_abha_search_find_abha_face`, `m1_post_v3_profile_login_request_otp_find_abha_face` with the chosen account's `index` and the search `txnId`, `m1_post_v3_enrollment_enrol_capturepid_find_abha_face` polled every 5 to 10 seconds, then `m1_post_v3_profile_login_verify_find_abha_face`. `hiecm.flow.m1-find-abha`
 
-Face authentication is a `human` step on a device, as in CRT_ABHA_101_FA to 117_FA. Without a phone with the ABHA app and the person, record every case from VRFY_ABHA_305_FA on `not-run`, with that reason.
+Face authentication is a `human` step on a device, as in CRT_ABHA_101_FA to 117_FA. Without a phone with the ABHA app and the person, record every case from VRFY_ABHA_305_FA on that you claim as `needs-human`, with that reason. A case you do not claim is `not-run`.
 
 Loop limit: 3 passes per test case.
 
@@ -616,7 +620,7 @@ The person does a scan that fails. Exit condition: one of the two refusals the s
 
 Optional, every case. The set names `/abha/api/v3/profile/account/abha/search`, `/abha/api/v3/profile/login/request/otp` and a verify path on the production host. Run the sandbox operations of the published find by fingerprint flow instead: `m1_post_v3_profile_account_abha_search_find_abha_fingerprint`, `m1_post_v3_profile_login_request_otp_find_abha_fingerprint` and `m1_post_v3_profile_login_verify_find_abha_fingerprint`. For iris, `m1_post_v3_profile_account_abha_search_find_abha_iris`, `m1_post_v3_profile_login_request_otp_find_abha_iris` and `m1_post_v3_profile_login_verify_find_abha_iris`. `hiecm.flow.m1-find-abha`
 
-Without a registered fingerprint or iris device the cases that scan are `not-run`, with that reason.
+Without a registered fingerprint or iris device, the cases that scan and that you claim are `needs-human`, with that reason. A case you do not claim is `not-run`.
 
 Loop limit: 3 passes per test case.
 
@@ -678,7 +682,7 @@ As CRT_ABHA_106, on the login screen.
 
 Optional, every case. The set names `/abha/api/v3/profile/login/request/otp` and `/abha/api/v3/profile/login/verify`. In the published specification the fingerprint use of those two paths takes an ABHA number, not an Aadhaar number. The login that takes an encrypted Aadhaar number with a biometric is `m1_post_v3_1_profile_login_verify_fingerprint`, or `m1_post_v3_1_profile_login_verify_iris`, one call each. Run that, and say in the run log that it is the v3.1 call.
 
-Without a registered fingerprint or iris device the cases that scan are `not-run`, with that reason.
+Without a registered fingerprint or iris device, the cases that scan and that you claim are `needs-human`, with that reason. A case you do not claim is `not-run`.
 
 Loop limit: 3 passes per test case.
 
@@ -734,17 +738,40 @@ Evidence: verify the same ABHA twice in a run. The second time, the screen says 
 
 ### SHARE_PATIENT_PROFILE_701 and 702: share a profile by scanning the facility QR
 
-Applies to the PHR app. Mandatory. These cases are run from the person's ABHA app, and the call that proves them lands on your side as the `on-share` webhook. They belong to the scan and register skill, `abdm-scan-and-register`, which carries the webhook and the token reply. Record them there. In this manifest, write `see abdm-scan-and-register` for each.
+Mandatory. The set marks this group for the PHR app, but the call that proves each case lands on your HIP. The person acts in the ABDM sandbox PHR app. Your system receives the share and answers it with a queue token. Both operations are in the scan and register specification.
+
+Calls: the inbound `scan-and-register_post_v3_hip_patient_share` at your callback URL, which your system answers with HTTP 200. Then your `scan-and-register_post_patient_share_v3_on_share`, which returns 202.
 
 Loop limit: 3 passes per test case.
 
-#### SHARE_PATIENT_PROFILE_701, the profile is shared and the patient registered. Mandatory. `sandbox`, `human`
+**Preconditions.** A gateway access token less than 30 minutes old. Your callback URL registered with the bridge and reachable from the internet. A facility QR code for one of your counters, and for SHARE_PATIENT_PROFILE_702 a second QR code for a different counter. The person present with the ABDM sandbox PHR app, an ABHA number, and a second ABHA address on that ABHA number for SHARE_PATIENT_PROFILE_702.
 
-The person scans your facility QR code in the PHR app, taps Get Token, and agrees. They receive a token valid for 60 minutes. Your system registers them from the shared details with no manual entry.
+#### SHARE_PATIENT_PROFILE_701, the profile is shared and the patient registered. Mandatory. `sandbox`, `human` and `screen`
 
-#### SHARE_PATIENT_PROFILE_702, a returning patient is matched. Mandatory. `sandbox`, `human`
+Use a person your system has not registered. The person logs in to the PHR app, scans your facility QR code, taps "Get Token", reads their profile and the consent message, and taps "I Agree". Stop for that.
 
-A person already registered scans again. Your system matches on name, mobile, gender, ABHA number and ABHA address, reuses the existing beneficiary id and registers no duplicate. No match is a new registration.
+Exit condition: three observations, all pasted.
+
+1. An inbound POST arrives at your URL for `scan-and-register_post_v3_hip_patient_share` with `intent` `PROFILE_SHARE`, `metaData.hipId` equal to your HIP id, `metaData.context` equal to the counter id of the QR code scanned, and `profile.patient.abhaAddress`, `profile.patient.name`, `profile.patient.gender` and `profile.patient.yearOfBirth` present. Your system answers it with HTTP 200. Paste the body in full, with `profile.patient.phoneNumber` masked.
+2. Your `scan-and-register_post_patient_share_v3_on_share` returns 202. It was sent with `acknowledgement.status` `SUCCESS`, `acknowledgement.abhaAddress` equal to `profile.patient.abhaAddress`, `acknowledgement.profile.context` equal to `metaData.context`, `acknowledgement.profile.tokenNumber` and `acknowledgement.profile.expiry` present, and `response.requestId` equal to the share's `REQUEST-ID`. Paste the body you sent.
+3. Human: the PHR app shows the token number you sent. The set says the token is valid for 60 minutes.
+
+Screen check: your system registered the person from the shared details with nothing typed. A new beneficiary id holds the ABHA number, ABHA address, name, gender, date of birth, mobile and address as `profile.patient` carried them. Evidence: the stored record for this run.
+
+Nudge: answer the inbound share with 200 first. Register the person and send the on-share after that.
+
+#### SHARE_PATIENT_PROFILE_702, a returning patient is matched. Mandatory. `sandbox`, `human` and `screen`
+
+Runs after SHARE_PATIENT_PROFILE_701, with the same person. Each step below is a fresh scan: the person scans, taps "Get Token" and taps "I Agree". Stop for each. Every scan must show observations 1 and 2 of SHARE_PATIENT_PROFILE_701, pasted, for the QR code scanned in that step.
+
+Your system matches on name, mobile, gender, ABHA number and ABHA address. A person with no match is a new registration, which SHARE_PATIENT_PROFILE_701 already observed.
+
+Exit condition: four steps, each with its share and on-share pasted and its screen check attested.
+
+1. A revisit. Close the queue entry from SHARE_PATIENT_PROFILE_701 in your system, then the person scans the same QR code with the same ABHA address. The share carries the same `profile.patient.abhaNumber` and `profile.patient.abhaAddress`. Screen: your system reuses the beneficiary id from SHARE_PATIENT_PROFILE_701, creates the care context under it, and still holds one row for the person.
+2. Another ABHA address. The person scans with their second ABHA address. The share carries the same `profile.patient.abhaNumber` and a different `profile.patient.abhaAddress`. Your on-share carries the new address in `acknowledgement.abhaAddress`. Screen: your system updates the ABHA address on the existing beneficiary id and creates no new one. Evidence: the record before and after, one row.
+3. A repeat scan while a queue entry is active. Straight after step 2, the person scans the same QR code with the same ABHA address as step 2. The share carries the same `metaData.context`. Screen: your system creates no new queue entry, and the existing queue association is unchanged. A new token number is issued only if your queue rules issue one. Evidence: the queue for that counter before and after, with one entry for the person.
+4. A different counter. The person scans the second QR code. The share carries a `metaData.context` different from step 3, and your on-share carries that context in `acknowledgement.profile.context` with an `acknowledgement.profile.tokenNumber` for that queue. Screen: your system creates a new queue entry on that counter, with the same beneficiary id and patient details. Evidence: both queues.
 
 ## When the last case is recorded
 

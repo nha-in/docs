@@ -25,7 +25,6 @@ Walks the ABDM M2 functional test cases, Health Information Provider, against th
 | A way to trigger each journey in your system | A screen, an API or a script. Say which at the start |
 | A person with a sandbox ABHA address and the ABDM sandbox PHR app on their phone | Present for the run. Logging in, entering an OTP, approving or revoking a consent and pulling records are all human steps, and the skill stops for each |
 | That person's name, gender and year of birth as their ABHA holds them | The demographic linking cases send these, and a mismatch is refused |
-| A way to raise a consent request to your HIP as an HIU | The sandbox HIU web interface, or an HIU you control |
 | At least one record per HI type you claim, as a FHIR bundle | Your own system. The sharing case sends it |
 | A folder for the run log | Your repository. `abdm-ft/` unless you name another |
 
@@ -92,9 +91,10 @@ Every case names one of these, or a combination. It decides what the manifest ca
 - Act on a callback only when it carries the bearer token and a request id you sent. Anything can post to a public URL. `hiecm.concept.callback-authenticity`
 - Two tokens. The gateway access token goes in `Authorization` on every call. The link token from the `on-generate-token` callback goes in `X-LINK-TOKEN` on `m2_post_hip_v3_link_carecontext`.
 - Fresh `REQUEST-ID` on every call, logged before sending. After a failure the id is the only handle on the call, and the callback is matched by it.
-- A retry is a duplicate. A refused link token request is remembered, and the same request again returns `ABDM-1092`. Change the input or wait before the next pass. `hiecm.concept.m2-retry-is-a-duplicate`
+- A retry is a duplicate. A refused link token request is remembered, and the same request again returns `ABDM-1092`, which the M2 error list in `errors/m2.yaml` documents rather than the operation's specification. Change the input or wait before the next pass. `hiecm.concept.m2-retry-is-a-duplicate`
 - Send the headers each operation lists in the specification: `X-CM-ID` `sbx` on calls to the sandbox gateway, and `X-HIP-ID` where the operation lists it. `REQUEST-ID` and `TIMESTAMP` go on every call.
 - Paste the response and the callback. A step with no pasted output is not done.
+- The set decides the outcome. A refusal the set asks for, such as a wrong OTP where the case names one, is part of the pass. A refusal the set does not ask for is labelled "Extra check, not in the set" in the case: run it, log it, and never let it decide the outcome.
 - Sensitive values travel encrypted, and the records you share are encrypted with the key material the request carries. Never log a record, an OTP or a mobile number in clear.
 - One question when you escalate. The person is being interrupted.
 
@@ -159,8 +159,8 @@ Asked for a test script, a test command or automated tests, build one interactiv
 | Name every check by its case id from this skill, such as `HIP_INTI_LINK_504`. Never invent a numbering such as `TC01` | The functional testing report quotes these ids. A check with no case id answers nothing a reviewer asks |
 | At each `human` step, stop and prompt in the terminal: log in to the PHR app, approve the consent, enter the OTP there, pull the records. Wait for the person to answer | Every M2 linking and sharing path passes through a person. A runner that never asks never reaches one |
 | Never write a typed value, an OTP or a record body to disk, a log or the manifest, and never hard code one | They belong to the person, not the run |
-| Run each `sandbox` case's success path and the refusal its exit condition names, as separate checks | The case passes only when both are observed |
-| Compare the callback literal the exit condition names, such as `linkToken` present, or `status` `Successfully Linked care context`, or `error.code` `ABDM-1037` | A status alone never passes a check, and a 202 never does |
+| Run each `sandbox` case's success path and each refusal its exit condition names, as separate checks. Run a refusal labelled "Extra check, not in the set" too, and log it on its own line | The outcome is decided only by what the set asks. An extra check is logged, and never passes or fails the case |
+| Compare the callback literal the exit condition names, such as `linkToken` present, or `status` `Successfully Linked care context`. An extra check compares its literal the same way, such as `error.code` `ABDM-1037` | A status alone never passes a check, and a 202 never does |
 | A `4xx` passes only where the case's exit condition names that refusal | A `400` on a success path step is `failed` |
 | A blank answer at a prompt records the case `needs-human` and moves to the next case | Nobody present is neither a pass nor a fail |
 | A `screen` case prints its check, then asks `passed? y/n` and the evidence file name | No call proves a screen, so the case is attested |
@@ -174,10 +174,10 @@ preflight          GET /api/hiecm/gateway/v3/bridge-services  REQUEST-ID 0c7e...
 HIP_INTI_LINK_504  POST /api/hiecm/v3/token/generate-token  REQUEST-ID 4d2a...  HTTP 202
   waiting up to 60 s for /api/v3/hip/token/on-generate-token
 HIP_INTI_LINK_504  callback response.requestId 4d2a...  linkToken present  matched
-HIP_INTI_LINK_505  count 2, one care context  REQUEST-ID 91b0...  HTTP 202
-HIP_INTI_LINK_505  callback /api/v3/link/on_carecontext  error.code ABDM-1037  matched
 HIP_INTI_LINK_505  count 1, one care context  REQUEST-ID 8b17...  HTTP 202
 HIP_INTI_LINK_505  callback /api/v3/link/on_carecontext  status Successfully Linked care context  matched
+HIP_INTI_LINK_505  extra check, not in the set: count 2, one care context  REQUEST-ID 91b0...  HTTP 202
+HIP_INTI_LINK_505  extra check  callback /api/v3/link/on_carecontext  error.code ABDM-1037  logged
 HIP_INTI_LINK_505  passed
 HIP_INTI_LINK_506  Ask the person to pull records in the PHR app. Is the visit listed? y/n, or blank if nobody is here:
 ```
@@ -188,7 +188,7 @@ The ids, the mandatory marks and the wording of each check are ABDM's, from the 
 
 The set also links a page of the sandbox documentation site against most cases. It is a reference, not an operation, so no case here calls it.
 
-HIP initiated linking is tested by demographic details only, through a link token. The set has no case of its own for a granted, revoked or expired consent. Your HIP still has to store each consent it is sent before it can share records, so HIP_INIT_SHARE_CARECONTEXT checks that first.
+HIP initiated linking is tested by demographic details only, through a link token. The set has no case of its own for a granted, revoked or expired consent. Your HIP still has to store each consent it is sent before it can share records, so HIP_INIT_SHARE_CARECONTEXT observes the consent notify that the person's "Get data" produces.
 
 ### Group 1: health record creation
 
@@ -226,7 +226,7 @@ Exit condition: three observations, all pasted.
 
 Nudge: a callback with an `error` object and no `linkToken` means the details sent did not match the ABHA. Check name, gender and year of birth against the profile before the next pass, and paste the code that came back.
 
-Nudge: change the input before you retry. A second identical request returns `ABDM-1092`, "Duplicate Link token request", which hides the real cause. `hiecm.concept.m2-retry-is-a-duplicate`
+Nudge: change the input before you retry. A second identical request returns `ABDM-1092`, "Duplicate Link token request", which hides the real cause. The code is documented in the M2 error list, `errors/m2.yaml`, not in this operation's specification. `hiecm.concept.m2-retry-is-a-duplicate`
 
 Nudge: a synchronous 400 with `ABDM-1035` is your HIP id, not the patient. Fix `X-HIP-ID` and the bridge linkage before the next pass.
 
@@ -237,12 +237,13 @@ Your system sends the link request on its own once a record is saved, with no cl
 Exit condition: three observations, all pasted.
 
 1. `m2_post_hip_v3_link_carecontext`, sent with the link token in `X-LINK-TOKEN`, returns 202. The callback `m2_post_v3_link_on_carecontext` arrives with `status` `Successfully Linked care context`, `abhaAddress` equal to the one linked, and `response.requestId` equal to your `REQUEST-ID`.
-2. A refusal: the same call with `patient[].count` not equal to the number of `careContexts`. The callback arrives with `error.code` `ABDM-1037`, and your system does not mark the care context linked.
-3. An update: add a record to the linked care context. `m2_post_hip_v3_link_context_notify` returns 202, and the callback `m2_post_v3_links_context_on_notify` arrives with `acknowledgement.status` `SUCCESS`.
+2. An update: add a record to the linked care context. `m2_post_hip_v3_link_context_notify` returns 202, and the callback `m2_post_v3_links_context_on_notify` arrives with `acknowledgement.status` `SUCCESS`.
+
+Extra check, not in the set. Send the same call with `patient[].count` not equal to the number of `careContexts`. The callback arrives with `error.code` `ABDM-1037`, and your system does not mark the care context linked. Log it; it does not decide the outcome.
 
 The pull in the PHR app that the set also asks for is HIP_INTI_LINK_506.
 
-Nudge: `ABDM-1038` in the callback is a link token issued for another ABHA address. `ABDM-1056`, "This care contexts has been already linked", is done, not failed; confirm and do not retry.
+Nudge: `ABDM-1038` in the callback is a link token issued for another ABHA address.
 
 #### HIP_INTI_LINK_506, the linked records can be pulled. Mandatory. `human` and `screen`
 
@@ -282,9 +283,9 @@ Exit condition: your `m2_post_user_initiated_linking_v3_patient_care_context_on_
 
 Exit condition: your `m2_post_user_initiated_linking_v3_patient_care_context_on_8c9340` returns 202, sent with `transactionId` equal to the discover's, `response.requestId` equal to the discover's `REQUEST-ID`, `patient[].careContexts` holding at least one entry, and `matchedBy` naming the identifier you matched on. The person then sees those care contexts in the PHR app and selects the ones to link; stop for that.
 
-Then the refusal: run a discover for a person your system does not hold. Your on-discover carries an `error` object and no `patient`, and the PHR app says no records were found. The specification names no single code for no match, so paste the code your system sent.
+Extra check, not in the set: run a discover for a person your system does not hold. Your on-discover carries an `error` object and no `patient`, and the PHR app says no records were found. The specification names no single code for no match, so paste the code your system sent. Log it; it does not decide the outcome.
 
-Nudge: return only unlinked care contexts. One already linked comes back from init as `ABDM-1056`.
+Nudge: return only unlinked care contexts. The specification documents `ABDM-1056`, "This care contexts has been already linked", only on this user initiated path, on `m2_post_v3_hip_link_care_context_init`.
 
 #### USER_INIT_LINK_605, the person links with an OTP your HIP sends. Mandatory. `sandbox`, `human`
 
@@ -294,7 +295,7 @@ Three observations, all pasted.
 2. Your system, not the gateway, sends the OTP to the person's mobile. The person enters it in the PHR app; stop for that. An inbound `m2_post_v3_hip_link_care_context_confirm` arrives with `confirmation.linkRefNumber` equal to your `link.referenceNumber` and `confirmation.token`.
 3. Your `m2_post_user_initiated_linking_v3_link_care_context_on_confirm` returns 202, sent with `patient[].careContexts` holding only the care contexts selected in step 1.
 
-Then a wrong OTP: your on-confirm carries an `error` object and no `patient`, and the PHR app says the link failed and lets the person retry.
+Extra check, not in the set: a wrong OTP. Your on-confirm carries an `error` object and no `patient`, and the PHR app says the link failed and lets the person retry. Log it; it does not decide the outcome.
 
 Screen check: the linked records appear under "Linked Facilities" in the PHR app.
 
@@ -328,13 +329,11 @@ Applies to every HIP. Mandatory.
 
 Loop limit: 3 passes per test case.
 
-**Preconditions.** A care context linked to the person, from HIP_INTI_LINK_505 or USER_INIT_LINK_605. The person present with the PHR app. A way to raise a consent request to your HIP as an HIU. Records behind that care context for the HI types you claim. The set asks for all eight HI types: structured and PDF for OP Consultation, Wellness Record, Prescription, Discharge Summary, Diagnostic Record, Immunization Record and Health Document Record, and structured for Invoice. Each PDF carries the patient's name, age, gender, mobile, ABHA number and ABHA address, and the doctor's name and speciality where they apply.
+**Preconditions.** A care context linked to the person, from HIP_INTI_LINK_505 or USER_INIT_LINK_605. The person present with the PHR app. Records behind that care context for the HI types you claim. The set asks for all eight HI types: structured and PDF for OP Consultation, Wellness Record, Prescription, Discharge Summary, Diagnostic Record, Immunization Record and Health Document Record, and structured for Invoice. Each PDF carries the patient's name, age, gender, mobile, ABHA number and ABHA address, and the doctor's name and speciality where they apply.
 
 #### HIP_INIT_SHARE_CARECONTEXT, records are shared on request. Mandatory. `human`, `sandbox` and `screen`
 
-First the consent your HIP checks against. Raise a consent request to your HIP as an HIU. The person approves it in the PHR app; stop for that. The specification also makes the HIP responsible for tracking expiry, and forbids serving a request on an expired consent.
-
-Then the person starts "Get data" for the linked care context in the PHR app; stop for that.
+The person starts "Get data" for the linked care context in the PHR app. Stop for that. It produces the consent notify and then the data request to your HIP. The specification also makes the HIP responsible for tracking expiry, and forbids serving a request on an expired consent.
 
 Exit condition: seven observations, all pasted.
 
@@ -342,15 +341,15 @@ Exit condition: seven observations, all pasted.
 2. Your `m2_post_consent_v3_request_hip_on_notify` returns 202, sent with `acknowledgement.consentId` equal to that consent id, `acknowledgement.status` `OK` and `response.requestId` equal to the notify's `REQUEST-ID`. Screen: your system shows the consent stored against the patient, with its HI types, date range, purpose and expiry.
 3. An inbound `m2_post_v3_hip_health_information_request` arrives with `transactionId`, `hiRequest.consent.id`, `hiRequest.dateRange`, `hiRequest.dataPushUrl` and `hiRequest.keyMaterial`.
 4. Your `m2_post_data_flow_v3_health_information_hip_on_request` returns 202, sent with `hiRequest.transactionId` equal to it and `hiRequest.sessionStatus` `ACKNOWLEDGED`.
-5. Your system checks that `hiRequest.consent.id` is the stored, granted, unexpired consent for that HIU, and selects only the HI types and the date range it allows.
-6. Your `m2_post_health_information_transfer` POST to the `dataPushUrl` returns 202, with each `entries[].media` `application/fhir+json` and your own `keyMaterial` carrying `cryptoAlg` `ECDH`, `curve` `Curve25519` and `nonce`.
+5. Your `m2_post_health_information_transfer` POST to the `dataPushUrl` returns 202, with each `entries[].media` `application/fhir+json` and your own `keyMaterial` carrying `cryptoAlg` `ECDH`, `curve` `Curve25519` and `nonce`.
+6. Every `entries[].careContextReference` you pushed in step 5 is among the `notification.consentDetail.careContexts[].careContextReference` values stored from step 1. The request's `hiRequest.dateRange.from` and `hiRequest.dateRange.to` lie inside the stored `notification.consentDetail.permission.dateRange.from` and `notification.consentDetail.permission.dateRange.to`. Paste both comparisons.
 7. Your `m2_post_data_flow_v3_health_information_notify` returns 202, sent with `notification.notifier.type` `HIP`, `statusNotification.sessionStatus` `TRANSFERRED` and each `statusResponses[].hiStatus` `DELIVERED`.
 
 Then the person sees the records in the PHR app, decrypted and in the FHIR document types NRCeS defines; stop for that, and take the screenshot.
 
-Then the refusal. The person revokes the consent in the PHR app; stop for that. An inbound `m2_post_v3_consent_request_hip_notify` arrives with `notification.status` `REVOKED` and `notification.consentId` equal to the stored consent, and your on-notify returns 202 with that `acknowledgement.consentId`. A data request on that consent gets nothing pushed, and your on-request carries an `error` object.
+Extra check, not in the set. The person revokes the consent in the PHR app; stop for that. An inbound `m2_post_v3_consent_request_hip_notify` arrives with `notification.status` `REVOKED` and `notification.consentId` equal to the stored consent, and your on-notify returns 202 with that `acknowledgement.consentId`. Your system marks the stored consent revoked. Log it; it does not decide the outcome.
 
-Nudge: store `consentDetail` whole. Step 5 checks the HIU, the HI types and the date range against it.
+Nudge: store `consentDetail` whole. Step 6 compares the pushed care contexts and the date range against it.
 
 Nudge: the PHR app decrypts with its own private key, and the public key and nonce you sent in `keyMaterial`. Derive the shared secret from the requester's `dhPublicKey`, never from a key of your own pair alone.
 
@@ -374,7 +373,7 @@ Mark the run log finished, with the time and the count of each outcome. Then wri
      "observed": ["generate-token 202", "on-generate-token linkToken present, response.requestId 4d2a...", "second link sent the stored token, no generate-token"]},
     {"id": "HIP_INTI_LINK_505", "outcome": "passed", "evidence": "sandbox",
      "request_ids": ["91b0...", "8b17...", "c3d9..."],
-     "observed": ["on_carecontext error.code ABDM-1037", "on_carecontext status Successfully Linked care context", "links/context/on-notify acknowledgement.status SUCCESS"]},
+     "observed": ["on_carecontext status Successfully Linked care context", "links/context/on-notify acknowledgement.status SUCCESS", "extra check, not in the set: on_carecontext error.code ABDM-1037"]},
     {"id": "Health_RECORD_CREATION_101", "outcome": "passed", "evidence": "screen",
      "attachment": "op-consultation-bundle.png", "rule": "hiecm.concept.m2-care-context-and-records"},
     {"id": "HIP_INIT_SHARE_CARECONTEXT", "outcome": "needs-human", "evidence": "human",

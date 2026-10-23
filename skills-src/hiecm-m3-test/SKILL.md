@@ -23,7 +23,7 @@ Walks the ABDM M3 functional test cases, Health Information User, against the sy
 | A public callback URL, reachable from the internet | Your deployment, or a tunnel to a local build. Register it with `gateway_patch_gateway_v3_bridge_url`. Every M3 answer arrives there as a POST. A 202 alone never passes a case |
 | A data push URL, reachable from the internet | The URL you send as `hiRequest.dataPushUrl`. The HIP posts the encrypted records to it directly |
 | A test patient with an ABHA address ending `@sbx`, and a PHR app on their phone | Present at the desk for the run. Every grant, denial and revocation is theirs to make in that app, and the skill stops for each |
-| A HIP that holds records for that patient, of each HI type you claim | Your own M2 build or any sandbox HIP the patient is linked to. Without a record of a type, that type's case is recorded as not run |
+| A HIP that holds records for that patient, of each HI type you claim | Your own M2 build or any sandbox HIP the patient is linked to. A mandatory fetch case whose type no linked HIP holds is recorded `needs-human` |
 | Your system running against the sandbox hosts | Your deployment or a local build. The skill drives your system, not the sandbox directly |
 | A way to trigger each journey in your system | A screen, an API or a script. Say which at the start |
 | A folder for the run log | Your repository. `abdm-ft/` unless you name another |
@@ -65,8 +65,8 @@ Loop limit: 3 passes per test case. Hitting the limit is an escalation: state wh
 |---|---|---|
 | `passed` | The exit condition is observed and the observation is pasted verbatim: the acknowledgement and the callback body | The callback was not pasted. A 202 with no callback is not a pass |
 | `failed` | Three passes and the exit condition was not observed, or the sandbox sent the answer the case expects you to handle and your system did not handle it | A human step was missing. That is `needs-human` |
-| `needs-human` | The case reached a grant, a denial or a revocation in the PHR app, and the patient was not there or did not act | Ever as a substitute for a fail you can see |
-| `not-run` | The case does not apply to your entity, you do not claim the HI type, no HIP holds a record of it, or ABDM publishes no operation for it | To skip a mandatory case that applies to you |
+| `needs-human` | The case reached a grant, a denial or a revocation in the PHR app, and the patient was not there or did not act. Or a mandatory fetch case found no linked HIP holding a record of its HI type | Ever as a substitute for a fail you can see |
+| `not-run` | The case does not apply to your entity, you do not claim an optional HI type, or ABDM publishes no operation for it | To skip a mandatory case that applies to you |
 
 ### The three kinds of evidence
 
@@ -80,6 +80,7 @@ Every case names one or more of these. They decide what the manifest carries.
 
 - Fresh `REQUEST-ID` on every call, logged before sending. The callback carries it back as `response.requestId`, and after a failure it is the only handle on the call.
 - Paste the response and the callback. A step with no pasted output is not done.
+- The set decides the outcome. A refusal the set asks for, such as a wrong OTP where the case names one, is part of the pass. A refusal the set does not ask for is labelled "Extra check, not in the set" in the case: run it, log it, and never let it decide the outcome.
 - Log the whole callback body on arrival, before you parse it. A handler written against an assumed shape then fails where you can see it.
 - Send the headers each operation asks for, and no fewer. The table below is from the specification.
 - Send `TIMESTAMP` in UTC with milliseconds and a trailing Z, as in `2022-10-06T15:10:00.587Z`.
@@ -164,8 +165,8 @@ Asked for a test script, a test command or automated tests, build one interactiv
 | The runner listens on the callback URL, or reads your callback log, and matches each callback to its call by `response.requestId` | Every M3 answer is a callback. A runner that only reads the 202 sees nothing |
 | At each `human` step, stop and prompt in the terminal: "Approve the request in the PHR app, then press Enter, or leave blank if nobody is here" | Every grant, denial and revocation is the patient's. A runner that never asks never reaches one |
 | Never write a private key, a token or a decrypted record to disk, a log or the manifest, and never hard code one | They belong to the patient and to that request, not to the run |
-| Run each `sandbox` case's success path and the refusal its exit condition names, as separate checks | The case passes only when both are observed |
-| Compare the status and the callback literal the exit condition names, such as `202` then `notification.status` `GRANTED`, or `400` with `[0].error.code` `ABDM-9999` | A status alone never passes a check. A `202` alone never passes one |
+| Run each `sandbox` case's success path and each refusal its exit condition names, as separate checks. Run a refusal labelled "Extra check, not in the set" too, and log it on its own line | The outcome is decided only by what the set asks. An extra check is logged, and never passes or fails the case |
+| Compare the status and the callback literal the exit condition names, such as `202` then `notification.status` `GRANTED`, or `400` with an array element whose `error.code` is `ABDM-9999` | A status alone never passes a check. A `202` alone never passes one |
 | A `4xx` passes only where the case's exit condition names that refusal | A `400` on a success path step is `failed` |
 | A blank answer at a prompt records the case `needs-human` and moves to the next case | Nobody present is neither a pass nor a fail |
 | A `screen` case prints its check, then asks `passed? y/n` and the evidence file name | No call proves a screen, so the case is attested |
@@ -177,7 +178,7 @@ A run reads like this.
 ```text
 HIU_FLOW_102  init  REQUEST-ID 6f1c...  HTTP 202
 HIU_FLOW_102  on-init  response.requestId 6f1c...  consentRequest.id present  matched
-HIU_FLOW_102  init, no purpose.code  REQUEST-ID 2d7a...  HTTP 400  [0].error.code ABDM-9999  matched
+HIU_FLOW_102  extra check, not in the set: init, no purpose.code  REQUEST-ID 2d7a...  HTTP 400  error.code ABDM-9999 in the array  logged
 HIU_FLOW_102  passed
 HIU_FLOW_106  Approve the request in the PHR app, then press Enter, or leave blank if nobody is here:
 HIU_FLOW_106  notify  notification.status GRANTED  consentArtefacts 2  matched
@@ -219,10 +220,9 @@ The user enters the ABHA address of a patient already registered in your system,
 
 Calls: `m3_post_consent_v3_request_init` with `consent.purpose.code` from the published list (`CAREMGT` for care), `consent.patient.id`, `consent.hiu.id`, `consent.requester`, `consent.hiTypes`, and `consent.permission` with `accessMode`, `dateRange.from`, `dateRange.to`, `dataEraseAt` and `frequency`.
 
-Exit condition, two checks, both needed:
+Exit condition: the init returns `202`, then a POST arrives at your `on-init` URL with `consentRequest.id` present, `error` absent or null, and `response.requestId` equal to the REQUEST-ID you sent. Store `consentRequest.id`.
 
-1. Success: the init returns `202`, then a POST arrives at your `on-init` URL with `consentRequest.id` present, `error` absent or null, and `response.requestId` equal to the REQUEST-ID you sent. Store `consentRequest.id`.
-2. Refusal: the same init with `consent.purpose.code` left out returns `400` with `[0].error.code` `ABDM-9999` and `[0].error.message` `Consent purpose code cannot be null`. Your screen shows that message.
+Extra check, not in the set: the same init with `consent.purpose.code` left out returns `400` with an element of the array with `error.code` `ABDM-9999` and `error.message` `Consent purpose code cannot be null`. Your screen shows that message. Log it; it does not decide the outcome.
 
 Screen check alongside: the form offers the eight HI types as ABDM lists them, and the date range and expiry are entered, not defaulted silently. After submitting, your system shows the request with the patient's name, ABHA address, ABHA number, HI types, purpose, from and to dates, consent expiry, the status `Requested`, and the date and time it was raised.
 
@@ -289,7 +289,7 @@ Optional: `m3_get_data_flow_v3_health_information_request_status_tra_550104` wit
 
 Exit condition: steps 2 to 6 observed and pasted, and the screen shows the decrypted record of that HI type. Never paste decrypted content into the run record; paste the checksum match.
 
-The set marks each fetch case mandatory for private integrators and optional for government ones. If the patient's HIP holds no record of the type, record the case `not-run` with that reason. A private integrator's mandatory case that is `not-run` for that reason still blocks the report: find a HIP that holds the type and run it again.
+The set marks each fetch case mandatory for private integrators and optional for government ones. For a private integrator, if no linked HIP holds a record of the type, record the case `needs-human` with the reason "no linked HIP holds a <type> record". It still shows as a mandatory case not passed: find a HIP that holds the type and run it again. For a government integrator, a fetch case for a type you do not claim is `not-run`.
 
 | Case | HI type in the set | `hiTypes` value | Exit condition beyond the shared steps |
 |---|---|---|---|
@@ -358,7 +358,7 @@ Mark the run log finished, with the time and the count of each outcome. Then wri
   "cases": [
     {"id": "HIU_FLOW_102", "outcome": "passed", "evidence": "sandbox",
      "request_ids": ["6f1c...", "2d7a..."],
-     "observed": ["init 202, on-init consentRequest.id present", "init without purpose.code 400 [0].error.code=ABDM-9999"]},
+     "observed": ["init 202, on-init consentRequest.id present", "extra check, not in the set: init without purpose.code 400, error.code=ABDM-9999 in the array"]},
     {"id": "HIU_FLOW_104", "outcome": "passed", "evidence": "screen",
      "attachment": "consent-list-2026-10-01.png", "rule": "hiecm.concept.consent-artefact"},
     {"id": "HIU_FLOW_108", "outcome": "passed", "evidence": "sandbox",
@@ -366,7 +366,7 @@ Mark the run log finished, with the time and the count of each outcome. Then wri
      "observed": ["health-information/request 202, on-request transactionId present", "push entries 1, checksum matched", "health-information/notify 202 sessionStatus=RECEIVED"]},
     {"id": "HIU_FLOW_201", "outcome": "needs-human", "evidence": "human",
      "request_ids": ["b7a1..."], "reason": "revocation is the patient's step in the PHR app; nobody present"},
-    {"id": "HIU_FLOW_114", "outcome": "not-run", "reason": "the patient's HIP holds no invoice"}
+    {"id": "HIU_FLOW_114", "outcome": "needs-human", "reason": "no linked HIP holds an Invoice record"}
   ]
 }
 ```
