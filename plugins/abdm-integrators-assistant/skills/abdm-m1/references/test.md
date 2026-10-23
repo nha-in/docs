@@ -1,5 +1,92 @@
 # HIE-CM m1 test
 
+## Read this first: this run is never hands-off
+
+A tester sits with this run from the first case to the last. Every Aadhaar number, mobile number, OTP, ABHA number or address, password, document number, biometric and approval is entered by that person, at the moment the case needs it. You never type one, never make one up, and never mock a response to get past one. This rule outranks every other rule in this file.
+
+### In plain words
+
+A functional test run is done with a tester at the keyboard. The agent drives
+the steps; the tester enters everything that belongs to a real person. When a
+step needs one of the values below, the agent stops, says exactly what is
+needed and where, and waits for the tester.
+
+| Value | Who enters it |
+|---|---|
+| Aadhaar number | The tester |
+| Mobile number, including the communication mobile | The tester |
+| Any OTP: Aadhaar OTP, mobile OTP, linking OTP | The tester |
+| ABHA number, ABHA address, and the password or PIN of either | The tester |
+| Name, date of birth, gender, email or address being enrolled or verified | The tester |
+| Driving licence or any document number | The tester |
+| A fingerprint, iris or face capture | The tester, on the device |
+| A consent, link or subscription approval in a PHR app | The tester, in the app |
+| A captcha | The tester |
+
+The agent never types any of these, in any run type. A value the agent did
+not get from the tester at that moment does not exist.
+
+This holds for a deliberately wrong value too. A case that checks your
+screen's own format rule, such as an 11 digit Aadhaar number or letters in a
+mobile field, still has the tester type it: the agent says what to type ("an
+11 digit number") and the tester types it.
+
+### Before you start
+
+- The tester is present for the whole run, with the phone that receives the Aadhaar and mobile OTPs.
+- For a `ui` run the browser is visible on the tester's screen, never headless, so the tester can type into it. The Playwright MCP server opens a visible browser unless it was started with `--headless`; if it was, stop and ask the tester to restart it without that flag.
+- For a PHR app, the emulator window or the phone is in front of the tester.
+
+### What happens
+
+Before every field, ask one question: does this field take a person's identity, a document number, a code sent to a person, or an approval? If yes, it is a tester's step.
+
+**In a `ui` run (browser or emulator):**
+
+1. Bring the field into view and click it, so the cursor is in it.
+2. Stop and say, in one line, what to enter and where:
+
+   ```text
+   CRT_ABHA_104: type your Aadhaar number into the "Aadhaar Number" field in the browser window, then reply done.
+   CRT_ABHA_105: an OTP has been sent to the Aadhaar linked mobile. Type it into the "Enter OTP" field in the browser, then reply done.
+   ```
+
+3. Wait for the tester's reply. Do not ask them to tell you the value; they type it into the screen, so it never passes through you.
+4. After `done`, take the snapshot, with that field's value replaced by `[redacted]`, and go on with the next step yourself.
+5. No reply, `skip`, or the tester not present: record the case `needs-human` with `Needs tester: <the value>`, and go to the next case.
+
+**In an `ft` run (terminal):** prompt in the terminal with input hidden, name what is needed and where it came from ("the OTP sent to the mobile ending 1234"), send it once, and hold it only for that call. Never write it to the run log, the results file or the workbook.
+
+**Never, in any run type:**
+
+| Never | Why |
+|---|---|
+| Type a made-up, sample or placeholder value, such as `1234 5678 9012`, `999999999999`, `9999999999`, `123456` or `000000` | The sandbox checks Aadhaar and mobile against UIDAI and sends a real OTP. A made-up value fails every case for a reason that is not the integrator's |
+| Use an example value from the workbook, a test case page or this skill | Examples show the format, not a person |
+| Reuse a value from an earlier case or an earlier run | An OTP is valid once; an identity is the tester's to give each time |
+| Generate an OTP, guess one, or read one from a log or an SMS tool | Only the tester enters an OTP |
+| Skip the step and carry on | Every later step then tests nothing |
+| Mock, stub, intercept or replay a sandbox response, or route the browser's network to a fake | The run then tests the mock, not the integration |
+| Run the browser headless | The tester cannot type into it |
+
+### How you know it worked
+
+- At every identity, code or approval step, the run log shows the prompt that was given to the tester and their `done`, or the case is `needs-human`.
+- No value from the "Never" table appears in any field the agent typed into: `browser_type` was never called on an identity, document, code or password field.
+- No case is `failed` because of a value the agent supplied.
+
+### When it goes wrong
+
+| Observed | Do |
+|---|---|
+| You are about to type an Aadhaar number, mobile number, OTP or other identity value yourself | Stop. Click the field and ask the tester to type it, as above |
+| The tester asks you to make up a value so the run can go faster | Refuse, and say why in one line: the sandbox needs a real person's values, and a made-up one fails the case |
+| You find that a value was typed by the agent, made up or reused, earlier in this run | Stop the run. Every case from that point is void: do not write those results to the workbook, mark them `pending` in the run log with `void: agent entered <value type>`, tell the tester, and run those cases again with the tester entering the value |
+| The OTP never arrives | Ask the tester to use the screen's resend option once, then wait. Still nothing: `needs-human` with `Needs tester: OTP not received` |
+| The browser is headless or not on the tester's screen | Stop before the first case and ask the tester to restart the Playwright server without `--headless` |
+
+From `shared.concept.test-human-entry`.
+
 Walks the ABDM M1 functional test cases, ABHA creation and verification, against the system you built and the sandbox. Each case ends in one of four recorded outcomes, never in an opinion.
 
 ## What this skill does
@@ -822,8 +909,8 @@ For each chosen case, at most 3 passes. Record the number of passes the case too
 
 1. Read the case's Steps and Expected Result from its workbook row, and its exit condition from the skill's case.
 2. Follow the Steps in order, on the surface the step names: the web application, or the PHR app.
-   - Web: `browser_navigate`, `browser_click`, `browser_type`, reading `browser_snapshot` before each action to find the element.
-   - PHR app: write the steps as a Maestro flow at `abdm-ft/maestro/<case id>.yaml` and run `maestro test abdm-ft/maestro/<case id>.yaml`.
+   - Web: `browser_navigate`, `browser_click`, `browser_type`, reading `browser_snapshot` before each action to find the element. `browser_type` is for fields that hold no person's value, such as a search term or a free text note. Every identity, document, code or password field is the tester's, as the rule at the top of this skill sets out.
+   - PHR app: write the steps as Maestro flows at `abdm-ft/maestro/<case id>-<n>.yaml` and run each with `maestro test`. A flow ends at the field before any identity, code or approval step, the tester types it on the emulator or phone, and the next flow starts after it.
 3. After step `n`, save one screenshot and the screen's text:
 
    | Surface | Screenshot | Screen text |
@@ -831,9 +918,9 @@ For each chosen case, at most 3 passes. Record the number of passes the case too
    | Web | `browser_take_screenshot` with `filename` `abdm-ft/evidence/<case id>/<n>.png`. The server resolves that name against its workspace root, which need not be your repository, so save or move the file to `abdm-ft/evidence/<case id>/<n>.png` and check that the file exists there | `browser_snapshot` output saved to `abdm-ft/evidence/<case id>/<n>.txt` |
    | PHR app | `- takeScreenshot: abdm-ft/evidence/<case id>/<n>` in the flow | `maestro hierarchy` output saved to `abdm-ft/evidence/<case id>/<n>.txt` |
 
-   The screen text shows what was typed into each field. Before saving it, replace the value of every field you typed an OTP, a password or an Aadhaar number into with `[redacted]`. For an OTP step, take the screenshot only after the field is submitted or cleared. Never save a snapshot or screenshot that shows an OTP, password or full Aadhaar number.
+   The screen text shows what was typed into each field. Before saving it, replace the value of every field the tester typed an identity value, an OTP or a password into with `[redacted]`. For an OTP step, take the screenshot only after the field is submitted or cleared. Never save a snapshot or screenshot that shows an OTP, password or full Aadhaar number.
 
-4. An OTP, a password, a captcha or an approval stops the case and asks the tester in the terminal, as in every run type. Read it with input hidden, type it with `browser_type`, and hold it only for that step. The tool's reply repeats what was typed. Never paste that reply into the run log, the evidence or the workbook. Write `<OTP typed>` or `<password typed>` in its place.
+4. An Aadhaar number, a mobile number, an OTP, an ABHA number or address, a password, a captcha, a document number, a biometric or an approval stops the case. Click the field, then ask the tester to type the value into the browser or the app themselves and reply `done`, as the rule at the top of this skill sets out. Never type it yourself, never ask the tester to tell you the value, and never put in a made-up, sample or earlier value. In the run log write `<Aadhaar entered by tester>`, `<OTP entered by tester>` and so on in its place.
 5. Judge the case. The pass condition is the case's exit condition and screen check in this skill, not the sheet's prose. The case is `passed` when the screen holds both. Paste into the run record the exact on-screen text or element you matched for each. When one holds and the other does not, the pass failed: say which one is missing. When the skill's case gives no literal for the screen, quote the on-screen text you believe satisfies the sheet's Expected Result, and record the case `needs-human` with `tester to confirm` in Remarks. Never record such a case `passed`.
 6. Write the result into the workbook, as `shared.concept.test-workbook-write-back` sets out, with `--run ui`. A `ui` run fills NHA's own columns:
 

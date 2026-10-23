@@ -827,6 +827,38 @@ function withReport(test, moduleId) {
   return `${test.slice(0, at)}\n${section}${test.slice(at)}`;
 }
 
+// The rule every test run is held to before anything else: a person enters
+// every Aadhaar number, mobile number, OTP and approval, and the agent never
+// makes one up. A run that typed a made-up Aadhaar number and never asked for
+// the OTP failed every case for that reason alone, so it opens the section.
+const HUMAN_ENTRY_ATOM = 'shared.concept.test-human-entry';
+
+function humanEntrySection() {
+  const {atoms} = loadAtoms();
+  const entry = atoms.get(HUMAN_ENTRY_ATOM);
+  if (!entry) throw new Error(`${HUMAN_ENTRY_ATOM} is missing, and every test section opens with it`);
+  const body = entry.body.replace(/^#\s+.+$/m, '').trim();
+  return [
+    '## Read this first: this run is never hands-off',
+    '',
+    'A tester sits with this run from the first case to the last. Every Aadhaar number, mobile number, OTP, ABHA number or address, password, document number, biometric and approval is entered by that person, at the moment the case needs it. You never type one, never make one up, and never mock a response to get past one. This rule outranks every other rule in this file.',
+    '',
+    body.replace(/^## /gm, '### ').trim(),
+    '',
+    `From \`${HUMAN_ENTRY_ATOM}\`.`,
+    '',
+  ].join('\n');
+}
+
+/** Puts the rule straight after the section's title, before anything else. */
+function withHumanEntry(test) {
+  if (!test) return test;
+  const nl = test.indexOf('\n');
+  const section = humanEntrySection();
+  if (!/^# /.test(test) || nl === -1) return `${section}\n${test}`;
+  return `${test.slice(0, nl + 1)}\n${section}${test.slice(nl + 1)}`;
+}
+
 /** Which guided loop is which section of which skill. */
 const FOLD = Object.fromEntries(
   MODULES.map((module) => [
@@ -963,11 +995,11 @@ for (const module of MODULES) {
   // check against the gateway rather than a screenshot.
   // The test section, then how a case runs as a UI test, how its result goes
   // into NHA's workbook, and how the report is written at the end.
-  const test = withReport(withUiRun(withWriteBack(fold.test ? guided(fold.test) : '', module.id), module.id), module.id);
+  const test = withHumanEntry(withReport(withUiRun(withWriteBack(fold.test ? guided(fold.test) : '', module.id), module.id), module.id));
   if (test) {
     files['references/test.md'] = test;
     covers.push(
-      `- **Test.** The functional test cases, one loop each, run as API or UI tests, with results written into NHA's workbook and the final test report once every mandatory case passes. [references/test.md](references/test.md)`,
+      `- **Test.** The functional test cases, one loop each, run as API or UI tests, with results written into NHA's workbook and the final test report once every mandatory case passes. Never hands-off: a tester enters every Aadhaar number, mobile number and OTP. [references/test.md](references/test.md)`,
     );
   }
 
