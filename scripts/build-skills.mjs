@@ -730,10 +730,10 @@ function withSurvey(scaffold) {
 
 // How a test run writes each case's result into NHA's workbook. It lives in
 // the Catalogue as shared.concept.test-workbook-write-back, script and all, and
-// folds into the test section of every module whose workbook carries case ids:
-// the PHR workbook has none yet, so P1 to P4 wait for them.
+// folds into the test section of every module NHA publishes a workbook for:
+// M1 to M4, and P1 to P4, whose PHR workbook gets ids built from its rows.
 const WRITE_BACK_ATOM = 'shared.concept.test-workbook-write-back';
-const WRITE_BACK_MODULES = new Set(['m1', 'm2', 'm3', 'm4']);
+const WRITE_BACK_MODULES = new Set(['m1', 'm2', 'm3', 'm4', 'p1', 'p2', 'p3', 'p4']);
 
 function writeBackSection() {
   const {atoms} = loadAtoms();
@@ -758,6 +758,71 @@ function withWriteBack(test, moduleId) {
   const marker = '\n## When the last case is recorded\n';
   const at = test.indexOf(marker);
   const section = writeBackSection();
+  if (at === -1) return `${test.trimEnd()}\n\n${section}`;
+  return `${test.slice(0, at)}\n${section}${test.slice(at)}`;
+}
+
+// How a test section runs a case as a ui run: Playwright for web screens,
+// Maestro for a PHR app, the PHR proof rule and the failure reason order.
+const UI_RUN_ATOM = 'shared.concept.test-ui-run';
+const UI_RUN_MODULES = new Set(['m1', 'm2', 'm3', 'm4', 'p1', 'p2', 'p3', 'p4']);
+
+function uiRunSection() {
+  const {atoms} = loadAtoms();
+  const entry = atoms.get(UI_RUN_ATOM);
+  if (!entry) throw new Error(`${UI_RUN_ATOM} is missing, and every test section folds it in`);
+  const body = entry.body.replace(/^#\s+.+$/m, '').trim();
+  return [
+    '## Running a case as a UI test',
+    '',
+    'Read this section when the run type is `ui` or `all`. Its readiness check joins the one above, and every rule above still holds.',
+    '',
+    body.replace(/^## /gm, '### ').trim(),
+    '',
+    `From \`${UI_RUN_ATOM}\`.`,
+    '',
+  ].join('\n');
+}
+
+/** Inserts the ui run ahead of the write-back, else ahead of the closing section, else at the end. */
+function withUiRun(test, moduleId) {
+  if (!test || !UI_RUN_MODULES.has(moduleId)) return test;
+  const section = uiRunSection();
+  for (const marker of ["\n## Writing results into NHA's workbook\n", '\n## When the last case is recorded\n']) {
+    const at = test.indexOf(marker);
+    if (at !== -1) return `${test.slice(0, at)}\n${section}${test.slice(at)}`;
+  }
+  return `${test.trimEnd()}\n\n${section}`;
+}
+
+// How the final test report is written once the last case is recorded: the
+// gate on every applicable mandatory case, then the report NHA asked for.
+const REPORT_ATOM = 'shared.concept.test-report';
+const REPORT_MODULES = new Set(['m1', 'm2', 'm3', 'm4', 'p1', 'p2', 'p3', 'p4']);
+
+function reportSection() {
+  const {atoms} = loadAtoms();
+  const entry = atoms.get(REPORT_ATOM);
+  if (!entry) throw new Error(`${REPORT_ATOM} is missing, and every test section folds it in`);
+  const body = entry.body.replace(/^#\s+.+$/m, '').trim();
+  return [
+    '## Writing the test report',
+    '',
+    'When the last case is recorded, save the script below as `abdm-ft/abdm_report.py` and run `check`. Run `build` only when `check` exits 0.',
+    '',
+    body.replace(/^## /gm, '### ').trim(),
+    '',
+    `From \`${REPORT_ATOM}\`.`,
+    '',
+  ].join('\n');
+}
+
+/** Inserts the report ahead of the closing section, or at the end when there is none. */
+function withReport(test, moduleId) {
+  if (!test || !REPORT_MODULES.has(moduleId)) return test;
+  const marker = '\n## When the last case is recorded\n';
+  const at = test.indexOf(marker);
+  const section = reportSection();
   if (at === -1) return `${test.trimEnd()}\n\n${section}`;
   return `${test.slice(0, at)}\n${section}${test.slice(at)}`;
 }
@@ -896,7 +961,9 @@ for (const module of MODULES) {
   // Test after debug: the functional test cases are what an integrator walks
   // once the build runs, and each case names the evidence a reviewer can
   // check against the gateway rather than a screenshot.
-  const test = withWriteBack(fold.test ? guided(fold.test) : '', module.id);
+  // The test section, then how a case runs as a UI test, how its result goes
+  // into NHA's workbook, and how the report is written at the end.
+  const test = withReport(withUiRun(withWriteBack(fold.test ? guided(fold.test) : '', module.id), module.id), module.id);
   if (test) {
     files['references/test.md'] = test;
     covers.push(

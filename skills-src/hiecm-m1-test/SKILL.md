@@ -27,6 +27,9 @@ Walks the ABDM M1 functional test cases, ABHA creation and verification, against
 | Whether you are a government or a private integrator | The set marks some cases mandatory for one and optional for the other |
 | A folder for the run log | Your repository. `abdm-ft/` unless you name another |
 | NHA's test case workbook for this module, if results go into it | The workbook NHA sent you, copied into `abdm-ft/`. Writing into it needs Python 3.9 or later with `openpyxl` and `Pillow` |
+| For a `ui` run: your application's URL | Your deployment, reachable from the browser on this machine |
+| For a `ui` run: a tester login for your application | A test account in your application, read from an environment variable you name or typed at a hidden prompt. It is never written to the run log, the evidence or the workbook |
+| For a `ui` run: Node 18 or later, the Playwright MCP server and Chromium | The integrators plugin declares the Playwright MCP server, and `/abdm-test-setup` lists what is missing. Without the plugin, the section "Running a case as a UI test" lists each install command |
 
 ## Say one of these
 
@@ -34,10 +37,11 @@ Walks the ABDM M1 functional test cases, ABHA creation and verification, against
 - "Run only the ABHA verification cases, VRFY_ABHA_101 to 405."
 - "Re-run CRT_ABHA_112, the address suggestion case failed yesterday."
 - "Write a terminal script that runs the M1 test cases and asks me for the Aadhaar number and each OTP."
+- "Run the M1 test cases as UI tests against my app and fill NHA's workbook."
 
 ## What happens first
 
-These runs are API functional tests, the `ft` run type: your system against the sandbox, judged on calls and callbacks. One question: which cases. All of them, one function group, or a list of ids. Then the preconditions for the first case are checked before anything is sent. Then the readiness check below. After it, nothing else is asked until a case needs a human or an authentication step.
+The first question is the run type. `ft` is the API functional test: your system against the sandbox, judged on calls and callbacks. `ui` is the UI test: an agent drives your application's screens, as the section "Running a case as a UI test" below sets out. `all` runs `ft` for the chosen cases, then `ui`. The second question: which cases. All of them, one function group, or a list of ids. Then the preconditions for the first case are checked before anything is sent. Then the readiness check below. After it, nothing else is asked until a case needs a human or an authentication step.
 
 **Readiness check.** The run does not start until every row of "What it needs from you" that the chosen cases use is confirmed. Ask for each one in the terminal, one at a time. Record each in the run log's header as `ready`, `missing` or `not needed`, never the value itself.
 
@@ -49,6 +53,7 @@ These runs are API functional tests, the `ft` run type: your system against the 
 | Entity type and claimed capabilities | Answered, because they decide which cases are mandatory |
 | The run log | Its folder exists and can be written: `abdm-ft/` in your repository unless you name another |
 | The workbook | `python3 abdm-ft/abdm_workbook.py cases <workbook>` lists the case ids, and every case chosen is among them. `not needed` when no workbook was given |
+| UI readiness, for a `ui` or `all` run | Every row of the readiness check in "Running a case as a UI test" is `ready`: Node, the Playwright tools, a browser, the application URL and the tester login. `not needed` for an `ft` run |
 
 A `missing` row that a mandatory case needs stops the run before the first call. Say what is missing and ask the one question that would fix it.
 
