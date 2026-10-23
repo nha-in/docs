@@ -25,7 +25,7 @@ Walks the ABDM P3 functional test cases against the system you built and the san
 | A sandbox HIP that can link a new record to that address | A partner or your own test facility. Without one, the notification cases are `needs-human` |
 | The person present with their phone | Every grant, deny, edit and consent tap is a human step and the skill stops for it |
 | A folder for the run log | Your repository. `abdm-ft/` unless you name another |
-| NHA's PHR test case workbook, required: the results and the report are built from it | The workbook NHA sent you, copied into `abdm-ft/`. It has one tab per PHR milestone and no case ids; the script adds a Test Case ID column with the ids this skill uses. Writing into it needs Python 3.9 or later with `openpyxl` and `Pillow` |
+| NHA's PHR test case workbook, required: the results and the report are built from it | It ships with this skill, in its `workbook/` folder (on the docs site, `/skills/abdm-p3/workbook/`): copy it into `abdm-ft/` before the run, and never use another copy, so the sheet matches the cases below. It has one tab per PHR milestone and no case ids; the script adds a Test Case ID column with the ids this skill uses. Writing into it needs Python 3.9 or later with `openpyxl` and `Pillow` |
 | For a `ui` run: your PHR app's APK, installed on an Android emulator or a device over adb | Your build. Android Studio's emulator, or a phone with USB debugging on |
 | For a `ui` run: Maestro, to drive the app | https://maestro.mobile.dev, Apache 2.0. `/abdm-test-setup` lists what is missing and prints the install command |
 | For a `ui` run: a test ABHA address and its login | A sandbox ABHA address the tester holds, typed at the app's own login when the run reaches it, never stored |

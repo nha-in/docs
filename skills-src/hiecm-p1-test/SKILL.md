@@ -25,7 +25,7 @@ Walks the ABDM P1 functional test cases, registration and login with an ABHA add
 | A person who holds an ABHA number with an Aadhaar linked mobile, for the KYC cases | Present for the run. Without one the ABHA number and Aadhaar cases are `needs-human` |
 | An ABHA address that already exists, with a password set | For the login and reset password cases |
 | A folder for the run log | Your repository. `abdm-ft/` unless you name another |
-| NHA's PHR test case workbook, required: the results and the report are built from it | The workbook NHA sent you, copied into `abdm-ft/`. It has one tab per PHR milestone and no case ids; the script adds a Test Case ID column with the ids this skill uses. Writing into it needs Python 3.9 or later with `openpyxl` and `Pillow` |
+| NHA's PHR test case workbook, required: the results and the report are built from it | It ships with this skill, in its `workbook/` folder (on the docs site, `/skills/abdm-p1/workbook/`): copy it into `abdm-ft/` before the run, and never use another copy, so the sheet matches the cases below. It has one tab per PHR milestone and no case ids; the script adds a Test Case ID column with the ids this skill uses. Writing into it needs Python 3.9 or later with `openpyxl` and `Pillow` |
 | For a `ui` run: your PHR app's APK, installed on an Android emulator or a device over adb | Your build. Android Studio's emulator, or a phone with USB debugging on |
 | For a `ui` run: Maestro, to drive the app | https://maestro.mobile.dev, Apache 2.0. `/abdm-test-setup` lists what is missing and prints the install command |
 | For a `ui` run: a test ABHA address and its login | A sandbox ABHA address the tester holds, typed at the app's own login when the run reaches it, never stored |

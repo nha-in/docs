@@ -113,7 +113,7 @@ Walks the ABDM M2 functional test cases, Health Information Provider, against th
 | That person's name, gender and year of birth as their ABHA holds them | The demographic linking cases send these, and a mismatch is refused |
 | At least one record per HI type you claim, as a FHIR bundle | Your own system. The sharing case sends it |
 | A folder for the run log | Your repository. `abdm-ft/` unless you name another |
-| NHA's test case workbook for this module, required: the results and the report are built from it | The workbook NHA sent you, copied into `abdm-ft/`. Writing into it needs Python 3.9 or later with `openpyxl` and `Pillow` |
+| NHA's test case workbook for this module, required: the results and the report are built from it | It ships with this skill, in its `workbook/` folder (on the docs site, `/skills/abdm-m2/workbook/`): copy it into `abdm-ft/` before the run, and never use another copy, so the sheet matches the cases below. Writing into it needs Python 3.9 or later with `openpyxl` and `Pillow` |
 | For a `ui` run: your application's URL | Your deployment, reachable from the browser on this machine |
 | For a `ui` run: a tester login for your application | A test account in your application, read from an environment variable you name or typed at a hidden prompt. It is never written to the run log, the evidence or the workbook |
 | For a `ui` run: Node 18 or later, the Playwright MCP server and a browser | The integrators plugin starts `@playwright/mcp@0.0.83`, which the first start downloads with `npx`. Install the browser the server reports missing, chrome or chromium. `/abdm-test-setup` lists what is missing. Without the plugin, the section "Running a case as a UI test" lists each install command |
@@ -585,7 +585,7 @@ overwrites the other:
 
 ### Before you start
 
-- The workbook for the module, as NHA published it, in your repository beside the run log, such as `abdm-ft/M1_ABHA_CREATION_VERIFICATION_SCAN_AND_SHARE.xlsx`. M4 has two, HFR and HPR: each is its own workbook with its own results file. The PHR workbook has no case ids: the script builds them from each tab and row, `PHR_ADDR_302` for row 3.2 of the ABHA address creation tab, exactly as the test case page shows them, and its first write adds a `Test Case ID` column holding them.
+- The workbook for the module, copied from the test skill's own `workbook/` folder into your repository beside the run log, such as `abdm-ft/M1_ABHA_CREATION_VERIFICATION_SCAN_AND_SHARE.xlsx`. The skill ships the sheet its cases come from, so use that copy rather than another. M4 has two, HFR and HPR: each is its own workbook with its own results file. The PHR workbook has no case ids: the script builds them from each tab and row, `PHR_ADDR_302` for row 3.2 of the ABHA address creation tab, exactly as the test case page shows them, and its first write adds a `Test Case ID` column holding them.
 - Python 3.9 or later with `openpyxl` and `Pillow`: `pip install openpyxl pillow`. Pillow is what keeps the sheet's logos when it is saved.
 - The script below, saved as `abdm-ft/abdm_workbook.py` before the readiness check, which runs it.
 

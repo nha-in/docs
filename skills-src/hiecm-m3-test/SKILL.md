@@ -27,7 +27,7 @@ Walks the ABDM M3 functional test cases, Health Information User, against the sy
 | Your system running against the sandbox hosts | Your deployment or a local build. The skill drives your system, not the sandbox directly |
 | A way to trigger each journey in your system | A screen, an API or a script. Say which at the start |
 | A folder for the run log | Your repository. `abdm-ft/` unless you name another |
-| NHA's test case workbook for this module, required: the results and the report are built from it | The workbook NHA sent you, copied into `abdm-ft/`. Writing into it needs Python 3.9 or later with `openpyxl` and `Pillow` |
+| NHA's test case workbook for this module, required: the results and the report are built from it | It ships with this skill, in its `workbook/` folder (on the docs site, `/skills/abdm-m3/workbook/`): copy it into `abdm-ft/` before the run, and never use another copy, so the sheet matches the cases below. Writing into it needs Python 3.9 or later with `openpyxl` and `Pillow` |
 | For a `ui` run: your application's URL | Your deployment, reachable from the browser on this machine |
 | For a `ui` run: a tester login for your application | A test account in your application, read from an environment variable you name or typed at a hidden prompt. It is never written to the run log, the evidence or the workbook |
 | For a `ui` run: Node 18 or later, the Playwright MCP server and a browser | The integrators plugin starts `@playwright/mcp@0.0.83`, which the first start downloads with `npx`. Install the browser the server reports missing, chrome or chromium. `/abdm-test-setup` lists what is missing. Without the plugin, the section "Running a case as a UI test" lists each install command |
