@@ -1,6 +1,6 @@
 # NHA raw set nha-2026-10-22-m3-tests
 
-The M3 functional test case set, Building HIU, revised by NHA on 21 October 2026 and sent on 22 October 2026 with NHA's request for a test skill that runs the cases and writes its results into the sheet. It replaces `nha-2026-10-01-m3-tests` as the source of `site/docs/hiecm/v3/resources/test-cases/m3.mdx`, written by `scripts/build-test-cases.py`. `skills-src/hiecm-m3-test/SKILL.md` still walks the 1 October set until it is updated to this one.
+The M3 functional test case set, Building HIU, revised by NHA on 21 October 2026 and sent on 22 October 2026 with NHA's request for a test skill that runs the cases and writes its results into the sheet. It replaces `nha-2026-10-01-m3-tests` as the source of `site/docs/hiecm/v3/resources/test-cases/m3.mdx`, written by `scripts/build-test-cases.py`. It is also the source of `skills-src/hiecm-m3-test/SKILL.md`.
 
 One tab, Building HIU, 16 cases. Columns S.No, Function, Applicable To, Mandatory/Optional, Test Case ID, Functionality, Test Case, Steps, Expected Result, Suggestions for the Functional Tester, Response of Request with Code, Status(PASS/FAIL), Iterations, Remark, APIs. The four result columns are empty; NHA asked for them to be filled by the test run. It carries no personal data; its two images are the NHA and ABDM logos.
 

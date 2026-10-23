@@ -127,10 +127,10 @@ Readiness: credentials ready; system ready; OTP person ready; biometric device n
 
 | Case | Outcome | Request ids | Observed |
 |---|---|---|---|
-| HIU_FLOW_101 | passed | 6f1c..., a02d... | exit condition matched, pasted below |
-| HIU_FLOW_102 | needs-human | b7a1... | OTP prompt shown, left blank |
-| HIU_FLOW_103 | running | | |
-| HIU_FLOW_104 | pending | | |
+| HIU_FLOW_102 | passed | 6f1c..., a02d... | exit condition matched, pasted below |
+| HIU_FLOW_103 | needs-human | b7a1... | patient asked to look in the PHR app, no answer |
+| HIU_FLOW_104 | running | | |
+| HIU_FLOW_105 | pending | | |
 ```
 
 ### Authentication is never skipped
@@ -186,7 +186,7 @@ Nudge: calls with a malformed `consentRequestId`, an unknown `consentId` or a st
 
 ## Test cases
 
-The ids, the mandatory marks and the wording of each check are ABDM's, from the M3 Building HIU set. The sections are grouped as the set groups them. The operation ids are the ones in `references/integrate.md`, which carries the host, the headers and a full request.
+The ids, the mandatory marks and the wording of each check are ABDM's, from the M3 Building HIU set NHA revised on 21 October 2026. The sections are grouped and numbered as the set groups them; the set numbers two groups 3. The operation ids are the ones in `references/integrate.md`, which carries the host, the headers and a full request.
 
 The set names six V3 APIs for the first group. Each maps to one operation:
 
@@ -209,17 +209,9 @@ Loop limit: 3 passes per test case.
 
 **Preconditions.** A gateway access token from `gateway_post_gateway_v3_sessions` with `accessToken` present, less than 20 minutes old. `hiecm.concept.gateway-session` The callback URL registered and reachable. The patient present, logged in to their PHR app.
 
-#### HIU_FLOW_101, find the patient by ABHA number or address. Mandatory. `screen`
+#### HIU_FLOW_102, raise a consent request for a registered patient. Mandatory. `sandbox`, `screen`
 
-Your system lets the user enter an ABHA address or number, and checks it is valid before any consent request is raised.
-
-ABDM's M3 specification publishes no patient lookup operation. The check this case can prove is your own: `consent.patient.id` must match `^[a-zA-Z0-9][a-zA-Z0-9_.\-!]+[a-zA-Z0-9]@(abdm|sbx)$`. Enter one address that matches and one that does not, such as one with no `@sbx`.
-
-Exit condition: the bad address is refused on screen and the call log holds no `m3_post_consent_v3_request_init` for it; the good one goes on to HIU_FLOW_102. Evidence: both screens and the empty call log. If your system also confirms the address exists by another route, attach that observation.
-
-#### HIU_FLOW_102, raise a consent request. Mandatory. `sandbox`, `screen`
-
-The user enters a purpose, a date range, a consent expiry and one or more HI types, and initiates the request.
+The user enters the ABHA address of a patient already registered in your system, a purpose, a date range, a consent expiry and one or more of the eight HI types, and submits the request.
 
 Calls: `m3_post_consent_v3_request_init` with `consent.purpose.code` from the published list (`CAREMGT` for care), `consent.patient.id`, `consent.hiu.id`, `consent.requester`, `consent.hiTypes`, and `consent.permission` with `accessMode`, `dateRange.from`, `dateRange.to`, `dataEraseAt` and `frequency`.
 
@@ -228,23 +220,29 @@ Exit condition, two checks, both needed:
 1. Success: the init returns `202`, then a POST arrives at your `on-init` URL with `consentRequest.id` present, `error` absent or null, and `response.requestId` equal to the REQUEST-ID you sent. Store `consentRequest.id`.
 2. Refusal: the same init with `consent.purpose.code` left out returns `400` with `[0].error.code` `ABDM-9999` and `[0].error.message` `Consent purpose code cannot be null`. Your screen shows that message.
 
-Screen check alongside: the form offers the HI types as ABDM lists them, and the date range and expiry are entered, not defaulted silently.
+Screen check alongside: the form offers the eight HI types as ABDM lists them, and the date range and expiry are entered, not defaulted silently. After submitting, your system shows the request with the patient's name, ABHA address, ABHA number, HI types, purpose, from and to dates, consent expiry, the status `Requested`, and the date and time it was raised.
 
 #### HIU_FLOW_103, the request reaches the patient's PHR app. Mandatory. `human`, `sandbox`
 
-Stop and ask the patient: "Do you see a consent request from this HIU in your PHR app?" Their yes is the human observation. Do not let them approve or deny yet.
+Stop and ask the patient: "Do you see a consent request from this HIU in your PHR app, and does it show the requester, the purpose, the date range, the HI types and the expiry you asked for?" Their yes is the human observation. Do not let them approve or deny yet.
 
 Then call `m3_post_consent_v3_request_status` with the stored `consentRequestId`.
 
 Exit condition: the status call returns `202`, then a POST arrives at your `on-status` URL with `consentRequest.id` equal to the stored id and `consentRequest.status` `REQUESTED`. If nobody is there to look at the app, record `needs-human` with the init's REQUEST-ID.
 
-The set's note for the tester describes the older consent-requests and patients APIs. Follow this case as written here.
+The set also says the patient may edit the request before granting, and the edited values then show in your system. HIU_FLOW_106 checks that.
 
 #### HIU_FLOW_104, the list of consent requests. Mandatory. `screen`
 
 Your system lists the consent requests raised for a patient. Each row shows the ABHA number or address, the patient's name, the date the request was created, its expiry, and its status.
 
-Evidence: the list after HIU_FLOW_102, showing the new request as `REQUESTED`. The status on screen comes from the last `on-status` or `notify` body your system received, not from a value it assumed. `hiecm.concept.consent-artefact`
+Evidence: the list after HIU_FLOW_102, showing the new request as `REQUESTED`, and the same list again once the later cases have run, showing each request as granted, denied, expired or revoked with the date and time of that change. The status on screen comes from the last `on-status` or `notify` body your system received, not from a value it assumed. `hiecm.concept.consent-artefact`
+
+### 3. Consent Request Denied
+
+Applies to: HIU.
+
+Loop limit: 3 passes per test case.
 
 #### HIU_FLOW_105, a denied request fetches nothing. Mandatory. `human`, `sandbox`, `screen`
 
@@ -254,7 +252,13 @@ Exit condition: a POST arrives at your `notify` URL with `notification.consentRe
 
 Screen check: the request shows as denied, with the time of the denial, and no record is shown for it.
 
-#### HIU_FLOW_106, an approved request, as the patient edited it. Any one of the fetch cases in this group is mandatory. `human`, `sandbox`, `screen`
+### 3. Consent Request Granted
+
+Applies to: HIU.
+
+Loop limit: 3 passes per test case.
+
+#### HIU_FLOW_106, a granted request, as the patient edited it. Mandatory. `human`, `sandbox`, `screen`
 
 Raise a fresh request as in HIU_FLOW_102. Stop and ask the patient to approve it, changing at least one of the HI types, the from date, the to date or the expiry before they grant.
 
@@ -264,9 +268,9 @@ Exit condition, in order:
 2. Your system sends `m3_post_consent_v3_request_hiu_on_notify` with one `acknowledgement[]` entry per artefact, `status` `OK` and its `consentId`, and gets `202`.
 3. For each artefact, `m3_post_consent_v3_fetch` with `consentId` returns `202`, then a POST arrives at your `on-fetch` URL with `consent.status` `GRANTED` and `consent.consentDetail.consentId` equal to that id.
 
-Screen check: your system shows what the patient granted, read from `consent.consentDetail`: `hiTypes`, `permission.dateRange.from`, `permission.dateRange.to` and `dataEraseAt`, which differ from what you requested. It also shows the time of the grant.
+Screen check: the request shows as granted, with the time of the grant. Your system shows what the patient granted, read from `consent.consentDetail`: `hiTypes`, `permission.dateRange.from`, `permission.dateRange.to` and `dataEraseAt`, which differ from what you requested. Records of a type the patient did not grant are never shown.
 
-#### Fetching and showing the records, shared by the next seven cases
+#### Fetching and showing the records, shared by the next eight cases
 
 Each fetch case runs this under an artefact from HIU_FLOW_106 that covers its HI type. `sandbox`, then `screen`.
 
@@ -281,7 +285,7 @@ Optional: `m3_get_data_flow_v3_health_information_request_status_tra_550104` wit
 
 Exit condition: steps 2 to 6 observed and pasted, and the screen shows the decrypted record of that HI type. Never paste decrypted content into the run record; paste the checksum match.
 
-If the patient's HIP holds no record of the type, record the case `not-run` with that reason. If you do not claim the type, record `not-run` too. The set marks the fetch cases as a group: at least one of them must pass.
+The set marks each fetch case mandatory for private integrators and optional for government ones. If the patient's HIP holds no record of the type, record the case `not-run` with that reason. A private integrator's mandatory case that is `not-run` for that reason still blocks the report: find a HIP that holds the type and run it again.
 
 | Case | HI type in the set | `hiTypes` value | Exit condition beyond the shared steps |
 |---|---|---|---|
@@ -292,45 +296,48 @@ If the patient's HIP holds no record of the type, record the case `not-run` with
 | HIU_FLOW_111 | Immunization record, structured or unstructured | `ImmunizationRecord` | The immunization record is shown, with its FHIR bundle |
 | HIU_FLOW_112 | Health record, structured or unstructured | `HealthDocumentRecord` | The health document is shown, with its FHIR bundle |
 | HIU_FLOW_113 | Wellness record, structured or unstructured | `WellnessRecord` | The wellness record is shown, with its FHIR bundle |
+| HIU_FLOW_114 | Invoice, structured | `Invoice` | The invoice is shown, with its FHIR bundle |
 
-### 2. Revoke Consent Request
+### 4. Consent Request Expired
+
+Applies to: HIU.
 
 Loop limit: 3 passes per test case.
 
-#### HIU_FLOW_201, the PHR app offers revocation. Mandatory for PHR apps. `human`, `screen`
+#### HIU_FLOW_301, a request nobody answers expires. Mandatory. `human`, `sandbox`, `screen`
 
-The set applies this case to PHR apps, not to an HIU. A PHR app shows an option to revoke a granted consent, and records when it was revoked. `hiecm.concept.consent-in-a-phr-app`
+Raise a fresh request as in HIU_FLOW_102 with the shortest expiry your form allows, such as two minutes. Tell the patient not to act on it in the PHR app. Wait past the expiry.
 
-If your system is an HIU only, record `not-run` with the reason "applies to PHR apps". The revocation itself is still the human step of HIU_FLOW_202.
+Exit condition: `m3_post_consent_v3_request_status` with the stored `consentRequestId` returns `202`, then a POST arrives at your `on-status` URL with `consentRequest.id` equal to the stored id and `consentRequest.status` `EXPIRED`. If a `notify` arrives with `notification.status` `EXPIRED`, paste it too and acknowledge it as in HIU_FLOW_105. The call log holds no `m3_post_consent_v3_fetch` and no `m3_post_data_flow_v3_health_information_request` for this request.
 
-#### HIU_FLOW_202, a revoked consent shows no records. Mandatory. `human`, `sandbox`, `screen`
+Screen check: the request shows as expired without anyone changing it by hand, with the time of expiry, and no record is shown for it.
 
-Start from a consent granted in HIU_FLOW_106 whose records your system has shown. Stop and ask the patient to revoke it for your HIU in the PHR app.
+A consent the patient granted also expires, at its `dataEraseAt`. That is the consent's validity, not this case. Once it passes, `m3_post_consent_v3_fetch` answers on `on-fetch` with `consent.status` `EXPIRED`, and your system stops showing the records. It is worth a run, but the set does not ask for it.
+
+### 5. Consent Request Revoked
+
+Applies to: HIU.
+
+Loop limit: 3 passes per test case.
+
+#### HIU_FLOW_201, the patient revokes a granted consent in the PHR app. Mandatory. `human`, `sandbox`, `screen`
+
+Start from a consent granted in HIU_FLOW_106 whose records your system has shown. Stop and ask the patient to open the consents in their PHR app, select the one granted to your HIU, and revoke it. `hiecm.concept.consent-in-a-phr-app`
+
+Exit condition: a POST arrives at your `notify` URL with `notification.status` `REVOKED` and the artefact ids in `notification.consentArtefacts`, and your system acknowledges it with `m3_post_consent_v3_request_hiu_on_notify`, which returns `202`. If nobody is there to revoke, record `needs-human`.
+
+Screen check: your consent list shows the consent as revoked, with the time of revocation.
+
+#### HIU_FLOW_202, a revoked consent shows no records. Mandatory. `sandbox`, `screen`
+
+Runs after HIU_FLOW_201, on the same consent.
 
 Exit condition, in order:
 
-1. A POST arrives at your `notify` URL with `notification.status` `REVOKED` and the artefact ids in `notification.consentArtefacts`.
-2. Your system acknowledges it with `m3_post_consent_v3_request_hiu_on_notify` and gets `202`.
-3. `m3_post_consent_v3_fetch` for a revoked artefact returns `202`, then `on-fetch` arrives with `consent.status` `REVOKED`.
-4. The call log holds no `m3_post_data_flow_v3_health_information_request` under that artefact after the notify.
+1. `m3_post_consent_v3_fetch` for a revoked artefact returns `202`, then `on-fetch` arrives with `consent.status` `REVOKED`.
+2. The call log holds no `m3_post_data_flow_v3_health_information_request` under that artefact after the notify.
 
-Screen check: the records fetched under that consent are no longer shown. The consent list shows the consent as revoked, with the time of revocation.
-
-### 3. Expiry of Consent Request
-
-Applies to: HIU. Mandatory.
-
-Loop limit: 3 passes per test case.
-
-#### HIU_FLOW_301, an expired consent shows no records. Mandatory. `human`, `sandbox`, `screen`
-
-Raise a fresh request. Stop and ask the patient to grant it with the shortest expiry the PHR app allows. Fetch the records once as in HIU_FLOW_106. Wait past the expiry.
-
-Exit condition: `m3_post_consent_v3_fetch` for the artefact returns `202`, then `on-fetch` arrives with `consent.status` `EXPIRED`. If a `notify` arrives with `notification.status` `EXPIRED`, paste it too and acknowledge it as in HIU_FLOW_105. After the expiry, the call log holds no `m3_post_data_flow_v3_health_information_request` under that artefact.
-
-Screen check: the records are no longer shown, and the consent list shows the consent as expired, with the time of expiry.
-
-A request the patient never answers expires too. That is the request window, not the consent's validity. `m3_post_consent_v3_request_status` then answers on `on-status` with `consentRequest.status` `EXPIRED`. It is worth a run, but it is not this case.
+Screen check: open the revoked consent in your system and try to view its records. The records fetched under it are no longer shown, and your system says the consent was revoked rather than showing an empty record.
 
 ## When the last case is recorded
 
@@ -339,7 +346,7 @@ Mark the run log finished, with the time and the count of each outcome. Then wri
 ```json
 {
   "skill": "abdm-m3",
-  "set": "M3 Building HIU, NHA, August 2022 sheet",
+  "set": "M3 Building HIU, NHA, revised 21 October 2026",
   "entity": "private",
   "run_started": "2026-10-01T10:12:40Z",
   "run_finished": "2026-10-01T11:48:03Z",
@@ -353,11 +360,11 @@ Mark the run log finished, with the time and the count of each outcome. Then wri
     {"id": "HIU_FLOW_108", "outcome": "passed", "evidence": "sandbox",
      "request_ids": ["4e19...", "c3a0..."],
      "observed": ["health-information/request 202, on-request transactionId present", "push entries 1, checksum matched", "health-information/notify 202 sessionStatus=RECEIVED"]},
-    {"id": "HIU_FLOW_202", "outcome": "needs-human", "evidence": "human",
+    {"id": "HIU_FLOW_201", "outcome": "needs-human", "evidence": "human",
      "request_ids": ["b7a1..."], "reason": "revocation is the patient's step in the PHR app; nobody present"},
-    {"id": "HIU_FLOW_201", "outcome": "not-run", "reason": "applies to PHR apps"}
+    {"id": "HIU_FLOW_114", "outcome": "not-run", "reason": "the patient's HIP holds no invoice"}
   ]
 }
 ```
 
-Then say three lines. First, how many cases passed, failed, need a human and were not run. Second, which mandatory cases are not `passed`; the fetch cases count as passed when at least one of them is. Third, the one case to fix first.
+Then say three lines. First, how many cases passed, failed, need a human and were not run. Second, which mandatory cases are not `passed`; for a private integrator that includes every fetch case, HIU_FLOW_107 to 114. Third, the one case to fix first.

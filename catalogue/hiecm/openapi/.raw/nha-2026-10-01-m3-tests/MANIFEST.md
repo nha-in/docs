@@ -2,6 +2,8 @@
 
 The M3 functional test case set, Building HIU, updated August 2022, as supplied on 1 October 2026. One sheet, 16 rows carrying a test case id, columns S.No, Function, Applicable To, Mandatory/Optional, Test Case ID, Functionality, Test Case, Steps, Expected Result, Suggestions, V2 APIs, V3 APIs, Actual Result, Status, Remarks. The page and the skill read the V3 APIs column. It carries no personal data. It is the source of `site/docs/hiecm/v3/resources/test-cases/m3.mdx` and `skills-src/hiecm-m3-test/SKILL.md`.
 
+Superseded on 22 October 2026 by `nha-2026-10-22-m3-tests`, which the page and the skill now read. Kept for the record.
+
 What the sheet says that the page or the skill could not use as written, kept here rather than in either:
 
 - The V3 APIs cell and the "Any one of them is mandatory" marking are merged across the fetch cases. The page gives each case the merged value.
