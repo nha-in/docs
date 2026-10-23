@@ -40,50 +40,54 @@ ROOT = Path(__file__).resolve().parent.parent
 RAW = ROOT / "catalogue" / "hiecm" / "openapi" / ".raw"
 ROUTES = ROOT / "site" / "src" / "data" / "api-routes.json"
 OUT = ROOT / "site" / "docs" / "hiecm" / "v3" / "resources" / "test-cases"
+# NHA's workbooks, as stored, so a reader downloads the sheet the page shows.
+# The site build does not run this script, so the copies are committed and
+# --check holds them to the bytes under .raw/.
+DOWNLOADS = ROOT / "site" / "static" / "downloads" / "test-cases"
 
 PAGES = {
     "m1": {
         "sources": [{"sheet": RAW / "nha-2026-10-22-m1-tests" / "M1_ABHA_CREATION_VERIFICATION_SCAN_AND_SHARE.xlsx"}],
-        "title": "M1 test cases",
+        "title": "M1 UI test cases",
         "label": "M1 Identity",
         "position": 2,
         "milestone": "[M1 Identity](/docs/hiecm/v3/milestones/m1)",
         "covers": "ABHA creation by Aadhaar OTP, face authentication, Aadhaar biometric, demographic authentication and driving licence, then login by ABHA number, ABHA address, mobile and Aadhaar, profile update, one ABHA per patient record, and sharing a profile by QR code",
         "skill": "[M1 Identity skill](/docs/hiecm/v3/milestones/m1#build-m1-with-an-ai-coding-assistant)",
-        "next": "[M2 test cases](/docs/hiecm/v3/resources/test-cases/m2)",
+        "next": "[M2 UI test cases](/docs/hiecm/v3/resources/test-cases/m2)",
     },
     "m2": {
         "sources": [{"sheet": RAW / "nha-2026-10-22-m2-tests" / "M2_BUILDING_HIP_TEST_CASES.xlsx"}],
-        "title": "M2 test cases",
+        "title": "M2 UI test cases",
         "label": "M2 Health Information Provider",
         "position": 3,
         "milestone": "[M2 Health Information Provider](/docs/hiecm/v3/milestones/m2)",
         "covers": "creating health records, linking care contexts to an ABHA address whether your facility or the patient starts it, and sharing records when a consent arrives",
         "skill": "[M2 skill](/docs/hiecm/v3/milestones/m2#build-m2-with-an-ai-coding-assistant)",
-        "next": "[M3 test cases](/docs/hiecm/v3/resources/test-cases/m3)",
+        "next": "[M3 UI test cases](/docs/hiecm/v3/resources/test-cases/m3)",
     },
     "m3": {
         "sources": [{"sheet": RAW / "nha-2026-10-22-m3-tests" / "M3_BUILDING_HIU_TEST_CASES.xlsx"}],
-        "title": "M3 test cases",
+        "title": "M3 UI test cases",
         "label": "M3 Health Information User",
         "position": 4,
         "milestone": "[M3 Health Information User](/docs/hiecm/v3/milestones/m3)",
         "covers": "raising a consent request, receiving the patient's decision, and fetching and showing the records the consent covers",
         "skill": "[M3 skill](/docs/hiecm/v3/milestones/m3#build-m3-with-an-ai-coding-assistant)",
-        "next": "[M4 test cases](/docs/hiecm/v3/resources/test-cases/m4)",
+        "next": "[M4 UI test cases](/docs/hiecm/v3/resources/test-cases/m4)",
     },
     "m4": {
         "sources": [
             {"sheet": RAW / "nha-2026-10-02-m4-tests" / "HFR_Test_Cases.xlsx", "tabs": "all", "section": "HFR {tab}"},
             {"sheet": RAW / "nha-2026-10-02-m4-tests" / "HPR_Test_Cases.xlsx", "section": "HPR"},
         ],
-        "title": "M4 test cases",
+        "title": "M4 UI test cases",
         "label": "M4 Registry Integration",
         "position": 5,
         "milestone": "[M4 Registry Integration](/docs/hiecm/v3/milestones/m4)",
         "covers": "searching, registering and updating a facility in the Health Facility Registry (HFR) and linking it to your software, then creating and updating a professional's profile in the Healthcare Professionals Registry (HPR)",
         "skill": "[M4 skill](/docs/hiecm/v3/milestones/m4#build-m4-with-an-ai-coding-assistant)",
-        "next": "[PHR application test cases](/docs/hiecm/v3/resources/test-cases/phr)",
+        "next": "[PHR application UI test cases](/docs/hiecm/v3/resources/test-cases/phr)",
     },
     "phr": {
         "sources": [{
@@ -98,7 +102,7 @@ PAGES = {
                 "Locker": "P4",
             },
         }],
-        "title": "PHR application test cases",
+        "title": "PHR application UI test cases",
         "label": "PHR application",
         "position": 6,
         "milestone": "[PHR application](/docs/hiecm/v3/milestones/p1)",
@@ -439,7 +443,7 @@ def cell(text):
 
 def marking(text, anchors):
     """Shorten the sheet's either-of marking and link the two cases it names."""
-    either = re.match(r"Either of the test cases (\S+) or (\S+) is mandatory for Gov\w* Optional for Private", text)
+    either = re.match(r"Either of the test cases (\S+) or (\S+) is mandatory for Gov\w*(?: only)?\.?(?: Optional for Private)?$", text)
     if not either:
         return cell(text or "Not marked")
     a, b = (f"[{i}](#{anchors.get(i, i.lower())})" for i in either.groups())
@@ -492,7 +496,7 @@ def render(spec, session, sections, routes):
         f"title: {spec['title']}",
         f"sidebar_label: {spec['label']}",
         f"sidebar_position: {spec['position']}",
-        f"description: The {len(cases)} {spec['label']} functional test cases, each with its id, marking, steps and expected result{', and the APIs it calls' if with_apis else ''}.",
+        f"description: The {len(cases)} {spec['label']} UI test cases, each with its id, marking, steps and expected result{', and the APIs it calls' if with_apis else ''}.",
         "page_type: reference",
         f"toc_max_heading_level: {3 if nested else 2}",
         "generated: true",
@@ -510,8 +514,12 @@ def render(spec, session, sections, routes):
         out.append("Each row keeps the case id the functional testing report uses, and links every API the case calls.")
     else:
         out.append("The sheet numbers its rows but gives them no ids, so each case here has an id built the way the HMIS ids are, from its PHR milestone and row: row P1 3.2 is `PHR_ADDR_302`, and P2, P3 and P4 are `PHR_APP_`, `PHR_HIU_` and `PHR_LOCKER_`. Quote the id when you report a result.")
+    sheets = list(dict.fromkeys(src["sheet"].name for src in spec["sources"]))
+    links = " and ".join(f"[{n}](pathname:///downloads/test-cases/{n})" for n in sheets)
     out += [
         "[How to read a case](/docs/hiecm/v3/resources/test-cases#how-to-read-a-case) explains the columns and markings.",
+        "",
+        f"Download the workbook{'s' if len(sheets) > 1 else ''}: {links}. The cases are run on your screens, and the result of each goes into the workbook, as [recording each result](/docs/hiecm/v3/resources/test-cases#recording-each-result-in-the-workbook) sets out.",
         "",
     ]
     if session:
@@ -547,6 +555,15 @@ def main():
     routes = load_routes()
     stale = False
     for name, spec in PAGES.items():
+        for src in spec["sources"]:
+            copy = DOWNLOADS / src["sheet"].name
+            same = copy.exists() and copy.read_bytes() == src["sheet"].read_bytes()
+            if check and not same:
+                stale = True
+                print(f"  {copy.relative_to(ROOT)}: OUT OF DATE")
+            elif not check and not same:
+                DOWNLOADS.mkdir(parents=True, exist_ok=True)
+                copy.write_bytes(src["sheet"].read_bytes())
         session, sections = sections_of(spec)
         text = render(spec, session, sections, routes)
         target = OUT / f"{name}.mdx"
