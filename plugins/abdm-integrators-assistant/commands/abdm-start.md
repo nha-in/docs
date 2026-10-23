@@ -40,6 +40,7 @@ Introduce this plugin in the order below, then stop and wait for an answer.
 - `/abdm-decode-error`: Turn an ABDM response into the code, the cause and the named fix.
 - `/abdm-preflight`: Check what must be true before any ABDM call, so a later failure is about the flow.
 - `/abdm-prove-encryption`: Prove your RSA padding against the ABDM sandbox before you build a flow on it.
+- `/abdm-test-setup`: Check what a functional test run needs on this machine for the run type you pick, and print the install command for each missing piece.
 
 ## The plan file
 

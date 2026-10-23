@@ -728,6 +728,137 @@ function withSurvey(scaffold) {
   return `${scaffold.slice(0, at)}\n${section}${scaffold.slice(at)}`;
 }
 
+// How a test run writes each case's result into NHA's workbook. It lives in
+// the Catalogue as shared.concept.test-workbook-write-back, script and all, and
+// folds into the test section of every module NHA publishes a workbook for:
+// M1 to M4, and P1 to P4, whose PHR workbook gets ids built from its rows.
+const WRITE_BACK_ATOM = 'shared.concept.test-workbook-write-back';
+const WRITE_BACK_MODULES = new Set(['m1', 'm2', 'm3', 'm4', 'p1', 'p2', 'p3', 'p4']);
+
+function writeBackSection() {
+  const {atoms} = loadAtoms();
+  const entry = atoms.get(WRITE_BACK_ATOM);
+  if (!entry) throw new Error(`${WRITE_BACK_ATOM} is missing, and every test section with a workbook folds it in`);
+  const body = entry.body.replace(/^#\s+.+$/m, '').trim();
+  return [
+    "## Writing results into NHA's workbook",
+    '',
+    'Ask for the workbook in the readiness check, and save the script below as `abdm-ft/abdm_workbook.py` before that check, because the check runs it. With a workbook, every case ends by writing its result into the sheet as below, after the run log row is updated. Without one, the run log and the manifest are the record, as before.',
+    '',
+    body.replace(/^## /gm, '### ').trim(),
+    '',
+    `From \`${WRITE_BACK_ATOM}\`.`,
+    '',
+  ].join('\n');
+}
+
+/** Inserts the write-back ahead of the closing section, or at the end when there is none. */
+function withWriteBack(test, moduleId) {
+  if (!test || !WRITE_BACK_MODULES.has(moduleId)) return test;
+  const marker = '\n## When the last case is recorded\n';
+  const at = test.indexOf(marker);
+  const section = writeBackSection();
+  if (at === -1) return `${test.trimEnd()}\n\n${section}`;
+  return `${test.slice(0, at)}\n${section}${test.slice(at)}`;
+}
+
+// How a test section runs a case as a ui run: Playwright for web screens,
+// Maestro for a PHR app, the PHR proof rule and the failure reason order.
+const UI_RUN_ATOM = 'shared.concept.test-ui-run';
+const UI_RUN_MODULES = new Set(['m1', 'm2', 'm3', 'm4', 'p1', 'p2', 'p3', 'p4']);
+
+function uiRunSection() {
+  const {atoms} = loadAtoms();
+  const entry = atoms.get(UI_RUN_ATOM);
+  if (!entry) throw new Error(`${UI_RUN_ATOM} is missing, and every test section folds it in`);
+  const body = entry.body.replace(/^#\s+.+$/m, '').trim();
+  return [
+    '## Running a case as a UI test',
+    '',
+    'Read this section when the run type is `ui` or `all`. Its readiness check joins the one above, and every rule above still holds.',
+    '',
+    body.replace(/^## /gm, '### ').trim(),
+    '',
+    `From \`${UI_RUN_ATOM}\`.`,
+    '',
+  ].join('\n');
+}
+
+/** Inserts the ui run ahead of the write-back, else ahead of the closing section, else at the end. */
+function withUiRun(test, moduleId) {
+  if (!test || !UI_RUN_MODULES.has(moduleId)) return test;
+  const section = uiRunSection();
+  for (const marker of ["\n## Writing results into NHA's workbook\n", '\n## When the last case is recorded\n']) {
+    const at = test.indexOf(marker);
+    if (at !== -1) return `${test.slice(0, at)}\n${section}${test.slice(at)}`;
+  }
+  return `${test.trimEnd()}\n\n${section}`;
+}
+
+// How the final test report is written once the last case is recorded: the
+// gate on every applicable mandatory case, then the report NHA asked for.
+const REPORT_ATOM = 'shared.concept.test-report';
+const REPORT_MODULES = new Set(['m1', 'm2', 'm3', 'm4', 'p1', 'p2', 'p3', 'p4']);
+
+function reportSection() {
+  const {atoms} = loadAtoms();
+  const entry = atoms.get(REPORT_ATOM);
+  if (!entry) throw new Error(`${REPORT_ATOM} is missing, and every test section folds it in`);
+  const body = entry.body.replace(/^#\s+.+$/m, '').trim();
+  return [
+    '## Writing the test report',
+    '',
+    'When the last case is recorded, save the script below as `abdm-ft/abdm_report.py` and run `check`. Run `build` only when `check` exits 0.',
+    '',
+    body.replace(/^## /gm, '### ').trim(),
+    '',
+    `From \`${REPORT_ATOM}\`.`,
+    '',
+  ].join('\n');
+}
+
+/** Inserts the report ahead of the closing section, or at the end when there is none. */
+function withReport(test, moduleId) {
+  if (!test || !REPORT_MODULES.has(moduleId)) return test;
+  const marker = '\n## When the last case is recorded\n';
+  const at = test.indexOf(marker);
+  const section = reportSection();
+  if (at === -1) return `${test.trimEnd()}\n\n${section}`;
+  return `${test.slice(0, at)}\n${section}${test.slice(at)}`;
+}
+
+// The rule every test run is held to before anything else: a person enters
+// every Aadhaar number, mobile number, OTP and approval, and the agent never
+// makes one up. A run that typed a made-up Aadhaar number and never asked for
+// the OTP failed every case for that reason alone, so it opens the section.
+const HUMAN_ENTRY_ATOM = 'shared.concept.test-human-entry';
+
+function humanEntrySection() {
+  const {atoms} = loadAtoms();
+  const entry = atoms.get(HUMAN_ENTRY_ATOM);
+  if (!entry) throw new Error(`${HUMAN_ENTRY_ATOM} is missing, and every test section opens with it`);
+  const body = entry.body.replace(/^#\s+.+$/m, '').trim();
+  return [
+    '## Read this first: this run is never hands-off',
+    '',
+    'A tester sits with this run from the first case to the last. Every Aadhaar number, mobile number, OTP, ABHA number or address, password, document number, biometric and approval is entered by that person, at the moment the case needs it. You never type one, never make one up, and never mock a response to get past one. This rule outranks every other rule in this file.',
+    '',
+    body.replace(/^## /gm, '### ').trim(),
+    '',
+    `From \`${HUMAN_ENTRY_ATOM}\`.`,
+    '',
+  ].join('\n');
+}
+
+/** Puts the rule straight after the section's title, before anything else. */
+function withHumanEntry(test) {
+  if (!test) return test;
+  const nl = test.indexOf('\n');
+  const section = humanEntrySection();
+  if (!/^# /.test(test) || nl === -1) return `${section}\n${test}`;
+  return `${test.slice(0, nl + 1)}\n${section}${test.slice(nl + 1)}`;
+}
+
 /** Which guided loop is which section of which skill. */
 const FOLD = Object.fromEntries(
   MODULES.map((module) => [
@@ -862,11 +993,13 @@ for (const module of MODULES) {
   // Test after debug: the functional test cases are what an integrator walks
   // once the build runs, and each case names the evidence a reviewer can
   // check against the gateway rather than a screenshot.
-  const test = fold.test ? guided(fold.test) : '';
+  // The test section, then how a case runs as a UI test, how its result goes
+  // into NHA's workbook, and how the report is written at the end.
+  const test = withHumanEntry(withReport(withUiRun(withWriteBack(fold.test ? guided(fold.test) : '', module.id), module.id), module.id));
   if (test) {
     files['references/test.md'] = test;
     covers.push(
-      `- **Test.** The functional test cases, one loop each, with the evidence the sandbox can vouch for and the manifest that replaces a screenshot report. [references/test.md](references/test.md)`,
+      `- **Test.** The functional test cases, one loop each, run as API or UI tests, with results written into NHA's workbook and the final test report once every mandatory case passes. Never hands-off: a tester enters every Aadhaar number, mobile number and OTP. [references/test.md](references/test.md)`,
     );
   }
 

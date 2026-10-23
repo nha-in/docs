@@ -1,6 +1,6 @@
 ---
 name: hiecm-p3-test
-description: "Use when walking the ABDM P3 functional test cases (PHR subscriptions, auto approval and the consent requests an HIU raises) against an integrator's own PHR app or HIU service and the sandbox: runs each case as a loop, records evidence the sandbox can vouch for, and writes the manifest that stands in for a screenshot report."
+description: "Use when walking the ABDM P3 functional test cases (PHR subscriptions, auto approval and the consent requests an HIU raises) against an integrator's own PHR app or HIU service and the sandbox: runs each case as a loop, records evidence the sandbox can vouch for, and writes NHA's workbook, the manifest of request ids a reviewer checks against the gateway, and the final test report."
 ---
 # HIE-CM p3 test
 
@@ -25,17 +25,21 @@ Walks the ABDM P3 functional test cases against the system you built and the san
 | A sandbox HIP that can link a new record to that address | A partner or your own test facility. Without one, the notification cases are `needs-human` |
 | The person present with their phone | Every grant, deny, edit and consent tap is a human step and the skill stops for it |
 | A folder for the run log | Your repository. `abdm-ft/` unless you name another |
+| NHA's PHR test case workbook, if results go into it | The workbook NHA sent you, copied into `abdm-ft/`. It has one tab per PHR milestone and no case ids; the script adds a Test Case ID column with the ids this skill uses. Writing into it needs Python 3.9 or later with `openpyxl` and `Pillow` |
+| For a `ui` run: your PHR app's APK, installed on an Android emulator or a device over adb | Your build. Android Studio's emulator, or a phone with USB debugging on |
+| For a `ui` run: Maestro, to drive the app | https://maestro.mobile.dev, Apache 2.0. `/abdm-test-setup` lists what is missing and prints the install command |
+| For a `ui` run: a test ABHA address and its login | A sandbox ABHA address the tester holds, typed at the app's own login when the run reaches it, never stored |
 
 ## Say one of these
 
 - "Walk the P3 test cases against my PHR app and my HIU, and log each one."
-- "Run only the subscription request cases, P3 1.1.1 to P3 1.1.5."
-- "Re-run P3 1.2.1, auto approval did not fire yesterday."
+- "Run only the subscription request cases, PHR_HIU_10101 to PHR_HIU_10105."
+- "Re-run PHR_HIU_10201, auto approval did not fire yesterday."
 - "Write a terminal script that runs the P3 test cases and waits for me to approve on the phone."
 
 ## What happens first
 
-Two questions, asked once: which side you built, and which cases. Then the preconditions for the first case are checked before anything is sent. Then the readiness check below. After it, nothing else is asked until a case needs a human or an authentication step.
+The first question is the run type. `ft` is the API functional test: your PHR app's backend against the sandbox, judged on calls and callbacks. `ui` is the UI test: an agent drives your PHR app on an Android emulator or device with Maestro, as the section "Running a case as a UI test" below sets out. `all` runs `ft` for the chosen cases, then `ui`. Then two questions, asked once: which side you built, and which cases. Then the preconditions for the first case are checked before anything is sent. Then the readiness check below. After it, nothing else is asked until a case needs a human or an authentication step.
 
 **Readiness check.** The run does not start until every row of "What it needs from you" that the chosen cases use is confirmed. Ask for each one in the terminal, one at a time. Record each in the run log's header as `ready`, `missing` or `not needed`, never the value itself.
 
@@ -46,6 +50,8 @@ Two questions, asked once: which side you built, and which cases. Then the preco
 | People and devices | Each is named for this run: who receives the OTPs, who approves in the PHR app, which device scans |
 | Entity type and claimed capabilities | Answered, because they decide which cases are mandatory |
 | The run log | Its folder exists and can be written: `abdm-ft/` in your repository unless you name another |
+| The workbook | `python3 abdm-ft/abdm_workbook.py cases <workbook>` lists the case ids, and every case chosen is among them. `not needed` when no workbook was given |
+| UI readiness, for a `ui` or `all` run | Every row of the readiness check in "Running a case as a UI test" is `ready`: the emulator or device, the APK installed, Maestro, and the tester present. `not needed` for an `ft` run |
 
 A `missing` row that a mandatory case needs stops the run before the first call. Say what is missing and ask the one question that would fix it.
 
@@ -69,7 +75,7 @@ Loop limit: 3 passes per test case. Hitting the limit is an escalation: state wh
 Every case names one of these. It decides what the manifest carries.
 
 - **sandbox.** A call or a callback the gateway sees. Evidence is the HTTP status, the body and the REQUEST-ID, pasted. For an asynchronous call it is the 202 and then the callback carrying the named field. A reviewer can check this against the gateway's own record, which is why it outranks the other two.
-- **screen.** A rule about what your app shows or stores, which no call proves. Evidence is one screenshot or a short recording. A screen case is attested, not observed, and the manifest marks it so.
+- **screen.** A rule about what your app shows or stores, which no call proves. Evidence is one screenshot or a short recording. A screen case is attested, not observed, and the manifest marks it so. In a `ui` run the agent observes the screen itself instead, as "Running a case as a UI test" sets out.
 - **human.** A step only a person can do. Evidence is the observation immediately before it and the outcome `needs-human` when nobody was there.
 
 ### Rules that hold for every case
@@ -88,12 +94,12 @@ Every case names one of these. It decides what the manifest carries.
 Append one block per loop pass. It is the raw material for the manifest.
 
 ```text
-case: P3 1.1.2   pass: 1 of 3   at: 2026-10-01T10:14:02Z
+case: PHR_HIU_10102   pass: 1 of 3   at: 2026-10-01T10:14:02Z
 observed: POST /api/hiecm/subscription-requests/v3/{subscriptionRequestId}/approve  REQUEST-ID 6f1c...  HTTP 202
 body: {"subscriptionId":"...","message":"..."}
 callback: POST /api/v3/hiu/subscription-requests/hiu/notify  notification.status GRANTED
-matched: exit condition for P3 1.1.2
-next: P3 1.1.3
+matched: exit condition for PHR_HIU_10102
+next: PHR_HIU_10103
 ```
 
 ### The run log
@@ -112,10 +118,10 @@ Readiness: credentials ready; system ready; OTP person ready; biometric device n
 
 | Case | Outcome | Request ids | Observed |
 |---|---|---|---|
-| P3 1.1.1 | passed | 6f1c..., a02d... | exit condition matched, pasted below |
-| P3 1.1.2 | needs-human | b7a1... | OTP prompt shown, left blank |
-| P3 1.1.3 | running | | |
-| P3 1.1.4 | pending | | |
+| PHR_HIU_10101 | passed | 6f1c..., a02d... | exit condition matched, pasted below |
+| PHR_HIU_10102 | needs-human | b7a1... | OTP prompt shown, left blank |
+| PHR_HIU_10103 | running | | |
+| PHR_HIU_10104 | pending | | |
 ```
 
 ### Authentication is never skipped
@@ -141,7 +147,7 @@ Asked for a test script, a test command or automated tests, build one interactiv
 | Before the first case, run the readiness check and create the run log | A run that starts without its credentials, people or devices fails cases for the wrong reason |
 | Every step in "Authentication is never skipped" is a terminal prompt, read with input hidden | A skipped login proves nothing, and a runner that never asks reaches no success path |
 | Update the run log after every case, then write the manifest beside it at the end | The person follows the run as it happens, and a stopped run resumes from the log |
-| Name every check by its case name from this skill, such as `P3 1.1.2`. Never invent a numbering such as `TC01` | The functional testing report quotes these names. A check with no case name answers nothing a reviewer asks |
+| Name every check by its case name from this skill, such as `PHR_HIU_10102`. Never invent a numbering such as `TC01` | The functional testing report quotes these names. A check with no case name answers nothing a reviewer asks |
 | At each `human` step, stop and prompt in the terminal: "grant the subscription on the phone, then press enter", "ask the facility to link a record, then press enter" | Every P3 success path passes through a person's decision. A runner that never asks never reaches one |
 | Never write a token to disk, a log or the manifest, and never hard code one | A login token acts for the person |
 | For an asynchronous call, wait on the HIU callback with a timeout, and match its `response.requestId` or its `subscriptionRequestId` to what you sent | The 202 alone proves only that the gateway took the request |
@@ -155,23 +161,25 @@ Asked for a test script, a test command or automated tests, build one interactiv
 A run reads like this.
 
 ```text
-P3 1.1.1  POST /api/hiecm/subscription-requests/v3/init  REQUEST-ID 3b9e...  HTTP 202  matched
-P3 1.1.1  callback on-init  subscriptionRequest.id present  matched
-P3 1.1.1  GET /api/hiecm/subscription-requests/v3/requests  REQUEST-ID 5e70...  HTTP 200  requests[].status REQUESTED  matched
+PHR_HIU_10101  POST /api/hiecm/subscription-requests/v3/init  REQUEST-ID 3b9e...  HTTP 202  matched
+PHR_HIU_10101  callback on-init  subscriptionRequest.id present  matched
+PHR_HIU_10101  GET /api/hiecm/subscription-requests/v3/requests  REQUEST-ID 5e70...  HTTP 200  requests[].status REQUESTED  matched
   Grant the subscription on the phone, then press enter. Leave blank if nobody is here:
-P3 1.1.2  callback hiu/notify  notification.status GRANTED  matched
-P3 1.1.2  passed
+PHR_HIU_10102  callback hiu/notify  notification.status GRANTED  matched
+PHR_HIU_10102  passed
 ```
 
 Nudge: calls with a missing `X-AUTH-TOKEN`, a wrong `X-CM-ID` or a made up subscription id test your client, not a case. Run them first if you want them, label them `preflight`, and keep them out of the case counts.
 
 ## Test cases
 
-The marks and the wording of each check are ABDM's, from the PHR mobile app test cases, Building HIU Service for PHR tab. That sheet carries no case ids, so each case here is named by its milestone and row, such as `P3 1.1.1`. Read the functional testing report against those names. The sections are grouped as the sheet groups them. Every operation id below is in a P specification, which carries the host, the headers and a full request.
+NHA's PHR sheet numbers its rows but gives them no ids, so each case here has an id built the way the HMIS ids are, from the PHR milestone and the row: row P1 3.2 is `PHR_ADDR_302`, and P2, P3 and P4 rows are `PHR_APP_`, `PHR_HIU_` and `PHR_LOCKER_`. The test case page shows each id with its row. Use the id in the run log, the manifest and the workbook.
+
+The marks and the wording of each check are ABDM's, from the PHR mobile app test cases, Building HIU Service for PHR tab. The sections are grouped as the sheet groups them. Every operation id below is in a P specification, which carries the host, the headers and a full request.
 
 Two calls this set leans on are not in any P specification. An HIU raises a consent request with `m3_post_consent_v3_request_init`, and fetches data with `m3_post_data_flow_v3_health_information_request`. Raising a request is a precondition below. A case whose result is data fetched is `not-run` with that reason.
 
-### P3 1.1.1 to 1.1.5: the subscription request
+### PHR_HIU_10101 to PHR_HIU_10105: the subscription request
 
 Mandatory.
 
@@ -181,38 +189,38 @@ Loop limit: 3 passes per test case.
 
 | Case | Evidence | Check | Exit condition |
 |---|---|---|---|
-| P3 1.1.1 | `sandbox`, `screen` | The HIU raises a subscription request, the app is notified, and it shows in Requests | `p3_post_subscription_requests_v3_init` with `subscription.patient.id`, `subscription.hiu.id`, `subscription.categories` and `subscription.period` returns 202. The `p3_post_v3_hiu_hiecm_subscription_requests_on_init` callback carries `subscriptionRequest.id`. `p3_get_subscription_requests_v3_requests` returns 200 with that `requests[].requestId` and `status` `REQUESTED`. Screen check: the notification and the request under Requests |
-| P3 1.1.2 | `sandbox`, `human` | The person grants it, choosing HI types, visit types and period, and it shows under Approved, Granted | The person grants. `p3_post_subscription_requests_v3_request_id_approve` with `includedSources[].hiTypes`, `includedSources[].categories` and `includedSources[].period` returns 202 with `subscriptionId`. The HIU's `p3_post_v3_hiu_subscription_requests_hiu_notify` callback carries `notification.status` `GRANTED`, and the HIU acknowledges with `p3_post_subscription_requests_v3_hiu_on_notify`, which returns 202. `p3_get_subscription_requests_v3_subscription_id` returns 200 with `status` `GRANTED` and `includedSources` as chosen |
-| P3 1.1.3 | `sandbox`, `human` | The person denies it, it shows under Requests, Denied, and the HIU gets no notifications | The person denies. `p3_post_subscription_requests_v3_request_id_deny` with `reason` returns 202 with `message`. The hiu/notify callback carries `notification.status` `DENIED`. No `p3_post_v3_hiu_subscription_notify` arrives for this person afterwards |
-| P3 1.1.4 | `sandbox`, `screen` | A request nobody acts on expires, and shows as Expired, never as Denied | Leave a fresh request alone past its window; the sheet gives 2 hours. `p3_get_subscription_requests_v3_requests` then returns 200 with that request's `status` `EXPIRED`, and the screen lists it under Expired. The sheet's same row asks that a grant gives access only for the period set; that is the `includedSources[].period` check in P3 1.1.2 |
-| P3 1.1.5 | `sandbox`, `human` | After a grant, the person deselects HI types, visit types or period and saves, and only the rest stays subscribed | The person edits and saves. `p3_put_subscription_requests_v3_patients_subscription_id` returns 202 with `subscriptionId`. `p3_get_subscription_requests_v3_subscription_id` then returns 200 with `includedSources[].hiTypes` and `includedSources[].period` as saved |
+| PHR_HIU_10101 | `sandbox`, `screen` | The HIU raises a subscription request, the app is notified, and it shows in Requests | `p3_post_subscription_requests_v3_init` with `subscription.patient.id`, `subscription.hiu.id`, `subscription.categories` and `subscription.period` returns 202. The `p3_post_v3_hiu_hiecm_subscription_requests_on_init` callback carries `subscriptionRequest.id`. `p3_get_subscription_requests_v3_requests` returns 200 with that `requests[].requestId` and `status` `REQUESTED`. Screen check: the notification and the request under Requests |
+| PHR_HIU_10102 | `sandbox`, `human` | The person grants it, choosing HI types, visit types and period, and it shows under Approved, Granted | The person grants. `p3_post_subscription_requests_v3_request_id_approve` with `includedSources[].hiTypes`, `includedSources[].categories` and `includedSources[].period` returns 202 with `subscriptionId`. The HIU's `p3_post_v3_hiu_subscription_requests_hiu_notify` callback carries `notification.status` `GRANTED`, and the HIU acknowledges with `p3_post_subscription_requests_v3_hiu_on_notify`, which returns 202. `p3_get_subscription_requests_v3_subscription_id` returns 200 with `status` `GRANTED` and `includedSources` as chosen |
+| PHR_HIU_10103 | `sandbox`, `human` | The person denies it, it shows under Requests, Denied, and the HIU gets no notifications | The person denies. `p3_post_subscription_requests_v3_request_id_deny` with `reason` returns 202 with `message`. The hiu/notify callback carries `notification.status` `DENIED`. No `p3_post_v3_hiu_subscription_notify` arrives for this person afterwards |
+| PHR_HIU_10104 | `sandbox`, `screen` | A request nobody acts on expires, and shows as Expired, never as Denied | Leave a fresh request alone past its window; the sheet gives 2 hours. `p3_get_subscription_requests_v3_requests` then returns 200 with that request's `status` `EXPIRED`, and the screen lists it under Expired. The sheet's same row asks that a grant gives access only for the period set; that is the `includedSources[].period` check in PHR_HIU_10102 |
+| PHR_HIU_10105 | `sandbox`, `human` | After a grant, the person deselects HI types, visit types or period and saves, and only the rest stays subscribed | The person edits and saves. `p3_put_subscription_requests_v3_patients_subscription_id` returns 202 with `subscriptionId`. `p3_get_subscription_requests_v3_subscription_id` then returns 200 with `includedSources[].hiTypes` and `includedSources[].period` as saved |
 
-### P3 1.2.1 to 1.2.3: the auto approval policy
-
-Mandatory.
-
-Loop limit: 3 passes per test case.
-
-**Preconditions.** P3 1.1.2 passed. A HIP that can create a new record for the person. An HIU that raises a consent request when notified.
-
-| Case | Evidence | Check | Exit condition |
-|---|---|---|---|
-| P3 1.2.1 | `sandbox`, `human` | With a policy set at grant, a consent request for a new record is granted with no tap, still shows in the app, and the HIU is notified | The person sets the policy. `p2_post_consent_v3_auto_approve` with `hiu.id` and `includedSources` returns 202. A HIP links a new record, and the HIU's `p3_post_v3_hiu_subscription_notify` callback carries `event.category` `LINK` or `DATA`. The HIU's consent request then shows `status` `GRANTED` on `p2_get_consent_v3_request_request_id`, with no `p2_post_consent_v3_request_request_id_approve` in your log. Screen check: the request appears in the app's history |
-| P3 1.2.2 | `sandbox`, `human` | With no policy, every consent request waits for the person | The HIU's consent request shows `status` `REQUESTED` on `p2_get_consent_v3_request_request_id` until the person taps Approve. After the tap, `p2_post_consent_v3_request_request_id_approve` returns 202 and the status is `GRANTED` |
-| P3 1.2.3 | `sandbox`, `human` | A disabled policy stops auto approval at once | The person disables it. `p2_post_consent_v3_auto_approve_auto_approval_id_disable` returns 202 with `message`. The next consent request from that HIU shows `status` `REQUESTED`, not `GRANTED` |
-
-### P3 1.3.1 and 1.3.2: notifications on a new record and a consent request
+### PHR_HIU_10201 to PHR_HIU_10203: the auto approval policy
 
 Mandatory.
 
 Loop limit: 3 passes per test case.
 
+**Preconditions.** PHR_HIU_10102 passed. A HIP that can create a new record for the person. An HIU that raises a consent request when notified.
+
 | Case | Evidence | Check | Exit condition |
 |---|---|---|---|
-| P3 1.3.1 | `sandbox`, `human` | The HIU is notified whenever a new record is created at a HIP under an approved subscription | A HIP links a record. The HIU's `p3_post_v3_hiu_subscription_notify` callback carries `event.id`, `event.category`, `event.subscriptionId` equal to the subscription, and `event.content.hip.id`. The HIU acknowledges with `p3_post_subscription_requests_v3_hiu_care_context_on_notify`, `acknowledgement.eventId` equal to `event.id`, which returns 202 |
-| P3 1.3.2 | `sandbox`, `screen` | A consent request from an HIU reaches the app, which shows its details with Grant and Deny | An HIU raises a request with `m3_post_consent_v3_request_init`. `p2_get_consent_v3_request_request_id` returns 200 with `status` `REQUESTED`, `hiu.id`, `purpose.code` and `permission.dateRange`. Screen check: the notification, then the details with Grant and Deny. `hiecm.concept.consent-in-a-phr-app` |
+| PHR_HIU_10201 | `sandbox`, `human` | With a policy set at grant, a consent request for a new record is granted with no tap, still shows in the app, and the HIU is notified | The person sets the policy. `p2_post_consent_v3_auto_approve` with `hiu.id` and `includedSources` returns 202. A HIP links a new record, and the HIU's `p3_post_v3_hiu_subscription_notify` callback carries `event.category` `LINK` or `DATA`. The HIU's consent request then shows `status` `GRANTED` on `p2_get_consent_v3_request_request_id`, with no `p2_post_consent_v3_request_request_id_approve` in your log. Screen check: the request appears in the app's history |
+| PHR_HIU_10202 | `sandbox`, `human` | With no policy, every consent request waits for the person | The HIU's consent request shows `status` `REQUESTED` on `p2_get_consent_v3_request_request_id` until the person taps Approve. After the tap, `p2_post_consent_v3_request_request_id_approve` returns 202 and the status is `GRANTED` |
+| PHR_HIU_10203 | `sandbox`, `human` | A disabled policy stops auto approval at once | The person disables it. `p2_post_consent_v3_auto_approve_auto_approval_id_disable` returns 202 with `message`. The next consent request from that HIU shows `status` `REQUESTED`, not `GRANTED` |
 
-### P3 1.4.1 to 1.4.4: what an HIU can fetch under each consent state
+### PHR_HIU_10301 and 1.3.2: notifications on a new record and a consent request
+
+Mandatory.
+
+Loop limit: 3 passes per test case.
+
+| Case | Evidence | Check | Exit condition |
+|---|---|---|---|
+| PHR_HIU_10301 | `sandbox`, `human` | The HIU is notified whenever a new record is created at a HIP under an approved subscription | A HIP links a record. The HIU's `p3_post_v3_hiu_subscription_notify` callback carries `event.id`, `event.category`, `event.subscriptionId` equal to the subscription, and `event.content.hip.id`. The HIU acknowledges with `p3_post_subscription_requests_v3_hiu_care_context_on_notify`, `acknowledgement.eventId` equal to `event.id`, which returns 202 |
+| PHR_HIU_10302 | `sandbox`, `screen` | A consent request from an HIU reaches the app, which shows its details with Grant and Deny | An HIU raises a request with `m3_post_consent_v3_request_init`. `p2_get_consent_v3_request_request_id` returns 200 with `status` `REQUESTED`, `hiu.id`, `purpose.code` and `permission.dateRange`. Screen check: the notification, then the details with Grant and Deny. `hiecm.concept.consent-in-a-phr-app` |
+
+### PHR_HIU_10401 to PHR_HIU_10404: what an HIU can fetch under each consent state
 
 Mandatory. Each case's result is data fetched or refused, which needs `m3_post_data_flow_v3_health_information_request`. No P specification publishes it.
 
@@ -220,18 +228,18 @@ Loop limit: 3 passes per test case.
 
 | Case | Evidence | Check | Exit condition |
 |---|---|---|---|
-| P3 1.4.1 | not-run | Approved: the HIU fetches and views the data | `not-run`: needs the M3 health information request. The approval half is P2 10.1 |
-| P3 1.4.2 | not-run | Denied: the HIU cannot fetch | `not-run`: as P3 1.4.1. The denial half is P2 9.2 |
-| P3 1.4.3 | not-run | Expired or not acted on: the HIU cannot fetch | `not-run`: as P3 1.4.1. The expiry half is P2 9.3 |
-| P3 1.4.4 | not-run | Revoked: the HIU cannot fetch | `not-run`: as P3 1.4.1. The revocation half is P2 10.2 |
+| PHR_HIU_10401 | not-run | Approved: the HIU fetches and views the data | `not-run`: needs the M3 health information request. The approval half is PHR_APP_1001 |
+| PHR_HIU_10402 | not-run | Denied: the HIU cannot fetch | `not-run`: as PHR_HIU_10401. The denial half is PHR_APP_902 |
+| PHR_HIU_10403 | not-run | Expired or not acted on: the HIU cannot fetch | `not-run`: as PHR_HIU_10401. The expiry half is PHR_APP_903 |
+| PHR_HIU_10404 | not-run | Revoked: the HIU cannot fetch | `not-run`: as PHR_HIU_10401. The revocation half is PHR_APP_1002 |
 
-### P3 1.5.1: one consent artefact per HIP
+### PHR_HIU_10501: one consent artefact per HIP
 
 Mandatory. `sandbox` and `human`.
 
 Loop limit: 3 passes per test case.
 
-#### P3 1.5.1, the artefacts are plural
+#### PHR_HIU_10501, the artefacts are plural
 
 The person grants one consent request across at least two HIPs. Exit condition: `p2_get_consent_v3_artefact_request_request_id` returns 200 with one entry per HIP, each with `status` `GRANTED` and a distinct `consentDetail.hip.id`, and the number of entries equals the number of HIPs granted. The HIU's own artefact fetch, and the records seen against each HIP, are M3. `hiecm.concept.m3-plural-artefacts-and-codes`
 
@@ -239,7 +247,7 @@ Nudge: an HIU that keeps the first artefact and drops the rest fetches from one 
 
 ## When the last case is recorded
 
-Mark the run log finished, with the time and the count of each outcome. Then write the manifest beside it, with the same name and `.json`. It is the whole report. Case names to request ids, nothing else, so a reviewer checks it against the gateway's own record rather than reading screenshots. Secrets never appear in it: no tokens, no client secret.
+Mark the run log finished, with the time and the count of each outcome. Then write the manifest beside it, with the same name and `.json`. It maps case names to request ids, nothing else. Those REQUEST-IDs are the evidence a reviewer can check against the gateway's own record. Secrets never appear in it: no tokens, no client secret. The run log and the manifest are written on every run. The manifest is not the final report: the section "Writing the test report" writes that, once its `check` exits 0.
 
 ```json
 {
@@ -250,15 +258,15 @@ Mark the run log finished, with the time and the count of each outcome. Then wri
   "run_finished": "2026-10-01T11:48:03Z",
   "client_id": "<your sandbox client id>",
   "cases": [
-    {"id": "P3 1.1.2", "outcome": "passed", "evidence": "sandbox",
+    {"id": "PHR_HIU_10102", "outcome": "passed", "evidence": "sandbox",
      "request_ids": ["6f1c...", "a02d..."],
      "observed": ["approve 202 subscriptionId", "hiu/notify notification.status=GRANTED"]},
-    {"id": "P3 1.1.4", "outcome": "passed", "evidence": "sandbox",
+    {"id": "PHR_HIU_10104", "outcome": "passed", "evidence": "sandbox",
      "request_ids": ["c9e4..."], "observed": ["requests 200 status=EXPIRED"],
      "attachment": "expired-tab-2026-10-01.png"},
-    {"id": "P3 1.3.1", "outcome": "needs-human", "evidence": "human",
+    {"id": "PHR_HIU_10301", "outcome": "needs-human", "evidence": "human",
      "reason": "no facility partner to link a new record"},
-    {"id": "P3 1.4.1", "outcome": "not-run", "reason": "health information request is M3; no P specification publishes it"}
+    {"id": "PHR_HIU_10401", "outcome": "not-run", "reason": "health information request is M3; no P specification publishes it"}
   ]
 }
 ```

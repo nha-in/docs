@@ -1,6 +1,6 @@
 ---
 name: hiecm-m4-test
-description: "Use when walking the ABDM M4 functional test cases (Health Facility Registry and Healthcare Professionals Registry) against an integrator's own system and the sandbox: runs each case as a loop, records evidence the registry can vouch for, and writes the manifest that stands in for a screenshot report."
+description: "Use when walking the ABDM M4 functional test cases (Health Facility Registry and Healthcare Professionals Registry) against an integrator's own system and the sandbox: runs each case as a loop, records evidence the registry can vouch for, and writes NHA's workbook, the manifest of request ids a reviewer checks against the gateway, and the final test report."
 ---
 # HIE-CM m4 test
 
@@ -27,6 +27,10 @@ Walks the ABDM M4 functional test cases, facility and professional registration,
 | Your `bridgeId`, and a facility id for the bridge cases | The bridge from your sandbox registration. The facility id from a submitted facility, or from a search |
 | Which registries your system integrates | HFR, HPR or both. Cases for a registry you do not integrate are recorded `not-run` with that reason |
 | A folder for the run log | Your repository. `abdm-ft/` unless you name another |
+| NHA's test case workbooks for this module, if results go into them | M4 has two, HFR and HPR. Copy each NHA sent you into `abdm-ft/`. Writing into them needs Python 3.9 or later with `openpyxl` and `Pillow` |
+| For a `ui` run: your application's URL | Your deployment, reachable from the browser on this machine |
+| For a `ui` run: a tester login for your application | A test account in your application, read from an environment variable you name or typed at a hidden prompt. It is never written to the run log, the evidence or the workbook |
+| For a `ui` run: Node 18 or later, the Playwright MCP server and a browser | The integrators plugin starts `@playwright/mcp@0.0.83`, which the first start downloads with `npx`. Install the browser the server reports missing, chrome or chromium. `/abdm-test-setup` lists what is missing. Without the plugin, the section "Running a case as a UI test" lists each install command |
 
 ## Say one of these
 
@@ -34,10 +38,11 @@ Walks the ABDM M4 functional test cases, facility and professional registration,
 - "Run only the HFR Bridge linkage cases."
 - "Re-run HFR-121, the HIP name was refused on the second bridge."
 - "Write a terminal script that runs the HPR cases and asks me for each OTP."
+- "Run the HFR and HPR test cases as UI tests against my app and fill NHA's workbooks."
 
 ## What happens first
 
-One question: which cases. All of them, one group, or a list of ids. Then the preconditions for the first case are checked before anything is sent. Then the readiness check below. After it, nothing else is asked until a case needs a human or an authentication step.
+The first question is the run type. `ft` is the API functional test: your system against the sandbox, judged on calls and callbacks. `ui` is the UI test: an agent drives your application's screens, as the section "Running a case as a UI test" below sets out. `all` runs `ft` for the chosen cases, then `ui`. The second question: which cases. All of them, one group, or a list of ids. Then the preconditions for the first case are checked before anything is sent. Then the readiness check below. After it, nothing else is asked until a case needs a human or an authentication step.
 
 **Readiness check.** The run does not start until every row of "What it needs from you" that the chosen cases use is confirmed. Ask for each one in the terminal, one at a time. Record each in the run log's header as `ready`, `missing` or `not needed`, never the value itself.
 
@@ -48,6 +53,8 @@ One question: which cases. All of them, one group, or a list of ids. Then the pr
 | People and devices | Each is named for this run: who receives the OTPs, who approves in the PHR app, which device scans |
 | Entity type and claimed capabilities | Answered, because they decide which cases are mandatory |
 | The run log | Its folder exists and can be written: `abdm-ft/` in your repository unless you name another |
+| The workbooks | For each of HFR and HPR, `python3 abdm-ft/abdm_workbook.py cases <workbook>` lists the case ids, and every case chosen from that registry is among them. Each workbook has its own results file. `not needed` when no workbook was given |
+| UI readiness, for a `ui` or `all` run | Every row of the readiness check in "Running a case as a UI test" is `ready`: Node, the Playwright tools, a browser, the application URL and the tester login. `not needed` for an `ft` run |
 
 A `missing` row that a mandatory case needs stops the run before the first call. Say what is missing and ask the one question that would fix it.
 
@@ -71,7 +78,7 @@ Loop limit: 3 passes per test case. Hitting the limit is an escalation: state wh
 Every case names one or more of these. They decide what the manifest carries.
 
 - **sandbox.** A call the registry sees. Evidence is the HTTP status, the body and the identifier the registry returned: `txnId`, `trackingId`, `facilityId` or `hprId`. The exit condition is a literal in the body. A reviewer can check the identifier against the registry's own record, which is why this outranks the other two.
-- **screen.** A rule about what your form shows, refuses or sends, which no call proves. Evidence is one screenshot or a short recording and the rule it satisfies. Where a row says "the logged request carries" a path, paste that line of your request log too. A screen case is attested, not observed, and the manifest marks it so.
+- **screen.** A rule about what your form shows, refuses or sends, which no call proves. Evidence is one screenshot or a short recording and the rule it satisfies. Where a row says "the logged request carries" a path, paste that line of your request log too. A screen case is attested, not observed, and the manifest marks it so. In a `ui` run the agent observes the screen itself instead, as "Running a case as a UI test" sets out.
 - **human.** A step only a person can do. Evidence is the last observation before it and the outcome `needs-human` when nobody was there.
 
 Most HFR rows test one form field. They are `screen` for the rule your form enforces and `sandbox` for the call that saves the field. Both halves are needed for a pass.
@@ -170,7 +177,7 @@ Asked for a test script, a test command or automated tests, build one interactiv
 | Before the first case, run the readiness check and create the run log | A run that starts without its credentials, people or devices fails cases for the wrong reason |
 | Every step in "Authentication is never skipped" is a terminal prompt, read with input hidden | A skipped login proves nothing, and a runner that never asks reaches no success path |
 | Update the run log after every case, then write the manifest beside it at the end | The person follows the run as it happens, and a stopped run resumes from the log |
-| Name every check by its case id from this skill, such as `HFR-010` or `HPR-011`. Never invent a numbering such as `TC01`. Mark the two bridge linkage runs as occurrence 1 and 2 | The functional testing report quotes these ids. A check with no case id answers nothing a reviewer asks |
+| Name every check by its case id from this skill, such as `HFR-010` or `HPR-011`. Never invent a numbering such as `TC01`. Mark the two bridge linkage runs as occurrence 1 and 2. In the HFR workbook the second occurrence's ids are `HFR-118#2` to `HFR-123#2`, as `cases` lists them; write its results under those ids | The functional testing report quotes these ids. A check with no case id answers nothing a reviewer asks |
 | At each `human` step, stop and prompt in the terminal. For Aadhaar authentication, print the `url` and wait for Enter once the person has finished there. For a mobile OTP, read it from stdin, encrypt it, send it | Every HPR success path passes through Aadhaar authentication and often an OTP. A runner that never asks never reaches one |
 | Never ask for the Aadhaar number in the terminal. Never write a typed value to disk, a log or the manifest, and never hard code one | The Aadhaar number belongs on the hosted page. An OTP or a password belongs to the person, not the run |
 | Run each `sandbox` row's success call and the refusal its exit condition names as separate checks | The case passes only when both are observed |
@@ -202,7 +209,7 @@ Nudge: a certificate fetch, a session call, or a call with a made up `trackingId
 
 ## Test cases
 
-The ids, the mandatory marks and the wording of each check are ABDM's, from the M4 HFR and HPR test case sets of 2 October 2026. The groups follow the set. Where the set names an operation, the operation id here is the one in `references/integrate.md`, which carries the host, the headers and a full request.
+The ids, the mandatory marks and the wording of each check are ABDM's, from the M4 HFR and HPR test case sets sent on 22 October 2026, the same files the sandbox site publishes. The groups follow the set. Where the set names an operation, the operation id here is the one in `references/integrate.md`, which carries the host, the headers and a full request.
 
 ### HFR Search facility
 
@@ -251,8 +258,8 @@ Loop limit: 3 passes per test case.
 | HFR-024 | `screen`, `sandbox` | Optional. Mobile number for public display, `facilityContactInformation.facilityContactNumber`. 10 digits, no letters or special characters. | Screen: `987654321` and `98765abc12` refused, nothing sent. Sandbox: `m4_post_v1_5_facility_basic_information` returns 200 with `trackingId` present. |
 | HFR-025 | `screen`, `sandbox` | Optional. Email for public display, `facilityContactInformation.facilityEmailId`. A valid email format. | Screen: `clinic@` and `clinic.example.com` refused, nothing sent. Sandbox: `m4_post_v1_5_facility_basic_information` returns 200 with `trackingId` present. |
 | HFR-026 | `screen`, `sandbox` | Optional. Website, `facilityContactInformation.websiteLink`. A valid link. | Screen: `not a link` refused, nothing sent. Sandbox: `m4_post_v1_5_facility_basic_information` returns 200 with `trackingId` present. |
-| HFR-027 | `screen`, `sandbox` | Mandatory. Building photograph, `facilityUploads.facilityBuildingPhoto` with `name` and `value`. One file, PNG, JPEG or JPG, at most 5 MB. | Screen: a 6 MB image and a PDF refused, a second file not accepted. Sandbox: `m4_post_v1_5_facility_basic_information` returns 200 with `trackingId` present. |
-| HFR-028 | `screen`, `sandbox` | Mandatory. Board photograph, `facilityUploads.facilityBoardPhoto` with `name` and `value`. Same rule as the building photograph. | Screen: a 6 MB image and a PDF refused, a second file not accepted. Sandbox: `m4_post_v1_5_facility_basic_information` returns 200 with `trackingId` present. |
+| HFR-027 | `screen`, `sandbox` | Optional. Building photograph, `facilityUploads.facilityBuildingPhoto` with `name` and `value`. One file, PNG, JPEG or JPG, at most 5 MB. | Screen: a 6 MB image and a PDF refused, a second file not accepted. Sandbox: `m4_post_v1_5_facility_basic_information` returns 200 with `trackingId` present. |
+| HFR-028 | `screen`, `sandbox` | Optional. Board photograph, `facilityUploads.facilityBoardPhoto` with `name` and `value`. Same rule as the building photograph. | Screen: a 6 MB image and a PDF refused, a second file not accepted. Sandbox: `m4_post_v1_5_facility_basic_information` returns 200 with `trackingId` present. |
 | HFR-029 | `screen`, `sandbox` | Optional. Address proof type, `facilityAddressProof[].addressProofType`. Several can be chosen. Codes come from master data type `ADDRESS-PROOF`. | Screen: more than one type can be chosen. Sandbox: `m4_get_v1_5_facility_get_master_data` with `type` `ADDRESS-PROOF` returns 200 with `data[0].code` present. Sandbox: `m4_post_v1_5_facility_basic_information` returns 200 with `trackingId` present. |
 | HFR-030 | `screen`, `sandbox` | Mandatory when an address proof type is chosen. Address proof, `facilityAddressProof[].addressProofAttachment`. One file per chosen type, at most 5 MB. | Screen: a chosen type with no file is refused, and a 6 MB file is refused. Sandbox: `m4_post_v1_5_facility_basic_information` returns 200 with `trackingId` present. |
 | HFR-031 | `screen`, `sandbox` | Mandatory. Ownership, `facilityInformation.ownershipCode`. A dropdown, one value. Codes come from master data type `OWNER`. | Screen: only one value can be chosen. Sandbox: `m4_get_v1_5_facility_get_master_data` with `type` `OWNER` returns 200 with `data[0].code` present. Sandbox: `m4_post_v1_5_facility_basic_information` returns 200 with `trackingId` present. |
@@ -410,7 +417,7 @@ Loop limit: 3 passes per test case.
 
 ### HFR Bridge linkage, first occurrence
 
-The set lists the bridge linkage rows twice, with the same ids. The first occurrence links one bridge to a facility. The second, below, links a second bridge to the same facility and adds two uniqueness checks. Record both, marked occurrence 1 and occurrence 2.
+The set lists the bridge linkage rows twice, with the same ids. The first occurrence links one bridge to a facility. The second, below, links a second bridge to the same facility and adds two uniqueness checks. In the HFR workbook the second occurrence's rows are `HFR-118#2` to `HFR-123#2`. Record both, marked occurrence 1 and occurrence 2.
 
 Loop limit: 3 passes per test case.
 
@@ -507,9 +514,9 @@ Nudge: the documents in HPR-059, HPR-069 and HPR-075 are not finished until they
 | HPR-057 | `screen` | Mandatory. Registration number, `practitioner.registrationAcademic.registrationData[].registrationNumber`, typed. | Screen: saving with the field empty is refused. The logged `m4_post_v1_doctors_register_professional_new` request carries `practitioner.registrationAcademic.registrationData[].registrationNumber`. |
 | HPR-058 | `screen` | Mandatory. Registration date, `practitioner.registrationAcademic.registrationData[].registrationDate`, typed or picked. | Screen: saving with the field empty is refused. The logged `m4_post_v1_doctors_register_professional_new` request carries `practitioner.registrationAcademic.registrationData[].registrationDate`. |
 | HPR-059 | `screen` | Mandatory. Registration certificate, `practitioner.registrationAcademic.registrationData[].registrationCertificate`, a base64 image with `fileType` and `data`. | Screen: saving with the field empty is refused. The logged `m4_post_v1_doctors_register_professional_new` request carries `practitioner.registrationAcademic.registrationData[].registrationCertificate.data`. |
-| HPR-060 | `screen` | Mandatory. Name differs on the registration certificate, `practitioner.registrationAcademic.registrationData[].isNameDifferentInCertificate`, yes or no. Yes asks for a PDF, PNG, JPEG or JPG of at most 5 MB. | Screen: a 6 MB file refused, nothing sent. The logged `m4_post_v1_doctors_register_professional_new` request carries `practitioner.registrationAcademic.registrationData[].isNameDifferentInCertificate`. |
+| HPR-060 | `screen` | Optional. Name differs on the registration certificate, `practitioner.registrationAcademic.registrationData[].isNameDifferentInCertificate`, yes or no. Yes asks for a PDF, PNG, JPEG or JPG of at most 5 MB. | Screen: a 6 MB file refused, nothing sent. The logged `m4_post_v1_doctors_register_professional_new` request carries `practitioner.registrationAcademic.registrationData[].isNameDifferentInCertificate`. |
 | HPR-061 | `screen` | Non-mandatory. Proof of name change for registration, `practitioner.registrationAcademic.registrationData[].proofOfNameChangeCertificate`, asked for only on yes, at most 5 MB. | Screen: a 6 MB file refused, nothing sent. The logged `m4_post_v1_doctors_register_professional_new` request carries `practitioner.registrationAcademic.registrationData[].proofOfNameChangeCertificate`. |
-| HPR-062 | `screen`, `sandbox` | Optional. Degree or diploma, `practitioner.registrationAcademic.registrationData[].qualifications[].nameOfDegreeOrDiplomaObtained`, from a dropdown. | Sandbox: `m4_post_v1_masters_courses` returns 200. Screen: saving with the field empty is refused. The logged `m4_post_v1_doctors_register_professional_new` request carries `practitioner.registrationAcademic.registrationData[].qualifications[].nameOfDegreeOrDiplomaObtained`. |
+| HPR-062 | `screen`, `sandbox` | Mandatory. Degree or diploma, `practitioner.registrationAcademic.registrationData[].qualifications[].nameOfDegreeOrDiplomaObtained`, from a dropdown. | Sandbox: `m4_post_v1_masters_courses` returns 200. Screen: saving with the field empty is refused. The logged `m4_post_v1_doctors_register_professional_new` request carries `practitioner.registrationAcademic.registrationData[].qualifications[].nameOfDegreeOrDiplomaObtained`. |
 | HPR-063 | `screen`, `sandbox` | Mandatory. Country of the qualification, `practitioner.registrationAcademic.registrationData[].qualifications[].country`, from a dropdown. | Sandbox: `m4_get_v1_masters_countries` returns 200. Screen: saving with the field empty is refused. The logged `m4_post_v1_doctors_register_professional_new` request carries `practitioner.registrationAcademic.registrationData[].qualifications[].country`. |
 | HPR-064 | `screen`, `sandbox` | Mandatory. State of the qualification, `practitioner.registrationAcademic.registrationData[].qualifications[].state`, from a dropdown. | Sandbox: `m4_get_v1_masters_states` returns 200. Screen: saving with the field empty is refused. The logged `m4_post_v1_doctors_register_professional_new` request carries `practitioner.registrationAcademic.registrationData[].qualifications[].state`. |
 | HPR-065 | `screen`, `sandbox` | Mandatory. College, `practitioner.registrationAcademic.registrationData[].qualifications[].college`, from a dropdown. | Sandbox: `m4_get_v1_masters_colleges_stateid_medicineid` returns 200. Screen: saving with the field empty is refused. The logged `m4_post_v1_doctors_register_professional_new` request carries `practitioner.registrationAcademic.registrationData[].qualifications[].college`. |
@@ -523,7 +530,7 @@ Nudge: the documents in HPR-059, HPR-069 and HPR-075 are not finished until they
 | HPR-073 | `screen` | Mandatory. On no, the reason, `practitioner.currentWorkDetails.reasonForNotWorking`, from a dropdown with a free text option. | Screen: no, with no reason, refused. The logged `m4_post_v1_doctors_register_professional_new` request carries `practitioner.currentWorkDetails.reasonForNotWorking`. |
 | HPR-074 | `screen` | Mandatory. On yes, a choice of Government, Private or Both, `practitioner.currentWorkDetails.chooseWorkStatus`. | Screen: yes, with no choice, refused. The logged `m4_post_v1_doctors_register_professional_new` request carries `practitioner.currentWorkDetails.chooseWorkStatus`. |
 | HPR-075 | `screen` | Mandatory. For Government or Both, a document such as a payslip or transfer order, `practitioner.currentWorkDetails.certificateAttachment`, at most 5 MB. Private needs none. | Screen: Government with no document refused; Private saves with none. The logged `m4_post_v1_doctors_register_professional_new` request carries `practitioner.currentWorkDetails.certificateAttachment`. |
-| HPR-076 | `screen`, `sandbox` | Mandatory. Facility declaration, `practitioner.currentWorkDetails.facilityDeclarationData`. The professional finds the facility by name or facility id. | Sandbox: `m4_post_facilitymanagement_v1_5_facility_search` returns 200 with `facilities[0].facilityId` present. The logged `m4_post_v1_doctors_register_professional_new` request carries that value as `practitioner.currentWorkDetails.facilityDeclarationData.facilityId`. |
+| HPR-076 | `screen`, `sandbox` | Mandatory where the professional works in a government facility or both. Facility declaration, `practitioner.currentWorkDetails.facilityDeclarationData`. The professional finds the facility by name or facility id. | Sandbox: `m4_post_facilitymanagement_v1_5_facility_search` returns 200 with `facilities[0].facilityId` present. The logged `m4_post_v1_doctors_register_professional_new` request carries that value as `practitioner.currentWorkDetails.facilityDeclarationData.facilityId`. |
 | HPR-077 | `sandbox`, `human` | Mandatory. Preview the profile and submit. An SMS or email confirms it. | Sandbox: `m4_post_v1_doctors_register_professional_new` returns 200 with `hprId` and `status` present. Human: the professional confirms the SMS or email arrived. Nobody present: `needs-human`. |
 
 ### HPR Fetch, update and upload
@@ -540,12 +547,12 @@ Loop limit: 3 passes per test case.
 
 ## When the last case is recorded
 
-Mark the run log finished, with the time and the count of each outcome. Then write the manifest beside it, with the same name and `.json`. It is the whole report. Case ids to the identifiers the registry returned, nothing else, so a reviewer checks it against the registry's own record rather than reading screenshots. Secrets never appear in it: no tokens, no OTPs, no Aadhaar numbers, no passwords, no mobile numbers, no client secret.
+Mark the run log finished, with the time and the count of each outcome. Then write the manifest beside it, with the same name and `.json`. It maps case ids to the identifiers the registry returned, nothing else. Those identifiers are the evidence a reviewer can check against the registry's own record. Secrets never appear in it: no tokens, no OTPs, no Aadhaar numbers, no passwords, no mobile numbers, no client secret. The run log and the manifest are written on every run. The manifest is not the final report: the section "Writing the test report" writes that, once its `check` exits 0.
 
 ```json
 {
   "skill": "abdm-m4",
-  "set": "M4 HFR and HPR test cases, NHA, 2 October 2026",
+  "set": "M4 HFR and HPR test cases, NHA, sent 22 October 2026",
   "registries": ["HFR", "HPR"],
   "run_started": "2026-10-01T10:12:40Z",
   "run_finished": "2026-10-01T12:03:11Z",

@@ -2,6 +2,8 @@
 
 The M4 functional test case sets, sent with NHA's review of 2 October 2026 for the M4 test cases page. Two workbooks:
 
+Superseded on 23 October 2026 by `nha-2026-10-22-m4-tests`, the copies NHA sent on 22 October, which the page and the skill now read. Kept for the record.
+
 - `HFR_Test_Cases.xlsx`, sent as `HFR_Test Cases (2).xlsx`. Four tabs: Search facility (HFR-001 to HFR-009), Registration (HFR-010 to HFR-063), Facility update (HFR-064 to HFR-117) and Bridge linkage (HFR-118 to HFR-123, twice). Columns S.No, Function, Applicable To, Mandatory/Optional, Test Case ID, Functionality, Actual Name of data fields on HFR portal, Steps, Expected Result, APIs, Status, Remarks, Suggestions for the Functional Tester.
 - `HPR_Test_Cases.xlsx`, sent as `HPR_Test_Cases (4).xlsx`. One tab, HPR-002 to HPR-080. Columns S.No, Function, Applicable To, Mandatory/Optional, Test Case ID, Feature, Functionality, Test Case, Steps, Expected Result, APIs, Status, Remarks, Suggestions for the Functional Tester.
 

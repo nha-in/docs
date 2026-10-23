@@ -3,6 +3,11 @@
     "abdm-docs": {
       "type": "http",
       "url": "https://docs.abdm.gov.in/mcp"
+    },
+    "playwright": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["@playwright/mcp@0.0.83"]
     }
   }
 }

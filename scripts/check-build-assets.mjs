@@ -143,7 +143,13 @@ for (const name of existsSync(pluginsDir) ? readdirSync(pluginsDir) : []) {
   const servers = Object.entries(mcp.mcpServers ?? {});
   if (!servers.length) fail(`plugins/${name}/.mcp.json names no server`);
   for (const [server, conf] of servers) {
-    if (!/^https:\/\//.test(conf.url ?? '')) fail(`plugins/${name}/.mcp.json: ${server} has no https URL`);
+    // A local server, such as Playwright for the UI test runs, starts from a
+    // command on the integrator's machine; a remote one needs an https URL.
+    if (conf.type === 'stdio') {
+      if (!conf.command) fail(`plugins/${name}/.mcp.json: ${server} is stdio but names no command`);
+    } else if (!/^https:\/\//.test(conf.url ?? '')) {
+      fail(`plugins/${name}/.mcp.json: ${server} has no https URL`);
+    }
   }
   const codex = join(pluginsDir, name, '.codex-plugin', 'plugin.json');
   if (existsSync(codex) && JSON.parse(readFileSync(codex, 'utf8')).mcpServers !== './.mcp.json') {

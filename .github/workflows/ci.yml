@@ -49,6 +49,15 @@ jobs:
         env:
           DOCUSAURUS_URL: ''
       - run: npm run test:scripts
+      # The scripts the test skills ship for NHA's workbooks run on Python,
+      # so they are checked against NHA's own sheets with the same libraries
+      # an integrator installs.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python3 -m pip install --quiet openpyxl pillow python-docx reportlab pypdf
+      - run: python3 scripts/check-workbook-writeback.py
+      - run: python3 scripts/check-test-report.py
       - run: npm run check:sections
       - run: npm run lint:questions
 

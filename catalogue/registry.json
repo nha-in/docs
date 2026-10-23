@@ -6299,6 +6299,34 @@
     "file": "catalogue/shared/concepts/survey-an-existing-codebase.md"
   },
   {
+    "id": "shared.concept.test-human-entry",
+    "type": "concept",
+    "gateway": "shared",
+    "source": "file",
+    "file": "catalogue/shared/concepts/test-human-entry.md"
+  },
+  {
+    "id": "shared.concept.test-report",
+    "type": "concept",
+    "gateway": "shared",
+    "source": "file",
+    "file": "catalogue/shared/concepts/test-report.md"
+  },
+  {
+    "id": "shared.concept.test-ui-run",
+    "type": "concept",
+    "gateway": "shared",
+    "source": "file",
+    "file": "catalogue/shared/concepts/test-ui-run.md"
+  },
+  {
+    "id": "shared.concept.test-workbook-write-back",
+    "type": "concept",
+    "gateway": "shared",
+    "source": "file",
+    "file": "catalogue/shared/concepts/test-workbook-write-back.md"
+  },
+  {
     "id": "shared.decision.role-model-two-axes",
     "type": "decision",
     "gateway": "shared",

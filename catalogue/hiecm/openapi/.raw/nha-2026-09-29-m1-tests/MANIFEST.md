@@ -2,6 +2,8 @@
 
 The M1 functional test case set, ABHA creation and verification, version 1.1, as published on the sandbox content store at https://sandboxcms.abdm.gov.in/uploads/M1_ABHA_CREATION_AND_VERIFICATION_WITH_APIS_UPDATED_V1_1_f656c93440.xlsx and fetched on 29 September 2026. One sheet, 66 rows carrying a test case id, columns S.No, Function, Applicable To, Mandatory/Optional, Test Case ID, Functionality, Test Case, Steps, Expected Result, Suggestions, Status, Remark, V3 APIs. It carries no personal data. It is the source of `skills-src/hiecm-m1-test/SKILL.md`.
 
+Superseded on 22 October 2026 by `nha-2026-10-22-m1-tests`, which the page and the skill now read. Kept for the record.
+
 What the sheet says that the skill could not use as written, kept here rather than in the skill:
 
 - `VRFY_ABHA_501` is the id of two rows, biometric verification (9.1) and reading the QR code (10.1). The skill records the QR row as `QR-read`.

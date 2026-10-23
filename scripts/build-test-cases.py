@@ -15,7 +15,8 @@ names wherever it sits; a page can draw on several sheets and several tabs,
 each tab its own section; a group starts at a row with no case id, or at a
 case row whose Function cell names one; and a row with content but no id
 continues the case above it. The PHR sheet carries no case ids, so its cases
-are named by the tab's milestone and the sheet's row number, such as P1 1.1.
+get an id built from the tab's milestone and the row number, such as
+PHR_ADDR_302 for row P1 3.2, shown with that row under it.
 
 Each call a case names links to its endpoint page when the path is exactly
 one operation in site/src/data/api-routes.json. A path several operations
@@ -42,47 +43,47 @@ OUT = ROOT / "site" / "docs" / "hiecm" / "v3" / "resources" / "test-cases"
 
 PAGES = {
     "m1": {
-        "sources": [{"sheet": RAW / "nha-2026-09-29-m1-tests" / "M1_ABHA_CREATION_AND_VERIFICATION_WITH_APIS_UPDATED_V1_1.xlsx"}],
-        "title": "M1 test cases",
+        "sources": [{"sheet": RAW / "nha-2026-10-22-m1-tests" / "M1_ABHA_CREATION_VERIFICATION_SCAN_AND_SHARE.xlsx"}],
+        "title": "M1 UI test cases",
         "label": "M1 Identity",
         "position": 2,
         "milestone": "[M1 Identity](/docs/hiecm/v3/milestones/m1)",
-        "covers": "ABHA creation by Aadhaar OTP, Aadhaar biometric, demographic authentication and driving licence or PAN, then verification, profile update, one ABHA per patient record, and sharing a profile by QR code",
+        "covers": "ABHA creation by Aadhaar OTP, face authentication, Aadhaar biometric, demographic authentication and driving licence, then login by ABHA number, ABHA address, mobile and Aadhaar, profile update, one ABHA per patient record, and sharing a profile by QR code",
         "skill": "[M1 Identity skill](/docs/hiecm/v3/milestones/m1#build-m1-with-an-ai-coding-assistant)",
-        "next": "[M2 test cases](/docs/hiecm/v3/resources/test-cases/m2)",
+        "next": "[M2 UI test cases](/docs/hiecm/v3/resources/test-cases/m2)",
     },
     "m2": {
-        "sources": [{"sheet": RAW / "nha-2026-10-01-m2-tests" / "M2_BUILDING_HIP_WITH_APIS_UPDATED_AUG_22.xlsx"}],
-        "title": "M2 test cases",
+        "sources": [{"sheet": RAW / "nha-2026-10-22-m2-tests" / "M2_BUILDING_HIP_TEST_CASES.xlsx"}],
+        "title": "M2 UI test cases",
         "label": "M2 Health Information Provider",
         "position": 3,
         "milestone": "[M2 Health Information Provider](/docs/hiecm/v3/milestones/m2)",
         "covers": "creating health records, linking care contexts to an ABHA address whether your facility or the patient starts it, and sharing records when a consent arrives",
         "skill": "[M2 skill](/docs/hiecm/v3/milestones/m2#build-m2-with-an-ai-coding-assistant)",
-        "next": "[M3 test cases](/docs/hiecm/v3/resources/test-cases/m3)",
+        "next": "[M3 UI test cases](/docs/hiecm/v3/resources/test-cases/m3)",
     },
     "m3": {
-        "sources": [{"sheet": RAW / "nha-2026-10-01-m3-tests" / "M3_BUILDING_HIU_APIS_UPDATED_AUG_22.xlsx"}],
-        "title": "M3 test cases",
+        "sources": [{"sheet": RAW / "nha-2026-10-22-m3-tests" / "M3_BUILDING_HIU_TEST_CASES.xlsx"}],
+        "title": "M3 UI test cases",
         "label": "M3 Health Information User",
         "position": 4,
         "milestone": "[M3 Health Information User](/docs/hiecm/v3/milestones/m3)",
         "covers": "raising a consent request, receiving the patient's decision, and fetching and showing the records the consent covers",
         "skill": "[M3 skill](/docs/hiecm/v3/milestones/m3#build-m3-with-an-ai-coding-assistant)",
-        "next": "[M4 test cases](/docs/hiecm/v3/resources/test-cases/m4)",
+        "next": "[M4 UI test cases](/docs/hiecm/v3/resources/test-cases/m4)",
     },
     "m4": {
         "sources": [
-            {"sheet": RAW / "nha-2026-10-02-m4-tests" / "HFR_Test_Cases.xlsx", "tabs": "all", "section": "HFR {tab}"},
-            {"sheet": RAW / "nha-2026-10-02-m4-tests" / "HPR_Test_Cases.xlsx", "section": "HPR"},
+            {"sheet": RAW / "nha-2026-10-22-m4-tests" / "HFR_Test_Cases.xlsx", "tabs": "all", "section": "HFR {tab}"},
+            {"sheet": RAW / "nha-2026-10-22-m4-tests" / "HPR_Test_Cases.xlsx", "section": "HPR"},
         ],
-        "title": "M4 test cases",
+        "title": "M4 UI test cases",
         "label": "M4 Registry Integration",
         "position": 5,
         "milestone": "[M4 Registry Integration](/docs/hiecm/v3/milestones/m4)",
         "covers": "searching, registering and updating a facility in the Health Facility Registry (HFR) and linking it to your software, then creating and updating a professional's profile in the Healthcare Professionals Registry (HPR)",
         "skill": "[M4 skill](/docs/hiecm/v3/milestones/m4#build-m4-with-an-ai-coding-assistant)",
-        "next": "[PHR application test cases](/docs/hiecm/v3/resources/test-cases/phr)",
+        "next": "[PHR application UI test cases](/docs/hiecm/v3/resources/test-cases/phr)",
     },
     "phr": {
         "sources": [{
@@ -97,7 +98,7 @@ PAGES = {
                 "Locker": "P4",
             },
         }],
-        "title": "PHR application test cases",
+        "title": "PHR application UI test cases",
         "label": "PHR application",
         "position": 6,
         "milestone": "[PHR application](/docs/hiecm/v3/milestones/p1)",
@@ -258,6 +259,20 @@ def marking_of(text):
     return {"yes": "Mandatory", "no": "Optional"}.get(word.lower(), re.sub(r"^Yes\b", "Mandatory", word))
 
 
+# The PHR sheet numbers its rows but gives them no ids. Each tab is one PHR
+# milestone, and a case's id is built the way NHA builds the HMIS ones, a
+# prefix and the row number as digits: P1 row 3.2 is PHR_ADDR_302, P2 row
+# 5.1.1 is PHR_APP_50101, a row numbered 9 alone is 900. The skills, the
+# workbook writer and this page derive the same id from the same row.
+PHR_CODES = {"P1": "ADDR", "P2": "APP", "P3": "HIU", "P4": "LOCKER"}
+
+
+def phr_id(prefix, number):
+    parts = number.split(".")
+    digits = parts[0] + ("".join(p.zfill(2) for p in parts[1:]) if len(parts) > 1 else "00")
+    return f"PHR_{PHR_CODES[prefix]}_{digits}"
+
+
 def lost_zero(number, last):
     """Put back the zero a spreadsheet drops from a row number.
 
@@ -321,6 +336,7 @@ def extract(path, tab=None, prefix=""):
             return row[index] if index is not None and index < len(row) else ""
 
         content = any(cell(k) for k in ("test", "steps", "expected"))
+        alias = ""
         if "id" in column:
             identifier = re.sub(r"\s+", "", cell("id"))
             if not identifier and content and cell("functionality") and previous is not None \
@@ -336,7 +352,8 @@ def extract(path, tab=None, prefix=""):
             if content and re.fullmatch(r"\d+(\.\d+)*", number):
                 number = lost_zero(number, last)
                 last = number
-                identifier = f"{prefix} {number}"
+                identifier = phr_id(prefix, number)
+                alias = f"{prefix} {number}"
 
         if not identifier:
             if content and previous is not None:
@@ -353,6 +370,12 @@ def extract(path, tab=None, prefix=""):
                 # What follows the name is who the group applies to, its
                 # marking, or both, such as "PHR app Mandatory".
                 applies = " ".join(text[2:] if number else text[1:])
+                if "id" in column and number and not cell("function") \
+                        and current is not None and not current["cases"]:
+                    # A numbered row with no name under a banner, such as M2's
+                    # "Health Record Creation" then "1 HIP": the banner names
+                    # the group and the row says who it applies to.
+                    name, applies = current["label"], " ".join(text[1:])
                 # Three M1 sections share one label, so the sheet's section
                 # number is what tells them apart.
                 start(f"{number}. {name}" if number else name, applies)
@@ -364,6 +387,7 @@ def extract(path, tab=None, prefix=""):
             start("Test cases")
         previous = {
             "id": identifier,
+            "alias": alias,
             "title": flat(cell("functionality")) or flat(cell("feature")) or identifier,
             "field": flat(cell("field")),
             "marking": marking_of(cell("marking")),
@@ -415,7 +439,7 @@ def cell(text):
 
 def marking(text, anchors):
     """Shorten the sheet's either-of marking and link the two cases it names."""
-    either = re.match(r"Either of the test cases (\S+) or (\S+) is mandatory for Gov\w* Optional for Private", text)
+    either = re.match(r"Either of the test cases (\S+) or (\S+) is mandatory for Gov\w*(?: only)?\.?(?: Optional for Private)?$", text)
     if not either:
         return cell(text or "Not marked")
     a, b = (f"[{i}](#{anchors.get(i, i.lower())})" for i in either.groups())
@@ -436,6 +460,8 @@ def row(case, routes, anchors, base, with_apis):
     # Link, not a literal <a>: only Link registers the id with the build's
     # broken anchor check, so a link to a case that is gone fails the build.
     ident = f'<Link id="{case["anchor"]}" to="#{case["anchor"]}">{case["id"]}</Link>'
+    if case.get("alias"):
+        ident += f"<br/>Row {case['alias']}"
     cells = [f"{ident}<br/>{marking(case['marking'], anchors)}", what, passes]
     if with_apis:
         cells.append("<br/>".join(call(u, routes, base) for u in case["apis"]) or "None. Checked on your screens or records.")
@@ -466,7 +492,7 @@ def render(spec, session, sections, routes):
         f"title: {spec['title']}",
         f"sidebar_label: {spec['label']}",
         f"sidebar_position: {spec['position']}",
-        f"description: The {len(cases)} {spec['label']} functional test cases, each with its id, marking, steps and expected result{', and the APIs it calls' if with_apis else ''}.",
+        f"description: The {len(cases)} {spec['label']} UI test cases, each with its id, marking, steps and expected result{', and the APIs it calls' if with_apis else ''}.",
         "page_type: reference",
         f"toc_max_heading_level: {3 if nested else 2}",
         "generated: true",
@@ -483,7 +509,7 @@ def render(spec, session, sections, routes):
     if with_apis:
         out.append("Each row keeps the case id the functional testing report uses, and links every API the case calls.")
     else:
-        out.append("The sheet numbers its rows but gives them no ids, so each case here is named by its PHR milestone and row, such as `P1 1.1`. Quote that name when you report a result.")
+        out.append("The sheet numbers its rows but gives them no ids, so each case here has an id built the way the HMIS ids are, from its PHR milestone and row: row P1 3.2 is `PHR_ADDR_302`, and P2, P3 and P4 are `PHR_APP_`, `PHR_HIU_` and `PHR_LOCKER_`. Quote the id when you report a result.")
     out += [
         "[How to read a case](/docs/hiecm/v3/resources/test-cases#how-to-read-a-case) explains the columns and markings.",
         "",
