@@ -127,6 +127,8 @@ The ranges were counted from a quick extraction of 218 PHR rows, while main's pa
 
 Each phase ends with the `adversarial-reviewer` agent before it ships.
 
+Status, 23 October 2026: phases 0 and 1 are on this branch. Phases 2 and 3 landed together as `shared.concept.test-workbook-write-back`, which carries the writer script, folds into the M1 to M4 test sections, and is checked against all five sheets with case ids by `scripts/check-workbook-writeback.py`. Two parts of them are not done: the page generator still reads the sheets its own way, and no M1 `ft` run has filled a workbook yet, because that run needs a sandbox-connected system and a person with an Aadhaar linked mobile. CI does not install openpyxl, so the check runs locally until CI does.
+
 ## 10. Questions for NHA
 
 1. Which sample report is the reference format, and does a named auditor still fill Prepared, Reviewed and Approved?

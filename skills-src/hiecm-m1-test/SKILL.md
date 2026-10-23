@@ -26,6 +26,7 @@ Walks the ABDM M1 functional test cases, ABHA creation and verification, against
 | A public callback URL and a facility QR code for each of two counters, for SHARE_PATIENT_PROFILE_701 and 702 | Your deployment, registered with the bridge. The profile share arrives there |
 | Whether you are a government or a private integrator | The set marks some cases mandatory for one and optional for the other |
 | A folder for the run log | Your repository. `abdm-ft/` unless you name another |
+| NHA's test case workbook for this module, if results go into it | The workbook NHA sent you, copied into `abdm-ft/`. Writing into it needs Python 3.9 or later with `openpyxl` and `Pillow` |
 
 ## Say one of these
 
@@ -36,7 +37,7 @@ Walks the ABDM M1 functional test cases, ABHA creation and verification, against
 
 ## What happens first
 
-One question: which cases. All of them, one function group, or a list of ids. Then the preconditions for the first case are checked before anything is sent. Then the readiness check below. After it, nothing else is asked until a case needs a human or an authentication step.
+These runs are API functional tests, the `ft` run type: your system against the sandbox, judged on calls and callbacks. One question: which cases. All of them, one function group, or a list of ids. Then the preconditions for the first case are checked before anything is sent. Then the readiness check below. After it, nothing else is asked until a case needs a human or an authentication step.
 
 **Readiness check.** The run does not start until every row of "What it needs from you" that the chosen cases use is confirmed. Ask for each one in the terminal, one at a time. Record each in the run log's header as `ready`, `missing` or `not needed`, never the value itself.
 
@@ -47,6 +48,7 @@ One question: which cases. All of them, one function group, or a list of ids. Th
 | People and devices | Each is named for this run: who receives the OTPs, who approves in the PHR app, which device scans |
 | Entity type and claimed capabilities | Answered, because they decide which cases are mandatory |
 | The run log | Its folder exists and can be written: `abdm-ft/` in your repository unless you name another |
+| The workbook | `python3 abdm-ft/abdm_workbook.py cases <workbook>` lists the case ids, and every case chosen is among them. `not needed` when no workbook was given |
 
 A `missing` row that a mandatory case needs stops the run before the first call. Say what is missing and ask the one question that would fix it.
 

@@ -27,6 +27,7 @@ Walks the ABDM M3 functional test cases, Health Information User, against the sy
 | Your system running against the sandbox hosts | Your deployment or a local build. The skill drives your system, not the sandbox directly |
 | A way to trigger each journey in your system | A screen, an API or a script. Say which at the start |
 | A folder for the run log | Your repository. `abdm-ft/` unless you name another |
+| NHA's test case workbook for this module, if results go into it | The workbook NHA sent you, copied into `abdm-ft/`. Writing into it needs Python 3.9 or later with `openpyxl` and `Pillow` |
 
 ## Say one of these
 
@@ -37,7 +38,7 @@ Walks the ABDM M3 functional test cases, Health Information User, against the sy
 
 ## What happens first
 
-One question: which cases. All of them, one function group, or a list of ids. Then the preconditions for the first case are checked before anything is sent. They are a fresh session token, the bridge URL registered, and a POST from outside your network arriving at your callback URL. Then the readiness check below. After it, nothing else is asked until a case needs a human or an authentication step.
+These runs are API functional tests, the `ft` run type: your system against the sandbox, judged on calls and callbacks. One question: which cases. All of them, one function group, or a list of ids. Then the preconditions for the first case are checked before anything is sent. They are a fresh session token, the bridge URL registered, and a POST from outside your network arriving at your callback URL. Then the readiness check below. After it, nothing else is asked until a case needs a human or an authentication step.
 
 **Readiness check.** The run does not start until every row of "What it needs from you" that the chosen cases use is confirmed. Ask for each one in the terminal, one at a time. Record each in the run log's header as `ready`, `missing` or `not needed`, never the value itself.
 
@@ -48,6 +49,7 @@ One question: which cases. All of them, one function group, or a list of ids. Th
 | People and devices | Each is named for this run: who receives the OTPs, who approves in the PHR app, which device scans |
 | Entity type and claimed capabilities | Answered, because they decide which cases are mandatory |
 | The run log | Its folder exists and can be written: `abdm-ft/` in your repository unless you name another |
+| The workbook | `python3 abdm-ft/abdm_workbook.py cases <workbook>` lists the case ids, and every case chosen is among them. `not needed` when no workbook was given |
 
 A `missing` row that a mandatory case needs stops the run before the first call. Say what is missing and ask the one question that would fix it.
 

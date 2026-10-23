@@ -728,6 +728,40 @@ function withSurvey(scaffold) {
   return `${scaffold.slice(0, at)}\n${section}${scaffold.slice(at)}`;
 }
 
+// How a test run writes each case's result into NHA's workbook. It lives in
+// the Catalogue as shared.concept.test-workbook-write-back, script and all, and
+// folds into the test section of every module whose workbook carries case ids:
+// the PHR workbook has none yet, so P1 to P4 wait for them.
+const WRITE_BACK_ATOM = 'shared.concept.test-workbook-write-back';
+const WRITE_BACK_MODULES = new Set(['m1', 'm2', 'm3', 'm4']);
+
+function writeBackSection() {
+  const {atoms} = loadAtoms();
+  const entry = atoms.get(WRITE_BACK_ATOM);
+  if (!entry) throw new Error(`${WRITE_BACK_ATOM} is missing, and every test section with a workbook folds it in`);
+  const body = entry.body.replace(/^#\s+.+$/m, '').trim();
+  return [
+    "## Writing results into NHA's workbook",
+    '',
+    'Ask for the workbook in the readiness check. With it, every case ends by writing its result into the sheet as below, after the run log row is updated. Without it, the run log and the manifest are the record, as before.',
+    '',
+    body.replace(/^## /gm, '### ').trim(),
+    '',
+    `From \`${WRITE_BACK_ATOM}\`.`,
+    '',
+  ].join('\n');
+}
+
+/** Inserts the write-back ahead of the closing section, or at the end when there is none. */
+function withWriteBack(test, moduleId) {
+  if (!test || !WRITE_BACK_MODULES.has(moduleId)) return test;
+  const marker = '\n## When the last case is recorded\n';
+  const at = test.indexOf(marker);
+  const section = writeBackSection();
+  if (at === -1) return `${test.trimEnd()}\n\n${section}`;
+  return `${test.slice(0, at)}\n${section}${test.slice(at)}`;
+}
+
 /** Which guided loop is which section of which skill. */
 const FOLD = Object.fromEntries(
   MODULES.map((module) => [
@@ -862,7 +896,7 @@ for (const module of MODULES) {
   // Test after debug: the functional test cases are what an integrator walks
   // once the build runs, and each case names the evidence a reviewer can
   // check against the gateway rather than a screenshot.
-  const test = fold.test ? guided(fold.test) : '';
+  const test = withWriteBack(fold.test ? guided(fold.test) : '', module.id);
   if (test) {
     files['references/test.md'] = test;
     covers.push(
