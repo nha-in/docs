@@ -68,7 +68,7 @@ What this branch adds (phase 0): NHA's revised M1, M2 and M3 sheets of 21 Octobe
 
 | User | Gets |
 |---|---|
-| Plugin, Claude Code | Playwright MCP declared in `.claude-plugin/plugin.json`, generated into the other manifests by `npm run build:plugins`. `/abdm-test-setup` |
+| Plugin, Claude Code | Playwright MCP declared beside abdm-docs in the plugin's `.mcp.json`, which the Codex manifest points at. `/abdm-test-setup` |
 | Plugin, Codex and other Agent Plugins 1.0 hosts | The same, if the host reads an MCP declaration from the manifest. To confirm per host; otherwise the skill-only path |
 | Skill or Docs MCP only | The opening block of `references/test.md` checks Node, Playwright and Chromium for `ui`, an emulator and Maestro for a PHR app, and prints what to install |
 
@@ -127,7 +127,16 @@ The ranges were counted from a quick extraction of 218 PHR rows, while main's pa
 
 Each phase ends with the `adversarial-reviewer` agent before it ships.
 
-Status, 23 October 2026: phases 0 and 1 are on this branch. Phases 2 and 3 landed together as `shared.concept.test-workbook-write-back`, which carries the writer script, folds into the M1 to M4 test sections, and is checked against all five sheets with case ids by `scripts/check-workbook-writeback.py`. Two parts of them are not done: the page generator still reads the sheets its own way, and no M1 `ft` run has filled a workbook yet, because that run needs a sandbox-connected system and a person with an Aadhaar linked mobile. CI does not install openpyxl, so the check runs locally until CI does.
+Status, 23 October 2026: every phase is built on this branch, and none has yet run against an integrator's system.
+
+- Phases 0 and 1: NHA's 21 October M1 to M3 sheets, their pages, and the test sections that walk them.
+- Phases 2 and 3: `shared.concept.test-workbook-write-back`, the writer every test section folds in, checked against all six sheets by `scripts/check-workbook-writeback.py`. The page generator still reads the sheets its own way; the check holds the two to the same case ids.
+- Phase 4: `shared.concept.test-ui-run`, Playwright in the plugin's `.mcp.json`, `/abdm-test-setup`, and the run type question in every test section.
+- Phase 5: `shared.concept.test-report`, checked by `scripts/check-test-report.py`. PDF needs LibreOffice on the machine; without it the DOCX is exported by hand.
+- Phase 6: PHR cases carry `PHR_ADDR_`, `PHR_APP_`, `PHR_HIU_` and `PHR_LOCKER_` ids, the writer fills the PHR workbook, and the PHR proof rule is in the UI run section.
+- CI installs openpyxl, Pillow and python-docx and runs both checks.
+
+Not done: a real `ft` and `ui` run of M1 against a sandbox-connected system, which needs that system and a person with an Aadhaar linked mobile; and NHA's answers to section 10.
 
 ## 10. Questions for NHA
 
