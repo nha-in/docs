@@ -57,19 +57,16 @@ const skillUrl = (slug, url) =>
 // Every rule below is lifted from that module's own pages. A rule that is true
 // of M1 and not of M2 belongs to M1 only: an agent told the wrong rule is
 // worse off than an agent told nothing.
-// Said of the calls, and only of the calls. It used to say "nothing here",
-// which stopped being true once a skill carried a design section: those rules
-// were observed at a working front desk against the sandbox and each names the
-// date it was seen. Claiming they were unproven undersold the one part of the
-// skill that had been run, and a reader who discounts it loses the rules that
-// stop a journey asking twice.
-const UNVERIFIED =
-  'Treat every request and response shape in this skill as unconfirmed until the sandbox has answered you. Check a response before you rely on its shape.';
+// How every call is worked, said once per skill. It used to tell the reader
+// to treat the skill's shapes as unconfirmed; the skills have since been run
+// against the sandbox, so it states the working habit instead.
+const OBSERVE_RESPONSES =
+  'Paste the sandbox response at every step and check it against the shape this skill gives before you build on it. A step is done when its response is observed.';
 
-// Added only where a design section exists, immediately after UNVERIFIED, so
-// the two claims are read together rather than a page apart.
+// Added only where a design section exists, immediately after
+// OBSERVE_RESPONSES, so the two are read together rather than a page apart.
 const DESIGN_OBSERVED =
-  'The design section is different in kind. Its rules come from building a working front desk against the sandbox, and each atom it cites names what was observed and the date it was seen.';
+  'The design section\'s rules come from building a working front desk against the sandbox, and each atom it cites names what was observed and the date it was seen.';
 
 // Practices, as distinct from rules. A rule is a fact about one module. A
 // practice is how to work so a wrong assumption surfaces in a minute rather
@@ -184,7 +181,7 @@ const MODULES = [
     example: 'Get a gateway access token and register this bridge',
     description:
       'Use when building, debugging or testing the ABDM gateway: the gateway session and bridge registry.',
-    rules: [UNVERIFIED],
+    rules: [OBSERVE_RESPONSES],
   },
   {
     id: 'm1',
@@ -196,7 +193,7 @@ const MODULES = [
     description:
       'Use when building, debugging or testing ABDM Milestone 1: creating an ABHA number or address, ABHA login, profile management, or the gateway session token. Carries the endpoints, the required headers, the two token rule, the encryption rule and the error codes its specification\'s examples return. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.',
     rules: [
-      UNVERIFIED,
+      OBSERVE_RESPONSES,
       'Get an access token first, from the gateway session endpoint. Every other call needs it in `Authorization: Bearer <token>`.',
       'Two tokens exist and they are not interchangeable. The gateway access token goes in `Authorization`. The user token from an enrolment or a login goes in `X-token`. Profile endpoints need both.',
       "Sensitive fields travel encrypted. Aadhaar numbers, mobile numbers, email addresses, OTP values and passwords are encrypted before they go in the body, then base64 encoded.",
@@ -215,7 +212,7 @@ const MODULES = [
     description:
       'Use when building, debugging or testing ABDM Milestone 2: care contexts, HIP initiated linking, discovery, and pushing encrypted health records to a requester. Carries the endpoints and the encryption parameters. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.',
     rules: [
-      UNVERIFIED,
+      OBSERVE_RESPONSES,
       'You act as the HIP.',
       'Before M2, three things must hold: the facility is registered in the HFR with a valid HFR ID, that HIP ID is linked to your client ID (through the NHPR portal or the M4 software linkage APIs), and a callback URL is set for the client ID with the Update Bridge API.',
       'You are the side that encrypts, and the parameters arrive from the requester rather than from you. The health information request carries `keyMaterial` with `cryptoAlg`, `curve: Curve25519`, the requester\'s `dhPublicKey` and a `nonce`. Generate your own Curve25519 pair and your own nonce, and send your public key and nonce back with the data so the requester can derive the same secret.',
@@ -232,7 +229,7 @@ const MODULES = [
     description:
       'Use when building, debugging or testing ABDM Milestone 3: raising a consent request, tracking its status, reading consent artefacts, and fetching encrypted health records as an HIU. Carries the endpoints and the consent rules. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.',
     rules: [
-      UNVERIFIED,
+      OBSERVE_RESPONSES,
       'You act as the HIU. The HIE-CM holds the consent and asks the patient on your behalf. No artefact, no records.',
       'The patient must be known to you by ABHA address before you can raise a request.',
       'Records arrive encrypted at the `dataPushUrl` the health information request names. Decrypt them with the key material that request carries.',
@@ -248,7 +245,7 @@ const MODULES = [
     description:
       'Use when building, debugging or testing ABDM Milestone 4, the NHPR: creating an HPID, registering a healthcare professional on the HPR, onboarding a facility to the HFR, and linking that facility to a bridge. Carries the operations, their hosts and headers.',
     rules: [
-      UNVERIFIED,
+      OBSERVE_RESPONSES,
       'Neither registry moves a health record. M4 establishes who the professional is and what the facility is, so every record flow has a verified provider behind it.',
       'The register professional call carries an `hprToken` in its payload, beside the practitioner.',
       'The facility calls are keyed to a `trackingId`, and the facility status values in the examples include `Draft` and `Submitted`. Read the status rather than assuming a facility is complete.',
@@ -266,7 +263,7 @@ const MODULES = [
     example: 'Register a new user in this PHR app and log them in',
     description:
       'Use when building, debugging or testing ABDM P1 in a PHR app: creating an ABHA address and logging in to it.',
-    rules: [UNVERIFIED],
+    rules: [OBSERVE_RESPONSES],
   },
   {
     id: 'p2',
@@ -278,7 +275,7 @@ const MODULES = [
     example: 'Link this user\'s records to their ABHA address from the PHR app',
     description:
       'Use when building, debugging or testing ABDM P2 in a PHR app: the PHR profile, linking an ABHA number, switching profiles, and linking, sharing and consent for the patient.',
-    rules: [UNVERIFIED],
+    rules: [OBSERVE_RESPONSES],
   },
   {
     id: 'p3',
@@ -290,7 +287,7 @@ const MODULES = [
     example: 'Let this user approve or deny a subscription request',
     description:
       'Use when building, debugging or testing ABDM P3 in a PHR app: reading, approving, denying, enabling, disabling and updating the patient\'s subscriptions and subscription requests, and the subscription request and notifications on the health locker side.',
-    rules: [UNVERIFIED],
+    rules: [OBSERVE_RESPONSES],
   },
   {
     id: 'p4',
@@ -302,7 +299,7 @@ const MODULES = [
     example: 'Set up a health locker for this user',
     description:
       'Use when building, debugging or testing ABDM P4, health lockers: setting up a locker and listing the lockers and requests on an ABHA address.',
-    rules: [UNVERIFIED],
+    rules: [OBSERVE_RESPONSES],
   },
   {
     id: 'scan-and-register',
@@ -314,7 +311,7 @@ const MODULES = [
     example: 'Register the patient who just scanned the counter QR code and hand them a token',
     description:
       'Use when building, debugging or testing ABDM scan and register: receiving the profile a patient shares by QR code at a counter and answering with a queue token.',
-    rules: [UNVERIFIED],
+    rules: [OBSERVE_RESPONSES],
   },
   {
     id: 'scan-and-pay',
@@ -326,7 +323,7 @@ const MODULES = [
     example: 'Open an order at this counter and take payment from a PHR app',
     description:
       'Use when building, debugging or testing ABDM scan and pay: open orders, patient selection and payment status between a facility and a PHR app.',
-    rules: [UNVERIFIED],
+    rules: [OBSERVE_RESPONSES],
   },
   {
     id: 'record-share',
@@ -338,7 +335,7 @@ const MODULES = [
     example: 'Receive the records a patient shares from a PHR app after scanning our QR code',
     description:
       'Use when building, debugging or testing ABDM patient scan and record share: a PHR app shares chosen records with an HIU after scanning its QR code, on either side.',
-    rules: [UNVERIFIED],
+    rules: [OBSERVE_RESPONSES],
   },
 ];
 
@@ -475,7 +472,7 @@ function build(module, url) {
   lines.push('');
   for (const rule of module.rules) {
     lines.push(`- ${rule}`);
-    if (rule === UNVERIFIED && DESIGN_ATOMS.has(module.id)) {
+    if (rule === OBSERVE_RESPONSES && DESIGN_ATOMS.has(module.id)) {
       lines.push(`- ${DESIGN_OBSERVED}`);
       for (const line of routerLines(DESIGN_ATOMS.get(module.id))) lines.push(`- ${line}`);
     }
@@ -1206,7 +1203,7 @@ const fhirSkillMd = (url) =>
     ...tryAskingSection(FHIR_ENTRY),
     '## Before anything else',
     '',
-    `- ${UNVERIFIED}`,
+    `- ${OBSERVE_RESPONSES}`,
     `- ${DESIGN_OBSERVED}`,
     ...routerLines([...fhirDesignEntries(), ...fhirRouterExtraEntries()]).map((line) => `- ${line}`),
     '',
@@ -1450,9 +1447,8 @@ const promptLines = [
   '',
   '## 4. Report back',
   '',
-  'Tell the user what you installed and where you suggest starting. Offer three prompts from the **Try asking** section of the skills that fit, and ask what they are building. Two cautions to keep for the whole engagement:',
+  'Tell the user what you installed and where you suggest starting. Offer three prompts from the **Try asking** section of the skills that fit, and ask what they are building. One caution to keep for the whole engagement:',
   '',
-  '- Nothing in these skills has been run against the ABDM sandbox. Verify response shapes against real calls before relying on them.',
   `- The skills are snapshots. The current documentation lives at ${promptRef('/')}; prefer it, and the MCP server when connected, over any downloaded copy that has aged.`,
   '',
   '## 5. Plan before you build',
