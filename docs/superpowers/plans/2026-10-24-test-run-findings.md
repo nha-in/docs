@@ -23,6 +23,8 @@ Everything below follows from that, but each problem would also survive a run th
 | R7 | Python, openpyxl and reportlab were missing and patched by hand | 11:05 to 11:06 venv attempts; 11:41 `reportlab<5` | The setup check was never run |
 | R8 | The workbook carries an unmasked ABHA number and ABHA address in Remarks | "verify returned code ABHA_ALREADY_EXISTS, 91-...", "sam.dennis@sbx" | The writer writes remarks as given; only the report masks |
 | R9 | Screenshots were blurred with ad hoc scripts after the fact | `blur.py`, `blur2.py` in the run's folder | No rule or helper to hide identity fields before the screenshot is taken |
+| R10 | The agent typed the holder's ABHA address into the app itself | 11:25:36, "Types the holder's ABHA address" | The skill was not loaded; its first rule forbids this. A run through the skill would have stopped and asked |
+| R11 | The agent repeated ABHA numbers and an ABHA address back to the tester in chat, including another patient's name and ABHA number from the app's patient list | 4 ABHA numbers and 1 ABHA address in its messages; 11:19:56 names the patient on UHID 0018 with his ABHA number | A gap in the skill as written: its rules cover the run log, evidence and workbook, not what the agent says. Reading a page or a network response puts the value in front of the agent; nothing tells it not to repeat it. No full Aadhaar number appears anywhere in the transcript |
 
 ### Judging
 
@@ -42,21 +44,29 @@ Everything below follows from that, but each problem would also survive a run th
 
 ### The integration skills
 
-SMART HMS was built almost entirely with the skills, so its failures are largely the build skills' gaps. The M1 build sections cite NHA's test cases twice in `design.md` and never in `scaffold.md` or `integrate.md`: the skills that design and build the integration do not know what it will be tested on.
+SMART HMS was built almost entirely with the skills, so its failures are a measure of the build skills. Each one checked against what the M1 build sections (`SKILL.md`, `scaffold.md`, `integrate.md`, `design.md`) and the scan and register skill say today:
 
-| # | What failed in SMART HMS | Case | What the build skills say today |
+| # | What failed in SMART HMS | Case | What the build skills say |
 |---|---|---|---|
 | I1 | Name, gender and date of birth stay editable after an ABHA fill | VRFY_ABHA_101, 102, 306 | Nothing |
 | I2 | A wrong OTP drops the transaction; the right OTP then fails | VRFY_ABHA_201 | Nothing about keeping `txnId` across a retry |
-| I3 | ABDM's error message replaced by the app's own text | CRT_ABHA_107 | Nothing requiring the message verbatim |
-| I4 | Send OTP bypasses the resend limit; Resend link silent | CRT_ABHA_106, VRFY_ABHA_405 | Design talks about resend locking, not NHA's 60 second wait, limit of 2 and its message |
-| I5 | OTP sent before the profile list on find by mobile | VRFY_ABHA_302, 304 | The scaffold has the right order (search, then OTP) but no screen rule saying no OTP before a profile is chosen |
-| I6 | Auth methods hard coded instead of read from the address search | VRFY_ABHA_102 | Nothing |
-| I7 | ABHA number login offers no Aadhaar OTP | VRFY_ABHA_101 | Nothing |
+| I3 | ABDM's error message replaced by the app's own text | CRT_ABHA_107 | "Display the text verbatim" is said of the consent text only, never of an error |
+| I4 | Send OTP bypasses the resend limit; Resend link silent | CRT_ABHA_106, VRFY_ABHA_405 | Design explains why resend locks a transaction, not NHA's rule: after 60 seconds, at most 2, then the limit message |
+| I5 | OTP sent before the profile list on find by mobile | VRFY_ABHA_302, 304 | The scaffold calls search before OTP, but nothing says the screen must not send an OTP before a profile is chosen |
+| I6 | Login methods hard coded instead of taken from the address search | VRFY_ABHA_102 | `authMethods` named once, as a field, never as a screen rule |
+| I7 | ABHA number login offers no Aadhaar OTP | VRFY_ABHA_101 | The journey exists in the scaffold, but the build interview decides which journeys to build from deployment questions, so a journey NHA marks mandatory can be left out |
 | I8 | No comparison screen when an ABHA is already linked | VRFY_ABHA_308 | Nothing |
 | I9 | Creation stops when the Aadhaar already holds an ABHA | CRT_ABHA_112 | Nothing about `isNew: false` |
-| I10 | Scan and share needs an operator to confirm each registration | 701, 702 | Nothing on registering from the shared profile without data entry |
+| I10 | Scan and share needs an operator to confirm each registration | 701, 702 | The scan and register skill has no design section and never says to register from the shared profile without data entry, to match on name, mobile, gender, ABHA number and address, or the queue rules of 702. Only the test skill says it |
 | I11 | Masked mobile from the OTP response not shown | VRFY_ABHA_404 | Nothing |
+
+Ten of the eleven have no rule in the build skills; the eleventh (I7) has the journey but no guarantee it is built. The pattern is structural:
+
+- **The build skills describe the API, not the screen.** They are compiled from the specifications and journeys: which calls, in which order, with which headers. NHA's test cases are mostly screen requirements: what is editable, what message shows, when a button is enabled, what a returning patient sees. That knowledge lives only in the workbooks, which feed the test skill and the pages, never the build.
+- **Scope is chosen by deployment, not by test.** The build interview asks yes or no questions about the deployment and builds the routes each yes adds. Nothing makes the journeys NHA's mandatory cases need non optional for the integrator's entity type.
+- **The build ends before the test starts.** A journey is done when its calls succeed. Nothing walks the screens against the cases that will be run on them, so the first time the integrator meets NHA's requirements is the test run.
+- **Failures do not flow back.** The test run finds the gap; nothing turns it into a rule in the build skill for the next integrator.
+- **The same holds beyond M1.** M2, M3, M4 and the PHR modules are compiled the same way, so they carry the same gap.
 
 ## 3. The plan
 
@@ -78,9 +88,9 @@ SMART HMS was built almost entirely with the skills, so its failures are largely
 ### C. Judging rules
 
 1. The Expected Result column decides PASS or FAIL. The Steps say what to do. The Suggestions for the Functional Tester column is guidance: a gap against it is an observation, never on its own a FAIL.
-2. Multi step cases carry a result per step. The case is FAIL only when a step's expected result fails; when every run step passes but a step could not be run, the case is `needs-human` naming the step.
-3. A third recorded result, PASS with observation, for an Expected Result met with a gap beside it (wording that means the same, a recommended but not required behaviour). NHA's Status column still reads PASS; the observation goes in Remarks and the report lists it.
-4. Message wording: same meaning is a PASS with observation, unless the sheet quotes the message and says it must match. Decision needed from NHA (section 4).
+2. Multi step cases carry a result per step, shown in the report. The case is FAIL only when a step's expected result fails; when every run step passes but a step could not be run, the case is `needs-human` naming the step.
+3. A third recorded result, **Conditional pass**, for an Expected Result met with a gap beside it (a recommended but not required behaviour, a tester suggestion not met). The condition goes in Remarks and the report lists every conditional pass with its condition.
+4. Message wording: a message that means the same as the one the sheet quotes is a PASS. Decided 24 October 2026.
 
 ### D. The report
 
@@ -92,7 +102,7 @@ SMART HMS was built almost entirely with the skills, so its failures are largely
    | Applicable to this integrator | n | not computed by the run |
    | Tested | n | 23 |
    | Passed | n | 12 |
-   | Passed with observations | n | none recorded; a new outcome |
+   | Conditional pass | n | none recorded; a new outcome |
    | Failed | n | 11 |
    | Blocked, waiting for a tester or device | n | not separated from not tested |
    | Not tested | n | 77, mixed with blocked and not applicable |
@@ -101,7 +111,7 @@ SMART HMS was built almost entirely with the skills, so its failures are largely
    Then the same counts for mandatory cases alone, and one line: ready for sandbox exit, or the number of mandatory cases still open. "No result" disappears.
 2. Evidence only for cases that were tested. Untested and not applicable cases appear once, in a compact table.
 3. Screenshots at a fixed size: two desktop or three phone screenshots per row, each a fixed height, with the full size images in the annexure bundle, not the PDF. No page may hold only an image and its caption.
-4. The failures log lists only FAIL, blocked and passed with observation cases.
+4. The failures log lists only FAIL, blocked and conditional pass cases.
 5. Plain wording: the fixed paragraphs cut to one line each or a table, one line findings, no sentence that restates a table. NHA reviews one sample before the wording is frozen.
 6. The check enforces it: a page budget (M1 with every case tested under 40 pages), no page with fewer than four lines except the cover, and the counts table present and adding up.
 
@@ -109,18 +119,23 @@ SMART HMS was built almost entirely with the skills, so its failures are largely
 
 1. The workbook writer masks Response and Remarks with the report's own `mask()`, so no ABHA number, ABHA address, mobile, Aadhaar or token reaches NHA's sheet.
 2. The UI run hides identity fields before a screenshot, with a short script that blurs input fields and known identity text on the page, instead of blurring images afterwards.
+3. A rule in the human entry section: the agent never repeats an Aadhaar number, mobile, ABHA number, ABHA address or name it reads from a page or a response, in chat, the run log, the remarks or a command. It refers to the tester's identity by its last four characters ("ABHA ending 8219") and never quotes another patient's data at all. Asking the tester to enter their own value names the field, never the value.
 
-### F. The build skills learn from the test cases
+### F. The build skills build to the test
 
-1. Each NHA test case is mapped to the journey step and operations it exercises, from the sheet's APIs column and the journey files, into one table the build reads.
-2. `scaffold.md`: every flow step lists "Tested by" with the case ids and their Expected Result in one line each, so the integrator builds to the test.
-3. `design.md`: the eleven findings in section 2 become design rules, each citing its case: lock ABHA filled demographics; keep the `txnId` across a wrong OTP; show ABDM's message verbatim; resend after 60 seconds, at most 2, with the limit message, and no other button bypassing it; no OTP before a profile is chosen; auth methods from the search; Aadhaar OTP on ABHA number login; compare before reuse when an ABHA is already linked; continue on `isNew: false`; register from a shared profile with no data entry; show the masked mobile.
-4. `INTEGRATION-PLAN.md`: a test case coverage table, each mandatory case against the screen or route that satisfies it, filled during the design and checked before handing over to the test skill.
-5. A self check in the build loop: before an integration is called done, walk the mandatory cases' Expected Results against the built screens, as a dry run of the test.
+1. **One mapping from test case to build.** Each NHA case is mapped to the journey, the step and the screen it tests, from the sheet's APIs column and the journey files, with its marking per entity type. It lives in the Catalogue (`catalogue/hiecm/tests/<module>.yaml`), is generated where the APIs column decides it and reviewed by hand where it does not, and CI fails when a mandatory case maps to nothing.
+2. **Screen requirements as design rules.** Each module's `design.md` gains a section, Screen requirements from NHA's test cases, grouped by screen (Aadhaar entry, OTP entry and resend, the profile and patient form, find by mobile, login by ABHA number and address, already linked, scan and share registration), each rule one line with the case ids it satisfies. The eleven findings above are the first rules. The rest come from walking every mandatory case's Expected Result.
+3. **Every build step names its tests.** `scaffold.md` lists, under each journey step, "Tested by" with the case ids and their Expected Result in one line, and the step's exit condition includes the screen check, not only the call.
+4. **Scope follows the mandatory cases.** The build interview asks the entity type first. Every journey a mandatory case needs for that entity type is built whatever the deployment answers; the yes or no questions add only the optional routes.
+5. **The integration plan carries the coverage.** `INTEGRATION-PLAN.md` gains a table: each mandatory case, the screen or route that satisfies it, the file, and its state. The build cannot be called done while a mandatory row is empty.
+6. **A pre-check before the test.** A `/abdm-precheck <module>` command walks the mandatory cases' Expected Results against the built screens and code, and lists every gap with its case id, so the integrator fixes them before the functional test, not during it.
+7. **Scan and register gets its design.** A design section with the registration rules 701 and 702 test: register from the shared profile with no data entry, match on name, mobile, gender, ABHA number and address, update the address on an existing beneficiary, one queue entry per counter.
+8. **Test failures feed the skills.** At the end of every run the test skill writes, beside the report, a findings file: each FAIL and conditional pass, its case id, and whether the build skills have a rule for it. A missing rule becomes a Catalogue issue against the design section, so the next integrator does not hit it. This run's eleven are the first batch.
+9. **All modules, not only M1.** The mapping, design rules, interview scope and pre-check are built for M1 first, then M2, M3, M4 and P1 to P4 from their workbooks.
 
 ### G. Proving it
 
-1. The SMART HMS run replayed against the new rules on paper: every case's outcome recomputed from its recorded observations. Expected, to be confirmed by the replay: 701 PASS with observation; 702 needs-human on step 2; 108 to 114 runnable with this holder; 301 to 308 NA for a private integrator.
+1. The SMART HMS run replayed against the new rules on paper: every case's outcome recomputed from its recorded observations. Expected, to be confirmed by the replay: 701 Conditional pass; 702 needs-human on step 2; 108 to 114 runnable with this holder; 301 to 308 NA for a private integrator.
 2. The report rebuilt from that run's workbook under the new format, with its page count.
 3. One full rerun on SMART HMS through `/abdm-test m1`, with the holder present and the test data plan prepared.
 
@@ -128,15 +143,16 @@ SMART HMS was built almost entirely with the skills, so its failures are largely
 
 1. The ABHA address limit per ABHA (you said 6): the source to cite.
 2. Does an operator clicking to confirm a match, with no data entry, count as "automatically" registering, for 701 and 702?
-3. Is "PASS with observation" acceptable to NHA, with Status still reading PASS?
-4. Error message wording: same meaning, or exact match, where the sheet quotes a message?
+3. Decided 24 October 2026: the outcome is named Conditional pass.
+4. Decided 24 October 2026: same meaning is enough.
 
 ## 5. Order
 
 | Step | Work | Done when |
 |---|---|---|
 | 1 | A and E: entry command, case plan script, coverage gate, writer masking | A run of the plan script on the SMART HMS workbook lists all 100 cases with applicability and needs; the writer check proves no identity reaches the sheet |
-| 2 | B and C: coverage and judging rules, step results, PASS with observation | The SMART HMS replay recomputes every case under the new rules, and each change from the recorded outcome is explained |
+| 2 | B and C: coverage and judging rules, step results, Conditional pass | The SMART HMS replay recomputes every case under the new rules, and each change from the recorded outcome is explained |
 | 3 | D: report summary, evidence filtering, image grid, wording, page checks | The SMART HMS report rebuilds under 40 pages with the counts table |
-| 4 | F: test case mapping into scaffold, design, plan template and self check | Every mandatory M1 case appears under a flow step; the eleven design rules are in `design.md` with their case ids |
+| 4 | F for M1: mapping, screen requirements, scaffold Tested by, interview scope, plan coverage table, pre-check, scan and register design, findings file | CI fails on an unmapped mandatory case; the eleven rules are in `design.md` with their case ids; `/abdm-precheck m1` run against SMART HMS lists the eleven gaps |
+| 4b | F for M2, M3, M4, P1 to P4 | Every module's mandatory cases are mapped and every module's pre-check runs |
 | 5 | G3: full rerun with the holder | The run log shows every mandatory case run, NA or needs-human with its need, and the report is final or a draft listing only what is truly open |
