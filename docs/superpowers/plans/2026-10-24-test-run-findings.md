@@ -159,10 +159,10 @@ NHA's observations on the run (24 October 2026, "Observations UI Test case run")
 1. The summary answers, in order, with each term defined under the table: cases in NHA's sheet; applicable to this integrator; tested; passed; conditional pass; failed; blocked, waiting for a tester or device; not tested; not applicable. The same counts for mandatory cases alone, then one line: ready for sandbox exit, or the number of mandatory cases still open. "No result" is gone.
 2. Results grouped by functionality, which is also how the integration was built.
 3. Evidence only for cases that were tested; untested and not applicable cases appear once, in a compact table.
-4. Screenshots at a fixed size: two desktop or three phone screenshots per row at a fixed height. Full size images go in the annexure bundle, not the PDF. No page holds only an image and its caption.
+4. Screenshots are shown large enough to read, embedded at their full resolution: a desktop screenshot takes the full text width, phone screenshots sit side by side at a readable height. A case's heading and result line stay with its first screenshot. Decided 24 October 2026: readable screenshots matter more than page count.
 5. The failures log lists only FAIL, blocked and conditional pass cases.
 6. Plain wording: the fixed paragraphs become one line or a table, one line findings, no sentence that restates a table. One sample goes to NHA before the wording is frozen.
-7. The check enforces it: M1 with every case tested under 40 pages, no page under four lines except the cover, the counts table present and adding up.
+7. The check enforces it: screenshots embedded at full resolution and printed at a readable size, no heading left alone at a page foot, the counts table present and adding up. There is no page limit.
 
 ### 3.11 Privacy
 
@@ -198,7 +198,7 @@ Each step is its own branch and pull request, ends with the `adversarial-reviewe
 | Step | Work | Done when |
 |---|---|---|
 | 1 | Run rules that do not wait for the restructure: writer masking, identity never repeated, judging rules and Conditional pass in the writer and report, existing ABHA rule, coverage gate and `plan` subcommand | The writer check proves no identity reaches the sheet; `plan` lists all 100 M1 cases with applicability and needs; the report gate and counts handle Conditional pass |
-| 2 | The report: summary counts, grouping by functionality, evidence filtering, image grid, page checks, plain wording | The SMART HMS workbook rebuilds under 40 pages with the counts table; the check enforces the page rules |
+| 2 | The report: summary counts, grouping by functionality, evidence filtering, image grid, page checks, plain wording | The SMART HMS workbook rebuilds with the counts table and readable full resolution screenshots; the check enforces the layout rules |
 | 3 | The M1 mapping, `catalogue/hiecm/tests/m1.yaml`, and its CI check | Every M1 case maps to a functionality; CI fails on an unmapped case |
 | 4 | The per functionality M1 skill: `build-skills.mjs` writes `SKILL.md`, `functionalities/`, `run.md`, `errors.md`; the five job files go; the eleven screen requirements land in their functionality files | `validate:skills` passes; each M1 functionality file holds its cases, screen requirements, calls and errors; no rule appears in two files |
 | 5 | `/abdm-build` and `/abdm-test`, the tracker in `INTEGRATION-PLAN.md`, entity type first scope, findings file | A dry run on SMART HMS's recorded results places each functionality in the tracker, lists its failing cases and the screen requirement each lacks |

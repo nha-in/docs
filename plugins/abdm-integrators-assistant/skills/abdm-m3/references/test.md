@@ -634,7 +634,7 @@ A case with more than one step can carry its step results. Each step is `passed`
 | `failed` | Any steps; a case with a `failed` step is always `failed` |
 | `needs-human` | At least one step `needs-human`, and no step `failed` |
 
-The writer masks the Response and Remarks values before it writes them, with the same masking block as the report: a 12 digit Aadhaar number, with or without spaces or hyphens, reads `XXXX XXXX 1234`, a 14 digit ABHA number, with or without hyphens, `XX-XXXX-XXXX-1234`, a 10 digit mobile, with or without `0`, `91` or `+91` in front and spaces or hyphens inside, `XXXXXX1234`, an ABHA address ending `@sbx` or `@abdm` keeps the last four characters before the `@` with the rest as `x` (four or fewer are all `x`), a JWT reads `[token]`, a value after a password, secret, token or OTP label, and a `Bearer` credential, read `[redacted]`, and the value of a profile field (`firstName`, `middleName`, `lastName`, `fullName`, `name`, `dob`, `dayOfBirth`, `monthOfBirth`, `yearOfBirth`, `address`, `pinCode`, `photo`, `profilePhoto`, `kycPhoto`, `email`), in JSON or as `key: value`, reads `[masked]`. Masking is the backstop, not the rule: never put an identity value in a result in the first place.
+The writer masks the Response and Remarks values before it writes them, with the same masking block as the report: a 12 digit Aadhaar number, with or without spaces or hyphens, reads `XXXX XXXX 1234`, a 14 digit ABHA number, with or without hyphens, `XX-XXXX-XXXX-1234`, a 10 digit mobile, with or without `0`, `91` or `+91` in front and spaces or hyphens inside, `XXXXXX1234`, an ABHA address ending `@sbx` or `@abdm` keeps the last four characters before the `@` with the rest as `x` (four or fewer are all `x`), a JWT reads `[token]`, a value after a password, secret, token or OTP label, and a `Bearer` credential, read `[redacted]`, and the value of a profile field (`firstName`, `middleName`, `lastName`, `fullName`, `name`, `dob`, `dayOfBirth`, `monthOfBirth`, `yearOfBirth`, `address`, `pinCode`, `photo`, `profilePhoto`, `kycPhoto`, `email`), in JSON or as `key: value` in any case, reads `[masked]` to the end of its clause, so `Name: asha verma, then` reads `Name: [masked], then`. A date of birth after `dob`, `DOB` or `date of birth` reads `[masked]`, and any date written dd/mm/yyyy reads `[date]`. Masking is the backstop, not the rule: never put an identity value in a result in the first place. A name written with no label, such as `asha verma saw the screen`, cannot be told from other words and is not masked: the agent never writes a name.
 
 ### Before you start
 
@@ -710,13 +710,18 @@ def labelled(words):
 
 LABELLED = labelled(SECRET_WORDS)
 BEARER = re.compile(r"\bBearer\s+(?!\[token\]|\[redacted\])[^\s'\",;}]+")
-# A person's profile fields, by key, in JSON or in "key: value" and "key=value" text. A quoted
-# value is taken whole; an unquoted one runs on over words that start with a capital or a digit.
+# A person's profile fields, by key, in JSON or in "key: value" and "key=value" text, in any case.
+# A quoted value is taken whole; an unquoted one runs to the end of its clause: a comma, a
+# semicolon, a full stop, a line end or a steps list.
 PROFILE_KEYS = (r"firstName|middleName|lastName|fullName|name|dob|dayOfBirth|monthOfBirth|yearOfBirth|"
                 r"address|pinCode|pincode|photo|profilePhoto|kycPhoto|email")
 PROFILE = re.compile(
     r"(['\"]?\b(?i:" + PROFILE_KEYS + r")\b['\"]?\s*[:=]\s*)(?![\[{])"
-    r"(\"(?:[^\"\\]|\\.)*\"|'[^']*'|[^\s,;}\]]+(?: (?!Steps:)[A-Z0-9][^\s,;}\]]*)*)")
+    r"(\"(?:[^\"\\]|\\.)*\"|'[^']*'|[^\s,;}\]]+(?: (?!Steps:)[^\s,;.}\]]+)*)")
+# A date of birth after its label, and any date written dd/mm/yyyy.
+DATE = r"\d{1,2}[/-]\d{1,2}[/-]\d{4}|\d{4}-\d{2}-\d{2}"
+BIRTH = re.compile(r"(\b(?i:dob|date of birth|birth ?date)\b['\"]?\s*[:=]?\s*['\"]?)(" + DATE + r")(?!\d)")
+SLASHED = re.compile(r"(?<![\d/])\d{1,2}/\d{1,2}/\d{4}(?![\d/])")
 ABHA_ADDRESS = re.compile(r"(?<![\w.-])([A-Za-z0-9._]+)@(sbx|abdm)\b(?!\.\w)", re.I)
 # A digit run is not a number to mask when it is a segment of a UUID.
 LEAD, TRAIL = r"(?<!\d)(?<![0-9a-fA-F]-)", r"(?!\d)(?!-[0-9a-fA-F])"
@@ -741,12 +746,15 @@ def address(m):
 
 def mask(text):
     """A JWT to [token], a secret's value and a Bearer credential to [redacted], a profile field's
-    value to [masked], an ABHA address to xxxxxx1234@sbx, ABHA numbers to XX-XXXX-XXXX-1234, any
-    other 12 digit run to XXXX XXXX 1234, a mobile, with or without 0 or +91, to XXXXXX1234."""
+    value and a date of birth to [masked], a dd/mm/yyyy date to [date], an ABHA address to
+    xxxxxx1234@sbx, ABHA numbers to XX-XXXX-XXXX-1234, any other 12 digit run to XXXX XXXX 1234,
+    a mobile, with or without 0 or +91, to XXXXXX1234."""
     text = JWT.sub("[token]", str(text))
     text = LABELLED.sub(lambda m: (m.group(1) or m.group(3)) + "[redacted]", text)
     text = BEARER.sub("Bearer [redacted]", text)
+    text = BIRTH.sub(lambda m: m.group(1) + "[masked]", text)
     text = PROFILE.sub(profile, text)
+    text = SLASHED.sub("[date]", text)
     text = ABHA_ADDRESS.sub(address, text)
     text = ABHA_NUMBER.sub(r"XX-XXXX-XXXX-\1", text)
     text = AADHAAR.sub(r"XXXX XXXX \1", text)
@@ -1210,36 +1218,71 @@ so far. The run log is made from that list, so no case is ever dropped.
 The report is a PDF, the file you submit, with a Word copy beside it that you
 can edit. Both hold the same text. The PDF is drawn in the ABDM Sandbox design
 system: a navy cover with the key facts in a ruled grid, a contents list with
-page numbers, each section opened by a rule and a numbered label, hairline
-tables, the counts as tiles, and each screenshot framed and captioned. Every
-page after the cover carries the report title in its header and
-`Confidential` with `Page N of M` in its footer. Its parts come in this order,
-each from a fixed source, so two reports for the same milestone read the same
-way.
+page numbers, each section opened by a rule and a numbered label, and hairline
+tables. Every page after the cover carries the report title in its header and
+`Confidential` with `Page N of M` in its footer. Cases flow on from one another;
+a case's heading and fields stay on the page with its first screenshot, and no
+heading ends a page. Its parts come in
+this order, each from a fixed source, so two reports for the same milestone
+read the same way.
 
 | Part | What it holds | Comes from |
 |---|---|---|
 | Cover | Title, product, organisation, milestone, run type, document id, version, release date, a confidentiality line | `meta.json`, `--run` |
-| Contents | Every section and every case id with its page number. The Word copy holds a contents field that Word fills in on opening | The headings below |
+| Contents | Every section, and each function group in the evidence, with its page number. The Word copy holds a contents field that Word fills in on opening | The headings below |
 | 1. Document control | Document title, id, version, prepared, reviewed, approved and released by, release date; change history; distribution list by name, organisation and role | `meta.json` `document` |
-| 2. Executive summary | The run in one paragraph: cases, PASS, conditional pass, FAIL, NA, no result, whether every mandatory case holds, how many took more than one pass | The workbook's counts |
+| 2. Executive summary | The counts table, for all cases and for mandatory cases, each term defined in one line under it, then `Ready for sandbox exit.` or `<n> mandatory cases are still open.` | The workbook, `plan`'s applicability, the gate |
 | 3. ABDM details | Entity, product, category, role, entity type, milestone, API version, run type, dates, days, most passes any case took, executed by, recordings | `meta.json`, the workbook |
-| 4. Results summary | A counts table with conditional pass on its own, a table by the workbook's Function column, one row per case with marking, status and iterations, every conditional pass with its condition, and any mandatory case NHA agreed is not run, with the agreement | The workbook, `agreed_not_run` |
-| 5. Scope and limitations | Applications and URLs; role, entity type, run type, workbook, tabs, cases; optional cases not passed; the limitation that results hold for the build tested on those dates, and any `limitations` | `meta.json`, the workbook |
+| 4. Results summary | The counts by function group; every conditional pass with its condition; any mandatory case NHA agreed is not run, with the agreement; then every case not tested, blocked or not applicable, once, with what it needs or why it does not apply | The workbook, `agreed_not_run` |
+| 5. Scope and limitations | Applications and URLs; workbook and tabs; the limitation that results hold for the build tested on those dates, and any `limitations` | `meta.json`, the workbook |
 | 6. Flow details | For linking and consent flows: the ABHA address used and the HI types created or tested | `meta.json` `flows` |
 | 7. Test environment and tools | Browser, Playwright, PHR app, emulator, the model that ran the agent, with versions | `meta.json` `environment` |
 | 8. Test team | Name, role and qualifications of each tester, reviewer and approver | `meta.json` `team` |
-| 9. Approach and methodology | How the agent ran cases, the three pass limit, how OTPs and consents were given, the run type, REQUEST-IDs, and what PASS, conditional pass, FAIL, NA and no result mean | Fixed text, `--run` |
+| 9. Approach and methodology | One line each: who ran the cases, the three pass limit, how OTPs and consents were given, the PHR app proof, the run type, REQUEST-IDs | Fixed text, `--run` |
 | 10. Test data | The ABHA numbers and addresses used, masked | `meta.json` `test_data` |
-| 11. Evidence | Per case, a heading with its id and title, then one table of test case ID, title, marking, expected result, observed, status, iterations, failure reason with any error code, and request ids; for a case with steps, a table of each step's result; then the response with its code; then each screenshot with a numbered caption naming the case and step | The workbook, `findings`, `--manifest`, the evidence folder |
-| 12. Failures and iterations log | Every case not PASS or that took more than one pass, with its failure reason and error code | The workbook |
-| 13. Conclusion and sign-off | The result in one paragraph, then a sign-off table for preparer, reviewer and approver with date and signature | The counts, `meta.json` `document` |
-| 14. Annexures | Recording links, the completed workbook, the REQUEST-ID manifest, the evidence folder | `meta.json`, the arguments |
+| 11. Evidence | Tested cases only, passed, conditional pass or failed, under their function group in sheet order. Per case: its id and title; the result line (status, passes, marking, any condition or error code); the expected result; what was observed; its REQUEST-IDs; a table of its steps if it has them; the response for an `ft` run; then its screenshots | The workbook, `findings`, `--manifest`, the evidence folder |
+| 12. Failures and iterations log | Failed, blocked and conditional pass cases only, with the reason, the condition or what is needed, and any error code | The workbook |
+| 13. Conclusion and sign-off | The same ready line as the summary, then a sign-off table for preparer, reviewer and approver with date and signature | The gate, `meta.json` `document` |
+| 14. Annexures | Recording links, the completed workbook, the REQUEST-ID manifest, the full size screenshots in the evidence folder and the file listing them | `meta.json`, the arguments |
+
+| Count | What it means |
+|---|---|
+| Cases in NHA's sheet | Every case in the workbook |
+| Applicable to this integrator | The cases less those not applicable, as `plan` classifies them for your entity type |
+| Tested | Passed, conditional pass and failed |
+| Passed, conditional pass, failed | `PASS`, `CONDITIONAL PASS` and `FAIL` in the run type's status column |
+| Blocked | A blank status with Remarks starting `Needs tester:`: waiting for a tester, a device or test data |
+| Not tested | Applicable and blank but not blocked; `NA` on a mandatory case NHA has not agreed to, which is still open; or a status the script does not know, shown as `Unrecognised status: <value>` |
+| Not applicable | In a group the sheet marks for the other entity type only, whether or not it was run (a run one is listed as `Run, not applicable` with its result); or `NA` on an optional case or with NHA's agreement |
+
+The counts must add up: applicable is tested, blocked and not tested; tested is
+passed, conditional pass and failed. The script stops with `the summary counts
+do not add up` if they do not. The mandatory column counts each case that is
+mandatory for your entity type, and each either pair once: by the case that met
+it, else by one that was tried. So the mandatory failed, blocked and not tested
+add up to the number in `<n> mandatory cases are still open.` When one case of
+an either pair passes, the other's result carries `Either rule: <id> or <id>
+satisfies it.` and is not a mandatory failure.
+
+Screenshots print to be read, at their own resolution. Two rows fit a page with a
+case heading: each row is at most about 98 mm tall. A landscape (desktop)
+screenshot spans the text width up to that height, one to a row, never under
+140 mm wide. Portrait (phone) ones sit up to three to a row at that height,
+never under 45 mm wide. A capture
+more than three times as tall as it is wide prints 60 mm wide, cut into parts
+that each fit a page. Landscape and portrait ones never share a row. Each is
+embedded with every pixel it has, unless that is more than prints at 300 dots
+per inch at its size, when it is scaled to that. A PNG stays lossless. A file
+Pillow cannot open, an empty one included, is named in the case as `Screenshot
+could not be read: <file>`, and the report is still written. The full size
+files stay in the evidence folder, and `build` writes `<report>-screenshots.json`
+beside the report, listing each figure's case, step and file, for the annexure
+bundle.
 
 The only prose you write is the one line finding per case, in `meta.json`.
-The observed value is that finding, else the Remarks value; the response
-with its code follows the table. A failure reason is the Remarks value, else the response,
-with any `ABDM-` or `MIS-` code, HTTP 4xx or 5xx status or exception named in them. Request
+The observed value is that finding, else the Remarks value. A failure reason is
+the Remarks value, else the response. The result line names any `ABDM-` or
+`MIS-` code, HTTP 4xx or 5xx status or exception in them. Request
 ids come from the run's manifest JSON, the file the test skill writes beside
 the run log, given with `--manifest`. A request id that is a UUID is printed as
 it is, so a reviewer can look it up in the gateway's record; anything else in
@@ -1282,12 +1325,12 @@ signing off sees them.
 ### Before you start
 
 - The workbook the run wrote into, with its results, as `shared.concept.test-workbook-write-back` leaves it.
-- For a `ui` report, the screenshots under `abdm-ft/evidence/<case id>/`, one folder per case id as `cases` prints it. They are placed in name order, so name them `01-consent.png`, `02-otp.png`. Blur any Aadhaar number, OTP or full mobile on a screenshot before it goes in the folder: the script masks text, not images.
+- For a `ui` report, the screenshots under `abdm-ft/evidence/<case id>/`, one folder per case id as `cases` prints it. They are placed in name order, so name them `01-consent.png`, `02-otp.png`. PNG, JPEG, GIF, BMP, WebP and TIFF are read; HEIC and PDF files are read only where Pillow can open them, so export them to PNG. Blur any Aadhaar number, OTP or full mobile on a screenshot before it goes in the folder: the script masks text, not images.
 - Python 3.9 or later with `openpyxl`, `Pillow`, `python-docx` and `reportlab`: `pip install openpyxl pillow python-docx reportlab`. On Python 3.9, ReportLab 5 does not install; use `pip install "reportlab<5"`. All four are open source (MIT, the HPND licence, MIT and BSD). ReportLab draws the PDF itself, so no office suite is needed.
 - Optionally, the design system's fonts as `.ttf` files: Newsreader for headings, Public Sans for text and JetBrains Mono for labels and case ids, all under the SIL Open Font License. The script looks in the folder given with `--fonts`, then `abdm-ft/fonts/`, then `~/Library/Fonts`, `/Library/Fonts` and `/usr/share/fonts`, and prints which it used. A font it does not find is replaced by the PDF's own Times-Roman, Helvetica or Courier, which are the design system's fallbacks, so the report is complete either way.
 - The script below, saved as `abdm-ft/abdm_report.py`.
 - A `meta.json` for the report, written by you, with placeholder values replaced. It carries no credential: the script refuses any field named like `password`, `secret`, `token` or `credentials`, and any value that holds a token or a credential's label with its value, such as `client secret: ...`. `agreed_not_run` is only for mandatory cases NHA agreed are not run; leave it `{}` otherwise. `flows` is for M2 and M3 linking and consent flows; leave it `[]` for M1. `team` and `distribution` carry no email or phone number.
-- For request ids in the report, the run's manifest JSON, which the test skill writes beside the run log at the end of the run. It is optional: without it each case reads `No manifest given`. The script refuses a manifest that holds a credential, as it does `meta.json`.
+- For request ids in the report, the run's manifest JSON, which the test skill writes beside the run log at the end of the run. It is optional: without it each tested case reads `No manifest given`. The script refuses a manifest that holds a credential, as it does `meta.json`.
 
 ```json
 {
@@ -1349,7 +1392,8 @@ and exits 1, or exits 0 when there is none. build refuses unless check passes, t
 report. A mandatory case NA passes only when meta.json's agreed_not_run names it.
 --manifest is the run's manifest of case ids to REQUEST-IDs, printed per case.
 build writes REPORT.pdf, the report to submit, and REPORT.docx beside it, the
-editable copy; --format picks one of them. The PDF uses Newsreader, Public Sans
+editable copy; --format picks one of them. For a ui run it also writes
+REPORT-screenshots.json, naming each figure's full size file for the annexure. The PDF uses Newsreader, Public Sans
 and JetBrains Mono where it finds them (--fonts DIR, abdm-ft/fonts, then the
 system's font folders), else Times-Roman, Helvetica and Courier.
 Needs openpyxl, Pillow, python-docx and reportlab
@@ -1378,15 +1422,35 @@ FORBIDDEN = re.compile(r"pass(word|wd)|secret|token|credential|api[_ -]?key|priv
 PASSING = ("PASS", "CONDITIONAL PASS")
 STEPS = re.compile(r"\bSteps: (.+)$")
 STEP = re.compile(r"^(\d+) (PASS|FAIL|needs tester|not run)(?: \((.*)\))?$")
-IMAGES = (".png", ".jpg", ".jpeg", ".gif", ".bmp")
+IMAGES = (".png", ".jpg", ".jpeg", ".gif", ".bmp", ".webp", ".tif", ".tiff", ".heic", ".heif", ".pdf")
 RUN_NAME = {"ui": "UI functional test", "ft": "API functional test"}
 SECTIONS = ["Document control", "Executive summary", "ABDM details", "Results summary",
             "Scope and limitations", "Flow details", "Test environment and tools", "Test team",
             "Approach and methodology", "Test data", "Evidence", "Failures and iterations log",
             "Conclusion and sign-off", "Annexures"]
-# The fixed fields of each case's evidence table, in order.
-CASE_FIELDS = ["Test case ID", "Title", "Marking", "Expected result", "Observed", "Status",
-               "Iterations", "Failure reason", "Request IDs"]
+# The fixed fields of each tested case's evidence table, in order, under its id and title.
+CASE_FIELDS = ["Result", "Expected result", "Observed", "Request IDs"]
+# Where each case stands. Tested is passed, conditional pass or failed; applicable is
+# tested, blocked or not tested; every case is applicable or not applicable.
+TESTED = ("PASS", "CONDITIONAL PASS", "FAIL")
+COUNTS = [("Cases in NHA's sheet", "Every case in the workbook."),
+          ("Applicable to this integrator", "The cases less those not applicable."),
+          ("Tested", "Run to a result: passed, conditional pass or failed."),
+          ("Passed", "The Expected Result was seen."),
+          ("Conditional pass", "The Expected Result was seen, with a gap beside it, listed with its condition."),
+          ("Failed", "The Expected Result was not seen in three passes."),
+          ("Blocked", "Started, then waiting for a tester, a device or test data."),
+          ("Not tested", "Applicable and not run yet, NA on a mandatory case NHA has not agreed to, or an unknown status."),
+          ("Not applicable", "Not for this entity type as the sheet's groups mark it, run or not; or NA agreed or optional.")]
+# Screenshots print to be read and pack two rows to a page: a row is at most ROW_MM tall, the
+# A4 frame (257 mm) less a case heading and fields (40 mm) and two captions and gaps (10 mm each),
+# halved. A landscape one spans the text width up to that height, never under 140 mm wide; portrait
+# ones sit three to a row at that height, never under 45 mm wide; a very tall one (over three times
+# as tall as wide) prints 60 mm wide, cut into parts that each fit a page. Each is embedded with
+# every pixel it has, up to what prints at 300 dots per inch.
+ROW_MM = (257 - 40 - 2 * 10) / 2.0
+SHOT_MM = {"wide_min_width": 140, "tall_min_width": 45, "very tall": 60, "part": 190}
+DPI = 300
 # A REQUEST-ID is a UUID. Only a UUID is printed as it is; anything else is masked.
 UUID = re.compile(r"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}")
 # An error code or exception named in a response or remark.
@@ -1414,13 +1478,18 @@ def labelled(words):
 
 LABELLED = labelled(SECRET_WORDS)
 BEARER = re.compile(r"\bBearer\s+(?!\[token\]|\[redacted\])[^\s'\",;}]+")
-# A person's profile fields, by key, in JSON or in "key: value" and "key=value" text. A quoted
-# value is taken whole; an unquoted one runs on over words that start with a capital or a digit.
+# A person's profile fields, by key, in JSON or in "key: value" and "key=value" text, in any case.
+# A quoted value is taken whole; an unquoted one runs to the end of its clause: a comma, a
+# semicolon, a full stop, a line end or a steps list.
 PROFILE_KEYS = (r"firstName|middleName|lastName|fullName|name|dob|dayOfBirth|monthOfBirth|yearOfBirth|"
                 r"address|pinCode|pincode|photo|profilePhoto|kycPhoto|email")
 PROFILE = re.compile(
     r"(['\"]?\b(?i:" + PROFILE_KEYS + r")\b['\"]?\s*[:=]\s*)(?![\[{])"
-    r"(\"(?:[^\"\\]|\\.)*\"|'[^']*'|[^\s,;}\]]+(?: (?!Steps:)[A-Z0-9][^\s,;}\]]*)*)")
+    r"(\"(?:[^\"\\]|\\.)*\"|'[^']*'|[^\s,;}\]]+(?: (?!Steps:)[^\s,;.}\]]+)*)")
+# A date of birth after its label, and any date written dd/mm/yyyy.
+DATE = r"\d{1,2}[/-]\d{1,2}[/-]\d{4}|\d{4}-\d{2}-\d{2}"
+BIRTH = re.compile(r"(\b(?i:dob|date of birth|birth ?date)\b['\"]?\s*[:=]?\s*['\"]?)(" + DATE + r")(?!\d)")
+SLASHED = re.compile(r"(?<![\d/])\d{1,2}/\d{1,2}/\d{4}(?![\d/])")
 ABHA_ADDRESS = re.compile(r"(?<![\w.-])([A-Za-z0-9._]+)@(sbx|abdm)\b(?!\.\w)", re.I)
 # A digit run is not a number to mask when it is a segment of a UUID.
 LEAD, TRAIL = r"(?<!\d)(?<![0-9a-fA-F]-)", r"(?!\d)(?!-[0-9a-fA-F])"
@@ -1445,12 +1514,15 @@ def address(m):
 
 def mask(text):
     """A JWT to [token], a secret's value and a Bearer credential to [redacted], a profile field's
-    value to [masked], an ABHA address to xxxxxx1234@sbx, ABHA numbers to XX-XXXX-XXXX-1234, any
-    other 12 digit run to XXXX XXXX 1234, a mobile, with or without 0 or +91, to XXXXXX1234."""
+    value and a date of birth to [masked], a dd/mm/yyyy date to [date], an ABHA address to
+    xxxxxx1234@sbx, ABHA numbers to XX-XXXX-XXXX-1234, any other 12 digit run to XXXX XXXX 1234,
+    a mobile, with or without 0 or +91, to XXXXXX1234."""
     text = JWT.sub("[token]", str(text))
     text = LABELLED.sub(lambda m: (m.group(1) or m.group(3)) + "[redacted]", text)
     text = BEARER.sub("Bearer [redacted]", text)
+    text = BIRTH.sub(lambda m: m.group(1) + "[masked]", text)
     text = PROFILE.sub(profile, text)
+    text = SLASHED.sub("[date]", text)
     text = ABHA_ADDRESS.sub(address, text)
     text = ABHA_NUMBER.sub(r"XX-XXXX-XXXX-\1", text)
     text = AADHAAR.sub(r"XXXX XXXX \1", text)
@@ -1612,7 +1684,9 @@ def group_applies(ws, top, cols):
 
 def group_names(ws, top, cols):
     """Each case row's group: the Function carried down from the row that heads the group,
-    else the last section heading, a row whose only value is a short title in its first column."""
+    else the last section heading. A section heading is a row with no case id whose values sit in
+    the first two columns only: a title, alone or after its number, as on the PHR sheet's
+    "4.1 | Login with mobile number flow" and "| Edit Profile"."""
     fcol, icol = cols.get("Function"), cols.get("Test Case ID")
     if not icol:
         return {}
@@ -1621,11 +1695,12 @@ def group_names(ws, top, cols):
     for r in range(top + 1, ws.max_row + 1):
         name = norm(anchor(ws, r, fcol).value) if fcol else ""
         filled = [c for c in ws[r] if norm(c.value)]
+        titles = [norm(c.value) for c in filled if not re.fullmatch(r"[\d.]+", norm(c.value))]
         if name:
             current = name
-        elif (len(filled) == 1 and filled[0].column == first and len(norm(filled[0].value)) <= 60
-              and not re.fullmatch(r"[\d.]+", norm(filled[0].value))):
-            current = norm(filled[0].value)
+        elif (filled and not norm(ws.cell(r, icol).value) and all(c.column in (first, first + 1) for c in filled)
+              and len(titles) == 1 and len(titles[0]) <= 120):
+            current = titles[0]
         if norm(ws.cell(r, icol).value):
             out[r] = current or norm(ws.title)
     return out
@@ -1669,7 +1744,7 @@ def read_cases(path, run, entity):
         rec["group"] = groups_by[ws.title].get(row, "") or norm(ws.title)
         for key, names in COLUMNS[run].items():
             rec[key] = value(ws, row, top, cols, names, original)
-        rec["status"] = rec["status"].upper()
+        rec["raw_status"], rec["status"] = rec["status"], rec["status"].upper()
         rec["iterations"] = iterations(rec["iterations"])
         out.append(rec)
     # The either rule binds every case it names, whatever their own marking.
@@ -1771,6 +1846,62 @@ def applicability(r):
     return what
 
 
+def settle(recs, groups):
+    """Mark what the counts need: a mandatory NA without NHA's agreement is still open, and an
+    either pair met by one case leaves the other's result beside it, not a mandatory failure.
+    Returns the mandatory cases to count: each mandatory case, and one case for each either pair."""
+    by_id = {r["id"]: r for r in recs}
+
+    def through(r):
+        return r["status"] in PASSING or bool(r.get("agreed"))
+
+    mandatory = [r for r in recs if r["kind"] == "mandatory"]
+    for ids in groups:
+        members = [by_id[i] for i in ids if i in by_id and by_id[i]["kind"] == "pair"]
+        if not members:
+            continue
+        met = [r for r in members if through(r)]
+        for r in members:
+            r["either"] = " or ".join(x["id"] for x in members)
+            r["pair_met"] = bool(met) and r not in met
+        tried = [r for r in members if r["status"] in TESTED or r["remarks"].lower().startswith("needs tester")]
+        mandatory.append((met or tried or members)[0])
+    for r in recs:
+        r["open_na"] = (r["status"] == "NA" and r["kind"] in ("mandatory", "pair") and not r.get("agreed")
+                        and not r.get("pair_met"))
+    return sorted(mandatory, key=recs.index)
+
+
+def standing(r):
+    """Where a case stands: passed, conditional pass, failed, blocked, not tested or not applicable.
+    What plan classifies not applicable stays so, run or not; a mandatory NA nobody agreed is not tested."""
+    status = r["status"]
+    if r.get("na"):
+        return "not applicable"
+    if status in TESTED:
+        return {"PASS": "passed", "CONDITIONAL PASS": "conditional pass", "FAIL": "failed"}[status]
+    if status == "NA":
+        return "not tested" if r.get("open_na") else "not applicable"
+    if not status and r["remarks"].lower().startswith("needs tester"):
+        return "blocked"
+    return "not tested"
+
+
+def tally(recs):
+    """The summary counts, checked to add up: applicable is tested, blocked and not tested;
+    tested is passed, conditional pass and failed; the sheet is applicable and not applicable."""
+    c = {"cases": len(recs)}
+    for name in ("passed", "conditional pass", "failed", "blocked", "not tested", "not applicable"):
+        c[name] = sum(1 for r in recs if standing(r) == name)
+    c["tested"] = sum(1 for r in recs if r["status"] in TESTED and not r.get("na"))
+    c["applicable"] = sum(1 for r in recs if not r.get("na") and not (r["status"] == "NA" and not r.get("open_na")))
+    if not (c["applicable"] == c["tested"] + c["blocked"] + c["not tested"]
+            and c["tested"] == c["passed"] + c["conditional pass"] + c["failed"]
+            and c["cases"] == c["applicable"] + c["not applicable"]):
+        sys.exit("the summary counts do not add up: " + json.dumps(c))
+    return c
+
+
 def run_plan(path, run, entity):
     """Every case in sheet order: id, group, applicability, status so far. Then the totals."""
     recs, _ = read_cases(path, run, entity)
@@ -1825,7 +1956,9 @@ def request_ids(path):
             ids = ids.get("request_ids") or ids.get("requestIds") or ids.get("request_id") or []
         if isinstance(ids, str):
             ids = [ids]
-        out[norm(case).replace(" ", "")] = [norm(i) for i in ids if norm(i)]
+        # A REQUEST-ID is a UUID; anything else in the field is not printed.
+        out[norm(case).replace(" ", "")] = [norm(i) if UUID.fullmatch(norm(i)) else "[invalid id]"
+                                            for i in ids if norm(i)]
     return out
 
 
@@ -1866,8 +1999,38 @@ def step_rows(remarks):
     return rows
 
 
-def content(path, run, meta, evidence, recs, groups, manifest=None, draft=None):
+def shot_rows(shots):
+    """Screenshots into rows, in name order within each shape: a landscape one alone across the
+    text width, portrait ones three to a row, a very tall one alone. Shapes never share a row."""
+    kinds = []
+    for shot in shots:
+        if shot["kind"] not in kinds:
+            kinds.append(shot["kind"])
+    rows = []
+    for kind in kinds:
+        these = [s for s in shots if s["kind"] == kind]
+        per = 3 if kind == "tall" else 1
+        rows += [these[i:i + per] for i in range(0, len(these), per)]
+    return rows
+
+
+def unreadable(path):
+    """Why a screenshot cannot be placed, or None when Pillow opens it."""
+    from PIL import Image
+    try:
+        with Image.open(path) as im:
+            im.load()
+            if not im.size[0] or not im.size[1]:
+                return "no pixels"
+        return None
+    except Exception as e:
+        return type(e).__name__
+
+
+def content(path, run, meta, evidence, recs, groups, manifest=None, draft=None, out=None):
     """What the report says, as a list of blocks. The DOCX and the PDF draw the same blocks."""
+    from PIL import Image
+
     dm = meta.get("document", {})
     dates = meta.get("test_dates", {})
     milestone = meta.get("milestone", "")
@@ -1887,41 +2050,55 @@ def content(path, run, meta, evidence, recs, groups, manifest=None, draft=None):
     def table(rows, header=None):
         add("table", rows, header)
 
-    n = len(recs)
-    passed = sum(1 for r in recs if r["status"] == "PASS")
+    counted = settle(recs, groups)
+    everything = tally(recs)
+    mandatory = tally(counted)
     conditional = [r for r in recs if r["status"] == "CONDITIONAL PASS"]
-    cond = len(conditional)
-    failed = sum(1 for r in recs if r["status"] == "FAIL")
-    na = sum(1 for r in recs if r["status"] == "NA")
-    blank = n - passed - cond - failed - na
-    mandatory = sum(1 for r in recs if r["kind"] == "mandatory") + len(groups)
-    retried = [r for r in recs if r["iterations"] > 1]
-    log = [r for r in recs if r["iterations"] > 1 or r["status"] != "PASS"]
     agreed = [r for r in recs if r.get("agreed")]
+    tested = [r for r in recs if standing(r) in ("passed", "conditional pass", "failed")]
+    untested = [r for r in recs if r not in tested]
+    log = [r for r in recs if standing(r) in ("failed", "blocked", "conditional pass")]
     findings = meta.get("findings", {})
-    if agreed:
-        held = (" All " + str(mandatory) + " mandatory cases that apply to a " + entity + " entity are PASS or "
-                "conditional pass, except " + str(len(agreed)) + " NA that NHA agreed not to run, listed in the "
-                "results summary.")
-    else:
-        held = (" All " + str(mandatory) + " mandatory cases that apply to a " + entity + " entity are PASS or "
-                "conditional pass.")
-    if draft:
-        held = (" This is a draft, not the report to submit: " + str(len(draft)) + " of the " + str(mandatory) +
-                " mandatory cases that apply to a " + entity + " entity are not yet PASS, listed below.")
+    ready = ("Ready for sandbox exit." if not draft else
+             str(len(draft)) + " mandatory case" + (" is" if len(draft) == 1 else "s are") + " still open.")
+    functions = []
+    for r in recs:
+        if r["group"] not in functions:
+            functions.append(r["group"])
+    by_function = [r for fn in functions for r in recs if r["group"] == fn]
 
-    def reason(r):
-        """Why a case failed, or what an earlier pass hit: the remark, else the response, with its codes."""
+    def condition(r):
+        return STEPS.sub("", r["remarks"]).strip() or "Not recorded"
+
+    def needed(r):
+        """For a case not tested: what it waits for, or why it does not apply."""
         if r.get("agreed"):
             return "Agreed not run: " + r["agreed"]
-        if r["status"] == "PASS" and r["iterations"] <= 1:
-            return "None"
-        if r["status"] == "CONDITIONAL PASS":
-            return "Condition: " + (STEPS.sub("", r["remarks"]).strip() or "not recorded")
-        text = r["remarks"] or r["response"] or "Not recorded"
-        if r["status"] == "PASS":
-            text = "Passed on pass " + str(r["iterations"]) + ". Earlier passes: " + text
-        return text
+        if r.get("na"):
+            ran = ("Run, result " + r["status"] + ". ") if r["status"] in TESTED else ""
+            return ran + "The group applies to " + r["applies"] + " only."
+        if r["status"] and r["status"] not in TESTED + ("NA",):
+            return "Unrecognised status: " + r["raw_status"]
+        text = STEPS.sub("", r["remarks"]).strip()
+        text = re.sub(r"^needs tester:\s*", "", text, flags=re.I)
+        if r.get("open_na"):
+            return ("Recorded NA without NHA's agreement: run it, or add the agreement to agreed_not_run."
+                    + (" Remarks: " + text if text else ""))
+        if not text and standing(r) == "blocked":
+            text = "; ".join(s[2] for s in step_rows(r["remarks"]) if s[1] == "needs tester" and s[2])
+        return text or ("Not run yet." if standing(r) == "not tested" else "Not recorded.")
+
+    def shown_status(r):
+        if r.get("na") and r["status"] in TESTED:
+            return "Run, not applicable"
+        return standing(r).capitalize()
+
+    def either(r):
+        return (" Either rule: " + r["either"] + " satisfies it.") if r.get("pair_met") else ""
+
+    def passes(r):
+        n = r["iterations"] or 1
+        return str(n) + (" pass" if n == 1 else " passes")
 
     def rid_text(r):
         if rids is None:
@@ -1949,21 +2126,14 @@ def content(path, run, meta, evidence, recs, groups, manifest=None, draft=None):
     table([[d.get("name", ""), d.get("organisation", ""), d.get("role", "")] if isinstance(d, dict)
            else [str(d), "", ""] for d in dist] or [["", "", ""]], header=["Name", "Organisation", "Role"])
 
-    # 2. Executive summary
+    # 2. Executive summary: the counts, each term in one line, then whether the run is done.
     add("h1", SECTIONS[1])
-    add("lead",
-        "This report records the " + label + " run of " + meta.get("product", "") + " by " +
-        meta.get("organisation", "") + " against ABDM " + milestone + ", API version " +
-        meta.get("api_version", "V3") + ", from " + dates.get("start", "") + " to " + dates.get("end", "") +
-        ". The workbook " + Path(path).name + " holds " + str(n) + " cases. " + str(passed) + " are PASS, " +
-        str(cond) + " conditional pass, " + str(failed) + " FAIL, " + str(na) + " NA and " + str(blank) +
-        " have no result." + held + " " +
-        str(len(retried)) + " cases took more than one pass.")
-    if draft:
-        add("callout", ["Draft. The report to submit is built only when every mandatory case below is PASS."])
-        add("h2", "Mandatory cases not yet passed")
-        table([line.split(": ", 1) if ": " in line else [line, ""] for line in draft],
-              header=["Test case ID", "Status"])
+    keys = ["cases", "applicable", "tested", "passed", "conditional pass", "failed", "blocked", "not tested",
+            "not applicable"]
+    add("counts", [[name, everything[k], mandatory[k]] for (name, _), k in zip(COUNTS, keys)],
+        ["Measure", "All cases", "Mandatory"],
+        [[name, meaning.replace("not applicable", "not applicable to a " + entity + " entity")
+          if name == "Applicable to this integrator" else meaning] for name, meaning in COUNTS], ready)
 
     # 3. ABDM details
     add("h1", SECTIONS[2])
@@ -1978,62 +2148,38 @@ def content(path, run, meta, evidence, recs, groups, manifest=None, draft=None):
            ["Test executed by", meta.get("executed_by", "")],
            ["Recordings", str(len(recordings)) + " listed in the annexures" if recordings else "None"]])
 
-    # 4. Results summary: counts, then by function, then one row per case.
+    # 4. Results summary: by function, the conditional passes, the agreed NA, then every case not tested.
     add("h1", SECTIONS[3])
-    add("stats", [["Cases in the workbook", n], ["PASS", passed], ["Conditional pass", cond], ["FAIL", failed],
-                  ["NA", na], ["No result", blank],
-                  ["Mandatory for a " + entity + " entity", mandatory], ["Took more than one pass", len(retried)]])
     add("h2", "Results by function")
-    functions = []
-    for r in recs:
-        if r["function"] not in functions:
-            functions.append(r["function"])
     rows = []
     for fn in functions:
-        these = [r for r in recs if r["function"] == fn]
-        rows.append([fn, len(these), sum(1 for r in these if r["status"] == "PASS"),
-                     sum(1 for r in these if r["status"] == "CONDITIONAL PASS"),
-                     sum(1 for r in these if r["status"] == "FAIL"), sum(1 for r in these if r["status"] == "NA"),
-                     sum(1 for r in these if r["kind"] == "mandatory" and r["status"] not in PASSING
-                         and not r.get("agreed"))])
-    table(rows, header=["Function", "Cases", "PASS", "Conditional pass", "FAIL", "NA", "Mandatory not PASS"])
-    add("h2", "Results by case")
-    table([[r["id"], r["title"], r["label"], (r["status"] or "Not recorded") + (" (agreed not run)" if r.get("agreed")
-            else ""), r["iterations"] or ""] for r in recs],
-          header=["Test case ID", "Title", "Marking", "Status", "Iterations"])
-    add("h2", "Conditional passes")
+        c = tally([r for r in recs if r["group"] == fn])
+        rows.append([fn, c["cases"], c["passed"], c["conditional pass"], c["failed"], c["blocked"],
+                     c["not tested"], c["not applicable"]])
+    table(rows, header=["Function", "Cases", "Passed", "Conditional pass", "Failed", "Blocked", "Not tested",
+                        "Not applicable"])
     if conditional:
-        add("note", ["Each case below met its Expected Result with a gap beside it. The condition is the gap."])
-        table([[r["id"], r["title"], STEPS.sub("", r["remarks"]).strip() or "Not recorded"] for r in conditional],
-              header=["Test case ID", "Title", "Condition"])
-    else:
-        add("para", "No case is a conditional pass.")
+        add("h2", "Conditional passes")
+        table([[r["id"], r["title"], condition(r)] for r in conditional], header=["Test case ID", "Title", "Condition"])
     if agreed:
         add("h2", "Mandatory cases NHA agreed not to run")
-        add("note", ["NHA agreed that each case below does not apply. The gate lets a mandatory NA through only "
-                     "when it is listed here with who agreed and when."])
         table([[r["id"], r["title"], r["agreed"]] for r in agreed], header=["Test case ID", "Title", "Agreed by and when"])
+    if untested:
+        add("h2", "Cases not tested")
+        table([[r["id"], r["title"], r["label"], shown_status(r), needed(r)]
+               for r in by_function if r in untested],
+              header=["Test case ID", "Title", "Marking", "Status", "Needed, or why not applicable"])
 
     # 5. Scope and limitations
     add("h1", SECTIONS[4])
     apps = meta.get("applications", [])
     table([[a.get("name", ""), a.get("url", "")] if isinstance(a, dict) else [str(a), ""] for a in apps]
           or [["", ""]], header=["Application", "URL"])
-    add("gap")
     sheets = sorted(set(r["sheet"] for r in recs), key=[r["sheet"] for r in recs].index)
-    table([["Role", meta.get("role", "")], ["Entity type", entity], ["Run type", run],
-           ["Workbook", Path(path).name], ["Tabs", ", ".join(sheets)], ["Cases", n]])
-    skipped = [r for r in recs if r["kind"] == "optional" and r["status"] not in PASSING]
-    add("h2", "Optional cases not passed")
-    if skipped:
-        table([[r["id"], r["title"], r["status"] or "Not recorded"] for r in skipped],
-              header=["Test case ID", "Title", "Status"])
-    else:
-        add("para", "Every optional case is PASS.")
-    add("h2", "Limitations")
-    add("callout", ["The results hold for the build and configuration tested from " + dates.get("start", "") +
-                    " to " + dates.get("end", "") + ". A later change to the code or the configuration can change them."]
-        + [str(x) for x in meta.get("limitations", [])])
+    table([["Workbook", Path(path).name], ["Tabs", ", ".join(sheets)],
+           ["Limitations", " ".join(["The results hold for the build and configuration tested from " +
+                                     dates.get("start", "") + " to " + dates.get("end", "") + "."] +
+                                    [str(x) for x in meta.get("limitations", [])])]])
 
     # 6. Flow details
     add("h1", SECTIONS[5])
@@ -2061,31 +2207,15 @@ def content(path, run, meta, evidence, recs, groups, manifest=None, draft=None):
     table([[m.get("name", ""), m.get("role", ""), m.get("qualifications", "")] for m in team if isinstance(m, dict)]
           or [[meta.get("executed_by", ""), "Tester", ""]], header=["Name", "Role", "Qualifications"])
 
-    # 9. Approach and methodology
+    # 9. Approach and methodology: one line each.
     add("h1", SECTIONS[8])
-    add("bullets", [
-        "An agent ran every case in the workbook's order, following the module's test skill, and wrote each "
-        "result into the workbook as the case ended.",
-        "Each case had at most three passes. Iterations is the number of passes a case took, whether it ended "
-        "PASS or FAIL.",
-        "Every OTP and every consent or approval came from a person at the moment the case needed it. Where "
-        "a screen took a typed OTP, the agent entered the OTP the person gave it into that screen and never "
-        "stored it.",
-        "For a case that passes through the PHR app, the proof is one PHR app screenshot showing the consent "
-        "granted or the record visible. The agent checked the application side.",
-        ("Run type ui: the agent drove the application's screens with Playwright and kept a screenshot per step."
-         if run == "ui" else
-         "Run type ft: each case was judged on the calls to the ABDM sandbox and the callbacks received. The "
-         "evidence for each case is the response with its code."),
-        "Every call carried a fresh REQUEST-ID. Where a manifest is given, each case lists its REQUEST-IDs, which "
-        "a reviewer can look up in the gateway's own record.",
-    ])
-    table([["PASS", "The case's expected result was observed."],
-           ["CONDITIONAL PASS", "The expected result was observed, with a gap beside it, such as a point in the "
-            "Suggestions for the Functional Tester column not met. The condition is listed in the results summary."],
-           ["FAIL", "The expected result was not observed in three passes. The failure reason says what was."],
-           ["NA", "The case was not run: optional and not offered, or mandatory with NHA's agreement."],
-           ["Not recorded", "The case has no result in the workbook."]], header=["Status", "Meaning"])
+    table([["Runner", "An agent ran each case with the module's test skill and wrote the result into the workbook."],
+           ["Passes", "At most three per case. Iterations is the number of passes a case took."],
+           ["Approvals", "A person gave every OTP, consent and approval as the case needed it. The agent kept no OTP."],
+           ["PHR app", "A case through the PHR app is proved by one PHR app screenshot of the consent or the record."],
+           ["Run type", run + ": Playwright drove the screens, with a screenshot per step." if run == "ui" else
+            run + ": the calls to the sandbox and the callbacks decide each case. The response is the evidence."],
+           ["Request IDs", "A fresh one on every call. Look each up in the gateway's own record."]])
 
     # 10. Test data
     add("h1", SECTIONS[9])
@@ -2094,41 +2224,61 @@ def content(path, run, meta, evidence, recs, groups, manifest=None, draft=None):
         data = [{"item": k, "value": v} for k, v in data.items()]
     table([[d.get("item", ""), d.get("value", "")] for d in data] or [["", ""]], header=["Item", "Value"])
 
-    # 11. Evidence: per case a fixed table, the response with its code, then captioned screenshots.
+    # 11. Evidence: tested cases only, by function. Each: a result line, the expected and observed
+    # results, its REQUEST-IDs, any steps, the response for an ft run, then its screenshots in rows.
     add("h1", SECTIONS[10])
-    figure = 0
-    for r in recs:
-        observed = findings.get(r["id"]) or r["remarks"] or "None recorded."
-        err = codes(r["response"], r["remarks"]) if r["status"] != "PASS" or r["iterations"] > 1 else ""
-        values = [r["id"], r["title"], r["label"], r["expected"] or "Not given in the workbook", observed,
-                  (r["status"] or "Not recorded") + (" (agreed not run)" if r.get("agreed") else ""),
-                  r["iterations"] or "", reason(r) + (("" if reason(r).endswith(".") else ".") + " Error code: " + err
-                                                      + "." if err else ""), rid_text(r)]
-        shots = []
-        if run == "ui":
-            folder = Path(evidence) / r["id"]
-            files = sorted(f for f in folder.iterdir() if f.suffix.lower() in IMAGES) if folder.is_dir() else []
-            for step, shot in enumerate(files, 1):
-                figure += 1
-                shots.append((shot, figure, step))
-        add("case", r, values, r["response"], shots, step_rows(r["remarks"]))
+    figures = []
+    if not tested:
+        add("para", "No case was tested.")
+    for fn in functions:
+        these = [r for r in recs if r["group"] == fn and r in tested]
+        if not these:
+            continue
+        add("group", fn)
+        for r in these:
+            observed = findings.get(r["id"]) or STEPS.sub("", r["remarks"]).strip() or "None recorded."
+            result = r["status"] + ", " + passes(r) + ". Marking: " + r["label"] + "." + either(r)
+            if r["status"] == "CONDITIONAL PASS" and condition(r) != observed:
+                result += " Condition: " + condition(r) + ("" if condition(r).endswith(".") else ".")
+            err = codes(r["response"], r["remarks"]) if r["status"] != "PASS" or r["iterations"] > 1 else ""
+            if err:
+                result += " Error code: " + err + "."
+            values = [result, r["expected"] or "Not given in the workbook", observed, rid_text(r)]
+            shots, unread = [], []
+            if run == "ui":
+                folder = Path(evidence) / r["id"]
+                files = sorted(f for f in folder.iterdir() if f.suffix.lower() in IMAGES) if folder.is_dir() else []
+                for step, shot in enumerate(files, 1):
+                    if unreadable(shot):
+                        # A file Pillow cannot open is named, never dropped and never a crash.
+                        unread.append("Screenshot could not be read: " + shot.name + " (" + unreadable(shot) + ")")
+                        continue
+                    with Image.open(shot) as im:
+                        w, h = im.size
+                    shots.append({"path": shot, "step": step, "w": w, "h": h,
+                                  "kind": "very tall" if h > 3 * w else "tall" if h > 1.2 * w else "wide"})
+            rows = shot_rows(shots)
+            for shot in [s for row in rows for s in row]:
+                # Figures are numbered in the order they print.
+                figures.append({"figure": len(figures) + 1, "case": r["id"], "step": shot["step"],
+                                "file": str(shot["path"])})
+                shot["figure"] = len(figures)
+            add("case", r, values, r["response"] if run == "ft" else "", rows, step_rows(r["remarks"]), unread)
 
-    # 12. Failures and iterations log
+    # 12. Failures and iterations log: failed, blocked and conditional pass only.
     add("h1", SECTIONS[11])
     if log:
-        table([[r["id"], r["status"] or "Not recorded", r["iterations"] or "", reason(r),
+        table([[r["id"], standing(r).capitalize(), r["iterations"] or "",
+                (condition(r) if r["status"] == "CONDITIONAL PASS" else needed(r) if standing(r) == "blocked"
+                 else STEPS.sub("", r["remarks"]).strip() or r["response"] or "Not recorded") + either(r),
                 codes(r["response"], r["remarks"]) or "None found"] for r in log],
               header=["Test case ID", "Status", "Iterations", "Failure reason", "Error code"])
     else:
-        add("para", "No case failed and no case took more than one pass.")
+        add("para", "No case failed, is blocked or passed with a condition.")
 
     # 13. Conclusion and sign-off
     add("h1", SECTIONS[12])
-    add("lead",
-        "In the " + run + " run of " + meta.get("product", "") + " for " + milestone + "," +
-        held.replace(" All", " all", 1) + " Of " + str(n) + " cases, " +
-        str(passed) + " are PASS, " + str(cond) + " conditional pass, " + str(failed) + " FAIL, " + str(na) +
-        " NA and " + str(blank) + " have no result.")
+    add("ready", ready)
     table([["Prepared by", dm.get("prepared_by", ""), "", ""], ["Reviewed by", dm.get("reviewed_by", ""), "", ""],
            ["Approved by", dm.get("approved_by", ""), "", ""]], header=["Sign-off", "Name", "Date", "Signature"])
 
@@ -2136,15 +2286,16 @@ def content(path, run, meta, evidence, recs, groups, manifest=None, draft=None):
     add("h1", SECTIONS[13])
     table([[x.get("title", ""), x.get("link", "")] if isinstance(x, dict) else [str(x), ""] for x in recordings]
           or [["", ""]], header=["Recording", "Link"])
-    add("gap")
+    listing = Path(out).stem + "-screenshots.json" if out else "Not written"
     table([["Completed workbook", Path(path).name],
            ["REQUEST-ID manifest", Path(manifest).name if manifest else "Not given"],
-           ["Evidence folder", (str(evidence) if run == "ui" else "Not used: the responses are the evidence")]],
+           ["Full size screenshots", (str(evidence) + ", each figure listed in " + listing if run == "ui"
+                                      else "Not used: the responses are the evidence")]],
           header=["Annexure", "File"])
 
     return {
         "title": title, "label": label, "run": run, "milestone": milestone, "entity": entity, "safe": safe,
-        "draft": draft or [],
+        "draft": draft or [], "figures": figures, "counts": everything, "mandatory": mandatory,
         "product": meta.get("product", ""), "organisation": meta.get("organisation", ""), "blocks": blocks,
         "cover": [["Product", meta.get("product", "")], ["Organisation", meta.get("organisation", "")],
                   ["Milestone", milestone], ["Report type", label + " (run type " + run + ")"],
@@ -2159,19 +2310,84 @@ def content(path, run, meta, evidence, recs, groups, manifest=None, draft=None):
     }
 
 
+def shot_parts(shot, text_mm, gap_mm=4):
+    """How a screenshot prints, as (crop box or None, width mm, height mm) for each piece: a
+    landscape one across the text width, no taller than a row and never under 140 mm wide; a
+    portrait one a row tall, never under 45 mm wide and never over a third of the row; a very tall
+    one 60 mm wide, cut into pieces that fit a page."""
+    w, h = float(shot["w"]), float(shot["h"])
+    if shot["kind"] == "wide":
+        width = min(text_mm, max(SHOT_MM["wide_min_width"], ROW_MM * w / h))
+        return [(None, width, width * h / w)]
+    if shot["kind"] == "tall":
+        slot = (text_mm - 2 * gap_mm) / 3.0
+        width = min(slot, max(SHOT_MM["tall_min_width"], ROW_MM * w / h))
+        return [(None, width, width * h / w)]
+    width = SHOT_MM["very tall"]
+    pieces = max(1, int(-(-(width * h / w) // SHOT_MM["part"])))
+    step = int(-(-h // pieces))
+    out = []
+    for i in range(pieces):
+        top, bottom = i * step, min(int(h), (i + 1) * step)
+        out.append(((0, top, int(w), bottom), width, width * (bottom - top) / w))
+    return out
+
+
+def embedded(shot, crop, w_mm, h_mm):
+    """The screenshot as it goes in the file: every source pixel, unless that is more than prints
+    at 300 dots per inch, when it is scaled to that. PNG stays lossless; JPEG keeps quality 95.
+    The full size file stays in the evidence folder for the annexure bundle."""
+    from io import BytesIO
+    from PIL import Image
+    cap = (max(1, int(w_mm / 25.4 * DPI)), max(1, int(h_mm / 25.4 * DPI)))
+    with Image.open(shot["path"]) as im:
+        jpeg = im.format == "JPEG"
+        if crop is None and im.format in ("PNG", "JPEG") and im.size[0] <= cap[0]:
+            return BytesIO(Path(shot["path"]).read_bytes())
+        im.load()
+        if crop is not None:
+            im = im.crop(crop)
+        if im.mode not in ("RGB", "RGBA", "L"):
+            im = im.convert("RGBA" if "A" in im.mode or im.mode == "P" else "RGB")
+        if im.size[0] > cap[0]:
+            im = im.resize((cap[0], max(1, int(im.size[1] * cap[0] / float(im.size[0])))), Image.LANCZOS)
+        buf = BytesIO()
+        if jpeg:
+            im.convert("RGB").save(buf, "JPEG", quality=95)
+        else:
+            im.save(buf, "PNG", optimize=True)
+    buf.seek(0)
+    return buf
+
+
+def caption(shot, piece, pieces, short=True):
+    text = ("Fig " if short else "Figure ") + str(shot["figure"]) + ", step " + str(shot["step"])
+    return text + (", part " + str(piece) + " of " + str(pieces) if pieces > 1 else "")
+
+
+def pieces_of(text, size=600):
+    """Long text in pieces of about size characters, broken at a space, so each fits a page."""
+    text = str(text if text is not None else "")
+    out = []
+    while len(text) > size:
+        cut = text.rfind(" ", 0, size)
+        cut = cut if cut > size // 2 else size
+        out.append(text[:cut])
+        text = text[cut:].lstrip()
+    return out + [text]
+
+
 def write_docx(m, out):
     """The editable copy, in Word's format: the same blocks, with Word's contents and page fields."""
     from docx import Document
     from docx.enum.text import WD_BREAK
     from docx.oxml import OxmlElement
     from docx.oxml.ns import qn
-    from docx.shared import Pt
-    from PIL import Image
+    from docx.shared import Mm, Pt
 
     doc = Document()
     sec = doc.sections[0]
     width = sec.page_width - sec.left_margin - sec.right_margin
-    height = sec.page_height - sec.top_margin - sec.bottom_margin
 
     def field(paragraph, code, placeholder=""):
         """A Word field, such as PAGE or a TOC, that Word fills in when the document opens."""
@@ -2241,23 +2457,25 @@ def write_docx(m, out):
         kind = block[0]
         if kind == "h1":
             doc.add_heading(block[1], level=1)
-        elif kind == "h2":
+        elif kind in ("h2", "group"):
             doc.add_heading(block[1], level=2)
         elif kind == "table":
             table(block[1], header=block[2])
-        elif kind == "stats":
-            table(block[1], header=["Measure", "Count"])
-        elif kind in ("para", "lead"):
+        elif kind == "para":
             doc.add_paragraph(block[1])
-        elif kind in ("bullets", "callout"):
-            for line in block[1]:
-                doc.add_paragraph(line, style="List Bullet")
-        elif kind == "gap":
-            doc.add_paragraph("")
+        elif kind == "counts":
+            table(block[1], header=block[2])
+            for term, meaning in block[3]:
+                p = doc.add_paragraph()
+                p.add_run(term + ": ").bold = True
+                p.add_run(meaning)
+            doc.add_paragraph().add_run(block[4]).bold = True
+        elif kind == "ready":
+            doc.add_paragraph().add_run(block[1]).bold = True
         elif kind == "case":
-            r, values, response, shots, steps = block[1:]
-            doc.add_heading(r["id"] + ": " + r["title"], level=2)
-            table([[k, v] for k, v in zip(CASE_FIELDS, values)], header=["Field", "Value"])
+            r, values, response, rows, steps, unread = block[1:]
+            doc.add_heading(r["id"] + ": " + r["title"], level=3)
+            table([[k, v] for k, v in zip(CASE_FIELDS, values)])
             if steps:
                 table(steps, header=["Step", "Result", "Note"])
             if response:
@@ -2266,17 +2484,23 @@ def write_docx(m, out):
                 code = p.add_run(response)
                 code.font.name = "Courier New"
                 code.font.size = Pt(9)
-            for shot, figure, step in shots:
-                with Image.open(shot) as im:
-                    w, h = im.size
-                # Page width, unless that makes a tall phone screenshot overrun the page.
-                if h * width > 0.75 * height * w:
-                    doc.add_picture(str(shot), height=int(0.75 * height))
-                else:
-                    doc.add_picture(str(shot), width=width)
-                doc.add_paragraph("Figure " + str(figure) + ": " + r["id"] + ", step " + str(step) +
-                                  " (" + shot.name + ")", style="Caption")
-        # "note" blocks are the PDF's callouts; the DOCX carries the same facts in its tables.
+            for note in unread:
+                doc.add_paragraph(note)
+            text_mm = width / 36000.0
+            for row in rows:
+                # The PDF's layout: a landscape screenshot across the page, portrait ones three to a row.
+                if row[0]["kind"] == "tall":
+                    grid = doc.add_table(rows=1, cols=len(row))
+                    for cell, shot in zip(grid.rows[0].cells, row):
+                        crop, w, h = shot_parts(shot, text_mm)[0]
+                        cell.paragraphs[0].add_run().add_picture(embedded(shot, crop, w, h), width=Mm(w), height=Mm(h))
+                        cell.add_paragraph(caption(shot, 1, 1, False), style="Caption")
+                    continue
+                for shot in row:
+                    parts = shot_parts(shot, text_mm)
+                    for n, (crop, w, h) in enumerate(parts, 1):
+                        doc.add_picture(embedded(shot, crop, w, h), width=Mm(w), height=Mm(h))
+                        doc.add_paragraph(caption(shot, n, len(parts), False), style="Caption")
 
     # Mask every run of text the document holds, tables, header and footer included.
     def paragraphs(container):
@@ -2312,17 +2536,16 @@ MILESTONES = {"M1": "M1 Identity", "M2": "M2 Health Information Provider", "M3":
 WIDTHS = {
     ("Version", "Date", "By", "Change"): [.12, .18, .25, .45],
     ("Name", "Organisation", "Role"): [.34, .36, .30],
-    ("Function", "Cases", "PASS", "Conditional pass", "FAIL", "NA", "Mandatory not PASS"):
-        [.30, .09, .09, .14, .09, .09, .20],
+    ("Measure", "All cases", "Mandatory"): [.56, .22, .22],
+    ("Function", "Cases", "Passed", "Conditional pass", "Failed", "Blocked", "Not tested", "Not applicable"):
+        [.36, .07, .08, .11, .08, .09, .10, .11],
     ("Test case ID", "Title", "Condition"): [.24, .30, .46],
     ("Step", "Result", "Note"): [.10, .22, .68],
-    ("Test case ID", "Title", "Marking", "Status", "Iterations"): [.24, .36, .17, .10, .13],
+    ("Test case ID", "Title", "Marking", "Status", "Needed, or why not applicable"): [.22, .30, .14, .12, .22],
     ("Test case ID", "Title", "Agreed by and when"): [.25, .37, .38],
-    ("Test case ID", "Title", "Status"): [.25, .60, .15],
-    ("Test case ID", "Status", "Iterations", "Failure reason", "Error code"): [.22, .09, .13, .38, .18],
+    ("Test case ID", "Status", "Iterations", "Failure reason", "Error code"): [.22, .12, .11, .37, .18],
     ("Flow", "ABHA address used", "HI types created or tested"): [.30, .35, .35],
     ("Name", "Role", "Qualifications"): [.34, .26, .40],
-    ("Status", "Meaning"): [.20, .80],
     ("Sign-off", "Name", "Date", "Signature"): [.18, .34, .18, .30],
 }
 
@@ -2368,9 +2591,8 @@ def write_pdf(m, out, fonts_dir=None):
     from reportlab.lib.units import mm
     from reportlab.pdfbase.pdfmetrics import stringWidth
     from reportlab.platypus import (BaseDocTemplate, CondPageBreak, Flowable, Frame, Image as Picture,
-                                    KeepTogether, NextPageTemplate, PageBreak, PageTemplate, Paragraph, Spacer, Table,
+                                    NextPageTemplate, PageBreak, PageTemplate, Paragraph, Spacer, Table,
                                     TableStyle)
-    from PIL import Image
 
     F = find_fonts(fonts_dir)
     C = {k: colors.HexColor(v) for k, v in INK.items()}
@@ -2394,14 +2616,15 @@ def write_pdf(m, out, fonts_dir=None):
         "strong": style("strong", "sans", 8.8, 12.6, "ink"),
         "id": style("id", "mono", 7.8, 11.5, "ink"),
         "code": style("code", "mono", 7.6, 11, "ink2"),
-        "h1": style("h1", "serif", 27, 32, "navy", spaceAfter=14),
-        "h2": style("h2", "serif", 17, 21, "navy", spaceBefore=16, spaceAfter=8),
-        "case": style("case", "serif", 15, 19, "navy", spaceAfter=8),
+        "h1": style("h1", "serif", 22, 26, "navy", spaceAfter=10),
+        "h2": style("h2", "serif", 15, 19, "navy", spaceBefore=12, spaceAfter=6),
+        "case": style("case", "serif", 12, 15, "navy", spaceAfter=4),
+        "small": style("small", "sans", 8.2, 11, "ink"),
+        "term": style("term", "sans", 8.2, 11.6, "ink3"),
         "note": style("note", "sans", 9.5, 14.5, "ink2"),
         "chev": style("chev", "serif", 13, 14.5, "orange"),
         "page": style("page", "mono", 8, 12, "ink4", alignment=TA_RIGHT),
         "toc": style("toc", "sans", 10.5, 14, "ink"),
-        "tocid": style("tocid", "mono", 7.2, 10, "ink3"),
         "tocpage": style("tocpage", "mono", 7.2, 10, "ink4", alignment=TA_RIGHT),
         "digit": style("digit", "mono", 24, 28, "off"),
         "cover": style("cover", "serif", 38, 43, "off"),
@@ -2498,24 +2721,32 @@ def write_pdf(m, out, fonts_dir=None):
         color = "blue" if word in ("PASS", "CONDITIONAL") else "otext" if word == "FAIL" else "ink4"
         return Tracked(text or "Not recorded", size=7.2, color=color, space=0.6)
 
-    def grid(rows, header=None, pad=6.5):
+    def grid(rows, header=None, pad=4.2, value="strong"):
         """Hairline rules only, a mist header row of mono labels that repeats, Paragraphs that wrap."""
         cols = len(header or rows[0])
         shares = WIDTHS.get(tuple(header or ())) or ([.34, .66] if cols == 2 else [1.0 / cols] * cols)
         body = []
+        split = []
         for row in rows:
+            # A cell too long for one page goes on over rows, so a table never outgrows a page.
             texts = shown(row)
+            chunks = [pieces_of(x) for x in texts]
+            for n in range(max(len(c) for c in chunks)):
+                split.append(([c[n] if n < len(c) else "" for c in chunks], n))
+        for texts, n in split:
             cells = []
             for c, text in enumerate(texts):
                 name = header[c] if header else ("Label" if c == 0 else texts[0])
-                if not header and c == 0:
+                if n and (c == 0 or not text):
+                    cells.append("")
+                elif not header and c == 0:
                     cells.append(Tracked(text, size=6.8, color="ink4", space=0.7))
                 elif name == "Status":
                     cells.append(status(text))
                 elif name == "Test case ID":
                     cells.append(para(text, "id"))
                 elif not header:
-                    cells.append(para(text, "strong"))
+                    cells.append(para(text, value))
                 else:
                     cells.append(para(text, "cell"))
             body.append(cells)
@@ -2545,86 +2776,65 @@ def write_pdf(m, out, fonts_dir=None):
             ("BOTTOMPADDING", (0, -1), (-1, -1), 12)]))
         return t
 
-    def bullets(lines):
-        rows = [[Paragraph("›", S["chev"]), para(line, "note")] for line in lines]
-        t = Table(rows, colWidths=[16, TW - 16], hAlign="LEFT")
-        t.setStyle(TableStyle([
-            ("VALIGN", (0, 0), (-1, -1), "TOP"), ("LEFTPADDING", (0, 0), (-1, -1), 0),
-            ("RIGHTPADDING", (0, 0), (-1, -1), 0), ("TOPPADDING", (0, 0), (-1, -1), 7),
-            ("BOTTOMPADDING", (0, 0), (-1, -1), 7), ("LINEBELOW", (0, 0), (-1, -2), 0.6, C["line"])]))
-        return [t, Spacer(1, 12)]
 
-    def tiles(rows):
-        """The counts as navy-deep tiles: off-white mono digits over an ice mono label."""
-        short = {"Cases in the workbook": "Cases", "Took more than one pass": "More than one pass"}
-        gap = 6
+    def facts(values):
+        """A tested case's fields, each a labelled line or paragraph, hairlines between them. The
+        result and the REQUEST-IDs share the first line; long text goes on over rows."""
+        def cell(name, text, first=True):
+            label = ('<font name="' + F["mono"] + '" size="6.2" color="' + INK["ink4"] + '">' +
+                     escape(name.upper()) + "</font>&nbsp;&nbsp; ") if first else ""
+            return Paragraph(label + escape(clean(text)), S["code" if name == "Request IDs" else "small"])
 
-        def tile(label, count, width):
-            t = Table([[Paragraph(escape(clean(count)), S["digit"])],
-                       [Tracked(short.get(label, label), size=6.4, color="ice", space=0.7)]],
-                      colWidths=[width], rowHeights=[34, 26])
-            t.setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, -1), C["deep"]), ("VALIGN", (0, 0), (-1, -1), "TOP"),
-                                   ("LEFTPADDING", (0, 0), (-1, -1), 10), ("RIGHTPADDING", (0, 0), (-1, -1), 8),
-                                   ("TOPPADDING", (0, 0), (-1, 0), 10), ("BOTTOMPADDING", (0, 0), (-1, -1), 0),
-                                   ("TOPPADDING", (0, 1), (-1, 1), 4)]))
-            return t
+        rows = [[cell(CASE_FIELDS[0], values[0]), cell(CASE_FIELDS[3], values[3])]]
+        spans = []
+        for name, text in zip(CASE_FIELDS[1:3], values[1:3]):
+            for n, piece in enumerate(pieces_of(text, 1200)):
+                spans.append(("SPAN", (0, len(rows)), (1, len(rows))))
+                rows.append([cell(name, piece, n == 0), ""])
+        t = Table(rows, colWidths=[TW * 0.56, TW * 0.44], hAlign="LEFT")
+        t.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "TOP"), ("LEFTPADDING", (0, 0), (-1, -1), 0),
+                               ("RIGHTPADDING", (0, 0), (-1, -1), 0), ("TOPPADDING", (0, 0), (-1, -1), 1.6),
+                               ("BOTTOMPADDING", (0, 0), (-1, -1), 1.6), ("LINEBELOW", (0, 0), (-1, -1), 0.6, C["line"]),
+                               ("RIGHTPADDING", (0, 0), (0, 0), 10)] + spans))
+        return t
 
+    def terms(rows):
+        """Each term of the counts table on one line: the term, then what it means."""
+        return [Paragraph("<b>" + escape(clean(term)) + "</b>: " + escape(clean(meaning)), S["term"])
+                for term, meaning in rows] + [Spacer(1, 8)]
+
+    def framed(shot, crop, w, h, text):
+        pic = Picture(embedded(shot, crop, w, h), width=w * mm, height=h * mm)
+        frame = Table([[pic]], colWidths=[w * mm], rowHeights=[h * mm], hAlign="LEFT")
+        frame.setStyle(TableStyle([("BOX", (0, 0), (-1, -1), 0.6, C["line"]),
+                                   ("LEFTPADDING", (0, 0), (-1, -1), 0), ("RIGHTPADDING", (0, 0), (-1, -1), 0),
+                                   ("TOPPADDING", (0, 0), (-1, -1), 0), ("BOTTOMPADDING", (0, 0), (-1, -1), 0)]))
+        return [frame, Spacer(1, 2), Tracked(text, size=6.2, color="ink4", space=0, upper=False)]
+
+    def shots(row):
+        """One row of screenshots as flowables: portrait ones side by side; a landscape one alone;
+        a very tall one as one flowable per piece, so each piece fits a page."""
         out = []
-        for chunk in (rows[:4], rows[4:]):
-            width = (TW - gap * (len(chunk) - 1)) / len(chunk)
-            cells, widths = [], []
-            for i, (label, count) in enumerate(chunk):
-                if i:
-                    cells.append("")
-                    widths.append(gap)
-                cells.append(tile(label, count, width))
-                widths.append(width)
-            row = Table([cells], colWidths=widths, hAlign="LEFT")
-            row.setStyle(TableStyle([("LEFTPADDING", (0, 0), (-1, -1), 0), ("RIGHTPADDING", (0, 0), (-1, -1), 0),
-                                     ("TOPPADDING", (0, 0), (-1, -1), 0), ("BOTTOMPADDING", (0, 0), (-1, -1), 0)]))
-            out += [row, Spacer(1, gap)]
+        if row[0]["kind"] == "tall":
+            cells = []
+            for shot in row:
+                crop, w, h = shot_parts(shot, TW / mm)[0]
+                cells.append(framed(shot, crop, w, h, caption(shot, 1, 1)))
+            out.append(Table([cells], colWidths=[TW / 3.0] * len(row), hAlign="LEFT"))
+        else:
+            for shot in row:
+                parts = shot_parts(shot, TW / mm)
+                for n, (crop, w, h) in enumerate(parts, 1):
+                    out.append(Table([[framed(shot, crop, w, h, caption(shot, n, len(parts)))]], colWidths=[TW],
+                                     hAlign="LEFT"))
+        for f in out:
+            f.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "TOP"), ("LEFTPADDING", (0, 0), (-1, -1), 0),
+                                   ("RIGHTPADDING", (0, 0), (-1, -1), 0), ("TOPPADDING", (0, 0), (-1, -1), 6),
+                                   ("BOTTOMPADDING", (0, 0), (-1, -1), 0)]))
         return out
 
-    class Shot(Flowable):
-        """A screenshot at the text width and at most 60 percent of the page height, in a hairline frame,
-        with its caption. It shrinks to as little as 60 percent of that to finish a page rather than leave a gap."""
-
-        def __init__(self, shot, figure, step, case):
-            Flowable.__init__(self)
-            with Image.open(shot) as im:
-                w, h = im.size
-            self.shot, self.ratio = shot, h / float(w)
-            self.full = min(TW, 0.6 * H / self.ratio)
-            self.caption = Tracked("FIGURE " + str(figure) + " \u00b7 " + case + ", STEP " + str(step) + " \u00b7 " +
-                                   shot.name, size=6.8, color="ink4", space=0.5, upper=False)
-
-        def wrap(self, aw, ah):
-            _, ch = self.caption.wrap(aw, ah)
-            self.ch = ch
-            extra = 16 + 7 + ch + 6
-            w = min(self.full, aw)
-            if w * self.ratio + extra > ah and (ah - extra) / self.ratio >= 0.6 * w:
-                w = (ah - extra) / self.ratio
-            self.w = w
-            self.width, self.height = aw, w * self.ratio + extra
-            return self.width, self.height
-
-        def draw(self):
-            c = self.canv
-            h = self.w * self.ratio
-            y = self.ch + 6 + 7
-            c.drawImage(str(self.shot), 0, y, width=self.w, height=h)
-            c.setStrokeColor(C["line"])
-            c.setLineWidth(0.6)
-            c.rect(0, y, self.w, h, stroke=1, fill=0)
-            self.caption.drawOn(c, 0, 6)
-
-    def tall(shot):
-        with Image.open(shot) as im:
-            return im.size[1] > 1.2 * im.size[0]
-
     def opener(number, name):
-        return [CondPageBreak(170), Rule("dark", 1, before=14, after=12), Mark("s" + str(number)),
+        return [CondPageBreak(120), Rule("dark", 1, before=12, after=10), Mark("s" + str(number)),
                 Tracked("%02d · %s" % (number, name), size=7.5, color="otext", space=1.0, after=8),
                 Paragraph(escape(clean(name)), S["h1"])]
 
@@ -2632,111 +2842,92 @@ def write_pdf(m, out, fonts_dir=None):
         out = [NextPageTemplate("inner"), PageBreak()]
         out += [Rule("dark", 1, after=12), Tracked("Contents", size=7.5, color="otext", space=1.0, after=8),
                 Paragraph("Contents", S["h1"])]
-        case_ids = [b[1]["id"] for b in m["blocks"] if b[0] == "case"]
+        functions = [b[1] for b in m["blocks"] if b[0] == "group"]
 
         def sections(names, first):
             rows = [[Tracked("%02d" % (first + i), size=7.5, color="otext", space=0.6), para(name, "toc"),
                      para(str(marks.get("s" + str(first + i), 0)), "page")] for i, name in enumerate(names)]
             t = Table(rows, colWidths=[40, TW - 80, 40], hAlign="LEFT")
             t.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "TOP"), ("LEFTPADDING", (0, 0), (-1, -1), 0),
-                                   ("RIGHTPADDING", (0, 0), (-1, -1), 0), ("TOPPADDING", (0, 0), (-1, -1), 7),
-                                   ("BOTTOMPADDING", (0, 0), (-1, -1), 7),
+                                   ("RIGHTPADDING", (0, 0), (-1, -1), 0), ("TOPPADDING", (0, 0), (-1, -1), 4),
+                                   ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
                                    ("LINEBELOW", (0, 0), (-1, -1), 0.6, C["line"])]))
             return t
 
-        def ident(text, width):
-            """A case id on as few lines as fit, broken after an underscore, never inside a number."""
-            text, size, lines, cur = clean(text), S["tocid"].fontSize, [], ""
-            for part in re.findall(r"[^_]+_?|_", text):
-                if cur and stringWidth(cur + part, F["mono"], size) > width:
-                    lines.append(cur)
-                    cur = part
-                else:
-                    cur += part
-            lines.append(cur)
-            return Paragraph("<br/>".join(escape(x) for x in lines), S["tocid"])
-
         split = SECTIONS.index("Evidence") + 1
         out.append(sections(SECTIONS[:split], 1))
-        if case_ids:
-            col = (TW - 40) / 3.0
-            per = -(-len(case_ids) // 3)
-            rows = []
-            for j in range(per):
-                row = []
-                for k in range(3):
-                    n = k * per + j
-                    if n < len(case_ids):
-                        row += [ident(case_ids[n], col - 34), para(str(marks.get("c" + case_ids[n], 0)), "tocpage")]
-                    else:
-                        row += ["", ""]
-                rows.append([""] + row)
-            cases_t = Table(rows, colWidths=[40] + [col - 30, 30] * 3, hAlign="LEFT")
-            cases_t.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "TOP"), ("LEFTPADDING", (0, 0), (-1, -1), 0),
-                                         ("RIGHTPADDING", (0, 0), (-1, -1), 0), ("RIGHTPADDING", (2, 0), (2, -1), 14),
-                                         ("RIGHTPADDING", (4, 0), (4, -1), 14),
-                                         ("TOPPADDING", (0, 0), (-1, -1), 2), ("BOTTOMPADDING", (0, 0), (-1, -1), 2),
-                                         ("TOPPADDING", (0, 0), (-1, 0), 9), ("BOTTOMPADDING", (0, -1), (-1, -1), 9),
-                                         ("LINEBELOW", (0, -1), (-1, -1), 0.6, C["line"])]))
-            out.append(cases_t)
+        if functions:
+            # Under Evidence, each function group with the page it starts on.
+            rows = [["", para(name, "small"), para(str(marks.get("g" + name, 0)), "tocpage")] for name in functions]
+            groups_t = Table(rows, colWidths=[40, TW - 80, 40], hAlign="LEFT")
+            groups_t.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "TOP"), ("LEFTPADDING", (0, 0), (-1, -1), 0),
+                                          ("RIGHTPADDING", (0, 0), (-1, -1), 0), ("TOPPADDING", (0, 0), (-1, -1), 1.5),
+                                          ("BOTTOMPADDING", (0, 0), (-1, -1), 1.5), ("TOPPADDING", (0, 0), (-1, 0), 6),
+                                          ("BOTTOMPADDING", (0, -1), (-1, -1), 6),
+                                          ("LINEBELOW", (0, -1), (-1, -1), 0.6, C["line"])]))
+            out.append(groups_t)
         out.append(sections(SECTIONS[split:], split + 1))
         out.append(PageBreak())
 
-        section = 0
+        # A heading never ends a page alone: a section opener, a group heading or a case heading is
+        # held, then kept on one page with the first thing after it.
+        section, held = 0, []
+
+        def place(lead, rest=()):
+            # Ask for the room the held headings and the lead take, with a margin; a lead taller than
+            # a page asks for the headings and its first lines.
+            body = H - 2 * M
+            need = sum(f.wrap(TW, body)[1] + f.getSpaceBefore() + f.getSpaceAfter() for f in held + list(lead))
+            if need > body:
+                need = sum(f.wrap(TW, body)[1] for f in held) + 80
+            out.append(CondPageBreak(need + 14))
+            out.extend(held + list(lead) + list(rest))
+            del held[:]
+
         for block in m["blocks"]:
             kind = block[0]
             if kind == "h1":
                 section += 1
-                if block[1] in ("Results summary", "Evidence", "Failures and iterations log") and section > 1:
-                    out.append(PageBreak())
-                out += opener(section, block[1])
+                parts = opener(section, block[1])
+                out.append(parts[0])
+                held.extend(parts[1:])
             elif kind == "h2":
-                out += [CondPageBreak(110), Paragraph(escape(clean(block[1])), S["h2"])]
+                held.append(Paragraph(escape(clean(block[1])), S["h2"]))
+            elif kind == "group":
+                held.extend([Mark("g" + block[1]), Paragraph(escape(clean(block[1])), S["h2"])])
             elif kind == "table":
-                out += [grid(block[1], block[2]), Spacer(1, 10)]
-            elif kind == "stats":
-                out += tiles(block[1])
-            elif kind in ("para", "lead"):
-                out.append(para(block[1], kind if kind == "lead" else "body"))
-            elif kind == "bullets":
-                out += bullets(block[1])
-            elif kind in ("callout", "note"):
-                out += [callout(block[1]), Spacer(1, 10)]
-            elif kind == "gap":
-                out.append(Spacer(1, 10))
+                place([grid(block[1], block[2]), Spacer(1, 10)])
+            elif kind == "counts":
+                # The counts, what each means and the verdict stay on one page.
+                place([grid(block[1], block[2], pad=3), Spacer(1, 6)] + terms(block[3]) +
+                      [callout([block[4]], "lead"), Spacer(1, 10)])
+            elif kind == "ready":
+                place([callout([block[1]], "lead"), Spacer(1, 10)])
+            elif kind == "para":
+                place([para(block[1])])
             elif kind == "case":
-                r, values, response, shots, steps = block[1:]
-                head = [CondPageBreak(200), Rule("line", 0.6, before=6, after=14, top=False), Mark("c" + r["id"]),
-                        Tracked(r["id"], size=7.5, color="otext", space=0.9, after=5),
-                        Paragraph(escape(clean(r["title"])), S["case"]),
-                        grid([[k, v] for k, v in zip(CASE_FIELDS, values)], pad=4.6)]
+                # A case flows on from the one before; its heading and fields stay with its first screenshot.
+                r, values, response, rows, steps, unread = block[1:]
+                lead = [Rule("line", 0.6, before=2, after=6, top=False), Mark("c" + r["id"]),
+                        Paragraph('<font name="' + F["mono"] + '" size="8" color="' + INK["otext"] + '">' +
+                                  escape(clean(r["id"])) + "</font>&nbsp;&nbsp; " + escape(clean(r["title"])),
+                                  S["case"]), facts(values)]
+                lead += [para(note, "small") for note in unread]
                 if steps:
-                    head += [Spacer(1, 8), grid(steps, ["Step", "Result", "Note"], pad=4.6)]
+                    lead += [Spacer(1, 4), grid(steps, ["Step", "Result", "Note"], pad=2.6)]
                 if response:
-                    code = Table([[Tracked("Response with code", size=6.6, color="ink4", space=0.7, after=3)],
-                                  [para(response, "code")]], colWidths=[TW], hAlign="LEFT")
+                    code = Table([[Tracked("Response with code", size=6.6, color="ink4", space=0.7, after=3)]] +
+                                 [[para(piece, "code")] for piece in pieces_of(response, 1500)],
+                                 colWidths=[TW], hAlign="LEFT")
                     code.setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, -1), C["mist"]),
                                               ("LEFTPADDING", (0, 0), (-1, -1), 9), ("RIGHTPADDING", (0, 0), (-1, -1), 9),
-                                              ("TOPPADDING", (0, 0), (-1, 0), 8), ("BOTTOMPADDING", (0, -1), (-1, -1), 8),
-                                              ("TOPPADDING", (0, 1), (-1, 1), 0), ("BOTTOMPADDING", (0, 0), (-1, 0), 0)]))
-                    head += [Spacer(1, 8), code]
-                out.append(KeepTogether(head))
-                k = 0
-                while k < len(shots):
-                    # Two phone screenshots in a row sit side by side.
-                    pair = shots[k:k + 2]
-                    if len(pair) == 2 and all(tall(x[0]) for x in pair):
-                        a, b = [Shot(x[0], x[1], x[2], r["id"]) for x in pair]
-                        t = Table([[a, "", b]], colWidths=[(TW - 16) / 2.0, 16, (TW - 16) / 2.0], hAlign="LEFT")
-                        t.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "BOTTOM"), ("LEFTPADDING", (0, 0), (-1, -1), 0),
-                                               ("RIGHTPADDING", (0, 0), (-1, -1), 0), ("TOPPADDING", (0, 0), (-1, -1), 0),
-                                               ("BOTTOMPADDING", (0, 0), (-1, -1), 0)]))
-                        out.append(t)
-                        k += 2
-                    else:
-                        out.append(Shot(*(shots[k] + (r["id"],))))
-                        k += 1
-                out.append(Spacer(1, 12))
+                                              ("TOPPADDING", (0, 0), (-1, 0), 6), ("BOTTOMPADDING", (0, -1), (-1, -1), 6),
+                                              ("TOPPADDING", (0, 1), (-1, -1), 0), ("BOTTOMPADDING", (0, 0), (-1, -2), 0)]))
+                    lead += [Spacer(1, 4), code]
+                pictures = [f for row in rows for f in shots(row)]
+                place(lead + pictures[:1], pictures[1:] + [Spacer(1, 6)])
+        if held:
+            place([])
         return out
 
     eyebrow = clean(m["title"]).upper()
@@ -2840,9 +3031,14 @@ def write_pdf(m, out, fonts_dir=None):
 
 def build(path, run, meta, evidence, out, recs, groups, manifest=None, fmt="both", fonts_dir=None, draft=None):
     """Write the report: the PDF to submit and the DOCX to edit, beside each other."""
-    m = content(path, run, meta, evidence, recs, groups, manifest, draft)
+    m = content(path, run, meta, evidence, recs, groups, manifest, draft, out)
     out = Path(out)
     out.parent.mkdir(parents=True, exist_ok=True)
+    if m["figures"]:
+        # The full size screenshots go in the annexure bundle; this lists them figure by figure.
+        listing = out.with_name(out.stem + "-screenshots.json")
+        listing.write_text(json.dumps({"report": out.stem, "figures": m["figures"]}, indent=1))
+        print("wrote " + str(listing))
     if fmt in ("docx", "both"):
         write_docx(m, out.with_suffix(".docx"))
     if fmt in ("pdf", "both"):
@@ -2919,7 +3115,7 @@ It prints one line per case, in sheet order: the case id, its group (the sheet's
    python3 abdm-ft/abdm_report.py build <workbook> --run ui --meta abdm-ft/meta.json --evidence abdm-ft/evidence --manifest abdm-ft/m1-<YYYYMMDD-HHMM>.json --out abdm-ft/draft-report-m1.pdf --draft
    ```
 
-   The draft is the same report, marked Draft on the cover and in the header of every page, with the mandatory cases not yet passed listed first in the executive summary. It is never the report to submit. Then rerun the cases `check` listed, as `open` in `shared.concept.test-workbook-write-back` does, and run `check` again. Every run ends with a PDF: the report when `check` exits `0`, the draft when it does not.
+   The draft is the same report, marked Draft on the cover and in the header of every page. Its executive summary ends on `<n> mandatory cases are still open.`, and each of them is in the failures log or the table of cases not tested. It is never the report to submit. Then rerun the cases `check` listed, as `open` in `shared.concept.test-workbook-write-back` does, and run `check` again. Every run ends with a PDF: the report when `check` exits `0`, the draft when it does not.
 
 3. Only when `check` exits `0`, write the one line findings into `meta.json` under `findings`, keyed by case id. A case without one gets its Remarks value. Then build:
 
@@ -2937,13 +3133,15 @@ It prints one line per case, in sheet order: the case id, its group (the sheet's
 
 - `plan` prints one line per case in the workbook, 100 for M1, then a `total` line, and the run log has a row for every one of them.
 - `check` exits `0` and reads `0 of <n> mandatory case(s) for a <entity> entity not PASS in the <run> run`, followed by one `conditional pass <id>: <condition>` line per conditional pass.
-- The results summary counts conditional pass on its own, in the tiles, the table by function and the executive summary, and lists every conditional pass with its condition. A case whose Remarks end in `Steps: ...` shows a Step, Result and Note table in its evidence.
-- `build` prints a `fonts:` line naming each font it used or replaced, then `wrote abdm-ft/report-m1.docx` and `wrote abdm-ft/report-m1.pdf`, and exits `0`.
-- The PDF opens on a navy cover with the milestone in orange, the key facts in a ruled grid and the confidentiality note. Page 2 is the contents, with every section and every case id and its page. Every later page reads the report title at the top left and `Confidential` and `Page N of M` at the bottom.
+- The executive summary's counts table has nine rows, from `Cases in NHA's sheet` to `Not applicable`, with an `All cases` and a `Mandatory` column. In each column, applicable equals tested plus blocked plus not tested, and tested equals passed plus conditional pass plus failed. Under it, one line defines each term, then `Ready for sandbox exit.` or `<n> mandatory cases are still open.`, the same number `check` lists. The words `No result` appear nowhere.
+- The results summary counts each function group in sheet order, lists every conditional pass with its condition, and lists every case not tested, blocked or not applicable once, with what it needs or why it does not apply. A tested case whose Remarks end in `Steps: ...` shows a Step, Result and Note table in its evidence.
+- `build` prints `wrote abdm-ft/report-m1-screenshots.json` for a `ui` run, a `fonts:` line naming each font it used or replaced, then `wrote abdm-ft/report-m1.docx` and `wrote abdm-ft/report-m1.pdf`, and exits `0`.
+- The PDF opens on a navy cover with the milestone in orange, the key facts in a ruled grid and the confidentiality note. Page 2 is the contents, with every section, each function group in the evidence, and its page. Every later page reads the report title at the top left and `Confidential` and `Page N of M` at the bottom, and every page outside the evidence holds at least four lines of text besides them. No section opener, group heading or case heading ends a page.
 - Both files open with the cover and the contents, then the fourteen headings from Document control to Annexures, in order. Every page of the Word copy has the report title at the top and `Confidential, page N of M` at the bottom.
-- The results summary has one row per case in the workbook, after the counts. Each case's evidence section starts with its nine row table, then its response, then its screenshots in name order, each captioned with its figure number, case id and step: `FIGURE <n> · <case id>, STEP <k> · <file>` in the PDF, `Figure <n>: <case id>, step <k> (<file>)` in the Word copy.
-- With `--manifest`, each case's Request IDs row lists the REQUEST-IDs the manifest gives it, or reads `None in the manifest`.
-- No 12 digit number appears anywhere in either file, the PDF's header and footer included: an Aadhaar number reads `XXXX XXXX 1234` and an ABHA number `XX-XXXX-XXXX-1234`, with the last four digits kept. A 10 digit mobile, with or without `0`, `91` or `+91` and spaces or hyphens inside, reads `XXXXXX1234`, and an ABHA address ending `@sbx` or `@abdm` keeps only the last four characters before the `@`, the rest as `x`, or is all `x` when four or fewer. A profile field's value, `firstName`, `lastName`, `name`, `dob`, `address`, `pinCode`, `photo`, `email` and the like, reads `[masked]`. The writer uses the same masking block, so the sheet and the report agree.
+- The evidence holds every tested case and no other, under its function group. Each starts with its id and title, then its result line, expected result, observed result and REQUEST-IDs, then its screenshots, two rows to a page: a landscape one 140 mm wide or more, portrait ones up to three to a row, each captioned with its figure number and step: `Fig <n>, step <k>` in the PDF, `Figure <n>, step <k>` in the Word copy. `<report>-screenshots.json` names each figure's full size file.
+- The failures and iterations log lists only failed, blocked and conditional pass cases.
+- With `--manifest`, each tested case's Request IDs line lists the REQUEST-IDs the manifest gives it, or reads `None in the manifest`. A value that is not a UUID reads `[invalid id]`.
+- No 12 digit number appears anywhere in either file, the PDF's header and footer included: an Aadhaar number reads `XXXX XXXX 1234` and an ABHA number `XX-XXXX-XXXX-1234`, with the last four digits kept. A 10 digit mobile, with or without `0`, `91` or `+91` and spaces or hyphens inside, reads `XXXXXX1234`, and an ABHA address ending `@sbx` or `@abdm` keeps only the last four characters before the `@`, the rest as `x`, or is all `x` when four or fewer. A profile field's value, `firstName`, `lastName`, `name`, `dob`, `address`, `pinCode`, `photo`, `email` and the like, reads `[masked]`, in any case and to the end of its clause, so `Name: asha verma` reads `Name: [masked]`. A date of birth after `dob`, `DOB` or `date of birth` reads `[masked]`, and any date written dd/mm/yyyy reads `[date]`. The writer uses the same masking block, so the sheet and the report agree.
 - No token or secret appears in it: a JWT reads `[token]`, and a value after a label naming a password, secret, token, OTP, credential, API key or private key reads `[redacted]`, as does a `Bearer` credential. This covers the workbook's Response and Remarks values and the findings, as well as `meta.json`.
 
 ### When it goes wrong
@@ -2967,7 +3165,14 @@ It prints one line per case, in sheet order: the case id, its group (the sheet's
 | `no Test Case ID column with ids` | The workbook has no case ids, as NHA's PHR workbook does not, and no write has added them yet | Write the run's results with `shared.concept.test-workbook-write-back` first: its first write adds the `Test Case ID` column |
 | `the manifest carries a credential` | The manifest JSON holds a token, secret or password field or value | Write the manifest as the test skill does, case ids to request ids and nothing else |
 | The Word copy's contents page reads `Open in Word and update fields` | Its fields have not been updated since the script wrote them. The PDF is not affected | Open the file in Word or LibreOffice and update fields, then save |
-| A screenshot is missing from the report | Its file is not under `<evidence>/<case id>/`, or its extension is not png, jpg, gif or bmp | Move it into the case's folder, named as `cases` prints the id, and build again |
+| A screenshot is missing from the report | Its file is not under `<evidence>/<case id>/`, or its extension is not png, jpg, jpeg, gif, bmp, webp, tif, tiff, heic, heif or pdf. Or the case was not tested: only passed, conditional pass and failed cases have evidence | Move it into the case's folder, named as `cases` prints the id, and build again. For a case not tested, finish it first |
+| A case you ran is under Cases not tested as `Blocked` | Its status is blank and its Remarks start `Needs tester:`, as the writer leaves a `needs-human` case | Finish the step with the tester, write the result again, and build again |
+| A case is counted `Not applicable` though you ran it | Its status is `NA`, as the writer writes a `not-run` case; or its group is for the other entity type only, listed as `Run, not applicable` | Write the result again with the outcome it had. For the group, check `--entity` |
+| A mandatory `NA` is counted `Not tested` | NHA has not agreed it does not apply | Run it, or add the agreement to `agreed_not_run` |
+| `Unrecognised status: Passed` in Cases not tested | The status was typed by hand, not written by the writer | Write the result again through `abdm_workbook.py write` |
+| `Screenshot could not be read: <file>` | The file is empty, damaged, or in a format Pillow cannot open, such as HEIC on most systems | Export it to PNG in the same folder, delete the unreadable one, and build again |
+| A person's name shows in the report | It was written with no label, such as `asha verma saw the screen`. Masking finds a name only after a label such as `Name:`, which it masks to the end of the clause | Write the result again without the name. The agent never writes a name; masking is the backstop, not the rule |
+| `the summary counts do not add up` | A status the script does not sort into the counts, which should not happen | Report it with the workbook; never edit the counts by hand |
 
 From `shared.concept.test-report`.
 

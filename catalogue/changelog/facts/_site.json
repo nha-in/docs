@@ -25,7 +25,7 @@
   ],
   "plugins": {
     "abdm-contributors-assistant": "0.4.4",
-    "abdm-integrators-assistant": "0.10.11",
+    "abdm-integrators-assistant": "0.10.12",
     "nhcx": "1.0.12",
     "uhi-integrators-assistant": "0.1.3"
   },
