@@ -20,7 +20,7 @@ Read `error.code` first and fall back to a top level `code`. A numeric code with
 
 ## Then match it
 
-Load the module's skill by its plugin name, `abdm-integrators-assistant:abdm-m1` for example. Each module skill's `references/debug.md` lists the codes its specification's examples return, with message, status and operation, and no fix per code. The module skills are `abdm-gateway`, `abdm-m1` through `abdm-m4`, `abdm-p1` through `abdm-p4`, `abdm-scan-and-register`, `abdm-scan-and-pay` and `abdm-record-share`. Where the file says the specification returns no code for the module, use the error codes reference on the portal at `/docs/hiecm/v3/reference/error-codes` and say so.
+Load the module's skill by its plugin name, `abdm-integrators-assistant:abdm-m1` for example. Each module skill's `references/debug.md`, or `references/errors.md` in a module built per functionality such as `abdm-m1`, lists the codes its specification's examples return, with message, status and operation, and no fix per code. The module skills are `abdm-gateway`, `abdm-m1` through `abdm-m4`, `abdm-p1` through `abdm-p4`, `abdm-scan-and-register`, `abdm-scan-and-pay` and `abdm-record-share`. Where the file says the specification returns no code for the module, use the error codes reference on the portal at `/docs/hiecm/v3/reference/error-codes` and say so.
 
 ## What a field validation body does not tell you
 

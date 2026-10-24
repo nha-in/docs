@@ -64,7 +64,8 @@ The reason is [the branch that creates a duplicate](m1-avoiding-duplicate-abha.m
 asking a person at a desk whether they want to log in or to register puts a
 question to them they often cannot answer, and the response already contains the
 answer. One screen titled for both outcomes takes the identifier and lets ABDM
-decide which journey it was.
+decide which journey it was. Either shape keeps the Create ABHA option the test cases
+look for.
 
 A chooser is better where the desk genuinely knows. A counter that only
 registers new patients has already answered the question, and making it click

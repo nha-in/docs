@@ -36,6 +36,10 @@ functionalities:
     title: Create ABHA by Aadhaar OTP
     skill: abdm-m1
     journeys: [m1-create-abha-aadhaar-otp, m1-abha-card-profile]
+    # Atoms that name no functionality of their own and belong in this one's
+    # screen requirements, after the atom that does: here, the ABHA enrolment
+    # terms and conditions, which live on the M1 page.
+    atoms: [hiecm.concept.m1-abha-consent]
     applies: all
     cases:
       - id: CRT_ABHA_101
@@ -163,7 +167,7 @@ functionalities:
 
   # Sheet group 8.
   - id: find-abha-mobile
-    title: Find ABHA by mobile
+    title: Find a forgotten ABHA by mobile
     skill: abdm-m1
     journeys: [m1-find-abha-mobile-otp, m1-abha-card-profile]
     applies: all

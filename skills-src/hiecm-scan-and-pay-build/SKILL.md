@@ -425,7 +425,7 @@ curl --request PATCH \
 
 **Exit condition (Observe until this is true)**
 
-A 200 response. The specification gives no body for it, so read what comes back.
+A 200 response to `PATCH /api/hiecm/gateway/v3/scanPay/updateVersion` in `scan-and-pay-utility`, whose body the specification does not give: read what comes back.
 
 ## Where the detail is
 

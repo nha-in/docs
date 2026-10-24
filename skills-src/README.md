@@ -20,6 +20,11 @@ format, so installing is one copy for every target. Two kinds live here:
   against the gateway, and the loop ends in a manifest of case ids to
   request ids. `hiecm-m1-test` to `hiecm-m4-test` and `hiecm-p1-test` to
   `hiecm-p4-test` exist; a module with no test source ships no test section.
+  A module whose cases are mapped in `catalogue/hiecm/tests/<module>.yaml`,
+  M1 today, is built per functionality instead: its test loop's shared rules
+  become `references/run.md`, and each case group goes to the functionality
+  file its cases map to. Its markings are read from the workbook, so the loop
+  carries none.
 - **Hand-authored** (`fhir-generate`, `fhir-audit`): agent-agnostic
   procedures for building or auditing NRCES compliant FHIR bundles. They
   assume the abdm-docs MCP server is connected, since every step calls

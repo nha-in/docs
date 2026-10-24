@@ -14,7 +14,8 @@ import (
 // four sections of one skill rather than four skills.
 //
 // Section is empty on the SKILL.md router and is the file's base name
-// otherwise ("scaffold", "integrate", "debug", "test"). Description is the
+// otherwise ("scaffold", "integrate", "debug", "test"), or
+// "functionalities/<id>" for a file under references/functionalities/. Description is the
 // SKILL.md frontmatter description, carried on every section so a client
 // listing sections can say what the skill is for.
 type Skill struct {
@@ -89,6 +90,33 @@ func LoadSkills(dir string) ([]Skill, error) {
 				Section:     strings.TrimSuffix(r.Name(), ".md"),
 				Description: fm.Description,
 				Body:        strings.TrimSpace(string(rb)),
+			})
+		}
+
+		// A module built per functionality keeps one loop per file under
+		// references/functionalities/. Each is a section of its own, named
+		// functionalities/<id>, so it is served and fetched like the rest.
+		funcDir := filepath.Join(refDir, "functionalities")
+		funcs, err := os.ReadDir(funcDir)
+		if os.IsNotExist(err) {
+			continue
+		}
+		if err != nil {
+			return nil, fmt.Errorf("skill %s functionalities: %w", name, err)
+		}
+		for _, f := range funcs {
+			if f.IsDir() || !strings.HasSuffix(f.Name(), ".md") {
+				continue
+			}
+			fb, err := os.ReadFile(filepath.Join(funcDir, f.Name()))
+			if err != nil {
+				return nil, fmt.Errorf("skill %s: %w", name, err)
+			}
+			skills = append(skills, Skill{
+				Name:        name,
+				Section:     "functionalities/" + strings.TrimSuffix(f.Name(), ".md"),
+				Description: fm.Description,
+				Body:        strings.TrimSpace(string(fb)),
 			})
 		}
 	}

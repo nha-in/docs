@@ -25,7 +25,7 @@ import (
 type skillIn struct {
 	Task    string `json:"task,omitempty" jsonschema:"what the person wants, in their words, such as 'integrate M1' or 'run the M2 test cases'. Picks the skill when name is not given"`
 	Name    string `json:"name,omitempty" jsonschema:"a skill name, such as abdm-m1. Omit to pick by task"`
-	Section string `json:"section,omitempty" jsonschema:"one section of the skill, such as scaffold, integrate, debug or test. Omit for the router, which says which section to read"`
+	Section string `json:"section,omitempty" jsonschema:"one section of the skill, such as scaffold, integrate, debug or test, or functionalities/<id> in a skill built per functionality. Omit for the router, which says which section to read"`
 	Gateway string `json:"gateway,omitempty" jsonschema:"hiecm, uhi or nhcx: keeps the choice to that gateway's skills. Taken from the task when it names one"`
 }
 

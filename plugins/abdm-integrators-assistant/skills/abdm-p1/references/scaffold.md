@@ -339,7 +339,7 @@ curl --request GET \
 
 **Exit condition (Observe until this is true)**
 
-A 200 response. The specification gives no body for it, so read what comes back.
+A 200 response to `GET /abha/api/v3/profile/account/abha-card` in `p1-create-abha-number-aadhaar-otp`, whose body the specification does not give: read what comes back.
 
 ### Create ABHA address, mobile number (`p1-create-abha-address-mobile`)
 
