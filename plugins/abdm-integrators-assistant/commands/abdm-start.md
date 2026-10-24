@@ -37,10 +37,12 @@ Introduce this plugin in the order below, then stop and wait for an answer.
 
 ## Commands
 
+- `/abdm-build`: Start or resume building a module one functionality at a time, each loop ending in that functionality's own NHA test cases.
 - `/abdm-decode-error`: Turn an ABDM response into the code, the cause and the named fix.
 - `/abdm-preflight`: Check what must be true before any ABDM call, so a later failure is about the flow.
 - `/abdm-prove-encryption`: Prove your RSA padding against the ABDM sandbox before you build a flow on it.
-- `/abdm-test-setup`: Check what a functional test run needs on this machine for the run type you pick, and print the install command for each missing piece.
+- `/abdm-test-setup`: Survey this machine for what a functional test run needs, for the run type you pick, and install what is missing only on your yes.
+- `/abdm-test`: Run every mandatory NHA test case of a module on one final build, and write the workbook, the report or the draft, and its findings.
 
 ## The plan file
 

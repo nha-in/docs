@@ -1,8 +1,8 @@
 """Read NHA's functional test case workbook and write a run's results into it.
 
-  python3 abdm_workbook.py cases  WORKBOOK
-  python3 abdm_workbook.py write  WORKBOOK --run ft|ui --results RESULTS.json
-  python3 abdm_workbook.py open   WORKBOOK --run ft|ui [--entity government|private]
+  python3 -I abdm_workbook.py cases  WORKBOOK
+  python3 -I abdm_workbook.py write  WORKBOOK --run ft|ui --results RESULTS.json
+  python3 -I abdm_workbook.py open   WORKBOOK --run ft|ui [--entity government|private]
 
 A result's outcome is passed, conditional-pass, failed, needs-human or not-run.
 A conditional-pass needs remarks naming the condition. A result may carry

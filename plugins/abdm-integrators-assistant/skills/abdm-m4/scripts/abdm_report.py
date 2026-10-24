@@ -1,9 +1,12 @@
 """Check that a functional test run may be reported, and write the report.
 
-  python3 abdm_report.py plan  WORKBOOK --run ft|ui --entity government|private
-  python3 abdm_report.py check WORKBOOK --run ft|ui --entity government|private [--meta meta.json]
-  python3 abdm_report.py build WORKBOOK --run ft|ui --meta meta.json --evidence DIR --out REPORT.pdf
+  python3 -I abdm_report.py plan  WORKBOOK --run ft|ui --entity government|private
+  python3 -I abdm_report.py check WORKBOOK --run ft|ui --entity government|private [--meta meta.json]
+  python3 -I abdm_report.py build WORKBOOK --run ft|ui --meta meta.json --evidence DIR --out REPORT.pdf
       [--manifest RUN.json] [--format pdf|docx|both] [--fonts DIR]
+  python3 -I abdm_report.py tracker  WORKBOOK --run ft|ui [--entity government|private] [--plan INTEGRATION-PLAN.md] [--meta meta.json]
+      [--set ID=building|built|tested|in-scope] [--screen CASE=ROUTE] [--build BUILD]
+  python3 -I abdm_report.py findings WORKBOOK --run ft|ui --entity government|private --out REPORT.pdf
 
 plan prints every case in sheet order with its group, its applicability for the
 entity type and its status so far, then the totals: the run log is made from it.
@@ -16,6 +19,12 @@ editable copy; --format picks one of them. For a ui run it also writes
 REPORT-screenshots.json, naming each figure's full size file for the annexure. The PDF uses Newsreader, Public Sans
 and JetBrains Mono where it finds them (--fonts DIR, abdm-ft/fonts, then the
 system's font folders), else Times-Roman, Helvetica and Courier.
+tracker and findings read functionalities.json, which a module skill built per
+functionality ships beside this script. tracker writes the functionality
+tracker into INTEGRATION-PLAN.md, its state in tracker.json beside the
+workbook. findings writes REPORT-findings.md: each FAIL and CONDITIONAL PASS,
+its functionality, and whether a screen requirement in that functionality's
+file cites it. build writes the findings too, when functionalities.json is there.
 Needs openpyxl, Pillow, python-docx and reportlab
 (pip install openpyxl pillow python-docx reportlab).
 """
@@ -390,16 +399,21 @@ def read_cases(path, run, entity):
     return out, list(groups.values())
 
 
+def passes_gate(r, agreed):
+    """One case through the gate: PASS, a CONDITIONAL PASS with its condition written down, or NA on a
+    case NHA agreed is not run. The gate and the tracker both read this."""
+    if r["status"] == "CONDITIONAL PASS":
+        return bool(STEPS.sub("", r["remarks"]).strip())
+    return r["status"] in PASSING or (r["status"] == "NA" and r["id"] in agreed)
+
+
 def gate(recs, groups, agreed):
     """Mandatory cases not PASS or CONDITIONAL PASS. NA passes only on a case NHA agreed not to run."""
     blocking = []
     by_id = {r["id"]: r for r in recs}
 
     def through(r):
-        if r["status"] == "CONDITIONAL PASS":
-            # A conditional pass passes only with its condition written down.
-            return bool(STEPS.sub("", r["remarks"]).strip())
-        return r["status"] in PASSING or (r["status"] == "NA" and r["id"] in agreed)
+        return passes_gate(r, agreed)
 
     def shown_status(r):
         if r["status"] == "CONDITIONAL PASS" and not through(r):
@@ -1665,9 +1679,304 @@ def build(path, run, meta, evidence, out, recs, groups, manifest=None, fmt="both
         write_pdf(m, out.with_suffix(".pdf"), fonts_dir)
 
 
+# A module skill built per functionality ships functionalities.json beside this
+# script: each functionality's cases and their titles, and the screen requirements
+# in its file with the cases each cites and the functionality it hands a case to.
+# The tracker and the findings are written from it and from the workbook; the
+# markings stay in the workbook, read as plan reads them, and a case is through
+# by the same passes_gate the gate uses.
+TRACKER_SET = {"building": "building", "built": "built and waiting for the tester", "tested": "tested"}
+HELD = ("building", "built and waiting for the tester")
+
+
+def load_functionalities(path=None):
+    p = Path(path) if path else Path(__file__).resolve().parent / "functionalities.json"
+    if not p.exists():
+        return None
+    data = json.loads(p.read_text())
+    return data if data.get("functionalities") else None
+
+
+def shown_result(r, agreed=()):
+    """A case's result as the tracker and the findings show it."""
+    if r is None:
+        return "not in the workbook"
+    if r["status"] == "CONDITIONAL PASS" and not passes_gate(r, agreed):
+        return "CONDITIONAL PASS with no condition"
+    if r["status"] == "NA" and r["id"] in agreed:
+        return "NA, agreed"
+    if r["status"] in ("PASS", "CONDITIONAL PASS", "FAIL", "NA"):
+        return r["status"]
+    if not r["status"] and r["remarks"].lower().startswith("needs tester"):
+        return "needs tester"
+    return r["status"] or "open"
+
+
+def run_date(path):
+    """The Test Execution date the writer put in the sheet's header block, when it holds one."""
+    wb = load(path)
+    for ws in wb.worksheets:
+        for row in ws.iter_rows(min_row=1, max_row=15):
+            for cell in row:
+                text = norm(cell.value)
+                if text.startswith("Test Execution date:"):
+                    m = re.search(r"\d{4}-\d{2}-\d{2}", text)
+                    if m:
+                        return m.group(0)
+    return ""
+
+
+def judged_on(f, by_id, state):
+    """A functionality's scope and the cases it is judged on: each mandatory case alone, an either pair
+    together, or every applicable case of an optional functionality the tester added."""
+    present = [by_id[c] for c in f["cases"] if c in by_id]
+    if present and all(r.get("na") for r in present):
+        return "not applicable", []
+    mandatory, seen = [], set()
+    for r in present:
+        if r["kind"] == "mandatory":
+            mandatory.append([r["id"]])
+        elif r["kind"] == "pair":
+            ids = tuple(i for i in r["pair"] if i in by_id)
+            if ids not in seen:
+                seen.add(ids)
+                mandatory.append(list(ids))
+    if mandatory:
+        return "mandatory", mandatory
+    if f["id"] in state.get("in_scope", []):
+        return "optional, added", [[r["id"]] for r in present if not r.get("na")]
+    return "optional", []
+
+
+def from_workbook(groups_of, by_id, agreed, tested):
+    """The state the workbook gives: passed, failing, built and waiting for the tester, or not started."""
+    def through(ids):
+        return any(passes_gate(by_id[i], agreed) for i in ids)
+
+    if all(through(ids) for ids in groups_of):
+        return "passed"
+    if any(by_id[i]["status"] == "FAIL" for ids in groups_of if not through(ids) for i in ids):
+        return "failing"
+    if tested or any(shown_result(by_id[i], agreed) != "open" for ids in groups_of for i in ids):
+        return "built and waiting for the tester"
+    return "not started"
+
+
+def run_tracker(a, entity, agreed):
+    """Write the functionality tracker into INTEGRATION-PLAN.md from the workbook, functionalities.json
+    and the tracker state, and print where each functionality stands, by id."""
+    data = load_functionalities(a.functionalities)
+    if not data:
+        sys.exit("no functionalities.json beside this script: this module's skill is not built per functionality "
+                 "yet, so it has no tracker. Use its INTEGRATION-PLAN.md steps instead")
+    state_path = Path(a.state) if a.state else Path(a.workbook).resolve().parent / "tracker.json"
+    state = json.loads(state_path.read_text()) if state_path.exists() else {}
+    entity = entity or state.get("entity")
+    if entity not in ("government", "private"):
+        sys.exit("the tracker holds no entity type: ask the tester, government or private, then pass --entity")
+    if state.get("entity") and state["entity"] != entity:
+        sys.exit("the tracker says " + state["entity"] + " and --entity says " + entity + ": ask the tester which")
+    state["entity"], state["module"] = entity, data.get("module", "")
+    by_fid = {f["id"]: f for f in data["functionalities"]}
+    owner = {c: f["id"] for f in data["functionalities"] for c in f["cases"]}
+    recs, _ = read_cases(a.workbook, a.run, entity)
+    by_id = {r["id"]: r for r in recs}
+    today = date.today().isoformat()
+
+    def snapshot(fid):
+        """What the workbook holds for a functionality's cases now, to tell when a later run changed it."""
+        return {c: shown_result(by_id.get(c), agreed) for c in by_fid[fid]["cases"]}
+
+    for item in a.set or []:
+        fid, _, what = item.partition("=")
+        if fid not in by_fid or what not in list(TRACKER_SET) + ["in-scope"]:
+            sys.exit("--set takes <functionality id>=building|built|tested|in-scope, not " + item)
+        if what == "in-scope":
+            state["in_scope"] = sorted(set(state.get("in_scope", [])) | {fid})
+            continue
+        entry = state.setdefault("functionalities", {}).setdefault(fid, {})
+        entry.update(state=TRACKER_SET[what], date=today, snapshot=snapshot(fid))
+        if a.build:
+            entry["build"] = mask(norm(a.build))
+    for item in a.screen or []:
+        case, _, where = item.partition("=")
+        if case not in owner or not where.strip():
+            sys.exit("--screen takes <case id>=<screen or route> for a case in functionalities.json, not " + case)
+        state.setdefault("screens", {})[case] = mask(norm(where))
+    when = run_date(a.workbook)
+    rows, counts, tally_of = [], {}, {"passed": 0, "failing": 0, "open": 0, "total": 0}
+    for f in data["functionalities"]:
+        scope, groups_of = judged_on(f, by_id, state)
+        entry = state.get("functionalities", {}).get(f["id"], {})
+        if scope == "not applicable":
+            st = "not applicable"
+        elif scope == "optional":
+            st = "optional, not in scope"
+        else:
+            st = from_workbook(groups_of, by_id, agreed, entry.get("state") == "tested")
+            if entry.get("state") in HELD:
+                # A held state gives way once a later write into the workbook settles the functionality.
+                if st in ("passed", "failing") and entry.get("snapshot") != snapshot(f["id"]):
+                    entry.pop("state")
+                    entry.pop("snapshot", None)
+                else:
+                    st = entry["state"]
+        listed = []
+        for ids in groups_of:
+            listed.append(" or ".join(i + " " + shown_result(by_id.get(i), agreed) for i in ids))
+            tally_of["total"] += 1
+            if any(passes_gate(by_id[i], agreed) for i in ids if i in by_id):
+                tally_of["passed"] += 1
+            elif any(by_id[i]["status"] == "FAIL" for i in ids if i in by_id):
+                tally_of["failing"] += 1
+            else:
+                tally_of["open"] += 1
+        screens = "; ".join(i + ": " + state.get("screens", {}).get(i, "not mapped") for ids in groups_of for i in ids)
+        tested = any(shown_result(by_id.get(i), agreed) not in ("open", "not in the workbook") for ids in groups_of for i in ids)
+        rows.append([str(f["order"]), f["title"] + " (`" + f["id"] + "`)",
+                     ", ".join(listed) or ("none for a " + entity + " entity"), screens, st,
+                     entry.get("date") or (when if tested else ""), entry.get("build", "not recorded" if tested else "")])
+        if scope not in ("not applicable", "optional"):
+            counts[st] = counts.get(st, 0) + 1
+        failing = [i for ids in groups_of for i in ids if shown_result(by_id.get(i), agreed) == "FAIL"]
+        print(f["id"] + ": " + st + (" (" + ", ".join(failing) + " FAIL)" if failing else ""))
+    in_scope = sum(counts.values())
+    module = data.get("module", "").upper()
+    lines = ["<!-- abdm-tracker start: written by abdm_report.py tracker. Never edit it by hand -->",
+             "",
+             "Entity type: " + entity + ". Run: " + a.run + ". Workbook: " + Path(a.workbook).name + ". Written " + today + ".",
+             "",
+             "In scope: " + str(in_scope) + " functionalities. " +
+             ", ".join(str(counts[k]) + " " + k for k in ("passed", "failing", "built and waiting for the tester",
+                                                         "building", "not started") if counts.get(k)) + ". " +
+             "Mandatory cases: " + str(tally_of["total"]) + ", " + str(tally_of["passed"]) + " passed, " +
+             str(tally_of["failing"]) + " failing, " + str(tally_of["open"]) + " open.",
+             "",
+             "| # | Functionality | Mandatory cases and results | Screen or route | State | Date | Build |",
+             "|---|---|---|---|---|---|---|"]
+    lines += ["| " + " | ".join(c.replace("|", "/") for c in row) + " |" for row in rows]
+    lines += ["", "<!-- abdm-tracker end -->"]
+    block = "\n".join(lines)
+    plan = Path(a.plan)
+    text = plan.read_text() if plan.exists() else "# Integration plan\n"
+    found = re.search(r"<!-- abdm-tracker start.*?<!-- abdm-tracker end -->", text, re.S)
+    if found:
+        text = text[:found.start()] + block + text[found.end():]
+    else:
+        text = text.rstrip("\n") + "\n\n## Functionality tracker, " + module + "\n\n" + block + "\n"
+    plan.write_text(text)
+    state_path.parent.mkdir(parents=True, exist_ok=True)
+    state_path.write_text(json.dumps(state, indent=1))
+    print("in scope " + str(in_scope) + "; mandatory cases " + str(tally_of["total"]) + ", " +
+          str(tally_of["passed"]) + " passed, " + str(tally_of["failing"]) + " failing, " +
+          str(tally_of["open"]) + " open")
+    print("wrote " + str(plan) + " and " + str(state_path))
+
+
+def words(text):
+    return set(re.findall(r"[a-z0-9]+", str(text).lower())) - {"the", "a", "an", "of", "and", "or", "to", "is"}
+
+
+def coverage(case, f, by_fid):
+    """How a functionality's file covers one case: ("own", rule) when a screen requirement states its check
+    for the case; ("through", rule, target, counterpart) when the only rows citing it hand it to another
+    functionality and that one states a check for the case of the same title; else ("none", reason)."""
+    if not f:
+        return ("none", "the case is in no functionality")
+    rows = [q for q in f.get("screen_requirements", []) if case in q["cases"]]
+    own = [q for q in rows if not q.get("delegates_to")]
+    if own:
+        return ("own", own[0]["requirement"], len(own))
+    title = words(f.get("titles", {}).get(case, ""))
+    for q in rows:
+        for target in q.get("delegates_to", []):
+            t = by_fid.get(target)
+            if not t:
+                continue
+            # The case of the same title, else the closest; a tie goes to the first in the file.
+            scored = sorted(((-(len(title & words(tt)) / max(1, len(title | words(tt)))), i, c)
+                             for i, (c, tt) in enumerate(t.get("titles", {}).items())))
+            scored = [(-x, c) for x, _, c in scored]
+            if not scored or scored[0][0] < 0.5:
+                continue
+            counterpart = scored[0][1]
+            rules = [r for r in t.get("screen_requirements", []) if counterpart in r["cases"] and not r.get("delegates_to")]
+            if rules:
+                return ("through", rules[0]["requirement"], target, counterpart)
+    if rows:
+        return ("none", "it hands the case to " + ", ".join(sorted({t for q in rows for t in q["delegates_to"]})) +
+                ", which states no check for its case of the same title")
+    return ("none", "no screen requirement cites it")
+
+
+def cut(text, size=120):
+    return text if len(text) <= size else text[:size - 3].rsplit(" ", 1)[0] + "..."
+
+
+def write_findings(path, run, entity, out, data, recs=None):
+    """<report>-findings.md beside the report: each FAIL and CONDITIONAL PASS, its functionality, and the screen
+    requirement that states the check for it, in its own file or in the one it hands the case to. A case with
+    none is a Catalogue issue to file."""
+    if recs is None:
+        recs, _ = read_cases(path, run, entity)
+    by_fid = {f["id"]: f for f in data["functionalities"]}
+    owner = {c: f for f in data["functionalities"] for c in f["cases"]}
+    found = [r for r in recs if r["status"] in ("FAIL", "CONDITIONAL PASS")]
+    rows, issues = [], []
+    for r in found:
+        f = owner.get(r["id"])
+        how = coverage(r["id"], f, by_fid)
+        if how[0] == "own":
+            answer = 'yes: "' + cut(how[1]) + '"' + (" and " + str(how[2] - 1) + " more" if how[2] > 1 else "")
+        elif how[0] == "through":
+            answer = "yes, through " + how[2] + ", its rule for " + how[3] + ': "' + cut(how[1]) + '"'
+        else:
+            answer = "none, " + how[1] + ": Catalogue issue to file, below"
+            issues.append((r, f, how[1]))
+        rows.append([r["id"], r["status"], (f["title"] + " (`" + f["id"] + "`)") if f else "not in functionalities.json", answer])
+    module = data.get("module", "").upper()
+    lines = ["# Findings, " + module + " " + run + " run", "",
+             "Written " + date.today().isoformat() + " from " + Path(path).name + " for a " + entity + " entity. "
+             "Each FAIL and CONDITIONAL PASS, its functionality, and the screen requirement that states the check "
+             "for it: in its own functionality file, or in the one a row there hands it to.", ""]
+    if rows:
+        lines += ["| Case | Result | Functionality | Screen requirement stating its check |", "|---|---|---|---|"]
+        lines += ["| " + " | ".join(c.replace("|", "/") for c in row) + " |" for row in rows]
+    else:
+        lines.append("No case is FAIL or CONDITIONAL PASS.")
+    lines += ["", "## Catalogue issues to file", ""]
+    if not issues:
+        lines.append("None: every FAIL and CONDITIONAL PASS has a screen requirement stating its check.")
+    else:
+        lines += ["Not filed. Paste each into a new issue on the ABDM Developer Portal repository. Write the "
+                  "observed line in your own words, with no Aadhaar number, mobile, ABHA number, ABHA address or name.", ""]
+        for r, f, why in issues:
+            where = (f["title"] + " (" + f["id"] + "), " + f["file"]) if f else "no functionality: the case is not in functionalities.json"
+            lines += ["### " + r["id"] + ": no screen requirement in " + (f["id"] if f else "any functionality"), "",
+                      "```text",
+                      "Title: " + (f["id"] if f else module) + ": no screen requirement states the check for " + r["id"],
+                      "Functionality: " + where,
+                      "Case: " + r["id"] + ", " + r["status"] + " in a " + run + " run for a " + entity + " entity",
+                      "Why: " + why,
+                      "Expected Result: " + mask(r["expected"]),
+                      "Observed: <one line, in your own words>",
+                      "Asked: a screen requirement in the functionality file that states the check for " + r["id"] +
+                      ", so the next integrator builds for it before the test.",
+                      "```", ""]
+    target = Path(out)
+    target = target.with_name(target.stem + "-findings.md")
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text("\n".join(lines).rstrip("\n") + "\n")
+    print("findings: " + str(len(found)) + " FAIL or CONDITIONAL PASS, " + str(len(issues)) +
+          " without a screen requirement")
+    for r, f, _ in issues:
+        print("catalogue issue " + r["id"] + " in " + (f["id"] if f else "no functionality"))
+    print("wrote " + str(target))
+
+
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument("action", choices=["plan", "check", "build"])
+    p.add_argument("action", choices=["plan", "check", "build", "tracker", "findings"])
     p.add_argument("workbook")
     p.add_argument("--run", choices=["ft", "ui"], required=True)
     p.add_argument("--entity", choices=["government", "private"])
@@ -1679,6 +1988,12 @@ def main():
     p.add_argument("--fonts")
     p.add_argument("--draft", action="store_true",
                    help="build even when mandatory cases are not PASS, marked Draft on every page")
+    p.add_argument("--functionalities", help="tracker, findings: functionalities.json, else the one beside this script")
+    p.add_argument("--plan", default="INTEGRATION-PLAN.md", help="tracker: the plan file the tracker is written into")
+    p.add_argument("--state", help="tracker: its state file, else tracker.json beside the workbook")
+    p.add_argument("--set", action="append", help="tracker: <functionality id>=building|built|tested|in-scope")
+    p.add_argument("--screen", action="append", help="tracker: <case id>=<the screen or route that satisfies it>")
+    p.add_argument("--build", help="tracker: the build a functionality was tested on, with --set <id>=tested")
     a = p.parse_args()
     meta = {}
     if a.action == "build" and not (a.meta and a.out):
@@ -1691,10 +2006,21 @@ def main():
                      "which never goes in a report: " + ", ".join(bad))
         meta["entity_type"] = a.entity or meta.get("entity_type")
     entity = a.entity or meta.get("entity_type")
+    if a.action == "tracker":
+        run_tracker(a, entity, agreed_cases(meta))
+        return
     if entity not in ("government", "private"):
         sys.exit("--entity, or entity_type in meta.json, must be government or private")
     if a.action == "plan":
         run_plan(a.workbook, a.run, entity)
+        return
+    if a.action == "findings":
+        data = load_functionalities(a.functionalities)
+        if not data:
+            sys.exit("no functionalities.json beside this script: this module's skill is not built per functionality yet")
+        if not a.out:
+            sys.exit("findings needs --out, the report it sits beside")
+        write_findings(a.workbook, a.run, entity, a.out, data)
         return
     recs, groups, blocking = run_check(a.workbook, a.run, entity, agreed_cases(meta))
     if blocking and not (a.action == "build" and a.draft):
@@ -1705,6 +2031,9 @@ def main():
     if a.action == "build":
         build(a.workbook, a.run, meta, a.evidence, a.out, recs, groups, a.manifest, a.format, a.fonts,
               blocking if blocking else None)
+        data = load_functionalities(a.functionalities)
+        if data:
+            write_findings(a.workbook, a.run, entity, a.out, data, recs)
 
 
 if __name__ == "__main__":
