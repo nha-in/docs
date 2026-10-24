@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["6640"],{44595(e,a,d){d.r(a),d.d(a,{__iconNode:()=>c,default:()=>t});var s=d(34438);let c=[["path",{d:"M20 18v-2a4 4 0 0 0-4-4H4",key:"5vmcpk"}],["path",{d:"m9 17-5-5 5-5",key:"nvlc11"}]],t=(0,s.A)("reply",c)}}]);
