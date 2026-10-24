@@ -44,3 +44,15 @@ Two things the index will not route for you, because they are repo-wide:
   in anything else that reads Agent Plugins 1.0. CI runs `check:plugins`.
 - The plan under `plan/` cannot move without the skills compiled from it moving
   too. `./scripts/plan-check.sh` is the gate, and CI runs it.
+- Every external service the build or the server calls has an input limit,
+  and catalogue content grows past it without any test noticing. Enforce the
+  limit in the client that makes the call, with a test whose fake refuses
+  what the service refuses, rather than by shortening content to fit.
+  `mcp/internal/embed/bedrock.go` cuts each input to 20,000 characters
+  because Titan refuses over 50,000 characters or 8,192 tokens.
+- docs-mcp embeds each `## ` section of an atom as one input, and only its
+  first 20,000 characters. Put what a searcher needs before any long code
+  block in a section; a script inlined in an atom goes last in its section.
+- A deploy runs a git tag. When a deploy fails on code, the fix is its own
+  commit and PR, and the deploy runs again under a new tag, never under the
+  old tag from a working tree holding code the tag does not.
