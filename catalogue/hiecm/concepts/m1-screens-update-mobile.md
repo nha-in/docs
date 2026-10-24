@@ -29,7 +29,7 @@ token. The new number is proved by an OTP before it replaces the old one.
 |---|---|
 | Take the new mobile, send the OTP to it, and verify it, with the `X-token` of an ABHA number login | PROF_ABHA_601 |
 | Show the mobile as updated only after the verify call returns success, then read the profile again so the screen shows the mobile the ABHA now holds | PROF_ABHA_601 |
-| The OTP, wrong OTP and resend rules are under Screen requirements in create-abha-aadhaar-otp | PROF_ABHA_601 |
+| Both OTPs on this screen follow create-abha-aadhaar-otp: its OTP field, wrong OTP and resend rules | PROF_ABHA_601 |
 
 ## How you know it worked
 

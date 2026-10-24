@@ -1,6 +1,8 @@
 # Create ABHA by demographic authentication
 
-Functionality 16 of 17 in M1's build order. Its group applies to government entities only, and is not applicable to the other. Read [run.md](../run.md) and [foundations.md](../foundations.md) once per session before this file.
+Sheet group: ABHA Creation Through Demo Auth/ Offline Mode.
+
+Functionality 16 of 17 in M1's build order. Create ABHA by demographic authentication applies to government entities only. Read [foundations.md](../foundations.md) at Design, and [run.md](../run.md) at Test and Record.
 
 ## The loop
 
@@ -10,7 +12,7 @@ Functionality 16 of 17 in M1's build order. Its group applies to government enti
 | Scaffold | Calls | Every call in `m1-create-abha-demo-auth` reaches its exit condition against the sandbox |
 | Integrate | Integrate notes | Create ABHA by demographic authentication works end to end on your own screen, for the screens the notes name |
 | Debug | Errors, then the loop in [errors.md](../errors.md) | The failing step of Create ABHA by demographic authentication succeeds |
-| Test | Cases, How the cases run | Each of `CRT_ABHA_301`, `CRT_ABHA_302`, `CRT_ABHA_303`, `CRT_ABHA_304`, `CRT_ABHA_305`, `CRT_ABHA_306`, `CRT_ABHA_307`, `CRT_ABHA_308`, `CRT_ABHA_309` is recorded in the workbook |
+| Test | Cases, How the cases run | The Test exit in [run.md](../run.md), over `CRT_ABHA_301`, `CRT_ABHA_302`, `CRT_ABHA_304`, `CRT_ABHA_305`, `CRT_ABHA_306`, `CRT_ABHA_307`, `CRT_ABHA_308`, `CRT_ABHA_309` |
 | Record | [run.md](../run.md): the workbook writer, the report | The draft report shows Create ABHA by demographic authentication |
 
 Loop limit: 3 passes through Test for Create ABHA by demographic authentication. On the fourth, escalate in the format [run.md](../run.md) sets out, naming the case among `CRT_ABHA_301`, `CRT_ABHA_302`, `CRT_ABHA_303`, `CRT_ABHA_304`, `CRT_ABHA_305`, `CRT_ABHA_306`, `CRT_ABHA_307`, `CRT_ABHA_308`, `CRT_ABHA_309`.
@@ -281,10 +283,10 @@ Built in [create-abha-aadhaar-otp](create-abha-aadhaar-otp.md). Reuse those call
 
 | Case | Screen | Calls |
 |---|---|---|
-| CRT_ABHA_301 | Create ABHA entry, method choice | None: Screen only. The option to start creation is checked before any call. |
+| CRT_ABHA_301 | Create ABHA entry, method choice | None |
 | CRT_ABHA_302 | Aadhaar consent | `m1_post_v3_enrollment_enrol_byaadhaar_demo_auth_create_ab_81107d` |
-| CRT_ABHA_303 | Aadhaar consent, language choice | None: Screen only. The language the consent is shown in. |
-| CRT_ABHA_304 | Aadhaar number entry | None: Screen only. Format and length are checked on the screen before any call. |
+| CRT_ABHA_303 | Aadhaar consent, language choice | None |
+| CRT_ABHA_304 | Aadhaar number entry | None |
 | CRT_ABHA_305 | Demographic details entry | `m1_post_v3_enrollment_enrol_byaadhaar_demo_auth_create_ab_81107d` |
 | CRT_ABHA_306 | Profile completion form | `m1_post_v3_enrollment_enrol_byaadhaar_demo_auth_create_ab_81107d` |
 | CRT_ABHA_307 | Created ABHA number | `m1_post_v3_enrollment_enrol_byaadhaar_demo_auth_create_ab_81107d` |

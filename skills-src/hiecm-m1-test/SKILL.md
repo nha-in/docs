@@ -84,7 +84,7 @@ Loop limit: 3 passes per test case. Hitting the limit is an escalation: state wh
 - The sheet's Expected Result column decides the outcome. Its Steps To Be Executed say what to do. Its Suggestions for the Functional Tester column is guidance: a gap against it, with the Expected Result met, is a `conditional-pass`, never on its own a FAIL.
 - A message that means the same as the one the sheet quotes is a PASS. Quote both in the run record.
 - A case with several steps records a result for each step, in its result's `steps`. The case is `failed` only when a step's expected result fails. When every step run passes and a step could not be run, the case is `needs-human`, naming that step and what it needs.
-- A case waiting on a person, a device or test data is `needs-human` only after the tester was asked for it, at the readiness check and again at the case, and said they cannot provide it in this run. Remarks name what was asked. Such a case is never `not-run` and never blank. `not-run` is only for a case that does not apply: the entity type, an optional capability you do not offer, or no published operation for it.
+- A case waiting on a person, a device or test data is `needs-human` only after the tester was asked for it, at the readiness check and again at the case, and said they cannot provide it in this run. Remarks name what was asked. Such a case is never `not-run` and never blank; `not-run` is kept for a case that does not apply, as the human entry rule above sets out.
 
 ### The three kinds of evidence
 
@@ -242,7 +242,7 @@ Screen checks alongside: the prompt tells the person the OTP went to the mobile 
 
 #### CRT_ABHA_106, resend OTP. `screen`
 
-The resend control is disabled for 60 seconds after each send and works at most twice. A third attempt shows "Maximum OTP resend attempts reached. Please try again after 30 mins". An OTP counter is visible. Evidence: a recording or timestamped screenshots: disabled at send, enabled after 60 seconds, disabled after the second resend, and the message on the third. A resend that works reuses the `txnId`; a fresh `txnId` is a new request, not a resend.
+Judge it against the Resend requirements under Screen requirements, pressing the Resend control only. Evidence: a recording or timestamped screenshots: disabled at send, enabled after 60 seconds, disabled after the second resend, and the message on the third. A resend that works reuses the `txnId`; a fresh `txnId` is a new request, not a resend.
 
 #### CRT_ABHA_107, the OTP is verified, and a wrong OTP is refused. `sandbox`, `human`
 

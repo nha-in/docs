@@ -1,6 +1,8 @@
 # Find the benefits linked to an ABHA
 
-Functionality 17 of 17 in M1's build order. Its group applies to government entities only, and is not applicable to the other. Read [run.md](../run.md) and [foundations.md](../foundations.md) once per session before this file.
+Sheet group: Find ABHA for benefit.
+
+Functionality 17 of 17 in M1's build order. Find the benefits linked to an ABHA applies to government entities only. Read [foundations.md](../foundations.md) at Design, and [run.md](../run.md) at Test and Record.
 
 ## The loop
 
@@ -10,7 +12,7 @@ Functionality 17 of 17 in M1's build order. Its group applies to government enti
 | Scaffold | Calls | Every call in `m1-benefit-search` reaches its exit condition against the sandbox |
 | Integrate | Integrate notes | Find the benefits linked to an ABHA works end to end on your own screen, for the screens the notes name |
 | Debug | Errors, then the loop in [errors.md](../errors.md) | The failing step of Find the benefits linked to an ABHA succeeds |
-| Test | Cases, How the cases run | Each of `VRFY_ABHA_701` is recorded in the workbook |
+| Test | Cases, How the cases run | The Test exit in [run.md](../run.md), over `VRFY_ABHA_701`, none of them mandatory |
 | Record | [run.md](../run.md): the workbook writer, the report | The draft report shows Find the benefits linked to an ABHA |
 
 Loop limit: 3 passes through Test for Find the benefits linked to an ABHA. On the fourth, escalate in the format [run.md](../run.md) sets out, naming the case among `VRFY_ABHA_701`.

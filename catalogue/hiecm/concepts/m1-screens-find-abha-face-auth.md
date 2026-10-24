@@ -34,6 +34,7 @@ place of the OTP.
 | Choosing a profile generates the QR code for that profile, and the choice holds until authentication completes | VRFY_ABHA_304_FA |
 | After success, open the chosen profile only | VRFY_ABHA_307_FA, VRFY_ABHA_308_FA |
 | A failure shows the PID error from the API, fills nothing, and allows a retry or a new QR code | VRFY_ABHA_309_FA |
+| The scan and the ABHA Face RD install for a chosen profile happen in the ABHA app on the patient's phone, judged on the case text there; your screen shows the QR code for the chosen profile | VRFY_ABHA_305_FA, VRFY_ABHA_306_FA |
 
 ## How you know it worked
 

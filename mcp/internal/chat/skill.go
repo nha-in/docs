@@ -2,6 +2,7 @@ package chat
 
 import (
 	"fmt"
+	"math"
 	"regexp"
 	"slices"
 	"sort"
@@ -322,10 +323,15 @@ func skillBlock(module, section, body string) string {
 // those rows, in the router's build order.
 var functionalityLinkRe = regexp.MustCompile(`\[([^\]]+)\]\(references/functionalities/([a-z0-9-]+)\.md\)`)
 
-// Functionality is one row of a per functionality router.
+// Functionality is one row of a per functionality router, with the words
+// its file adds: the title of each of its cases and the screen each is
+// judged on.
 type Functionality struct {
-	ID    string
-	Title string
+	ID      string
+	Title   string
+	Group   string
+	Cases   []string
+	Screens []string
 }
 
 // RouterFunctionalities lists the functionalities a router links, in its
@@ -343,6 +349,59 @@ func RouterFunctionalities(router string) []Functionality {
 	return out
 }
 
+// tableColumn returns one column of the first table under a "## " heading,
+// header and divider rows left out.
+func tableColumn(body, heading string, col int) []string {
+	at := strings.Index(body, "\n## "+heading+"\n")
+	if at < 0 {
+		return nil
+	}
+	rest := body[at+len(heading)+5:]
+	if end := strings.Index(rest, "\n## "); end >= 0 {
+		rest = rest[:end]
+	}
+	var out []string
+	rows := 0
+	for _, line := range strings.Split(rest, "\n") {
+		line = strings.TrimSpace(line)
+		if !strings.HasPrefix(line, "|") {
+			if rows > 0 {
+				break
+			}
+			continue
+		}
+		rows++
+		if rows <= 2 {
+			continue
+		}
+		cells := strings.Split(strings.Trim(line, "|"), "|")
+		if col < len(cells) {
+			out = append(out, strings.TrimSpace(cells[col]))
+		}
+	}
+	return out
+}
+
+var sheetGroupRe = regexp.MustCompile(`(?m)^Sheet group: (.+)$`)
+
+// withFileWords adds what each functionality's own file says about it: the
+// sheet group it comes from, which joins its title, and the case titles and
+// screens under its Cases and Integrate notes tables.
+func withFileWords(skill func(name, section string) (string, bool), module string, fs []Functionality) []Functionality {
+	out := make([]Functionality, len(fs))
+	for i, f := range fs {
+		out[i] = f
+		if body, ok := skill(module, "functionalities/"+f.ID); ok {
+			if m := sheetGroupRe.FindStringSubmatch(body); m != nil {
+				out[i].Group = m[1]
+			}
+			out[i].Cases = tableColumn(body, "Cases", 3)
+			out[i].Screens = tableColumn(body, "Integrate notes", 1)
+		}
+	}
+	return out
+}
+
 // commandFiles maps a command to the shared files of a per functionality
 // module, besides the router that always goes in: design reads the
 // foundations, debug the codes. Scaffold and integrate live in each
@@ -354,17 +413,47 @@ var commandFiles = map[string][]string{
 	"integrate": nil,
 }
 
-// Words every M1 functionality title shares, so they pick none of them.
+// Words that say nothing about which functionality a question means: every
+// M1 title shares them, or they only join the others.
 var functionalityStopWords = map[string]bool{
-	"abha": true, "with": true, "the": true, "one": true, "an": true, "a": true, "by": true, "to": true, "of": true, "on": true, "at": true,
+	"abha": true, "with": true, "the": true, "one": true, "an": true, "a": true, "by": true, "to": true,
+	"of": true, "on": true, "at": true, "in": true, "their": true, "my": true, "our": true, "is": true, "via": true,
+}
+
+func matchWords(text string) []string {
+	var out []string
+	for _, w := range strings.FieldsFunc(strings.ToLower(text), func(r rune) bool {
+		return !(r >= 'a' && r <= 'z' || r >= '0' && r <= '9')
+	}) {
+		if !functionalityStopWords[w] {
+			out = append(out, w)
+		}
+	}
+	return out
+}
+
+// sameWord matches a question word to a vocabulary word: equal, a plural,
+// or one the start of the other when both are five letters or more
+// ("forgot" and "forgotten", "login" and "logins").
+func sameWord(q, v string) bool {
+	if q == v || q+"s" == v || v+"s" == q {
+		return true
+	}
+	if len(q) >= 5 && len(v) >= 5 {
+		return strings.HasPrefix(v, q) || strings.HasPrefix(q, v)
+	}
+	return false
 }
 
 // MatchFunctionality picks the one functionality a question is about, or ""
-// when it names none. A functionality id in the question wins outright.
-// Otherwise each functionality scores the question words that appear in its
-// title or id, leaving out words every title shares; the highest score wins,
-// and a tie goes to the earlier one in build order. Deterministic, so the
-// same question always loads the same file.
+// when it names none clearly. A functionality id in the question wins
+// outright. Otherwise each question word scores where a functionality holds
+// it: three in its title, id or sheet group, one in a case title or a screen name, each
+// times how rare the word is across the functionalities, so a word every
+// file holds counts for little. A functionality must hold at least half the
+// question's words to count; the highest score wins, and a tie goes to the
+// earlier one in build order. Deterministic, so the same question always
+// loads the same file.
 func MatchFunctionality(question string, fs []Functionality) string {
 	low := strings.ToLower(question)
 	for _, f := range fs {
@@ -372,24 +461,60 @@ func MatchFunctionality(question string, fs []Functionality) string {
 			return f.ID
 		}
 	}
-	words := questionWords(question)
-	best, bestScore := "", 0
-	for _, f := range fs {
-		vocab := map[string]bool{}
-		for _, w := range strings.FieldsFunc(strings.ToLower(f.Title+" "+f.ID), func(r rune) bool {
-			return !(r >= 'a' && r <= 'z' || r >= '0' && r <= '9')
-		}) {
-			if !functionalityStopWords[w] {
-				vocab[w] = true
+	var words []string
+	seenQ := map[string]bool{}
+	for _, w := range matchWords(question) {
+		if len(w) >= 3 && !questionStopWords[w] && !seenQ[w] {
+			seenQ[w] = true
+			words = append(words, w)
+		}
+	}
+	if len(words) == 0 || len(fs) == 0 {
+		return ""
+	}
+	type vocab struct{ title, rest []string }
+	vs := make([]vocab, len(fs))
+	for i, f := range fs {
+		vs[i].title = matchWords(f.Title + " " + f.Group + " " + strings.ReplaceAll(f.ID, "-", " "))
+		vs[i].rest = matchWords(strings.Join(f.Cases, " ") + " " + strings.Join(f.Screens, " "))
+	}
+	holds := func(list []string, w string) bool {
+		for _, v := range list {
+			if sameWord(w, v) {
+				return true
 			}
 		}
-		score := 0
+		return false
+	}
+	idf := map[string]float64{}
+	for _, w := range words {
+		df := 0
+		for _, v := range vs {
+			if holds(v.title, w) || holds(v.rest, w) {
+				df++
+			}
+		}
+		if df > 0 {
+			idf[w] = math.Log(float64(len(fs)+1) / float64(df))
+		}
+	}
+	best, bestScore := "", 0.0
+	for i, f := range fs {
+		score, matched := 0.0, 0
 		for _, w := range words {
-			if vocab[w] || vocab[strings.TrimSuffix(w, "s")] {
-				score++
+			switch {
+			case holds(vs[i].title, w):
+				score += 3 * idf[w]
+				matched++
+			case holds(vs[i].rest, w):
+				score += idf[w]
+				matched++
 			}
 		}
-		if score > bestScore {
+		if 2*matched < len(words) {
+			continue
+		}
+		if score > bestScore+1e-9 {
 			best, bestScore = f.ID, score
 		}
 	}
@@ -421,7 +546,7 @@ func perFunctionalityParts(skill func(name, section string) (string, bool), modu
 			parts = append(parts, skillPart{section: sec, body: body})
 		}
 	}
-	if id := MatchFunctionality(question, fs); id != "" {
+	if id := MatchFunctionality(question, withFileWords(skill, module, fs)); id != "" {
 		if body, has := skill(module, "functionalities/"+id); has {
 			parts = append(parts, skillPart{section: "functionalities/" + id, body: body})
 		}

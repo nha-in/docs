@@ -1,6 +1,8 @@
 # Create ABHA by driving licence
 
-Functionality 15 of 17 in M1's build order. Its group applies to every entity type. Read [run.md](../run.md) and [foundations.md](../foundations.md) once per session before this file.
+Sheet group: ABHA Creation Through Driving License.
+
+Functionality 15 of 17 in M1's build order. Its group applies to every entity type. Read [foundations.md](../foundations.md) at Design, and [run.md](../run.md) at Test and Record.
 
 ## The loop
 
@@ -10,7 +12,7 @@ Functionality 15 of 17 in M1's build order. Its group applies to every entity ty
 | Scaffold | Calls | Create ABHA by driving licence makes no ABDM call; skip to Integrate |
 | Integrate | Integrate notes | Create ABHA by driving licence works end to end on your own screen, for the screens the notes name |
 | Debug | Errors, then the loop in [errors.md](../errors.md) | The failing step of Create ABHA by driving licence succeeds |
-| Test | Cases, How the cases run | Each of `CRT_ABHA_401`, `CRT_ABHA_402`, `CRT_ABHA_403`, `CRT_ABHA_404`, `CRT_ABHA_405`, `CRT_ABHA_406`, `CRT_ABHA_407`, `CRT_ABHA_408`, `CRT_ABHA_410`, `CRT_ABHA_411` is recorded in the workbook |
+| Test | Cases, How the cases run | The Test exit in [run.md](../run.md), over `CRT_ABHA_401`, `CRT_ABHA_402`, `CRT_ABHA_403`, `CRT_ABHA_404`, `CRT_ABHA_405`, `CRT_ABHA_406`, `CRT_ABHA_407`, `CRT_ABHA_408`, `CRT_ABHA_410`, `CRT_ABHA_411`, none of them mandatory |
 | Record | [run.md](../run.md): the workbook writer, the report | The draft report shows Create ABHA by driving licence |
 
 Loop limit: 3 passes through Test for Create ABHA by driving licence. On the fourth, escalate in the format [run.md](../run.md) sets out, naming the case among `CRT_ABHA_401`, `CRT_ABHA_402`, `CRT_ABHA_403`, `CRT_ABHA_404`, `CRT_ABHA_405`, `CRT_ABHA_406`, `CRT_ABHA_407`, `CRT_ABHA_408`, `CRT_ABHA_410`, `CRT_ABHA_411`.
@@ -221,16 +223,16 @@ Create ABHA by driving licence makes no ABDM call: no operation in the specifica
 
 | Case | Screen | Calls |
 |---|---|---|
-| CRT_ABHA_401 | Create ABHA entry, method choice | None: Screen only. The option to start creation is checked before any call. |
-| CRT_ABHA_402 | Driving licence consent | None: Screen only. Consent is shown and captured before any call. |
-| CRT_ABHA_403 | Communication mobile entry | None: Screen only. The mobile is entered before any call. |
-| CRT_ABHA_404 | Communication mobile OTP | None: The column names request/otp and auth/byAbdm, but the spec has them only inside the Aadhaar, face and biometric creation journeys, never for a driving licence, so no operation is mapped. |
-| CRT_ABHA_405 | Driving licence details | None: The column names enrol/byDocument, which the spec lacks. |
-| CRT_ABHA_406 | Driving licence upload, front and back | None: The column names enrol/byDocument, which the spec lacks. |
-| CRT_ABHA_407 | Operator verification of the licence | None: The column names enrol/byDocument, which the spec lacks. |
-| CRT_ABHA_408 | Created ABHA number | None: The column names enrol/byDocument, which the spec lacks. |
-| CRT_ABHA_410 | ABHA card, view and download | None: The column names enrol/byDocument, which the spec lacks; the card call needs the token that call would return. |
-| CRT_ABHA_411 | Integrator's own card with ABHA details | None: The column names enrol/byDocument, which the spec lacks. |
+| CRT_ABHA_401 | Create ABHA entry, method choice | None |
+| CRT_ABHA_402 | Driving licence consent | None |
+| CRT_ABHA_403 | Communication mobile entry | None |
+| CRT_ABHA_404 | Communication mobile OTP | None |
+| CRT_ABHA_405 | Driving licence details | None |
+| CRT_ABHA_406 | Driving licence upload, front and back | None |
+| CRT_ABHA_407 | Operator verification of the licence | None |
+| CRT_ABHA_408 | Created ABHA number | None |
+| CRT_ABHA_410 | ABHA card, view and download | None |
+| CRT_ABHA_411 | Integrator's own card with ABHA details | None |
 
 ## Errors
 

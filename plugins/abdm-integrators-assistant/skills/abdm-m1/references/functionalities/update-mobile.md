@@ -1,6 +1,8 @@
 # Update the mobile on an ABHA
 
-Functionality 8 of 17 in M1's build order. Its group applies to every entity type. Read [run.md](../run.md) and [foundations.md](../foundations.md) once per session before this file.
+Sheet group: Profile update.
+
+Functionality 8 of 17 in M1's build order. Its group applies to every entity type. Read [foundations.md](../foundations.md) at Design, and [run.md](../run.md) at Test and Record.
 
 ## The loop
 
@@ -10,7 +12,7 @@ Functionality 8 of 17 in M1's build order. Its group applies to every entity typ
 | Scaffold | Calls | The calls are built in [login-abha-number](login-abha-number.md); they answer in your build |
 | Integrate | Integrate notes | Update the mobile on an ABHA works end to end on your own screen, for the screens the notes name |
 | Debug | Errors, then the loop in [errors.md](../errors.md) | The failing step of Update the mobile on an ABHA succeeds |
-| Test | Cases, How the cases run | Each of `PROF_ABHA_601` is recorded in the workbook |
+| Test | Cases, How the cases run | The Test exit in [run.md](../run.md), over `PROF_ABHA_601`, none of them mandatory |
 | Record | [run.md](../run.md): the workbook writer, the report | The draft report shows Update the mobile on an ABHA |
 
 Loop limit: 3 passes through Test for Update the mobile on an ABHA. On the fourth, escalate in the format [run.md](../run.md) sets out, naming the case among `PROF_ABHA_601`.
@@ -51,7 +53,7 @@ token. The new number is proved by an OTP before it replaces the old one.
 |---|---|
 | Take the new mobile, send the OTP to it, and verify it, with the `X-token` of an ABHA number login | PROF_ABHA_601 |
 | Show the mobile as updated only after the verify call returns success, then read the profile again so the screen shows the mobile the ABHA now holds | PROF_ABHA_601 |
-| The OTP, wrong OTP and resend rules are under Screen requirements in create-abha-aadhaar-otp | PROF_ABHA_601 |
+| Both OTPs on this screen follow create-abha-aadhaar-otp: its OTP field, wrong OTP and resend rules | PROF_ABHA_601 |
 
 ### How you know it worked
 

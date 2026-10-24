@@ -130,7 +130,15 @@ The first question of a build is the entity type. Every functionality that holds
 |---|---|
 | `/abdm-build <module>` | Starts or resumes the loop: reads the tracker, picks the next functionality, runs it |
 | `/abdm-test <module>` | The full final run: readiness, the case plan from the script, every mandatory case, the final report or the draft |
-| `/abdm-test-setup` | Kept: checks Python, the libraries, the browser, the emulator; installs nothing |
+| `/abdm-test-setup` | The environment survey, also run automatically as the first step of `/abdm-build` and `/abdm-test` (see below) |
+
+**The environment survey** (decided 24 October 2026). It finds what the machine already has before asking for anything:
+
+1. Every Python on the machine: the versions on PATH, Homebrew, pyenv, conda, `uv`, and any `.venv` in the project. Each is tested for openpyxl, Pillow, python-docx and ReportLab; the first with all four is used, else the newest 3.9 or later.
+2. The browser: whether the Playwright MCP tools are loaded, and which browsers they can reach, Playwright's own or an installed Chrome or Edge, which is used as it is.
+3. The emulator for a PHR app: `adb`, a running device, the app, Maestro.
+4. The result is written to `abdm-ft/env.json`, so the workbook writer and the report always run under the interpreter that has the libraries, and a later session skips the survey while the file still holds.
+5. Anything still missing is offered as one install, run only after the tester says yes, into a private `abdm-ft/.venv`, never into the system or the integrator's own environment. Without a yes, the exact command is printed for the tester to run.
 
 Both `/abdm-build` and `/abdm-test` load the module skill and `run.md` before anything else and refuse to start without the workbook in `abdm-ft/` and the setup check passing, so a run cannot be improvised from a branch or a raw workbook again.
 

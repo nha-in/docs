@@ -128,8 +128,11 @@ export function functionalityFile({f, index, total, cases, gov, priv, screens, j
   const owned = journeys.filter((j) => j.owner === f.id);
   const lines = [];
   lines.push(`# ${f.title}`, '');
+  const sheetGroups = [...new Set(cases.map((c) => c.group?.name).filter(Boolean))];
   lines.push(
-    `Functionality ${index} of ${total} in M1's build order. ${f.applies === 'all' ? 'Its group applies to every entity type.' : `Its group applies to ${f.applies} entities only, and is not applicable to the other.`} Read [run.md](../run.md) and [foundations.md](../foundations.md) once per session before this file.`,
+    `Sheet group: ${sheetGroups.join('; ')}.`,
+    '',
+    `Functionality ${index} of ${total} in M1's build order. ${f.applies === 'all' ? 'Its group applies to every entity type.' : `${f.title} applies to ${f.applies} entities only.`} Read [foundations.md](../foundations.md) at Design, and [run.md](../run.md) at Test and Record.`,
     '',
   );
 
@@ -139,7 +142,7 @@ export function functionalityFile({f, index, total, cases, gov, priv, screens, j
   lines.push(`| Scaffold | Calls | ${owned.length ? `Every call in ${list(owned.map((j) => j.id))} reaches its exit condition against the sandbox` : journeys.length ? `The calls are built in ${[...new Set(journeys.map((j) => j.owner))].map((o) => `[${o}](${o}.md)`).join(', ')}; they answer in your build` : `${f.title} makes no ABDM call; skip to Integrate`} |`);
   lines.push(`| Integrate | Integrate notes | ${f.title} works end to end on your own screen, for the screens the notes name |`);
   lines.push(`| Debug | Errors, then the loop in [errors.md](../errors.md) | The failing step of ${f.title} succeeds |`);
-  lines.push(`| Test | Cases, How the cases run | Each of ${list(ids)} is recorded in the workbook |`);
+  lines.push(`| Test | Cases, How the cases run | The Test exit in [run.md](../run.md), over ${mandatoryIds.length ? list(mandatoryIds) : `${list(ids)}, none of them mandatory`} |`);
   lines.push(`| Record | [run.md](../run.md): the workbook writer, the report | The draft report shows ${f.title} |`);
   lines.push('');
   lines.push(
@@ -182,7 +185,7 @@ export function functionalityFile({f, index, total, cases, gov, priv, screens, j
 
   lines.push('## Integrate notes', '');
   lines.push('| Case | Screen | Calls |', '|---|---|---|');
-  for (const m of f.cases) lines.push(`| ${m.id} | ${cellText(m.screen)} | ${m.ops.length ? list(m.ops) : `None: ${cellText(m.reason ?? 'judged on the screen')}`} |`);
+  for (const m of f.cases) lines.push(`| ${m.id} | ${cellText(m.screen)} | ${m.ops.length ? list(m.ops) : 'None'} |`);
   lines.push('');
   if (operations.length) {
     lines.push('| Operation | Call | What it does |', '|---|---|---|');

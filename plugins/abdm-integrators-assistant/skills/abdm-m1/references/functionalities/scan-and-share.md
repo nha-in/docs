@@ -1,6 +1,8 @@
 # Scan and share at a counter
 
-Functionality 7 of 17 in M1's build order. Its group applies to every entity type. Read [run.md](../run.md) and [foundations.md](../foundations.md) once per session before this file.
+Sheet group: Share Profile.
+
+Functionality 7 of 17 in M1's build order. Its group applies to every entity type. Read [foundations.md](../foundations.md) at Design, and [run.md](../run.md) at Test and Record.
 
 ## The loop
 
@@ -10,7 +12,7 @@ Functionality 7 of 17 in M1's build order. Its group applies to every entity typ
 | Scaffold | Calls | Every call in `scan-and-register-abdm-patient-share-hip` reaches its exit condition against the sandbox |
 | Integrate | Integrate notes | Scan and share at a counter works end to end on your own screen, for the screens the notes name |
 | Debug | Errors, then the loop in [errors.md](../errors.md) | The failing step of Scan and share at a counter succeeds |
-| Test | Cases, How the cases run | Each of `SHARE_PATIENT_PROFILE_701`, `SHARE_PATIENT_PROFILE_702` is recorded in the workbook |
+| Test | Cases, How the cases run | The Test exit in [run.md](../run.md), over `SHARE_PATIENT_PROFILE_701`, `SHARE_PATIENT_PROFILE_702` |
 | Record | [run.md](../run.md): the workbook writer, the report | The draft report shows Scan and share at a counter |
 
 Loop limit: 3 passes through Test for Scan and share at a counter. On the fourth, escalate in the format [run.md](../run.md) sets out, naming the case among `SHARE_PATIENT_PROFILE_701`, `SHARE_PATIENT_PROFILE_702`.
@@ -79,7 +81,7 @@ is in that profile, so nobody at the counter types anything.
 | Requirement | Cases |
 |---|---|
 | A new patient is registered from the shared profile automatically, with no click and no data entry, and gets a token in the `on-share` answer | SHARE_PATIENT_PROFILE_701 |
-| The token is the one the patient's app shows; the case expects a token valid for 60 minutes | SHARE_PATIENT_PROFILE_701 |
+| The `on-share` answer carries the token number your queue issued, in `acknowledgement.profile.tokenNumber`, with `status` `SUCCESS` and no `error` beside it. The case expects the patient to receive a token valid for 60 minutes. The specification gives `expiry` as a number and names no unit, so confirm the unit at onboarding before you set it | SHARE_PATIENT_PROFILE_701 |
 | Match a returning patient on name, mobile, gender, ABHA number and ABHA address against your records | SHARE_PATIENT_PROFILE_702 |
 | A certain match registers automatically under the existing beneficiary id, and the visit's care context is created under it | SHARE_PATIENT_PROFILE_702 |
 | An uncertain match may take one confirmation from the operator, a single choice on the screen. Never any typing | SHARE_PATIENT_PROFILE_702 |
@@ -126,19 +128,15 @@ curl --request POST \
   --data '{
   "acknowledgement": {
     "status": "SUCCESS",
-    "abhaAddress": "<ABHA_ADDRESS>",
+    "abhaAddress": "<ABHA_ADDRESS_FROM_THE_SHARE>",
     "profile": {
-      "context": "43",
-      "tokenNumber": "3",
-      "expiry": 180
+      "context": "<COUNTER_ID_FROM_THE_SHARE>",
+      "tokenNumber": "<TOKEN_NUMBER_YOUR_QUEUE_ISSUED>",
+      "expiry": "<TOKEN_EXPIRY_AS_A_NUMBER>"
     }
   },
-  "error": {
-    "code": "ABDM-9999",
-    "message": "Unknown exception"
-  },
   "response": {
-    "requestId": "6f0b4665-a915-4c92-aa36-65afb4a2cd71"
+    "requestId": "<REQUEST_ID_OF_THE_SHARE>"
   }
 }'
 ```

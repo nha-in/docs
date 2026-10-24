@@ -41,6 +41,7 @@ screen waits for the result, then carries on to the communication mobile.
 | A failed face authentication stops the journey and shows the PID error code and message the API returned. The person can retry, or a new QR code is generated | CRT_ABHA_109_FA |
 | The communication mobile is always verified by OTP in this route, whether or not it is the Aadhaar linked one. The OTP and resend rules are in create-abha-aadhaar-otp | CRT_ABHA_110_FA, CRT_ABHA_111_FA, CRT_ABHA_112_FA |
 | The address step, the profile, the card and a returning patient follow create-abha-aadhaar-otp, and the profile and card show the communication mobile verified here | CRT_ABHA_113_FA, CRT_ABHA_114_FA, CRT_ABHA_115_FA, CRT_ABHA_116_FA, CRT_ABHA_117_FA |
+| Scanning the QR code and installing the ABHA Face RD app happen in the ABHA app on the patient's phone, and are judged on the case text there. Your product's part is the QR code and the instruction beside it | CRT_ABHA_106_FA, CRT_ABHA_107_FA |
 
 ## How you know it worked
 

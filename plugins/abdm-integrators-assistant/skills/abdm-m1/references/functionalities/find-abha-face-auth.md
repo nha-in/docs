@@ -1,6 +1,8 @@
 # Find ABHA by mobile with face authentication
 
-Functionality 11 of 17 in M1's build order. Its group applies to every entity type. Read [run.md](../run.md) and [foundations.md](../foundations.md) once per session before this file.
+Sheet group: Login Via Mobile: Find ABHA via Face Auth.
+
+Functionality 11 of 17 in M1's build order. Its group applies to every entity type. Read [foundations.md](../foundations.md) at Design, and [run.md](../run.md) at Test and Record.
 
 ## The loop
 
@@ -10,7 +12,7 @@ Functionality 11 of 17 in M1's build order. Its group applies to every entity ty
 | Scaffold | Calls | Every call in `m1-find-abha-face` reaches its exit condition against the sandbox |
 | Integrate | Integrate notes | Find ABHA by mobile with face authentication works end to end on your own screen, for the screens the notes name |
 | Debug | Errors, then the loop in [errors.md](../errors.md) | The failing step of Find ABHA by mobile with face authentication succeeds |
-| Test | Cases, How the cases run | Each of `VRFY_ABHA_301_FA`, `VRFY_ABHA_302_FA`, `VRFY_ABHA_303_FA`, `VRFY_ABHA_304_FA`, `VRFY_ABHA_305_FA`, `VRFY_ABHA_306_FA`, `VRFY_ABHA_307_FA`, `VRFY_ABHA_308_FA`, `VRFY_ABHA_309_FA` is recorded in the workbook |
+| Test | Cases, How the cases run | The Test exit in [run.md](../run.md), over `VRFY_ABHA_301_FA`, `VRFY_ABHA_302_FA`, `VRFY_ABHA_303_FA`, `VRFY_ABHA_304_FA`, `VRFY_ABHA_305_FA`, `VRFY_ABHA_306_FA`, `VRFY_ABHA_307_FA`, `VRFY_ABHA_308_FA`, `VRFY_ABHA_309_FA`, none of them mandatory |
 | Record | [run.md](../run.md): the workbook writer, the report | The draft report shows Find ABHA by mobile with face authentication |
 
 Loop limit: 3 passes through Test for Find ABHA by mobile with face authentication. On the fourth, escalate in the format [run.md](../run.md) sets out, naming the case among `VRFY_ABHA_301_FA`, `VRFY_ABHA_302_FA`, `VRFY_ABHA_303_FA`, `VRFY_ABHA_304_FA`, `VRFY_ABHA_305_FA`, `VRFY_ABHA_306_FA`, `VRFY_ABHA_307_FA`, `VRFY_ABHA_308_FA`, `VRFY_ABHA_309_FA`.
@@ -196,6 +198,7 @@ place of the OTP.
 | Choosing a profile generates the QR code for that profile, and the choice holds until authentication completes | VRFY_ABHA_304_FA |
 | After success, open the chosen profile only | VRFY_ABHA_307_FA, VRFY_ABHA_308_FA |
 | A failure shows the PID error from the API, fills nothing, and allows a retry or a new QR code | VRFY_ABHA_309_FA |
+| The scan and the ABHA Face RD install for a chosen profile happen in the ABHA app on the patient's phone, judged on the case text there; your screen shows the QR code for the chosen profile | VRFY_ABHA_305_FA, VRFY_ABHA_306_FA |
 
 ### How you know it worked
 
@@ -322,12 +325,12 @@ A 200 whose body matches:
 
 | Case | Screen | Calls |
 |---|---|---|
-| VRFY_ABHA_301_FA | Mobile number entry | None: Screen only. An invalid mobile number must not reach abha/search. |
+| VRFY_ABHA_301_FA | Mobile number entry | None |
 | VRFY_ABHA_302_FA | ABHA profile list | `m1_post_v3_profile_account_abha_search_find_abha_face` |
 | VRFY_ABHA_303_FA | ABHA profile list, none found | `m1_post_v3_profile_account_abha_search_find_abha_face` |
 | VRFY_ABHA_304_FA | Face authentication QR code for the selected profile | `m1_post_v3_profile_login_request_otp_find_abha_face` |
-| VRFY_ABHA_305_FA | ABHA app scanner | None: The APIs column is empty, and the case is judged in the ABHA app on the patient's phone, not in the product. |
-| VRFY_ABHA_306_FA | ABHA app, Face RD install redirect | None: The APIs column is empty, and the case is judged in the ABHA app on the patient's phone, not in the product. |
+| VRFY_ABHA_305_FA | ABHA app scanner | None |
+| VRFY_ABHA_306_FA | ABHA app, Face RD install redirect | None |
 | VRFY_ABHA_307_FA | Face authentication status | `m1_post_v3_enrollment_enrol_capturepid_find_abha_face` |
 | VRFY_ABHA_308_FA | Selected ABHA profile | `m1_post_v3_profile_login_verify_find_abha_face` |
 | VRFY_ABHA_309_FA | Face authentication failure, PID error | `m1_post_v3_enrollment_enrol_capturepid_find_abha_face`, `m1_post_v3_profile_login_verify_find_abha_face` |

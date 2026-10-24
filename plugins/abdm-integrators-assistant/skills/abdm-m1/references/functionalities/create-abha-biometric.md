@@ -1,6 +1,8 @@
 # Create ABHA by fingerprint or iris
 
-Functionality 12 of 17 in M1's build order. Its group applies to every entity type. Read [run.md](../run.md) and [foundations.md](../foundations.md) once per session before this file.
+Sheet group: ABHA Creation Through Aadhaar Biometric(Fingerprint/Iris).
+
+Functionality 12 of 17 in M1's build order. Its group applies to every entity type. Read [foundations.md](../foundations.md) at Design, and [run.md](../run.md) at Test and Record.
 
 ## The loop
 
@@ -10,7 +12,7 @@ Functionality 12 of 17 in M1's build order. Its group applies to every entity ty
 | Scaffold | Calls | Every call in `m1-create-abha-fingerprint`, `m1-create-abha-iris` reaches its exit condition against the sandbox |
 | Integrate | Integrate notes | Create ABHA by fingerprint or iris works end to end on your own screen, for the screens the notes name |
 | Debug | Errors, then the loop in [errors.md](../errors.md) | The failing step of Create ABHA by fingerprint or iris succeeds |
-| Test | Cases, How the cases run | Each of `CRT_ABHA_201`, `CRT_ABHA_204`, `CRT_ABHA_202`, `CRT_ABHA_203`, `CRT_ABHA_205`, `CRT_ABHA_206`, `CRT_ABHA_207`, `CRT_ABHA_208`, `CRT_ABHA_209`, `CRT_ABHA_210`, `CRT_ABHA_211` is recorded in the workbook |
+| Test | Cases, How the cases run | The Test exit in [run.md](../run.md), over `CRT_ABHA_201`, `CRT_ABHA_204`, `CRT_ABHA_202`, `CRT_ABHA_203`, `CRT_ABHA_205`, `CRT_ABHA_206`, `CRT_ABHA_207`, `CRT_ABHA_208`, `CRT_ABHA_209`, `CRT_ABHA_210`, `CRT_ABHA_211`, none of them mandatory |
 | Record | [run.md](../run.md): the workbook writer, the report | The draft report shows Create ABHA by fingerprint or iris |
 
 Loop limit: 3 passes through Test for Create ABHA by fingerprint or iris. On the fourth, escalate in the format [run.md](../run.md) sets out, naming the case among `CRT_ABHA_201`, `CRT_ABHA_204`, `CRT_ABHA_202`, `CRT_ABHA_203`, `CRT_ABHA_205`, `CRT_ABHA_206`, `CRT_ABHA_207`, `CRT_ABHA_208`, `CRT_ABHA_209`, `CRT_ABHA_210`, `CRT_ABHA_211`.
@@ -576,10 +578,10 @@ Built in [create-abha-aadhaar-otp](create-abha-aadhaar-otp.md). Reuse those call
 
 | Case | Screen | Calls |
 |---|---|---|
-| CRT_ABHA_201 | Create ABHA entry, method choice | None: Screen only. The option to start creation is checked before any call. |
-| CRT_ABHA_204 | Aadhaar number entry | None: Screen only. Format and length are checked on the screen before any call. |
+| CRT_ABHA_201 | Create ABHA entry, method choice | None |
+| CRT_ABHA_204 | Aadhaar number entry | None |
 | CRT_ABHA_202 | Aadhaar consent | `m1_post_v3_enrollment_enrol_byaadhaar_fingerprint`, `m1_post_v3_enrollment_enrol_byaadhaar_iris` |
-| CRT_ABHA_203 | Aadhaar consent, language choice | None: Screen only. The language the consent is shown in. |
+| CRT_ABHA_203 | Aadhaar consent, language choice | None |
 | CRT_ABHA_205 | Biometric capture and verify | `m1_post_v3_enrollment_enrol_byaadhaar_fingerprint`, `m1_post_v3_enrollment_enrol_byaadhaar_iris` |
 | CRT_ABHA_206 | Communication mobile entry | `m1_post_v3_enrollment_enrol_byaadhaar_fingerprint`, `m1_post_v3_enrollment_enrol_byaadhaar_iris` |
 | CRT_ABHA_207 | Communication mobile OTP | `m1_post_v3_enrollment_request_otp_mobile_verify_create_ab_64b04e`, `m1_post_v3_enrollment_auth_byabdm_mobile_verify_create_ab_3b237a`, `m1_post_v3_enrollment_request_otp_mobile_verify_create_abha_iris`, `m1_post_v3_enrollment_auth_byabdm_mobile_verify_create_abha_iris` |

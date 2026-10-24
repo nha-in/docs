@@ -6,10 +6,11 @@ milestone: M1
 version: abdm-v3
 order: 10
 router: >
-  Every identifier starts on the login path, Aadhaar included. A verified
-  login already returns the accounts, and only ABDM-1114 on a refusal means
-  nobody holds one. Create on any other answer and the patient ends up with
-  two numbers, which nothing merges.
+  Offer Create ABHA and the verification routes the cases require. Creation by
+  Aadhaar cannot make a second ABHA: an Aadhaar that already holds one comes
+  back with isNew false and that account, and the journey carries on from it.
+  On a login, only ABDM-1114 means nobody holds an ABHA; create on any other
+  refusal and the patient can end up with two numbers, which nothing merges.
 title: The branch that creates a duplicate ABHA, and how to close it
 summary: >
   A second ABHA number for one person is the expensive failure in M1, nothing
@@ -52,17 +53,20 @@ matter.
 
 ## What happens
 
-**Every identifier starts on the login path, Aadhaar included.** Wiring Aadhaar
-straight to enrolment, because enrolment is where Aadhaar is most discussed,
-sends everybody who already holds an ABHA to make a second one.
+**Offer create and verify, and let creation carry on for an existing account.**
+The product offers a Create ABHA option and the login routes the verification
+cases need. Creation by Aadhaar does not make a second ABHA: `enrol/byAadhaar`
+answers an Aadhaar that already holds one with a 200, `isNew` `false` and that
+account's tokens and profile. Carry on from that response to the profile, the
+card and the address step, as for a new account.
 
-**`ABDM-1114` is the only answer that means nobody holds an ABHA.** A refusal
+**On a login, `ABDM-1114` is the only answer that means nobody holds an ABHA.** A refusal
 that names a field is not the same thing. A stale certificate reads back
 identically, and creating an account on that is how the duplicate happens.
 
-**Never ask the patient whether they want to log in or to create.** They often
-cannot answer. One screen, titled for both outcomes, takes an identifier and
-lets the response decide.
+**A patient who cannot say whether they hold an ABHA need not decide.** A
+screen titled for both outcomes can take an identifier and let the response
+decide. It sits beside the Create ABHA option, never in place of it.
 
 **Read the token, not the account count.** A verification that returns a
 `refreshToken` has already returned the final user token, so use it. One without
@@ -80,14 +84,16 @@ rule into code as a guard that refuses an unknown method by name, because a rule
 the code merely happens to satisfy is one that regresses silently.
 
 When the desk already knows there is no ABHA, ask only for Aadhaar. Offering a
-mobile there offers a path that cannot finish. The lookup still runs first: a
-patient saying they have never had one is not evidence, and creating on somebody's
-word is how the second number appears.
+mobile there offers a path that cannot finish. A patient saying they have never
+had one is not evidence, and the creation response settles it: `isNew` `false`
+means they had one, and the journey carries on with it.
 
 ## How you know it worked
 
 Run a login for an identifier nobody holds. You receive `404` with `ABDM-1114`,
 no one time password is sent, and only then does the journey offer creation.
+Run creation for an Aadhaar that already holds an ABHA. You receive `200` with
+`isNew` `false`, and the journey shows that account rather than an error.
 
 Run the Aadhaar login path. The verify response carries a `refreshToken`, the
 journey uses it directly, and no exchange call is made. Run the mobile path and
@@ -102,4 +108,7 @@ the exchange call is made, because no `refreshToken` came back.
   The journey branched on the account count instead of on `refreshToken`, and
   made a call it did not need to make.
 - Two patients a week arrive holding two numbers. Something in the journey is
-  creating before it has looked, and the lookup is the cheapest call available.
+  creating by a route other than Aadhaar before it has looked, and the lookup is
+  the cheapest call available.
+- Creation stops at `This account already exist`. The journey treated
+  `isNew` `false` as a failure instead of carrying on with the account.

@@ -79,7 +79,7 @@ const exit = (journey, stepData) => {
     const what = answers.map((c) => `\`${c.method} ${c.path}\``).join(' or ');
     return `A ${status} on this reply, sent with \`response.requestId\` set to the \`REQUEST-ID\` of the ${what} request it answers. A reply without that id answers nothing.`;
   }
-  return ok?.example ? `A ${ok.status} whose body matches:\n\n\`\`\`json\n${JSON.stringify(ok.example, null, 2)}\n\`\`\`` : `A ${status} response. The specification gives no body for it, so read what comes back.`;
+  return ok?.example ? `A ${ok.status} whose body matches:\n\n\`\`\`json\n${JSON.stringify(ok.example, null, 2)}\n\`\`\`` : `A ${status} response to \`${last.data.method} ${last.data.path}\` in \`${journey.id}\`, whose body the specification does not give: read what comes back.`;
 };
 
 function buildSkill(module, hasErrorsPage) {

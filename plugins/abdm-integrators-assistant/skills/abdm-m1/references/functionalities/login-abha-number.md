@@ -1,6 +1,8 @@
 # Log in with ABHA number
 
-Functionality 2 of 17 in M1's build order. Its group applies to every entity type. Read [run.md](../run.md) and [foundations.md](../foundations.md) once per session before this file.
+Sheet group: Login Via ABHA Number.
+
+Functionality 2 of 17 in M1's build order. Its group applies to every entity type. Read [foundations.md](../foundations.md) at Design, and [run.md](../run.md) at Test and Record.
 
 ## The loop
 
@@ -10,7 +12,7 @@ Functionality 2 of 17 in M1's build order. Its group applies to every entity typ
 | Scaffold | Calls | Every call in `m1-login-abha-number-aadhaar-otp`, `m1-login-abha-number-mobile-otp`, `m1-profile-update-mobile` reaches its exit condition against the sandbox |
 | Integrate | Integrate notes | Log in with ABHA number works end to end on your own screen, for the screens the notes name |
 | Debug | Errors, then the loop in [errors.md](../errors.md) | The failing step of Log in with ABHA number succeeds |
-| Test | Cases, How the cases run | Each of `VRFY_ABHA_101`, `VRFY_ABHA_201` is recorded in the workbook |
+| Test | Cases, How the cases run | The Test exit in [run.md](../run.md), over `VRFY_ABHA_101`, `VRFY_ABHA_201` |
 | Record | [run.md](../run.md): the workbook writer, the report | The draft report shows Log in with ABHA number |
 
 Loop limit: 3 passes through Test for Log in with ABHA number. On the fourth, escalate in the format [run.md](../run.md) sets out, naming the case among `VRFY_ABHA_101`, `VRFY_ABHA_201`.

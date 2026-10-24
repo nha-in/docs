@@ -2,6 +2,8 @@ package chat
 
 import (
 	"context"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 )
@@ -36,7 +38,7 @@ func perFunctionalityService(fm *fakeModel) *Service {
 	}
 }
 
-func TestRouterFunctionalitiesAndMatch(t *testing.T) {
+func TestRouterFunctionalities(t *testing.T) {
 	fs := RouterFunctionalities(perFunctionalityRouter)
 	if len(fs) != 4 || fs[0].ID != "create-abha-aadhaar-otp" || fs[2].Title != "Find ABHA by mobile" {
 		t.Fatalf("functionalities = %+v", fs)
@@ -44,15 +46,39 @@ func TestRouterFunctionalitiesAndMatch(t *testing.T) {
 	if got := RouterFunctionalities("# M2\n\n[scaffold](references/scaffold.md)"); len(got) != 0 {
 		t.Fatalf("a job file router listed %+v", got)
 	}
-	cases := map[string]string{
-		"How should the find ABHA by mobile list look?":  "find-abha-mobile",
-		"Why does find-abha-face-auth show no QR?":       "find-abha-face-auth",
-		"The consent before I create an ABHA by Aadhaar": "create-abha-aadhaar-otp",
-		"Logging in with an ABHA number fails":           "login-abha-number",
-		"What is ABHA?":                                  "",
-		"Find my ABHA":                                   "find-abha-mobile",
+}
+
+// The match runs on the M1 skill the repository ships, so it is held to the
+// real titles, case titles and screens rather than to a fixture shaped for it.
+func TestMatchFunctionalityOnTheShippedM1Skill(t *testing.T) {
+	dir := filepath.Join("..", "..", "..", "plugins", "abdm-integrators-assistant", "skills", "abdm-m1")
+	router, err := os.ReadFile(filepath.Join(dir, "SKILL.md"))
+	if err != nil {
+		t.Skip("no compiled abdm-m1 skill: ", err)
 	}
-	for q, want := range cases {
+	skill := func(name, section string) (string, bool) {
+		path := filepath.Join(dir, "references", section+".md")
+		if section == "" {
+			path = filepath.Join(dir, "SKILL.md")
+		}
+		b, err := os.ReadFile(path)
+		return string(b), err == nil
+	}
+	fs := withFileWords(skill, "abdm-m1", RouterFunctionalities(string(router)))
+	if len(fs) != 17 || len(fs[0].Cases) == 0 || len(fs[0].Screens) == 0 {
+		t.Fatalf("read %d functionalities, the first with %d cases and %d screens", len(fs), len(fs[0].Cases), len(fs[0].Screens))
+	}
+	for q, want := range map[string]string{
+		"login with mobile OTP":              "find-abha-mobile",
+		"patient forgot their ABHA number":   "find-abha-mobile",
+		"link care context":                  "",
+		"ABHA card download":                 "create-abha-aadhaar-otp",
+		"create ABHA with Aadhaar OTP":       "create-abha-aadhaar-otp",
+		"scan and share token":               "scan-and-share",
+		"Why does find-abha-face-auth fail?": "find-abha-face-auth",
+		"What is ABHA?":                      "",
+		"How do I raise a consent request?":  "",
+	} {
 		if got := MatchFunctionality(q, fs); got != want {
 			t.Errorf("MatchFunctionality(%q) = %q, want %q", q, got, want)
 		}
@@ -65,11 +91,11 @@ func TestRespondCommandOnAPerFunctionalityModule(t *testing.T) {
 		want, not              []string
 	}{
 		{"design", "Design the M1 find ABHA by mobile list", "skill://abdm-m1/functionalities/find-abha-mobile",
-			[]string{`section="router"`, `section="foundations"`, `section="functionalities/find-abha-mobile"`, "List before any OTP"}, []string{`section="errors"`}},
+			[]string{`section="router"`, `section="foundations"`, `section="functionalities/find-abha-mobile"`, "List before any OTP"}, []string{`section="errors"`, scaffoldRule}},
 		{"debug", "M1 returned ABDM-1204", "skill://abdm-m1/errors",
 			[]string{`section="router"`, `section="errors"`, "wrong OTP"}, []string{`section="functionalities/`}},
 		{"scaffold", "Scaffold M1", "skill://abdm-m1",
-			[]string{`section="router"`, "Find ABHA by mobile"}, []string{`section="foundations"`, `section="errors"`}},
+			[]string{`section="router"`, "Find ABHA by mobile", scaffoldRule}, []string{`section="foundations"`, `section="errors"`}},
 		{"integrate", "Integrate M1 login with ABHA number", "skill://abdm-m1/functionalities/login-abha-number",
 			[]string{`section="router"`, "Both routes."}, []string{`section="foundations"`}},
 	} {

@@ -194,7 +194,7 @@ const MODULES = [
     spec: 'hiecm-m1.yaml',
     example: 'Add ABHA creation by Aadhaar OTP to this codebase',
     description:
-      'Use when building, debugging or testing ABDM Milestone 1: creating an ABHA number or address, ABHA login, profile management, or the gateway session token. Carries the endpoints, the required headers, the two token rule, the encryption rule and the error codes its specification\'s examples return. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.',
+      'Use when building, debugging or testing ABDM Milestone 1: creating an ABHA number or address, ABHA login, profile management, or a profile shared at the counter. Built per functionality: the router asks the entity type and lists each functionality with its mandatory cases; each file under references/functionalities/ is one loop from its screen requirements and calls to its own NHA test cases, with run.md, foundations.md, errors.md and the run scripts beside them.',
     rules: [
       OBSERVE_RESPONSES,
       'Get an access token first, from the gateway session endpoint. Every other call needs it in `Authorization: Bearer <token>`.',
@@ -737,6 +737,46 @@ function withSurvey(scaffold) {
 // the Catalogue as shared.concept.test-workbook-write-back, script and all, and
 // folds into the test section of every module NHA publishes a workbook for:
 // M1 to M4, and P1 to P4, whose PHR workbook gets ids built from its rows.
+// The two scripts a test run uses ship as files in the skill, under scripts/,
+// generated from the python block of the atom that holds each, so an agent
+// copies them rather than transcribing two thousand lines from a reference.
+// The atoms stay the source, and scripts/check-*.py extract from them.
+const SCRIPT_OF = {
+  'shared.concept.test-workbook-write-back': 'abdm_workbook.py',
+  'shared.concept.test-report': 'abdm_report.py',
+};
+const PYTHON_BLOCK = /```python\n([\s\S]*?)\n```/;
+
+/** The script an atom holds, as a file body. */
+function atomScript(id) {
+  const entry = loadAtoms().atoms.get(id);
+  const m = entry?.body.match(PYTHON_BLOCK);
+  if (!m) throw new Error(`${id} holds no python block, and the skill ships it as scripts/${SCRIPT_OF[id]}`);
+  return `${m[1]}\n`;
+}
+
+/** An atom's body with its script replaced by the instruction to copy the shipped file. */
+function withoutScript(body, id) {
+  const file = SCRIPT_OF[id];
+  return body
+    .replace(PYTHON_BLOCK, [
+      `The script ships with this skill as \`scripts/${file}\`. Copy \`${file}\` from there; never retype it or rebuild it from this text:`,
+      '',
+      '```bash',
+      `mkdir -p abdm-ft && cp <this skill folder>/scripts/${file} abdm-ft/${file}`,
+      '```',
+    ].join('\n'))
+    .replace(/The script below, saved as `abdm-ft\/(abdm_\w+\.py)`/, 'The script `scripts/$1` from this skill, copied to `abdm-ft/$1`');
+}
+
+/** The scripts a module's test section uses, as skill files. */
+function scriptFiles(moduleId) {
+  const out = {};
+  if (WRITE_BACK_MODULES.has(moduleId)) out['scripts/abdm_workbook.py'] = atomScript(WRITE_BACK_ATOM);
+  if (REPORT_MODULES.has(moduleId)) out['scripts/abdm_report.py'] = atomScript(REPORT_ATOM);
+  return out;
+}
+
 const WRITE_BACK_ATOM = 'shared.concept.test-workbook-write-back';
 const WRITE_BACK_MODULES = new Set(['m1', 'm2', 'm3', 'm4', 'p1', 'p2', 'p3', 'p4']);
 
@@ -748,9 +788,9 @@ function writeBackSection() {
   return [
     "## Writing results into NHA's workbook",
     '',
-    'Ask for the workbook in the readiness check, and save the script below as `abdm-ft/abdm_workbook.py` before that check, because the check runs it. Every case ends by writing its result into the sheet as below, after the run log row is updated. The workbook is required: the report is built from it.',
+    'Ask for the workbook in the readiness check, and copy `scripts/abdm_workbook.py` from this skill to `abdm-ft/abdm_workbook.py` before that check, because the check runs it. Every case ends by writing its result into the sheet as below, after the run log row is updated. The workbook is required: the report is built from it.',
     '',
-    body.replace(/^## /gm, '### ').trim(),
+    withoutScript(body, WRITE_BACK_ATOM).replace(/^## /gm, '### ').trim(),
     '',
     `From \`${WRITE_BACK_ATOM}\`.`,
     '',
@@ -813,9 +853,9 @@ function reportSection() {
   return [
     '## Writing the test report',
     '',
-    'Save the script below as `abdm-ft/abdm_report.py` before the readiness check, and make the run log from its `plan`. When the last case is recorded, run `check`. Run `build` only when `check` exits 0.',
+    'Copy `scripts/abdm_report.py` from this skill to `abdm-ft/abdm_report.py` before the readiness check, and make the run log from its `plan`. When the last case is recorded, run `check`. Run `build` only when `check` exits 0.',
     '',
-    body.replace(/^## /gm, '### ').trim(),
+    withoutScript(body, REPORT_ATOM).replace(/^## /gm, '### ').trim(),
     '',
     `From \`${REPORT_ATOM}\`.`,
     '',
@@ -936,6 +976,7 @@ function emit(name, files, pluginFiles = files) {
     const folder = join(base, name);
     mkdirSync(join(folder, 'references'), {recursive: true});
     for (const [path, body] of Object.entries(entries)) {
+      mkdirSync(dirname(join(folder, path)), {recursive: true});
       writeFileSync(join(folder, path), body.endsWith('\n') ? body : `${body}\n`);
     }
   };
@@ -966,6 +1007,25 @@ const mappingOf = (id) => {
  */
 const sharedDesign = (moduleId, placed = new Set()) =>
   (DESIGN_ATOMS.get(moduleId) ?? []).filter((e) => !e.fm.functionality && !e.fm.superseded_by && !placed.has(e.fm.id));
+
+/** Every code a module returns, each with every operation whose examples return it and the full message. */
+function everyCode(module) {
+  const path = join(specDir, module.spec);
+  const byOp = existsSync(path) ? errorsByOperation(parse(readFileSync(path, 'utf8'))) : new Map();
+  const rows = new Map();
+  for (const [op, list] of byOp) {
+    for (const e of list) {
+      const key = `${e.code}|${e.http}|${e.message}`;
+      if (!rows.has(key)) rows.set(key, {code: e.code, http: e.http, message: e.message, ops: []});
+      rows.get(key).ops.push(op);
+    }
+  }
+  // The codes ABDM lists for the module with no call, after the ones an example returns.
+  for (const e of moduleCodes(module).filter((c) => c.listed)) {
+    rows.set(`${e.code}|listed|${e.message}`, {code: e.code, http: '', message: e.message, ops: []});
+  }
+  return [...rows.values()].sort((a, b) => a.code.localeCompare(b.code, undefined, {numeric: true}) || a.message.localeCompare(b.message));
+}
 
 function buildByFunctionality(module, mapping, whole, wholeFrozen, parts) {
   const page = WORKBOOK_PAGES[module.id];
@@ -1062,7 +1122,9 @@ function buildByFunctionality(module, mapping, whole, wholeFrozen, parts) {
     '| Test | Its NHA cases as a `ui` run, the tester entering every identity |',
     '| Record | The workbook row per case, the draft report rebuilt, the tracker updated |',
     '',
-    'A FAIL sends the loop back to Design or Integrate for that functionality only. The loop ends when every mandatory case of the functionality for your entity type is PASS or CONDITIONAL PASS, or is needs-human with the need named.',
+    'A FAIL sends the loop back to Design or Integrate for that functionality only.',
+    '',
+    '**The Test exit.** Every mandatory case of the functionality for your entity type is PASS or CONDITIONAL PASS, or is needs-human with the need named after the tester was asked for it twice. The loop ends there. Each functionality file names its cases against this exit.',
     '',
     'Escalate on the fourth pass through Test. Name what was observed, verbatim with request ids; each hypothesis tried and why it was ruled out; the one section or atom to read. Then ask one question.',
     '',
@@ -1131,7 +1193,15 @@ function buildByFunctionality(module, mapping, whole, wholeFrozen, parts) {
     '',
     'Exit condition: the original call now succeeds. Applying a fix is not the exit.',
     '',
-    `## Every code in the specification\n\n${(parts.get('Errors') ?? '').replace(/^## Errors\n+/, '')}`,
+    '## Every code in the specification',
+    '',
+    'Each code with every call whose examples return it, and the message in full.',
+    '',
+    '| Code | HTTP | Message | Returned by |',
+    '| --- | --- | --- | --- |',
+    ...everyCode(module).map((e) => `| \`${e.code}\` | ${e.http} | ${e.message.replace(/\|/g, '\\|').replace(/\s+/g, ' ')} | ${e.ops.length ? e.ops.map((o) => `\`${o}\``).join(', ') : "ABDM's list for the module, with no call named"} |`),
+    '',
+    'A code you meet that is not above is one the specifications do not carry yet. Read the code together with the message: a code can appear twice with different meanings.',
   ].join('\n');
 
   const codes = moduleCodes(module);
@@ -1175,7 +1245,7 @@ function buildByFunctionality(module, mapping, whole, wholeFrozen, parts) {
     '',
     '## Functionalities, in build order',
     '',
-    `The mandatory cases for each entity type, read from NHA's ${entry.module} workbook. Every other case is optional for that entity type.`,
+    'The cases each entity type must pass. Every other case is optional for that entity type.',
     '',
     '| # | Functionality | Mandatory for government | Mandatory for private |',
     '|---|---|---|---|',
@@ -1183,9 +1253,10 @@ function buildByFunctionality(module, mapping, whole, wholeFrozen, parts) {
     '',
     '## Starting a loop',
     '',
-    `1. Read [run.md](references/run.md) and [foundations.md](references/foundations.md) once per session.`,
-    '2. Pick the first functionality in the table that `INTEGRATION-PLAN.md` does not show as passed, and open its file.',
-    '3. Run its loop. An integration that already exists starts each loop at Test.',
+    '1. Build, in the order of the table, each functionality with a mandatory case for your entity type. An integration that already exists starts each loop at Test.',
+    '2. Read [foundations.md](references/foundations.md) at Design, and [run.md](references/run.md) at Test and Record.',
+    '3. Stop building when every one of those functionalities has met the Test exit in [run.md](references/run.md). Then run the full test.',
+    '4. Build an optional functionality only when the person asks for it, or a deployment answer in foundations.md added it.',
     '',
     '## The full test run',
     '',
@@ -1199,10 +1270,12 @@ function buildByFunctionality(module, mapping, whole, wholeFrozen, parts) {
     '- **[foundations.md](references/foundations.md)**: the rules across calls, hosts, headers, the codebase survey and the design rules across functionalities.',
     `- **[errors.md](references/errors.md)**: every code the ${entry.module} specification returns, and the loop from a code to a fix.`,
     "- **workbook/**: NHA's workbook, copied into `abdm-ft/` before a run.",
+    '- **scripts/**: `abdm_workbook.py` and `abdm_report.py`, copied into `abdm-ft/` before a run, never retyped.',
     '',
     parts.get('Where the detail is'),
   ].filter((part) => part !== undefined).join('\n');
 
+  Object.assign(files, scriptFiles(module.id));
   files['SKILL.md'] = skillMd(head(whole));
   const pluginFiles = {...files, 'SKILL.md': skillMd(head(wholeFrozen))};
   return {files, pluginFiles, entry};
@@ -1314,6 +1387,7 @@ for (const module of MODULES) {
   const test = withHumanEntry(withReport(withUiRun(withWriteBack(fold.test ? guided(fold.test) : '', module.id), module.id), module.id));
   if (test) {
     files['references/test.md'] = test;
+    Object.assign(files, scriptFiles(module.id));
     covers.push(
       `- **Test.** The functional test cases, one loop each, run as API or UI tests, with results written into NHA's workbook and the final test report once every mandatory case passes. Never hands-off: a tester enters every Aadhaar number, mobile number and OTP. [references/test.md](references/test.md)`,
     );
@@ -1368,6 +1442,14 @@ for (const module of MODULES) {
   emit(module.slug, files, pluginFiles);
   if (fold.test) emitWorkbooks(module.slug, module.id);
 
+  // A folder with scripts/ or workbook/ beside references/ ships as an archive
+  // as well, because a curl loop over section names cannot fetch it.
+  if (Object.keys(files).some((path) => path.startsWith('scripts/'))) {
+    execFileSync('tar', ['-czf', join(outDir, `${module.slug}.tar.gz`), '-C', outDir, module.slug], {
+      env: {...process.env, COPYFILE_DISABLE: '1'},
+    });
+    Object.assign(entry, {folder: true, files: filesUnder(join(pluginDir, module.slug)).length});
+  }
   manifest[module.slug] = entry;
 
   const size = Object.values(files).reduce((total, body) => total + body.length, 0);

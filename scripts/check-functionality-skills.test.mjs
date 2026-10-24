@@ -3,22 +3,26 @@ import assert from 'node:assert/strict';
 import {units} from './check-functionality-skills.mjs';
 import {loadPage, applicability, isMandatory} from './lib/test-case-page.mjs';
 
-test('units skip headings, code, short lines and the quoted cases', () => {
+test('units join wrapped lines, split sentences, drop case id cells and skip quotes', () => {
   const text = [
-    '# Title with many many words in it to pass the twelve word floor ok',
-    'A line that is long enough to count as a rule of this skill, surely.',
-    'Too short to count.',
+    '# A title that has many many words in it and would pass the floor easily',
+    'A rule that is long enough to count, wrapped across',
+    'two lines of the source file. Short sentence here.',
     '```',
     'a code line that is long enough to count as a rule of this skill, surely',
     '```',
+    '> A quoted declaration that is long enough to count as a rule, but is quoted.',
     '## Cases',
+    'Mandatory for a government entity: none, and that is the whole summary line.',
+    '### CRT_ABHA_101: Create ABHA Option',
     'NHA case text that is long enough to count as a rule of this skill, surely.',
     '## Calls',
-    '| a | table row that is long enough to count as a rule of this skill | x |',
+    '| CRT_ABHA_101, CRT_ABHA_102 | a table row that is long enough to count as a rule of the skill |',
   ].join('\n');
   assert.deepEqual(units(text), [
-    'A line that is long enough to count as a rule of this skill, surely.',
-    '| a | table row that is long enough to count as a rule of this skill | x |',
+    'a rule that is long enough to count, wrapped across two lines of the source file.',
+    'mandatory for a government entity: none, and that is the whole summary line.',
+    'row: a table row that is long enough to count as a rule of the skill',
   ]);
 });
 

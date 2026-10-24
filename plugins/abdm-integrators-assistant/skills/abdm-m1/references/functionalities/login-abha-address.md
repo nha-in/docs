@@ -1,6 +1,8 @@
 # Log in with ABHA address
 
-Functionality 3 of 17 in M1's build order. Its group applies to every entity type. Read [run.md](../run.md) and [foundations.md](../foundations.md) once per session before this file.
+Sheet group: Login Via ABHA address.
+
+Functionality 3 of 17 in M1's build order. Its group applies to every entity type. Read [foundations.md](../foundations.md) at Design, and [run.md](../run.md) at Test and Record.
 
 ## The loop
 
@@ -10,7 +12,7 @@ Functionality 3 of 17 in M1's build order. Its group applies to every entity typ
 | Scaffold | Calls | Every call in `m1-abha-address-login-aadhaar-otp`, `m1-abha-address-login-mobile-otp` reaches its exit condition against the sandbox |
 | Integrate | Integrate notes | Log in with ABHA address works end to end on your own screen, for the screens the notes name |
 | Debug | Errors, then the loop in [errors.md](../errors.md) | The failing step of Log in with ABHA address succeeds |
-| Test | Cases, How the cases run | Each of `VRFY_ABHA_102`, `VRFY_ABHA_202` is recorded in the workbook |
+| Test | Cases, How the cases run | The Test exit in [run.md](../run.md), over `VRFY_ABHA_102`, `VRFY_ABHA_202` |
 | Record | [run.md](../run.md): the workbook writer, the report | The draft report shows Log in with ABHA address |
 
 Loop limit: 3 passes through Test for Log in with ABHA address. On the fourth, escalate in the format [run.md](../run.md) sets out, naming the case among `VRFY_ABHA_102`, `VRFY_ABHA_202`.
@@ -198,7 +200,7 @@ curl --request GET \
 
 **Exit condition (Observe until this is true)**
 
-A 200 response. The specification gives no body for it, so read what comes back.
+A 200 response to `GET /abha/api/v3/phr/web/login/profile/abha/qr-code` in `m1-abha-address-login-aadhaar-otp`, whose body the specification does not give: read what comes back.
 
 ### ABHA Address Login, Mobile OTP (`m1-abha-address-login-mobile-otp`)
 
@@ -298,7 +300,7 @@ curl --request GET \
 
 **Exit condition (Observe until this is true)**
 
-A 200 response. The specification gives no body for it, so read what comes back.
+A 200 response to `GET /abha/api/v3/phr/web/login/profile/abha/qr-code` in `m1-abha-address-login-mobile-otp`, whose body the specification does not give: read what comes back.
 
 ## Integrate notes
 

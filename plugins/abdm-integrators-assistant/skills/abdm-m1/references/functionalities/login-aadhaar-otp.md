@@ -1,6 +1,8 @@
 # Log in with Aadhaar OTP
 
-Functionality 5 of 17 in M1's build order. Its group applies to every entity type. Read [run.md](../run.md) and [foundations.md](../foundations.md) once per session before this file.
+Sheet group: Login Via Aadhaar(OTP).
+
+Functionality 5 of 17 in M1's build order. Its group applies to every entity type. Read [foundations.md](../foundations.md) at Design, and [run.md](../run.md) at Test and Record.
 
 ## The loop
 
@@ -10,7 +12,7 @@ Functionality 5 of 17 in M1's build order. Its group applies to every entity typ
 | Scaffold | Calls | Every call in `m1-login-aadhaar-number` reaches its exit condition against the sandbox |
 | Integrate | Integrate notes | Log in with Aadhaar OTP works end to end on your own screen, for the screens the notes name |
 | Debug | Errors, then the loop in [errors.md](../errors.md) | The failing step of Log in with Aadhaar OTP succeeds |
-| Test | Cases, How the cases run | Each of `VRFY_ABHA_401`, `VRFY_ABHA_402`, `VRFY_ABHA_403`, `VRFY_ABHA_404`, `VRFY_ABHA_405` is recorded in the workbook |
+| Test | Cases, How the cases run | The Test exit in [run.md](../run.md), over `VRFY_ABHA_401`, `VRFY_ABHA_402`, `VRFY_ABHA_403`, `VRFY_ABHA_404`, `VRFY_ABHA_405` |
 | Record | [run.md](../run.md): the workbook writer, the report | The draft report shows Log in with Aadhaar OTP |
 
 Loop limit: 3 passes through Test for Log in with Aadhaar OTP. On the fourth, escalate in the format [run.md](../run.md) sets out, naming the case among `VRFY_ABHA_401`, `VRFY_ABHA_402`, `VRFY_ABHA_403`, `VRFY_ABHA_404`, `VRFY_ABHA_405`.
@@ -121,7 +123,7 @@ person hold an ABHA, and if so, which. Both answers have a screen.
 |---|---|
 | The Aadhaar field follows the rule in create-abha-aadhaar-otp: 12 digits, a refusal on the screen, no call, the number masked once entered | VRFY_ABHA_401 |
 | Where this route asks for consent, it shows the published consent screen from create-abha-aadhaar-otp | VRFY_ABHA_401 |
-| The OTP screen says the OTP went to the Aadhaar linked mobile ending in the last digits the `request/otp` response carries, shown masked as `******XXXX`. A screen that names no mobile fails the case | VRFY_ABHA_403, VRFY_ABHA_404 |
+| The OTP screen says where the OTP went, as the case's steps write it: "OTP sent to Aadhaar linked mobile number ending with ******XXXX", with the last digits the `request/otp` response carries. A screen that names no mobile fails the case | VRFY_ABHA_403, VRFY_ABHA_404 |
 | A wrong OTP stops progress and shows ABDM's message, under the OTP rules in create-abha-aadhaar-otp | VRFY_ABHA_402 |
 | No ABHA on the Aadhaar shows a clear message, such as "NO ABHA user registered with this Aadhaar Number", and offers to create one. Creation carries on from what this screen already holds and never asks for the Aadhaar again | VRFY_ABHA_403 |
 | An ABHA on the Aadhaar shows the profile, lets the person download the card, and offers to register and link it to your beneficiary id | VRFY_ABHA_404 |

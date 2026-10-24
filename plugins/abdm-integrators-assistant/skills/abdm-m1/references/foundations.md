@@ -11,7 +11,7 @@ What holds for every functionality: the rules across calls, the hosts and header
 - Two ways the profile reaches the desk. The patient scans a QR and consents in their own app, and ABDM posts the profile to your callback, so nobody types or asks anything. Or the desk runs the identifier journey. The filled form is the destination either way.
 - Decide deliberately whether a journey can complete without an ABHA. A record keyed by the facility's own number does not need one, and a journey that cannot finish without one blocks care for anyone who has none.
 - An identifier and an auth method are two different questions, and listing them together is what makes M1 look like five choices. Ask which identifier first, then offer auth methods underneath it, and only where there is more than one.
-- Every identifier starts on the login path, Aadhaar included. A verified login already returns the accounts, and only ABDM-1114 on a refusal means nobody holds one. Create on any other answer and the patient ends up with two numbers, which nothing merges.
+- Offer Create ABHA and the verification routes the cases require. Creation by Aadhaar cannot make a second ABHA: an Aadhaar that already holds one comes back with isNew false and that account, and the journey carries on from it. On a login, only ABDM-1114 means nobody holds an ABHA; create on any other refusal and the patient can end up with two numbers, which nothing merges.
 - Get an access token first, from the gateway session endpoint. Every other call needs it in `Authorization: Bearer <token>`.
 - Two tokens exist and they are not interchangeable. The gateway access token goes in `Authorization`. The user token from an enrolment or a login goes in `X-token`. Profile endpoints need both.
 - Sensitive fields travel encrypted. Aadhaar numbers, mobile numbers, email addresses, OTP values and passwords are encrypted before they go in the body, then base64 encoded.
@@ -205,7 +205,8 @@ The reason is the branch that creates a duplicate:
 asking a person at a desk whether they want to log in or to register puts a
 question to them they often cannot answer, and the response already contains the
 answer. One screen titled for both outcomes takes the identifier and lets ABDM
-decide which journey it was.
+decide which journey it was. Either shape keeps the Create ABHA option the test cases
+look for.
 
 A chooser is better where the desk genuinely knows. A counter that only
 registers new patients has already answered the question, and making it click
@@ -493,46 +494,53 @@ M1 has around forty operations and no deployment needs all of them. The routes
 do not change from one integrator to the next. The context does: who they are,
 what hardware sits on the desk, what their record already holds.
 
-So the first thing to establish is not how the journey should look. It is six
-facts about the deployment. Each answer adds a route rather than replacing one,
-which is what keeps an integration from branching into a government variant and
-a private variant that then drift apart.
+The first fact is the entity type, government or private. Every functionality
+that holds a mandatory test case for that entity type is built, whatever else
+the deployment looks like. The other questions only add optional routes. None
+of them removes a route a mandatory case needs, which is what keeps an
+integration from branching into a government variant and a private variant
+that then drift apart.
 
 #### What happens
 
-Ask these six. Each is a yes or a no.
+Settle the entity type first. Then ask these five. Each is a yes or a no, and a
+yes adds an optional route.
 
 | Ask | A yes adds |
 |---|---|
-| Are you a government integrator? | The demographic route: one call, no one time password |
 | Does your record hold the patient's mobile at check in? | No route. It removes a screen, because the lookup is submitted from the number you already hold |
-| Are you a registered facility with a callback ABDM can reach? | Scan and register, which then becomes the default counter experience |
 | Is there a fingerprint or iris reader at the desk? | The biometric method |
 | Do patients arrive with the ABHA app? | The face route, as a second method rather than a first |
+| Do you create ABHAs from a driving licence? | The driving licence route |
 | Which record types does your system actually produce? | The bundles worth generating, rather than all seven |
 
-The answers give the route set. The route set gives the screen set. The
-integrator then implements renderers for the screens that survive, rather than
-implementing a flow.
+Scan and register is not a question. Its cases are mandatory for every entity
+type, so it is always built. A callback ABDM cannot reach yet is a readiness
+item to solve before its test, never a reason to leave it out. The same holds
+for the demographic route for a government entity.
 
-The sixth question belongs here rather than with the record work, because
+The mandatory functionalities and the answers together give the route set. The
+route set gives the screen set. The integrator then implements renderers for
+those screens, rather than implementing a flow.
+
+The last question belongs here rather than with the record work, because
 scaffolding all eight record types before knowing which two a system produces is
 the most expensive guess available in this integration.
 
 #### How you know it worked
 
-You can name, before any screen is drawn, which routes this deployment offers
-and which it does not. Every screen in the build traces to a route that at least
-one answer switched on, and no screen exists for a route no answer reached.
+You can name, before any screen is drawn, the routes the entity type makes
+mandatory and the optional routes the answers added. Every functionality with a
+mandatory case for the entity type is in the build, whatever the answers were.
 
 #### When it goes wrong
 
 - The build contains a government branch and a private branch. The answers were
-  used to pick a variant rather than to light up routes. Each yes should add,
+  used to pick a variant rather than to add routes. Each yes should add,
   never replace.
-- A screen exists that no route uses. Something was built from the specification
-  rather than from the answers.
-- Seven record generators exist and the system produces two. The sixth question
+- A functionality with a mandatory case is missing because an answer was no.
+  The answers add optional routes only.
+- Seven record generators exist and the system produces two. The last question
   was not asked.
 
 ### An identifier and an auth method are two different questions
@@ -710,17 +718,20 @@ matter.
 
 #### What happens
 
-**Every identifier starts on the login path, Aadhaar included.** Wiring Aadhaar
-straight to enrolment, because enrolment is where Aadhaar is most discussed,
-sends everybody who already holds an ABHA to make a second one.
+**Offer create and verify, and let creation carry on for an existing account.**
+The product offers a Create ABHA option and the login routes the verification
+cases need. Creation by Aadhaar does not make a second ABHA: `enrol/byAadhaar`
+answers an Aadhaar that already holds one with a 200, `isNew` `false` and that
+account's tokens and profile. Carry on from that response to the profile, the
+card and the address step, as for a new account.
 
-**`ABDM-1114` is the only answer that means nobody holds an ABHA.** A refusal
+**On a login, `ABDM-1114` is the only answer that means nobody holds an ABHA.** A refusal
 that names a field is not the same thing. A stale certificate reads back
 identically, and creating an account on that is how the duplicate happens.
 
-**Never ask the patient whether they want to log in or to create.** They often
-cannot answer. One screen, titled for both outcomes, takes an identifier and
-lets the response decide.
+**A patient who cannot say whether they hold an ABHA need not decide.** A
+screen titled for both outcomes can take an identifier and let the response
+decide. It sits beside the Create ABHA option, never in place of it.
 
 **Read the token, not the account count.** A verification that returns a
 `refreshToken` has already returned the final user token, so use it. One without
@@ -738,14 +749,16 @@ rule into code as a guard that refuses an unknown method by name, because a rule
 the code merely happens to satisfy is one that regresses silently.
 
 When the desk already knows there is no ABHA, ask only for Aadhaar. Offering a
-mobile there offers a path that cannot finish. The lookup still runs first: a
-patient saying they have never had one is not evidence, and creating on somebody's
-word is how the second number appears.
+mobile there offers a path that cannot finish. A patient saying they have never
+had one is not evidence, and the creation response settles it: `isNew` `false`
+means they had one, and the journey carries on with it.
 
 #### How you know it worked
 
 Run a login for an identifier nobody holds. You receive `404` with `ABDM-1114`,
 no one time password is sent, and only then does the journey offer creation.
+Run creation for an Aadhaar that already holds an ABHA. You receive `200` with
+`isNew` `false`, and the journey shows that account rather than an error.
 
 Run the Aadhaar login path. The verify response carries a `refreshToken`, the
 journey uses it directly, and no exchange call is made. Run the mobile path and
@@ -760,7 +773,10 @@ the exchange call is made, because no `refreshToken` came back.
   The journey branched on the account count instead of on `refreshToken`, and
   made a call it did not need to make.
 - Two patients a week arrive holding two numbers. Something in the journey is
-  creating before it has looked, and the lookup is the cheapest call available.
+  creating by a route other than Aadhaar before it has looked, and the lookup is
+  the cheapest call available.
+- Creation stops at `This account already exist`. The journey treated
+  `isNew` `false` as a failure instead of carrying on with the account.
 
 ### Telling the truth on screen at the counter
 
@@ -1093,9 +1109,12 @@ The suggested journey, in five steps:
    only route that ends in a KYC verified ABHA number. Mobile sits beside it.
    Under Aadhaar only, ask how they prove it: an OTP, a face scan, or a
    fingerprint or iris reader.
-4. **Log in or create, decided by the answer.** Every identifier starts on the
-   login path. One account signs the person in. Several need a chooser. None
-   offers creation.
+4. **Offer both: find an existing ABHA, or create one.** Functional testing
+   expects a Create ABHA option beside verification. On the find path, one
+   account signs the person in, several need a chooser, and none offers
+   creation. On the create path, an Aadhaar that already holds an ABHA is not
+   a stop: `enrol/byAadhaar` returns that account, and the journey carries on
+   to its profile, card and ABHA address.
 5. **Fill your form from what came back,** and let the receptionist confirm it
    rather than type it.
 
@@ -1114,15 +1133,15 @@ Whatever journey you build, these hold:
 
 #### What happens
 
-Send every identifier, Aadhaar included, to the login OTP request first, never straight to enrolment. Read `accounts` on the verify response: one account, call verify user with its `ABHANumber` and the same `txnId`; several, show a chooser and do the same with the chosen one; none, offer creation. Then read the profile at `/abha/api/v3/profile/account` with the `X-token` and fill the form.
+Offer Create ABHA beside the find and login paths, as CRT_ABHA_101 requires. On a find or login path, read `accounts` on the verify response: one account, call verify user with its `ABHANumber` and the same `txnId`; several, show a chooser and do the same with the chosen one; none, offer creation. On the create path, `enrol/byAadhaar` answering `isNew` false returns the existing account's profile and tokens: carry on to the profile, card and ABHA address step, never create a second account. Then read the profile at `/abha/api/v3/profile/account` with the `X-token` and fill the form.
 
 #### How you know it worked
 
-A person with an ABHA registers with their details arriving from the profile and the receptionist correcting at most one field. A person who declines is still registered, with no error, and can be offered ABHA again from their chart. A person who already holds an ABHA, run through the path a new patient takes, ends signed in to the account they had.
+A person with an ABHA registers with their details arriving from the profile and the receptionist correcting at most one field. A person who declines is still registered, with no error, and can be offered ABHA again from their chart. A person who already holds an ABHA ends on the account they had, whether they chose to find it or to create one.
 
 #### When it goes wrong
 
-Two ABHA numbers for one person: the journey branched into creation without reading `accounts`. The desk types everything and then links an ABHA: the order is wrong, fetch the profile first. A refused encrypted field shown to the person as a wrong number: check the padding before you blame the number, see [encryption](/docs/hiecm/v3/concepts/encryption).
+Two ABHA numbers for one person: the journey ignored `accounts` on a find path, or `isNew` on the create path. The desk types everything and then links an ABHA: the order is wrong, fetch the profile first. A refused encrypted field shown to the person as a wrong number: check the padding before you blame the number, see [encryption](/docs/hiecm/v3/concepts/encryption).
 
 ### The counter QR code for scan and register
 

@@ -889,7 +889,12 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 				if label == "" {
 					label = "router"
 				}
-				blocks = append(blocks, skillBlock(module, label, cut))
+				shown := cut
+				if cmd.Name == "scaffold" && len(blocks) == 0 {
+					// The scaffold chip carries its rule on this path too.
+					shown = scaffoldRule + "\n\n" + cut
+				}
+				blocks = append(blocks, skillBlock(module, label, shown))
 				g.corpus.WriteString(cut)
 				uri := "skill://" + module
 				if p.section != "" {

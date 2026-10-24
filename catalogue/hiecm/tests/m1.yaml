@@ -167,7 +167,7 @@ functionalities:
 
   # Sheet group 8.
   - id: find-abha-mobile
-    title: Find ABHA by mobile
+    title: Find a forgotten ABHA by mobile
     skill: abdm-m1
     journeys: [m1-find-abha-mobile-otp, m1-abha-card-profile]
     applies: all

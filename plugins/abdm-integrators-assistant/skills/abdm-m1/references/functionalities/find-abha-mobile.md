@@ -1,6 +1,8 @@
-# Find ABHA by mobile
+# Find a forgotten ABHA by mobile
 
-Functionality 4 of 17 in M1's build order. Its group applies to every entity type. Read [run.md](../run.md) and [foundations.md](../foundations.md) once per session before this file.
+Sheet group: Login Via Mobile: Find ABHA via Mobile Number(OTP).
+
+Functionality 4 of 17 in M1's build order. Its group applies to every entity type. Read [foundations.md](../foundations.md) at Design, and [run.md](../run.md) at Test and Record.
 
 ## The loop
 
@@ -8,13 +10,13 @@ Functionality 4 of 17 in M1's build order. Its group applies to every entity typ
 |---|---|---|
 | Design | Screen requirements | Each of `VRFY_ABHA_301`, `VRFY_ABHA_302`, `VRFY_ABHA_303`, `VRFY_ABHA_304`, `VRFY_ABHA_305`, `VRFY_ABHA_306`, `VRFY_ABHA_307`, `VRFY_ABHA_308`, for your entity type, is mapped to a screen or route in `INTEGRATION-PLAN.md` |
 | Scaffold | Calls | Every call in `m1-find-abha-mobile-otp` reaches its exit condition against the sandbox |
-| Integrate | Integrate notes | Find ABHA by mobile works end to end on your own screen, for the screens the notes name |
-| Debug | Errors, then the loop in [errors.md](../errors.md) | The failing step of Find ABHA by mobile succeeds |
-| Test | Cases, How the cases run | Each of `VRFY_ABHA_301`, `VRFY_ABHA_302`, `VRFY_ABHA_303`, `VRFY_ABHA_304`, `VRFY_ABHA_305`, `VRFY_ABHA_306`, `VRFY_ABHA_307`, `VRFY_ABHA_308` is recorded in the workbook |
-| Record | [run.md](../run.md): the workbook writer, the report | The draft report shows Find ABHA by mobile |
+| Integrate | Integrate notes | Find a forgotten ABHA by mobile works end to end on your own screen, for the screens the notes name |
+| Debug | Errors, then the loop in [errors.md](../errors.md) | The failing step of Find a forgotten ABHA by mobile succeeds |
+| Test | Cases, How the cases run | The Test exit in [run.md](../run.md), over `VRFY_ABHA_301`, `VRFY_ABHA_302`, `VRFY_ABHA_303`, `VRFY_ABHA_304`, `VRFY_ABHA_305`, `VRFY_ABHA_306`, `VRFY_ABHA_307`, `VRFY_ABHA_308` |
+| Record | [run.md](../run.md): the workbook writer, the report | The draft report shows Find a forgotten ABHA by mobile |
 
-Loop limit: 3 passes through Test for Find ABHA by mobile. On the fourth, escalate in the format [run.md](../run.md) sets out, naming the case among `VRFY_ABHA_301`, `VRFY_ABHA_302`, `VRFY_ABHA_303`, `VRFY_ABHA_304`, `VRFY_ABHA_305`, `VRFY_ABHA_306`, `VRFY_ABHA_307`, `VRFY_ABHA_308`.
-An integration that already exists enters Find ABHA by mobile at Test, and goes back to Design or Integrate only for a case that fails.
+Loop limit: 3 passes through Test for Find a forgotten ABHA by mobile. On the fourth, escalate in the format [run.md](../run.md) sets out, naming the case among `VRFY_ABHA_301`, `VRFY_ABHA_302`, `VRFY_ABHA_303`, `VRFY_ABHA_304`, `VRFY_ABHA_305`, `VRFY_ABHA_306`, `VRFY_ABHA_307`, `VRFY_ABHA_308`.
+An integration that already exists enters Find a forgotten ABHA by mobile at Test, and goes back to Design or Integrate only for a case that fails.
 
 ## Cases
 
@@ -299,7 +301,7 @@ Built in [create-abha-aadhaar-otp](create-abha-aadhaar-otp.md). Reuse those call
 
 | Case | Screen | Calls |
 |---|---|---|
-| VRFY_ABHA_301 | Mobile number entry | None: Screen only. An invalid mobile number must not reach abha/search. |
+| VRFY_ABHA_301 | Mobile number entry | None |
 | VRFY_ABHA_302 | ABHA profile list | `m1_post_v3_profile_account_abha_search_find_abha_mobile_otp` |
 | VRFY_ABHA_303 | ABHA profile list, none found | `m1_post_v3_profile_account_abha_search_find_abha_mobile_otp` |
 | VRFY_ABHA_304 | ABHA profile list, select then send OTP | `m1_post_v3_profile_account_abha_search_find_abha_mobile_otp`, `m1_post_v3_profile_login_request_otp_find_abha_mobile` |
@@ -314,7 +316,7 @@ Built in [create-abha-aadhaar-otp](create-abha-aadhaar-otp.md). Reuse those call
 | `m1_post_v3_profile_login_request_otp_find_abha_mobile` | `POST /abha/api/v3/profile/login/request/otp` | Find ABHA via Mobile - send OTP |
 | `m1_post_v3_profile_login_verify_find_abha_mobile` | `POST /abha/api/v3/profile/login/verify` | Find ABHA via Mobile - verify OTP |
 
-Headers the calls of Find ABHA by mobile take: `REQUEST-ID`, `TIMESTAMP`. What each one is: [foundations.md](../foundations.md), Headers.
+Headers the calls of Find a forgotten ABHA by mobile take: `REQUEST-ID`, `TIMESTAMP`. What each one is: [foundations.md](../foundations.md), Headers.
 
 ## Errors
 

@@ -1,6 +1,6 @@
 ---
 name: abdm-m1
-description: Use when building, debugging or testing ABDM Milestone 1: creating an ABHA number or address, ABHA login, profile management, or the gateway session token. Carries the endpoints, the required headers, the two token rule, the encryption rule and the error codes its specification's examples return. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.
+description: Use when building, debugging or testing ABDM Milestone 1: creating an ABHA number or address, ABHA login, profile management, or a profile shared at the counter. Built per functionality: the router asks the entity type and lists each functionality with its mandatory cases; each file under references/functionalities/ is one loop from its screen requirements and calls to its own NHA test cases, with run.md, foundations.md, errors.md and the run scripts beside them.
 type: skill
 domain: m1
 agent_consumers:
@@ -43,14 +43,14 @@ The first question is your entity type: government or private. It sets the scope
 
 ## Functionalities, in build order
 
-The mandatory cases for each entity type, read from NHA's M1 workbook. Every other case is optional for that entity type.
+The cases each entity type must pass. Every other case is optional for that entity type.
 
 | # | Functionality | Mandatory for government | Mandatory for private |
 |---|---|---|---|
 | 1 | [Create ABHA by Aadhaar OTP](references/functionalities/create-abha-aadhaar-otp.md) | CRT_ABHA_101, CRT_ABHA_104, CRT_ABHA_102, CRT_ABHA_105, CRT_ABHA_106, CRT_ABHA_107, CRT_ABHA_108, CRT_ABHA_109, CRT_ABHA_112 (conditional), CRT_ABHA_113, CRT_ABHA_114 or CRT_ABHA_115, CRT_ABHA_116 | CRT_ABHA_101, CRT_ABHA_104, CRT_ABHA_102, CRT_ABHA_105, CRT_ABHA_106, CRT_ABHA_107, CRT_ABHA_108, CRT_ABHA_109, CRT_ABHA_112 (conditional), CRT_ABHA_113, CRT_ABHA_114, CRT_ABHA_116 |
 | 2 | [Log in with ABHA number](references/functionalities/login-abha-number.md) | VRFY_ABHA_101, VRFY_ABHA_201 | VRFY_ABHA_101, VRFY_ABHA_201 |
 | 3 | [Log in with ABHA address](references/functionalities/login-abha-address.md) | VRFY_ABHA_102, VRFY_ABHA_202 | VRFY_ABHA_102, VRFY_ABHA_202 |
-| 4 | [Find ABHA by mobile](references/functionalities/find-abha-mobile.md) | VRFY_ABHA_301, VRFY_ABHA_302, VRFY_ABHA_303, VRFY_ABHA_304, VRFY_ABHA_305, VRFY_ABHA_306, VRFY_ABHA_307, VRFY_ABHA_308 | VRFY_ABHA_301, VRFY_ABHA_302, VRFY_ABHA_303, VRFY_ABHA_304, VRFY_ABHA_305, VRFY_ABHA_306, VRFY_ABHA_307, VRFY_ABHA_308 |
+| 4 | [Find a forgotten ABHA by mobile](references/functionalities/find-abha-mobile.md) | VRFY_ABHA_301, VRFY_ABHA_302, VRFY_ABHA_303, VRFY_ABHA_304, VRFY_ABHA_305, VRFY_ABHA_306, VRFY_ABHA_307, VRFY_ABHA_308 | VRFY_ABHA_301, VRFY_ABHA_302, VRFY_ABHA_303, VRFY_ABHA_304, VRFY_ABHA_305, VRFY_ABHA_306, VRFY_ABHA_307, VRFY_ABHA_308 |
 | 5 | [Log in with Aadhaar OTP](references/functionalities/login-aadhaar-otp.md) | VRFY_ABHA_401, VRFY_ABHA_402, VRFY_ABHA_403, VRFY_ABHA_404, VRFY_ABHA_405 | VRFY_ABHA_401, VRFY_ABHA_402, VRFY_ABHA_403, VRFY_ABHA_404, VRFY_ABHA_405 |
 | 6 | [Link one ABHA number to one patient record](references/functionalities/link-one-abha-per-patient.md) | TAGGING_UNIQUEPATIENTID_UNIQUEABHANUMBER | TAGGING_UNIQUEPATIENTID_UNIQUEABHANUMBER |
 | 7 | [Scan and share at a counter](references/functionalities/scan-and-share.md) | SHARE_PATIENT_PROFILE_701, SHARE_PATIENT_PROFILE_702 | SHARE_PATIENT_PROFILE_701, SHARE_PATIENT_PROFILE_702 |
@@ -67,9 +67,10 @@ The mandatory cases for each entity type, read from NHA's M1 workbook. Every oth
 
 ## Starting a loop
 
-1. Read [run.md](references/run.md) and [foundations.md](references/foundations.md) once per session.
-2. Pick the first functionality in the table that `INTEGRATION-PLAN.md` does not show as passed, and open its file.
-3. Run its loop. An integration that already exists starts each loop at Test.
+1. Build, in the order of the table, each functionality with a mandatory case for your entity type. An integration that already exists starts each loop at Test.
+2. Read [foundations.md](references/foundations.md) at Design, and [run.md](references/run.md) at Test and Record.
+3. Stop building when every one of those functionalities has met the Test exit in [run.md](references/run.md). Then run the full test.
+4. Build an optional functionality only when the person asks for it, or a deployment answer in foundations.md added it.
 
 ## The full test run
 
@@ -108,6 +109,7 @@ The last steps are the module's functional test cases. Their run log is its own 
 - **[foundations.md](references/foundations.md)**: the rules across calls, hosts, headers, the codebase survey and the design rules across functionalities.
 - **[errors.md](references/errors.md)**: every code the M1 specification returns, and the loop from a code to a fix.
 - **workbook/**: NHA's workbook, copied into `abdm-ft/` before a run.
+- **scripts/**: `abdm_workbook.py` and `abdm_report.py`, copied into `abdm-ft/` before a run, never retyped.
 
 ## Where the detail is
 

@@ -1,6 +1,8 @@
 # Create ABHA by face authentication
 
-Functionality 10 of 17 in M1's build order. Its group applies to every entity type. Read [run.md](../run.md) and [foundations.md](../foundations.md) once per session before this file.
+Sheet group: ABHA creation via Face Auth.
+
+Functionality 10 of 17 in M1's build order. Its group applies to every entity type. Read [foundations.md](../foundations.md) at Design, and [run.md](../run.md) at Test and Record.
 
 ## The loop
 
@@ -10,7 +12,7 @@ Functionality 10 of 17 in M1's build order. Its group applies to every entity ty
 | Scaffold | Calls | Every call in `m1-create-abha-face-authentication` reaches its exit condition against the sandbox |
 | Integrate | Integrate notes | Create ABHA by face authentication works end to end on your own screen, for the screens the notes name |
 | Debug | Errors, then the loop in [errors.md](../errors.md) | The failing step of Create ABHA by face authentication succeeds |
-| Test | Cases, How the cases run | Each of `CRT_ABHA_101_FA`, `CRT_ABHA_102_FA`, `CRT_ABHA_103_FA`, `CRT_ABHA_104_FA`, `CRT_ABHA_105_FA`, `CRT_ABHA_106_FA`, `CRT_ABHA_107_FA`, `CRT_ABHA_108_FA`, `CRT_ABHA_109_FA`, `CRT_ABHA_110_FA`, `CRT_ABHA_111_FA`, `CRT_ABHA_112_FA`, `CRT_ABHA_113_FA`, `CRT_ABHA_114_FA`, `CRT_ABHA_115_FA`, `CRT_ABHA_116_FA`, `CRT_ABHA_117_FA` is recorded in the workbook |
+| Test | Cases, How the cases run | The Test exit in [run.md](../run.md), over `CRT_ABHA_101_FA`, `CRT_ABHA_102_FA`, `CRT_ABHA_103_FA`, `CRT_ABHA_104_FA`, `CRT_ABHA_105_FA`, `CRT_ABHA_106_FA`, `CRT_ABHA_107_FA`, `CRT_ABHA_108_FA`, `CRT_ABHA_109_FA`, `CRT_ABHA_110_FA`, `CRT_ABHA_111_FA`, `CRT_ABHA_112_FA`, `CRT_ABHA_113_FA`, `CRT_ABHA_114_FA`, `CRT_ABHA_115_FA`, `CRT_ABHA_116_FA`, `CRT_ABHA_117_FA`, none of them mandatory |
 | Record | [run.md](../run.md): the workbook writer, the report | The draft report shows Create ABHA by face authentication |
 
 Loop limit: 3 passes through Test for Create ABHA by face authentication. On the fourth, escalate in the format [run.md](../run.md) sets out, naming the case among `CRT_ABHA_101_FA`, `CRT_ABHA_102_FA`, `CRT_ABHA_103_FA`, `CRT_ABHA_104_FA`, `CRT_ABHA_105_FA`, `CRT_ABHA_106_FA`, `CRT_ABHA_107_FA`, `CRT_ABHA_108_FA`, `CRT_ABHA_109_FA`, `CRT_ABHA_110_FA`, `CRT_ABHA_111_FA`, `CRT_ABHA_112_FA`, `CRT_ABHA_113_FA`, `CRT_ABHA_114_FA`, `CRT_ABHA_115_FA`, `CRT_ABHA_116_FA`, `CRT_ABHA_117_FA`.
@@ -359,6 +361,7 @@ screen waits for the result, then carries on to the communication mobile.
 | A failed face authentication stops the journey and shows the PID error code and message the API returned. The person can retry, or a new QR code is generated | CRT_ABHA_109_FA |
 | The communication mobile is always verified by OTP in this route, whether or not it is the Aadhaar linked one. The OTP and resend rules are in create-abha-aadhaar-otp | CRT_ABHA_110_FA, CRT_ABHA_111_FA, CRT_ABHA_112_FA |
 | The address step, the profile, the card and a returning patient follow create-abha-aadhaar-otp, and the profile and card show the communication mobile verified here | CRT_ABHA_113_FA, CRT_ABHA_114_FA, CRT_ABHA_115_FA, CRT_ABHA_116_FA, CRT_ABHA_117_FA |
+| Scanning the QR code and installing the ABHA Face RD app happen in the ABHA app on the patient's phone, and are judged on the case text there. Your product's part is the QR code and the instruction beside it | CRT_ABHA_106_FA, CRT_ABHA_107_FA |
 
 ### How you know it worked
 
@@ -577,13 +580,13 @@ Built in [create-abha-aadhaar-otp](create-abha-aadhaar-otp.md). Reuse those call
 
 | Case | Screen | Calls |
 |---|---|---|
-| CRT_ABHA_101_FA | Create ABHA entry, method choice | None: Screen only. The option to start creation is checked before any call. |
-| CRT_ABHA_102_FA | Aadhaar number entry | None: Screen only. An invalid number must not reach auth/init, so no QR code is generated. |
+| CRT_ABHA_101_FA | Create ABHA entry, method choice | None |
+| CRT_ABHA_102_FA | Aadhaar number entry | None |
 | CRT_ABHA_103_FA | Aadhaar consent | `m1_post_v3_enrollment_enrol_byaadhaar_face` |
-| CRT_ABHA_104_FA | Aadhaar consent, language choice | None: Screen only. The language the consent is shown in. |
+| CRT_ABHA_104_FA | Aadhaar consent, language choice | None |
 | CRT_ABHA_105_FA | Face authentication QR code | `m1_post_v3_enrollment_enrol_auth_init_create_abha_face_au_4dea33` |
-| CRT_ABHA_106_FA | ABHA app scanner | None: The APIs column is empty, and the case is judged in the ABHA app on the patient's phone, not in the product. |
-| CRT_ABHA_107_FA | ABHA app, Face RD install redirect | None: The APIs column is empty, and the case is judged in the ABHA app on the patient's phone, not in the product. |
+| CRT_ABHA_106_FA | ABHA app scanner | None |
+| CRT_ABHA_107_FA | ABHA app, Face RD install redirect | None |
 | CRT_ABHA_108_FA | Face authentication status, then mobile entry | `m1_post_v3_enrollment_enrol_capturepid_create_abha_face_a_417d5e`, `m1_post_v3_enrollment_enrol_byaadhaar_face` |
 | CRT_ABHA_109_FA | Face authentication failure, PID error | `m1_post_v3_enrollment_enrol_capturepid_create_abha_face_a_417d5e`, `m1_post_v3_enrollment_enrol_byaadhaar_face` |
 | CRT_ABHA_110_FA | Communication mobile entry | `m1_post_v3_enrollment_request_otp_mobile_verify_create_ab_6474ce` |
@@ -593,7 +596,7 @@ Built in [create-abha-aadhaar-otp](create-abha-aadhaar-otp.md). Reuse those call
 | CRT_ABHA_114_FA | Created ABHA profile | `m1_post_v3_enrollment_enrol_byaadhaar_face`, `m1_get_v3_profile_account` |
 | CRT_ABHA_115_FA | ABHA card, view and download | `m1_get_v3_profile_account_abha_card` |
 | CRT_ABHA_116_FA | Integrator's own card with ABHA details | `m1_get_v3_profile_account` |
-| CRT_ABHA_117_FA | Patient registration, returning patient match | None: Screen only. It rides on a face creation already run (CRT_ABHA_114_FA); the match runs on the integrator's own records and no ABDM call decides it. |
+| CRT_ABHA_117_FA | Patient registration, returning patient match | None |
 
 | Operation | Call | What it does |
 |---|---|---|

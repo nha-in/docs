@@ -434,7 +434,7 @@ curl --request POST \
 
 **Exit condition (Observe until this is true)**
 
-A 202 response. The specification gives no body for it, so read what comes back.
+A 202 response to `POST /api/hiecm/data-flow/v3/health-information/notify` in `m2-consent-management-data-flow-hip`, whose body the specification does not give: read what comes back.
 
 ### Callbacks (`m2-callbacks`)
 
@@ -554,7 +554,7 @@ Outbound from your bridge. POST each page of encrypted records to the `dataPushU
 
 **Exit condition (Observe until this is true)**
 
-A 202 response. The specification gives no body for it, so read what comes back.
+A 202 response to `POST /health-information/transfer` in `m2-callbacks`, whose body the specification does not give: read what comes back.
 
 ## Where the detail is
 

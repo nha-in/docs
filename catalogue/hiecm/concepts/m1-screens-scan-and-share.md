@@ -37,7 +37,7 @@ is in that profile, so nobody at the counter types anything.
 | Requirement | Cases |
 |---|---|
 | A new patient is registered from the shared profile automatically, with no click and no data entry, and gets a token in the `on-share` answer | SHARE_PATIENT_PROFILE_701 |
-| The token is the one the patient's app shows; the case expects a token valid for 60 minutes | SHARE_PATIENT_PROFILE_701 |
+| The `on-share` answer carries the token number your queue issued, in `acknowledgement.profile.tokenNumber`, with `status` `SUCCESS` and no `error` beside it. The case expects the patient to receive a token valid for 60 minutes. The specification gives `expiry` as a number and names no unit, so confirm the unit at onboarding before you set it | SHARE_PATIENT_PROFILE_701 |
 | Match a returning patient on name, mobile, gender, ABHA number and ABHA address against your records | SHARE_PATIENT_PROFILE_702 |
 | A certain match registers automatically under the existing beneficiary id, and the visit's care context is created under it | SHARE_PATIENT_PROFILE_702 |
 | An uncertain match may take one confirmation from the operator, a single choice on the screen. Never any typing | SHARE_PATIENT_PROFILE_702 |

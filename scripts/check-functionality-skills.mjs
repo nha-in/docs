@@ -1,12 +1,14 @@
 // Checks every module skill built per functionality: the abdm-<module> folders
 // whose cases are mapped in catalogue/hiecm/tests/<module>.yaml.
 //
-// 1. No rule in two files. A paragraph, list item or table row of more than
-//    twelve words that appears verbatim in two files of the folder fails.
-//    NHA's own case text under each file's "## Cases" is quoted, not a rule,
-//    and code blocks are calls and scripts, so neither is compared.
-// 2. Every functionality file is complete: its cases, its screen requirements
-//    citing them, its calls and its errors.
+// 1. No rule twice. A sentence of twelve words or more, read from paragraphs
+//    with their wrapped lines joined, or a table row of twelve words or more
+//    with its case id cells left out, that appears twice in the folder fails,
+//    in two files or in one, ignoring case and spacing. Quoted text is not
+//    compared: NHA's own case text under each case's heading in "## Cases",
+//    a blockquote such as the consent language, and code.
+// 2. Every functionality file is complete: its cases, a screen requirement
+//    citing each of them, its calls and its errors.
 // 3. No job file is left beside the functionality files, every relative link
 //    lands inside the folder, every atom cited exists, and no em dash.
 //
@@ -22,7 +24,6 @@ const root = join(fileURLToPath(import.meta.url), '..', '..');
 const testsDir = join(root, 'catalogue', 'hiecm', 'tests');
 const JOB_FILES = ['scaffold.md', 'design.md', 'integrate.md', 'debug.md', 'test.md'];
 const REQUIRED = ['## Cases', '## Screen requirements', '## Calls', '## Errors'];
-const MIN_WORDS = 13;
 
 function walk(dir) {
   return readdirSync(dir).flatMap((name) => {
@@ -31,20 +32,52 @@ function walk(dir) {
   });
 }
 
-/** The comparable units of one file: lines outside code and outside "## Cases", with more than twelve words. */
+const CASE_IDS = /^[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+(?:,\s*[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+)*$/;
+const norm = (text) => text.replace(/\s+/g, ' ').trim().toLowerCase();
+const wordCount = (text) => text.split(' ').filter(Boolean).length;
+
+/**
+ * The comparable units of one file, in order: each sentence of twelve words
+ * or more, from paragraphs whose wrapped lines are joined first, and each
+ * table row of twelve words or more with the cells that only hold case ids
+ * left out. Code is not compared, nor NHA's case text quoted under each
+ * "### <case id>" heading of a file's "## Cases".
+ */
 export function units(text) {
   const out = [];
   let inCode = false;
   let inCases = false;
+  let quoting = false;
+  let para = [];
+  const flush = () => {
+    if (!para.length) return;
+    const joined = para.join(' ');
+    para = [];
+    for (const sentence of joined.split(/(?<=[.!?])\s+(?=[A-Z`"*(\[])/)) {
+      const n = norm(sentence);
+      if (wordCount(n) >= 12) out.push(n);
+    }
+  };
   for (const raw of text.split('\n')) {
     const line = raw.trim();
-    if (line.startsWith('```')) { inCode = !inCode; continue; }
+    if (line.startsWith('```')) { flush(); inCode = !inCode; continue; }
     if (inCode) continue;
-    if (/^## /.test(line)) inCases = line === '## Cases';
-    if (inCases || !line || /^#/.test(line) || /^\|[-| :]+\|$/.test(line)) continue;
-    const norm = line.replace(/\s+/g, ' ');
-    if (norm.split(' ').length >= MIN_WORDS) out.push(norm);
+    if (/^## /.test(line)) { flush(); inCases = line === '## Cases'; quoting = false; continue; }
+    if (inCases && /^### /.test(line)) { flush(); quoting = true; continue; }
+    if (/^#/.test(line) || !line) { flush(); continue; }
+    if (quoting || line.startsWith('>')) { flush(); continue; }
+    if (line.startsWith('|')) {
+      flush();
+      if (/^\|[-| :]+\|$/.test(line)) continue;
+      const cells = line.replace(/^\||\|$/g, '').split(/(?<!\\)\|/).map((c) => c.trim()).filter((c) => !CASE_IDS.test(c));
+      const n = norm(cells.join(' | '));
+      if (wordCount(n) >= 12) out.push(`row: ${n}`);
+      continue;
+    }
+    if (/^([-*]|\d+\.)\s/.test(line)) flush();
+    para.push(line.replace(/^([-*]|\d+\.)\s*/, ''));
   }
+  flush();
   return out;
 }
 
@@ -71,9 +104,9 @@ export function checkFolder(folder, mapping, atoms) {
   // 1. No rule in two files.
   const seen = new Map();
   for (const file of files) {
-    for (const u of new Set(units(readFileSync(file, 'utf8')))) {
+    for (const u of units(readFileSync(file, 'utf8'))) {
       if (!seen.has(u)) seen.set(u, rel(file));
-      else if (seen.get(u) !== rel(file)) fail(`the same text is in ${seen.get(u)} and ${rel(file)}: "${u.slice(0, 120)}${u.length > 120 ? '...' : ''}"`);
+      else fail(`the same text is in ${seen.get(u)}${seen.get(u) === rel(file) ? ' twice' : ` and ${rel(file)}`}: "${u.slice(0, 120)}${u.length > 120 ? '...' : ''}"`);
     }
   }
 
@@ -89,7 +122,9 @@ export function checkFolder(folder, mapping, atoms) {
     const casesText = parts.get('## Cases') ?? '';
     for (const id of ids) if (!new RegExp(`^\\| ${id} \\|`, 'm').test(casesText)) fail(`${where} lists no row for case ${id} under ## Cases`);
     const screens = parts.get('## Screen requirements') ?? '';
-    if (screens && !ids.some((id) => screens.includes(id))) fail(`${where}: no screen requirement cites one of its cases`);
+    for (const id of ids) {
+      if (screens && !new RegExp(`${id}(?![_A-Z0-9])`).test(screens)) fail(`${where}: no screen requirement cites case ${id}`);
+    }
   }
 
   // 3. Links, atoms, em dashes.
