@@ -82,6 +82,15 @@ const exit = (journey, stepData) => {
   return ok?.example ? `A ${ok.status} whose body matches:\n\n\`\`\`json\n${JSON.stringify(ok.example, null, 2)}\n\`\`\`` : `A ${status} response to \`${last.data.method} ${last.data.path}\` in \`${journey.id}\`, whose body the specification does not give: read what comes back.`;
 };
 
+// The one line each build and test source carries about references/test-matrix.md.
+// NHA's PHR sheet has no APIs column, so the matrix says so and the line differs.
+function matrixLine(module) {
+  const matrix = JSON.parse(readFileSync(join(root, 'catalogue', 'hiecm', 'tests', 'matrix', `${module}.json`), 'utf8'));
+  return matrix.note
+    ? 'NHA\'s sheet lists no APIs for these cases. Before building, read `references/test-matrix.md` in this skill: build each mandatory case\'s Expected Result for your entity type into the app screen, and use this module\'s journeys for the calls. The test run uses it to know what each case exercises.'
+    : 'Before building, read `references/test-matrix.md` in this skill. Its APIs are the ones the sheet lists for the group a case sits in, so a case may not call all of them. Build every journey that a case mandatory for your entity type needs, and build each mandatory case\'s Expected Result into the screen, not only its calls. The test run uses it to know what each case exercises.';
+}
+
 function buildSkill(module, hasErrorsPage) {
   const list = journeys.get(module) ?? [];
   const sections = list.map((j) => [
@@ -106,6 +115,10 @@ function buildSkill(module, hasErrorsPage) {
     '## How this skill runs', '',
     'Every journey below is an OODA loop, not a recipe: observe the actual state (last response, last error), orient against the step matched below, decide the cheapest next action, act, and return to observe. A step is done only when its exit condition is observed against the sandbox, never because it "should have worked."', '',
     'Loop limit: 8 passes per step. Hitting the limit is an escalation: state what was observed, what was tried, and which operation page to read, then ask one question.', '',
+    // The case to API matrix build-test-cases.py writes from NHA's workbook ships beside this loop.
+    ...(existsSync(join(root, 'catalogue', 'hiecm', 'tests', 'matrix', `${module}.json`))
+      ? [matrixLine(module), '']
+      : []),
     '## Journeys', '', sections.join('\n\n'), '',
     '## Where the detail is', '', `- Every operation, with its body fields and responses: /docs/hiecm/v3/api/${module}`, ...(hasErrorsPage ? [`- Error codes: /docs/hiecm/v3/api/${module}/errors`] : []), '',
   ].join('\n');

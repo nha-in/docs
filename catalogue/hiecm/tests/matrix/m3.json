@@ -1,0 +1,506 @@
+{
+  "module": "m3",
+  "generated": "scripts/build-test-cases.py from NHA's workbook. Fix the sheet or the script, never this file.",
+  "page": "site/docs/hiecm/v3/resources/test-cases/m3.mdx",
+  "workbooks": [
+    "catalogue/hiecm/openapi/.raw/nha-2026-10-22-m3-tests/M3_BUILDING_HIU_TEST_CASES.xlsx"
+  ],
+  "specs": [
+    "m3"
+  ],
+  "cases": [
+    {
+      "id": "HIU_FLOW_102",
+      "anchor": "hiu_flow_102",
+      "group": "1. Create Consent Request",
+      "title": "Consent Request Initiation",
+      "marking": {
+        "government": "mandatory; applies: HIU (read as all)",
+        "private": "mandatory; applies: HIU (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "1. In Consent Request Form:- Consent Request raised with the following details :- ABHA Address, Health Info Type , Purpose of Request , Health Info from, Health Info to , Consent Expiry. 2. Verify the all entered data (Name, ABHA Address, ABHA Number, HI types, Request Status, Cosnent Created On, Consent Expiry On, From Date ad To Date) are accurately viisbile in HIU with the status \"Requested\" and Requested Date and Time.",
+      "apis": [
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/init",
+          "path": "/api/hiecm/consent/v3/request/init",
+          "method": "POST",
+          "spec": "m3",
+          "operations": [
+            "m3_post_consent_v3_request_init"
+          ],
+          "journeys": [
+            "m3-consent-management-data-flow-hiu"
+          ]
+        },
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/status",
+          "path": "/api/hiecm/consent/v3/request/status",
+          "method": "POST",
+          "spec": "m3",
+          "operations": [
+            "m3_post_consent_v3_request_status"
+          ],
+          "journeys": [
+            "m3-consent-management-data-flow-hiu"
+          ]
+        },
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/hiu/on-notify",
+          "path": "/api/hiecm/consent/v3/request/hiu/on-notify",
+          "method": "POST",
+          "spec": "m3",
+          "operations": [
+            "m3_post_consent_v3_request_hiu_on_notify"
+          ],
+          "journeys": [
+            "m3-consent-management-data-flow-hiu"
+          ]
+        },
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/consent/v3/fetch",
+          "path": "/api/hiecm/consent/v3/fetch",
+          "method": "POST",
+          "spec": "m3",
+          "operations": [
+            "m3_post_consent_v3_fetch"
+          ],
+          "journeys": [
+            "m3-consent-management-data-flow-hiu"
+          ]
+        },
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/request",
+          "path": "/api/hiecm/data-flow/v3/health-information/request",
+          "method": "POST",
+          "spec": "m3",
+          "operations": [
+            "m3_post_data_flow_v3_health_information_request"
+          ],
+          "journeys": [
+            "m3-consent-management-data-flow-hiu"
+          ]
+        },
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/notify",
+          "path": "/api/hiecm/data-flow/v3/health-information/notify",
+          "method": "POST",
+          "spec": "m3",
+          "operations": [
+            "m3_post_data_flow_v3_health_information_notify"
+          ],
+          "journeys": [
+            "m3-consent-management-data-flow-hiu"
+          ]
+        },
+        {
+          "source": "https://sandbox.abdm.gov.in/sandbox/v3/new-documentation/swagger?integration_label=https://sandboxcms.abdm.gov.in/uploads/consent_management_data_flow_1_42b7c27e53",
+          "path": "/sandbox/v3/new-documentation/swagger",
+          "unresolved": true,
+          "reason": "a link to a documentation page, which names no call"
+        }
+      ]
+    },
+    {
+      "id": "HIU_FLOW_103",
+      "anchor": "hiu_flow_103",
+      "group": "1. Create Consent Request",
+      "title": "Notification to PHR",
+      "marking": {
+        "government": "mandatory; applies: HIU (read as all)",
+        "private": "mandatory; applies: HIU (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "1. Beneficary's is successfully login with the same ABHA address in PHR app for which the consent request has been raised in HIU 2. Successfully verified that the consent request notification has been successfully get in PHR app. 3. Once the consent request notification opened in PHR then it shows below follwing details. Requester Name:- HIU Name , Purpose of Request , Information Request Duration, Information Request Type , Consent Valid Up To. 4. Consent Request Edit Scenario: Use can edit the consent request by the, the edited information is reflected in the HIU portal with all informations.",
+      "apis": [
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/init",
+          "path": "/api/hiecm/consent/v3/request/init",
+          "method": "POST",
+          "spec": "m3",
+          "operations": [
+            "m3_post_consent_v3_request_init"
+          ],
+          "journeys": [
+            "m3-consent-management-data-flow-hiu"
+          ]
+        },
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/status",
+          "path": "/api/hiecm/consent/v3/request/status",
+          "method": "POST",
+          "spec": "m3",
+          "operations": [
+            "m3_post_consent_v3_request_status"
+          ],
+          "journeys": [
+            "m3-consent-management-data-flow-hiu"
+          ]
+        },
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/hiu/on-notify",
+          "path": "/api/hiecm/consent/v3/request/hiu/on-notify",
+          "method": "POST",
+          "spec": "m3",
+          "operations": [
+            "m3_post_consent_v3_request_hiu_on_notify"
+          ],
+          "journeys": [
+            "m3-consent-management-data-flow-hiu"
+          ]
+        },
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/consent/v3/fetch",
+          "path": "/api/hiecm/consent/v3/fetch",
+          "method": "POST",
+          "spec": "m3",
+          "operations": [
+            "m3_post_consent_v3_fetch"
+          ],
+          "journeys": [
+            "m3-consent-management-data-flow-hiu"
+          ]
+        },
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/request",
+          "path": "/api/hiecm/data-flow/v3/health-information/request",
+          "method": "POST",
+          "spec": "m3",
+          "operations": [
+            "m3_post_data_flow_v3_health_information_request"
+          ],
+          "journeys": [
+            "m3-consent-management-data-flow-hiu"
+          ]
+        },
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/notify",
+          "path": "/api/hiecm/data-flow/v3/health-information/notify",
+          "method": "POST",
+          "spec": "m3",
+          "operations": [
+            "m3_post_data_flow_v3_health_information_notify"
+          ],
+          "journeys": [
+            "m3-consent-management-data-flow-hiu"
+          ]
+        },
+        {
+          "source": "https://sandbox.abdm.gov.in/sandbox/v3/new-documentation/swagger?integration_label=https://sandboxcms.abdm.gov.in/uploads/consent_management_data_flow_1_42b7c27e53",
+          "path": "/sandbox/v3/new-documentation/swagger",
+          "unresolved": true,
+          "reason": "a link to a documentation page, which names no call"
+        }
+      ]
+    },
+    {
+      "id": "HIU_FLOW_104",
+      "anchor": "hiu_flow_104",
+      "group": "1. Create Consent Request",
+      "title": "Listing of Consent Requests",
+      "marking": {
+        "government": "mandatory; applies: HIU (read as all)",
+        "private": "mandatory; applies: HIU (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "1. After consent request initaited , the request is visbile in HIU Protal with the following details. ABHA Address, Health Info Type , Purpose of Request , Health Info from, Health Info to , Consent Expiry, and verify all the entered data (Name, ABHA Address, ABHA Number, HI types, Request Status, Cosnent Created On, Consent Expiry On, From Date ad To Date) are accurately viisbile in HIU with the status. 2. Date and time for all status is updated according to the status. 3. All editing information should be correctly visibile in HIU. 4. All Consent request according to their status(Granted, Expired, Denied, Revoked) should be visible with accurate time and status.",
+      "apis": [
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/init",
+          "path": "/api/hiecm/consent/v3/request/init",
+          "method": "POST",
+          "spec": "m3",
+          "operations": [
+            "m3_post_consent_v3_request_init"
+          ],
+          "journeys": [
+            "m3-consent-management-data-flow-hiu"
+          ]
+        },
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/status",
+          "path": "/api/hiecm/consent/v3/request/status",
+          "method": "POST",
+          "spec": "m3",
+          "operations": [
+            "m3_post_consent_v3_request_status"
+          ],
+          "journeys": [
+            "m3-consent-management-data-flow-hiu"
+          ]
+        },
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/hiu/on-notify",
+          "path": "/api/hiecm/consent/v3/request/hiu/on-notify",
+          "method": "POST",
+          "spec": "m3",
+          "operations": [
+            "m3_post_consent_v3_request_hiu_on_notify"
+          ],
+          "journeys": [
+            "m3-consent-management-data-flow-hiu"
+          ]
+        },
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/consent/v3/fetch",
+          "path": "/api/hiecm/consent/v3/fetch",
+          "method": "POST",
+          "spec": "m3",
+          "operations": [
+            "m3_post_consent_v3_fetch"
+          ],
+          "journeys": [
+            "m3-consent-management-data-flow-hiu"
+          ]
+        },
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/request",
+          "path": "/api/hiecm/data-flow/v3/health-information/request",
+          "method": "POST",
+          "spec": "m3",
+          "operations": [
+            "m3_post_data_flow_v3_health_information_request"
+          ],
+          "journeys": [
+            "m3-consent-management-data-flow-hiu"
+          ]
+        },
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/notify",
+          "path": "/api/hiecm/data-flow/v3/health-information/notify",
+          "method": "POST",
+          "spec": "m3",
+          "operations": [
+            "m3_post_data_flow_v3_health_information_notify"
+          ],
+          "journeys": [
+            "m3-consent-management-data-flow-hiu"
+          ]
+        },
+        {
+          "source": "https://sandbox.abdm.gov.in/sandbox/v3/new-documentation/swagger?integration_label=https://sandboxcms.abdm.gov.in/uploads/consent_management_data_flow_1_42b7c27e53",
+          "path": "/sandbox/v3/new-documentation/swagger",
+          "unresolved": true,
+          "reason": "a link to a documentation page, which names no call"
+        }
+      ]
+    },
+    {
+      "id": "HIU_FLOW_105",
+      "anchor": "hiu_flow_105",
+      "group": "3. Consent Request Denied",
+      "title": "Consent Request is Denied",
+      "marking": {
+        "government": "mandatory; applies: HIU (read as all)",
+        "private": "mandatory; applies: HIU (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "1.The status of the consent on the HIU portal should change to \"Denied\". 2. The timestamp of denial should be updated accurately. 3. No health data should be accessible or visible to the HIU for this request.",
+      "apis": []
+    },
+    {
+      "id": "HIU_FLOW_106",
+      "anchor": "hiu_flow_106",
+      "group": "3. Consent Request Granted",
+      "title": "Consent Request is Granted",
+      "marking": {
+        "government": "mandatory; applies: HIU (read as all)",
+        "private": "mandatory; applies: HIU (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "1. The consent status should change to \"Granted\" on the HIU portal. 2. The timestamp of when the consent was granted should be correctly logged and displayed. 3. If the consent was edited before granting, the updated parameters (HI types , from date, to date , consent expiry etc.) should reflect on the HIU portal. 4. Health data for the granted HI types should be visible and accessible to the HIU after the consent is granted. 5. No data should be visible to the HIU from any other HI types that were not granted in the consent request.",
+      "apis": []
+    },
+    {
+      "id": "HIU_FLOW_107",
+      "anchor": "hiu_flow_107",
+      "group": "3. Consent Request Granted",
+      "title": "HIU_FLOW_107",
+      "marking": {
+        "government": "optional; applies: HIU (read as all)",
+        "private": "mandatory; applies: HIU (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": true
+      },
+      "expected": "HIU user should be able to view the health data of selected HI type from HIU application.",
+      "apis": []
+    },
+    {
+      "id": "HIU_FLOW_108",
+      "anchor": "hiu_flow_108",
+      "group": "3. Consent Request Granted",
+      "title": "HIU_FLOW_108",
+      "marking": {
+        "government": "optional; applies: HIU (read as all)",
+        "private": "mandatory; applies: HIU (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": true
+      },
+      "expected": "HIU user should be able to view the health data of selected HI type from HIU application.",
+      "apis": []
+    },
+    {
+      "id": "HIU_FLOW_109",
+      "anchor": "hiu_flow_109",
+      "group": "3. Consent Request Granted",
+      "title": "HIU_FLOW_109",
+      "marking": {
+        "government": "optional; applies: HIU (read as all)",
+        "private": "mandatory; applies: HIU (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": true
+      },
+      "expected": "HIU user should be able to view the health data of selected HI type from HIU application.",
+      "apis": []
+    },
+    {
+      "id": "HIU_FLOW_110",
+      "anchor": "hiu_flow_110",
+      "group": "3. Consent Request Granted",
+      "title": "HIU_FLOW_110",
+      "marking": {
+        "government": "optional; applies: HIU (read as all)",
+        "private": "mandatory; applies: HIU (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": true
+      },
+      "expected": "HIU user should be able to view the health data of selected HI type from HIU application.",
+      "apis": []
+    },
+    {
+      "id": "HIU_FLOW_111",
+      "anchor": "hiu_flow_111",
+      "group": "3. Consent Request Granted",
+      "title": "HIU_FLOW_111",
+      "marking": {
+        "government": "optional; applies: HIU (read as all)",
+        "private": "mandatory; applies: HIU (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": true
+      },
+      "expected": "HIU user should be able to view the health data of selected HI type from HIU application.",
+      "apis": []
+    },
+    {
+      "id": "HIU_FLOW_112",
+      "anchor": "hiu_flow_112",
+      "group": "3. Consent Request Granted",
+      "title": "HIU_FLOW_112",
+      "marking": {
+        "government": "optional; applies: HIU (read as all)",
+        "private": "mandatory; applies: HIU (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": true
+      },
+      "expected": "HIU user should be able to view the health data of selected HI type from HIU application.",
+      "apis": []
+    },
+    {
+      "id": "HIU_FLOW_113",
+      "anchor": "hiu_flow_113",
+      "group": "3. Consent Request Granted",
+      "title": "HIU_FLOW_113",
+      "marking": {
+        "government": "optional; applies: HIU (read as all)",
+        "private": "mandatory; applies: HIU (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": true
+      },
+      "expected": "HIU user should be able to view the health data of selected HI type from HIU application.",
+      "apis": []
+    },
+    {
+      "id": "HIU_FLOW_114",
+      "anchor": "hiu_flow_114",
+      "group": "3. Consent Request Granted",
+      "title": "HIU_FLOW_114",
+      "marking": {
+        "government": "optional; applies: HIU (read as all)",
+        "private": "mandatory; applies: HIU (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": true
+      },
+      "expected": "HIU user should be able to view the health data of selected HI type from HIU application.",
+      "apis": []
+    },
+    {
+      "id": "HIU_FLOW_301",
+      "anchor": "hiu_flow_301",
+      "group": "4. Consent Request Expired",
+      "title": "Consent Request is expired",
+      "marking": {
+        "government": "mandatory; applies: HIU (read as all)",
+        "private": "mandatory; applies: HIU (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "1. The consent status should automatically update to \"Expired\" on the HIU portal. 2. The expiry timestamp should be accurately recorded and shown. 3. No health data should be accessible or retrievable for the expired consent.",
+      "apis": []
+    },
+    {
+      "id": "HIU_FLOW_201",
+      "anchor": "hiu_flow_201",
+      "group": "5. Consent Request Revoked",
+      "title": "Revoke Consent (Patient PHR App)",
+      "marking": {
+        "government": "mandatory; applies: HIU (read as all)",
+        "private": "mandatory; applies: HIU (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Verifiy that the patient PHR app allows revoking consent for individual HIPs. After revocation, the HIU is unable to access the health records. Revoked request appears in the consent list with proper status and timestamp.",
+      "apis": []
+    },
+    {
+      "id": "HIU_FLOW_202",
+      "anchor": "hiu_flow_202",
+      "group": "5. Consent Request Revoked",
+      "title": "Revoke Consent",
+      "marking": {
+        "government": "mandatory; applies: HIU (read as all)",
+        "private": "mandatory; applies: HIU (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Verify that revoked consents are correctly marked in the HIU system. Access to associated health records is blocked post-revocation. Consent list is updated in real-time to reflect the new status.",
+      "apis": []
+    }
+  ]
+}

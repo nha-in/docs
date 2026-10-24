@@ -6,6 +6,8 @@ description: "Use when walking the ABDM M3 functional test cases (Health Informa
 
 Walks the ABDM M3 functional test cases, Health Information User, against the system you built and the sandbox. Each case ends in one of five recorded outcomes, never in an opinion.
 
+Before building, read `references/test-matrix.md` in this skill. Its APIs are the ones the sheet lists for the group a case sits in, so a case may not call all of them. Build every journey that a case mandatory for your entity type needs, and build each mandatory case's Expected Result into the screen, not only its calls. The test run uses it to know what each case exercises.
+
 ## What this skill does
 
 - Runs every M3 test case against your system and the sandbox, one case at a time: raising a consent request, the patient's grant, denial, revocation or expiry, and fetching and showing the records

@@ -6,6 +6,8 @@ description: "Use when walking the ABDM M2 functional test cases (Health Informa
 
 Walks the ABDM M2 functional test cases, Health Information Provider, against the system you built and the sandbox. Each case ends in one of five recorded outcomes, never in an opinion.
 
+Before building, read `references/test-matrix.md` in this skill. Its APIs are the ones the sheet lists for the group a case sits in, so a case may not call all of them. Build every journey that a case mandatory for your entity type needs, and build each mandatory case's Expected Result into the screen, not only its calls. The test run uses it to know what each case exercises.
+
 ## What this skill does
 
 - Runs every M2 test case in the Building HIP set against your system and the sandbox, one case at a time

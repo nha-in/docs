@@ -6,6 +6,8 @@ description: "Use when walking the ABDM P2 functional test cases (PHR consents m
 
 Walks the ABDM P2 functional test cases against the PHR app you built and the sandbox: linking records, sharing a profile, the consents tabs and the profile. Each case ends in one of five recorded outcomes, never in an opinion.
 
+NHA's sheet lists no APIs for these cases. Before building, read `references/test-matrix.md` in this skill: build each mandatory case's Expected Result for your entity type into the app screen, and use this module's journeys for the calls. The test run uses it to know what each case exercises.
+
 ## What this skill does
 
 - Runs every P2 case in the PHR app set against your app and the sandbox, one case at a time

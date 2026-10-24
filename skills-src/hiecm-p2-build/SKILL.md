@@ -12,6 +12,8 @@ Every journey below is an OODA loop, not a recipe: observe the actual state (las
 
 Loop limit: 8 passes per step. Hitting the limit is an escalation: state what was observed, what was tried, and which operation page to read, then ask one question.
 
+NHA's sheet lists no APIs for these cases. Before building, read `references/test-matrix.md` in this skill: build each mandatory case's Expected Result for your entity type into the app screen, and use this module's journeys for the calls. The test run uses it to know what each case exercises.
+
 ## Journeys
 
 ### PHR profile, update mobile (`p2-update-mobile`)

@@ -12,6 +12,8 @@ Every journey below is an OODA loop, not a recipe: observe the actual state (las
 
 Loop limit: 8 passes per step. Hitting the limit is an escalation: state what was observed, what was tried, and which operation page to read, then ask one question.
 
+Before building, read `references/test-matrix.md` in this skill. Its APIs are the ones the sheet lists for the group a case sits in, so a case may not call all of them. Build every journey that a case mandatory for your entity type needs, and build each mandatory case's Expected Result into the screen, not only its calls. The test run uses it to know what each case exercises.
+
 ## Journeys
 
 ### Consent and data flow (`m3-consent-management-data-flow-hiu`)

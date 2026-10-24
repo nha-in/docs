@@ -1,0 +1,707 @@
+{
+  "module": "m2",
+  "generated": "scripts/build-test-cases.py from NHA's workbook. Fix the sheet or the script, never this file.",
+  "page": "site/docs/hiecm/v3/resources/test-cases/m2.mdx",
+  "workbooks": [
+    "catalogue/hiecm/openapi/.raw/nha-2026-10-22-m2-tests/M2_BUILDING_HIP_TEST_CASES.xlsx"
+  ],
+  "specs": [
+    "m2"
+  ],
+  "cases": [
+    {
+      "id": "Health_RECORD_CREATION_101",
+      "anchor": "health_record_creation_101",
+      "group": "1. Health Record Creation",
+      "title": "Creation of Health Records",
+      "marking": {
+        "government": "mandatory; applies: HIP (read as all)",
+        "private": "mandatory; applies: HIP (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "1. ABDM mandates only the sharing of digital health records in FHIR format. 2. Kindly ensure to implement SNOMED CT/ LOINC Codes. Refer to following link to know more: https://sandbox.abdm.gov.in/sandbox/v3/toolkit",
+      "apis": []
+    },
+    {
+      "id": "HIP_INTI_LINK_504",
+      "anchor": "hip_inti_link_504",
+      "group": "2. HIP Initiated Health Record Linking Using Demographic Auth",
+      "title": "Generate Link Token",
+      "marking": {
+        "government": "mandatory; applies: HIP (read as all)",
+        "private": "mandatory; applies: HIP (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "1. A new linking token should be created. Before generating a new token, check if an existing token is already available for the same patient. If it is still valid, reuse the same token for linking. Currently, the token is valid for 6 months",
+      "apis": [
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/v3/token/generate-token",
+          "path": "/api/hiecm/v3/token/generate-token",
+          "method": "POST",
+          "spec": "m2",
+          "operations": [
+            "m2_post_v3_token_generate_token"
+          ],
+          "journeys": [
+            "m2-abdm-link-token-hip"
+          ]
+        },
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/hip/v3/link/carecontext",
+          "path": "/api/hiecm/hip/v3/link/carecontext",
+          "method": "POST",
+          "spec": "m2",
+          "operations": [
+            "m2_post_hip_v3_link_carecontext"
+          ],
+          "journeys": [
+            "m2-abdm-hip-initiated-linking-hip"
+          ]
+        },
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/hip/v3/link/context/notify",
+          "path": "/api/hiecm/hip/v3/link/context/notify",
+          "method": "POST",
+          "spec": "m2",
+          "operations": [
+            "m2_post_hip_v3_link_context_notify"
+          ],
+          "journeys": [
+            "m2-abdm-hip-initiated-linking-hip"
+          ]
+        },
+        {
+          "source": "https://sandbox.abdm.gov.in/sandbox/v3/new-documentation/swagger?integration_label=https://sandboxcms.abdm.gov.in/uploads/HIP_initiated_linking_1_477507bb00",
+          "path": "/sandbox/v3/new-documentation/swagger",
+          "unresolved": true,
+          "reason": "a link to a documentation page, which names no call"
+        }
+      ]
+    },
+    {
+      "id": "HIP_INTI_LINK_505",
+      "anchor": "hip_inti_link_505",
+      "group": "2. HIP Initiated Health Record Linking Using Demographic Auth",
+      "title": "Linking of Health Records",
+      "marking": {
+        "government": "mandatory; applies: HIP (read as all)",
+        "private": "mandatory; applies: HIP (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "1. Linking of care context initiated using the token. 2. User can pull linked health records via PHR app. Note: Linking of health records should be done automatically once records have been saved at HIP end.",
+      "apis": [
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/v3/token/generate-token",
+          "path": "/api/hiecm/v3/token/generate-token",
+          "method": "POST",
+          "spec": "m2",
+          "operations": [
+            "m2_post_v3_token_generate_token"
+          ],
+          "journeys": [
+            "m2-abdm-link-token-hip"
+          ]
+        },
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/hip/v3/link/carecontext",
+          "path": "/api/hiecm/hip/v3/link/carecontext",
+          "method": "POST",
+          "spec": "m2",
+          "operations": [
+            "m2_post_hip_v3_link_carecontext"
+          ],
+          "journeys": [
+            "m2-abdm-hip-initiated-linking-hip"
+          ]
+        },
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/hip/v3/link/context/notify",
+          "path": "/api/hiecm/hip/v3/link/context/notify",
+          "method": "POST",
+          "spec": "m2",
+          "operations": [
+            "m2_post_hip_v3_link_context_notify"
+          ],
+          "journeys": [
+            "m2-abdm-hip-initiated-linking-hip"
+          ]
+        },
+        {
+          "source": "https://sandbox.abdm.gov.in/sandbox/v3/new-documentation/swagger?integration_label=https://sandboxcms.abdm.gov.in/uploads/HIP_initiated_linking_1_477507bb00",
+          "path": "/sandbox/v3/new-documentation/swagger",
+          "unresolved": true,
+          "reason": "a link to a documentation page, which names no call"
+        }
+      ]
+    },
+    {
+      "id": "HIP_INTI_LINK_506",
+      "anchor": "hip_inti_link_506",
+      "group": "2. HIP Initiated Health Record Linking Using Demographic Auth",
+      "title": "Pull Records",
+      "marking": {
+        "government": "mandatory; applies: HIP (read as all)",
+        "private": "mandatory; applies: HIP (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "1. Linked records can be pulled using the \"Pull Records\" button in the PHR app.",
+      "apis": [
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/v3/token/generate-token",
+          "path": "/api/hiecm/v3/token/generate-token",
+          "method": "POST",
+          "spec": "m2",
+          "operations": [
+            "m2_post_v3_token_generate_token"
+          ],
+          "journeys": [
+            "m2-abdm-link-token-hip"
+          ]
+        },
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/hip/v3/link/carecontext",
+          "path": "/api/hiecm/hip/v3/link/carecontext",
+          "method": "POST",
+          "spec": "m2",
+          "operations": [
+            "m2_post_hip_v3_link_carecontext"
+          ],
+          "journeys": [
+            "m2-abdm-hip-initiated-linking-hip"
+          ]
+        },
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/hip/v3/link/context/notify",
+          "path": "/api/hiecm/hip/v3/link/context/notify",
+          "method": "POST",
+          "spec": "m2",
+          "operations": [
+            "m2_post_hip_v3_link_context_notify"
+          ],
+          "journeys": [
+            "m2-abdm-hip-initiated-linking-hip"
+          ]
+        },
+        {
+          "source": "https://sandbox.abdm.gov.in/sandbox/v3/new-documentation/swagger?integration_label=https://sandboxcms.abdm.gov.in/uploads/HIP_initiated_linking_1_477507bb00",
+          "path": "/sandbox/v3/new-documentation/swagger",
+          "unresolved": true,
+          "reason": "a link to a documentation page, which names no call"
+        }
+      ]
+    },
+    {
+      "id": "USER_INIT_LINK_601",
+      "anchor": "user_init_link_601",
+      "group": "3. User Initiated Health Record Linking",
+      "title": "Login into PHR App",
+      "marking": {
+        "government": "mandatory; applies: HIP (read as all)",
+        "private": "mandatory; applies: HIP (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "1. User should be able to successfully log in to the PHR app.",
+      "apis": [
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/patient/care-context/on-discover",
+          "path": "/api/hiecm/user-initiated-linking/v3/patient/care-context/on-discover",
+          "method": "POST",
+          "spec": "m2",
+          "operations": [
+            "m2_post_user_initiated_linking_v3_patient_care_context_on_8c9340"
+          ],
+          "journeys": [
+            "m2-abdm-user-initiated-linking-hip"
+          ]
+        },
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/care-context/on-init",
+          "path": "/api/hiecm/user-initiated-linking/v3/link/care-context/on-init",
+          "method": "POST",
+          "spec": "m2",
+          "operations": [
+            "m2_post_user_initiated_linking_v3_link_care_context_on_init"
+          ],
+          "journeys": [
+            "m2-abdm-user-initiated-linking-hip"
+          ]
+        },
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm",
+          "path": "/api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm",
+          "method": "POST",
+          "spec": "m2",
+          "operations": [
+            "m2_post_user_initiated_linking_v3_link_care_context_on_confirm"
+          ],
+          "journeys": [
+            "m2-abdm-user-initiated-linking-hip"
+          ]
+        },
+        {
+          "source": "https://sandbox.abdm.gov.in/sandbox/v3/new-documentation/swagger?integration_label=https://sandboxcms.abdm.gov.in/uploads/abdm_user_initiated_linking_phr_1_1_ae156da840",
+          "path": "/sandbox/v3/new-documentation/swagger",
+          "unresolved": true,
+          "reason": "a link to a documentation page, which names no call"
+        }
+      ]
+    },
+    {
+      "id": "USER_INIT_LINK_602",
+      "anchor": "user_init_link_602",
+      "group": "3. User Initiated Health Record Linking",
+      "title": "Search for Facility/ HIP",
+      "marking": {
+        "government": "mandatory; applies: HIP (read as all)",
+        "private": "mandatory; applies: HIP (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "1. User should be able to search and select the desired health provider (HIP).",
+      "apis": [
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/patient/care-context/on-discover",
+          "path": "/api/hiecm/user-initiated-linking/v3/patient/care-context/on-discover",
+          "method": "POST",
+          "spec": "m2",
+          "operations": [
+            "m2_post_user_initiated_linking_v3_patient_care_context_on_8c9340"
+          ],
+          "journeys": [
+            "m2-abdm-user-initiated-linking-hip"
+          ]
+        },
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/care-context/on-init",
+          "path": "/api/hiecm/user-initiated-linking/v3/link/care-context/on-init",
+          "method": "POST",
+          "spec": "m2",
+          "operations": [
+            "m2_post_user_initiated_linking_v3_link_care_context_on_init"
+          ],
+          "journeys": [
+            "m2-abdm-user-initiated-linking-hip"
+          ]
+        },
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm",
+          "path": "/api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm",
+          "method": "POST",
+          "spec": "m2",
+          "operations": [
+            "m2_post_user_initiated_linking_v3_link_care_context_on_confirm"
+          ],
+          "journeys": [
+            "m2-abdm-user-initiated-linking-hip"
+          ]
+        },
+        {
+          "source": "https://sandbox.abdm.gov.in/sandbox/v3/new-documentation/swagger?integration_label=https://sandboxcms.abdm.gov.in/uploads/abdm_user_initiated_linking_phr_1_1_ae156da840",
+          "path": "/sandbox/v3/new-documentation/swagger",
+          "unresolved": true,
+          "reason": "a link to a documentation page, which names no call"
+        }
+      ]
+    },
+    {
+      "id": "USER_INIT_LINK_603",
+      "anchor": "user_init_link_603",
+      "group": "3. User Initiated Health Record Linking",
+      "title": "Share User Profile Details with HIP",
+      "marking": {
+        "government": "mandatory; applies: HIP (read as all)",
+        "private": "mandatory; applies: HIP (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "1. The Gateway send the request to the HIP to identify the patient in th HIP System. 2. The Facility/ HIP will receive the User's profile details. HIP searches their records for any of the verified identifers; search with Mobile number. On mobile number match HIP to do a fuzzy logic match on matched records. 3. Proceed with sharing the health records for linking.",
+      "apis": [
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/patient/care-context/on-discover",
+          "path": "/api/hiecm/user-initiated-linking/v3/patient/care-context/on-discover",
+          "method": "POST",
+          "spec": "m2",
+          "operations": [
+            "m2_post_user_initiated_linking_v3_patient_care_context_on_8c9340"
+          ],
+          "journeys": [
+            "m2-abdm-user-initiated-linking-hip"
+          ]
+        },
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/care-context/on-init",
+          "path": "/api/hiecm/user-initiated-linking/v3/link/care-context/on-init",
+          "method": "POST",
+          "spec": "m2",
+          "operations": [
+            "m2_post_user_initiated_linking_v3_link_care_context_on_init"
+          ],
+          "journeys": [
+            "m2-abdm-user-initiated-linking-hip"
+          ]
+        },
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm",
+          "path": "/api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm",
+          "method": "POST",
+          "spec": "m2",
+          "operations": [
+            "m2_post_user_initiated_linking_v3_link_care_context_on_confirm"
+          ],
+          "journeys": [
+            "m2-abdm-user-initiated-linking-hip"
+          ]
+        },
+        {
+          "source": "https://sandbox.abdm.gov.in/sandbox/v3/new-documentation/swagger?integration_label=https://sandboxcms.abdm.gov.in/uploads/abdm_user_initiated_linking_phr_1_1_ae156da840",
+          "path": "/sandbox/v3/new-documentation/swagger",
+          "unresolved": true,
+          "reason": "a link to a documentation page, which names no call"
+        }
+      ]
+    },
+    {
+      "id": "USER_INIT_LINK_606",
+      "anchor": "user_init_link_606",
+      "group": "3. User Initiated Health Record Linking",
+      "title": "Validate Request",
+      "marking": {
+        "government": "mandatory; applies: HIP (read as all)",
+        "private": "mandatory; applies: HIP (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "1. HIP send the matching record to the patient (PHR App)",
+      "apis": [
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/patient/care-context/on-discover",
+          "path": "/api/hiecm/user-initiated-linking/v3/patient/care-context/on-discover",
+          "method": "POST",
+          "spec": "m2",
+          "operations": [
+            "m2_post_user_initiated_linking_v3_patient_care_context_on_8c9340"
+          ],
+          "journeys": [
+            "m2-abdm-user-initiated-linking-hip"
+          ]
+        },
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/care-context/on-init",
+          "path": "/api/hiecm/user-initiated-linking/v3/link/care-context/on-init",
+          "method": "POST",
+          "spec": "m2",
+          "operations": [
+            "m2_post_user_initiated_linking_v3_link_care_context_on_init"
+          ],
+          "journeys": [
+            "m2-abdm-user-initiated-linking-hip"
+          ]
+        },
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm",
+          "path": "/api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm",
+          "method": "POST",
+          "spec": "m2",
+          "operations": [
+            "m2_post_user_initiated_linking_v3_link_care_context_on_confirm"
+          ],
+          "journeys": [
+            "m2-abdm-user-initiated-linking-hip"
+          ]
+        },
+        {
+          "source": "https://sandbox.abdm.gov.in/sandbox/v3/new-documentation/swagger?integration_label=https://sandboxcms.abdm.gov.in/uploads/abdm_user_initiated_linking_phr_1_1_ae156da840",
+          "path": "/sandbox/v3/new-documentation/swagger",
+          "unresolved": true,
+          "reason": "a link to a documentation page, which names no call"
+        }
+      ]
+    },
+    {
+      "id": "USER_INIT_LINK_604",
+      "anchor": "user_init_link_604",
+      "group": "3. User Initiated Health Record Linking",
+      "title": "Fetch Health Records",
+      "marking": {
+        "government": "mandatory; applies: HIP (read as all)",
+        "private": "mandatory; applies: HIP (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "1. If health records are available at the HIP, the user receives the list of available records and selects the records to proceed with linking.",
+      "apis": [
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/patient/care-context/on-discover",
+          "path": "/api/hiecm/user-initiated-linking/v3/patient/care-context/on-discover",
+          "method": "POST",
+          "spec": "m2",
+          "operations": [
+            "m2_post_user_initiated_linking_v3_patient_care_context_on_8c9340"
+          ],
+          "journeys": [
+            "m2-abdm-user-initiated-linking-hip"
+          ]
+        },
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/care-context/on-init",
+          "path": "/api/hiecm/user-initiated-linking/v3/link/care-context/on-init",
+          "method": "POST",
+          "spec": "m2",
+          "operations": [
+            "m2_post_user_initiated_linking_v3_link_care_context_on_init"
+          ],
+          "journeys": [
+            "m2-abdm-user-initiated-linking-hip"
+          ]
+        },
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm",
+          "path": "/api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm",
+          "method": "POST",
+          "spec": "m2",
+          "operations": [
+            "m2_post_user_initiated_linking_v3_link_care_context_on_confirm"
+          ],
+          "journeys": [
+            "m2-abdm-user-initiated-linking-hip"
+          ]
+        },
+        {
+          "source": "https://sandbox.abdm.gov.in/sandbox/v3/new-documentation/swagger?integration_label=https://sandboxcms.abdm.gov.in/uploads/abdm_user_initiated_linking_phr_1_1_ae156da840",
+          "path": "/sandbox/v3/new-documentation/swagger",
+          "unresolved": true,
+          "reason": "a link to a documentation page, which names no call"
+        }
+      ]
+    },
+    {
+      "id": "USER_INIT_LINK_605",
+      "anchor": "user_init_link_605",
+      "group": "3. User Initiated Health Record Linking",
+      "title": "Provide Consent for Health Record Linking",
+      "marking": {
+        "government": "mandatory; applies: HIP (read as all)",
+        "private": "mandatory; applies: HIP (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "1. If OTP is valid, selected health records are linked with the ABHA. 2. Linked health record should be visible under the “Linked Facilities” section in the PHR app.",
+      "apis": [
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/patient/care-context/on-discover",
+          "path": "/api/hiecm/user-initiated-linking/v3/patient/care-context/on-discover",
+          "method": "POST",
+          "spec": "m2",
+          "operations": [
+            "m2_post_user_initiated_linking_v3_patient_care_context_on_8c9340"
+          ],
+          "journeys": [
+            "m2-abdm-user-initiated-linking-hip"
+          ]
+        },
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/care-context/on-init",
+          "path": "/api/hiecm/user-initiated-linking/v3/link/care-context/on-init",
+          "method": "POST",
+          "spec": "m2",
+          "operations": [
+            "m2_post_user_initiated_linking_v3_link_care_context_on_init"
+          ],
+          "journeys": [
+            "m2-abdm-user-initiated-linking-hip"
+          ]
+        },
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm",
+          "path": "/api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm",
+          "method": "POST",
+          "spec": "m2",
+          "operations": [
+            "m2_post_user_initiated_linking_v3_link_care_context_on_confirm"
+          ],
+          "journeys": [
+            "m2-abdm-user-initiated-linking-hip"
+          ]
+        },
+        {
+          "source": "https://sandbox.abdm.gov.in/sandbox/v3/new-documentation/swagger?integration_label=https://sandboxcms.abdm.gov.in/uploads/abdm_user_initiated_linking_phr_1_1_ae156da840",
+          "path": "/sandbox/v3/new-documentation/swagger",
+          "unresolved": true,
+          "reason": "a link to a documentation page, which names no call"
+        }
+      ]
+    },
+    {
+      "id": "USER_INIT_LINK_607",
+      "anchor": "user_init_link_607",
+      "group": "3. User Initiated Health Record Linking",
+      "title": "Pull Records",
+      "marking": {
+        "government": "mandatory; applies: HIP (read as all)",
+        "private": "mandatory; applies: HIP (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "1. Health record linking is completed. 2. User can now pull linked records in their PHR app.",
+      "apis": [
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/patient/care-context/on-discover",
+          "path": "/api/hiecm/user-initiated-linking/v3/patient/care-context/on-discover",
+          "method": "POST",
+          "spec": "m2",
+          "operations": [
+            "m2_post_user_initiated_linking_v3_patient_care_context_on_8c9340"
+          ],
+          "journeys": [
+            "m2-abdm-user-initiated-linking-hip"
+          ]
+        },
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/care-context/on-init",
+          "path": "/api/hiecm/user-initiated-linking/v3/link/care-context/on-init",
+          "method": "POST",
+          "spec": "m2",
+          "operations": [
+            "m2_post_user_initiated_linking_v3_link_care_context_on_init"
+          ],
+          "journeys": [
+            "m2-abdm-user-initiated-linking-hip"
+          ]
+        },
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm",
+          "path": "/api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm",
+          "method": "POST",
+          "spec": "m2",
+          "operations": [
+            "m2_post_user_initiated_linking_v3_link_care_context_on_confirm"
+          ],
+          "journeys": [
+            "m2-abdm-user-initiated-linking-hip"
+          ]
+        },
+        {
+          "source": "https://sandbox.abdm.gov.in/sandbox/v3/new-documentation/swagger?integration_label=https://sandboxcms.abdm.gov.in/uploads/abdm_user_initiated_linking_phr_1_1_ae156da840",
+          "path": "/sandbox/v3/new-documentation/swagger",
+          "unresolved": true,
+          "reason": "a link to a documentation page, which names no call"
+        }
+      ]
+    },
+    {
+      "id": "HIP_INIT_NOTIFY_HIECM",
+      "anchor": "hip_init_notify_hiecm",
+      "group": "4. Sending Notification for deep link workflow",
+      "title": "Sending Notification to Patient with Deep Link",
+      "marking": {
+        "government": "mandatory; applies: HIP (read as all)",
+        "private": "mandatory; applies: HIP (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "1. SMS with deep link is sent to the patient’s mobile.",
+      "apis": [
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/hip/v3/link/patient/links/sms/notify2",
+          "path": "/api/hiecm/hip/v3/link/patient/links/sms/notify2",
+          "method": "POST",
+          "spec": "m2",
+          "operations": [
+            "m2_post_hip_v3_link_patient_links_sms_notify2"
+          ],
+          "journeys": [
+            "m2-abdm-hip-initiated-linking-hip"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HIP_INIT_SHARE_CARECONTEXT",
+      "anchor": "hip_init_share_carecontext",
+      "group": "5. Data transfer & share",
+      "title": "HIP must share health records associated with care context on request",
+      "marking": {
+        "government": "mandatory; applies: HIP (read as all)",
+        "private": "mandatory; applies: HIP (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "1. Health records will be successfully received in the PHR app 2. Health records must be properly decryptable using the HIP public key and nonce. 3. Health records shared/ transferred must be in proper FHIR formats defined by NrCes. 1. Health records will be successfully received in the PHR app 2. Health records must be properly decryptable using the HIP public key and nonce. 3. Health records shared/ transferred must be in proper FHIR formats defined by NrCes. 1. Health records will be successfully received in the PHR app 2. Health records must be properly decryptable using the HIP public key and nonce. 3. Health records shared/ transferred must be in proper FHIR formats defined by NrCes. 1. Health records will be successfully received in the PHR app 2. Health records must be properly decryptable using the HIP public key and nonce. 3. Health records shared/ transferred must be in proper FHIR formats defined by NrCes. 1. Health records will be successfully received in the PHR app 2. Health records must be properly decryptable using the HIP public key and nonce. 3. Health records shared/ transferred must be in proper FHIR formats defined by NrCes. 1. Health records will be successfully received in the PHR app 2. Health records must be properly decryptable using the HIP public key and nonce. 3. Health records shared/ transferred must be in proper FHIR formats defined by NrCes. 1. Health records will be successfully received in the PHR app 2. Health records must be properly decryptable using the HIP public key and nonce. 3. Health records shared/ transferred must be in proper FHIR formats defined by NrCes.",
+      "apis": [
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/hip/on-notify",
+          "path": "/api/hiecm/consent/v3/request/hip/on-notify",
+          "method": "POST",
+          "spec": "m2",
+          "operations": [
+            "m2_post_consent_v3_request_hip_on_notify"
+          ],
+          "journeys": [
+            "m2-consent-management-data-flow-hip"
+          ]
+        },
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/hip/on-request",
+          "path": "/api/hiecm/data-flow/v3/health-information/hip/on-request",
+          "method": "POST",
+          "spec": "m2",
+          "operations": [
+            "m2_post_data_flow_v3_health_information_hip_on_request"
+          ],
+          "journeys": [
+            "m2-consent-management-data-flow-hip"
+          ]
+        },
+        {
+          "source": "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/notify",
+          "path": "/api/hiecm/data-flow/v3/health-information/notify",
+          "method": "POST",
+          "spec": "m2",
+          "operations": [
+            "m2_post_data_flow_v3_health_information_notify"
+          ],
+          "journeys": [
+            "m2-consent-management-data-flow-hip"
+          ]
+        },
+        {
+          "source": "https://sandbox.abdm.gov.in/sandbox/v3/new-documentation/swagger?integration_label=https://sandboxcms.abdm.gov.in/uploads/consent_management_data_flow_1_42b7c27e53",
+          "path": "/sandbox/v3/new-documentation/swagger",
+          "unresolved": true,
+          "reason": "a link to a documentation page, which names no call"
+        }
+      ]
+    }
+  ]
+}

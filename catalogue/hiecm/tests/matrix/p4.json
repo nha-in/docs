@@ -1,0 +1,686 @@
+{
+  "module": "p4",
+  "generated": "scripts/build-test-cases.py from NHA's workbook. Fix the sheet or the script, never this file.",
+  "page": "site/docs/hiecm/v3/resources/test-cases/phr.mdx",
+  "workbooks": [
+    "catalogue/hiecm/openapi/.raw/nha-2026-10-01-phr-tests/PHR_MOBILE_APP_TEST_CASES.xlsx"
+  ],
+  "specs": [
+    "p4"
+  ],
+  "note": "NHA's PHR sheet has no APIs column, so no case names its calls. Read the P specification and journeys for the calls a case's steps imply.",
+  "cases": [
+    {
+      "id": "PHR_LOCKER_101",
+      "anchor": "phr_locker_101",
+      "group": "1. Discovery & add health locker",
+      "title": "Discovery & add health locker Linking locker with existing Health ID (PHR address)",
+      "marking": {
+        "government": "optional",
+        "private": "optional"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Locker will be linked with the health id. A consent request will be sent to the PHR app for linking. Locker will be linked with the health id. A consent request will be sent to the PHR app for linking. Locker will be linked with the health id. A consent request will be sent to the PHR app for linking. Locker will be linked with the health id. A consent request will be sent to the PHR app for linking.",
+      "apis": []
+    },
+    {
+      "id": "PHR_LOCKER_201",
+      "anchor": "phr_locker_201",
+      "group": "2. Set up a Health Locker through PHR app",
+      "title": "Linking Health ID with existing locker",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Consent Notification will be sent to PHR app for confirming the Health ID. Token will be received which is a long term linking token and can be used multiple times. Locker will be linked with the health id. Consent Notification will be sent to PHR app for confirming the Health ID. Token will be received which is a long term linking token and can be used multiple times. Locker will be linked with the health id. Consent Notification will be sent to PHR app for confirming the Health ID. Token will be received which is a long term linking token and can be used multiple times. Locker will be linked with the health id. Consent Notification will be sent to PHR app for confirming the Health ID. Token will be received which is a long term linking token and can be used multiple times. Locker will be linked with the health id. Consent Notification will be sent to PHR app for confirming the Health ID. Token will be received which is a long term linking token and can be used multiple times. Locker will be linked with the health id. Consent Notification will be sent to PHR app for confirming the Health ID. Token will be received which is a long term linking token and can be used multiple times. Locker will be linked with the health id.",
+      "apis": []
+    },
+    {
+      "id": "PHR_LOCKER_301",
+      "anchor": "phr_locker_301",
+      "group": "3. Fetching of health record from HIP to Locker",
+      "title": "Notification is sent from HIP to locker",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Notification is received in locker.",
+      "apis": []
+    },
+    {
+      "id": "PHR_LOCKER_302",
+      "anchor": "phr_locker_302",
+      "group": "3. Fetching of health record from HIP to Locker",
+      "title": "Locker Consent request is received in PHR app and SMS is also sent from locker to users mobile",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Records will be fetched into health locker once user approves the request",
+      "apis": []
+    },
+    {
+      "id": "PHR_LOCKER_303",
+      "anchor": "phr_locker_303",
+      "group": "3. Fetching of health record from HIP to Locker",
+      "title": "The consent request is auto approved based on the policy",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Records will be auto fetched whenever new records will be available",
+      "apis": []
+    },
+    {
+      "id": "PHR_LOCKER_304",
+      "anchor": "phr_locker_304",
+      "group": "3. Fetching of health record from HIP to Locker",
+      "title": "Grant consent received in \"Request\" list, of PHR app, so that locker can view health records from all linked PHR accounts",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "User can view records in healthlocker upon approval of consent",
+      "apis": []
+    },
+    {
+      "id": "PHR_LOCKER_306",
+      "anchor": "phr_locker_306",
+      "group": "3.5",
+      "title": "Once locker has the consent, it can fetch data from respective HIP",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Records from HIP's will be visible in locker",
+      "apis": []
+    },
+    {
+      "id": "PHR_LOCKER_307",
+      "anchor": "phr_locker_307",
+      "group": "3.5",
+      "title": "After getting the record for a care context, the locker links it to CM",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Care context will be visible in PHR",
+      "apis": []
+    },
+    {
+      "id": "PHR_LOCKER_308",
+      "anchor": "phr_locker_308",
+      "group": "3.5",
+      "title": "View health record received from HIP to locker",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Records can be viewed in locker once fetched",
+      "apis": []
+    },
+    {
+      "id": "PHR_LOCKER_400",
+      "anchor": "phr_locker_400",
+      "group": "4. Upload document in health locker through PHR app",
+      "title": "User pushes health record to health locker by uploading the scanned reports through clicking on \"Upload\" icon in PHR app",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Records will be uploaded",
+      "apis": []
+    },
+    {
+      "id": "PHR_LOCKER_401",
+      "anchor": "phr_locker_401",
+      "group": "4. Upload document in health locker through PHR app",
+      "title": "Upload Document Fields",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "PHR_LOCKER_402",
+      "anchor": "phr_locker_402",
+      "group": "4. Upload document in health locker through PHR app",
+      "title": "Processing of the uploaded document in the health locker, to find that uploaded document is health record or not",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Process will be done at locker level",
+      "apis": []
+    },
+    {
+      "id": "PHR_LOCKER_403",
+      "anchor": "phr_locker_403",
+      "group": "4. Upload document in health locker through PHR app",
+      "title": "Locker stores the record against care context",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Records will be stored",
+      "apis": []
+    },
+    {
+      "id": "PHR_LOCKER_404",
+      "anchor": "phr_locker_404",
+      "group": "4. Upload document in health locker through PHR app",
+      "title": "Link the uploaded document to Health ID (PHR address) by linking the care context on CM - HIP initiated linking",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Care context will be added",
+      "apis": []
+    },
+    {
+      "id": "PHR_LOCKER_405",
+      "anchor": "phr_locker_405",
+      "group": "4. Upload document in health locker through PHR app",
+      "title": "After document is linked to Health ID (PHR address), the locker is displayed in the \"Providers\" tab of PHR app",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Locker will be created in PHR",
+      "apis": []
+    },
+    {
+      "id": "PHR_LOCKER_406",
+      "anchor": "phr_locker_406",
+      "group": "4. Upload document in health locker through PHR app",
+      "title": "Click on \"Get Data\" to fetch the record in the \"Records\" tab of PHR app",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Records will be fetched",
+      "apis": []
+    },
+    {
+      "id": "PHR_LOCKER_407",
+      "anchor": "phr_locker_407",
+      "group": "4. Upload document in health locker through PHR app",
+      "title": "Click on the record received in the \"Records\" tab of PHR app - to see record details and open the attachment to view patient record",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Records will be viewed from attachments",
+      "apis": []
+    },
+    {
+      "id": "PHR_LOCKER_50101",
+      "anchor": "phr_locker_50101",
+      "group": "5.1. Subscription Request - Getting to know about new health record",
+      "title": "Locker / HIU will raise a request to subscribe to notifications for patient records",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Subscription request will be set up",
+      "apis": []
+    },
+    {
+      "id": "PHR_LOCKER_50102",
+      "anchor": "phr_locker_50102",
+      "group": "5.1. Subscription Request - Getting to know about new health record",
+      "title": "Patient will approve the subscription request in PHR app",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Request will be visible in PHR under request tab",
+      "apis": []
+    },
+    {
+      "id": "PHR_LOCKER_50103",
+      "anchor": "phr_locker_50103",
+      "group": "5.1. Subscription Request - Getting to know about new health record",
+      "title": "Locker will be notified whenever there is new data / care context available for the patient",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Alert notification is received in locker",
+      "apis": []
+    },
+    {
+      "id": "PHR_LOCKER_50104",
+      "anchor": "phr_locker_50104",
+      "group": "5.1. Subscription Request - Getting to know about new health record",
+      "title": "On notification, locker will fetch the new record (There may be a need to create a new consent request)",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Records will be fetched",
+      "apis": []
+    },
+    {
+      "id": "PHR_LOCKER_50201",
+      "anchor": "phr_locker_50201",
+      "group": "5.2. Auto approval policy - Simplifying user experience for consents",
+      "title": "Based on the subscription (if approved), user can choose to create an auto approval policy",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Consents will be auto approved",
+      "apis": []
+    },
+    {
+      "id": "PHR_LOCKER_50202",
+      "anchor": "phr_locker_50202",
+      "group": "5.2. Auto approval policy - Simplifying user experience for consents",
+      "title": "If a consent request is within the bounds of the policy, it will be automatically approved",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Consents will be auto approved",
+      "apis": []
+    },
+    {
+      "id": "PHR_LOCKER_50203",
+      "anchor": "phr_locker_50203",
+      "group": "5.2. Auto approval policy - Simplifying user experience for consents",
+      "title": "Disable auto approval policy",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Consents needs to be manually approved",
+      "apis": []
+    },
+    {
+      "id": "PHR_LOCKER_50301",
+      "anchor": "phr_locker_50301",
+      "group": "5.3. Authorization Request - Letting the consent manager know Locker has records",
+      "title": "Locker/HIP will raise a direct auth request",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Consent request will be there under request tab in PHR",
+      "apis": []
+    },
+    {
+      "id": "PHR_LOCKER_50302",
+      "anchor": "phr_locker_50302",
+      "group": "5.3. Authorization Request - Letting the consent manager know Locker has records",
+      "title": "User will have to approve it",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Request will be seen in PHR",
+      "apis": []
+    },
+    {
+      "id": "PHR_LOCKER_50303",
+      "anchor": "phr_locker_50303",
+      "group": "5.3. Authorization Request - Letting the consent manager know Locker has records",
+      "title": "Locker/HIP will get a linking token (as in the case on HIP initiated linking)",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Linking token can be checked",
+      "apis": []
+    },
+    {
+      "id": "PHR_LOCKER_50304",
+      "anchor": "phr_locker_50304",
+      "group": "5.3. Authorization Request - Letting the consent manager know Locker has records",
+      "title": "In case of locker, this token can be used to link multiple care context",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Multiple care context",
+      "apis": []
+    },
+    {
+      "id": "PHR_LOCKER_601",
+      "anchor": "phr_locker_601",
+      "group": "6. Viewing Consent Request",
+      "title": "Viewing list of Consent Requests in \"Requests\" tab of PHR app",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Types of consents visible",
+      "apis": []
+    },
+    {
+      "id": "PHR_LOCKER_60101",
+      "anchor": "phr_locker_60101",
+      "group": "6. Viewing Consent Request",
+      "title": "1) Requested - Not yet any action is taken by user on \"Consent Requests\"",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "To act upon requests under requested",
+      "apis": []
+    },
+    {
+      "id": "PHR_LOCKER_60102",
+      "anchor": "phr_locker_60102",
+      "group": "6. Viewing Consent Request",
+      "title": "2) Denied - User have \"Denied\" received consent request",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Rejected requests",
+      "apis": []
+    },
+    {
+      "id": "PHR_LOCKER_60103",
+      "anchor": "phr_locker_60103",
+      "group": "6. Viewing Consent Request",
+      "title": "3) Expired - Consent Requests is expired",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Expired requests",
+      "apis": []
+    },
+    {
+      "id": "PHR_LOCKER_70101",
+      "anchor": "phr_locker_70101",
+      "group": "7. Viewing list of Consent Requests in the \"Approved\" tab of PHR app",
+      "title": "1) Granted",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Granted",
+      "apis": []
+    },
+    {
+      "id": "PHR_LOCKER_70102",
+      "anchor": "phr_locker_70102",
+      "group": "7. Viewing list of Consent Requests in the \"Approved\" tab of PHR app",
+      "title": "2) Expired",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Expired",
+      "apis": []
+    },
+    {
+      "id": "PHR_LOCKER_800",
+      "anchor": "phr_locker_800",
+      "group": "7. Viewing list of Consent Requests in the \"Approved\" tab of PHR app",
+      "title": "Edit active subscription request",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Request will be edited",
+      "apis": []
+    },
+    {
+      "id": "PHR_LOCKER_900",
+      "anchor": "phr_locker_900",
+      "group": "7. Viewing list of Consent Requests in the \"Approved\" tab of PHR app",
+      "title": "Disable auto approval requests",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Needs manual approval",
+      "apis": []
+    },
+    {
+      "id": "PHR_LOCKER_1001",
+      "anchor": "phr_locker_1001",
+      "group": "10. Types of Consent in Health Locker",
+      "title": "Approved: HIU should be able to view the health data of a APPROVED consent request",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "HIU user should be able to view the health data for the GRANTED consent request.",
+      "apis": []
+    },
+    {
+      "id": "PHR_LOCKER_1002",
+      "anchor": "phr_locker_1002",
+      "group": "10. Types of Consent in Health Locker",
+      "title": "Denied: HIU should not be able to view the health data of a DENIED consent request",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "HIU user should not be able to view the health data for the DENIED consent request. HIU user should not be able to view the health data for the DENIED consent request.",
+      "apis": []
+    },
+    {
+      "id": "PHR_LOCKER_1003",
+      "anchor": "phr_locker_1003",
+      "group": "10. Types of Consent in Health Locker",
+      "title": "Expired : HIU should not be able to view the health data of a EXPIRED consent request",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "HIU user should not be able to view the health data for the EXPIRED/NOT ACTED UPON consent request. HIU user should not be able to view the health data for the EXPIRED/NOT ACTED UPON consent request.",
+      "apis": []
+    },
+    {
+      "id": "PHR_LOCKER_1004",
+      "anchor": "phr_locker_1004",
+      "group": "10. Types of Consent in Health Locker",
+      "title": "Revoked: HIU should not be able to view the health data of a REVOKED consent request",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "HIU user should not be able to view the health data for the REVOKED consent request.",
+      "apis": []
+    },
+    {
+      "id": "PHR_LOCKER_1005",
+      "anchor": "phr_locker_1005",
+      "group": "10. Types of Consent in Health Locker",
+      "title": "Auto Approval",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "HIU user should be able to fetch the health data for the AUTO APPROVED consent request, HIU user should be able to fetch the health data for the AUTO APPROVED consent request, HIU user should be able to fetch the health data for the AUTO APPROVED consent request,",
+      "apis": []
+    },
+    {
+      "id": "PHR_LOCKER_1100",
+      "anchor": "phr_locker_1100",
+      "group": "11. HIU receives record only if consent request is approved in PHR app",
+      "title": "HIU should be able to view the health data of a APPROVED consent request",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "HIU user should be able to view the health data of selected HI type from PHR app or HIU application. HIU user should be able to view the health data of selected HI type from PHR app or HIU application. HIU user should be able to view the health data of selected HI type from PHR app or HIU application. HIU user should be able to view the health data of selected HI type from PHR app or HIU application. HIU user should be able to view the health data of selected HI type from PHR app or HIU application. HIU user should be able to view the health data of selected HI type from PHR app or HIU application. HIU user should be able to view the health data of selected HI type from PHR app or HIU application. HIU user should be able to view the health data of selected HI type from PHR app or HIU application. HIU user should be able to view the health data of selected HI type from PHR app or HIU application. HIU user should be able to view the health data of selected HI type from PHR app or HIU application. HIU user should be able to view the health data of selected HI type from PHR app or HIU application. HIU user should be able to view the health data of selected HI type from PHR app or HIU application. HIU user should be able to view the health data of selected HI type from PHR app or HIU application. HIU user should be able to view the health data of selected HI type from PHR app or HIU application.",
+      "apis": []
+    }
+  ]
+}

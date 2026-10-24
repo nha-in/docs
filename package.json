@@ -42,6 +42,7 @@
     "build:sections": "node scripts/build-sections.mjs",
     "check:sections": "node scripts/build-sections.mjs --check",
     "check:test-mapping": "node scripts/check-test-mapping.mjs",
+    "check:test-matrix": "node scripts/check-test-matrix.mjs",
     "report:migration": "node scripts/migration-report.mjs",
     "build:widget": "npm run build --workspace ai-widget",
     "test:widget": "npm test --workspace ai-widget",
