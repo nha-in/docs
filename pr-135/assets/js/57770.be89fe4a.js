@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["57770"],{78225(e,s,c){c.r(s),c.d(s,{__iconNode:()=>_,default:()=>a});var d=c(34438);let _=[["path",{d:"M7 3.5c5-2 7 2.5 3 4C1.5 10 2 15 5 16c5 2 9-10 14-7s.5 13.5-4 12c-5-2.5.5-11 6-2",key:"1lrphd"}]],a=(0,d.A)("line-squiggle",_)}}]);
