@@ -33,8 +33,7 @@
             "m3_post_consent_v3_request_init"
           ],
           "journeys": [
-            "m3-consent-management-data-flow-hiu",
-            "p2-consent-manager-hiu-hip"
+            "m3-consent-management-data-flow-hiu"
           ]
         },
         {
@@ -46,8 +45,7 @@
             "m3_post_consent_v3_request_status"
           ],
           "journeys": [
-            "m3-consent-management-data-flow-hiu",
-            "p2-consent-manager-hiu-hip"
+            "m3-consent-management-data-flow-hiu"
           ]
         },
         {
@@ -59,8 +57,7 @@
             "m3_post_consent_v3_request_hiu_on_notify"
           ],
           "journeys": [
-            "m3-consent-management-data-flow-hiu",
-            "p2-consent-manager-hiu-hip"
+            "m3-consent-management-data-flow-hiu"
           ]
         },
         {
@@ -72,8 +69,7 @@
             "m3_post_consent_v3_fetch"
           ],
           "journeys": [
-            "m3-consent-management-data-flow-hiu",
-            "p2-consent-manager-hiu-hip"
+            "m3-consent-management-data-flow-hiu"
           ]
         },
         {
@@ -132,8 +128,7 @@
             "m3_post_consent_v3_request_init"
           ],
           "journeys": [
-            "m3-consent-management-data-flow-hiu",
-            "p2-consent-manager-hiu-hip"
+            "m3-consent-management-data-flow-hiu"
           ]
         },
         {
@@ -145,8 +140,7 @@
             "m3_post_consent_v3_request_status"
           ],
           "journeys": [
-            "m3-consent-management-data-flow-hiu",
-            "p2-consent-manager-hiu-hip"
+            "m3-consent-management-data-flow-hiu"
           ]
         },
         {
@@ -158,8 +152,7 @@
             "m3_post_consent_v3_request_hiu_on_notify"
           ],
           "journeys": [
-            "m3-consent-management-data-flow-hiu",
-            "p2-consent-manager-hiu-hip"
+            "m3-consent-management-data-flow-hiu"
           ]
         },
         {
@@ -171,8 +164,7 @@
             "m3_post_consent_v3_fetch"
           ],
           "journeys": [
-            "m3-consent-management-data-flow-hiu",
-            "p2-consent-manager-hiu-hip"
+            "m3-consent-management-data-flow-hiu"
           ]
         },
         {
@@ -231,8 +223,7 @@
             "m3_post_consent_v3_request_init"
           ],
           "journeys": [
-            "m3-consent-management-data-flow-hiu",
-            "p2-consent-manager-hiu-hip"
+            "m3-consent-management-data-flow-hiu"
           ]
         },
         {
@@ -244,8 +235,7 @@
             "m3_post_consent_v3_request_status"
           ],
           "journeys": [
-            "m3-consent-management-data-flow-hiu",
-            "p2-consent-manager-hiu-hip"
+            "m3-consent-management-data-flow-hiu"
           ]
         },
         {
@@ -257,8 +247,7 @@
             "m3_post_consent_v3_request_hiu_on_notify"
           ],
           "journeys": [
-            "m3-consent-management-data-flow-hiu",
-            "p2-consent-manager-hiu-hip"
+            "m3-consent-management-data-flow-hiu"
           ]
         },
         {
@@ -270,8 +259,7 @@
             "m3_post_consent_v3_fetch"
           ],
           "journeys": [
-            "m3-consent-management-data-flow-hiu",
-            "p2-consent-manager-hiu-hip"
+            "m3-consent-management-data-flow-hiu"
           ]
         },
         {

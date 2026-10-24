@@ -106,7 +106,7 @@ From `shared.concept.test-human-entry`.
 
 Walks the ABDM M4 functional test cases, facility and professional registration, against the system you built and the sandbox. Each case ends in one of five recorded outcomes, never in an opinion.
 
-Before building, read `references/test-matrix.md` in this skill: build every journey that a case mandatory for your entity type calls, and build each mandatory case's Expected Result into the screen, not only its calls. The test run uses it to know what each case exercises.
+Before building, read `references/test-matrix.md` in this skill. Its APIs are the ones the sheet lists for the group a case sits in, so a case may not call all of them. Build every journey that a case mandatory for your entity type needs, and build each mandatory case's Expected Result into the screen, not only its calls. The test run uses it to know what each case exercises.
 
 ## What this skill does
 

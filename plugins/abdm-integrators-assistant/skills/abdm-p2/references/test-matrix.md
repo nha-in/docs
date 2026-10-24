@@ -1,6 +1,6 @@
 # P2 test case matrix
 
-Every case in NHA's P2 workbook, in the order the sheet groups them, with its marking, its Expected Result and the calls its APIs column names. Before building, read it and build every journey that a case mandatory for your entity type calls. Build each mandatory case's Expected Result into the screen, not only its calls. The test run uses it to know what each case exercises.
+Every case in NHA's P2 workbook, in the order the sheet groups them, with its marking and its Expected Result. Before building, read it and build each mandatory case's Expected Result for your entity type into the app screen. The test run uses it to know what each case exercises.
 
 Marking is for a government and a private entity, as `abdm_report.py plan` reads the workbook. Mandatory cases come first in each group. 74 cases; 66 mandatory for at least one entity type.
 

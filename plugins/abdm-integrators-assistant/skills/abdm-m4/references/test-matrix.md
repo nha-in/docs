@@ -1,17 +1,17 @@
 # M4 test case matrix
 
-Every case in NHA's M4 workbook, in the order the sheet groups them, with its marking, its Expected Result and the calls its APIs column names. Before building, read it and build every journey that a case mandatory for your entity type calls. Build each mandatory case's Expected Result into the screen, not only its calls. The test run uses it to know what each case exercises.
+Every case in NHA's M4 workbook, in the order the sheet groups them, with its marking, its Expected Result and the APIs the sheet lists for it. The sheet merges one APIs cell across the cases of a group, so a case lists every API of its group, and may call only some of them. Before building, read it and build every journey that a case mandatory for your entity type needs. Build each mandatory case's Expected Result into the screen, not only its calls. The test run uses it to know what each case exercises.
 
 Marking is for a government and a private entity, as `abdm_report.py plan` reads the workbook. Mandatory cases come first in each group. 190 cases; 108 mandatory for at least one entity type.
 
 An operation in another module's specification is named with that module. An unresolved path is one the sheet names that no operation in the specifications matches, with the reason: work out the call from the Expected Result and the specification.
 
-- Journeys the mandatory cases call for a government entity: `m4-enrollment`, `m4-multiple-hrp-api`, `m4-onboarding-apis`, `m4-search`, `m4-utilities`.
-- Journeys the mandatory cases call for a private entity: `m4-enrollment`, `m4-multiple-hrp-api`, `m4-onboarding-apis`, `m4-search`, `m4-utilities`.
+- Journeys the mandatory cases need for a government entity: `m4-enrollment`, `m4-multiple-hrp-api`, `m4-onboarding-apis`, `m4-search`, `m4-utilities`.
+- Journeys the mandatory cases need for a private entity: `m4-enrollment`, `m4-multiple-hrp-api`, `m4-onboarding-apis`, `m4-search`, `m4-utilities`.
 
 ## HFR Search facility: Facility search
 
-| Case | Marking | Operations | Journeys | Unresolved | Expected Result |
+| Case | Marking | Operations the sheet lists for this group | Journeys | Unresolved | Expected Result |
 | --- | --- | --- | --- | --- | --- |
 | `HFR-002` search through facility name | conditional | none | none | `v15SearchFacilitiesFuzzyPost`: a Swagger operation name that names no operation in the specifications | Facility name should get filled |
 | `HFR-003` To fill the facility ownership | conditional | `m4_get_v1_5_facility_get_master_data`, `m4_post_v1_5_facility_get_owner_subtype` | `m4-utilities` | `v15SearchFacilitiesFuzzyPost`: a Swagger operation name that names no operation in the specifications | Facility ownership should get filled |
@@ -25,7 +25,7 @@ An operation in another module's specification is named with that module. An unr
 
 ## HFR Registration: Facility Registration(Basic demographics of the facility)
 
-| Case | Marking | Operations | Journeys | Unresolved | Expected Result |
+| Case | Marking | Operations the sheet lists for this group | Journeys | Unresolved | Expected Result |
 | --- | --- | --- | --- | --- | --- |
 | `HFR-010` To Save the facilty basic details | mandatory | `m4_post_v1_5_facility_basic_information` | `m4-onboarding-apis` | none | Filled Facility Name |
 | `HFR-011` Fill the geographic location | mandatory | `m4_post_v1_5_facility_basic_information` | `m4-onboarding-apis` | none | Latitude has been filled as per the definition |
@@ -59,7 +59,7 @@ An operation in another module's specification is named with that module. An unr
 
 ## HFR Registration: Facility Registration(Capture Health program ids)
 
-| Case | Marking | Operations | Journeys | Unresolved | Expected Result |
+| Case | Marking | Operations the sheet lists for this group | Journeys | Unresolved | Expected Result |
 | --- | --- | --- | --- | --- | --- |
 | `HFR-039` Linked program Id | optional | `m4_post_v1_5_facility_additional_information` | `m4-onboarding-apis` | none | It should get filled |
 | `HFR-040` Linked program Id | optional | `m4_post_v1_5_facility_additional_information` | `m4-onboarding-apis` | none | It should get filled |
@@ -72,7 +72,7 @@ An operation in another module's specification is named with that module. An unr
 
 ## HFR Registration: Facility Registration(Capture facility details information-infrastructure and specialization
 
-| Case | Marking | Operations | Journeys | Unresolved | Expected Result |
+| Case | Marking | Operations the sheet lists for this group | Journeys | Unresolved | Expected Result |
 | --- | --- | --- | --- | --- | --- |
 | `HFR-047` systemOfMedicineCode | mandatory | `m4_post_v1_5_facility_detailed_information`, `m4_get_v1_5_facility_get_master_types`, `m4_get_v1_5_facility_get_master_data` | `m4-onboarding-apis`, `m4-utilities` | none | System of medicine should get selected |
 | `HFR-048` isSpecializationAvalaible | mandatory | none | none | none | Not stated. |
@@ -92,14 +92,14 @@ An operation in another module's specification is named with that module. An unr
 
 ## HFR Registration: Facility submission
 
-| Case | Marking | Operations | Journeys | Unresolved | Expected Result |
+| Case | Marking | Operations the sheet lists for this group | Journeys | Unresolved | Expected Result |
 | --- | --- | --- | --- | --- | --- |
 | `HFR-062` sourceOfInformation | optional | `m4_post_v1_5_facility_submit_facility` | `m4-onboarding-apis` | none | Facility shold get submitted |
 | `HFR-063` sourceUniqueID | optional | none | none | none | Not stated. |
 
 ## HFR Facility update: Facility Registration(Basic demographics of the facility)
 
-| Case | Marking | Operations | Journeys | Unresolved | Expected Result |
+| Case | Marking | Operations the sheet lists for this group | Journeys | Unresolved | Expected Result |
 | --- | --- | --- | --- | --- | --- |
 | `HFR-064` To edit the facilty basic details | mandatory | `m4_post_v1_5_facility_basic_information` | `m4-onboarding-apis` | none | Filled Facility Name |
 | `HFR-065` Change the geographic location | mandatory | `m4_post_v1_5_facility_basic_information` | `m4-onboarding-apis` | none | Latitude has been filled as per the definition |
@@ -133,7 +133,7 @@ An operation in another module's specification is named with that module. An unr
 
 ## HFR Facility update: Facility Registration(Capture Health program ids)
 
-| Case | Marking | Operations | Journeys | Unresolved | Expected Result |
+| Case | Marking | Operations the sheet lists for this group | Journeys | Unresolved | Expected Result |
 | --- | --- | --- | --- | --- | --- |
 | `HFR-093` Edit Linked program Id | optional | `m4_post_v1_5_facility_additional_information` | `m4-onboarding-apis` | none | It should get filled |
 | `HFR-094` Edit Linked program Id | optional | `m4_post_v1_5_facility_additional_information` | `m4-onboarding-apis` | none | It should get filled |
@@ -146,7 +146,7 @@ An operation in another module's specification is named with that module. An unr
 
 ## HFR Facility update: Facility Registration(Capture facility details information-infrastructure and specialization
 
-| Case | Marking | Operations | Journeys | Unresolved | Expected Result |
+| Case | Marking | Operations the sheet lists for this group | Journeys | Unresolved | Expected Result |
 | --- | --- | --- | --- | --- | --- |
 | `HFR-101` To edit systemOfMedicine | mandatory | `m4_post_v1_5_facility_detailed_information`, `m4_get_v1_5_facility_get_master_types`, `m4_get_v1_5_facility_get_master_data` | `m4-onboarding-apis`, `m4-utilities` | none | System of medicine should get selected |
 | `HFR-102` to edit if Specialization is Avalaible | mandatory | none | none | none | Not stated. |
@@ -166,14 +166,14 @@ An operation in another module's specification is named with that module. An unr
 
 ## HFR Facility update: Facility submission
 
-| Case | Marking | Operations | Journeys | Unresolved | Expected Result |
+| Case | Marking | Operations the sheet lists for this group | Journeys | Unresolved | Expected Result |
 | --- | --- | --- | --- | --- | --- |
 | `HFR-116` sourceOfInformation | optional | `m4_post_v1_5_facility_submit_facility` | `m4-onboarding-apis` | none | Facility shold get submitted |
 | `HFR-117` sourceUniqueID | optional | none | none | none | Not stated. |
 
 ## HFR Bridge linkage: Bridge linkage
 
-| Case | Marking | Operations | Journeys | Unresolved | Expected Result |
+| Case | Marking | Operations the sheet lists for this group | Journeys | Unresolved | Expected Result |
 | --- | --- | --- | --- | --- | --- |
 | `HFR-118` Fill the facility Id | mandatory | `m4_post_v1_bridges_mutiplehrpaddupdateservices` | `m4-multiple-hrp-api` | none | Facility should get validated |
 | `HFR-119` Fill the facility Name | mandatory | `m4_post_v1_bridges_mutiplehrpaddupdateservices` | `m4-multiple-hrp-api` | none | Facility Name should fetch |
@@ -181,31 +181,31 @@ An operation in another module's specification is named with that module. An unr
 | `HFR-121` Fill the hip Name | mandatory | `m4_post_v1_bridges_mutiplehrpaddupdateservices` | `m4-multiple-hrp-api` | none | Valid HIP name should get filled |
 | `HFR-122` Fill the HIP type | mandatory | `m4_post_v1_bridges_mutiplehrpaddupdateservices` | `m4-multiple-hrp-api` | none | Not stated. |
 | `HFR-123` Provide details if the bridge is Active or not | mandatory | `m4_post_v1_bridges_mutiplehrpaddupdateservices` | `m4-multiple-hrp-api` | none | Not stated. |
-| `HFR-118` Fill the facility Id | mandatory | `m4_post_v1_bridges_mutiplehrpaddupdateservices` | `m4-multiple-hrp-api` | none | Facility should get validated |
-| `HFR-119` Fill the facility Name | mandatory | `m4_post_v1_bridges_mutiplehrpaddupdateservices` | `m4-multiple-hrp-api` | none | Facility Name should fetch |
-| `HFR-120` Fill the bridge Id | mandatory | `m4_post_v1_bridges_mutiplehrpaddupdateservices` | `m4-multiple-hrp-api` | none | Bridge id should get validated |
-| `HFR-121` Fill the hip Name | mandatory | `m4_post_v1_bridges_mutiplehrpaddupdateservices` | `m4-multiple-hrp-api` | none | Valid HIP name should get filled and HIP name should not be repeated |
-| `HFR-122` Fill the HIP type | mandatory | `m4_post_v1_bridges_mutiplehrpaddupdateservices` | `m4-multiple-hrp-api` | none | Not stated. |
-| `HFR-123` Provide details if the bridge is Active or not | mandatory | `m4_post_v1_bridges_mutiplehrpaddupdateservices` | `m4-multiple-hrp-api` | none | Not stated. |
+| `HFR-118#2` Fill the facility Id | mandatory | `m4_post_v1_bridges_mutiplehrpaddupdateservices` | `m4-multiple-hrp-api` | none | Facility should get validated |
+| `HFR-119#2` Fill the facility Name | mandatory | `m4_post_v1_bridges_mutiplehrpaddupdateservices` | `m4-multiple-hrp-api` | none | Facility Name should fetch |
+| `HFR-120#2` Fill the bridge Id | mandatory | `m4_post_v1_bridges_mutiplehrpaddupdateservices` | `m4-multiple-hrp-api` | none | Bridge id should get validated |
+| `HFR-121#2` Fill the hip Name | mandatory | `m4_post_v1_bridges_mutiplehrpaddupdateservices` | `m4-multiple-hrp-api` | none | Valid HIP name should get filled and HIP name should not be repeated |
+| `HFR-122#2` Fill the HIP type | mandatory | `m4_post_v1_bridges_mutiplehrpaddupdateservices` | `m4-multiple-hrp-api` | none | Not stated. |
+| `HFR-123#2` Provide details if the bridge is Active or not | mandatory | `m4_post_v1_bridges_mutiplehrpaddupdateservices` | `m4-multiple-hrp-api` | none | Not stated. |
 
 ## HPR: Creation of HPR Profile
 
-| Case | Marking | Operations | Journeys | Unresolved | Expected Result |
+| Case | Marking | Operations the sheet lists for this group | Journeys | Unresolved | Expected Result |
 | --- | --- | --- | --- | --- | --- |
-| `HPR-002` Create your Healthcare Professional ID via Aadhaar | mandatory | none | none | `/api/v1/registration/aadhaar/generateOtp`: no operation in the specifications has this path | Not stated. |
-| `HPR-003` consent collection | mandatory | none | none | `/api/v1/registration/aadhaar/generateOtp`: no operation in the specifications has this path | Please refer the cell no -M5 |
-| `HPR-004` Suggestions:- Consent collection should be multilingual | mandatory | none | none | `/api/v1/registration/aadhaar/generateOtp`: no operation in the specifications has this path | User provides consent for sharing of Aadhaar details and creation of HPR. System records user consent for compliance with Health Data Management Policy. |
-| `HPR-005` Aadhaar collection and Error Message | mandatory | none | none | `/api/v1/registration/aadhaar/generateOtp`: no operation in the specifications has this path | User is prompted to enter correct Aadhaar Number |
-| `HPR-006` Captcha | mandatory | none | none | `/api/v1/registration/aadhaar/generateOtp`: no operation in the specifications has this path | Not stated. |
-| `HPR-007` Aadhaar OTP Collection | mandatory | none | none | `/api/v1/registration/aadhaar/generateOtp`: no operation in the specifications has this path | Not stated. |
+| `HPR-002` Create your Healthcare Professional ID via Aadhaar | mandatory | none | none | `/api/v1/registration/aadhaar/generateOtp`: no operation in the specifications has this path; near: m4_post_v1_registration_aadhaar_generatemobileotp (POST /v1/registration/aadhaar/generateMobileOTP) | Not stated. |
+| `HPR-003` consent collection | mandatory | none | none | `/api/v1/registration/aadhaar/generateOtp`: no operation in the specifications has this path; near: m4_post_v1_registration_aadhaar_generatemobileotp (POST /v1/registration/aadhaar/generateMobileOTP) | Please refer the cell no -M5 |
+| `HPR-004` Suggestions:- Consent collection should be multilingual | mandatory | none | none | `/api/v1/registration/aadhaar/generateOtp`: no operation in the specifications has this path; near: m4_post_v1_registration_aadhaar_generatemobileotp (POST /v1/registration/aadhaar/generateMobileOTP) | User provides consent for sharing of Aadhaar details and creation of HPR. System records user consent for compliance with Health Data Management Policy. |
+| `HPR-005` Aadhaar collection and Error Message | mandatory | none | none | `/api/v1/registration/aadhaar/generateOtp`: no operation in the specifications has this path; near: m4_post_v1_registration_aadhaar_generatemobileotp (POST /v1/registration/aadhaar/generateMobileOTP) | User is prompted to enter correct Aadhaar Number |
+| `HPR-006` Captcha | mandatory | none | none | `/api/v1/registration/aadhaar/generateOtp`: no operation in the specifications has this path; near: m4_post_v1_registration_aadhaar_generatemobileotp (POST /v1/registration/aadhaar/generateMobileOTP) | Not stated. |
+| `HPR-007` Aadhaar OTP Collection | mandatory | none | none | `/api/v1/registration/aadhaar/generateOtp`: no operation in the specifications has this path; near: m4_post_v1_registration_aadhaar_generatemobileotp (POST /v1/registration/aadhaar/generateMobileOTP) | Not stated. |
 | `HPR-008` Resend OTP | mandatory | none | none | none | User will able to send OTP again and verify it |
-| `HPR-010` Communication Mobile Number verification-I | mandatory | none | none | `/api/v1/registration/aadhaar/demographicAuthViaMobile`: no operation in the specifications has this path | Not stated. |
-| `HPR-011` Communication Mobile Number verification-II | mandatory | none | none | `/api/v1/registration/aadhaar/createHprIdWithPreVerified`: no operation in the specifications has this path | Not stated. |
-| `No id` Aadhaar collection and Error Message | no case id in NHA's sheet, so the workbook and the report cannot record it | none | none | `/api/v1/registration/aadhaar/generateOtp`: no operation in the specifications has this path | User is prompted to enter correct Aadhaar Number |
+| `HPR-010` Communication Mobile Number verification-I | mandatory | none | none | `/api/v1/registration/aadhaar/demographicAuthViaMobile`: no operation in the specifications has this path; near: m4_post_v2_registration_aadhaar_demographicauthviamobile (POST /v2/registration/aadhaar/demographicAuthViaMobile) | Not stated. |
+| `HPR-011` Communication Mobile Number verification-II | mandatory | none | none | `/api/v1/registration/aadhaar/createHprIdWithPreVerified`: no operation in the specifications has this path; near: m4_post_v2_registration_aadhaar_createhpridwithpreverified (POST /v2/registration/aadhaar/createHprIdWithPreVerified) | Not stated. |
+| `No id` Aadhaar collection and Error Message | no case id in NHA's sheet, so the workbook and the report cannot record it | none | none | `/api/v1/registration/aadhaar/generateOtp`: no operation in the specifications has this path; near: m4_post_v1_registration_aadhaar_generatemobileotp (POST /v1/registration/aadhaar/generateMobileOTP) | User is prompted to enter correct Aadhaar Number |
 
 ## HPR: Register In HPR
 
-| Case | Marking | Operations | Journeys | Unresolved | Expected Result |
+| Case | Marking | Operations the sheet lists for this group | Journeys | Unresolved | Expected Result |
 | --- | --- | --- | --- | --- | --- |
 | `HPR-018` hprToken | mandatory | `m4_post_v1_doctors_register_professional_new` | `m4-enrollment` | none | Received Token |
 | `HPR-020` Healthcare Professional ID | mandatory | none | none | none | Healthcare Professional ID is successfully genearted |
@@ -258,18 +258,18 @@ An operation in another module's specification is named with that module. An unr
 
 ## HPR: Fetch Professionals details
 
-| Case | Marking | Operations | Journeys | Unresolved | Expected Result |
+| Case | Marking | Operations the sheet lists for this group | Journeys | Unresolved | Expected Result |
 | --- | --- | --- | --- | --- | --- |
 | `HPR-078` fetchProfessionalsdetails | optional | `m4_post_v1_doctors_fetch_professional_info` | `m4-enrollment` | none | Not stated. |
 
 ## HPR: Update Professionals details
 
-| Case | Marking | Operations | Journeys | Unresolved | Expected Result |
+| Case | Marking | Operations the sheet lists for this group | Journeys | Unresolved | Expected Result |
 | --- | --- | --- | --- | --- | --- |
-| `HPR-079` update-professional | mandatory | none | none | `/apis/v1/doctors/update-professional`: no operation in the specifications has this path | Not stated. |
+| `HPR-079` update-professional | mandatory | none | none | `/apis/v1/doctors/update-professional`: no operation in the specifications has this path; near: m4_post_v1_doctors_update_professional_new (POST /apis/v1/doctors/update-professional-new) | Not stated. |
 
 ## HPR: Upload Document API
 
-| Case | Marking | Operations | Journeys | Unresolved | Expected Result |
+| Case | Marking | Operations the sheet lists for this group | Journeys | Unresolved | Expected Result |
 | --- | --- | --- | --- | --- | --- |
 | `HPR-080` Upload- Document | optional | `m4_post_v1_doctors_fetch_documents_list`, `m4_post_v1_uploads_upload_document` | `m4-enrollment` | none | Not stated. |

@@ -34,6 +34,7 @@ Usage: python3 scripts/build-test-cases.py [--check] [--matrix-out DIR]
 --matrix-out writes only the matrices, into DIR, for check-test-matrix.mjs.
 Needs openpyxl and node.
 """
+import difflib
 import json
 import re
 import subprocess
@@ -664,20 +665,50 @@ def resolve(url, specs, index):
         elif len(spec) >= 3 and segments_match(spec, sheet[-len(spec):]):
             # The host's own prefix, such as /api on a registry host, before the specified path.
             tail.append(op)
-    found = exact or tail
+    found = literal_first(exact or tail, sheet)
     if not found:
         return {**entry, "path": path, **({"method": method.upper()} if method else {}), "unresolved": True,
-                "reason": "no operation in the specifications has this path"}
+                "reason": "no operation in the specifications has this path" + near(path, method, index)}
     own = [op for op in found if op["module"] in specs]
+    # A path only another module's specification has is kept as that module's, named, and drives no journey.
     chosen = own or found
     modules = sorted({op["module"] for op in chosen})
     ids = sorted(op["id"] for op in chosen)
-    journeys = sorted({j["id"] for j in index["journeys"] for op in ids if op in j["ops"]})
+    journeys = sorted({j["id"] for j in index["journeys"] if j["module"] in specs for op in ids if op in j["ops"]}) if own else []
     out = {**entry, "path": path, "method": "/".join(sorted({op["method"].upper() for op in chosen})),
            "spec": modules[0] if len(modules) == 1 else modules, "operations": ids, "journeys": journeys}
     if not own:
         out["other_module"] = True
     return out
+
+
+def literal_first(ops, sheet):
+    """Of the operations whose path fits, those that match the most literal segments.
+
+    A path the spec writes as masters/states/district is not masters/states/{id}."""
+    def params(op):
+        spec = op["path"].split("#")[0].strip("/").split("/")
+        spec = spec[-len(sheet):] if len(spec) > len(sheet) else spec
+        return sum(1 for a, b in zip(spec, sheet) if a.startswith("{") and not b.startswith("{"))
+    if not ops:
+        return []
+    least = min(params(op) for op in ops)
+    return [op for op in ops if params(op) == least]
+
+
+def near(path, method, index):
+    """The closest operation to a path nothing matches, named and never used: '; near: <operationId>'."""
+    def flat(p):
+        return re.sub(r"\{[^}]*\}", "{}", p.split("#")[0]).strip("/").lower()
+    want = flat(path)
+    best, score = None, 0.0
+    for op in index["ops"]:
+        if method and op["method"] != method:
+            continue
+        ratio = difflib.SequenceMatcher(None, want, flat(op["path"])).ratio()
+        if ratio > score:
+            best, score = op, ratio
+    return f"; near: {best['id']} ({best['method'].upper()} {best['path'].split('#')[0]})" if best and score >= 0.8 else ""
 
 
 def matrix(name, spec, sections, index):
@@ -702,7 +733,8 @@ def matrix(name, spec, sections, index):
                 if mark is None:
                     sys.exit(f"{name}: {key} is on the page but abdm_report.py read_cases does not read it from {section['sheet'].name}")
                 cases.append({
-                    "id": case["id"],
+                    # As plan prints a repeated id, so each row is distinct.
+                    "id": key,
                     "anchor": case["anchor"],
                     "group": label,
                     "title": case["title"],

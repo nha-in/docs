@@ -1386,7 +1386,9 @@ function addTestMatrix(moduleId, files, covers) {
   const out = [
     `# ${name} test case matrix`,
     '',
-    `Every case in NHA's ${name} workbook, in the order the sheet groups them, with its marking, its Expected Result and the calls its APIs column names. Before building, read it and build every journey that a case mandatory for your entity type calls. Build each mandatory case's Expected Result into the screen, not only its calls. The test run uses it to know what each case exercises.`,
+    withApis
+      ? `Every case in NHA's ${name} workbook, in the order the sheet groups them, with its marking, its Expected Result and the APIs the sheet lists for it. The sheet merges one APIs cell across the cases of a group, so a case lists every API of its group, and may call only some of them. Before building, read it and build every journey that a case mandatory for your entity type needs. Build each mandatory case's Expected Result into the screen, not only its calls. The test run uses it to know what each case exercises.`
+      : `Every case in NHA's ${name} workbook, in the order the sheet groups them, with its marking and its Expected Result. Before building, read it and build each mandatory case's Expected Result for your entity type into the app screen. The test run uses it to know what each case exercises.`,
     '',
     `Marking is for a government and a private entity, as \`abdm_report.py plan\` reads the workbook. Mandatory cases come first in each group. ${matrix.cases.length} cases; ${matrix.cases.filter(mandatory).length} mandatory for at least one entity type.`,
     '',
@@ -1395,7 +1397,7 @@ function addTestMatrix(moduleId, files, covers) {
     out.push(
       'An operation in another module\'s specification is named with that module. An unresolved path is one the sheet names that no operation in the specifications matches, with the reason: work out the call from the Expected Result and the specification.',
       '',
-      ...['government', 'private'].map((e) => `- Journeys the mandatory cases call for a ${e} entity: ${journeysFor(e).map((j) => `\`${j}\``).join(', ') || 'none named'}.`),
+      ...['government', 'private'].map((e) => `- Journeys the mandatory cases need for a ${e} entity: ${journeysFor(e).map((j) => `\`${j}\``).join(', ') || 'none named'}.`),
       '',
     );
   } else {
@@ -1403,7 +1405,7 @@ function addTestMatrix(moduleId, files, covers) {
   }
   for (const [group, cases] of groups) {
     out.push(`## ${esc(group)}`, '');
-    const head = withApis ? ['Case', 'Marking', 'Operations', 'Journeys', 'Unresolved', 'Expected Result'] : ['Case', 'Marking', 'Expected Result'];
+    const head = withApis ? ['Case', 'Marking', 'Operations the sheet lists for this group', 'Journeys', 'Unresolved', 'Expected Result'] : ['Case', 'Marking', 'Expected Result'];
     out.push(`| ${head.join(' | ')} |`, `|${' --- |'.repeat(head.length)}`);
     for (const c of [...cases.filter(mandatory), ...cases.filter((x) => !mandatory(x))]) {
       const row = [`\`${c.id}\` ${esc(c.title)}`, esc(marking(c))];
@@ -1420,7 +1422,7 @@ function addTestMatrix(moduleId, files, covers) {
   }
   files['references/test-matrix.md'] = out.join('\n');
   covers.push(
-    `- **Test matrix.** Each of the ${matrix.cases.length} NHA cases with its marking for each entity type, its Expected Result and the operations and journeys it calls. Read it before building. [references/test-matrix.md](references/test-matrix.md)`,
+    `- **Test matrix.** Each of the ${matrix.cases.length} NHA cases with its marking for each entity type and its Expected Result${withApis ? ', and the operations and journeys the sheet lists for its group' : ''}. Read it before building. [references/test-matrix.md](references/test-matrix.md)`,
   );
 }
 

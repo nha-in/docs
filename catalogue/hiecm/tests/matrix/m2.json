@@ -668,8 +668,7 @@
             "m2_post_consent_v3_request_hip_on_notify"
           ],
           "journeys": [
-            "m2-consent-management-data-flow-hip",
-            "p2-consent-manager-hiu-hip"
+            "m2-consent-management-data-flow-hip"
           ]
         },
         {

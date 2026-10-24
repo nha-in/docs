@@ -4132,7 +4132,7 @@
       ]
     },
     {
-      "id": "HFR-118",
+      "id": "HFR-118#2",
       "anchor": "hfr-118-2",
       "group": "HFR Bridge linkage: Bridge linkage",
       "title": "Fill the facility Id",
@@ -4161,7 +4161,7 @@
       ]
     },
     {
-      "id": "HFR-119",
+      "id": "HFR-119#2",
       "anchor": "hfr-119-2",
       "group": "HFR Bridge linkage: Bridge linkage",
       "title": "Fill the facility Name",
@@ -4190,7 +4190,7 @@
       ]
     },
     {
-      "id": "HFR-120",
+      "id": "HFR-120#2",
       "anchor": "hfr-120-2",
       "group": "HFR Bridge linkage: Bridge linkage",
       "title": "Fill the bridge Id",
@@ -4219,7 +4219,7 @@
       ]
     },
     {
-      "id": "HFR-121",
+      "id": "HFR-121#2",
       "anchor": "hfr-121-2",
       "group": "HFR Bridge linkage: Bridge linkage",
       "title": "Fill the hip Name",
@@ -4248,7 +4248,7 @@
       ]
     },
     {
-      "id": "HFR-122",
+      "id": "HFR-122#2",
       "anchor": "hfr-122-2",
       "group": "HFR Bridge linkage: Bridge linkage",
       "title": "Fill the HIP type",
@@ -4277,7 +4277,7 @@
       ]
     },
     {
-      "id": "HFR-123",
+      "id": "HFR-123#2",
       "anchor": "hfr-123-2",
       "group": "HFR Bridge linkage: Bridge linkage",
       "title": "Provide details if the bridge is Active or not",
@@ -4324,7 +4324,7 @@
           "source": "https://hpridsbx.abdm.gov.in/api/v1/registration/aadhaar/generateOtp",
           "path": "/api/v1/registration/aadhaar/generateOtp",
           "unresolved": true,
-          "reason": "no operation in the specifications has this path"
+          "reason": "no operation in the specifications has this path; near: m4_post_v1_registration_aadhaar_generatemobileotp (POST /v1/registration/aadhaar/generateMobileOTP)"
         }
       ]
     },
@@ -4347,7 +4347,7 @@
           "source": "https://hpridsbx.abdm.gov.in/api/v1/registration/aadhaar/generateOtp",
           "path": "/api/v1/registration/aadhaar/generateOtp",
           "unresolved": true,
-          "reason": "no operation in the specifications has this path"
+          "reason": "no operation in the specifications has this path; near: m4_post_v1_registration_aadhaar_generatemobileotp (POST /v1/registration/aadhaar/generateMobileOTP)"
         }
       ]
     },
@@ -4370,7 +4370,7 @@
           "source": "https://hpridsbx.abdm.gov.in/api/v1/registration/aadhaar/generateOtp",
           "path": "/api/v1/registration/aadhaar/generateOtp",
           "unresolved": true,
-          "reason": "no operation in the specifications has this path"
+          "reason": "no operation in the specifications has this path; near: m4_post_v1_registration_aadhaar_generatemobileotp (POST /v1/registration/aadhaar/generateMobileOTP)"
         }
       ]
     },
@@ -4393,7 +4393,7 @@
           "source": "https://hpridsbx.abdm.gov.in/api/v1/registration/aadhaar/generateOtp",
           "path": "/api/v1/registration/aadhaar/generateOtp",
           "unresolved": true,
-          "reason": "no operation in the specifications has this path"
+          "reason": "no operation in the specifications has this path; near: m4_post_v1_registration_aadhaar_generatemobileotp (POST /v1/registration/aadhaar/generateMobileOTP)"
         }
       ]
     },
@@ -4416,7 +4416,7 @@
           "source": "https://hpridsbx.abdm.gov.in/api/v1/registration/aadhaar/generateOtp",
           "path": "/api/v1/registration/aadhaar/generateOtp",
           "unresolved": true,
-          "reason": "no operation in the specifications has this path"
+          "reason": "no operation in the specifications has this path; near: m4_post_v1_registration_aadhaar_generatemobileotp (POST /v1/registration/aadhaar/generateMobileOTP)"
         }
       ]
     },
@@ -4439,7 +4439,7 @@
           "source": "https://hpridsbx.abdm.gov.in/api/v1/registration/aadhaar/generateOtp",
           "path": "/api/v1/registration/aadhaar/generateOtp",
           "unresolved": true,
-          "reason": "no operation in the specifications has this path"
+          "reason": "no operation in the specifications has this path; near: m4_post_v1_registration_aadhaar_generatemobileotp (POST /v1/registration/aadhaar/generateMobileOTP)"
         }
       ]
     },
@@ -4462,7 +4462,7 @@
           "source": "https://hpridsbx.abdm.gov.in/api/v1/registration/aadhaar/generateOtp",
           "path": "/api/v1/registration/aadhaar/generateOtp",
           "unresolved": true,
-          "reason": "no operation in the specifications has this path"
+          "reason": "no operation in the specifications has this path; near: m4_post_v1_registration_aadhaar_generatemobileotp (POST /v1/registration/aadhaar/generateMobileOTP)"
         }
       ]
     },
@@ -4501,7 +4501,7 @@
           "source": "https://hpridsbx.abdm.gov.in/api/v1/registration/aadhaar/demographicAuthViaMobile",
           "path": "/api/v1/registration/aadhaar/demographicAuthViaMobile",
           "unresolved": true,
-          "reason": "no operation in the specifications has this path"
+          "reason": "no operation in the specifications has this path; near: m4_post_v2_registration_aadhaar_demographicauthviamobile (POST /v2/registration/aadhaar/demographicAuthViaMobile)"
         }
       ]
     },
@@ -4524,7 +4524,7 @@
           "source": "https://hpridsbx.abdm.gov.in/api/v1/registration/aadhaar/createHprIdWithPreVerified",
           "path": "/api/v1/registration/aadhaar/createHprIdWithPreVerified",
           "unresolved": true,
-          "reason": "no operation in the specifications has this path"
+          "reason": "no operation in the specifications has this path; near: m4_post_v2_registration_aadhaar_createhpridwithpreverified (POST /v2/registration/aadhaar/createHprIdWithPreVerified)"
         }
       ]
     },
@@ -5383,7 +5383,7 @@
           "source": "https://doctorsbx.abdm.gov.in/apis/v1/doctors/update-professional",
           "path": "/apis/v1/doctors/update-professional",
           "unresolved": true,
-          "reason": "no operation in the specifications has this path"
+          "reason": "no operation in the specifications has this path; near: m4_post_v1_doctors_update_professional_new (POST /apis/v1/doctors/update-professional-new)"
         }
       ]
     },
