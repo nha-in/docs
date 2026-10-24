@@ -59,8 +59,9 @@ SMART HMS was built almost entirely with the skills, so its failures are a measu
 | I9 | Creation stops when the Aadhaar already holds an ABHA | CRT_ABHA_112 | Nothing about `isNew: false` |
 | I10 | Scan and share needs an operator to confirm each registration | 701, 702 | The scan and register skill has no design section and never says to register from the shared profile without data entry, to match on name, mobile, gender, ABHA number and address, or the queue rules of 702. Only the test skill says it |
 | I11 | Masked mobile from the OTP response not shown | VRFY_ABHA_404 | Nothing |
+| I12 | The consent screen is not NHA's published consent, and has no language choice | CRT_ABHA_102 (mandatory), 103, 203, 303, 103_FA (optional) | `design.md` gives one paragraph ("I, hereby declare that I am voluntarily sharing my Aadhaar number ... with National Health Authority (NHA) for the sole purpose of creation of ABHA number") and says other languages are optional. NHA's approved consent (sandbox site, Milestone 1, Creation of ABHA Number, Consent Language, image `Consent_Language_ABDM_1_25c394153b.png`) is five declarations with a checkbox each: Aadhaar based authentication; creation with a document other than Aadhaar, left unchecked in an Aadhaar flow; linking past records; sharing for this encounter; anonymised public health use. Then a confirmation by the healthcare worker, named from the logged in user, and by the beneficiary, named dynamically. Private entities remove the word "government". Facilities are advised to show it on a patient facing screen and in the local language. NHA publishes no translations there, so the skill cannot supply them: it requires a language choice that uses the facility's approved translation |
 
-Ten of the eleven have no rule in the build skills; the eleventh (I7) has the journey but no guarantee it is built. The pattern is structural:
+Ten of the eleven have no rule in the build skills; the eleventh (I7) has the journey but no guarantee it is built. I12, found after the run, is worse than a missing rule: the skill teaches the wrong consent text for a mandatory case. The pattern is structural:
 
 - **The build skills describe the API, not the screen.** They are compiled from the specifications and journeys: which calls, in which order, with which headers. NHA's test cases are mostly screen requirements: what is editable, what message shows, when a button is enabled, what a returning patient sees. That knowledge lives only in the workbooks, which feed the test skill and the pages, never the build.
 - **Scope is chosen by deployment, not by test.** The build interview asks yes or no questions about the deployment and builds the routes each yes adds. Nothing makes the journeys NHA's mandatory cases need non optional for the integrator's entity type.
@@ -138,7 +139,7 @@ Both `/abdm-build` and `/abdm-test` load the module skill and `run.md` before an
 
 ### 3.8 Coverage rules
 
-1. An existing ABHA is not a stop: on `isNew: false` the profile (113), the card (114) and the address step (112, with the same `txnId`) still run. The ABHA address limit per ABHA is stated only once it has a source.
+1. An existing ABHA is not a stop: on `isNew: false` the profile (113), the card (114) and the address step (112, with the same `txnId`) still run. More than one ABHA address can be created for the same ABHA number; the skill states no limit.
 2. The test data plan is part of readiness: the identities the mandatory cases need, which one Aadhaar holder covers, and the order that reuses outputs (the address created in 112 is the second address for 702 step 2).
 3. SHARE_PATIENT_PROFILE_701 and 702 are always planned, with what they need: the ABHA app, a counter QR, the bridge callback reaching the product.
 
@@ -180,11 +181,11 @@ Settled on 24 October 2026:
 | Shape of the work | One loop per functionality, from design to test, with a running workbook and draft report |
 | The report to submit | Only from a full run on one final build |
 | The tester | Batched by default; per loop when on call |
+| ABHA addresses | A person can create more than one ABHA address for the same ABHA number. The skill states no number |
 
 Open:
 
-1. **The ABHA address limit.** The user confirms on 24 October 2026 that a person can hold several ABHA addresses on one Aadhaar, up to 6, as stated in ABDM's documentation. The exact page is still to be found: the only "six" located so far is an ABDM developer forum reply that limits ABHA numbers per mobile number to six, a different limit (https://devforum.abdm.gov.in/t/how-will-response-of-search-by-mobile-if-multiple-ahba-registered-with-same-mobile-number/4986). The skill says a person can create more than one ABHA address on the same Aadhaar, and states the number 6 only with the documentation link beside it. Ask the user for the link before stating the number.
-2. **Registration from scan and share (701, 702).** Proposed to the user on 24 October 2026, awaiting their answer: a new patient registers automatically from the shared profile, with no click; a returning patient's suggested match may need one confirmation, never any typing, because matching on name, mobile and gender alone can link the wrong person. Under that rule SMART HMS's flow passes 702 step 1 and is a Conditional pass on 701 (a click where none should be needed). Ask before writing the scan and register screen requirements if the answer has not reached the plan.
+1. **Registration from scan and share (701, 702).** Proposed to the user on 24 October 2026, awaiting their answer: a new patient registers automatically from the shared profile, with no click; a returning patient's suggested match may need one confirmation, never any typing, because matching on name, mobile and gender alone can link the wrong person. Under that rule SMART HMS's flow passes 702 step 1 and is a Conditional pass on 701 (a click where none should be needed). Ask before writing the scan and register screen requirements if the answer has not reached the plan.
 
 ## 5. Order
 
