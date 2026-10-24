@@ -4,8 +4,8 @@ What holds for every functionality: the rules across calls, the hosts and header
 
 ## Before anything else
 
-- Treat every request and response shape in this skill as unconfirmed until the sandbox has answered you. Check a response before you rely on its shape.
-- The design section is different in kind. Its rules come from building a working front desk against the sandbox, and each atom it cites names what was observed and the date it was seen.
+- Paste the sandbox response at every step and check it against the shape this skill gives before you build on it. A step is done when its response is observed.
+- The design section's rules come from building a working front desk against the sandbox, and each atom it cites names what was observed and the date it was seen.
 - ABDM publishes operations, not a user experience. The journey is the integrator's to design, so offer the shape below as a suggestion and build what they ask for instead when they have a view of their own counter.
 - The ABHA step comes before the registration form and fills it. A verified profile carries the whole form, so a journey that registers the patient first and offers ABHA afterwards has already spent the keystrokes it existed to save.
 - Two ways the profile reaches the desk. The patient scans a QR and consents in their own app, and ABDM posts the profile to your callback, so nobody types or asks anything. Or the desk runs the identifier journey. The filled form is the destination either way.
