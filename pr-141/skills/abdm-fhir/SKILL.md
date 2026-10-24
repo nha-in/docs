@@ -55,8 +55,8 @@ The last steps are the module's functional test cases. Their run log is its own 
 
 ## Before anything else
 
-- Treat every request and response shape in this skill as unconfirmed until the sandbox has answered you. Check a response before you rely on its shape.
-- The design section is different in kind. Its rules come from building a working front desk against the sandbox, and each atom it cites names what was observed and the date it was seen.
+- Paste the sandbox response at every step and check it against the shape this skill gives before you build on it. A step is done when its response is observed.
+- The design section's rules come from building a working front desk against the sandbox, and each atom it cites names what was observed and the date it was seen.
 - A bundle that validates is not a bundle ABDM accepts. The NRCES profiles are the floor, and the milestone the bundle travels under adds its own rules on top.
 
 ## Practices that hold across every call

@@ -69,7 +69,7 @@ This file is the map. Each line above is a file beside it, opened one at a time 
 
 ## Before anything else
 
-- Treat every request and response shape in this skill as unconfirmed until the sandbox has answered you. Check a response before you rely on its shape.
+- Paste the sandbox response at every step and check it against the shape this skill gives before you build on it. A step is done when its response is observed.
 - Neither registry moves a health record. M4 establishes who the professional is and what the facility is, so every record flow has a verified provider behind it.
 - The register professional call carries an `hprToken` in its payload, beside the practitioner.
 - The facility calls are keyed to a `trackingId`, and the facility status values in the examples include `Draft` and `Submitted`. Read the status rather than assuming a facility is complete.
