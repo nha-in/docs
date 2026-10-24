@@ -1,0 +1,760 @@
+# NHA's M1 UI test cases, each mapped to the functionality it tests.
+#
+# A functionality is one thing a person does in the integrator's product. The
+# groups follow the 17 groups of NHA's sheet one to one; none is merged or
+# split. They are ordered as an integrator builds them: the groups holding a
+# mandatory case for every entity type first, in the order a patient meets
+# them at a counter, then the optional groups, then the two that apply to
+# government integrators only.
+#
+# Per case:
+#   screen  the screen the case is judged on.
+#   ops     the operation ids the case exercises, from the named skill's spec.
+#           Empty when the case is judged on a screen alone.
+#   needs   what the run needs from the tester. Each name is defined in one
+#           place, the NEEDS list in scripts/check-test-mapping.mjs.
+#   gaps    optional: steps the spec has no operation for, as {step, note}.
+#           A case with gaps is always source: reviewed, with a reason.
+#   source  apis-column: every op is a path the sheet's APIs column names,
+#           resolved to the variant in this functionality's journeys that the
+#           case's steps reach. The column lists the whole group's calls on
+#           every row, so a case keeps only the calls its steps make.
+#           reviewed: the column is empty, names a call the spec lacks, or
+#           leaves out a call the steps make, or the case makes no call at
+#           all. `reason` says which.
+#
+# `applies` is the group's Applicable To. A blank Applicable To, and "PHR App"
+# on Share Profile, both read as all.
+#
+# scripts/check-test-mapping.mjs checks this file against the generated page
+# site/docs/hiecm/v3/resources/test-cases/m1.mdx, the journeys and the specs.
+module: m1
+sheet: nha-2026-10-22-m1-tests/M1_ABHA_CREATION_VERIFICATION_SCAN_AND_SHARE.xlsx
+functionalities:
+  # Sheet group 1.
+  - id: create-abha-aadhaar-otp
+    title: Create ABHA by Aadhaar OTP
+    skill: abdm-m1
+    journeys: [m1-create-abha-aadhaar-otp, m1-abha-card-profile]
+    applies: all
+    cases:
+      - id: CRT_ABHA_101
+        screen: Create ABHA entry, method choice
+        ops: []
+        needs: []
+        source: reviewed
+        reason: Screen only. The option to start creation is checked before any call.
+      - id: CRT_ABHA_104
+        screen: Aadhaar number entry
+        ops: []
+        needs: []
+        source: reviewed
+        reason: Screen only. Format and length are checked on the screen, and an invalid number must not reach request/otp.
+      - id: CRT_ABHA_102
+        screen: Aadhaar consent
+        ops: [m1_post_v3_enrollment_enrol_byaadhaar_otp]
+        needs: [aadhaar-holder, otp]
+        source: apis-column
+      - id: CRT_ABHA_103
+        screen: Aadhaar consent, language choice
+        ops: []
+        needs: []
+        source: reviewed
+        reason: Screen only. The language the consent is shown in; the call carries the same consent code whatever the language.
+      - id: CRT_ABHA_105
+        screen: Aadhaar OTP entry
+        ops: [m1_post_v3_enrollment_request_otp_aadhaar_otp, m1_post_v3_enrollment_enrol_byaadhaar_otp]
+        needs: [aadhaar-holder, otp]
+        source: apis-column
+      - id: CRT_ABHA_106
+        screen: Aadhaar OTP entry, resend
+        ops: [m1_post_v3_enrollment_request_otp_aadhaar_otp]
+        needs: [aadhaar-holder, otp]
+        source: apis-column
+      - id: CRT_ABHA_107
+        screen: Aadhaar OTP entry, verify
+        ops: [m1_post_v3_enrollment_enrol_byaadhaar_otp]
+        needs: [aadhaar-holder, otp]
+        source: apis-column
+      - id: CRT_ABHA_108
+        screen: Communication mobile entry
+        ops: [m1_post_v3_enrollment_enrol_byaadhaar_otp]
+        needs: [otp, aadhaar-without-abha]
+        source: apis-column
+      - id: CRT_ABHA_109
+        screen: Communication mobile OTP
+        ops: [m1_post_v3_enrollment_request_otp_mobile_verify_create_ab_1b66bb, m1_post_v3_enrollment_auth_byabdm_mobile_verify_create_ab_091285]
+        needs: [otp, aadhaar-without-abha, second-mobile]
+        source: apis-column
+      # 112 to 114 run on an Aadhaar that already holds an ABHA: enrol/byAadhaar
+      # answers isNew false with the profile and a txnId (plan 3.8, item 1).
+      - id: CRT_ABHA_112
+        screen: ABHA address choice
+        ops: [m1_get_v3_enrollment_enrol_suggestion_create_abha_aadhaar_otp, m1_post_v3_enrollment_enrol_abha_address_create_abha_aadhaar_otp]
+        needs: [aadhaar-holder, otp]
+        source: apis-column
+      - id: CRT_ABHA_113
+        screen: Created ABHA profile
+        ops: [m1_post_v3_enrollment_enrol_byaadhaar_otp, m1_get_v3_profile_account]
+        needs: [aadhaar-holder, otp]
+        source: apis-column
+      - id: CRT_ABHA_114
+        screen: ABHA card, view and download
+        ops: [m1_get_v3_profile_account_abha_card]
+        needs: [aadhaar-holder, otp]
+        source: apis-column
+      - id: CRT_ABHA_115
+        screen: Integrator's own card with ABHA details
+        ops: [m1_get_v3_profile_account]
+        needs: [aadhaar-holder, otp]
+        source: apis-column
+      - id: CRT_ABHA_116
+        screen: Patient registration, returning patient match
+        ops: []
+        needs: [patient-registered]
+        source: reviewed
+        reason: Screen only. It rides on a creation already run (CRT_ABHA_113), whose identity and OTP it reuses; the match runs on the integrator's own records and no ABDM call decides it.
+
+  # Sheet group 6.
+  - id: login-abha-number
+    title: Log in with ABHA number
+    skill: abdm-m1
+    journeys: [m1-login-abha-number-aadhaar-otp, m1-login-abha-number-mobile-otp, m1-abha-card-profile, m1-profile-update-mobile]
+    applies: all
+    cases:
+      - id: VRFY_ABHA_101
+        screen: ABHA number login, Aadhaar OTP, then registration form
+        ops: [m1_post_v3_profile_login_request_otp_abha_number_aadhaar_otp, m1_post_v3_profile_login_verify_abha_number_aadhaar_otp, m1_get_v3_profile_account, m1_post_v3_profile_account_request_otp_update_mobile, m1_post_v3_profile_account_verify_update_mobile]
+        needs: [aadhaar-holder, otp, second-mobile]
+        source: reviewed
+        reason: The column names the login and profile calls; step 5 also updates the mobile through the Profile API, which the column leaves out, so the update mobile calls are added.
+      - id: VRFY_ABHA_201
+        screen: ABHA number login, mobile OTP, then registration form
+        ops: [m1_post_v3_profile_login_request_otp_abha_number_abha_otp, m1_post_v3_profile_login_verify_abha_number_abha_otp, m1_get_v3_profile_account, m1_post_v3_profile_account_request_otp_update_mobile, m1_post_v3_profile_account_verify_update_mobile]
+        needs: [aadhaar-holder, otp, second-mobile]
+        source: reviewed
+        reason: The column names the login and profile calls; step 5 also updates the mobile through the Profile API, which the column leaves out, so the update mobile calls are added.
+
+  # Sheet group 7.
+  - id: login-abha-address
+    title: Log in with ABHA address
+    skill: abdm-m1
+    journeys: [m1-abha-address-login-aadhaar-otp, m1-abha-address-login-mobile-otp]
+    applies: all
+    cases:
+      - id: VRFY_ABHA_102
+        screen: ABHA address login, Aadhaar OTP, then registration form
+        ops: [m1_post_v3_phr_web_login_abha_search_abha_address_login_a_de8184, m1_post_v3_phr_web_login_abha_request_otp_aadhaar_otp, m1_post_v3_phr_web_login_abha_verify_aadhaar_otp, m1_get_v3_phr_web_login_profile_abha_profile_abha_address_c04e83, m1_get_v3_phr_web_login_profile_abha_phr_card_abha_addres_817c0d]
+        needs: [aadhaar-holder, otp]
+        gaps:
+          - step: 5
+            note: Updates the mobile through the Profile API. The spec's update mobile calls take the X-token of an ABHA number login; no call updates the mobile with an ABHA address login's token.
+        source: reviewed
+        reason: The column decides every op; step 5 has no operation in the spec, recorded under gaps.
+      - id: VRFY_ABHA_202
+        screen: ABHA address login, mobile OTP, then registration form
+        ops: [m1_post_v3_phr_web_login_abha_search_abha_address_login_m_27a20f, m1_post_v3_phr_web_login_abha_request_otp_mobile_otp, m1_post_v3_phr_web_login_abha_verify_mobile_otp, m1_get_v3_phr_web_login_profile_abha_profile_abha_address_b038c4, m1_get_v3_phr_web_login_profile_abha_phr_card_abha_addres_e1bae9]
+        needs: [aadhaar-holder, otp]
+        gaps:
+          - step: 5
+            note: Updates the mobile through the Profile API. The spec's update mobile calls take the X-token of an ABHA number login; no call updates the mobile with an ABHA address login's token.
+        source: reviewed
+        reason: The column decides every op; step 5 has no operation in the spec, recorded under gaps.
+
+  # Sheet group 8.
+  - id: find-abha-mobile
+    title: Find ABHA by mobile
+    skill: abdm-m1
+    journeys: [m1-find-abha-mobile-otp, m1-abha-card-profile]
+    applies: all
+    cases:
+      - id: VRFY_ABHA_301
+        screen: Mobile number entry
+        ops: []
+        needs: []
+        source: reviewed
+        reason: Screen only. An invalid mobile number must not reach abha/search.
+      - id: VRFY_ABHA_302
+        screen: ABHA profile list
+        ops: [m1_post_v3_profile_account_abha_search_find_abha_mobile_otp]
+        needs: [aadhaar-holder]
+        source: apis-column
+      - id: VRFY_ABHA_303
+        screen: ABHA profile list, none found
+        ops: [m1_post_v3_profile_account_abha_search_find_abha_mobile_otp]
+        needs: [mobile-without-abha]
+        source: apis-column
+      - id: VRFY_ABHA_304
+        screen: ABHA profile list, select then send OTP
+        ops: [m1_post_v3_profile_account_abha_search_find_abha_mobile_otp, m1_post_v3_profile_login_request_otp_find_abha_mobile]
+        needs: [aadhaar-holder, otp]
+        source: apis-column
+      - id: VRFY_ABHA_305
+        screen: Mobile OTP entry, then selected profile
+        ops: [m1_post_v3_profile_login_verify_find_abha_mobile, m1_get_v3_profile_account]
+        needs: [aadhaar-holder, otp]
+        source: apis-column
+      - id: VRFY_ABHA_306
+        screen: Registration form filled from the profile
+        ops: [m1_post_v3_profile_login_verify_find_abha_mobile, m1_get_v3_profile_account]
+        needs: [aadhaar-holder, otp]
+        source: apis-column
+      - id: VRFY_ABHA_307
+        screen: Mobile OTP entry, wrong OTP
+        ops: [m1_post_v3_profile_login_verify_find_abha_mobile]
+        needs: [aadhaar-holder, otp]
+        source: apis-column
+      - id: VRFY_ABHA_308
+        screen: Already linked, comparison screen
+        ops: [m1_post_v3_profile_account_abha_search_find_abha_mobile_otp, m1_post_v3_profile_login_request_otp_find_abha_mobile, m1_post_v3_profile_login_verify_find_abha_mobile, m1_get_v3_profile_account]
+        needs: [aadhaar-holder, otp, patient-registered]
+        source: apis-column
+
+  # Sheet group 12.
+  - id: login-aadhaar-otp
+    title: Log in with Aadhaar OTP
+    skill: abdm-m1
+    journeys: [m1-login-aadhaar-number, m1-abha-card-profile]
+    applies: all
+    cases:
+      - id: VRFY_ABHA_401
+        screen: Aadhaar number entry
+        ops: [m1_post_v3_profile_login_request_otp_aadhaar]
+        needs: []
+        source: apis-column
+      - id: VRFY_ABHA_402
+        screen: Aadhaar OTP entry, wrong OTP
+        ops: [m1_post_v3_profile_login_verify_aadhaar_otp]
+        needs: [aadhaar-holder, otp]
+        source: apis-column
+      - id: VRFY_ABHA_403
+        screen: No ABHA found, offer to create
+        ops: [m1_post_v3_profile_login_request_otp_aadhaar, m1_post_v3_profile_login_verify_aadhaar_otp]
+        needs: [aadhaar-without-abha, otp]
+        source: apis-column
+      - id: VRFY_ABHA_404
+        screen: ABHA profile and card, then registration
+        ops: [m1_post_v3_profile_login_request_otp_aadhaar, m1_post_v3_profile_login_verify_aadhaar_otp, m1_get_v3_profile_account, m1_get_v3_profile_account_abha_card]
+        needs: [aadhaar-holder, otp]
+        source: apis-column
+      - id: VRFY_ABHA_405
+        screen: Aadhaar OTP entry, resend
+        ops: [m1_post_v3_profile_login_request_otp_aadhaar]
+        needs: [aadhaar-holder, otp]
+        source: apis-column
+
+  # Sheet group 16.
+  - id: link-one-abha-per-patient
+    title: Link one ABHA number to one patient record
+    skill: abdm-m1
+    journeys: []
+    applies: all
+    cases:
+      - id: TAGGING_UNIQUEPATIENTID_UNIQUEABHANUMBER
+        screen: Patient registration, ABHA number already linked
+        ops: []
+        needs: [patient-registered]
+        source: reviewed
+        reason: Screen only. It rides on a creation or verification already run; the check runs on the integrator's own patient records, the sheet names no call and none decides it.
+
+  # Sheet group 17. NHA's M1 sheet holds these two cases, but they exercise the
+  # scan and register module's operations, so the skill is that module's.
+  - id: scan-and-share
+    title: Scan and share at a counter
+    skill: abdm-scan-and-register
+    journeys: [scan-and-register-abdm-patient-share-hip]
+    applies: all
+    cases:
+      - id: SHARE_PATIENT_PROFILE_701
+        screen: Counter registration from a shared profile, token
+        ops: [scan-and-register_post_v3_hip_patient_share, scan-and-register_post_patient_share_v3_on_share]
+        needs: [abha-app, counter-qr, public-callback]
+        source: reviewed
+        reason: The column names only on-share. The shared profile first reaches the product on the /v3/hip/patient/share callback, so that operation is added.
+      - id: SHARE_PATIENT_PROFILE_702
+        screen: Counter registration, returning patient and queue
+        ops: [scan-and-register_post_v3_hip_patient_share, scan-and-register_post_patient_share_v3_on_share]
+        needs: [abha-app, counter-qr, public-callback, second-abha-address, patient-registered, second-counter-qr]
+        source: reviewed
+        reason: The column names only on-share. The shared profile first reaches the product on the /v3/hip/patient/share callback, so that operation is added.
+
+  # Sheet group 14.
+  - id: update-mobile
+    title: Update the mobile on an ABHA
+    skill: abdm-m1
+    journeys: [m1-profile-update-mobile]
+    applies: all
+    cases:
+      - id: PROF_ABHA_601
+        screen: Profile, update mobile
+        ops: [m1_post_v3_profile_account_request_otp_update_mobile, m1_post_v3_profile_account_verify_update_mobile]
+        needs: [aadhaar-holder, otp, second-mobile]
+        source: apis-column
+
+  # Sheet group 15.
+  - id: read-abha-qr
+    title: Read an ABHA QR code
+    skill: abdm-m1
+    journeys: []
+    applies: all
+    cases:
+      - id: VRFY_ABHA_501
+        screen: Registration form filled from a scanned ABHA QR code
+        ops: []
+        needs: [aadhaar-holder]
+        source: reviewed
+        reason: Screen only. The QR code is read on the integrator's device; the sheet names no call and no call in the spec reads a QR code.
+
+  # Sheet group 2.
+  - id: create-abha-face-auth
+    title: Create ABHA by face authentication
+    skill: abdm-m1
+    journeys: [m1-create-abha-face-authentication, m1-abha-card-profile]
+    applies: all
+    cases:
+      - id: CRT_ABHA_101_FA
+        screen: Create ABHA entry, method choice
+        ops: []
+        needs: []
+        source: reviewed
+        reason: Screen only. The option to start creation is checked before any call.
+      - id: CRT_ABHA_102_FA
+        screen: Aadhaar number entry
+        ops: []
+        needs: []
+        source: reviewed
+        reason: Screen only. An invalid number must not reach auth/init, so no QR code is generated.
+      - id: CRT_ABHA_103_FA
+        screen: Aadhaar consent
+        ops: [m1_post_v3_enrollment_enrol_byaadhaar_face]
+        needs: [aadhaar-holder, abha-app, face-device]
+        source: reviewed
+        reason: The APIs column is empty. The consent code travels in enrol/byAadhaar for face.
+      - id: CRT_ABHA_104_FA
+        screen: Aadhaar consent, language choice
+        ops: []
+        needs: []
+        source: reviewed
+        reason: Screen only. The language the consent is shown in.
+      - id: CRT_ABHA_105_FA
+        screen: Face authentication QR code
+        ops: [m1_post_v3_enrollment_enrol_auth_init_create_abha_face_au_4dea33]
+        needs: [aadhaar-holder]
+        source: reviewed
+        reason: The APIs column is empty. auth/init returns the transaction the QR code carries.
+      - id: CRT_ABHA_106_FA
+        screen: ABHA app scanner
+        ops: []
+        needs: [aadhaar-holder, abha-app]
+        source: reviewed
+        reason: The APIs column is empty, and the case is judged in the ABHA app on the patient's phone, not in the product.
+      - id: CRT_ABHA_107_FA
+        screen: ABHA app, Face RD install redirect
+        ops: []
+        needs: [abha-app, face-device]
+        source: reviewed
+        reason: The APIs column is empty, and the case is judged in the ABHA app on the patient's phone, not in the product.
+      - id: CRT_ABHA_108_FA
+        screen: Face authentication status, then mobile entry
+        ops: [m1_post_v3_enrollment_enrol_capturepid_create_abha_face_a_417d5e, m1_post_v3_enrollment_enrol_byaadhaar_face]
+        needs: [aadhaar-holder, abha-app, face-device]
+        source: reviewed
+        reason: The APIs column is empty. capturePID reports the status the product waits on, then enrol/byAadhaar creates the ABHA.
+      - id: CRT_ABHA_109_FA
+        screen: Face authentication failure, PID error
+        ops: [m1_post_v3_enrollment_enrol_capturepid_create_abha_face_a_417d5e, m1_post_v3_enrollment_enrol_byaadhaar_face]
+        needs: [aadhaar-holder, abha-app, face-device]
+        source: reviewed
+        reason: The APIs column is empty. The PID error comes back on capturePID or enrol/byAadhaar.
+      - id: CRT_ABHA_110_FA
+        screen: Communication mobile entry
+        ops: [m1_post_v3_enrollment_request_otp_mobile_verify_create_ab_6474ce]
+        needs: [abha-app, face-device, aadhaar-without-abha]
+        source: reviewed
+        reason: The APIs column is empty. The OTP goes to the entered mobile through the journey's request/otp.
+      - id: CRT_ABHA_111_FA
+        screen: Communication mobile OTP
+        ops: [m1_post_v3_enrollment_auth_byabdm_mobile_verify_create_ab_b555fb]
+        needs: [abha-app, face-device, aadhaar-without-abha, otp]
+        source: reviewed
+        reason: The APIs column is empty. The journey's auth/byAbdm verifies the mobile OTP.
+      - id: CRT_ABHA_112_FA
+        screen: Communication mobile OTP, resend
+        ops: [m1_post_v3_enrollment_request_otp_mobile_verify_create_ab_6474ce]
+        needs: [abha-app, face-device, aadhaar-without-abha, otp]
+        source: reviewed
+        reason: The APIs column is empty. A resend is the journey's request/otp again.
+      - id: CRT_ABHA_113_FA
+        screen: ABHA address choice
+        ops: [m1_get_v3_enrollment_enrol_suggestion_create_abha_face_au_848b26, m1_post_v3_enrollment_enrol_abha_address_create_abha_face_4b1f33]
+        needs: [aadhaar-holder, abha-app, face-device]
+        source: reviewed
+        reason: The APIs column is empty. The journey's suggestion and abha-address calls.
+      - id: CRT_ABHA_114_FA
+        screen: Created ABHA profile
+        ops: [m1_post_v3_enrollment_enrol_byaadhaar_face, m1_get_v3_profile_account]
+        needs: [aadhaar-holder, abha-app, face-device]
+        source: reviewed
+        reason: The APIs column is empty. The profile comes from enrol/byAadhaar and profile/account.
+      - id: CRT_ABHA_115_FA
+        screen: ABHA card, view and download
+        ops: [m1_get_v3_profile_account_abha_card]
+        needs: [aadhaar-holder, abha-app, face-device]
+        source: reviewed
+        reason: The APIs column is empty. The card comes from profile/account/abha-card.
+      - id: CRT_ABHA_116_FA
+        screen: Integrator's own card with ABHA details
+        ops: [m1_get_v3_profile_account]
+        needs: [aadhaar-holder, abha-app, face-device]
+        source: reviewed
+        reason: The APIs column is empty. The ABHA number and address come from profile/account.
+      - id: CRT_ABHA_117_FA
+        screen: Patient registration, returning patient match
+        ops: []
+        needs: [patient-registered]
+        source: reviewed
+        reason: Screen only. It rides on a face creation already run (CRT_ABHA_114_FA); the match runs on the integrator's own records and no ABDM call decides it.
+
+  # Sheet group 9. Applicable To is blank on the sheet; every case is optional.
+  - id: find-abha-face-auth
+    title: Find ABHA by mobile with face authentication
+    skill: abdm-m1
+    journeys: [m1-find-abha-face]
+    applies: all
+    cases:
+      - id: VRFY_ABHA_301_FA
+        screen: Mobile number entry
+        ops: []
+        needs: []
+        source: reviewed
+        reason: Screen only. An invalid mobile number must not reach abha/search.
+      - id: VRFY_ABHA_302_FA
+        screen: ABHA profile list
+        ops: [m1_post_v3_profile_account_abha_search_find_abha_face]
+        needs: [aadhaar-holder]
+        source: reviewed
+        reason: The APIs column is empty. The journey's abha/search lists the profiles.
+      - id: VRFY_ABHA_303_FA
+        screen: ABHA profile list, none found
+        ops: [m1_post_v3_profile_account_abha_search_find_abha_face]
+        needs: [mobile-without-abha]
+        source: reviewed
+        reason: The APIs column is empty. The journey's abha/search answers with no profile.
+      - id: VRFY_ABHA_304_FA
+        screen: Face authentication QR code for the selected profile
+        ops: [m1_post_v3_profile_login_request_otp_find_abha_face]
+        needs: [aadhaar-holder]
+        source: reviewed
+        reason: The APIs column is empty. The journey's request/otp starts face authentication for the selected profile.
+      - id: VRFY_ABHA_305_FA
+        screen: ABHA app scanner
+        ops: []
+        needs: [aadhaar-holder, abha-app]
+        source: reviewed
+        reason: The APIs column is empty, and the case is judged in the ABHA app on the patient's phone, not in the product.
+      - id: VRFY_ABHA_306_FA
+        screen: ABHA app, Face RD install redirect
+        ops: []
+        needs: [abha-app, face-device]
+        source: reviewed
+        reason: The APIs column is empty, and the case is judged in the ABHA app on the patient's phone, not in the product.
+      - id: VRFY_ABHA_307_FA
+        screen: Face authentication status
+        ops: [m1_post_v3_enrollment_enrol_capturepid_find_abha_face]
+        needs: [aadhaar-holder, abha-app, face-device]
+        source: reviewed
+        reason: The APIs column is empty. capturePID reports the status the product waits on.
+      - id: VRFY_ABHA_308_FA
+        screen: Selected ABHA profile
+        ops: [m1_post_v3_profile_login_verify_find_abha_face]
+        needs: [aadhaar-holder, abha-app, face-device]
+        source: reviewed
+        reason: The APIs column is empty. The journey's verify call returns the selected profile.
+      - id: VRFY_ABHA_309_FA
+        screen: Face authentication failure, PID error
+        ops: [m1_post_v3_enrollment_enrol_capturepid_find_abha_face, m1_post_v3_profile_login_verify_find_abha_face]
+        needs: [aadhaar-holder, abha-app, face-device]
+        source: reviewed
+        reason: The APIs column is empty. The PID error comes back on capturePID or verify.
+
+  # Sheet group 3.
+  - id: create-abha-biometric
+    title: Create ABHA by fingerprint or iris
+    skill: abdm-m1
+    journeys: [m1-create-abha-fingerprint, m1-create-abha-iris, m1-abha-card-profile]
+    applies: all
+    cases:
+      - id: CRT_ABHA_201
+        screen: Create ABHA entry, method choice
+        ops: []
+        needs: []
+        source: reviewed
+        reason: Screen only. The option to start creation is checked before any call.
+      - id: CRT_ABHA_204
+        screen: Aadhaar number entry
+        ops: []
+        needs: []
+        source: reviewed
+        reason: Screen only. Format and length are checked on the screen before any call.
+      - id: CRT_ABHA_202
+        screen: Aadhaar consent
+        ops: [m1_post_v3_enrollment_enrol_byaadhaar_fingerprint, m1_post_v3_enrollment_enrol_byaadhaar_iris]
+        needs: [aadhaar-holder, biometric-device]
+        source: apis-column
+      - id: CRT_ABHA_203
+        screen: Aadhaar consent, language choice
+        ops: []
+        needs: []
+        source: reviewed
+        reason: Screen only. The language the consent is shown in.
+      - id: CRT_ABHA_205
+        screen: Biometric capture and verify
+        ops: [m1_post_v3_enrollment_enrol_byaadhaar_fingerprint, m1_post_v3_enrollment_enrol_byaadhaar_iris]
+        needs: [aadhaar-holder, biometric-device]
+        source: apis-column
+      - id: CRT_ABHA_206
+        screen: Communication mobile entry
+        ops: [m1_post_v3_enrollment_enrol_byaadhaar_fingerprint, m1_post_v3_enrollment_enrol_byaadhaar_iris]
+        needs: [biometric-device, aadhaar-without-abha]
+        source: apis-column
+      - id: CRT_ABHA_207
+        screen: Communication mobile OTP
+        ops: [m1_post_v3_enrollment_request_otp_mobile_verify_create_ab_64b04e, m1_post_v3_enrollment_auth_byabdm_mobile_verify_create_ab_3b237a, m1_post_v3_enrollment_request_otp_mobile_verify_create_abha_iris, m1_post_v3_enrollment_auth_byabdm_mobile_verify_create_abha_iris]
+        needs: [biometric-device, aadhaar-without-abha, second-mobile, otp]
+        source: reviewed
+        reason: The column names only enrol/byAadhaar. The mobile is verified with the journeys' request/otp and auth/byAbdm.
+      - id: CRT_ABHA_208
+        screen: ABHA address choice
+        ops: [m1_get_v3_enrollment_enrol_suggestion_create_abha_fingerprint, m1_post_v3_enrollment_enrol_abha_address_create_abha_fingerprint, m1_get_v3_enrollment_enrol_suggestion_create_abha_iris, m1_post_v3_enrollment_enrol_abha_address_create_abha_iris]
+        needs: [aadhaar-holder, biometric-device]
+        source: reviewed
+        reason: The column names only enrol/byAadhaar. Suggestions and the chosen address go through the journeys' suggestion and abha-address calls.
+      - id: CRT_ABHA_209
+        screen: Created ABHA profile
+        ops: [m1_post_v3_enrollment_enrol_byaadhaar_fingerprint, m1_post_v3_enrollment_enrol_byaadhaar_iris]
+        needs: [aadhaar-holder, biometric-device]
+        source: apis-column
+      - id: CRT_ABHA_210
+        screen: ABHA card, view and download
+        ops: [m1_get_v3_profile_account_abha_card]
+        needs: [aadhaar-holder, biometric-device]
+        source: reviewed
+        reason: The column names only enrol/byAadhaar. The card comes from profile/account/abha-card.
+      - id: CRT_ABHA_211
+        screen: Integrator's own card with ABHA details
+        ops: [m1_post_v3_enrollment_enrol_byaadhaar_fingerprint, m1_post_v3_enrollment_enrol_byaadhaar_iris]
+        needs: [aadhaar-holder, biometric-device]
+        source: apis-column
+
+  # Sheet group 10. Applicable To is blank on the sheet; every case is optional.
+  - id: find-abha-biometric
+    title: Find ABHA by mobile with fingerprint or iris
+    skill: abdm-m1
+    journeys: [m1-find-abha-fingerprint, m1-find-abha-iris]
+    applies: all
+    cases:
+      - id: VRFY_ABHA_601
+        screen: Mobile number entry
+        ops: []
+        needs: []
+        source: reviewed
+        reason: Screen only. An invalid mobile number must not reach abha/search.
+      - id: VRFY_ABHA_602
+        screen: ABHA profile list, none found
+        ops: [m1_post_v3_profile_account_abha_search_find_abha_fingerprint, m1_post_v3_profile_account_abha_search_find_abha_iris]
+        needs: [mobile-without-abha]
+        source: apis-column
+      - id: VRFY_ABHA_603
+        screen: ABHA profile list, biometric verify, profile
+        ops: [m1_post_v3_profile_account_abha_search_find_abha_fingerprint, m1_post_v3_profile_login_request_otp_find_abha_fingerprint, m1_post_v3_profile_login_verify_find_abha_fingerprint, m1_post_v3_profile_account_abha_search_find_abha_iris, m1_post_v3_profile_login_request_otp_find_abha_iris, m1_post_v3_profile_login_verify_find_abha_iris]
+        needs: [aadhaar-holder, biometric-device]
+        source: reviewed
+        reason: The column names abha/search and request/otp as V3 paths, but gives verify as https://abha.abdm.gov.in/api/abha/v3/profile/login/verify, a path the spec lacks; it is read as the journeys' /abha/api/v3/profile/login/verify.
+
+  # Sheet group 13. Applicable To is blank on the sheet; every case is optional.
+  - id: login-aadhaar-biometric
+    title: Log in with Aadhaar by fingerprint or iris
+    skill: abdm-m1
+    journeys: [m1-login-biometric-v3-fingerprint, m1-login-biometric-v3-iris]
+    applies: all
+    cases:
+      - id: VRFY_ABHA_801
+        screen: Aadhaar number entry
+        ops: [m1_post_v3_profile_login_request_otp_biometric_fingerprint, m1_post_v3_profile_login_request_otp_biometric_iris]
+        needs: []
+        source: apis-column
+      - id: VRFY_ABHA_802
+        screen: Biometric capture and verify
+        ops: [m1_post_v3_profile_login_request_otp_biometric_fingerprint, m1_post_v3_profile_login_verify_biometric_fingerprint, m1_post_v3_profile_login_request_otp_biometric_iris, m1_post_v3_profile_login_verify_biometric_iris]
+        needs: [aadhaar-holder, biometric-device]
+        source: apis-column
+      - id: VRFY_ABHA_803
+        screen: No ABHA found, offer to create
+        ops: [m1_post_v3_profile_login_request_otp_biometric_fingerprint, m1_post_v3_profile_login_verify_biometric_fingerprint, m1_post_v3_profile_login_request_otp_biometric_iris, m1_post_v3_profile_login_verify_biometric_iris]
+        needs: [aadhaar-without-abha, biometric-device]
+        source: apis-column
+      - id: VRFY_ABHA_804
+        screen: ABHA profile and card, then registration
+        ops: [m1_post_v3_profile_login_request_otp_biometric_fingerprint, m1_post_v3_profile_login_verify_biometric_fingerprint, m1_post_v3_profile_login_request_otp_biometric_iris, m1_post_v3_profile_login_verify_biometric_iris]
+        needs: [aadhaar-holder, biometric-device]
+        source: apis-column
+
+  # Sheet group 5. The spec has no driving licence journey and no
+  # enrol/byDocument operation, so no case here has an operation.
+  - id: create-abha-driving-licence
+    title: Create ABHA by driving licence
+    skill: abdm-m1
+    journeys: []
+    applies: all
+    cases:
+      - id: CRT_ABHA_401
+        screen: Create ABHA entry, method choice
+        ops: []
+        needs: []
+        source: reviewed
+        reason: Screen only. The option to start creation is checked before any call.
+      - id: CRT_ABHA_402
+        screen: Driving licence consent
+        ops: []
+        needs: []
+        source: reviewed
+        reason: Screen only. Consent is shown and captured before any call.
+      - id: CRT_ABHA_403
+        screen: Communication mobile entry
+        ops: []
+        needs: []
+        source: reviewed
+        reason: Screen only. The mobile is entered before any call.
+      - id: CRT_ABHA_404
+        screen: Communication mobile OTP
+        ops: []
+        needs: [otp]
+        gaps:
+          - step: 1
+            note: Sends and verifies the mobile OTP. The spec has request/otp and auth/byAbdm only inside the Aadhaar, face and biometric creation journeys, not for a driving licence.
+        source: reviewed
+        reason: The column names request/otp and auth/byAbdm, but the spec has them only inside the Aadhaar, face and biometric creation journeys, never for a driving licence, so no operation is mapped.
+      - id: CRT_ABHA_405
+        screen: Driving licence details
+        ops: []
+        needs: [driving-licence]
+        gaps:
+          - step: 3
+            note: Verifies the licence and returns an enrolment number through enrol/byDocument, which the spec lacks.
+        source: reviewed
+        reason: The column names enrol/byDocument, which the spec lacks.
+      - id: CRT_ABHA_406
+        screen: Driving licence upload, front and back
+        ops: []
+        needs: [driving-licence]
+        gaps:
+          - step: 1
+            note: Uploads the front and back of the licence through enrol/byDocument, which the spec lacks.
+        source: reviewed
+        reason: The column names enrol/byDocument, which the spec lacks.
+      - id: CRT_ABHA_407
+        screen: Operator verification of the licence
+        ops: []
+        needs: [driving-licence]
+        gaps:
+          - step: 1
+            note: The operator's approval creates the ABHA through enrol/byDocument, which the spec lacks.
+        source: reviewed
+        reason: The column names enrol/byDocument, which the spec lacks.
+      - id: CRT_ABHA_408
+        screen: Created ABHA number
+        ops: []
+        needs: [driving-licence]
+        gaps:
+          - step: 1
+            note: Shows the ABHA number enrol/byDocument would return; the spec lacks that call.
+        source: reviewed
+        reason: The column names enrol/byDocument, which the spec lacks.
+      - id: CRT_ABHA_410
+        screen: ABHA card, view and download
+        ops: []
+        needs: [driving-licence]
+        gaps:
+          - step: 1
+            note: Shows the ABHA card; profile/account/abha-card needs the token enrol/byDocument would return, and the spec lacks that call.
+        source: reviewed
+        reason: The column names enrol/byDocument, which the spec lacks; the card call needs the token that call would return.
+      - id: CRT_ABHA_411
+        screen: Integrator's own card with ABHA details
+        ops: []
+        needs: [driving-licence]
+        gaps:
+          - step: 1
+            note: Prints the ABHA number and address enrol/byDocument would return; the spec lacks that call.
+        source: reviewed
+        reason: The column names enrol/byDocument, which the spec lacks.
+
+  # Sheet group 4. Applicable To: Government.
+  - id: create-abha-demo-auth
+    title: Create ABHA by demographic authentication
+    skill: abdm-m1
+    journeys: [m1-create-abha-demo-auth, m1-abha-card-profile]
+    applies: government
+    cases:
+      - id: CRT_ABHA_301
+        screen: Create ABHA entry, method choice
+        ops: []
+        needs: []
+        source: reviewed
+        reason: Screen only. The option to start creation is checked before any call.
+      - id: CRT_ABHA_302
+        screen: Aadhaar consent
+        ops: [m1_post_v3_enrollment_enrol_byaadhaar_demo_auth_create_ab_81107d]
+        needs: [aadhaar-holder]
+        source: apis-column
+      - id: CRT_ABHA_303
+        screen: Aadhaar consent, language choice
+        ops: []
+        needs: []
+        source: reviewed
+        reason: Screen only. The language the consent is shown in.
+      - id: CRT_ABHA_304
+        screen: Aadhaar number entry
+        ops: []
+        needs: []
+        source: reviewed
+        reason: Screen only. Format and length are checked on the screen before any call.
+      - id: CRT_ABHA_305
+        screen: Demographic details entry
+        ops: [m1_post_v3_enrollment_enrol_byaadhaar_demo_auth_create_ab_81107d]
+        needs: [aadhaar-holder]
+        source: apis-column
+      - id: CRT_ABHA_306
+        screen: Profile completion form
+        ops: [m1_post_v3_enrollment_enrol_byaadhaar_demo_auth_create_ab_81107d]
+        needs: [aadhaar-holder]
+        source: apis-column
+      - id: CRT_ABHA_307
+        screen: Created ABHA number
+        ops: [m1_post_v3_enrollment_enrol_byaadhaar_demo_auth_create_ab_81107d]
+        needs: [aadhaar-holder]
+        source: apis-column
+      - id: CRT_ABHA_308
+        screen: ABHA card, view and download
+        ops: [m1_get_v3_profile_account_abha_card]
+        needs: [aadhaar-holder]
+        source: reviewed
+        reason: The column names only enrol/byAadhaar. The card comes from profile/account/abha-card.
+      - id: CRT_ABHA_309
+        screen: Integrator's own card with ABHA details
+        ops: [m1_post_v3_enrollment_enrol_byaadhaar_demo_auth_create_ab_81107d]
+        needs: [aadhaar-holder]
+        source: apis-column
+
+  # Sheet group 11. Applicable To: Only for Govt.
+  - id: find-abha-benefit
+    title: Find the benefits linked to an ABHA
+    skill: abdm-m1
+    journeys: [m1-benefit-search]
+    applies: government
+    cases:
+      - id: VRFY_ABHA_701
+        screen: Benefit programmes for an ABHA number
+        ops: [m1_get_v3_profile_benefit_abha_abhanumber]
+        needs: [aadhaar-holder]
+        source: apis-column
