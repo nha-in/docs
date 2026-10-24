@@ -856,6 +856,8 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 			for _, m := range known {
 				if _, ok := s.Skill(m, cmd.Name); ok {
 					use.Candidates = append(use.Candidates, m)
+				} else if _, ok := perFunctionalityParts(s.Skill, m, cmd.Name, ""); ok {
+					use.Candidates = append(use.Candidates, m)
 				}
 			}
 			if err := emit("skill", use); err != nil {
@@ -874,6 +876,35 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 			// the same way a retrieved passage does.
 			g.corpus.WriteString(cut)
 			addSource(&sources, Source{ID: use.URI, Title: module + " " + cmd.Name, URL: use.Href})
+		} else if parts, ok := perFunctionalityParts(s.Skill, module, cmd.Name, question); ok {
+			// A module built per functionality: the router, the shared file
+			// the command maps to, and the functionality the question
+			// matches, each with an equal share of the budget.
+			budget := MaxPageChars / len(parts)
+			var blocks []string
+			for _, p := range parts {
+				cut, truncated := CutSection(p.body, question, budget)
+				use.Truncated = use.Truncated || truncated
+				label := p.section
+				if label == "" {
+					label = "router"
+				}
+				blocks = append(blocks, skillBlock(module, label, cut))
+				g.corpus.WriteString(cut)
+				uri := "skill://" + module
+				if p.section != "" {
+					uri += "/" + p.section
+				}
+				addSource(&sources, Source{ID: uri, Title: module + " " + label, URL: partHref(module, p.section)})
+			}
+			main := parts[len(parts)-1]
+			use.Status = "used"
+			use.URI = "skill://" + module
+			if main.section != "" {
+				use.URI += "/" + main.section
+			}
+			use.Href = partHref(module, main.section)
+			skillPrefix = strings.Join(blocks, "\n\n") + "\n\n"
 		} else {
 			use.Status = "missing"
 		}

@@ -33,7 +33,47 @@ If the abdm-docs MCP server is connected, trust its answers over this file: it s
 - Show the ABHA card and QR code, and take a profile a patient shares by QR at your counter.
 - Update a profile and change a mobile.
 
-What it cannot do yet matters as much. Read **Before anything else** below before assuming a capability is one endpoint away.
+## What happens first
+
+The first question is your entity type: government or private. It sets the scope before anything is built.
+
+- Every functionality below that holds a mandatory case for your entity type is in scope, whatever the deployment answers.
+- The deployment questions in [foundations.md](references/foundations.md) add optional functionalities only. They never remove a journey a mandatory case needs.
+- A group for the other entity type only is out of scope, and its cases are recorded NA with the group named.
+
+## Functionalities, in build order
+
+The mandatory cases for each entity type, read from NHA's M1 workbook. Every other case is optional for that entity type.
+
+| # | Functionality | Mandatory for government | Mandatory for private |
+|---|---|---|---|
+| 1 | [Create ABHA by Aadhaar OTP](references/functionalities/create-abha-aadhaar-otp.md) | CRT_ABHA_101, CRT_ABHA_104, CRT_ABHA_102, CRT_ABHA_105, CRT_ABHA_106, CRT_ABHA_107, CRT_ABHA_108, CRT_ABHA_109, CRT_ABHA_112 (conditional), CRT_ABHA_113, CRT_ABHA_114 or CRT_ABHA_115, CRT_ABHA_116 | CRT_ABHA_101, CRT_ABHA_104, CRT_ABHA_102, CRT_ABHA_105, CRT_ABHA_106, CRT_ABHA_107, CRT_ABHA_108, CRT_ABHA_109, CRT_ABHA_112 (conditional), CRT_ABHA_113, CRT_ABHA_114, CRT_ABHA_116 |
+| 2 | [Log in with ABHA number](references/functionalities/login-abha-number.md) | VRFY_ABHA_101, VRFY_ABHA_201 | VRFY_ABHA_101, VRFY_ABHA_201 |
+| 3 | [Log in with ABHA address](references/functionalities/login-abha-address.md) | VRFY_ABHA_102, VRFY_ABHA_202 | VRFY_ABHA_102, VRFY_ABHA_202 |
+| 4 | [Find ABHA by mobile](references/functionalities/find-abha-mobile.md) | VRFY_ABHA_301, VRFY_ABHA_302, VRFY_ABHA_303, VRFY_ABHA_304, VRFY_ABHA_305, VRFY_ABHA_306, VRFY_ABHA_307, VRFY_ABHA_308 | VRFY_ABHA_301, VRFY_ABHA_302, VRFY_ABHA_303, VRFY_ABHA_304, VRFY_ABHA_305, VRFY_ABHA_306, VRFY_ABHA_307, VRFY_ABHA_308 |
+| 5 | [Log in with Aadhaar OTP](references/functionalities/login-aadhaar-otp.md) | VRFY_ABHA_401, VRFY_ABHA_402, VRFY_ABHA_403, VRFY_ABHA_404, VRFY_ABHA_405 | VRFY_ABHA_401, VRFY_ABHA_402, VRFY_ABHA_403, VRFY_ABHA_404, VRFY_ABHA_405 |
+| 6 | [Link one ABHA number to one patient record](references/functionalities/link-one-abha-per-patient.md) | TAGGING_UNIQUEPATIENTID_UNIQUEABHANUMBER | TAGGING_UNIQUEPATIENTID_UNIQUEABHANUMBER |
+| 7 | [Scan and share at a counter](references/functionalities/scan-and-share.md) | SHARE_PATIENT_PROFILE_701, SHARE_PATIENT_PROFILE_702 | SHARE_PATIENT_PROFILE_701, SHARE_PATIENT_PROFILE_702 |
+| 8 | [Update the mobile on an ABHA](references/functionalities/update-mobile.md) | none | none |
+| 9 | [Read an ABHA QR code](references/functionalities/read-abha-qr.md) | none | none |
+| 10 | [Create ABHA by face authentication](references/functionalities/create-abha-face-auth.md) | none | none |
+| 11 | [Find ABHA by mobile with face authentication](references/functionalities/find-abha-face-auth.md) | none | none |
+| 12 | [Create ABHA by fingerprint or iris](references/functionalities/create-abha-biometric.md) | none | none |
+| 13 | [Find ABHA by mobile with fingerprint or iris](references/functionalities/find-abha-biometric.md) | none | none |
+| 14 | [Log in with Aadhaar by fingerprint or iris](references/functionalities/login-aadhaar-biometric.md) | none | none |
+| 15 | [Create ABHA by driving licence](references/functionalities/create-abha-driving-licence.md) | none | none |
+| 16 | [Create ABHA by demographic authentication](references/functionalities/create-abha-demo-auth.md) | CRT_ABHA_301, CRT_ABHA_302, CRT_ABHA_304, CRT_ABHA_305, CRT_ABHA_306, CRT_ABHA_307, CRT_ABHA_308 or CRT_ABHA_309 | not applicable: government only |
+| 17 | [Find the benefits linked to an ABHA](references/functionalities/find-abha-benefit.md) | none | not applicable: government only |
+
+## Starting a loop
+
+1. Read [run.md](references/run.md) and [foundations.md](references/foundations.md) once per session.
+2. Pick the first functionality in the table that `INTEGRATION-PLAN.md` does not show as passed, and open its file.
+3. Run its loop. An integration that already exists starts each loop at Test.
+
+## The full test run
+
+Results gathered while building come from different builds. The report to submit comes from one run of every case in the workbook, on one final build, as [run.md](references/run.md) sets out, with the tester present.
 
 ## Try asking
 
@@ -63,53 +103,11 @@ The last steps are the module's functional test cases. Their run log is its own 
 
 ## What is in this folder
 
-- **Scaffold.** Survey the codebase first when one exists, then build it flow by flow against the sandbox, as a loop that ends when the step's exit condition holds rather than on a call returning 200. [references/scaffold.md](references/scaffold.md)
-- **Design.** What the journey around the calls has to do, and what a screen is forbidden to claim. [references/design.md](references/design.md)
-- **Integrate.** 123 operations, with their hosts and headers. [references/integrate.md](references/integrate.md)
-- **Debug.** The loop from a failed call to a named fix, and 17 error codes from the specification's examples. [references/debug.md](references/debug.md)
-- **Test.** The functional test cases, one loop each, run as API or UI tests, with results written into NHA's workbook and the final test report once every mandatory case passes. Never hands-off: a tester enters every Aadhaar number, mobile number and OTP. [references/test.md](references/test.md)
-
-This file is the map. Each line above is a file beside it, opened one at a time rather than read through.
-
-## Before anything else
-
-- Treat every request and response shape in this skill as unconfirmed until the sandbox has answered you. Check a response before you rely on its shape.
-- The design section is different in kind. Its rules come from building a working front desk against the sandbox, and each atom it cites names what was observed and the date it was seen.
-- ABDM publishes operations, not a user experience. The journey is the integrator's to design, so offer the shape below as a suggestion and build what they ask for instead when they have a view of their own counter.
-- The ABHA step comes before the registration form and fills it. A verified profile carries the whole form, so a journey that registers the patient first and offers ABHA afterwards has already spent the keystrokes it existed to save.
-- Two ways the profile reaches the desk. The patient scans a QR and consents in their own app, and ABDM posts the profile to your callback, so nobody types or asks anything. Or the desk runs the identifier journey. The filled form is the destination either way.
-- Decide deliberately whether a journey can complete without an ABHA. A record keyed by the facility's own number does not need one, and a journey that cannot finish without one blocks care for anyone who has none.
-- An identifier and an auth method are two different questions, and listing them together is what makes M1 look like five choices. Ask which identifier first, then offer auth methods underneath it, and only where there is more than one.
-- Every identifier starts on the login path, Aadhaar included. A verified login already returns the accounts, and only ABDM-1114 on a refusal means nobody holds one. Create on any other answer and the patient ends up with two numbers, which nothing merges.
-- Get an access token first, from the gateway session endpoint. Every other call needs it in `Authorization: Bearer <token>`.
-- Two tokens exist and they are not interchangeable. The gateway access token goes in `Authorization`. The user token from an enrolment or a login goes in `X-token`. Profile endpoints need both.
-- Sensitive fields travel encrypted. Aadhaar numbers, mobile numbers, email addresses, OTP values and passwords are encrypted before they go in the body, then base64 encoded.
-- The certificate response tells you the padding. `GET /v3/profile/public/certificate` returns `{"publicKey", "encryptionAlgorithm"}`. Read that field and translate it for your language. Do not hard code a padding: a constant is right until it is not, and the failure then looks like a bad value rather than a stale constant.
-- One path serves several jobs. The `scope` array in the body picks which one, so read it before assuming an endpoint does one thing.
-- The accounts array on a login verification already carries ABHANumber, preferredAbhaAddress, name, gender, dob, profilePhoto and kycVerified, so a registration form can fill the moment the OTP verifies and before any profile call.
-
-## Practices that hold across every call
-
-- Read the body, not only the status. A refusal often names the field in its body while the status says nothing useful.
-- When ABDM publishes a value, read it rather than hard coding what it currently says. That covers a parameter, such as the encryption algorithm the certificate endpoints return beside the key, and it covers an enumeration. The registries publish theirs as master data calls: councils, courses, colleges, states and districts on the HPR, and facility types and LGD codes on the HFR. A table typed into your source goes stale silently. Purposes and HI types have no master data call: take them from the enumeration in the specification of the call you are making. Refuse to act on a published value you do not recognise rather than falling back to a default.
-- Read every field in a response, not the one you came for. The M1 certificate call returns the encryption algorithm next to the key.
-- Prove an assumption against a call that is able to disagree with you. A call that refuses every input with one message cannot tell you which input was right.
-- Suspect the transport before the data. When a call refuses a value you believe in, check the encryption, the headers and the clock before you doubt the value.
-- Do not carry an encryption path from one module to another. Read the certificate and the algorithm from the registry you are calling.
-- Never log a sensitive value before you encrypt it, and never send one to a remote service to be encrypted. Both move the leak rather than removing it.
-- Generate a fresh REQUEST-ID for every call and log it before sending. Once a call has failed it is the only handle on it.
-- Check the host on any sample before you copy it. A request copied whole can be correct in every respect except where it is pointed, and that failure looks like credentials.
-- Do not validate an identifier more strictly than the platform does. A schema that types a field as a UUID is not a promise that every value is one. Refusing a value ABDM would have accepted turns your own client into the thing that broke.
-- Read a plural response as plural. A verification returns an accounts array and a consent request can produce more than one artefact. Store the collection and decide from its length.
-- A documented callback path is not a documented callback payload. Log the whole body on arrival before you parse it, so a handler written against an assumed shape fails where you can see it.
-- Decode a token before you use it. A call that hands you a token has not necessarily handed you the token the next call wants, and the claims are base64 that need no library to read.
-- When a journey carries the same parameter through two calls, check what each call's specification asks for rather than carrying the first value forward.
-- Do not infer which path an identifier belongs to from where that identifier is most discussed. Send every identifier to the lookup first and let the answer pick the path, so nobody who already holds an account is sent to create a second.
-- Do not match an error code with string equality. A code may come back bare, as `ABDM-1001`, or with a trailing `: ` separator, as `ABDM-1001: `. Match on the code itself and tolerate the separator.
-- Handle a failure that carries no body. Check for an empty body before you parse, or your client throws on the simplest failure there is.
-- Back off on an authentication failure rather than retrying, and never loop a credential check.
-- Send TIMESTAMP in UTC, ISO-8601 with milliseconds and a trailing Z, as in `2022-10-06T15:10:00.587Z`.
-- Cache a public certificate with a validity window rather than forever. A rotation fails every encrypted call at once, and a cache with no expiry cannot recover on its own.
+- **functionalities/**: 17 files, one loop each, in the order of the table above.
+- **[run.md](references/run.md)**: the rules every test run follows, from the readiness check to the report.
+- **[foundations.md](references/foundations.md)**: the rules across calls, hosts, headers, the codebase survey and the design rules across functionalities.
+- **[errors.md](references/errors.md)**: every code the M1 specification returns, and the loop from a code to a fix.
+- **workbook/**: NHA's workbook, copied into `abdm-ft/` before a run.
 
 ## Where the detail is
 

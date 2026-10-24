@@ -19,7 +19,7 @@ Run `/abdm-start` after installing. It says what the skills, agents and commands
 Three, and only three.
 
 - `abdm-integration-agent` takes a goal such as "make my application an HIU", picks the module skills it needs, orders them by their `requires` and `produces`, and holds each step to its exit condition.
-- `abdm-call-debugger` takes one failing call to a fix, verified by the original call succeeding. It reads each module's `references/debug.md`, which lists codes and operations but no fix per code, and carries no codes of its own.
+- `abdm-call-debugger` takes one failing call to a fix, verified by the original call succeeding. It reads each module's `references/debug.md`, or `references/errors.md` in a module built per functionality such as `abdm-m1`, which lists codes and operations but no fix per code, and carries no codes of its own.
 - `fhir-compliance-agent` finds where a codebase generates FHIR, validates representative bundles, corrects the generator, and validates again. It orchestrates `abdm-fhir` and does not replace it.
 
 ## Skills

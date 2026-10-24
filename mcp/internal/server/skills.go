@@ -46,9 +46,16 @@ var sectionLabel = map[string]string{
 	"design":    "What the journey around the calls must do: the screens, the consent and the failure states",
 	"generate":  "Builds conformant FHIR bundles",
 	"audit":     "Checks bundles an existing FHIR store emits",
+	// A module built per functionality.
+	"run":         "The rules every test run follows, from the readiness check to the report",
+	"foundations": "The rules across calls and functionalities: hosts, headers, the codebase survey and the design rules",
+	"errors":      "Every error code the module returns, and the loop from a code to a fix",
 }
 
 func describeSection(name, section string) string {
+	if id, ok := strings.CutPrefix(section, "functionalities/"); ok {
+		return fmt.Sprintf("%s: one loop for the %s functionality, from its screens to its own test cases.", name, id)
+	}
 	if label, ok := sectionLabel[section]; ok {
 		return fmt.Sprintf("%s: %s.", name, label)
 	}

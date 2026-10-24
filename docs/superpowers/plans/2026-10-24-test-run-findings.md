@@ -51,7 +51,7 @@ SMART HMS was built almost entirely with the skills, so its failures are a measu
 | I1 | Name, gender and date of birth stay editable after an ABHA fill | VRFY_ABHA_101, 102, 306 | Nothing |
 | I2 | A wrong OTP drops the transaction; the right OTP then fails | VRFY_ABHA_201 | Nothing about keeping `txnId` across a retry |
 | I3 | ABDM's error message replaced by the app's own text | CRT_ABHA_107 | "Display the text verbatim" is said of the consent text only, never of an error |
-| I4 | Send OTP bypasses the resend limit; Resend link silent | CRT_ABHA_106, VRFY_ABHA_405 | Design explains why resend locks a transaction, not NHA's rule: after 60 seconds, at most 2, then the limit message |
+| I4 | Resend link silent; resend limit not shown | CRT_ABHA_106, VRFY_ABHA_405 | Design explains why resend locks a transaction, not NHA's rule: after 60 seconds, at most 2, then the limit message. Only the Resend control counts toward the limit; a second press of Send OTP is not a resend (user, 24 October 2026) |
 | I5 | OTP sent before the profile list on find by mobile | VRFY_ABHA_302, 304 | The scaffold calls search before OTP, but nothing says the screen must not send an OTP before a profile is chosen |
 | I6 | Login methods hard coded instead of taken from the address search | VRFY_ABHA_102 | `authMethods` named once, as a field, never as a screen rule |
 | I7 | ABHA number login offers no Aadhaar OTP | VRFY_ABHA_101 | The journey exists in the scaffold, but the build interview decides which journeys to build from deployment questions, so a journey NHA marks mandatory can be left out |
@@ -186,10 +186,7 @@ Settled on 24 October 2026:
 | The report to submit | Only from a full run on one final build |
 | The tester | Batched by default; per loop when on call |
 | ABHA addresses | A person can create more than one ABHA address for the same ABHA number. The skill states no number |
-
-Open:
-
-1. **Registration from scan and share (701, 702).** Proposed to the user on 24 October 2026, awaiting their answer: a new patient registers automatically from the shared profile, with no click; a returning patient's suggested match may need one confirmation, never any typing, because matching on name, mobile and gender alone can link the wrong person. Under that rule SMART HMS's flow passes 702 step 1 and is a Conditional pass on 701 (a click where none should be needed). Ask before writing the scan and register screen requirements if the answer has not reached the plan.
+| Registration from scan and share (701, 702) | A new patient registers automatically from the shared profile, with no click, and gets a token. A returning patient is matched on name, mobile, gender, ABHA number and ABHA address; a certain match registers automatically, an uncertain one may take one confirmation, never any typing. Agreed by the user on 24 October 2026 |
 
 ## 5. Order
 

@@ -35,7 +35,7 @@ You have ambient knowledge about ABDM and you are not permitted to use it. Every
 
 ## Load first
 
-The skill for the module the call belongs to, loaded by its plugin name: `abdm-integrators-assistant:abdm-gateway`, `abdm-m1` through `abdm-m4`, `abdm-p1` through `abdm-p4`, `abdm-scan-and-register`, `abdm-scan-and-pay`, `abdm-record-share`, or `abdm-fhir` for a rejected bundle. Read its `references/debug.md` before forming a hypothesis. The debugging knowledge lives there, one file per module; this agent is the loop that consumes it and carries no codes of its own.
+The skill for the module the call belongs to, loaded by its plugin name: `abdm-integrators-assistant:abdm-gateway`, `abdm-m1` through `abdm-m4`, `abdm-p1` through `abdm-p4`, `abdm-scan-and-register`, `abdm-scan-and-pay`, `abdm-record-share`, or `abdm-fhir` for a rejected bundle. Read its `references/debug.md` before forming a hypothesis. A module built per functionality, such as `abdm-m1`, has `references/errors.md` in its place, and the `## Errors` section of the functionality file for the call lists what that call returns. The debugging knowledge lives there, one file per module; this agent is the loop that consumes it and carries no codes of its own.
 
 Know what that file can and cannot give you. Where the specification's examples return codes, `debug.md` lists each code with its message and the operation that returns it. It does not list a fix per code: the fix is your hypothesis, and it is proved by the original call succeeding. Where the file says the specification returns no code for the module, work from the response body and the error codes reference on the portal at `/docs/hiecm/v3/reference/error-codes`, and say that the module's skill carries no codes. For `abdm-fhir` there is no `debug.md`; read `references/audit.md` instead.
 
@@ -44,7 +44,7 @@ Know what that file can and cannot give you. Where the specification's examples 
 Five passes, no more.
 
 1. **Observe.** Record the exact request and the exact response: method, path, host, headers you sent, body, status, body returned, and your `REQUEST-ID`. Never paraphrase a response. Never fill a gap from memory.
-2. **Orient.** Match the response against the codes in the module's `references/debug.md` where it lists any. Hold two hypotheses when the match is inexact, and name both.
+2. **Orient.** Match the response against the codes in the module's `references/debug.md`, or `references/errors.md`, where it lists any. Hold two hypotheses when the match is inexact, and name both.
 3. **Decide.** Pick the cheapest action that would separate them.
 4. **Act.** Change one thing. Changing two leaves you unable to say which mattered.
 5. **Observe again, against the original call.** Applying a fix is not the exit condition. The call you started with succeeding is.

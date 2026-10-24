@@ -314,3 +314,125 @@ func skillBlock(module, section, body string) string {
 	}
 	return fmt.Sprintf("<skill module=%q section=%q>\n%s%s\n</skill>", module, section, rule, body)
 }
+
+// A module skill built per functionality has no scaffold, design, integrate
+// or debug file. Its router lists one file per functionality, as a table
+// row linking references/functionalities/<id>.md, and the parts every loop
+// shares live in foundations.md and errors.md. functionalityLinkRe reads
+// those rows, in the router's build order.
+var functionalityLinkRe = regexp.MustCompile(`\[([^\]]+)\]\(references/functionalities/([a-z0-9-]+)\.md\)`)
+
+// Functionality is one row of a per functionality router.
+type Functionality struct {
+	ID    string
+	Title string
+}
+
+// RouterFunctionalities lists the functionalities a router links, in its
+// order. None means the module still has its job files.
+func RouterFunctionalities(router string) []Functionality {
+	var out []Functionality
+	seen := map[string]bool{}
+	for _, m := range functionalityLinkRe.FindAllStringSubmatch(router, -1) {
+		if seen[m[2]] {
+			continue
+		}
+		seen[m[2]] = true
+		out = append(out, Functionality{ID: m[2], Title: m[1]})
+	}
+	return out
+}
+
+// commandFiles maps a command to the shared files of a per functionality
+// module, besides the router that always goes in: design reads the
+// foundations, debug the codes. Scaffold and integrate live in each
+// functionality file, so the router alone says which to open.
+var commandFiles = map[string][]string{
+	"design":    {"foundations"},
+	"debug":     {"errors"},
+	"scaffold":  nil,
+	"integrate": nil,
+}
+
+// Words every M1 functionality title shares, so they pick none of them.
+var functionalityStopWords = map[string]bool{
+	"abha": true, "with": true, "the": true, "one": true, "an": true, "a": true, "by": true, "to": true, "of": true, "on": true, "at": true,
+}
+
+// MatchFunctionality picks the one functionality a question is about, or ""
+// when it names none. A functionality id in the question wins outright.
+// Otherwise each functionality scores the question words that appear in its
+// title or id, leaving out words every title shares; the highest score wins,
+// and a tie goes to the earlier one in build order. Deterministic, so the
+// same question always loads the same file.
+func MatchFunctionality(question string, fs []Functionality) string {
+	low := strings.ToLower(question)
+	for _, f := range fs {
+		if strings.Contains(low, f.ID) {
+			return f.ID
+		}
+	}
+	words := questionWords(question)
+	best, bestScore := "", 0
+	for _, f := range fs {
+		vocab := map[string]bool{}
+		for _, w := range strings.FieldsFunc(strings.ToLower(f.Title+" "+f.ID), func(r rune) bool {
+			return !(r >= 'a' && r <= 'z' || r >= '0' && r <= '9')
+		}) {
+			if !functionalityStopWords[w] {
+				vocab[w] = true
+			}
+		}
+		score := 0
+		for _, w := range words {
+			if vocab[w] || vocab[strings.TrimSuffix(w, "s")] {
+				score++
+			}
+		}
+		if score > bestScore {
+			best, bestScore = f.ID, score
+		}
+	}
+	return best
+}
+
+// skillPart is one file that goes in front of the model for a command.
+type skillPart struct {
+	section string
+	body    string
+}
+
+// perFunctionalityParts is what a command loads from a per functionality
+// module: the router, the shared file the command maps to, and the one
+// functionality file the question matches. ok is false when the module is
+// not built that way, or when Skill returns no router.
+func perFunctionalityParts(skill func(name, section string) (string, bool), module, command, question string) (parts []skillPart, ok bool) {
+	router, found := skill(module, "")
+	if !found {
+		return nil, false
+	}
+	fs := RouterFunctionalities(router)
+	if len(fs) == 0 {
+		return nil, false
+	}
+	parts = append(parts, skillPart{section: "", body: router})
+	for _, sec := range commandFiles[command] {
+		if body, has := skill(module, sec); has {
+			parts = append(parts, skillPart{section: sec, body: body})
+		}
+	}
+	if id := MatchFunctionality(question, fs); id != "" {
+		if body, has := skill(module, "functionalities/"+id); has {
+			parts = append(parts, skillPart{section: "functionalities/" + id, body: body})
+		}
+	}
+	return parts, true
+}
+
+// partHref is where a part is published on the site.
+func partHref(module, section string) string {
+	if section == "" {
+		return "/skills/" + module + "/SKILL.md"
+	}
+	return "/skills/" + module + "/references/" + section + ".md"
+}
