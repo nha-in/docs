@@ -5,6 +5,7 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -110,5 +111,46 @@ func TestLoadSkillsMissingDirIsNotExist(t *testing.T) {
 	_, err := LoadSkills(filepath.Join(t.TempDir(), "absent"))
 	if !errors.Is(err, fs.ErrNotExist) {
 		t.Fatalf("err = %v, want one errors.Is(fs.ErrNotExist) matches", err)
+	}
+}
+
+func TestLoadSkillsReadsFunctionalitiesBesideJobFiles(t *testing.T) {
+	dir := t.TempDir()
+	writeSkill(t, dir, "abdm-m1",
+		"---\nname: abdm-m1\ndescription: Use when building M1.\n---\n\n# M1\n",
+		map[string]string{"run.md": "# Run\n", "errors.md": "# Errors\n", "foundations.md": "# Foundations\n"})
+	funcDir := filepath.Join(dir, "abdm-m1", "references", "functionalities")
+	if err := os.MkdirAll(funcDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	for f, body := range map[string]string{"find-abha-mobile.md": "# Find\n", "create-abha-aadhaar-otp.md": "# Create\n", "notes.txt": "skip"} {
+		if err := os.WriteFile(filepath.Join(funcDir, f), []byte(body), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	writeSkill(t, dir, "abdm-m2",
+		"---\nname: abdm-m2\ndescription: Use when building M2.\n---\n\n# M2\n",
+		map[string]string{"scaffold.md": "# Scaffold\n", "debug.md": "# Debug\n"})
+
+	got, err := LoadSkills(dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var keys []string
+	for _, s := range got {
+		keys = append(keys, s.Name+"|"+s.Section)
+	}
+	want := []string{
+		"abdm-m1|", "abdm-m1|errors", "abdm-m1|foundations",
+		"abdm-m1|functionalities/create-abha-aadhaar-otp", "abdm-m1|functionalities/find-abha-mobile",
+		"abdm-m1|run", "abdm-m2|", "abdm-m2|debug", "abdm-m2|scaffold",
+	}
+	if strings.Join(keys, ",") != strings.Join(want, ",") {
+		t.Fatalf("sections:\n got %v\nwant %v", keys, want)
+	}
+	for _, s := range got {
+		if s.Section == "functionalities/find-abha-mobile" && (s.Body != "# Find" || s.Description != "Use when building M1.") {
+			t.Errorf("functionality section = %+v", s)
+		}
 	}
 }

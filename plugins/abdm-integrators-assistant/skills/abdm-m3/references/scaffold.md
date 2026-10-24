@@ -369,7 +369,7 @@ Inbound to your bridge at `/api/v3/hiu/health-information/on-request`. Acknowled
 
 **Exit condition (Observe until this is true)**
 
-A 200 response. The specification gives no body for it, so read what comes back.
+A 200 response to `POST /api/v3/hiu/health-information/on-request` in `m3-callbacks`, whose body the specification does not give: read what comes back.
 
 ## Where the detail is
 

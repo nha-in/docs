@@ -30,6 +30,8 @@ type Entry = {
   tests?: number;
   /** The reference files this skill is made of, from the generator. */
   sections: string[];
+  /** A skill built per functionality: how many functionality files it holds. */
+  functionalities?: number;
   /** True when the skill is more than SKILL.md plus references/, so it ships
       as an archive. The NHCX skills are 59 files across eight directories. */
   folder?: boolean;
@@ -154,6 +156,12 @@ const DETAIL: Record<string, (entry: Entry) => string> = {
       : 'Tests from offline pins to a live sandbox.',
   design: () =>
     'What a screen must do, and never claim.',
+  functionalities: (entry) =>
+    `${entry.functionalities ?? 0} loops, each from screen to test.`,
+  run: () => 'The test run, from readiness to report.',
+  foundations: () => 'Rules across calls, hosts and headers.',
+  errors: (entry) =>
+    (entry.codes ?? 0) > 0 ? `${entry.codes} error codes, and the debug loop.` : 'The debug loop.',
   generate: () => 'Builds NRCES compliant bundles into your code.',
   audit: () => "Checks a FHIR store against the profiles.",
 };

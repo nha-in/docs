@@ -2943,7 +2943,7 @@ curl --request GET \
 
 **Exit condition (Observe until this is true)**
 
-A 200 response. The specification gives no body for it, so read what comes back.
+A 200 response to `GET /abha/api/v3/phr/web/login/profile/abha/qr-code` in `m1-abha-address-login-mobile-otp`, whose body the specification does not give: read what comes back.
 
 ### ABHA Address Login, Aadhaar OTP (`m1-abha-address-login-aadhaar-otp`)
 
@@ -3043,7 +3043,7 @@ curl --request GET \
 
 **Exit condition (Observe until this is true)**
 
-A 200 response. The specification gives no body for it, so read what comes back.
+A 200 response to `GET /abha/api/v3/phr/web/login/profile/abha/qr-code` in `m1-abha-address-login-aadhaar-otp`, whose body the specification does not give: read what comes back.
 
 ### ABHA Address Login, Fingerprint (`m1-abha-address-login-fingerprint`)
 
@@ -3130,7 +3130,7 @@ curl --request GET \
 
 **Exit condition (Observe until this is true)**
 
-A 200 response. The specification gives no body for it, so read what comes back.
+A 200 response to `GET /abha/api/v3/phr/web/login/profile/abha/qr-code` in `m1-abha-address-login-fingerprint`, whose body the specification does not give: read what comes back.
 
 ### ABHA Address Login, IRIS (`m1-abha-address-login-iris`)
 
@@ -3217,7 +3217,7 @@ curl --request GET \
 
 **Exit condition (Observe until this is true)**
 
-A 200 response. The specification gives no body for it, so read what comes back.
+A 200 response to `GET /abha/api/v3/phr/web/login/profile/abha/qr-code` in `m1-abha-address-login-iris`, whose body the specification does not give: read what comes back.
 
 ## Where the detail is
 

@@ -65,3 +65,30 @@ export function errorsFromSpec(spec) {
   }
   return [...fromExamples, ...listed];
 }
+
+/**
+ * Every error code each operation's own response examples return, as
+ * operationId -> [{code, http, message}]. errorsFromSpec keeps one operation
+ * per code; this keeps every operation that returns it, so a functionality's
+ * calls can list the codes they return.
+ */
+export function errorsByOperation(spec) {
+  const out = new Map();
+  for (const block of [spec.paths ?? {}, spec.webhooks ?? {}]) {
+    for (const item of Object.values(block)) for (const method of METHODS) {
+      const op = item?.[method]; if (!op?.operationId) continue;
+      const seen = new Map();
+      for (const [status, response] of Object.entries(op.responses ?? {})) {
+        if (!/^[45]/.test(status)) continue;
+        const media = response?.content?.['application/json'] ?? {};
+        const samples = [media.example, ...Object.values(media.examples ?? {}).map((e) => e?.value)];
+        for (const sample of samples) for (const {code, message} of codesIn(sample)) {
+          const key = `${code}|${message.trim()}`;
+          if (!seen.has(key)) seen.set(key, {code, http: status, message: message.trim()});
+        }
+      }
+      if (seen.size) out.set(op.operationId, [...seen.values()]);
+    }
+  }
+  return out;
+}

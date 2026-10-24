@@ -7,8 +7,9 @@ version: abdm-v3
 order: 6
 title: Ask the integrator about the deployment, not the patient about the journey
 summary: >
-  Six questions about a deployment decide which ABHA routes it offers, and the
-  routes then decide which screens get built.
+  The entity type decides which functionalities must be built. Five questions
+  about the deployment then add optional routes, and never remove a mandatory
+  one.
 sources:
   - url: https://sandbox.abdm.gov.in/
     status: observed-2026-09-15
@@ -29,10 +30,12 @@ M1 has around forty operations and no deployment needs all of them. The routes
 do not change from one integrator to the next. The context does: who they are,
 what hardware sits on the desk, what their record already holds.
 
-So the first thing to establish is not how the journey should look. It is six
-facts about the deployment. Each answer adds a route rather than replacing one,
-which is what keeps an integration from branching into a government variant and
-a private variant that then drift apart.
+The first fact is the entity type, government or private. Every functionality
+that holds a mandatory test case for that entity type is built, whatever else
+the deployment looks like. The other questions only add optional routes. None
+of them removes a route a mandatory case needs, which is what keeps an
+integration from branching into a government variant and a private variant
+that then drift apart.
 
 ## Before you start
 
@@ -42,37 +45,42 @@ answers decide what
 
 ## What happens
 
-Ask these six. Each is a yes or a no.
+Settle the entity type first. Then ask these five. Each is a yes or a no, and a
+yes adds an optional route.
 
 | Ask | A yes adds |
 |---|---|
-| Are you a government integrator? | The demographic route: one call, no one time password |
 | Does your record hold the patient's mobile at check in? | No route. It removes a screen, because the lookup is submitted from the number you already hold |
-| Are you a registered facility with a callback ABDM can reach? | Scan and register, which then becomes the default counter experience |
 | Is there a fingerprint or iris reader at the desk? | The biometric method |
 | Do patients arrive with the ABHA app? | The face route, as a second method rather than a first |
+| Do you create ABHAs from a driving licence? | The driving licence route |
 | Which record types does your system actually produce? | The bundles worth generating, rather than all seven |
 
-The answers give the route set. The route set gives the screen set. The
-integrator then implements renderers for the screens that survive, rather than
-implementing a flow.
+Scan and register is not a question. Its cases are mandatory for every entity
+type, so it is always built. A callback ABDM cannot reach yet is a readiness
+item to solve before its test, never a reason to leave it out. The same holds
+for the demographic route for a government entity.
 
-The sixth question belongs here rather than with the record work, because
+The mandatory functionalities and the answers together give the route set. The
+route set gives the screen set. The integrator then implements renderers for
+those screens, rather than implementing a flow.
+
+The last question belongs here rather than with the record work, because
 scaffolding all eight record types before knowing which two a system produces is
 the most expensive guess available in this integration.
 
 ## How you know it worked
 
-You can name, before any screen is drawn, which routes this deployment offers
-and which it does not. Every screen in the build traces to a route that at least
-one answer switched on, and no screen exists for a route no answer reached.
+You can name, before any screen is drawn, the routes the entity type makes
+mandatory and the optional routes the answers added. Every functionality with a
+mandatory case for the entity type is in the build, whatever the answers were.
 
 ## When it goes wrong
 
 - The build contains a government branch and a private branch. The answers were
-  used to pick a variant rather than to light up routes. Each yes should add,
+  used to pick a variant rather than to add routes. Each yes should add,
   never replace.
-- A screen exists that no route uses. Something was built from the specification
-  rather than from the answers.
-- Seven record generators exist and the system produces two. The sixth question
+- A functionality with a mandatory case is missing because an answer was no.
+  The answers add optional routes only.
+- Seven record generators exist and the system produces two. The last question
   was not asked.

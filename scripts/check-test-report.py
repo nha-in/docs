@@ -34,6 +34,8 @@ catalogue/shared/concepts/test-workbook-write-back.md, and checks:
   its condition, counted on its own and listed with its condition in the
   report; a case's steps render as a Step, Result and Note table; the writer
   refuses a conditional-pass with no condition;
+- the M1 skill's page classifier, scripts/lib/test-case-page.mjs, says what
+  plan says for every M1 case, for a government and a private entity;
 - plan lists the 100 M1 cases in sheet order with their applicability: the
   demographic group not applicable for a private entity, SHARE_PATIENT_PROFILE_701
   mandatory;
@@ -1016,6 +1018,21 @@ def main():
        f"plan: SHARE_PATIENT_PROFILE_701 is mandatory: {rows.get('SHARE_PATIENT_PROFILE_701')}")
     ok(all(r[3] == "open" for r in rows.values()) and out.stdout.splitlines()[-1].startswith("total 100 cases"),
        "plan: an unrun workbook reads open for every case, then the totals")
+
+    # The M1 skill's router and functionality files read each case's marking
+    # from the generated test case page through scripts/lib/test-case-page.mjs.
+    # It must say what plan says, for both entity types, on every case.
+    for entity in ("government", "private"):
+        planned = run(report, "plan", fresh, "--run", "ui", "--entity", entity).stdout.splitlines()
+        want = {x.split(" | ")[0]: x.split(" | ")[2].split(" (")[0].split(";")[0].strip()
+                for x in planned if " | " in x and not x.startswith("total ")}
+        page = subprocess.run(["node", str(ROOT / "scripts" / "lib" / "test-case-page.mjs"), "m1", entity],
+                              capture_output=True, text=True)
+        got = {x.split(" | ")[0]: x.split(" | ")[1] for x in page.stdout.splitlines() if " | " in x}
+        differ = sorted(i for i in set(want) | set(got) if want.get(i) != got.get(i))
+        ok(page.returncode == 0 and len(got) == 100 and not differ,
+           f"the skill's page classifier agrees with plan for a {entity} entity: "
+           f"{[(i, want.get(i), got.get(i)) for i in differ][:5]} {page.stderr.strip()[-200:]}")
 
     shape_checks(work, report, writer, run, ids)
 
