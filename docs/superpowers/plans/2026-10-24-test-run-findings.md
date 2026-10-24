@@ -183,8 +183,8 @@ Settled on 24 October 2026:
 
 Open:
 
-1. The ABHA address limit per ABHA (6, as reported): the source to cite.
-2. For 701 and 702, does an operator confirming a match with no data entry count as "automatically" registering?
+1. **The ABHA address limit.** The user confirms on 24 October 2026 that a person can hold several ABHA addresses on one Aadhaar, up to 6, as stated in ABDM's documentation. The exact page is still to be found: the only "six" located so far is an ABDM developer forum reply that limits ABHA numbers per mobile number to six, a different limit (https://devforum.abdm.gov.in/t/how-will-response-of-search-by-mobile-if-multiple-ahba-registered-with-same-mobile-number/4986). The skill says a person can create more than one ABHA address on the same Aadhaar, and states the number 6 only with the documentation link beside it. Ask the user for the link before stating the number.
+2. **Registration from scan and share (701, 702).** Proposed to the user on 24 October 2026, awaiting their answer: a new patient registers automatically from the shared profile, with no click; a returning patient's suggested match may need one confirmation, never any typing, because matching on name, mobile and gender alone can link the wrong person. Under that rule SMART HMS's flow passes 702 step 1 and is a Conditional pass on 701 (a click where none should be needed). Ask before writing the scan and register screen requirements if the answer has not reached the plan.
 
 ## 5. Order
 
