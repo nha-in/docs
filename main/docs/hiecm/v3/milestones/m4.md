@@ -54,16 +54,16 @@ M4 agent skill
 
 Every M4 call in one file: 104 operations.
 
-[SKILL.md](/docs/main/skills/abdm-m4/SKILL.md "The router. Use the command below to take the references with it.")
+[Download skill](/docs/main/skills/abdm-m4.tar.gz "The whole skill folder, as a .tar.gz archive.")
 
-- ScaffoldBuilds each flow until the sandbox confirms it.
+- ScaffoldEight steps from discovery to sandbox tests.
 - Integrate91 operations, with hosts and headers.
 - DebugNo error code is recorded yet.
 - TestTests from offline pins to a live sandbox.
 
-`mkdir -p .claude/skills/abdm-m4/references && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m4/SKILL.md -o .claude/skills/abdm-m4/SKILL.md && for f in scaffold integrate debug test; do curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m4/references/$f.md -o .claude/skills/abdm-m4/references/$f.md; done`
+`mkdir -p .claude/skills && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m4.tar.gz | tar -xzf - -C .claude/skills`
 
-[Open in Claude](claude://code/new?q=Install%20the%20ABDM%20M4%20agent%20skill%20into%20this%20project%2C%20then%20help%20me%20use%20it.%0A%0ARun%20this%3A%0Amkdir%20-p%20.claude%2Fskills%2Fabdm-m4%2Freferences%20%26%26%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fskills%2Fabdm-m4%2FSKILL.md%20-o%20.claude%2Fskills%2Fabdm-m4%2FSKILL.md%20%26%26%20for%20f%20in%20scaffold%20integrate%20debug%20test%3B%20do%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fskills%2Fabdm-m4%2Freferences%2F%24f.md%20-o%20.claude%2Fskills%2Fabdm-m4%2Freferences%2F%24f.md%3B%20done%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20ABDM%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
+[Open in Claude](claude://code/new?q=Install%20the%20ABDM%20M4%20agent%20skill%20into%20this%20project%2C%20then%20help%20me%20use%20it.%0A%0ARun%20this%3A%0Amkdir%20-p%20.claude%2Fskills%20%26%26%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fskills%2Fabdm-m4.tar.gz%20%7C%20tar%20-xzf%20-%20-C%20.claude%2Fskills%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20ABDM%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
 
 Drops the skill into this project. Claude loads it when a task matches.
 
@@ -71,7 +71,7 @@ How to use it
 
 1. Run the command above in the repository you are integrating.
 2. Ask your agent for the job in your own words. "Onboard this facility to the HFR and link its HIP bridge". The skill loads when the task matches it.
-3. Check what it writes against these pages. The skill carries the facts, not the sandbox: nothing in it has been run against ABDM.
+3. Check what it writes against these pages. The skill names the cases it could not reach on the NHCX sandbox, and nothing in it is re-verified here.
 4. Open in Claude needs that app installed. It fills the composer and waits: nothing runs until you read it and press Enter.
 
 ## Certification

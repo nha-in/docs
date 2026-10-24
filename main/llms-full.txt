@@ -35314,19 +35314,15 @@ curl --request POST \
   --data '{
   "acknowledgement": {
     "status": "SUCCESS",
-    "abhaAddress": "<ABHA_ADDRESS>",
+    "abhaAddress": "<ABHA_ADDRESS_FROM_THE_SHARE>",
     "profile": {
-      "context": "43",
-      "tokenNumber": "3",
-      "expiry": 180
+      "context": "<COUNTER_ID_FROM_THE_SHARE>",
+      "tokenNumber": "<TOKEN_NUMBER_YOUR_QUEUE_ISSUED>",
+      "expiry": "<TOKEN_EXPIRY_AS_A_NUMBER>"
     }
   },
-  "error": {
-    "code": "ABDM-9999",
-    "message": "Unknown exception"
-  },
   "response": {
-    "requestId": "6f0b4665-a915-4c92-aa36-65afb4a2cd71"
+    "requestId": "<REQUEST_ID_OF_THE_SHARE>"
   }
 }'
 ```
@@ -35459,7 +35455,7 @@ The suggested journey, in five steps:
 1. **Start registering the patient** in your own system, under your own number.
 2. **Ask whether they have an ABHA.** No means the form is typed by hand, and the patient is treated exactly the same.
 3. **Take one identifier.** Aadhaar is the one to recommend, because it is the only route that ends in a KYC verified ABHA number. Mobile sits beside it. Under Aadhaar only, ask how they prove it: an OTP, a face scan, or a fingerprint or iris reader.
-4. **Log in or create, decided by the answer.** Every identifier starts on the login path. One account signs the person in. Several need a chooser. None offers creation.
+4. **Offer both: find an existing ABHA, or create one.** Functional testing expects a Create ABHA option beside verification. On the find path, one account signs the person in, several need a chooser, and none offers creation. On the create path, an Aadhaar that already holds an ABHA is not a stop: `enrol/byAadhaar` returns that account, and the journey carries on to its profile, card and ABHA address.
 5. **Fill your form from what came back,** and let the receptionist confirm it rather than type it.
 
 Whatever journey you build, these hold:
@@ -35473,11 +35469,11 @@ Notes for AI agents
 
 **Before you start.** A gateway session, the M1 certificate for encrypting identifiers, and a decision on what the desk does when the person has no ABHA and does not want one today.
 
-**What happens.** Send every identifier, Aadhaar included, to the login OTP request first, never straight to enrolment. Read `accounts` on the verify response: one account, call verify user with its `ABHANumber` and the same `txnId`; several, show a chooser and do the same with the chosen one; none, offer creation. Then read the profile at `/abha/api/v3/profile/account` with the `X-token` and fill the form.
+**What happens.** Offer Create ABHA beside the find and login paths, as CRT\_ABHA\_101 requires. On a find or login path, read `accounts` on the verify response: one account, call verify user with its `ABHANumber` and the same `txnId`; several, show a chooser and do the same with the chosen one; none, offer creation. On the create path, `enrol/byAadhaar` answering `isNew` false returns the existing account's profile and tokens: carry on to the profile, card and ABHA address step, never create a second account. Then read the profile at `/abha/api/v3/profile/account` with the `X-token` and fill the form.
 
-**How you know it worked.** A person with an ABHA registers with their details arriving from the profile and the receptionist correcting at most one field. A person who declines is still registered, with no error, and can be offered ABHA again from their chart. A person who already holds an ABHA, run through the path a new patient takes, ends signed in to the account they had.
+**How you know it worked.** A person with an ABHA registers with their details arriving from the profile and the receptionist correcting at most one field. A person who declines is still registered, with no error, and can be offered ABHA again from their chart. A person who already holds an ABHA ends on the account they had, whether they chose to find it or to create one.
 
-**When it goes wrong.** Two ABHA numbers for one person: the journey branched into creation without reading `accounts`. The desk types everything and then links an ABHA: the order is wrong, fetch the profile first. A refused encrypted field shown to the person as a wrong number: check the padding before you blame the number, see [encryption](/docs/main/docs/hiecm/v3/concepts/encryption).
+**When it goes wrong.** Two ABHA numbers for one person: the journey ignored `accounts` on a find path, or `isNew` on the create path. The desk types everything and then links an ABHA: the order is wrong, fetch the profile first. A refused encrypted field shown to the person as a wrong number: check the padding before you blame the number, see [encryption](/docs/main/docs/hiecm/v3/concepts/encryption).
 
 ## Next
 
@@ -37128,23 +37124,22 @@ The setup also connects the [Docs MCP server](/docs/main/docs/hiecm/v3/getting-s
 
 ## Install a skill
 
-One file per job, in three shapes. A module skill carries every endpoint, header and error code for that milestone, provider side (M1 to M4) or patient side (P1 to P4). A scaffold or debug skill is a procedure instead: it works against the sandbox in a loop that ends on an observed result, not on a call returning 200. Every module skill carries both, under its `references/`. The FHIR skills build or audit NRCES compliant bundles.
+One file per job, in three shapes. A module skill carries every endpoint, header and error code for that milestone, provider side (M1 to M4) or patient side (P1 to P4). A scaffold or debug skill is a procedure instead: it works against the sandbox in a loop that ends on an observed result, not on a call returning 200. Every module skill carries both, under its `references/`. M1 is built per functionality instead: one file per thing a person does, each a loop from its screens to its own test cases. The FHIR skills build or audit NRCES compliant bundles.
 
 M1 agent skill
 
 The whole of M1: the calls, the loop that builds them, every error code and the tests.
 
-[SKILL.md](/docs/main/skills/abdm-m1/SKILL.md "The router. Use the command below to take the references with it.")
+[Download skill](/docs/main/skills/abdm-m1.tar.gz "The whole skill folder, as a .tar.gz archive.")
 
-- ScaffoldBuilds each flow until the sandbox confirms it.
-- DesignWhat a screen must do, and never claim.
-- Integrate123 operations, with hosts and headers.
-- Debug17 error codes, each with its fix.
-- TestTests from offline pins to a live sandbox.
+- Functionalities17 loops, each from screen to test.
+- RunThe test run, from readiness to report.
+- FoundationsRules across calls, hosts and headers.
+- Errors17 error codes, and the debug loop.
 
-`mkdir -p .claude/skills/abdm-m1/references && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m1/SKILL.md -o .claude/skills/abdm-m1/SKILL.md && for f in scaffold design integrate debug test; do curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m1/references/$f.md -o .claude/skills/abdm-m1/references/$f.md; done`
+`mkdir -p .claude/skills && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m1.tar.gz | tar -xzf - -C .claude/skills`
 
-[Open in Claude](claude://code/new?q=Install%20the%20ABDM%20M1%20agent%20skill%20into%20this%20project%2C%20then%20help%20me%20use%20it.%0A%0ARun%20this%3A%0Amkdir%20-p%20.claude%2Fskills%2Fabdm-m1%2Freferences%20%26%26%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fskills%2Fabdm-m1%2FSKILL.md%20-o%20.claude%2Fskills%2Fabdm-m1%2FSKILL.md%20%26%26%20for%20f%20in%20scaffold%20design%20integrate%20debug%20test%3B%20do%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fskills%2Fabdm-m1%2Freferences%2F%24f.md%20-o%20.claude%2Fskills%2Fabdm-m1%2Freferences%2F%24f.md%3B%20done%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20ABDM%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
+[Open in Claude](claude://code/new?q=Install%20the%20ABDM%20M1%20agent%20skill%20into%20this%20project%2C%20then%20help%20me%20use%20it.%0A%0ARun%20this%3A%0Amkdir%20-p%20.claude%2Fskills%20%26%26%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fskills%2Fabdm-m1.tar.gz%20%7C%20tar%20-xzf%20-%20-C%20.claude%2Fskills%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20ABDM%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
 
 Drops the skill into this project. Claude loads it when a task matches.
 
@@ -37152,19 +37147,19 @@ How to use it
 
 1. Run the command above in the repository you are integrating.
 2. Ask your agent for the job in your own words. "Add ABHA creation by Aadhaar OTP to this codebase", "why am I getting ABDM-1017". The skill loads when the task matches it.
-3. Check what it writes against these pages. The skill carries the facts, not the sandbox: nothing in it has been run against ABDM.
+3. Check what it writes against these pages. The skill names the cases it could not reach on the NHCX sandbox, and nothing in it is re-verified here.
 4. Open in Claude needs that app installed. It fills the composer and waits: nothing runs until you read it and press Enter.
 
 Download all skills
 
-- [Create and verify ABHA (M1)](https://nha-in.github.io/docs/main/skills/abdm-m1/SKILL.md)
-- [Creation, Linking and Sharing of Health Records (M2)](https://nha-in.github.io/docs/main/skills/abdm-m2/SKILL.md)
-- [Health Information Exchange with Consent (M3)](https://nha-in.github.io/docs/main/skills/abdm-m3/SKILL.md)
-- [Register Healthcare Professionals and Health Facilities (M4)](https://nha-in.github.io/docs/main/skills/abdm-m4/SKILL.md)
-- [PHR registration and login (P1)](https://nha-in.github.io/docs/main/skills/abdm-p1/SKILL.md)
-- [Consents Management (P2)](https://nha-in.github.io/docs/main/skills/abdm-p2/SKILL.md)
-- [PHR subscriptions (P3)](https://nha-in.github.io/docs/main/skills/abdm-p3/SKILL.md)
-- [Health lockers (P4)](https://nha-in.github.io/docs/main/skills/abdm-p4/SKILL.md)
+- [Create and verify ABHA (M1)](https://nha-in.github.io/docs/main/skills/abdm-m1.tar.gz)
+- [Creation, Linking and Sharing of Health Records (M2)](https://nha-in.github.io/docs/main/skills/abdm-m2.tar.gz)
+- [Health Information Exchange with Consent (M3)](https://nha-in.github.io/docs/main/skills/abdm-m3.tar.gz)
+- [Register Healthcare Professionals and Health Facilities (M4)](https://nha-in.github.io/docs/main/skills/abdm-m4.tar.gz)
+- [PHR registration and login (P1)](https://nha-in.github.io/docs/main/skills/abdm-p1.tar.gz)
+- [Consents Management (P2)](https://nha-in.github.io/docs/main/skills/abdm-p2.tar.gz)
+- [PHR subscriptions (P3)](https://nha-in.github.io/docs/main/skills/abdm-p3.tar.gz)
+- [Health lockers (P4)](https://nha-in.github.io/docs/main/skills/abdm-p4.tar.gz)
 - [FHIR bundles](https://nha-in.github.io/docs/main/skills/abdm-fhir/SKILL.md)
 
 ## Prompting an agent to build against ABDM
@@ -37982,17 +37977,16 @@ M1 agent skill
 
 Every M1 call, one per use case, with its error codes in one file: 125 operations, 17 codes.
 
-[SKILL.md](/docs/main/skills/abdm-m1/SKILL.md "The router. Use the command below to take the references with it.")
+[Download skill](/docs/main/skills/abdm-m1.tar.gz "The whole skill folder, as a .tar.gz archive.")
 
-- ScaffoldBuilds each flow until the sandbox confirms it.
-- DesignWhat a screen must do, and never claim.
-- Integrate123 operations, with hosts and headers.
-- Debug17 error codes, each with its fix.
-- TestTests from offline pins to a live sandbox.
+- Functionalities17 loops, each from screen to test.
+- RunThe test run, from readiness to report.
+- FoundationsRules across calls, hosts and headers.
+- Errors17 error codes, and the debug loop.
 
-`mkdir -p .claude/skills/abdm-m1/references && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m1/SKILL.md -o .claude/skills/abdm-m1/SKILL.md && for f in scaffold design integrate debug test; do curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m1/references/$f.md -o .claude/skills/abdm-m1/references/$f.md; done`
+`mkdir -p .claude/skills && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m1.tar.gz | tar -xzf - -C .claude/skills`
 
-[Open in Claude](claude://code/new?q=Install%20the%20ABDM%20M1%20agent%20skill%20into%20this%20project%2C%20then%20help%20me%20use%20it.%0A%0ARun%20this%3A%0Amkdir%20-p%20.claude%2Fskills%2Fabdm-m1%2Freferences%20%26%26%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fskills%2Fabdm-m1%2FSKILL.md%20-o%20.claude%2Fskills%2Fabdm-m1%2FSKILL.md%20%26%26%20for%20f%20in%20scaffold%20design%20integrate%20debug%20test%3B%20do%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fskills%2Fabdm-m1%2Freferences%2F%24f.md%20-o%20.claude%2Fskills%2Fabdm-m1%2Freferences%2F%24f.md%3B%20done%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20ABDM%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
+[Open in Claude](claude://code/new?q=Install%20the%20ABDM%20M1%20agent%20skill%20into%20this%20project%2C%20then%20help%20me%20use%20it.%0A%0ARun%20this%3A%0Amkdir%20-p%20.claude%2Fskills%20%26%26%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fskills%2Fabdm-m1.tar.gz%20%7C%20tar%20-xzf%20-%20-C%20.claude%2Fskills%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20ABDM%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
 
 Drops the skill into this project. Claude loads it when a task matches.
 
@@ -38000,7 +37994,7 @@ How to use it
 
 1. Run the command above in the repository you are integrating.
 2. Ask your agent for the job in your own words. "Add ABHA creation by Aadhaar OTP to this codebase", "why am I getting ABDM-1017". The skill loads when the task matches it.
-3. Check what it writes against these pages. The skill carries the facts, not the sandbox: nothing in it has been run against ABDM.
+3. Check what it writes against these pages. The skill names the cases it could not reach on the NHCX sandbox, and nothing in it is re-verified here.
 4. Open in Claude needs that app installed. It fills the composer and waits: nothing runs until you read it and press Enter.
 
 ## ABHA creation
@@ -38353,17 +38347,17 @@ M2 agent skill
 
 Every M2 call and callback with its error codes in one file: 24 operations, 120 codes.
 
-[SKILL.md](/docs/main/skills/abdm-m2/SKILL.md "The router. Use the command below to take the references with it.")
+[Download skill](/docs/main/skills/abdm-m2.tar.gz "The whole skill folder, as a .tar.gz archive.")
 
-- ScaffoldBuilds each flow until the sandbox confirms it.
+- ScaffoldEight steps from discovery to sandbox tests.
 - DesignWhat a screen must do, and never claim.
 - Integrate24 operations, with hosts and headers.
 - Debug120 error codes, each with its fix.
 - TestTests from offline pins to a live sandbox.
 
-`mkdir -p .claude/skills/abdm-m2/references && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m2/SKILL.md -o .claude/skills/abdm-m2/SKILL.md && for f in scaffold design integrate debug test; do curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m2/references/$f.md -o .claude/skills/abdm-m2/references/$f.md; done`
+`mkdir -p .claude/skills && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m2.tar.gz | tar -xzf - -C .claude/skills`
 
-[Open in Claude](claude://code/new?q=Install%20the%20ABDM%20M2%20agent%20skill%20into%20this%20project%2C%20then%20help%20me%20use%20it.%0A%0ARun%20this%3A%0Amkdir%20-p%20.claude%2Fskills%2Fabdm-m2%2Freferences%20%26%26%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fskills%2Fabdm-m2%2FSKILL.md%20-o%20.claude%2Fskills%2Fabdm-m2%2FSKILL.md%20%26%26%20for%20f%20in%20scaffold%20design%20integrate%20debug%20test%3B%20do%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fskills%2Fabdm-m2%2Freferences%2F%24f.md%20-o%20.claude%2Fskills%2Fabdm-m2%2Freferences%2F%24f.md%3B%20done%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20ABDM%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
+[Open in Claude](claude://code/new?q=Install%20the%20ABDM%20M2%20agent%20skill%20into%20this%20project%2C%20then%20help%20me%20use%20it.%0A%0ARun%20this%3A%0Amkdir%20-p%20.claude%2Fskills%20%26%26%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fskills%2Fabdm-m2.tar.gz%20%7C%20tar%20-xzf%20-%20-C%20.claude%2Fskills%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20ABDM%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
 
 Drops the skill into this project. Claude loads it when a task matches.
 
@@ -38371,7 +38365,7 @@ How to use it
 
 1. Run the command above in the repository you are integrating.
 2. Ask your agent for the job in your own words. "Link a care context for this patient", "why am I getting ABDM-1000". The skill loads when the task matches it.
-3. Check what it writes against these pages. The skill carries the facts, not the sandbox: nothing in it has been run against ABDM.
+3. Check what it writes against these pages. The skill names the cases it could not reach on the NHCX sandbox, and nothing in it is re-verified here.
 4. Open in Claude needs that app installed. It fills the composer and waits: nothing runs until you read it and press Enter.
 
 ## Workflow overview
@@ -38645,17 +38639,17 @@ M3 agent skill
 
 Every M3 call and callback in one file: 16 operations.
 
-[SKILL.md](/docs/main/skills/abdm-m3/SKILL.md "The router. Use the command below to take the references with it.")
+[Download skill](/docs/main/skills/abdm-m3.tar.gz "The whole skill folder, as a .tar.gz archive.")
 
-- ScaffoldBuilds each flow until the sandbox confirms it.
+- ScaffoldEight steps from discovery to sandbox tests.
 - DesignWhat a screen must do, and never claim.
 - Integrate16 operations, with hosts and headers.
 - DebugNo error code is recorded yet.
 - TestTests from offline pins to a live sandbox.
 
-`mkdir -p .claude/skills/abdm-m3/references && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m3/SKILL.md -o .claude/skills/abdm-m3/SKILL.md && for f in scaffold design integrate debug test; do curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m3/references/$f.md -o .claude/skills/abdm-m3/references/$f.md; done`
+`mkdir -p .claude/skills && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m3.tar.gz | tar -xzf - -C .claude/skills`
 
-[Open in Claude](claude://code/new?q=Install%20the%20ABDM%20M3%20agent%20skill%20into%20this%20project%2C%20then%20help%20me%20use%20it.%0A%0ARun%20this%3A%0Amkdir%20-p%20.claude%2Fskills%2Fabdm-m3%2Freferences%20%26%26%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fskills%2Fabdm-m3%2FSKILL.md%20-o%20.claude%2Fskills%2Fabdm-m3%2FSKILL.md%20%26%26%20for%20f%20in%20scaffold%20design%20integrate%20debug%20test%3B%20do%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fskills%2Fabdm-m3%2Freferences%2F%24f.md%20-o%20.claude%2Fskills%2Fabdm-m3%2Freferences%2F%24f.md%3B%20done%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20ABDM%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
+[Open in Claude](claude://code/new?q=Install%20the%20ABDM%20M3%20agent%20skill%20into%20this%20project%2C%20then%20help%20me%20use%20it.%0A%0ARun%20this%3A%0Amkdir%20-p%20.claude%2Fskills%20%26%26%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fskills%2Fabdm-m3.tar.gz%20%7C%20tar%20-xzf%20-%20-C%20.claude%2Fskills%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20ABDM%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
 
 Drops the skill into this project. Claude loads it when a task matches.
 
@@ -38663,7 +38657,7 @@ How to use it
 
 1. Run the command above in the repository you are integrating.
 2. Ask your agent for the job in your own words. "Raise a consent request and fetch the records it covers". The skill loads when the task matches it.
-3. Check what it writes against these pages. The skill carries the facts, not the sandbox: nothing in it has been run against ABDM.
+3. Check what it writes against these pages. The skill names the cases it could not reach on the NHCX sandbox, and nothing in it is re-verified here.
 4. Open in Claude needs that app installed. It fills the composer and waits: nothing runs until you read it and press Enter.
 
 ## Journey 1: raising a consent request
@@ -38836,16 +38830,16 @@ M4 agent skill
 
 Every M4 call in one file: 104 operations.
 
-[SKILL.md](/docs/main/skills/abdm-m4/SKILL.md "The router. Use the command below to take the references with it.")
+[Download skill](/docs/main/skills/abdm-m4.tar.gz "The whole skill folder, as a .tar.gz archive.")
 
-- ScaffoldBuilds each flow until the sandbox confirms it.
+- ScaffoldEight steps from discovery to sandbox tests.
 - Integrate91 operations, with hosts and headers.
 - DebugNo error code is recorded yet.
 - TestTests from offline pins to a live sandbox.
 
-`mkdir -p .claude/skills/abdm-m4/references && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m4/SKILL.md -o .claude/skills/abdm-m4/SKILL.md && for f in scaffold integrate debug test; do curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m4/references/$f.md -o .claude/skills/abdm-m4/references/$f.md; done`
+`mkdir -p .claude/skills && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m4.tar.gz | tar -xzf - -C .claude/skills`
 
-[Open in Claude](claude://code/new?q=Install%20the%20ABDM%20M4%20agent%20skill%20into%20this%20project%2C%20then%20help%20me%20use%20it.%0A%0ARun%20this%3A%0Amkdir%20-p%20.claude%2Fskills%2Fabdm-m4%2Freferences%20%26%26%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fskills%2Fabdm-m4%2FSKILL.md%20-o%20.claude%2Fskills%2Fabdm-m4%2FSKILL.md%20%26%26%20for%20f%20in%20scaffold%20integrate%20debug%20test%3B%20do%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fskills%2Fabdm-m4%2Freferences%2F%24f.md%20-o%20.claude%2Fskills%2Fabdm-m4%2Freferences%2F%24f.md%3B%20done%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20ABDM%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
+[Open in Claude](claude://code/new?q=Install%20the%20ABDM%20M4%20agent%20skill%20into%20this%20project%2C%20then%20help%20me%20use%20it.%0A%0ARun%20this%3A%0Amkdir%20-p%20.claude%2Fskills%20%26%26%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fskills%2Fabdm-m4.tar.gz%20%7C%20tar%20-xzf%20-%20-C%20.claude%2Fskills%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20ABDM%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
 
 Drops the skill into this project. Claude loads it when a task matches.
 
@@ -38853,7 +38847,7 @@ How to use it
 
 1. Run the command above in the repository you are integrating.
 2. Ask your agent for the job in your own words. "Onboard this facility to the HFR and link its HIP bridge". The skill loads when the task matches it.
-3. Check what it writes against these pages. The skill carries the facts, not the sandbox: nothing in it has been run against ABDM.
+3. Check what it writes against these pages. The skill names the cases it could not reach on the NHCX sandbox, and nothing in it is re-verified here.
 4. Open in Claude needs that app installed. It fills the composer and waits: nothing runs until you read it and press Enter.
 
 ## Certification
