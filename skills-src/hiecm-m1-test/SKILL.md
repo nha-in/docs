@@ -42,7 +42,7 @@ Walks the ABDM M1 functional test cases, ABHA creation and verification, against
 
 ## What happens first
 
-The first question is the run type. `ft` is the API functional test: your system against the sandbox, judged on calls and callbacks. `ui` is the UI test: an agent drives your application's screens, as the section "Running a case as a UI test" below sets out. `all` runs `ft` for the chosen cases, then `ui`. The second question: which cases. All of them, one function group, or a list of ids. Then the preconditions for the first case are checked before anything is sent. Then the readiness check below. After it, nothing else is asked until a case needs a human or an authentication step.
+Before the first question, run the environment survey, as "The environment survey" below sets out, and run every script after it under the interpreter `abdm-ft/env.json` names. The first question is the run type. `ft` is the API functional test: your system against the sandbox, judged on calls and callbacks. `ui` is the UI test: an agent drives your application's screens, as the section "Running a case as a UI test" below sets out. `all` runs `ft` for the chosen cases, then `ui`. The second question: which cases. All of them, one function group, or a list of ids. Then the preconditions for the first case are checked before anything is sent. Then the readiness check below. After it, nothing else is asked until a case needs a human or an authentication step.
 
 **Readiness check.** The run does not start until every row of "What it needs from you" that the chosen cases use is confirmed. Ask for each one in the terminal, one at a time. Record each in the run log's header as `ready`, `missing` or `not needed`, never the value itself.
 
@@ -53,15 +53,16 @@ The first question is the run type. `ft` is the API functional test: your system
 | People and devices | Each is named for this run: who receives the OTPs, who approves in the PHR app, which device scans |
 | Entity type and claimed capabilities | Answered, because they decide which cases are mandatory |
 | An Aadhaar with no ABHA | The tester was told, before the first case, that the full creation journey needs an Aadhaar that holds no ABHA, and that an existing ABHA can be deleted on https://abhasbx.abdm.gov.in/abha/v3 to free it, as NHA recommends. Record `ready` when they have one, or `existing ABHA kept` when they keep theirs |
+| The environment | `abdm-ft/abdm_env.py survey` printed `ready`. For a `ui` or `all` run, the Playwright tools are also in your tool list |
 | The run log | Its folder exists and can be written: `abdm-ft/` in your repository unless you name another |
-| The workbook | `python3 abdm-ft/abdm_workbook.py cases <workbook>` lists the case ids, and every case chosen is among them. Required: without it there are no results in the sheet and no report, so ask for it before the first case |
+| The workbook | `python3 -I abdm-ft/abdm_workbook.py cases <workbook>` lists the case ids, and every case chosen is among them. Required: without it there are no results in the sheet and no report, so ask for it before the first case |
 | UI readiness, for a `ui` or `all` run | Every row of the readiness check in "Running a case as a UI test" is `ready`: Node, the Playwright tools, a browser, the application URL and the tester login. `not needed` for an `ft` run |
 
 A `missing` row that a mandatory case needs stops the run before the first call. Say what is missing and ask the one question that would fix it.
 
 **Ask for every input the cases need.** In the readiness check, ask for each input a chosen case needs beyond the rows above, such as a second mobile, a mobile that holds no ABHA, an Aadhaar that holds no ABHA, a second ABHA address, a fingerprint or face device, the ABHA app, a counter QR code or a public callback URL. Record each as `ready` or `missing`. Ask again for a `missing` one when the run reaches the case that needs it. Only when the tester says they cannot provide it in this run is that case `needs-human`, with what was asked in Remarks.
 
-**The case plan.** Before the first case, run `python3 abdm-ft/abdm_report.py plan <workbook> --run <ft or ui> --entity <government or private>`, as "Writing the test report" sets out. It lists every case in the workbook, in sheet order, with its group, what it is for your entity type and its status so far. The run log's rows are made from that list. No case may be dropped: a case that cannot run is `needs-human` with its need named, after asking, or `not-run` with the rule that makes it not apply. Before the tester leaves, run `python3 abdm-ft/abdm_workbook.py open <workbook> --run <ft or ui> --entity <government or private>` and read the list out, including every `NA on a mandatory case` line, so every case still waiting for them is done, or asked about, while they are there.
+**The case plan.** Before the first case, run `python3 -I abdm-ft/abdm_report.py plan <workbook> --run <ft or ui> --entity <government or private>`, as "Writing the test report" sets out. It lists every case in the workbook, in sheet order, with its group, what it is for your entity type and its status so far. The run log's rows are made from that list. No case may be dropped: a case that cannot run is `needs-human` with its need named, after asking, or `not-run` with the rule that makes it not apply. Before the tester leaves, run `python3 -I abdm-ft/abdm_workbook.py open <workbook> --run <ft or ui> --entity <government or private>` and read the list out, including every `NA on a mandatory case` line, so every case still waiting for them is done, or asked about, while they are there.
 
 ## How this skill runs
 
@@ -138,6 +139,36 @@ Readiness: credentials ready; system ready; OTP person ready; biometric device n
 | CRT_ABHA_106 | running | | |
 | CRT_ABHA_107 | pending | | |
 ```
+
+### The tracker in INTEGRATION-PLAN.md
+
+`INTEGRATION-PLAN.md` carries one row per functionality, between two `abdm-tracker` markers. `abdm_report.py tracker` writes those rows from the workbook and `functionalities.json`, as "Writing the test report" sets out. Never type a count, a case, a result or a state into them.
+
+| Column | Holds |
+|---|---|
+| Functionality | Its place in build order and its id |
+| Mandatory cases and results | Each case mandatory for your entity type, an either pair as `<id> or <id>`, with its result in the workbook: PASS, CONDITIONAL PASS, FAIL, needs tester, NA or open |
+| Screen or route | What in your product satisfies each case, recorded at Design with `--screen <case id>=<screen or route>` |
+| State | One of the states below |
+| Date and Build | When, and on which build, the functionality was last tested, recorded with `--set <id>=tested --build <build>` |
+
+| State | Means | Comes from |
+|---|---|---|
+| `not started` | No result and nothing recorded | The default |
+| `building` | Somewhere from Design to Debug | `--set <id>=building` |
+| `built and waiting for the tester` | Built, and its cases wait for the tester, or some are recorded with none failed and some still open | `--set <id>=built`, or the workbook |
+| `passed` | Every mandatory case for your entity type is PASS or CONDITIONAL PASS | The workbook |
+| `failing` | A mandatory case is FAIL | The workbook |
+| `optional, not in scope` | No case in it is mandatory for your entity type | The workbook. `--set <id>=in-scope` adds it |
+| `not applicable` | Its group is for the other entity type only | The workbook |
+
+`building` and `built and waiting for the tester` hold until `--set <id>=tested`, recorded once its cases are written into the workbook. From then the workbook decides the state.
+
+**The tester is batched by default.** Take each functionality to `built and waiting for the tester`, then run the cases of all of them in one session with the tester present. Test each functionality as soon as it is built only when the tester says they are on call.
+
+### Findings after every loop and every run
+
+After a functionality's test, and after every run, write the findings file beside the draft or the report: `build` writes it, and `findings` writes it without a report. It lists each FAIL and CONDITIONAL PASS, its functionality, and the screen requirements in that functionality's file that cite the case. A case none cites gets a Catalogue issue, written out ready to paste. Show it to the person and leave the filing to them: the next integrator meets that requirement before the test only when it is in the functionality file.
 
 ### Authentication is never skipped
 

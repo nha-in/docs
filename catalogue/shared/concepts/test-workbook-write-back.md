@@ -63,15 +63,15 @@ The writer masks the Response and Remarks values before it writes them, with the
 ## Before you start
 
 - The workbook for the module, copied from the test skill's own `workbook/` folder into your repository beside the run log, such as `abdm-ft/M1_ABHA_CREATION_VERIFICATION_SCAN_AND_SHARE.xlsx`. The skill ships the sheet its cases come from, so use that copy rather than another. M4 has two, HFR and HPR: each is its own workbook with its own results file. The PHR workbook has no case ids: the script builds them from each tab and row, `PHR_ADDR_302` for row 3.2 of the ABHA address creation tab, exactly as the test case page shows them, and its first write adds a `Test Case ID` column holding them.
-- Python 3.9 or later with `openpyxl` and `Pillow`: `pip install openpyxl pillow`. Pillow is what keeps the sheet's logos when it is saved.
+- Python 3.9 or later with `openpyxl` and `Pillow`. Pillow is what keeps the sheet's logos when it is saved. The environment survey, `shared.concept.test-environment`, finds an interpreter that has them, or installs them into `abdm-ft/.venv` on the tester's yes. Run the script under the interpreter it names.
 - The script below, saved as `abdm-ft/abdm_workbook.py` before the readiness check, which runs it.
 
 ```python
 """Read NHA's functional test case workbook and write a run's results into it.
 
-  python3 abdm_workbook.py cases  WORKBOOK
-  python3 abdm_workbook.py write  WORKBOOK --run ft|ui --results RESULTS.json
-  python3 abdm_workbook.py open   WORKBOOK --run ft|ui [--entity government|private]
+  python3 -I abdm_workbook.py cases  WORKBOOK
+  python3 -I abdm_workbook.py write  WORKBOOK --run ft|ui --results RESULTS.json
+  python3 -I abdm_workbook.py open   WORKBOOK --run ft|ui [--entity government|private]
 
 A result's outcome is passed, conditional-pass, failed, needs-human or not-run.
 A conditional-pass needs remarks naming the condition. A result may carry
@@ -546,7 +546,7 @@ if __name__ == "__main__":
 1. Before the first case, list the case ids the workbook holds:
 
    ```bash
-   python3 abdm-ft/abdm_workbook.py cases <workbook>
+   python3 -I abdm-ft/abdm_workbook.py cases <workbook>
    ```
 
    Run the cases in that list. A case id the skill carries that the workbook lacks is a different version of the set: say so before the run starts.
@@ -569,7 +569,7 @@ if __name__ == "__main__":
 3. Then write it into the workbook, so a stopped run loses nothing:
 
    ```bash
-   python3 abdm-ft/abdm_workbook.py write <workbook> --run ft --results abdm-ft/<workbook name>-ft-results.json --executed-by "<tester>" --application "<your system>"
+   python3 -I abdm-ft/abdm_workbook.py write <workbook> --run ft --results abdm-ft/<workbook name>-ft-results.json --executed-by "<tester>" --application "<your system>"
    ```
 
    The first write copies the workbook to `<name>.before-abdm-run.xlsx` beside it, and every later write reads that copy to tell NHA's text from the run's. Every write rewrites the result cells of every case in the file, so writing again is safe. The header block above the table gets the tester, the date and the application, and a later write updates them. When NHA sends a new version of the workbook, delete the old `.before-abdm-run.xlsx` before the first write to it.
@@ -577,7 +577,7 @@ if __name__ == "__main__":
 4. To resume, list the cases whose status for the run type is not `PASS`, `CONDITIONAL PASS` or `NA`, and run only those. With `--entity`, the list also holds every `NA` on a case mandatory for that entity type, marked `(NA on a mandatory case)`, because the report's gate blocks it unless NHA agreed it is not run. Read the list out before the tester leaves, so every case still waiting for them is done or asked about while they are there:
 
    ```bash
-   python3 abdm-ft/abdm_workbook.py open <workbook> --run ft --entity private
+   python3 -I abdm-ft/abdm_workbook.py open <workbook> --run ft --entity private
    ```
 
 ## How you know it worked
@@ -592,7 +592,7 @@ if __name__ == "__main__":
 
 | Observed | Cause | Do |
 |---|---|---|
-| `ModuleNotFoundError: No module named 'openpyxl'` | Not installed | `pip install openpyxl pillow` |
+| `ModuleNotFoundError: No module named 'openpyxl'` | The script ran under an interpreter without it | Run it under `"$(python3 -I abdm-ft/abdm_env.py python)" -I`. If the survey found none with it, install into `abdm-ft/.venv` on the tester's yes |
 | The logos are gone after a write | Pillow is missing, so the images were not read | Install Pillow, copy `<name>.before-abdm-run.xlsx` back over the workbook, and write again |
 | `case id on more than one tab` | Two tabs carry the same id | Ask NHA which one counts. The script writes neither until it is resolved |
 | `not in the workbook: <id>` | The workbook is another version of the set, or the id was typed with a space | Check the id against `cases`. Never rename a case to fit |

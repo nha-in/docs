@@ -22,7 +22,7 @@ import {parse} from 'yaml';
 import {cleanDescription} from './lib/titles.mjs';
 import {errorsFromSpec, errorsByOperation} from './lib/spec-errors.mjs';
 import {loadPage, applicability, ENTITIES} from './lib/test-case-page.mjs';
-import {journeySections, buildLoopRules, splitTestLoop, atomBody, functionalityFile, mandatoryFor} from './lib/functionality-skill.mjs';
+import {journeySections, buildLoopRules, splitTestLoop, atomBody, functionalityFile, mandatoryFor, screenRequirements} from './lib/functionality-skill.mjs';
 import {NEEDS} from './check-test-mapping.mjs';
 import {loadJourneys, stepDataName} from './lib/journeys.mjs';
 import {tryAsking, tryAskingSection, planSection, PLAN_RULE} from './lib/try-asking.mjs';
@@ -744,6 +744,7 @@ function withSurvey(scaffold) {
 const SCRIPT_OF = {
   'shared.concept.test-workbook-write-back': 'abdm_workbook.py',
   'shared.concept.test-report': 'abdm_report.py',
+  'shared.concept.test-environment': 'abdm_env.py',
 };
 const PYTHON_BLOCK = /```python\n([\s\S]*?)\n```/;
 
@@ -774,7 +775,44 @@ function scriptFiles(moduleId) {
   const out = {};
   if (WRITE_BACK_MODULES.has(moduleId)) out['scripts/abdm_workbook.py'] = atomScript(WRITE_BACK_ATOM);
   if (REPORT_MODULES.has(moduleId)) out['scripts/abdm_report.py'] = atomScript(REPORT_ATOM);
+  if (ENVIRONMENT_MODULES.has(moduleId)) out['scripts/abdm_env.py'] = atomScript(ENVIRONMENT_ATOM);
   return out;
+}
+
+// The survey of the machine every run starts with: which Python holds the
+// libraries the two scripts above need, which browser the Playwright server
+// can reach, and for a PHR app adb and Maestro. It lives in the Catalogue as
+// shared.concept.test-environment, script and all, ships as scripts/abdm_env.py
+// and is folded into every test section ahead of the UI run.
+const ENVIRONMENT_ATOM = 'shared.concept.test-environment';
+const ENVIRONMENT_MODULES = new Set(['m1', 'm2', 'm3', 'm4', 'p1', 'p2', 'p3', 'p4']);
+
+function environmentSection() {
+  const {atoms} = loadAtoms();
+  const entry = atoms.get(ENVIRONMENT_ATOM);
+  if (!entry) throw new Error(`${ENVIRONMENT_ATOM} is missing, and every test section folds it in`);
+  const body = entry.body.replace(/^#\s+.+$/m, '').trim();
+  return [
+    '## The environment survey',
+    '',
+    'Run this before the readiness check, and before any other script in this section. `/abdm-test-setup`, `/abdm-build` and `/abdm-test` run it first.',
+    '',
+    withoutScript(body, ENVIRONMENT_ATOM).replace(/^## /gm, '### ').trim(),
+    '',
+    `From \`${ENVIRONMENT_ATOM}\`.`,
+    '',
+  ].join('\n');
+}
+
+/** Inserts the survey ahead of the UI run, else ahead of the write-back, else at the end. */
+function withEnvironment(test, moduleId) {
+  if (!test || !ENVIRONMENT_MODULES.has(moduleId)) return test;
+  const section = environmentSection();
+  for (const marker of ['\n## Running a case as a UI test\n', "\n## Writing results into NHA's workbook\n"]) {
+    const at = test.indexOf(marker);
+    if (at !== -1) return `${test.slice(0, at)}\n${section}${test.slice(at)}`;
+  }
+  return `${test.trimEnd()}\n\n${section}`;
 }
 
 const WRITE_BACK_ATOM = 'shared.concept.test-workbook-write-back';
@@ -1107,6 +1145,31 @@ function buildByFunctionality(module, mapping, whole, wholeFrozen, parts) {
     });
   });
 
+  // The functionalities as data, for the scripts a run uses: abdm_report.py
+  // reads it to write the tracker in INTEGRATION-PLAN.md and the findings
+  // beside a report. Which cases each functionality holds comes from the
+  // mapping; which of them a screen requirement cites, from the file just
+  // written. Markings are not here: the scripts read them from the workbook.
+  files['scripts/functionalities.json'] = `${JSON.stringify({
+    module: module.id,
+    skill: module.slug,
+    generated: 'by scripts/build-skills.mjs from catalogue/hiecm/tests/' + module.id + '.yaml and each functionality file. Do not edit by hand.',
+    functionalities: functionalities.map((f, i) => {
+      const file = `references/functionalities/${f.id}.md`;
+      return {
+        id: f.id,
+        order: i + 1,
+        title: f.title,
+        group: [...new Set(f.cases.map((c) => pageCases.get(c.id)?.group?.name).filter(Boolean))].join('; '),
+        applies: f.applies,
+        file,
+        cases: f.cases.map((c) => c.id),
+        titles: Object.fromEntries(f.cases.map((c) => [c.id, pageCases.get(c.id)?.title ?? ''])),
+        screen_requirements: screenRequirements(files[file], functionalities.map((o) => o.id).filter((id) => id !== f.id)),
+      };
+    }),
+  }, null, 1)}\n`;
+
   // run.md: the rules every run follows, once.
   const loopRules = [
     '## The functionality loop',
@@ -1143,7 +1206,7 @@ function buildByFunctionality(module, mapping, whole, wholeFrozen, parts) {
   ].join('\n');
   const preamble = test.preamble.replace(/^# .+$/m, `# Run ${module.title.split(',')[0]}`);
   const runBody = [preamble, '', loopRules, '## The test cases', '', test.intro, '', 'Each functionality file carries its own cases, under Cases and How the cases run.', '', test.closing].join('\n');
-  files['references/run.md'] = withHumanEntry(withReport(withUiRun(withWriteBack(runBody, module.id), module.id), module.id));
+  files['references/run.md'] = withHumanEntry(withReport(withEnvironment(withUiRun(withWriteBack(runBody, module.id), module.id), module.id), module.id));
 
   // Every header the module's calls and its functionalities' calls take, each
   // once: a functionality can call another module's operations, as scan and
@@ -1262,7 +1325,20 @@ function buildByFunctionality(module, mapping, whole, wholeFrozen, parts) {
     '',
     'Results gathered while building come from different builds. The report to submit comes from one run of every case in the workbook, on one final build, as [run.md](references/run.md) sets out, with the tester present.',
     '',
+    '## Two commands',
+    '',
+    'With the integrators plugin installed, each starts with the environment survey and refuses to go on without NHA\'s workbook in `abdm-ft/`.',
+    '',
+    '| Command | Does |',
+    '|---|---|',
+    `| \`/abdm-build ${module.id}\` | Starts or resumes the loops: reads the tracker, asks the entity type when the tracker lacks it, takes the next functionality in the table above whose mandatory cases have not passed, and runs its loop |`,
+    `| \`/abdm-test ${module.id}\` | The final run on one build: every input asked for up front, the case plan, every mandatory case, the workbook, then the report or the draft and its findings |`,
+    '',
+    'Without the plugin, follow the same order by hand: [run.md](references/run.md) holds every step.',
+    '',
     ...tryAskingSection(entry),
+    `For ${entry.module}, the functionality rows of \`INTEGRATION-PLAN.md\` are the tracker [run.md](references/run.md) defines, and \`abdm_report.py tracker\` writes them. They take the place of the step statuses above for each functionality.`,
+    '',
     '## What is in this folder',
     '',
     `- **functionalities/**: ${functionalities.length} files, one loop each, in the order of the table above.`,
@@ -1270,7 +1346,7 @@ function buildByFunctionality(module, mapping, whole, wholeFrozen, parts) {
     '- **[foundations.md](references/foundations.md)**: the rules across calls, hosts, headers, the codebase survey and the design rules across functionalities.',
     `- **[errors.md](references/errors.md)**: every code the ${entry.module} specification returns, and the loop from a code to a fix.`,
     "- **workbook/**: NHA's workbook, copied into `abdm-ft/` before a run.",
-    '- **scripts/**: `abdm_workbook.py` and `abdm_report.py`, copied into `abdm-ft/` before a run, never retyped.',
+    '- **scripts/**: `abdm_env.py`, the environment survey; `abdm_workbook.py`; `abdm_report.py`, which also writes the tracker and the findings; and `functionalities.json`, which they read. All four are copied into `abdm-ft/` before a run, never retyped.',
     '',
     parts.get('Where the detail is'),
   ].filter((part) => part !== undefined).join('\n');
@@ -1384,7 +1460,7 @@ for (const module of MODULES) {
   // check against the gateway rather than a screenshot.
   // The test section, then how a case runs as a UI test, how its result goes
   // into NHA's workbook, and how the report is written at the end.
-  const test = withHumanEntry(withReport(withUiRun(withWriteBack(fold.test ? guided(fold.test) : '', module.id), module.id), module.id));
+  const test = withHumanEntry(withReport(withEnvironment(withUiRun(withWriteBack(fold.test ? guided(fold.test) : '', module.id), module.id), module.id), module.id));
   if (test) {
     files['references/test.md'] = test;
     Object.assign(files, scriptFiles(module.id));

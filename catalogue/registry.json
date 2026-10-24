@@ -6418,6 +6418,13 @@
     "file": "catalogue/shared/concepts/survey-an-existing-codebase.md"
   },
   {
+    "id": "shared.concept.test-environment",
+    "type": "concept",
+    "gateway": "shared",
+    "source": "file",
+    "file": "catalogue/shared/concepts/test-environment.md"
+  },
+  {
     "id": "shared.concept.test-human-entry",
     "type": "concept",
     "gateway": "shared",
