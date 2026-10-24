@@ -10,6 +10,10 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/bedrockruntime"
 )
 
+// Titan Text Embeddings V2 refuses an input over 50,000 characters or 8,192
+// tokens, and code in a section runs near three characters a token.
+const bedrockMaxInputRunes = 20000
+
 // bedrockInvoker is the one Bedrock call this package makes, held as an
 // interface so tests never touch AWS.
 type bedrockInvoker interface {
@@ -47,7 +51,7 @@ func (b *Bedrock) Model() string { return "bedrock/" + b.modelID }
 func (b *Bedrock) Embed(ctx context.Context, texts []string) ([][]float32, error) {
 	out := make([][]float32, len(texts))
 	for i, text := range texts {
-		body, err := json.Marshal(map[string]any{"inputText": text})
+		body, err := json.Marshal(map[string]any{"inputText": cutToRunes(text, bedrockMaxInputRunes)})
 		if err != nil {
 			return nil, err
 		}
@@ -72,4 +76,15 @@ func (b *Bedrock) Embed(ctx context.Context, texts []string) ([][]float32, error
 		out[i] = parsed.Embedding
 	}
 	return out, nil
+}
+
+func cutToRunes(s string, n int) string {
+	i := 0
+	for j := range s {
+		if i == n {
+			return s[:j]
+		}
+		i++
+	}
+	return s
 }
