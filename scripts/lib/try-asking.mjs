@@ -18,7 +18,8 @@ export function tryAsking(entry) {
   const sections = entry.sections ?? [];
   const prompts = [entry.example];
   if (entry.operations) prompts.push(`What has to be in place before my first ${name} call?`);
-  if (sections.includes('debug')) {
+  // A skill built per functionality carries its codes in errors and its test run in run.
+  if (sections.includes('debug') || sections.includes('errors')) {
     prompts.push(
       entry.errorExample
         ? `My ${name} call returned ${entry.errorExample}. What is wrong, and how do I fix it?`
@@ -26,7 +27,7 @@ export function tryAsking(entry) {
     );
   }
   if (sections.includes('audit')) prompts.push('Audit the FHIR bundles this codebase already emits');
-  if (sections.includes('test')) prompts.push(`Walk me through the ${name} test cases before go-live`);
+  if (sections.includes('test') || sections.includes('run')) prompts.push(`Walk me through the ${name} test cases before go-live`);
   return prompts;
 }
 

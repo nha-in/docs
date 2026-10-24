@@ -84,7 +84,7 @@ Loop limit: 3 passes per test case. Hitting the limit is an escalation: state wh
 - The sheet's Expected Result column decides the outcome. Its Steps To Be Executed say what to do. Its Suggestions for the Functional Tester column is guidance: a gap against it, with the Expected Result met, is a `conditional-pass`, never on its own a FAIL.
 - A message that means the same as the one the sheet quotes is a PASS. Quote both in the run record.
 - A case with several steps records a result for each step, in its result's `steps`. The case is `failed` only when a step's expected result fails. When every step run passes and a step could not be run, the case is `needs-human`, naming that step and what it needs.
-- A case waiting on a person, a device or test data is `needs-human` only after the tester was asked for it, at the readiness check and again at the case, and said they cannot provide it in this run. Remarks name what was asked. Such a case is never `not-run` and never blank. `not-run` is only for a case that does not apply: the entity type, an optional capability you do not offer, or no published operation for it.
+- A case waiting on a person, a device or test data is `needs-human` only after the tester was asked for it, at the readiness check and again at the case, and said they cannot provide it in this run. Remarks name what was asked. Such a case is never `not-run` and never blank; `not-run` is kept for a case that does not apply, as the human entry rule above sets out.
 
 ### The three kinds of evidence
 
@@ -186,11 +186,11 @@ Nudge: calls with a bad `scope`, a bad `loginHint` or a made up `txnId` test you
 
 ## Test cases
 
-The ids, the mandatory marks and the wording of each check are ABDM's, from the M1 ABHA creation, verification, scan and share set as revised on 21 October 2026. The sections are grouped and ordered as the set groups them, and the cases inside a group follow the set's order. Where the set names an operation, the operation id here is the one in `references/integrate.md`, which carries the host, the headers and a full request. Where the set lists no API for a case and ABDM publishes one, the operation id is named so the case can still be observed.
+The ids and the wording of each check are ABDM's, from the M1 ABHA creation, verification, scan and share set as revised on 21 October 2026. What each case is for your entity type is read from that set, not from this text. Where the set names an operation, the operation id here is a call in the same functionality's Calls section, which carries the host, the headers and the full request. Where the set lists no API for a case and ABDM publishes one, the operation id is named so the case can still be observed.
 
 ### CRT_ABHA_101 to 116: create an ABHA by Aadhaar OTP
 
-Applies to every integrator. Mandatory unless marked. This is the group every other creation group repeats with a different authentication step, so it is written in full and the others state only what differs.
+This is the group every other creation group repeats with a different authentication step, so it is written in full and the others state only what differs.
 
 Loop limit: 3 passes per test case.
 
@@ -208,7 +208,7 @@ Loop limit: 3 passes per test case.
 
 Only a case that truly needs a brand new ABHA waits for a fresh Aadhaar, and is `needs-human` with `an Aadhaar with no ABHA` in Remarks after the tester was asked for one. If your application offers no address step for an existing account, that is your application's FAIL on CRT_ABHA_112, not a `not-run`.
 
-#### CRT_ABHA_101, the option exists. Mandatory. `sandbox`
+#### CRT_ABHA_101, the option exists. `sandbox`
 
 Your system offers ABHA creation by Aadhaar OTP, and the journey completes. Drive it end to end through your screen or API.
 
@@ -222,29 +222,29 @@ Exit condition: three literals, all pasted.
 
 Nudge: read `message` and `isNew` on step 1. `Account created successfully` with `isNew` `true` is a new account. `This account already exist` with `isNew` `false` is a 200 too, and is not a failure: the Aadhaar already holds an ABHA. Your application must carry on from that response to the profile, the card and the address step, as "An existing ABHA is not a stop" above sets out. Say in the run log that the account existed, and that steps 1 to 3 ran on it.
 
-#### CRT_ABHA_104, an invalid Aadhaar number is refused before any call. Mandatory. `screen`
+#### CRT_ABHA_104, an invalid Aadhaar number is refused before any call. `screen`
 
 Enter fewer than 12 digits, more than 12 digits, letters and special characters. Your system refuses each with the message "Aadhaar Number is not valid", and sends nothing. Evidence: the refusal on screen and an empty call log for that attempt. Your own check has to be the strict one here; the sandbox's refusal for a bad number is not the one this case is about. The set recommends showing the Aadhaar number masked once entered. `hiecm.concept.m1-honest-screen-states`
 
-#### CRT_ABHA_102, consent is shown and recorded. Mandatory. `screen`
+#### CRT_ABHA_102, consent is shown and recorded. `screen`
 
 Your system shows the published ABDM consent text before the Aadhaar number is asked for, and stores that the person agreed, with when. The person agrees with an "I Agree" checkbox or another approved mechanism. Evidence: the consent screen, and the stored record for this run. `hiecm.concept.m1-screen-contract`
 
-#### CRT_ABHA_103, consent in another language. Optional. `screen`
+#### CRT_ABHA_103, consent in another language. `screen`
 
 The same consent offered in at least one language other than English. Evidence: the screen in that language. Record `not-run` if you do not claim it.
 
-#### CRT_ABHA_105, the Aadhaar OTP is requested and can be entered. Mandatory. `sandbox`, then `human`
+#### CRT_ABHA_105, the Aadhaar OTP is requested and can be entered. `sandbox`, then `human`
 
 Exit condition: `m1_post_v3_enrollment_request_otp_aadhaar_otp` returns 200 with a `txnId` and a `message` that names the masked mobile. Paste it. Then stop: the OTP arrives on the person's phone and only they enter it. If they are not there, ask again naming the OTP field; only when the tester says they cannot provide it in this run, or stays silent after the second ask, record `needs-human` with what was asked and the txnId, and do not mark the case passed or failed.
 
 Screen checks alongside: the prompt tells the person the OTP went to the mobile linked with Aadhaar and shows the last digits, which the `message` carries. The OTP field accepts only six digits. An incomplete, wrong or expired OTP shows the message the API returned.
 
-#### CRT_ABHA_106, resend OTP. Mandatory. `screen`
+#### CRT_ABHA_106, resend OTP. `screen`
 
-The resend control is disabled for 60 seconds after each send and works at most twice. A third attempt shows "Maximum OTP resend attempts reached. Please try again after 30 mins". An OTP counter is visible. Evidence: a recording or timestamped screenshots: disabled at send, enabled after 60 seconds, disabled after the second resend, and the message on the third. A resend that works reuses the `txnId`; a fresh `txnId` is a new request, not a resend.
+Judge it against the Resend requirements under Screen requirements, pressing the Resend control only. Evidence: a recording or timestamped screenshots: disabled at send, enabled after 60 seconds, disabled after the second resend, and the message on the third. A resend that works reuses the `txnId`; a fresh `txnId` is a new request, not a resend.
 
-#### CRT_ABHA_107, the OTP is verified, and a wrong OTP is refused. Mandatory. `sandbox`, `human`
+#### CRT_ABHA_107, the OTP is verified, and a wrong OTP is refused. `sandbox`, `human`
 
 Two observations, both needed.
 
@@ -253,17 +253,17 @@ Two observations, both needed.
 
 The person enters both OTPs. Stop for each.
 
-#### CRT_ABHA_108, the communication mobile is the Aadhaar mobile. Mandatory. `sandbox`
+#### CRT_ABHA_108, the communication mobile is the Aadhaar mobile. `sandbox`
 
 When the mobile the person gives is the Aadhaar linked one, your system goes on to ABHA creation with no second OTP. Drive that path. Exit condition: the journey reaches the ABHA address step with no `m1_post_v3_enrollment_request_otp_mobile_verify_create_ab_1b66bb` call in the log.
 
-#### CRT_ABHA_109, a different communication mobile is verified. Mandatory. `sandbox`, `human`
+#### CRT_ABHA_109, a different communication mobile is verified. `sandbox`, `human`
 
 Give a mobile that is not the Aadhaar linked one. Exit condition: `m1_post_v3_enrollment_request_otp_mobile_verify_create_ab_1b66bb` returns 200 with a `txnId`, the person enters the OTP, and `m1_post_v3_enrollment_auth_byabdm_mobile_verify_create_ab_091285` returns 200. A wrong OTP here is refused on screen and the person can retry.
 
 Screen checks alongside: resend as in CRT_ABHA_106. The communication mobile, whether the Aadhaar one or another, is the one the ABHA card shows.
 
-#### CRT_ABHA_112, the ABHA address is suggested and validated. Mandatory for private and government. `sandbox` and `screen`
+#### CRT_ABHA_112, the ABHA address is suggested and validated. `sandbox` and `screen`
 
 Optional only for a programme that creates a default address by demographic authentication.
 
@@ -277,25 +277,25 @@ letters, digits, or both
 at most one dot and at most one underscore, neither first nor last
 ```
 
-#### CRT_ABHA_113, the ABHA number is displayed. Mandatory. `screen`
+#### CRT_ABHA_113, the ABHA number is displayed. `screen`
 
 The 14 digit ABHA number and the ABHA address from CRT_ABHA_112 are shown together with the profile after creation. Evidence: the screen, with the number matching `healthIdNumber` from the pasted response.
 
-#### CRT_ABHA_114, the ABHA card can be viewed and downloaded. Mandatory for private. `sandbox` and `screen`
+#### CRT_ABHA_114, the ABHA card can be viewed and downloaded. `sandbox` and `screen`
 
 For an integrator that shows the ABHA card. Exit condition: `m1_get_v3_profile_account_abha_card` returns 200 with content type `image/png`, sent with the `X-token` from creation. Screen check: the card is shown as the API returned it, with the demographic details it carries, and can be downloaded. A non-KYC ABHA address cannot download a card; the details have to be KYC verified first.
 
-#### CRT_ABHA_115, your own card carries the ABHA details. Mandatory for government, either this or CRT_ABHA_114. `screen`
+#### CRT_ABHA_115, your own card carries the ABHA details. `screen`
 
 For an integrator that prints its own programme or scheme card instead. A government integrator passes one of CRT_ABHA_114 and CRT_ABHA_115. The card shows the ABHA number and the ABHA address, both required, and your system stores both against your own patient id. Evidence: the card and the stored record.
 
-#### CRT_ABHA_116, a returning patient is matched, not registered again. Mandatory. `screen`
+#### CRT_ABHA_116, a returning patient is matched, not registered again. `screen`
 
 After a creation or a verification, your system searches its own records by mobile, name, gender and age, and by your own beneficiary id such as an MRD or UHID number when one is given. A full match links this visit to the existing beneficiary id. A mismatch in any critical demographic field creates a new one. Evidence: run the same person twice; the second visit is linked to the first beneficiary id and your database holds one row. `hiecm.concept.m1-avoiding-duplicate-abha`
 
 ### CRT_ABHA_101_FA to 117_FA: create an ABHA by Aadhaar face authentication
 
-Applies to every integrator. Optional, every case. The set lists no API for this group. ABDM publishes the face authentication creation flow, so the operation ids below are the ones that observe it. `hiecm.flow.m1-create-abha-face-auth`
+The set lists no API for this group. ABDM publishes the face authentication creation flow, so the operation ids below are the ones that observe it. `hiecm.flow.m1-create-abha-face-auth`
 
 Face authentication is a `human` step on a device. The person scans a QR code from your screen with the ABHA app, logged out, and captures their face in the ABHA Face RD app on their phone. Ask for that phone and that person at readiness and again at each case. Without them, record every case from CRT_ABHA_106_FA on that you claim as `needs-human`, naming what was asked, after it was asked for at readiness and again at the case, and the tester said they cannot provide it in this run. A case you do not claim is `not-run`, because the whole group is optional.
 
@@ -303,49 +303,49 @@ Loop limit: 3 passes per test case.
 
 **Preconditions.** A gateway access token less than 30 minutes old. A person present with their Aadhaar number and a phone with the ABHA app installed and logged out. Their Aadhaar number searched first on the login path and not found.
 
-#### CRT_ABHA_101_FA, the face authentication option exists. Optional. `screen`
+#### CRT_ABHA_101_FA, the face authentication option exists. `screen`
 
 Your ABHA creation screen offers face authentication as a way to authenticate the Aadhaar number. Evidence: the screen with the option.
 
-#### CRT_ABHA_102_FA, an invalid Aadhaar number is refused before a QR code. Optional. `screen`
+#### CRT_ABHA_102_FA, an invalid Aadhaar number is refused before a QR code. `screen`
 
 As CRT_ABHA_104, with blank input as well. No QR code is generated for an invalid number, so no `m1_post_v3_enrollment_enrol_auth_init_create_abha_face_au_4dea33` call is in the log for that attempt.
 
-#### CRT_ABHA_103_FA, consent comes before the QR code. Optional. `screen`
+#### CRT_ABHA_103_FA, consent comes before the QR code. `screen`
 
 As CRT_ABHA_102. Your system does not generate the face authentication QR code until consent is recorded. Evidence: the consent screen, the stored record, and no init call before it in the log. `hiecm.concept.m1-screen-contract`
 
-#### CRT_ABHA_104_FA, consent in another language. Optional. `screen`
+#### CRT_ABHA_104_FA, consent in another language. `screen`
 
 As CRT_ABHA_103.
 
-#### CRT_ABHA_105_FA, the face authentication QR code is generated. Optional. `sandbox` and `screen`
+#### CRT_ABHA_105_FA, the face authentication QR code is generated. `sandbox` and `screen`
 
 After the Aadhaar number and consent, your system generates a transaction and shows it as a QR code.
 
 Exit condition: `m1_post_v3_enrollment_enrol_auth_init_create_abha_face_au_4dea33` returns 200 with a `txnId`. Screen check: the QR code is shown clearly, and the person is told to scan it with the scanner on the logged out ABHA app's landing page.
 
-#### CRT_ABHA_106_FA, the QR code is scanned in the ABHA app. Optional. `human`
+#### CRT_ABHA_106_FA, the QR code is scanned in the ABHA app. `human`
 
 The person opens the ABHA app logged out, taps the scanner at the top left of the landing page, and scans your QR code. The ABHA app starts face authentication and opens the ABHA Face RD app. No call of yours proves the scan. Evidence: the phone screen after the scan, and the `status` from `m1_post_v3_enrollment_enrol_capturepid_create_abha_face_a_417d5e` pasted at that moment.
 
-#### CRT_ABHA_107_FA, the ABHA Face RD app is not installed. Optional. `human`
+#### CRT_ABHA_107_FA, the ABHA Face RD app is not installed. `human`
 
 On a phone without the ABHA Face RD app, the scan sends the person to the Play Store or App Store to install it, and they can then continue or restart. This is the ABHA app's behaviour, not your system's. Evidence: the phone screen at the store. If you claim the case and no such phone is available, record `needs-human` naming what was asked, after it was asked for at readiness and again at the case, and the tester said they cannot provide it in this run.
 
-#### CRT_ABHA_108_FA, face authentication succeeds. Optional. `sandbox`, `human`
+#### CRT_ABHA_108_FA, face authentication succeeds. `sandbox`, `human`
 
 The person captures their face. Poll the status every 5 to 10 seconds while they do.
 
 Exit condition: `m1_post_v3_enrollment_enrol_capturepid_create_abha_face_a_417d5e` returns 200 with `status` `COMPLETE`. Screen check: the phone shows success, and your system moves on to the communication mobile step.
 
-#### CRT_ABHA_109_FA, a failed face authentication is refused. Optional. `sandbox`, `human`
+#### CRT_ABHA_109_FA, a failed face authentication is refused. `sandbox`, `human`
 
 The person does a scan that fails: another face, a poor capture, or a timeout.
 
 Exit condition: `m1_post_v3_enrollment_enrol_capturepid_create_abha_face_a_417d5e` returns 200 with `status` `FAILED` and a `message`. Your screen shows that message, does not go on to the mobile step or creation, and lets the person retry or generate a new QR code.
 
-#### CRT_ABHA_110_FA, the communication mobile is collected after face authentication. Optional. `sandbox`, `human`
+#### CRT_ABHA_110_FA, the communication mobile is collected after face authentication. `sandbox`, `human`
 
 Your system asks for the communication mobile after face authentication, checks its format, and sends an OTP to it. The set asks for the OTP whether or not this is the Aadhaar linked mobile.
 
@@ -354,7 +354,7 @@ Exit condition: two literals, both pasted.
 1. `m1_post_v3_enrollment_enrol_byaadhaar_face`, sent with the `txnId` from CRT_ABHA_108_FA and that mobile, returns 200 with `tokens.token` present and `ABHAProfile.ABHANumber` present.
 2. `m1_post_v3_enrollment_request_otp_mobile_verify_create_ab_6474ce` returns 200 with a `txnId` and a `message` naming the masked mobile.
 
-#### CRT_ABHA_111_FA, the communication mobile OTP is verified. Optional. `sandbox`, `human`
+#### CRT_ABHA_111_FA, the communication mobile OTP is verified. `sandbox`, `human`
 
 Two observations, both needed. The person enters both OTPs. Stop for each.
 
@@ -363,33 +363,33 @@ Two observations, both needed. The person enters both OTPs. Stop for each.
 
 Screen check: the OTP field accepts only six digits.
 
-#### CRT_ABHA_112_FA, resend the communication mobile OTP. Optional. `screen`
+#### CRT_ABHA_112_FA, resend the communication mobile OTP. `screen`
 
 As CRT_ABHA_106, for the communication mobile OTP.
 
-#### CRT_ABHA_113_FA, the ABHA address is suggested and validated. Optional. `sandbox` and `screen`
+#### CRT_ABHA_113_FA, the ABHA address is suggested and validated. `sandbox` and `screen`
 
 As CRT_ABHA_112, with the face flow's calls. Exit condition: `m1_get_v3_enrollment_enrol_suggestion_create_abha_face_au_848b26` returns 200 with `abhaAddressList` holding at least three entries, and `m1_post_v3_enrollment_enrol_abha_address_create_abha_face_4b1f33` returns 200 with `preferredAbhaAddress` equal to the one chosen.
 
-#### CRT_ABHA_114_FA, the ABHA number is displayed. Optional. `sandbox` and `screen`
+#### CRT_ABHA_114_FA, the ABHA number is displayed. `sandbox` and `screen`
 
 As CRT_ABHA_113. Exit condition: `m1_get_v3_profile_account`, sent with the `X-token` from CRT_ABHA_110_FA, returns 200 with the same `ABHANumber` and a masked `mobile` ending in the digits of the mobile verified in CRT_ABHA_111_FA.
 
-#### CRT_ABHA_115_FA, the ABHA card can be viewed and downloaded. Optional. `sandbox` and `screen`
+#### CRT_ABHA_115_FA, the ABHA card can be viewed and downloaded. `sandbox` and `screen`
 
 As CRT_ABHA_114.
 
-#### CRT_ABHA_116_FA, your own card carries the ABHA details. Optional. `screen`
+#### CRT_ABHA_116_FA, your own card carries the ABHA details. `screen`
 
 As CRT_ABHA_115.
 
-#### CRT_ABHA_117_FA, a returning patient is matched, not registered again. Optional. `screen`
+#### CRT_ABHA_117_FA, a returning patient is matched, not registered again. `screen`
 
 As CRT_ABHA_116, for a person created by face authentication.
 
 ### CRT_ABHA_201 to 211: create an ABHA by Aadhaar biometric, fingerprint or iris
 
-Applies to every integrator. Optional, every case. Each case runs as its counterpart in CRT_ABHA_101 to 116 and records the counterpart's evidence, with the differences stated.
+Each case runs as its counterpart in CRT_ABHA_101 to 116 and records the counterpart's evidence, with the differences stated.
 
 The creation call is `m1_post_v3_enrollment_enrol_byaadhaar_fingerprint` or `m1_post_v3_enrollment_enrol_byaadhaar_iris`. The calls after it are the same flow's: for fingerprint `m1_post_v3_enrollment_request_otp_mobile_verify_create_ab_64b04e`, `m1_post_v3_enrollment_auth_byabdm_mobile_verify_create_ab_3b237a`, `m1_get_v3_enrollment_enrol_suggestion_create_abha_fingerprint` and `m1_post_v3_enrollment_enrol_abha_address_create_abha_fingerprint`; for iris `m1_post_v3_enrollment_request_otp_mobile_verify_create_abha_iris`, `m1_post_v3_enrollment_auth_byabdm_mobile_verify_create_abha_iris`, `m1_get_v3_enrollment_enrol_suggestion_create_abha_iris` and `m1_post_v3_enrollment_enrol_abha_address_create_abha_iris`.
 
@@ -397,73 +397,73 @@ If you do not claim biometric creation, the whole group is `not-run`. If you cla
 
 Loop limit: 3 passes per test case.
 
-#### CRT_ABHA_201, the option exists. Optional. `sandbox`
+#### CRT_ABHA_201, the option exists. `sandbox`
 
 As CRT_ABHA_101, with the creation call above. Exit condition: it returns 200 with `tokens.token` and `ABHAProfile.ABHANumber`.
 
-#### CRT_ABHA_204, an invalid Aadhaar number is refused before any call. Optional. `screen`
+#### CRT_ABHA_204, an invalid Aadhaar number is refused before any call. `screen`
 
 As CRT_ABHA_104.
 
-#### CRT_ABHA_202, consent is shown and recorded. Optional. `screen`
+#### CRT_ABHA_202, consent is shown and recorded. `screen`
 
 As CRT_ABHA_102.
 
-#### CRT_ABHA_203, consent in another language. Optional. `screen`
+#### CRT_ABHA_203, consent in another language. `screen`
 
 As CRT_ABHA_103.
 
-#### CRT_ABHA_205, the biometric is verified, and a failed scan is refused. Optional. `sandbox`, `human`
+#### CRT_ABHA_205, the biometric is verified, and a failed scan is refused. `sandbox`, `human`
 
 The person scans a fingerprint or an iris. Exit condition: the creation call returns 200 as in CRT_ABHA_201. For a failed scan, the specification documents a 422 with `error.code` `ABDM-1204` and a `message` carrying the UIDAI error code. Your screen shows the message the API returned and lets the person scan again. Paste what the sandbox returned.
 
-#### CRT_ABHA_206, the communication mobile is the Aadhaar mobile. Optional. `sandbox`
+#### CRT_ABHA_206, the communication mobile is the Aadhaar mobile. `sandbox`
 
 As CRT_ABHA_108, with the mobile verify call of the flow you ran.
 
-#### CRT_ABHA_207, a different communication mobile is verified. Optional. `sandbox`, `human`
+#### CRT_ABHA_207, a different communication mobile is verified. `sandbox`, `human`
 
 As CRT_ABHA_109, with the mobile verify calls of the flow you ran.
 
-#### CRT_ABHA_208, the ABHA address is suggested and validated. Optional. `sandbox` and `screen`
+#### CRT_ABHA_208, the ABHA address is suggested and validated. `sandbox` and `screen`
 
 As CRT_ABHA_112, with the suggestion and address calls of the flow you ran.
 
-#### CRT_ABHA_209, the ABHA number is displayed. Optional. `screen`
+#### CRT_ABHA_209, the ABHA number is displayed. `screen`
 
 As CRT_ABHA_113.
 
-#### CRT_ABHA_210, the ABHA card can be viewed and downloaded. Optional. `sandbox` and `screen`
+#### CRT_ABHA_210, the ABHA card can be viewed and downloaded. `sandbox` and `screen`
 
 As CRT_ABHA_114.
 
-#### CRT_ABHA_211, your own card carries the ABHA details. Optional. `screen`
+#### CRT_ABHA_211, your own card carries the ABHA details. `screen`
 
 As CRT_ABHA_115.
 
 ### CRT_ABHA_301 to 309: create an ABHA by demographic authentication
 
-Government entities only. Mandatory for them unless marked. A private integrator records the group `not-run`.
+A private integrator records the group `not-run`: it applies to government entities only.
 
 Loop limit: 3 passes per test case.
 
-#### CRT_ABHA_301, the option exists. Mandatory. `screen`
+#### CRT_ABHA_301, the option exists. `screen`
 
 Your landing or registration screen offers "Create ABHA using Demographics", and it starts the demographic flow. Evidence: the screen with the option and the screen it opens.
 
-#### CRT_ABHA_302, consent is shown and recorded. Mandatory. `screen`
+#### CRT_ABHA_302, consent is shown and recorded. `screen`
 
 As CRT_ABHA_102.
 
-#### CRT_ABHA_303, consent in another language. Optional. `screen`
+#### CRT_ABHA_303, consent in another language. `screen`
 
 As CRT_ABHA_103.
 
-#### CRT_ABHA_304, an invalid Aadhaar number is refused before any call. Mandatory. `screen`
+#### CRT_ABHA_304, an invalid Aadhaar number is refused before any call. `screen`
 
 As CRT_ABHA_104.
 
-#### CRT_ABHA_305, the demographic details are checked against Aadhaar. Mandatory. `sandbox`
+#### CRT_ABHA_305, the demographic details are checked against Aadhaar. `sandbox`
 
 One call, `m1_post_v3_enrollment_enrol_byaadhaar_demo_auth_create_ab_81107d`, with the name, date of birth, gender, Aadhaar number and mobile as they read on the Aadhaar card. Exit condition: 200 with `healthIdNumber`, `healthId` and `kycVerified` `true`.
 
@@ -473,63 +473,61 @@ Screen check: name, date of birth and gender are filled and not editable; addres
 
 Nudge: the same mobile on a seventh account is refused with ABDM-1124. That is a mobile limit, not a demographic mismatch. Read `error.message`.
 
-#### CRT_ABHA_306, the profile is completed from the response, not typed. Mandatory. `screen`
+#### CRT_ABHA_306, the profile is completed from the response, not typed. `screen`
 
 Your system fills name, date of birth, gender, Aadhaar number, mobile, address, state, district and ABHA number from the response. Name, date of birth and gender are not editable. Address, email, mobile, state, district and profile photo are editable. The person completes the rest and submits without an error. Evidence: the form after creation and after submission. `hiecm.concept.m1-confirm-the-filled-form`
 
-#### CRT_ABHA_307, the ABHA number is displayed. Mandatory. `screen`
+#### CRT_ABHA_307, the ABHA number is displayed. `screen`
 
 As CRT_ABHA_113, matching `healthIdNumber` and `healthId` from CRT_ABHA_305.
 
-#### CRT_ABHA_308, the ABHA card can be viewed. Mandatory. `sandbox` and `screen`
+#### CRT_ABHA_308, the ABHA card can be viewed. `sandbox` and `screen`
 
-As CRT_ABHA_114, sent with the `token` from CRT_ABHA_305 as `X-token`. The card carries the ABHA number, the QR code, date of birth, gender and the ABHA address. The photo is optional. The 21 October set marks this case Mandatory, and CRT_ABHA_309 as its alternative for government. The set published on the sandbox site marks it Mandatory for Private, the same pattern as CRT_ABHA_114 and 115, and that is how it is read: mandatory for a private integrator; for a government one, either this case or CRT_ABHA_309.
+As CRT_ABHA_114, sent with the `token` from CRT_ABHA_305 as `X-token`. The card carries the ABHA number, the QR code, date of birth, gender and the ABHA address. The photo is optional.
 
-#### CRT_ABHA_309, your own card carries the ABHA details. Mandatory for government, either this or CRT_ABHA_308. `screen`
+#### CRT_ABHA_309, your own card carries the ABHA details. `screen`
 
 As CRT_ABHA_115.
 
 ### CRT_ABHA_401 to 411: create an ABHA by driving licence
 
-Optional for private and for government. The set names `/abha/api/v3/enrollment/enrol/byDocument` for every case in this group. ABDM's M1 specification does not publish that operation, so there is no operation id to call. Record every case in this group `not-run` with that reason, until an operation is published. Do not improvise a call. Each heading names the evidence the case will need once an operation exists.
+The set names `/abha/api/v3/enrollment/enrol/byDocument` for every case in this group. ABDM's M1 specification does not publish that operation, so there is no operation id to call. Record every case in this group `not-run` with that reason, until an operation is published. Do not improvise a call. Each heading names the evidence the case will need once an operation exists.
 
 Loop limit: 3 passes per test case.
 
-#### CRT_ABHA_401, the option exists. Optional. `screen`
+#### CRT_ABHA_401, the option exists. `screen`
 
 The set checks that your system offers creation by driving licence.
 
-#### CRT_ABHA_402, consent is shown and recorded. Optional. `screen`
+#### CRT_ABHA_402, consent is shown and recorded. `screen`
 
 The set checks consent for sharing the driving licence details, as CRT_ABHA_102.
 
-#### CRT_ABHA_403, the communication mobile is collected. Optional. `screen`
+#### CRT_ABHA_403, the communication mobile is collected. `screen`
 
-#### CRT_ABHA_404, the mobile is verified by OTP. Optional. `sandbox`, `human`
+#### CRT_ABHA_404, the mobile is verified by OTP. `sandbox`, `human`
 
-#### CRT_ABHA_405, the driving licence is verified. Optional. `sandbox`
+#### CRT_ABHA_405, the driving licence is verified. `sandbox`
 
 The set describes an enrolment number returned after the licence, name, date of birth and gender are checked, which the person takes to an ABDM facility.
 
-#### CRT_ABHA_406, the licence front and back are uploaded. Optional. `screen`
+#### CRT_ABHA_406, the licence front and back are uploaded. `screen`
 
-#### CRT_ABHA_407, an operator checks the documents and approves or rejects. Optional. `human`
+#### CRT_ABHA_407, an operator checks the documents and approves or rejects. `human`
 
-#### CRT_ABHA_408, the ABHA number is displayed. Optional. `screen`
+#### CRT_ABHA_408, the ABHA number is displayed. `screen`
 
-#### CRT_ABHA_410, the ABHA card can be viewed. Optional. `sandbox` and `screen`
+#### CRT_ABHA_410, the ABHA card can be viewed. `sandbox` and `screen`
 
-#### CRT_ABHA_411, your own card carries the ABHA details. Optional. `screen`
+#### CRT_ABHA_411, your own card carries the ABHA details. `screen`
 
 ### VRFY_ABHA_101 and 201: log in with an ABHA number
-
-Applies to every integrator. Mandatory.
 
 Loop limit: 3 passes per test case.
 
 **Preconditions.** A person present with an ABHA, the Aadhaar linked mobile and the ABHA linked mobile.
 
-#### VRFY_ABHA_101, by ABHA number and Aadhaar OTP. Mandatory. `sandbox`, `human`
+#### VRFY_ABHA_101, by ABHA number and Aadhaar OTP. `sandbox`, `human`
 
 Calls: `m1_post_v3_profile_login_request_otp_abha_number_aadhaar_otp`, the OTP, `m1_post_v3_profile_login_verify_abha_number_aadhaar_otp`, then `m1_get_v3_profile_account` with the returned token as `X-token`.
 
@@ -539,19 +537,17 @@ Screen checks alongside: resend as in CRT_ABHA_106; name, date of birth and gend
 
 Nudge: the accounts array already carries the whole registration form. Fill the form from it before the profile call, so the person reads back rather than types.
 
-#### VRFY_ABHA_201, by ABHA number and the ABHA linked mobile OTP. Mandatory. `sandbox`, `human`
+#### VRFY_ABHA_201, by ABHA number and the ABHA linked mobile OTP. `sandbox`, `human`
 
 As VRFY_ABHA_101 with `m1_post_v3_profile_login_request_otp_abha_number_abha_otp` and `m1_post_v3_profile_login_verify_abha_number_abha_otp`. Same exit condition, same screen checks.
 
 ### VRFY_ABHA_102 and 202: log in with an ABHA address
 
-Applies to every integrator. Mandatory.
-
 Loop limit: 3 passes per test case.
 
 **Preconditions.** A person present with an ABHA address, the Aadhaar linked mobile and the ABHA linked mobile.
 
-#### VRFY_ABHA_102, by ABHA address and Aadhaar OTP. Mandatory. `sandbox`, `human`
+#### VRFY_ABHA_102, by ABHA address and Aadhaar OTP. `sandbox`, `human`
 
 Calls: `m1_post_v3_phr_web_login_abha_search_abha_address_login_a_de8184`, `m1_post_v3_phr_web_login_abha_request_otp_aadhaar_otp`, the OTP, `m1_post_v3_phr_web_login_abha_verify_aadhaar_otp`, then `m1_get_v3_phr_web_login_profile_abha_profile_abha_address_c04e83`.
 
@@ -559,23 +555,23 @@ Exit condition: the search returns 200 with `authMethods`, the verify returns 20
 
 Screen checks alongside: the ways to log in that your screen offers are the ones `authMethods` returned, not a fixed list. Resend, the not editable fields, the stored record and the mobile update offer as in VRFY_ABHA_101.
 
-#### VRFY_ABHA_202, by ABHA address and the ABHA linked mobile OTP. Mandatory. `sandbox`, `human`
+#### VRFY_ABHA_202, by ABHA address and the ABHA linked mobile OTP. `sandbox`, `human`
 
 As VRFY_ABHA_102 with `m1_post_v3_phr_web_login_abha_search_abha_address_login_m_27a20f`, `m1_post_v3_phr_web_login_abha_request_otp_mobile_otp`, `m1_post_v3_phr_web_login_abha_verify_mobile_otp` and `m1_get_v3_phr_web_login_profile_abha_profile_abha_address_b038c4`. Same exit condition, same screen checks.
 
 ### VRFY_ABHA_301 to 308: find an ABHA by the communication mobile and OTP
 
-Applies to every integrator. Mandatory. This is the lookup that costs no Aadhaar OTP, so it is the one your desk should run first.
+This is the lookup that costs no Aadhaar OTP, so it is the one your desk should run first.
 
 Calls, in order: `m1_post_v3_profile_account_abha_search_find_abha_mobile_otp`, `m1_post_v3_profile_login_request_otp_find_abha_mobile` with the chosen account's `index` and the search `txnId`, the OTP, `m1_post_v3_profile_login_verify_find_abha_mobile`, then `m1_get_v3_profile_account` with the returned `token` as `X-token`. `hiecm.flow.m1-find-abha`
 
 Loop limit: 3 passes per test case.
 
-#### VRFY_ABHA_301, an invalid mobile is refused. Mandatory. `screen`
+#### VRFY_ABHA_301, an invalid mobile is refused. `screen`
 
 Fewer than ten digits, more than ten, letters, special characters and blank input are each refused on screen with "Please enter a valid mobile number.", and no search is sent.
 
-#### VRFY_ABHA_302, every ABHA on this mobile is listed. Mandatory. `sandbox` and `screen`
+#### VRFY_ABHA_302, every ABHA on this mobile is listed. `sandbox` and `screen`
 
 Exit condition: the search returns 200 with a top level array. `[0].txnId` is present, and `[0].ABHA[]` holds the accounts, each entry carrying `index`, `ABHANumber` and `name`. Paste it.
 
@@ -585,91 +581,91 @@ Screen checks: every account in the array is listed, with enough to tell them ap
 
 Nudge: read the array as plural. One mobile can hold up to six accounts, and a screen that shows the first one silently links the wrong person.
 
-#### VRFY_ABHA_303, no ABHA on this mobile. Mandatory. `sandbox`
+#### VRFY_ABHA_303, no ABHA on this mobile. `sandbox`
 
 Exit condition: the search returns 404 with `error.code` `ABDM-1114`. Your screen says "ABHA details not found. We did not find any ABHA number linked to this mobile number. Please use an ABHA-linked mobile number.", and opens no OTP screen. If your business flow supports creation, the screen also offers to create a new ABHA. `hiecm.concept.m1-journey-completes-without-abha`
 
-#### VRFY_ABHA_304, the chosen ABHA gets the OTP. Mandatory. `sandbox`, `human`
+#### VRFY_ABHA_304, the chosen ABHA gets the OTP. `sandbox`, `human`
 
 Exit condition: `m1_post_v3_profile_login_request_otp_find_abha_mobile` returns 200 with a `txnId` and a `message` naming the masked mobile, sent only after the person picked an account. Screen checks: the OTP screen opens, the chosen account stays selected until verification, and resend works as in CRT_ABHA_106.
 
-#### VRFY_ABHA_305, the OTP is verified and the chosen ABHA opens. Mandatory. `sandbox`, `human`
+#### VRFY_ABHA_305, the OTP is verified and the chosen ABHA opens. `sandbox`, `human`
 
 Exit condition: `m1_post_v3_profile_login_verify_find_abha_mobile` returns 200 with `authResult` `success`, `token`, and `accounts` holding the chosen `ABHANumber`; the profile call returns 200 with that `ABHANumber`. Screen check: only the chosen profile is shown, with name, date of birth or age, gender, mobile, ABHA number, ABHA address, state, district, photo and address as the API returned them.
 
-#### VRFY_ABHA_306, the registration form is filled from the profile. Mandatory. `screen`
+#### VRFY_ABHA_306, the registration form is filled from the profile. `screen`
 
 After VRFY_ABHA_305, your registration or linking form is filled from the profile. Name, date of birth or age and gender are not editable. Address, email, mobile, state, district and city are editable. After registration, the ABHA number and ABHA address are linked to your beneficiary id. Evidence: the form, and the stored link. `hiecm.concept.m1-confirm-the-filled-form`
 
-#### VRFY_ABHA_307, a wrong OTP is refused. Mandatory. `sandbox`, `human`
+#### VRFY_ABHA_307, a wrong OTP is refused. `sandbox`, `human`
 
 Exit condition: `m1_post_v3_profile_login_verify_find_abha_mobile` returns 400 with `otpValue` naming an invalid OTP value. Your screen shows an error such as "Invalid OTP. Please enter a valid OTP.", opens no profile, and allows a retry without re-entering the mobile.
 
-#### VRFY_ABHA_308, the chosen ABHA is already linked in your system. Mandatory. `screen`
+#### VRFY_ABHA_308, the chosen ABHA is already linked in your system. `screen`
 
 Pick an account already linked to one of your patients. After VRFY_ABHA_305 your screen says "This ABHA profile is already linked to HMIS Beneficiary ID.", shows the ABHA details and your stored details side by side, and creates no second registration. Evidence: the screen and one row in your database. `hiecm.concept.m1-avoiding-duplicate-abha`
 
 ### VRFY_ABHA_301_FA to 309_FA: find an ABHA by the communication mobile and face authentication
 
-Optional, every case. The set lists no API for this group. ABDM publishes the find by face flow: `m1_post_v3_profile_account_abha_search_find_abha_face`, `m1_post_v3_profile_login_request_otp_find_abha_face` with the chosen account's `index` and the search `txnId`, `m1_post_v3_enrollment_enrol_capturepid_find_abha_face` polled every 5 to 10 seconds, then `m1_post_v3_profile_login_verify_find_abha_face`. `hiecm.flow.m1-find-abha`
+The set lists no API for this group. ABDM publishes the find by face flow: `m1_post_v3_profile_account_abha_search_find_abha_face`, `m1_post_v3_profile_login_request_otp_find_abha_face` with the chosen account's `index` and the search `txnId`, `m1_post_v3_enrollment_enrol_capturepid_find_abha_face` polled every 5 to 10 seconds, then `m1_post_v3_profile_login_verify_find_abha_face`. `hiecm.flow.m1-find-abha`
 
 Face authentication is a `human` step on a device, as in CRT_ABHA_101_FA to 117_FA. Without a phone with the ABHA app and the person, record every case from VRFY_ABHA_305_FA on that you claim as `needs-human`, naming what was asked, after it was asked for at readiness and again at the case, and the tester said they cannot provide it in this run. A case you do not claim is `not-run`.
 
 Loop limit: 3 passes per test case.
 
-#### VRFY_ABHA_301_FA, an invalid mobile is refused. Optional. `screen`
+#### VRFY_ABHA_301_FA, an invalid mobile is refused. `screen`
 
 As VRFY_ABHA_301. No search and no QR code follow an invalid mobile.
 
-#### VRFY_ABHA_302_FA, every ABHA on this mobile is listed. Optional. `sandbox` and `screen`
+#### VRFY_ABHA_302_FA, every ABHA on this mobile is listed. `sandbox` and `screen`
 
 As VRFY_ABHA_302, with `m1_post_v3_profile_account_abha_search_find_abha_face`. No QR code is generated before the person picks an account.
 
-#### VRFY_ABHA_303_FA, no ABHA on this mobile. Optional. `sandbox`
+#### VRFY_ABHA_303_FA, no ABHA on this mobile. `sandbox`
 
 As VRFY_ABHA_303, with `m1_post_v3_profile_account_abha_search_find_abha_face`. No QR code is generated.
 
-#### VRFY_ABHA_304_FA, the chosen ABHA gets a face authentication QR code. Optional. `sandbox` and `screen`
+#### VRFY_ABHA_304_FA, the chosen ABHA gets a face authentication QR code. `sandbox` and `screen`
 
 Exit condition: `m1_post_v3_profile_login_request_otp_find_abha_face` returns 200 with a `txnId`, sent only after the person picked an account. Screen check: the QR code is shown clearly for scanning, and the chosen account stays selected until authentication ends.
 
-#### VRFY_ABHA_305_FA, the QR code is scanned in the ABHA app. Optional. `human`
+#### VRFY_ABHA_305_FA, the QR code is scanned in the ABHA app. `human`
 
 As CRT_ABHA_106_FA, with the `status` from `m1_post_v3_enrollment_enrol_capturepid_find_abha_face`.
 
-#### VRFY_ABHA_306_FA, the ABHA Face RD app is not installed. Optional. `human`
+#### VRFY_ABHA_306_FA, the ABHA Face RD app is not installed. `human`
 
 As CRT_ABHA_107_FA.
 
-#### VRFY_ABHA_307_FA, face authentication succeeds. Optional. `sandbox`, `human`
+#### VRFY_ABHA_307_FA, face authentication succeeds. `sandbox`, `human`
 
 Exit condition: `m1_post_v3_enrollment_enrol_capturepid_find_abha_face` returns 200 with `status` `COMPLETE`, then `m1_post_v3_profile_login_verify_find_abha_face` returns 200 with `authResult` `success`. Screen check: the phone shows success.
 
-#### VRFY_ABHA_308_FA, the chosen ABHA opens. Optional. `sandbox` and `screen`
+#### VRFY_ABHA_308_FA, the chosen ABHA opens. `sandbox` and `screen`
 
 Exit condition: the verify in VRFY_ABHA_307_FA carries `accounts` with the chosen account's `ABHANumber`, and `m1_get_v3_profile_account`, sent with the returned `token` as `X-token`, returns 200 with that `ABHANumber`. Screen check: as VRFY_ABHA_305. No other account's details are shown.
 
-#### VRFY_ABHA_309_FA, a failed face authentication is refused. Optional. `sandbox`, `human`
+#### VRFY_ABHA_309_FA, a failed face authentication is refused. `sandbox`, `human`
 
 The person does a scan that fails. Exit condition: one of the two refusals the specification documents, pasted. `m1_post_v3_enrollment_enrol_capturepid_find_abha_face` returns 200 with `status` `FAILED`, or `m1_post_v3_profile_login_verify_find_abha_face` returns 422 with `error.code` `ABDM-1204` and a `message` carrying the UIDAI error code. Your screen shows the code and message the API returned, fills no profile, and lets the person retry or generate a new QR code.
 
 ### VRFY_ABHA_601 to 603: find an ABHA by the communication mobile and a biometric
 
-Optional, every case. The set names `/abha/api/v3/profile/account/abha/search`, `/abha/api/v3/profile/login/request/otp` and a verify path on the production host. Run the sandbox operations of the published find by fingerprint flow instead: `m1_post_v3_profile_account_abha_search_find_abha_fingerprint`, `m1_post_v3_profile_login_request_otp_find_abha_fingerprint` and `m1_post_v3_profile_login_verify_find_abha_fingerprint`. For iris, `m1_post_v3_profile_account_abha_search_find_abha_iris`, `m1_post_v3_profile_login_request_otp_find_abha_iris` and `m1_post_v3_profile_login_verify_find_abha_iris`. `hiecm.flow.m1-find-abha`
+The set names `/abha/api/v3/profile/account/abha/search`, `/abha/api/v3/profile/login/request/otp` and a verify path on the production host. Run the sandbox operations of the published find by fingerprint flow instead: `m1_post_v3_profile_account_abha_search_find_abha_fingerprint`, `m1_post_v3_profile_login_request_otp_find_abha_fingerprint` and `m1_post_v3_profile_login_verify_find_abha_fingerprint`. For iris, `m1_post_v3_profile_account_abha_search_find_abha_iris`, `m1_post_v3_profile_login_request_otp_find_abha_iris` and `m1_post_v3_profile_login_verify_find_abha_iris`. `hiecm.flow.m1-find-abha`
 
 Without a registered fingerprint or iris device, the cases that scan and that you claim are `needs-human`, naming the device, after it was asked for at readiness and again at the case, and the tester said they cannot provide it in this run. A case you do not claim is `not-run`.
 
 Loop limit: 3 passes per test case.
 
-#### VRFY_ABHA_601, an invalid mobile is refused. Optional. `screen`
+#### VRFY_ABHA_601, an invalid mobile is refused. `screen`
 
 As VRFY_ABHA_301. No biometric step starts.
 
-#### VRFY_ABHA_602, no ABHA on this mobile. Optional. `sandbox`
+#### VRFY_ABHA_602, no ABHA on this mobile. `sandbox`
 
 As VRFY_ABHA_303, with the search operation of the flow you ran.
 
-#### VRFY_ABHA_603, the chosen ABHA is verified by biometric. Optional. `sandbox`, `human`
+#### VRFY_ABHA_603, the chosen ABHA is verified by biometric. `sandbox`, `human`
 
 The search lists the accounts as in VRFY_ABHA_302, the person picks one, the request call returns 200 with a `txnId`, and the person scans.
 
@@ -677,75 +673,72 @@ Exit condition: the verify returns 200 with `authResult` `success` and `accounts
 
 ### VRFY_ABHA_701: benefit programmes linked to an ABHA number
 
-Government entities only. Optional. A private integrator records it `not-run`.
+A private integrator records it `not-run`: the group applies to government entities only.
 
 Loop limit: 3 passes per test case.
 
-#### VRFY_ABHA_701, the benefit programmes are listed. Optional. `sandbox`
+#### VRFY_ABHA_701, the benefit programmes are listed. `sandbox`
 
 Call `m1_get_v3_profile_benefit_abha_abhanumber` with a valid ABHA number. Exit condition: 200 with `abhaNumber` equal to the one sent and a `programme` array, each entry carrying `benefitName`. Screen check: your system shows the list.
 
 ### VRFY_ABHA_401 to 405: log in with an Aadhaar number and OTP
 
-Applies to every integrator. Mandatory.
-
 Loop limit: 3 passes per test case.
 
-#### VRFY_ABHA_401, an invalid Aadhaar is refused. Mandatory. `screen`
+#### VRFY_ABHA_401, an invalid Aadhaar is refused. `screen`
 
 As CRT_ABHA_104, on the login screen. The message may read "Invalid LoginId" or "Aadhaar Number is not valid". The set recommends the masked format and the current consent text here too.
 
-#### VRFY_ABHA_402, a wrong OTP is refused. Mandatory. `sandbox`, `human`
+#### VRFY_ABHA_402, a wrong OTP is refused. `sandbox`, `human`
 
 Exit condition: `m1_post_v3_profile_login_verify_aadhaar_otp` returns 400 with `otpValue` naming an invalid OTP value, and your screen shows an error and goes no further.
 
-#### VRFY_ABHA_403, no ABHA on this Aadhaar. Mandatory. `sandbox`, `human`
+#### VRFY_ABHA_403, no ABHA on this Aadhaar. `sandbox`, `human`
 
 Calls: `m1_post_v3_profile_login_request_otp_aadhaar`, the OTP, `m1_post_v3_profile_login_verify_aadhaar_otp`.
 
 Exit condition: the request returns 200 with a `message` naming the masked Aadhaar mobile, the person enters the OTP, and the verify returns 404 with `error.code` `ABDM-1114` and a message that no ABHA user is registered with this Aadhaar number. Your screen says so and offers creation, and the creation path does not ask for the Aadhaar number again. `hiecm.concept.m1-never-ask-twice`
 
-#### VRFY_ABHA_404, an ABHA exists on this Aadhaar. Mandatory. `sandbox`, `human`
+#### VRFY_ABHA_404, an ABHA exists on this Aadhaar. `sandbox`, `human`
 
 Same calls with an Aadhaar that holds an account, then `m1_get_v3_profile_account`.
 
 Exit condition: the verify returns 200 with `authResult` `success` and `accounts[0].ABHANumber`; the profile call returns 200 with the same number. Screen checks: the profile is shown, the card can be downloaded as in CRT_ABHA_114 where the account is KYC verified, and the account is registered and linked to your patient id if it was not already.
 
-#### VRFY_ABHA_405, resend OTP. Mandatory. `screen`
+#### VRFY_ABHA_405, resend OTP. `screen`
 
 As CRT_ABHA_106, on the login screen.
 
 ### VRFY_ABHA_801 to 804: log in with an Aadhaar number and a biometric
 
-Optional, every case. The set names `/abha/api/v3/profile/login/request/otp` and `/abha/api/v3/profile/login/verify`. In the published specification the fingerprint use of those two paths takes an ABHA number, not an Aadhaar number. The login that takes an encrypted Aadhaar number with a biometric is `m1_post_v3_1_profile_login_verify_fingerprint`, or `m1_post_v3_1_profile_login_verify_iris`, one call each. Run that, and say in the run log that it is the v3.1 call.
+The set names `/abha/api/v3/profile/login/request/otp` and `/abha/api/v3/profile/login/verify`. In the published specification the fingerprint use of those two paths takes an ABHA number, not an Aadhaar number. The login that takes an encrypted Aadhaar number with a biometric is `m1_post_v3_1_profile_login_verify_fingerprint`, or `m1_post_v3_1_profile_login_verify_iris`, one call each. Run that, and say in the run log that it is the v3.1 call.
 
-Without a registered fingerprint or iris device, the cases that scan and that you claim are `needs-human`, naming the device, after it was asked for at readiness and again at the case, and the tester said they cannot provide it in this run. A case you do not claim is `not-run`.
+A claimed case that scans waits on a registered fingerprint or iris device. With none present after both asks, and the tester unable to provide one in this run, it is `needs-human`, naming the device. An unclaimed case is `not-run`.
 
 Loop limit: 3 passes per test case.
 
-#### VRFY_ABHA_801, an invalid Aadhaar is refused. Optional. `screen`
+#### VRFY_ABHA_801, an invalid Aadhaar is refused. `screen`
 
 As VRFY_ABHA_401.
 
-#### VRFY_ABHA_802, the biometric is verified, and a failed scan is refused. Optional. `sandbox`, `human`
+#### VRFY_ABHA_802, the biometric is verified, and a failed scan is refused. `sandbox`, `human`
 
 Exit condition: the v3.1 call returns 200 with `authResult` `success` and `token`. A failed scan is refused with the error the API returned; your screen shows it and lets the person scan again. Paste what the sandbox returned.
 
-#### VRFY_ABHA_803, no ABHA on this Aadhaar. Optional. `sandbox`, `human`
+#### VRFY_ABHA_803, no ABHA on this Aadhaar. `sandbox`, `human`
 
 Exit condition: the v3.1 call returns 404 with `error.code` `ABDM-1114`. Your screen says no ABHA user is registered with this Aadhaar number and offers creation, as in VRFY_ABHA_403.
 
-#### VRFY_ABHA_804, an ABHA exists on this Aadhaar. Optional. `sandbox`, `human`
+#### VRFY_ABHA_804, an ABHA exists on this Aadhaar. `sandbox`, `human`
 
 As VRFY_ABHA_404, with the v3.1 call in place of the OTP verify: 200 with `accounts[0].ABHANumber`, then `m1_get_v3_profile_account` with the returned `token` as `X-token`, 200 with the same number.
 
 ### PROF_ABHA_601: profile update
 
-Applies to every integrator. Optional.
 
 Loop limit: 3 passes per test case.
 
-#### PROF_ABHA_601, the mobile is updated. Optional. `sandbox`, `human`
+#### PROF_ABHA_601, the mobile is updated. `sandbox`, `human`
 
 Calls: `m1_post_v3_profile_account_request_otp_update_mobile`, the OTP, `m1_post_v3_profile_account_verify_update_mobile`. The person enters the OTP on the new mobile, and the password or OTP on the old one when asked. Stop for each.
 
@@ -753,21 +746,18 @@ Exit condition: the verify returns 200 with `authResult` `success` and a message
 
 ### VRFY_ABHA_501: read the ABHA QR code
 
-Applies to every integrator. Optional.
 
 Loop limit: 3 passes per test case.
 
-#### VRFY_ABHA_501, the ABHA QR code fills registration. Optional. `screen`
+#### VRFY_ABHA_501, the ABHA QR code fills registration. `screen`
 
 No call. Your system scans a person's ABHA QR code and fills name, date of birth, gender, mobile and the other details into registration from it. Evidence: the filled form after a scan, with nothing typed. `hiecm.concept.m1-two-routes-to-the-profile`
 
 ### TAGGING_UNIQUEPATIENTID_UNIQUEABHANUMBER: one ABHA per patient id
 
-Applies to every integrator. Mandatory.
-
 Loop limit: 3 passes per test case.
 
-#### TAGGING_UNIQUEPATIENTID_UNIQUEABHANUMBER, one ABHA maps to one patient id. Mandatory. `screen`
+#### TAGGING_UNIQUEPATIENTID_UNIQUEABHANUMBER, one ABHA maps to one patient id. `screen`
 
 Your system checks whether an ABHA number already exists in its database before it creates a patient id, on both the creation and the verification paths. Not yet linked, it tags the ABHA to the patient id. Already linked, it creates no new patient id. So one ABHA never maps to two of your patients and one of your patients never holds two ABHAs.
 
@@ -775,7 +765,7 @@ Evidence: verify the same ABHA twice in a run. The second time, the screen says 
 
 ### SHARE_PATIENT_PROFILE_701 and 702: share a profile by scanning the facility QR
 
-Mandatory. The set marks this group for the PHR app, but the call that proves each case lands on your HIP. The person acts in the ABDM sandbox PHR app. Your system receives the share and answers it with a queue token. Both operations are in the scan and register specification.
+The set marks this group for the PHR app, but the call that proves each case lands on your HIP. The person acts in the ABDM sandbox PHR app. Your system receives the share and answers it with a queue token. Both operations are in the scan and register specification.
 
 Calls: the inbound `scan-and-register_post_v3_hip_patient_share` at your callback URL, which your system answers with HTTP 200. Then your `scan-and-register_post_patient_share_v3_on_share`, which returns 202.
 
@@ -783,7 +773,7 @@ Loop limit: 3 passes per test case.
 
 **Preconditions.** A gateway access token less than 30 minutes old. Your callback URL registered with the bridge and reachable from the internet. A facility QR code for one of your counters, and for SHARE_PATIENT_PROFILE_702 a second QR code for a different counter. The person present with the ABDM sandbox PHR app, an ABHA number, and a second ABHA address on that ABHA number for SHARE_PATIENT_PROFILE_702.
 
-#### SHARE_PATIENT_PROFILE_701, the profile is shared and the patient registered. Mandatory. `sandbox`, `human` and `screen`
+#### SHARE_PATIENT_PROFILE_701, the profile is shared and the patient registered. `sandbox`, `human` and `screen`
 
 Use a person your system has not registered. The person logs in to the PHR app, scans your facility QR code, taps "Get Token", reads their profile and the consent message, and taps "I Agree". Stop for that.
 
@@ -797,7 +787,7 @@ Screen check: your system registered the person from the shared details with not
 
 Nudge: answer the inbound share with 200 first. Register the person and send the on-share after that.
 
-#### SHARE_PATIENT_PROFILE_702, a returning patient is matched. Mandatory. `sandbox`, `human` and `screen`
+#### SHARE_PATIENT_PROFILE_702, a returning patient is matched. `sandbox`, `human` and `screen`
 
 Runs after SHARE_PATIENT_PROFILE_701, with the same person. Each step below is a fresh scan: the person scans, taps "Get Token" and taps "I Agree". Stop for each. Every scan must show observations 1 and 2 of SHARE_PATIENT_PROFILE_701, pasted, for the QR code scanned in that step.
 

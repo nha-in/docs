@@ -24,7 +24,7 @@
     "check:plugins": "node scripts/build-plugin-manifests.mjs --check",
     "check:plugin-version": "node scripts/check-plugin-version.mjs",
     "check:build-assets": "node scripts/check-build-assets.mjs",
-    "validate:skills": "node scripts/validate-skills.mjs",
+    "validate:skills": "node scripts/validate-skills.mjs && node scripts/check-functionality-skills.mjs",
     "stamp:nhcx": "node scripts/stamp-nhcx-skills.mjs",
     "check:nhcx-stamp": "node scripts/stamp-nhcx-skills.mjs --check",
     "check:skills-version": "node scripts/build-api-reference.mjs && node scripts/build-skills.mjs",

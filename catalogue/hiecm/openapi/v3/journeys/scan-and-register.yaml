@@ -3,3 +3,17 @@
   steps:
     - op: scan-and-register_post_v3_hip_patient_share
     - op: scan-and-register_post_patient_share_v3_on_share
+      # The schema's first alternative lists error as required beside
+      # acknowledgement, so a body built from it sent SUCCESS with an error.
+      # Its own description says a success sends acknowledgement, with error
+      # optional. The specification gives expiry as a number and names no unit.
+      body:
+        acknowledgement:
+          status: SUCCESS
+          abhaAddress: <ABHA_ADDRESS_FROM_THE_SHARE>
+          profile:
+            context: <COUNTER_ID_FROM_THE_SHARE>
+            tokenNumber: <TOKEN_NUMBER_YOUR_QUEUE_ISSUED>
+            expiry: <TOKEN_EXPIRY_AS_A_NUMBER>
+        response:
+          requestId: <REQUEST_ID_OF_THE_SHARE>

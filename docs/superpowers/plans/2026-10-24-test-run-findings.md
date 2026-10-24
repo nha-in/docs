@@ -51,7 +51,7 @@ SMART HMS was built almost entirely with the skills, so its failures are a measu
 | I1 | Name, gender and date of birth stay editable after an ABHA fill | VRFY_ABHA_101, 102, 306 | Nothing |
 | I2 | A wrong OTP drops the transaction; the right OTP then fails | VRFY_ABHA_201 | Nothing about keeping `txnId` across a retry |
 | I3 | ABDM's error message replaced by the app's own text | CRT_ABHA_107 | "Display the text verbatim" is said of the consent text only, never of an error |
-| I4 | Send OTP bypasses the resend limit; Resend link silent | CRT_ABHA_106, VRFY_ABHA_405 | Design explains why resend locks a transaction, not NHA's rule: after 60 seconds, at most 2, then the limit message |
+| I4 | Resend link silent; resend limit not shown | CRT_ABHA_106, VRFY_ABHA_405 | Design explains why resend locks a transaction, not NHA's rule: after 60 seconds, at most 2, then the limit message. Only the Resend control counts toward the limit; a second press of Send OTP is not a resend (user, 24 October 2026) |
 | I5 | OTP sent before the profile list on find by mobile | VRFY_ABHA_302, 304 | The scaffold calls search before OTP, but nothing says the screen must not send an OTP before a profile is chosen |
 | I6 | Login methods hard coded instead of taken from the address search | VRFY_ABHA_102 | `authMethods` named once, as a field, never as a screen rule |
 | I7 | ABHA number login offers no Aadhaar OTP | VRFY_ABHA_101 | The journey exists in the scaffold, but the build interview decides which journeys to build from deployment questions, so a journey NHA marks mandatory can be left out |
@@ -130,7 +130,15 @@ The first question of a build is the entity type. Every functionality that holds
 |---|---|
 | `/abdm-build <module>` | Starts or resumes the loop: reads the tracker, picks the next functionality, runs it |
 | `/abdm-test <module>` | The full final run: readiness, the case plan from the script, every mandatory case, the final report or the draft |
-| `/abdm-test-setup` | Kept: checks Python, the libraries, the browser, the emulator; installs nothing |
+| `/abdm-test-setup` | The environment survey, also run automatically as the first step of `/abdm-build` and `/abdm-test` (see below) |
+
+**The environment survey** (decided 24 October 2026). It finds what the machine already has before asking for anything:
+
+1. Every Python on the machine: the versions on PATH, Homebrew, pyenv, conda, `uv`, and any `.venv` in the project. Each is tested for openpyxl, Pillow, python-docx and ReportLab; the first with all four is used, else the newest 3.9 or later.
+2. The browser: whether the Playwright MCP tools are loaded, and which browsers they can reach, Playwright's own or an installed Chrome or Edge, which is used as it is.
+3. The emulator for a PHR app: `adb`, a running device, the app, Maestro.
+4. The result is written to `abdm-ft/env.json`, so the workbook writer and the report always run under the interpreter that has the libraries, and a later session skips the survey while the file still holds.
+5. Anything still missing is offered as one install, run only after the tester says yes, into a private `abdm-ft/.venv`, never into the system or the integrator's own environment. Without a yes, the exact command is printed for the tester to run.
 
 Both `/abdm-build` and `/abdm-test` load the module skill and `run.md` before anything else and refuse to start without the workbook in `abdm-ft/` and the setup check passing, so a run cannot be improvised from a branch or a raw workbook again.
 
@@ -159,10 +167,10 @@ NHA's observations on the run (24 October 2026, "Observations UI Test case run")
 1. The summary answers, in order, with each term defined under the table: cases in NHA's sheet; applicable to this integrator; tested; passed; conditional pass; failed; blocked, waiting for a tester or device; not tested; not applicable. The same counts for mandatory cases alone, then one line: ready for sandbox exit, or the number of mandatory cases still open. "No result" is gone.
 2. Results grouped by functionality, which is also how the integration was built.
 3. Evidence only for cases that were tested; untested and not applicable cases appear once, in a compact table.
-4. Screenshots at a fixed size: two desktop or three phone screenshots per row at a fixed height. Full size images go in the annexure bundle, not the PDF. No page holds only an image and its caption.
+4. Screenshots are shown large enough to read, embedded at their full resolution: a desktop screenshot takes the full text width, phone screenshots sit side by side at a readable height. A case's heading and result line stay with its first screenshot. Decided 24 October 2026: readable screenshots matter more than page count.
 5. The failures log lists only FAIL, blocked and conditional pass cases.
 6. Plain wording: the fixed paragraphs become one line or a table, one line findings, no sentence that restates a table. One sample goes to NHA before the wording is frozen.
-7. The check enforces it: M1 with every case tested under 40 pages, no page under four lines except the cover, the counts table present and adding up.
+7. The check enforces it: screenshots embedded at full resolution and printed at a readable size, no heading left alone at a page foot, the counts table present and adding up. There is no page limit.
 
 ### 3.11 Privacy
 
@@ -186,10 +194,7 @@ Settled on 24 October 2026:
 | The report to submit | Only from a full run on one final build |
 | The tester | Batched by default; per loop when on call |
 | ABHA addresses | A person can create more than one ABHA address for the same ABHA number. The skill states no number |
-
-Open:
-
-1. **Registration from scan and share (701, 702).** Proposed to the user on 24 October 2026, awaiting their answer: a new patient registers automatically from the shared profile, with no click; a returning patient's suggested match may need one confirmation, never any typing, because matching on name, mobile and gender alone can link the wrong person. Under that rule SMART HMS's flow passes 702 step 1 and is a Conditional pass on 701 (a click where none should be needed). Ask before writing the scan and register screen requirements if the answer has not reached the plan.
+| Registration from scan and share (701, 702) | A new patient registers automatically from the shared profile, with no click, and gets a token. A returning patient is matched on name, mobile, gender, ABHA number and ABHA address; a certain match registers automatically, an uncertain one may take one confirmation, never any typing. Agreed by the user on 24 October 2026 |
 
 ## 5. Order
 
@@ -198,7 +203,7 @@ Each step is its own branch and pull request, ends with the `adversarial-reviewe
 | Step | Work | Done when |
 |---|---|---|
 | 1 | Run rules that do not wait for the restructure: writer masking, identity never repeated, judging rules and Conditional pass in the writer and report, existing ABHA rule, coverage gate and `plan` subcommand | The writer check proves no identity reaches the sheet; `plan` lists all 100 M1 cases with applicability and needs; the report gate and counts handle Conditional pass |
-| 2 | The report: summary counts, grouping by functionality, evidence filtering, image grid, page checks, plain wording | The SMART HMS workbook rebuilds under 40 pages with the counts table; the check enforces the page rules |
+| 2 | The report: summary counts, grouping by functionality, evidence filtering, image grid, page checks, plain wording | The SMART HMS workbook rebuilds with the counts table and readable full resolution screenshots; the check enforces the layout rules |
 | 3 | The M1 mapping, `catalogue/hiecm/tests/m1.yaml`, and its CI check | Every M1 case maps to a functionality; CI fails on an unmapped case |
 | 4 | The per functionality M1 skill: `build-skills.mjs` writes `SKILL.md`, `functionalities/`, `run.md`, `errors.md`; the five job files go; the eleven screen requirements land in their functionality files | `validate:skills` passes; each M1 functionality file holds its cases, screen requirements, calls and errors; no rule appears in two files |
 | 5 | `/abdm-build` and `/abdm-test`, the tracker in `INTEGRATION-PLAN.md`, entity type first scope, findings file | A dry run on SMART HMS's recorded results places each functionality in the tracker, lists its failing cases and the screen requirement each lacks |
