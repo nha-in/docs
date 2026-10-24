@@ -1,0 +1,195 @@
+{
+  "catalogue_version": "2026.09.16",
+  "built": "2026-09-16",
+  "skills": [
+    {
+      "name": "abdm-gateway",
+      "title": "Gateway, sessions and the bridge registry",
+      "files": [
+        "SKILL.md",
+        "references/scaffold.md",
+        "references/integrate.md",
+        "references/debug.md"
+      ]
+    },
+    {
+      "name": "abdm-m1",
+      "title": "M1, create and verify ABHA",
+      "archive": "abdm-m1.tar.gz",
+      "files": [
+        "SKILL.md",
+        "references/errors.md",
+        "references/foundations.md",
+        "references/functionalities/create-abha-aadhaar-otp.md",
+        "references/functionalities/create-abha-biometric.md",
+        "references/functionalities/create-abha-demo-auth.md",
+        "references/functionalities/create-abha-driving-licence.md",
+        "references/functionalities/create-abha-face-auth.md",
+        "references/functionalities/find-abha-benefit.md",
+        "references/functionalities/find-abha-biometric.md",
+        "references/functionalities/find-abha-face-auth.md",
+        "references/functionalities/find-abha-mobile.md",
+        "references/functionalities/link-one-abha-per-patient.md",
+        "references/functionalities/login-aadhaar-biometric.md",
+        "references/functionalities/login-aadhaar-otp.md",
+        "references/functionalities/login-abha-address.md",
+        "references/functionalities/login-abha-number.md",
+        "references/functionalities/read-abha-qr.md",
+        "references/functionalities/scan-and-share.md",
+        "references/functionalities/update-mobile.md",
+        "references/run.md",
+        "scripts/abdm_report.py",
+        "scripts/abdm_workbook.py",
+        "workbook/M1_ABHA_CREATION_VERIFICATION_SCAN_AND_SHARE.xlsx"
+      ]
+    },
+    {
+      "name": "abdm-m2",
+      "title": "M2, create and link records",
+      "archive": "abdm-m2.tar.gz",
+      "files": [
+        "SKILL.md",
+        "references/debug.md",
+        "references/design.md",
+        "references/integrate.md",
+        "references/scaffold.md",
+        "references/test.md",
+        "scripts/abdm_report.py",
+        "scripts/abdm_workbook.py",
+        "workbook/M2_BUILDING_HIP_TEST_CASES.xlsx"
+      ]
+    },
+    {
+      "name": "abdm-m3",
+      "title": "M3, fetch data with consent",
+      "archive": "abdm-m3.tar.gz",
+      "files": [
+        "SKILL.md",
+        "references/debug.md",
+        "references/design.md",
+        "references/integrate.md",
+        "references/scaffold.md",
+        "references/test.md",
+        "scripts/abdm_report.py",
+        "scripts/abdm_workbook.py",
+        "workbook/M3_BUILDING_HIU_TEST_CASES.xlsx"
+      ]
+    },
+    {
+      "name": "abdm-m4",
+      "title": "M4, register facilities and professionals",
+      "archive": "abdm-m4.tar.gz",
+      "files": [
+        "SKILL.md",
+        "references/debug.md",
+        "references/integrate.md",
+        "references/scaffold.md",
+        "references/test.md",
+        "scripts/abdm_report.py",
+        "scripts/abdm_workbook.py",
+        "workbook/HFR_Test_Cases.xlsx",
+        "workbook/HPR_Test_Cases.xlsx"
+      ]
+    },
+    {
+      "name": "abdm-p1",
+      "title": "P1, PHR registration and login",
+      "archive": "abdm-p1.tar.gz",
+      "files": [
+        "SKILL.md",
+        "references/debug.md",
+        "references/integrate.md",
+        "references/scaffold.md",
+        "references/test.md",
+        "scripts/abdm_report.py",
+        "scripts/abdm_workbook.py",
+        "workbook/PHR_MOBILE_APP_TEST_CASES.xlsx"
+      ]
+    },
+    {
+      "name": "abdm-p2",
+      "title": "P2, Consents Management",
+      "archive": "abdm-p2.tar.gz",
+      "files": [
+        "SKILL.md",
+        "references/debug.md",
+        "references/integrate.md",
+        "references/scaffold.md",
+        "references/test.md",
+        "scripts/abdm_report.py",
+        "scripts/abdm_workbook.py",
+        "workbook/PHR_MOBILE_APP_TEST_CASES.xlsx"
+      ]
+    },
+    {
+      "name": "abdm-p3",
+      "title": "P3, PHR subscriptions",
+      "archive": "abdm-p3.tar.gz",
+      "files": [
+        "SKILL.md",
+        "references/debug.md",
+        "references/design.md",
+        "references/integrate.md",
+        "references/scaffold.md",
+        "references/test.md",
+        "scripts/abdm_report.py",
+        "scripts/abdm_workbook.py",
+        "workbook/PHR_MOBILE_APP_TEST_CASES.xlsx"
+      ]
+    },
+    {
+      "name": "abdm-p4",
+      "title": "P4, health lockers",
+      "archive": "abdm-p4.tar.gz",
+      "files": [
+        "SKILL.md",
+        "references/debug.md",
+        "references/integrate.md",
+        "references/scaffold.md",
+        "references/test.md",
+        "scripts/abdm_report.py",
+        "scripts/abdm_workbook.py",
+        "workbook/PHR_MOBILE_APP_TEST_CASES.xlsx"
+      ]
+    },
+    {
+      "name": "abdm-scan-and-register",
+      "title": "Scan and register",
+      "files": [
+        "SKILL.md",
+        "references/scaffold.md",
+        "references/integrate.md",
+        "references/debug.md"
+      ]
+    },
+    {
+      "name": "abdm-scan-and-pay",
+      "title": "Scan and pay",
+      "files": [
+        "SKILL.md",
+        "references/scaffold.md",
+        "references/integrate.md",
+        "references/debug.md"
+      ]
+    },
+    {
+      "name": "abdm-record-share",
+      "title": "Patient scan and record share",
+      "files": [
+        "SKILL.md",
+        "references/scaffold.md",
+        "references/integrate.md",
+        "references/debug.md"
+      ]
+    },
+    {
+      "name": "abdm-fhir",
+      "title": "FHIR, generating and auditing bundles",
+      "files": [
+        "SKILL.md",
+        "references/generate.md",
+        "references/audit.md"
+      ]
+    }
+  ]
+}
