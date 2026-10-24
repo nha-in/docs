@@ -59,6 +59,9 @@ jobs:
       - run: python3 scripts/check-workbook-writeback.py
       - run: python3 scripts/check-test-report.py
       - run: npm run check:sections
+      # Every NHA UI test case maps to one functionality, with journeys and
+      # operations that exist (catalogue/hiecm/tests/<module>.yaml).
+      - run: npm run check:test-mapping
       - run: npm run lint:questions
 
   lint-sources:
