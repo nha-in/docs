@@ -58,7 +58,7 @@ A case with more than one step can carry its step results. Each step is `passed`
 | `failed` | Any steps; a case with a `failed` step is always `failed` |
 | `needs-human` | At least one step `needs-human`, and no step `failed` |
 
-The writer masks the Response and Remarks values before it writes them, with the same masking block as the report: a 12 digit Aadhaar number, with or without spaces or hyphens, reads `XXXX XXXX 1234`, a 14 digit ABHA number, with or without hyphens, `XX-XXXX-XXXX-1234`, a 10 digit mobile, with or without `0`, `91` or `+91` in front and spaces or hyphens inside, `XXXXXX1234`, an ABHA address ending `@sbx` or `@abdm` keeps the last four characters before the `@` with the rest as `x` (four or fewer are all `x`), a JWT reads `[token]`, a value after a password, secret, token or OTP label, and a `Bearer` credential, read `[redacted]`, and the value of a profile field (`firstName`, `middleName`, `lastName`, `fullName`, `name`, `dob`, `dayOfBirth`, `monthOfBirth`, `yearOfBirth`, `address`, `pinCode`, `photo`, `profilePhoto`, `kycPhoto`, `email`), in JSON or as `key: value`, reads `[masked]`. Masking is the backstop, not the rule: never put an identity value in a result in the first place.
+The writer masks the Response and Remarks values before it writes them, with the same masking block as the report: a 12 digit Aadhaar number, with or without spaces or hyphens, reads `XXXX XXXX 1234`, a 14 digit ABHA number, with or without hyphens, `XX-XXXX-XXXX-1234`, a 10 digit mobile, with or without `0`, `91` or `+91` in front and spaces or hyphens inside, `XXXXXX1234`, an ABHA address ending `@sbx` or `@abdm` keeps the last four characters before the `@` with the rest as `x` (four or fewer are all `x`), a JWT reads `[token]`, a value after a password, secret, token or OTP label, and a `Bearer` credential, read `[redacted]`, and the value of a profile field (`firstName`, `middleName`, `lastName`, `fullName`, `name`, `dob`, `dayOfBirth`, `monthOfBirth`, `yearOfBirth`, `address`, `pinCode`, `photo`, `profilePhoto`, `kycPhoto`, `email`), in JSON or as `key: value` in any case, reads `[masked]` to the end of its clause, so `Name: asha verma, then` reads `Name: [masked], then`. A date of birth after `dob`, `DOB` or `date of birth` reads `[masked]`, and any date written dd/mm/yyyy reads `[date]`. Masking is the backstop, not the rule: never put an identity value in a result in the first place. A name written with no label, such as `asha verma saw the screen`, cannot be told from other words and is not masked: the agent never writes a name.
 
 ## Before you start
 
@@ -134,13 +134,18 @@ def labelled(words):
 
 LABELLED = labelled(SECRET_WORDS)
 BEARER = re.compile(r"\bBearer\s+(?!\[token\]|\[redacted\])[^\s'\",;}]+")
-# A person's profile fields, by key, in JSON or in "key: value" and "key=value" text. A quoted
-# value is taken whole; an unquoted one runs on over words that start with a capital or a digit.
+# A person's profile fields, by key, in JSON or in "key: value" and "key=value" text, in any case.
+# A quoted value is taken whole; an unquoted one runs to the end of its clause: a comma, a
+# semicolon, a full stop, a line end or a steps list.
 PROFILE_KEYS = (r"firstName|middleName|lastName|fullName|name|dob|dayOfBirth|monthOfBirth|yearOfBirth|"
                 r"address|pinCode|pincode|photo|profilePhoto|kycPhoto|email")
 PROFILE = re.compile(
     r"(['\"]?\b(?i:" + PROFILE_KEYS + r")\b['\"]?\s*[:=]\s*)(?![\[{])"
-    r"(\"(?:[^\"\\]|\\.)*\"|'[^']*'|[^\s,;}\]]+(?: (?!Steps:)[A-Z0-9][^\s,;}\]]*)*)")
+    r"(\"(?:[^\"\\]|\\.)*\"|'[^']*'|[^\s,;}\]]+(?: (?!Steps:)[^\s,;.}\]]+)*)")
+# A date of birth after its label, and any date written dd/mm/yyyy.
+DATE = r"\d{1,2}[/-]\d{1,2}[/-]\d{4}|\d{4}-\d{2}-\d{2}"
+BIRTH = re.compile(r"(\b(?i:dob|date of birth|birth ?date)\b['\"]?\s*[:=]?\s*['\"]?)(" + DATE + r")(?!\d)")
+SLASHED = re.compile(r"(?<![\d/])\d{1,2}/\d{1,2}/\d{4}(?![\d/])")
 ABHA_ADDRESS = re.compile(r"(?<![\w.-])([A-Za-z0-9._]+)@(sbx|abdm)\b(?!\.\w)", re.I)
 # A digit run is not a number to mask when it is a segment of a UUID.
 LEAD, TRAIL = r"(?<!\d)(?<![0-9a-fA-F]-)", r"(?!\d)(?!-[0-9a-fA-F])"
@@ -165,12 +170,15 @@ def address(m):
 
 def mask(text):
     """A JWT to [token], a secret's value and a Bearer credential to [redacted], a profile field's
-    value to [masked], an ABHA address to xxxxxx1234@sbx, ABHA numbers to XX-XXXX-XXXX-1234, any
-    other 12 digit run to XXXX XXXX 1234, a mobile, with or without 0 or +91, to XXXXXX1234."""
+    value and a date of birth to [masked], a dd/mm/yyyy date to [date], an ABHA address to
+    xxxxxx1234@sbx, ABHA numbers to XX-XXXX-XXXX-1234, any other 12 digit run to XXXX XXXX 1234,
+    a mobile, with or without 0 or +91, to XXXXXX1234."""
     text = JWT.sub("[token]", str(text))
     text = LABELLED.sub(lambda m: (m.group(1) or m.group(3)) + "[redacted]", text)
     text = BEARER.sub("Bearer [redacted]", text)
+    text = BIRTH.sub(lambda m: m.group(1) + "[masked]", text)
     text = PROFILE.sub(profile, text)
+    text = SLASHED.sub("[date]", text)
     text = ABHA_ADDRESS.sub(address, text)
     text = ABHA_NUMBER.sub(r"XX-XXXX-XXXX-\1", text)
     text = AADHAAR.sub(r"XXXX XXXX \1", text)
