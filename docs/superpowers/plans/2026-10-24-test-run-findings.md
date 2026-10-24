@@ -92,9 +92,10 @@ An integration that already exists, such as SMART HMS, enters each loop at Test 
 
 ### 3.2 The mapping from NHA case to functionality
 
-1. One file per module, `catalogue/hiecm/tests/<module>.yaml`: every NHA case id, its functionality, the journey and steps it exercises, the screen it is judged on, its marking per entity type, and what it needs from the tester (Aadhaar holder, OTP, second mobile, mobile with no ABHA, second ABHA address, device, PHR app, counter QR).
+1. One file per module, `catalogue/hiecm/tests/<module>.yaml`: every NHA case id, its functionality, the journey and steps it exercises, the screen it is judged on, and what it needs from the tester (Aadhaar holder, OTP, second mobile, mobile with no ABHA, second ABHA address, device, PHR app, counter QR).
 2. Generated where the sheet's APIs column and the journey files decide it; reviewed by hand where they do not, with the reason recorded beside the entry.
-3. CI fails when a case in the shipped workbook has no functionality, or a mandatory case maps to a functionality with no journey.
+3. CI fails when a case in the shipped workbook has no functionality or is mapped twice, a journey or operation does not exist, a need is outside the allowed list, or a functionality has no journey and none of its cases is screen only with a reason. A mandatory case may be screen only (TAGGING_UNIQUEPATIENTID_UNIQUEABHANUMBER calls no ABDM API) when its reason says so.
+4. The marking per entity type is not copied into the mapping. It is read from the shipped workbook (the Mandatory/Optional column and the group's Applicable To) by `abdm_report.py plan`, so the two cannot drift.
 
 ### 3.3 The skill is built per functionality
 

@@ -72,8 +72,8 @@ This file is the map. Each line above is a file beside it, opened one at a time 
 
 ## Before anything else
 
-- Treat every request and response shape in this skill as unconfirmed until the sandbox has answered you. Check a response before you rely on its shape.
-- The design section is different in kind. Its rules come from building a working front desk against the sandbox, and each atom it cites names what was observed and the date it was seen.
+- Paste the sandbox response at every step and check it against the shape this skill gives before you build on it. A step is done when its response is observed.
+- The design section's rules come from building a working front desk against the sandbox, and each atom it cites names what was observed and the date it was seen.
 - One consent request produces one artefact per HIP, so store the request id and every artefact id. Taking the first element is the bug that silently drops half a fetch.
 - You act as the HIU. The HIE-CM holds the consent and asks the patient on your behalf. No artefact, no records.
 - The patient must be known to you by ABHA address before you can raise a request.

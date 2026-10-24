@@ -41,6 +41,7 @@
     "check:routes": "node scripts/build-atom-routes.mjs --check",
     "build:sections": "node scripts/build-sections.mjs",
     "check:sections": "node scripts/build-sections.mjs --check",
+    "check:test-mapping": "node scripts/check-test-mapping.mjs",
     "report:migration": "node scripts/migration-report.mjs",
     "build:widget": "npm run build --workspace ai-widget",
     "test:widget": "npm test --workspace ai-widget",
