@@ -37,8 +37,19 @@ always agree.
 
 The report is written only when the run has passed. Its gate is every
 mandatory case that applies to your entity type, government or private, with
-status `PASS` in the run type's column. A mandatory case that is `FAIL` or
-blank stops it, and so does one that is `NA` unless NHA agreed it is not run.
+status `PASS` or `CONDITIONAL PASS` in the run type's column. A mandatory case
+that is `FAIL` or blank stops it, and so does one that is `NA` unless NHA
+agreed it is not run.
+
+A conditional pass is a case whose Expected Result was met with a gap beside
+it, such as a point in the sheet's Suggestions for the Functional Tester column
+that was not met. It passes the gate only with its condition written in
+Remarks, and the report counts it on its own and lists every one with its
+condition, so a reviewer sees each gap.
+
+The same script also plans the run. `plan` lists every case in the workbook,
+in sheet order, with its group, what it is for your entity type and its status
+so far. The run log is made from that list, so no case is ever dropped.
 
 | Run type | Report | Evidence per case |
 |---|---|---|
@@ -60,16 +71,16 @@ way.
 | Cover | Title, product, organisation, milestone, run type, document id, version, release date, a confidentiality line | `meta.json`, `--run` |
 | Contents | Every section and every case id with its page number. The Word copy holds a contents field that Word fills in on opening | The headings below |
 | 1. Document control | Document title, id, version, prepared, reviewed, approved and released by, release date; change history; distribution list by name, organisation and role | `meta.json` `document` |
-| 2. Executive summary | The run in one paragraph: cases, PASS, FAIL, NA, no result, whether every mandatory case holds, how many took more than one pass | The workbook's counts |
+| 2. Executive summary | The run in one paragraph: cases, PASS, conditional pass, FAIL, NA, no result, whether every mandatory case holds, how many took more than one pass | The workbook's counts |
 | 3. ABDM details | Entity, product, category, role, entity type, milestone, API version, run type, dates, days, most passes any case took, executed by, recordings | `meta.json`, the workbook |
-| 4. Results summary | A counts table, a table by the workbook's Function column, and one row per case with marking, status and iterations; any mandatory case NHA agreed is not run, with the agreement | The workbook, `agreed_not_run` |
+| 4. Results summary | A counts table with conditional pass on its own, a table by the workbook's Function column, one row per case with marking, status and iterations, every conditional pass with its condition, and any mandatory case NHA agreed is not run, with the agreement | The workbook, `agreed_not_run` |
 | 5. Scope and limitations | Applications and URLs; role, entity type, run type, workbook, tabs, cases; optional cases not passed; the limitation that results hold for the build tested on those dates, and any `limitations` | `meta.json`, the workbook |
 | 6. Flow details | For linking and consent flows: the ABHA address used and the HI types created or tested | `meta.json` `flows` |
 | 7. Test environment and tools | Browser, Playwright, PHR app, emulator, the model that ran the agent, with versions | `meta.json` `environment` |
 | 8. Test team | Name, role and qualifications of each tester, reviewer and approver | `meta.json` `team` |
-| 9. Approach and methodology | How the agent ran cases, the three pass limit, how OTPs and consents were given, the run type, REQUEST-IDs, and what PASS, FAIL, NA and no result mean | Fixed text, `--run` |
+| 9. Approach and methodology | How the agent ran cases, the three pass limit, how OTPs and consents were given, the run type, REQUEST-IDs, and what PASS, conditional pass, FAIL, NA and no result mean | Fixed text, `--run` |
 | 10. Test data | The ABHA numbers and addresses used, masked | `meta.json` `test_data` |
-| 11. Evidence | Per case, a heading with its id and title, then one table of test case ID, title, marking, expected result, observed, status, iterations, failure reason with any error code, and request ids; then the response with its code; then each screenshot with a numbered caption naming the case and step | The workbook, `findings`, `--manifest`, the evidence folder |
+| 11. Evidence | Per case, a heading with its id and title, then one table of test case ID, title, marking, expected result, observed, status, iterations, failure reason with any error code, and request ids; for a case with steps, a table of each step's result; then the response with its code; then each screenshot with a numbered caption naming the case and step | The workbook, `findings`, `--manifest`, the evidence folder |
 | 12. Failures and iterations log | Every case not PASS or that took more than one pass, with its failure reason and error code | The workbook |
 | 13. Conclusion and sign-off | The result in one paragraph, then a sign-off table for preparer, reviewer and approver with date and signature | The counts, `meta.json` `document` |
 | 14. Annexures | Recording links, the completed workbook, the REQUEST-ID manifest, the evidence folder | `meta.json`, the arguments |
@@ -84,8 +95,8 @@ it is, so a reviewer can look it up in the gateway's record; anything else in
 that field is masked like the rest of the report.
 
 What the report never holds: a login, password, client secret, token or OTP,
-an unmasked Aadhaar number, ABHA number or mobile, and anyone's email or phone
-number. The team and distribution tables take a name, a role and an
+an unmasked Aadhaar number, ABHA number, ABHA address or mobile, and anyone's
+email or phone number. The team and distribution tables take a name, a role and an
 organisation only.
 
 How the marking column is read. It is the first column whose name holds both
@@ -175,12 +186,15 @@ signing off sees them.
 ```python
 """Check that a functional test run may be reported, and write the report.
 
+  python3 abdm_report.py plan  WORKBOOK --run ft|ui --entity government|private
   python3 abdm_report.py check WORKBOOK --run ft|ui --entity government|private [--meta meta.json]
   python3 abdm_report.py build WORKBOOK --run ft|ui --meta meta.json --evidence DIR --out REPORT.pdf
       [--manifest RUN.json] [--format pdf|docx|both] [--fonts DIR]
 
-check lists every mandatory case not PASS for the run type and exits 1, or
-exits 0 when there is none. build refuses unless check passes, then writes the
+plan prints every case in sheet order with its group, its applicability for the
+entity type and its status so far, then the totals: the run log is made from it.
+check lists every mandatory case not PASS or CONDITIONAL PASS for the run type
+and exits 1, or exits 0 when there is none. build refuses unless check passes, then writes the
 report. A mandatory case NA passes only when meta.json's agreed_not_run names it.
 --manifest is the run's manifest of case ids to REQUEST-IDs, printed per case.
 build writes REPORT.pdf, the report to submit, and REPORT.docx beside it, the
@@ -209,23 +223,10 @@ COLUMNS = {
 TITLE = ["functionality", "feature", "test title"]
 OPTIONAL = ("no", "optional", "non-mandatory", "non mandatory", "not mandatory")
 FORBIDDEN = re.compile(r"pass(word|wd)|secret|token|credential|api[_ -]?key|private[_ -]?key", re.I)
-# A JWT: three base64url segments, the first a JSON header, so starting eyJ.
-JWT = re.compile(r"\beyJ[\w-]+\.[\w-]+\.[\w-]*")
-SECRET_WORDS = r"pass(?:word|wd)|secret|token|otp|credentials?|api[ _-]?key|private[ _-]?key"
-
-
-def labelled(words):
-    """A value after a label naming a secret: "client secret: x", "OTP 482913", "otp":"482913"."""
-    return re.compile(
-        r"(\b[\w-]*(?:" + words + r")[\w-]*['\"]?\s*[:=]\s*['\"]?)([^\s'\",;}]+)"
-        r"|(\b(?:" + words + r")\b\s+(?:is\s+)?)((?=[^\s,;]*\d)[^\s,;]{4,})", re.I)
-
-
-LABELLED = labelled(SECRET_WORDS)
-# What meta.json may never hold as a value. An OTP is masked, not refused: it
-# has expired by the time a report is written, and findings name the OTP step.
-LABELLED_CREDENTIAL = labelled(r"pass(?:word|wd)|secret|token|credentials?|api[ _-]?key|private[ _-]?key")
-LABEL = re.compile(r"\b(?:" + SECRET_WORDS + r")\b", re.I)
+# The statuses that pass a case, and how a multi step case's steps read in Remarks.
+PASSING = ("PASS", "CONDITIONAL PASS")
+STEPS = re.compile(r"\bSteps: (.+)$")
+STEP = re.compile(r"^(\d+) (PASS|FAIL|needs tester|not run)(?: \((.*)\))?$")
 IMAGES = (".png", ".jpg", ".jpeg", ".gif", ".bmp")
 RUN_NAME = {"ui": "UI functional test", "ft": "API functional test"}
 SECTIONS = ["Document control", "Executive summary", "ABDM details", "Results summary",
@@ -245,14 +246,71 @@ def norm(text):
     return re.sub(r"\s+", " ", str(text if text is not None else "")).strip()
 
 
+# Masking. This block is the same in abdm_workbook.py and abdm_report.py, so the
+# sheet and the report hide the same things in the same way.
+# A JWT: three base64url segments, the first a JSON header, so starting eyJ.
+JWT = re.compile(r"\beyJ[\w-]+\.[\w-]+\.[\w-]*")
+SECRET_WORDS = r"pass(?:word|wd)|secret|token|otp|credentials?|api[ _-]?key|private[ _-]?key"
+
+
+def labelled(words):
+    """A value after a label naming a secret: "client secret: x", "OTP 482913", "otp":"482913",
+    "X-token: Bearer x". Only a value is taken, never the { or [ that opens an object or a list."""
+    return re.compile(
+        r"(\b[\w-]*(?:" + words + r")[\w-]*['\"]?\s*[:=]\s*['\"]?)(?![\[{])((?:Bearer\s+)?[^\s'\",;}]+)"
+        r"|(\b(?:" + words + r")\b\s+(?:is\s+)?)((?=[^\s,;]*\d)[^\s,;]{4,})", re.I)
+
+
+LABELLED = labelled(SECRET_WORDS)
+BEARER = re.compile(r"\bBearer\s+(?!\[token\]|\[redacted\])[^\s'\",;}]+")
+# A person's profile fields, by key, in JSON or in "key: value" and "key=value" text. A quoted
+# value is taken whole; an unquoted one runs on over words that start with a capital or a digit.
+PROFILE_KEYS = (r"firstName|middleName|lastName|fullName|name|dob|dayOfBirth|monthOfBirth|yearOfBirth|"
+                r"address|pinCode|pincode|photo|profilePhoto|kycPhoto|email")
+PROFILE = re.compile(
+    r"(['\"]?\b(?i:" + PROFILE_KEYS + r")\b['\"]?\s*[:=]\s*)(?![\[{])"
+    r"(\"(?:[^\"\\]|\\.)*\"|'[^']*'|[^\s,;}\]]+(?: (?!Steps:)[A-Z0-9][^\s,;}\]]*)*)")
+ABHA_ADDRESS = re.compile(r"(?<![\w.-])([A-Za-z0-9._]+)@(sbx|abdm)\b(?!\.\w)", re.I)
+# A digit run is not a number to mask when it is a segment of a UUID.
+LEAD, TRAIL = r"(?<!\d)(?<![0-9a-fA-F]-)", r"(?!\d)(?!-[0-9a-fA-F])"
+ABHA_NUMBER = re.compile(LEAD + r"\d{2}[ -]?\d{4}[ -]?\d{4}[ -]?(\d{4})" + TRAIL)
+AADHAAR = re.compile(LEAD + r"\d{4}[ -]?\d{4}[ -]?(\d{4})" + TRAIL)
+MOBILE = re.compile(r"(?<![\d+])(?<![0-9a-fA-F]-)(?:\+91[ -]?|91[ -]?|0)?[6-9](?:[ -]?\d){5}"
+                    r"[ -]?(\d)[ -]?(\d)[ -]?(\d)[ -]?(\d)" + TRAIL)
+
+
+def profile(m):
+    quote = m.group(2)[0] if m.group(2)[:1] in ("'", '"') else ""
+    return m.group(1) + quote + "[masked]" + quote
+
+
+def address(m):
+    """An ABHA address keeps the last four characters before the @, the rest as x. Four or fewer: all x."""
+    name = m.group(1)
+    if len(name) <= 4:
+        return "x" * len(name) + "@" + m.group(2)
+    return "x" * (len(name) - 4) + name[-4:] + "@" + m.group(2)
+
+
 def mask(text):
-    """A JWT to [token], a value after a secret's label to [redacted], ABHA numbers to
-    XX-XXXX-XXXX-1234, any other 12 digit run to XXXX XXXX 1234, a mobile to XXXXXX1234."""
+    """A JWT to [token], a secret's value and a Bearer credential to [redacted], a profile field's
+    value to [masked], an ABHA address to xxxxxx1234@sbx, ABHA numbers to XX-XXXX-XXXX-1234, any
+    other 12 digit run to XXXX XXXX 1234, a mobile, with or without 0 or +91, to XXXXXX1234."""
     text = JWT.sub("[token]", str(text))
     text = LABELLED.sub(lambda m: (m.group(1) or m.group(3)) + "[redacted]", text)
-    text = re.sub(r"(?<!\d)\d{2}[ -]?\d{4}[ -]?\d{4}[ -]?(\d{4})(?!\d)", r"XX-XXXX-XXXX-\1", text)
-    text = re.sub(r"(?<!\d)\d{4}[ -]?\d{4}[ -]?(\d{4})(?!\d)", r"XXXX XXXX \1", text)
-    return re.sub(r"(?<!\d)[6-9]\d{4}[ -]?\d(\d{4})(?!\d)", r"XXXXXX\1", text)
+    text = BEARER.sub("Bearer [redacted]", text)
+    text = PROFILE.sub(profile, text)
+    text = ABHA_ADDRESS.sub(address, text)
+    text = ABHA_NUMBER.sub(r"XX-XXXX-XXXX-\1", text)
+    text = AADHAAR.sub(r"XXXX XXXX \1", text)
+    return MOBILE.sub(r"XXXXXX\1\2\3\4", text)
+# End of the masking block.
+
+
+# What meta.json may never hold as a value. An OTP is masked, not refused: it
+# has expired by the time a report is written, and findings name the OTP step.
+LABELLED_CREDENTIAL = labelled(r"pass(?:word|wd)|secret|token|credentials?|api[ _-]?key|private[ _-]?key")
+LABEL = re.compile(r"\b(?:" + SECRET_WORDS + r")\b", re.I)
 
 
 def load(path):
@@ -401,6 +459,27 @@ def group_applies(ws, top, cols):
     return out
 
 
+def group_names(ws, top, cols):
+    """Each case row's group: the Function carried down from the row that heads the group,
+    else the last section heading, a row whose only value is a short title in its first column."""
+    fcol, icol = cols.get("Function"), cols.get("Test Case ID")
+    if not icol:
+        return {}
+    first = min(cols.values())
+    out, current = {}, ""
+    for r in range(top + 1, ws.max_row + 1):
+        name = norm(anchor(ws, r, fcol).value) if fcol else ""
+        filled = [c for c in ws[r] if norm(c.value)]
+        if name:
+            current = name
+        elif (len(filled) == 1 and filled[0].column == first and len(norm(filled[0].value)) <= 60
+              and not re.fullmatch(r"[\d.]+", norm(filled[0].value))):
+            current = norm(filled[0].value)
+        if norm(ws.cell(r, icol).value):
+            out[r] = current or norm(ws.title)
+    return out
+
+
 def restricted_to(applies):
     """The one entity type a group is for, when it names only one: government or private."""
     low = applies.lower()
@@ -418,11 +497,12 @@ def read_cases(path, run, entity):
     backup = path.with_name(path.stem + ".before-abdm-run" + path.suffix)
     original = load(backup) if backup.exists() else None
     out = []
-    applies_by = {}
+    applies_by, groups_by = {}, {}
     for case, (ws, row) in index(wb).items():
         top, cols = header_row(ws)
         if ws.title not in applies_by:
             applies_by[ws.title] = group_applies(ws, top, cols)
+            groups_by[ws.title] = group_names(ws, top, cols)
         mcol = marking_col(cols)
         marking = norm(anchor(ws, row, mcol).value) if mcol else ""
         tcol = find(cols, TITLE)
@@ -435,6 +515,7 @@ def read_cases(path, run, entity):
                "expected": norm(anchor(ws, row, ecol).value) if ecol else "",
                "function": (norm(anchor(ws, row, fcol).value) if fcol else "") or ws.title}
         rec["applies"] = applies_by[ws.title].get(row, "")
+        rec["group"] = groups_by[ws.title].get(row, "") or norm(ws.title)
         for key, names in COLUMNS[run].items():
             rec[key] = value(ws, row, top, cols, names, original)
         rec["status"] = rec["status"].upper()
@@ -457,28 +538,36 @@ def read_cases(path, run, entity):
     for rec in out:
         only = restricted_to(rec["applies"])
         if only and only != entity:
-            rec.update(kind="optional", pair=None, label="Not for a " + entity + " entity",
+            rec.update(kind="optional", pair=None, label="Not for a " + entity + " entity", na=True,
                        note="the group applies to " + rec["applies"] + " only: not for a " + entity + " entity")
     groups = {k: v for k, v in groups.items() if any(by_id[i]["kind"] == "pair" for i in v if i in by_id)}
     return out, list(groups.values())
 
 
 def gate(recs, groups, agreed):
-    """Mandatory cases not PASS. NA passes only on a case NHA agreed not to run."""
+    """Mandatory cases not PASS or CONDITIONAL PASS. NA passes only on a case NHA agreed not to run."""
     blocking = []
     by_id = {r["id"]: r for r in recs}
 
     def through(r):
-        return r["status"] == "PASS" or (r["status"] == "NA" and r["id"] in agreed)
+        if r["status"] == "CONDITIONAL PASS":
+            # A conditional pass passes only with its condition written down.
+            return bool(STEPS.sub("", r["remarks"]).strip())
+        return r["status"] in PASSING or (r["status"] == "NA" and r["id"] in agreed)
+
+    def shown_status(r):
+        if r["status"] == "CONDITIONAL PASS" and not through(r):
+            return "CONDITIONAL PASS with no condition in Remarks"
+        return r["status"] or "blank"
 
     for r in recs:
         if r["kind"] == "mandatory" and not through(r):
-            blocking.append(r["id"] + ": " + (r["status"] or "blank"))
+            blocking.append(r["id"] + ": " + shown_status(r))
     for ids in groups:
         present = [by_id[i] for i in ids if i in by_id]
         if present and not any(through(r) for r in present):
             blocking.append(" or ".join(r["id"] for r in present) + ": " +
-                            ", ".join(r["status"] or "blank" for r in present))
+                            ", ".join(shown_status(r) for r in present))
     return blocking
 
 
@@ -507,7 +596,45 @@ def run_check(path, run, entity, agreed):
     mandatory = sum(1 for r in recs if r["kind"] == "mandatory") + len(groups)
     print(str(len(blocking)) + " of " + str(mandatory) + " mandatory case(s) for a " + entity +
           " entity not PASS in the " + run + " run")
+    for r in recs:
+        if r["status"] == "CONDITIONAL PASS":
+            print("conditional pass " + r["id"] + ": " + mask(r["remarks"] or "no condition recorded"))
     return recs, groups, blocking
+
+
+def applicability(r):
+    """What a case is for this entity type, in the words plan prints."""
+    if r.get("na"):
+        return "not applicable (group " + r["group"] + ", Applicable To: " + r["applies"] + ")"
+    if r["kind"] == "pair":
+        what = "mandatory, either " + " or ".join(r["pair"])
+    elif r["kind"] == "mandatory":
+        what = "conditional" if "conditional" in r["label"].lower() else "mandatory"
+    else:
+        what = "optional"
+    low = r["applies"].lower()
+    if r["applies"] and not restricted_to(r["applies"]) and not ("all" in low or "both" in low or
+                                                                  ("gov" in low and "priv" in low)):
+        # An Applicable To that names neither entity type, such as "PHR App", is read as all.
+        what += "; applies: " + r["applies"] + " (read as all)"
+    return what
+
+
+def run_plan(path, run, entity):
+    """Every case in sheet order: id, group, applicability, status so far. Then the totals."""
+    recs, _ = read_cases(path, run, entity)
+    if not recs:
+        sys.exit("no Test Case ID column with ids in " + Path(path).name + ": nothing to plan")
+    counts, statuses = {}, {}
+    for r in recs:
+        what = applicability(r)
+        status = r["status"] or "open"
+        print(" | ".join([r["id"], r["group"], what, status]))
+        key = what.split(" (")[0].split(",")[0].split(";")[0]
+        counts[key] = counts.get(key, 0) + 1
+        statuses[status] = statuses.get(status, 0) + 1
+    print("total " + str(len(recs)) + " cases: " + ", ".join(str(v) + " " + k for k, v in counts.items()) +
+          "; status: " + ", ".join(str(v) + " " + k for k, v in statuses.items()))
 
 
 def forbidden(meta, where="meta.json"):
@@ -577,6 +704,17 @@ def shown(row, header=False):
             for c, text in enumerate(row)]
 
 
+def step_rows(remarks):
+    """A multi step case's steps, read back from the "Steps: ..." the writer put at the end of Remarks."""
+    found = STEPS.search(remarks or "")
+    rows = []
+    for part in (found.group(1).split("; ") if found else []):
+        m = STEP.match(part.strip())
+        if m:
+            rows.append([m.group(1), m.group(2), m.group(3) or ""])
+    return rows
+
+
 def content(path, run, meta, evidence, recs, groups, manifest=None, draft=None):
     """What the report says, as a list of blocks. The DOCX and the PDF draw the same blocks."""
     dm = meta.get("document", {})
@@ -600,19 +738,23 @@ def content(path, run, meta, evidence, recs, groups, manifest=None, draft=None):
 
     n = len(recs)
     passed = sum(1 for r in recs if r["status"] == "PASS")
+    conditional = [r for r in recs if r["status"] == "CONDITIONAL PASS"]
+    cond = len(conditional)
     failed = sum(1 for r in recs if r["status"] == "FAIL")
     na = sum(1 for r in recs if r["status"] == "NA")
-    blank = n - passed - failed - na
+    blank = n - passed - cond - failed - na
     mandatory = sum(1 for r in recs if r["kind"] == "mandatory") + len(groups)
     retried = [r for r in recs if r["iterations"] > 1]
     log = [r for r in recs if r["iterations"] > 1 or r["status"] != "PASS"]
     agreed = [r for r in recs if r.get("agreed")]
     findings = meta.get("findings", {})
     if agreed:
-        held = (" All " + str(mandatory) + " mandatory cases that apply to a " + entity + " entity are PASS, except " +
-                str(len(agreed)) + " NA that NHA agreed not to run, listed in the results summary.")
+        held = (" All " + str(mandatory) + " mandatory cases that apply to a " + entity + " entity are PASS or "
+                "conditional pass, except " + str(len(agreed)) + " NA that NHA agreed not to run, listed in the "
+                "results summary.")
     else:
-        held = " All " + str(mandatory) + " mandatory cases that apply to a " + entity + " entity are PASS."
+        held = (" All " + str(mandatory) + " mandatory cases that apply to a " + entity + " entity are PASS or "
+                "conditional pass.")
     if draft:
         held = (" This is a draft, not the report to submit: " + str(len(draft)) + " of the " + str(mandatory) +
                 " mandatory cases that apply to a " + entity + " entity are not yet PASS, listed below.")
@@ -623,6 +765,8 @@ def content(path, run, meta, evidence, recs, groups, manifest=None, draft=None):
             return "Agreed not run: " + r["agreed"]
         if r["status"] == "PASS" and r["iterations"] <= 1:
             return "None"
+        if r["status"] == "CONDITIONAL PASS":
+            return "Condition: " + (STEPS.sub("", r["remarks"]).strip() or "not recorded")
         text = r["remarks"] or r["response"] or "Not recorded"
         if r["status"] == "PASS":
             text = "Passed on pass " + str(r["iterations"]) + ". Earlier passes: " + text
@@ -661,7 +805,8 @@ def content(path, run, meta, evidence, recs, groups, manifest=None, draft=None):
         meta.get("organisation", "") + " against ABDM " + milestone + ", API version " +
         meta.get("api_version", "V3") + ", from " + dates.get("start", "") + " to " + dates.get("end", "") +
         ". The workbook " + Path(path).name + " holds " + str(n) + " cases. " + str(passed) + " are PASS, " +
-        str(failed) + " FAIL, " + str(na) + " NA and " + str(blank) + " have no result." + held + " " +
+        str(cond) + " conditional pass, " + str(failed) + " FAIL, " + str(na) + " NA and " + str(blank) +
+        " have no result." + held + " " +
         str(len(retried)) + " cases took more than one pass.")
     if draft:
         add("callout", ["Draft. The report to submit is built only when every mandatory case below is PASS."])
@@ -684,7 +829,8 @@ def content(path, run, meta, evidence, recs, groups, manifest=None, draft=None):
 
     # 4. Results summary: counts, then by function, then one row per case.
     add("h1", SECTIONS[3])
-    add("stats", [["Cases in the workbook", n], ["PASS", passed], ["FAIL", failed], ["NA", na], ["No result", blank],
+    add("stats", [["Cases in the workbook", n], ["PASS", passed], ["Conditional pass", cond], ["FAIL", failed],
+                  ["NA", na], ["No result", blank],
                   ["Mandatory for a " + entity + " entity", mandatory], ["Took more than one pass", len(retried)]])
     add("h2", "Results by function")
     functions = []
@@ -695,13 +841,22 @@ def content(path, run, meta, evidence, recs, groups, manifest=None, draft=None):
     for fn in functions:
         these = [r for r in recs if r["function"] == fn]
         rows.append([fn, len(these), sum(1 for r in these if r["status"] == "PASS"),
+                     sum(1 for r in these if r["status"] == "CONDITIONAL PASS"),
                      sum(1 for r in these if r["status"] == "FAIL"), sum(1 for r in these if r["status"] == "NA"),
-                     sum(1 for r in these if r["kind"] == "mandatory" and r["status"] != "PASS" and not r.get("agreed"))])
-    table(rows, header=["Function", "Cases", "PASS", "FAIL", "NA", "Mandatory not PASS"])
+                     sum(1 for r in these if r["kind"] == "mandatory" and r["status"] not in PASSING
+                         and not r.get("agreed"))])
+    table(rows, header=["Function", "Cases", "PASS", "Conditional pass", "FAIL", "NA", "Mandatory not PASS"])
     add("h2", "Results by case")
     table([[r["id"], r["title"], r["label"], (r["status"] or "Not recorded") + (" (agreed not run)" if r.get("agreed")
             else ""), r["iterations"] or ""] for r in recs],
           header=["Test case ID", "Title", "Marking", "Status", "Iterations"])
+    add("h2", "Conditional passes")
+    if conditional:
+        add("note", ["Each case below met its Expected Result with a gap beside it. The condition is the gap."])
+        table([[r["id"], r["title"], STEPS.sub("", r["remarks"]).strip() or "Not recorded"] for r in conditional],
+              header=["Test case ID", "Title", "Condition"])
+    else:
+        add("para", "No case is a conditional pass.")
     if agreed:
         add("h2", "Mandatory cases NHA agreed not to run")
         add("note", ["NHA agreed that each case below does not apply. The gate lets a mandatory NA through only "
@@ -717,7 +872,7 @@ def content(path, run, meta, evidence, recs, groups, manifest=None, draft=None):
     sheets = sorted(set(r["sheet"] for r in recs), key=[r["sheet"] for r in recs].index)
     table([["Role", meta.get("role", "")], ["Entity type", entity], ["Run type", run],
            ["Workbook", Path(path).name], ["Tabs", ", ".join(sheets)], ["Cases", n]])
-    skipped = [r for r in recs if r["kind"] == "optional" and r["status"] != "PASS"]
+    skipped = [r for r in recs if r["kind"] == "optional" and r["status"] not in PASSING]
     add("h2", "Optional cases not passed")
     if skipped:
         table([[r["id"], r["title"], r["status"] or "Not recorded"] for r in skipped],
@@ -775,6 +930,8 @@ def content(path, run, meta, evidence, recs, groups, manifest=None, draft=None):
         "a reviewer can look up in the gateway's own record.",
     ])
     table([["PASS", "The case's expected result was observed."],
+           ["CONDITIONAL PASS", "The expected result was observed, with a gap beside it, such as a point in the "
+            "Suggestions for the Functional Tester column not met. The condition is listed in the results summary."],
            ["FAIL", "The expected result was not observed in three passes. The failure reason says what was."],
            ["NA", "The case was not run: optional and not offered, or mandatory with NHA's agreement."],
            ["Not recorded", "The case has no result in the workbook."]], header=["Status", "Meaning"])
@@ -803,7 +960,7 @@ def content(path, run, meta, evidence, recs, groups, manifest=None, draft=None):
             for step, shot in enumerate(files, 1):
                 figure += 1
                 shots.append((shot, figure, step))
-        add("case", r, values, r["response"], shots)
+        add("case", r, values, r["response"], shots, step_rows(r["remarks"]))
 
     # 12. Failures and iterations log
     add("h1", SECTIONS[11])
@@ -819,8 +976,8 @@ def content(path, run, meta, evidence, recs, groups, manifest=None, draft=None):
     add("lead",
         "In the " + run + " run of " + meta.get("product", "") + " for " + milestone + "," +
         held.replace(" All", " all", 1) + " Of " + str(n) + " cases, " +
-        str(passed) + " are PASS, " + str(failed) + " FAIL, " + str(na) + " NA and " + str(blank) +
-        " have no result.")
+        str(passed) + " are PASS, " + str(cond) + " conditional pass, " + str(failed) + " FAIL, " + str(na) +
+        " NA and " + str(blank) + " have no result.")
     table([["Prepared by", dm.get("prepared_by", ""), "", ""], ["Reviewed by", dm.get("reviewed_by", ""), "", ""],
            ["Approved by", dm.get("approved_by", ""), "", ""]], header=["Sign-off", "Name", "Date", "Signature"])
 
@@ -947,9 +1104,11 @@ def write_docx(m, out):
         elif kind == "gap":
             doc.add_paragraph("")
         elif kind == "case":
-            r, values, response, shots = block[1:]
+            r, values, response, shots, steps = block[1:]
             doc.add_heading(r["id"] + ": " + r["title"], level=2)
             table([[k, v] for k, v in zip(CASE_FIELDS, values)], header=["Field", "Value"])
+            if steps:
+                table(steps, header=["Step", "Result", "Note"])
             if response:
                 p = doc.add_paragraph()
                 p.add_run("Response with code: ").bold = True
@@ -1002,7 +1161,10 @@ MILESTONES = {"M1": "M1 Identity", "M2": "M2 Health Information Provider", "M3":
 WIDTHS = {
     ("Version", "Date", "By", "Change"): [.12, .18, .25, .45],
     ("Name", "Organisation", "Role"): [.34, .36, .30],
-    ("Function", "Cases", "PASS", "FAIL", "NA", "Mandatory not PASS"): [.38, .11, .11, .11, .11, .18],
+    ("Function", "Cases", "PASS", "Conditional pass", "FAIL", "NA", "Mandatory not PASS"):
+        [.30, .09, .09, .14, .09, .09, .20],
+    ("Test case ID", "Title", "Condition"): [.24, .30, .46],
+    ("Step", "Result", "Note"): [.10, .22, .68],
     ("Test case ID", "Title", "Marking", "Status", "Iterations"): [.24, .36, .17, .10, .13],
     ("Test case ID", "Title", "Agreed by and when"): [.25, .37, .38],
     ("Test case ID", "Title", "Status"): [.25, .60, .15],
@@ -1182,7 +1344,7 @@ def write_pdf(m, out, fonts_dir=None):
 
     def status(text):
         word = clean(text).split(" ")[0].upper()
-        color = "blue" if word == "PASS" else "otext" if word == "FAIL" else "ink4"
+        color = "blue" if word in ("PASS", "CONDITIONAL") else "otext" if word == "FAIL" else "ink4"
         return Tracked(text or "Not recorded", size=7.2, color=color, space=0.6)
 
     def grid(rows, header=None, pad=6.5):
@@ -1392,11 +1554,13 @@ def write_pdf(m, out, fonts_dir=None):
             elif kind == "gap":
                 out.append(Spacer(1, 10))
             elif kind == "case":
-                r, values, response, shots = block[1:]
+                r, values, response, shots, steps = block[1:]
                 head = [CondPageBreak(200), Rule("line", 0.6, before=6, after=14, top=False), Mark("c" + r["id"]),
                         Tracked(r["id"], size=7.5, color="otext", space=0.9, after=5),
                         Paragraph(escape(clean(r["title"])), S["case"]),
                         grid([[k, v] for k, v in zip(CASE_FIELDS, values)], pad=4.6)]
+                if steps:
+                    head += [Spacer(1, 8), grid(steps, ["Step", "Result", "Note"], pad=4.6)]
                 if response:
                     code = Table([[Tracked("Response with code", size=6.6, color="ink4", space=0.7, after=3)],
                                   [para(response, "code")]], colWidths=[TW], hAlign="LEFT")
@@ -1536,7 +1700,7 @@ def build(path, run, meta, evidence, out, recs, groups, manifest=None, fmt="both
 
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument("action", choices=["check", "build"])
+    p.add_argument("action", choices=["plan", "check", "build"])
     p.add_argument("workbook")
     p.add_argument("--run", choices=["ft", "ui"], required=True)
     p.add_argument("--entity", choices=["government", "private"])
@@ -1562,6 +1726,9 @@ def main():
     entity = a.entity or meta.get("entity_type")
     if entity not in ("government", "private"):
         sys.exit("--entity, or entity_type in meta.json, must be government or private")
+    if a.action == "plan":
+        run_plan(a.workbook, a.run, entity)
+        return
     recs, groups, blocking = run_check(a.workbook, a.run, entity, agreed_cases(meta))
     if blocking and not (a.action == "build" and a.draft):
         if a.action == "build":
@@ -1578,6 +1745,14 @@ if __name__ == "__main__":
 ```
 
 ## What happens
+
+**Before the first case, plan the run from the workbook:**
+
+```bash
+python3 abdm-ft/abdm_report.py plan <workbook> --run ui --entity private
+```
+
+It prints one line per case, in sheet order: the case id, its group (the sheet's Function, else its section heading), what it is for your entity type (`mandatory`, `mandatory, either <id> or <id>`, `conditional`, `optional`, or `not applicable` with the group and its Applicable To; an Applicable To that names neither entity type, such as `PHR App`, adds `applies: PHR App (read as all)`), and its status so far in the run type's column, `open` when blank. Then one `total` line. NHA's PHR workbook carries no case ids until the writer's first write adds them, so for P1 to P4 write an empty results file, `[]`, with `abdm_workbook.py write` first, then run `plan`. Create the run log's rows from this list, one per case. No case may be dropped: a case that cannot run is `needs-human` with what it needs named, after the tester was asked for it, or `not-run` with the rule that makes it not apply. Before the tester leaves, run `python3 abdm-ft/abdm_workbook.py open <workbook> --run ui --entity private` and read the list out, so every case still waiting for them is done or asked about while they are there.
 
 1. When the last case is recorded and written into the workbook, run the gate for the run type and your entity type:
 
@@ -1609,14 +1784,16 @@ if __name__ == "__main__":
 
 ## How you know it worked
 
-- `check` exits `0` and its last line reads `0 of <n> mandatory case(s) for a <entity> entity not PASS in the <run> run`.
+- `plan` prints one line per case in the workbook, 100 for M1, then a `total` line, and the run log has a row for every one of them.
+- `check` exits `0` and reads `0 of <n> mandatory case(s) for a <entity> entity not PASS in the <run> run`, followed by one `conditional pass <id>: <condition>` line per conditional pass.
+- The results summary counts conditional pass on its own, in the tiles, the table by function and the executive summary, and lists every conditional pass with its condition. A case whose Remarks end in `Steps: ...` shows a Step, Result and Note table in its evidence.
 - `build` prints a `fonts:` line naming each font it used or replaced, then `wrote abdm-ft/report-m1.docx` and `wrote abdm-ft/report-m1.pdf`, and exits `0`.
 - The PDF opens on a navy cover with the milestone in orange, the key facts in a ruled grid and the confidentiality note. Page 2 is the contents, with every section and every case id and its page. Every later page reads the report title at the top left and `Confidential` and `Page N of M` at the bottom.
 - Both files open with the cover and the contents, then the fourteen headings from Document control to Annexures, in order. Every page of the Word copy has the report title at the top and `Confidential, page N of M` at the bottom.
 - The results summary has one row per case in the workbook, after the counts. Each case's evidence section starts with its nine row table, then its response, then its screenshots in name order, each captioned with its figure number, case id and step: `FIGURE <n> · <case id>, STEP <k> · <file>` in the PDF, `Figure <n>: <case id>, step <k> (<file>)` in the Word copy.
 - With `--manifest`, each case's Request IDs row lists the REQUEST-IDs the manifest gives it, or reads `None in the manifest`.
-- No 12 digit number appears anywhere in either file, the PDF's header and footer included: an Aadhaar number reads `XXXX XXXX 1234` and an ABHA number `XX-XXXX-XXXX-1234`, with the last four digits kept. A 10 digit mobile reads `XXXXXX1234`.
-- No token or secret appears in it: a JWT reads `[token]`, and a value after a label naming a password, secret, token, OTP, credential, API key or private key reads `[redacted]`. This covers the workbook's Response and Remarks values and the findings, as well as `meta.json`.
+- No 12 digit number appears anywhere in either file, the PDF's header and footer included: an Aadhaar number reads `XXXX XXXX 1234` and an ABHA number `XX-XXXX-XXXX-1234`, with the last four digits kept. A 10 digit mobile, with or without `0`, `91` or `+91` and spaces or hyphens inside, reads `XXXXXX1234`, and an ABHA address ending `@sbx` or `@abdm` keeps only the last four characters before the `@`, the rest as `x`, or is all `x` when four or fewer. A profile field's value, `firstName`, `lastName`, `name`, `dob`, `address`, `pinCode`, `photo`, `email` and the like, reads `[masked]`. The writer uses the same masking block, so the sheet and the report agree.
+- No token or secret appears in it: a JWT reads `[token]`, and a value after a label naming a password, secret, token, OTP, credential, API key or private key reads `[redacted]`, as does a `Bearer` credential. This covers the workbook's Response and Remarks values and the findings, as well as `meta.json`.
 
 ## When it goes wrong
 
@@ -1629,6 +1806,9 @@ if __name__ == "__main__":
 | `not passed <id>: NA` | A mandatory case was recorded not run, and `agreed_not_run` does not list it | Run it, or agree with NHA that it does not apply, keep the reason in its remarks, and add it to `agreed_not_run` with who agreed and when. Pass `--meta` to `check` |
 | `agreed_not_run must map each case id` | An entry has no agreement text | Write who at NHA agreed and when for every case listed |
 | `not passed <id>: blank` | The case needs a tester step, or never ran | Finish it with the tester, then write it back |
+| `not passed <id>: CONDITIONAL PASS with no condition in Remarks` | The Remarks cell for a conditional pass is empty, which the writer refuses, so it was typed into the sheet by hand. The gate blocks it | Write the result again through `abdm_workbook.py write` with the condition in `remarks` |
+| A case is missing from the run log | The run log was written by hand, not from `plan` | Run `plan` again and add a row for every case it lists. Never drop a case to finish sooner |
+| `plan` prints `not applicable` for a case you expected to run | The sheet's group Applicable To names the other entity type only | Check `--entity`. A group for the other entity type is `not-run` with that rule in Remarks |
 | `marking <id> "...": unrecognised marking: treated as mandatory`, or `no marking` | NHA used a marking the script does not know, such as PHR's note on row P1 3.6, or left it blank | Ask NHA what it means for your entity type. Never edit NHA's marking to pass the gate |
 | `meta.json carries a credential` | `meta.json` has a password, secret, token or credentials field, or a value holding a JWT or a credential's label with its value | Delete the field or the value. A report never carries a credential |
 | `the workbook has a (run) column but no .before-abdm-run copy` | The writer's copy of NHA's workbook was moved or deleted | Put it back beside the workbook. Without it the script cannot tell NHA's text from the run's |
