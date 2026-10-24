@@ -78,6 +78,7 @@ Every M3 call and callback in one file: 16 operations.
 - Integrate16 operations, with hosts and headers.
 - DebugNo error code is recorded yet.
 - TestTests from offline pins to a live sandbox.
+- Test-matrix
 
 `mkdir -p .claude/skills && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m3.tar.gz | tar -xzf - -C .claude/skills`
 

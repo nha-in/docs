@@ -8,13 +8,13 @@ Ask the user which of these this project needs, and install only what they name:
 
 - `abdm-gateway`: Gateway, sessions and the bridge registry. Sections: scaffold, integrate, debug.
 - `abdm-m1`: M1, create and verify ABHA. Sections: functionalities, run, foundations, errors.
-- `abdm-m2`: M2, create and link records. Sections: scaffold, design, integrate, debug, test.
-- `abdm-m3`: M3, fetch data with consent. Sections: scaffold, design, integrate, debug, test.
-- `abdm-m4`: M4, register facilities and professionals. Sections: scaffold, integrate, debug, test.
-- `abdm-p1`: P1, PHR registration and login. Sections: scaffold, integrate, debug, test.
-- `abdm-p2`: P2, Consents Management. Sections: scaffold, integrate, debug, test.
-- `abdm-p3`: P3, PHR subscriptions. Sections: scaffold, design, integrate, debug, test.
-- `abdm-p4`: P4, health lockers. Sections: scaffold, integrate, debug, test.
+- `abdm-m2`: M2, create and link records. Sections: scaffold, design, integrate, debug, test, test-matrix.
+- `abdm-m3`: M3, fetch data with consent. Sections: scaffold, design, integrate, debug, test, test-matrix.
+- `abdm-m4`: M4, register facilities and professionals. Sections: scaffold, integrate, debug, test, test-matrix.
+- `abdm-p1`: P1, PHR registration and login. Sections: scaffold, integrate, debug, test, test-matrix.
+- `abdm-p2`: P2, Consents Management. Sections: scaffold, integrate, debug, test, test-matrix.
+- `abdm-p3`: P3, PHR subscriptions. Sections: scaffold, design, integrate, debug, test, test-matrix.
+- `abdm-p4`: P4, health lockers. Sections: scaffold, integrate, debug, test, test-matrix.
 - `abdm-scan-and-register`: Scan and register. Sections: scaffold, integrate, debug.
 - `abdm-scan-and-pay`: Scan and pay. Sections: scaffold, integrate, debug.
 - `abdm-record-share`: Patient scan and record share. Sections: scaffold, integrate, debug.

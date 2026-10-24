@@ -38354,6 +38354,7 @@ Every M2 call and callback with its error codes in one file: 24 operations, 120 
 - Integrate24 operations, with hosts and headers.
 - Debug120 error codes, each with its fix.
 - TestTests from offline pins to a live sandbox.
+- Test-matrix
 
 `mkdir -p .claude/skills && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m2.tar.gz | tar -xzf - -C .claude/skills`
 
@@ -38646,6 +38647,7 @@ Every M3 call and callback in one file: 16 operations.
 - Integrate16 operations, with hosts and headers.
 - DebugNo error code is recorded yet.
 - TestTests from offline pins to a live sandbox.
+- Test-matrix
 
 `mkdir -p .claude/skills && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m3.tar.gz | tar -xzf - -C .claude/skills`
 
@@ -38836,6 +38838,7 @@ Every M4 call in one file: 104 operations.
 - Integrate91 operations, with hosts and headers.
 - DebugNo error code is recorded yet.
 - TestTests from offline pins to a live sandbox.
+- Test-matrix
 
 `mkdir -p .claude/skills && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m4.tar.gz | tar -xzf - -C .claude/skills`
 

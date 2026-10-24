@@ -60,6 +60,7 @@ Every M4 call in one file: 104 operations.
 - Integrate91 operations, with hosts and headers.
 - DebugNo error code is recorded yet.
 - TestTests from offline pins to a live sandbox.
+- Test-matrix
 
 `mkdir -p .claude/skills && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m4.tar.gz | tar -xzf - -C .claude/skills`
 

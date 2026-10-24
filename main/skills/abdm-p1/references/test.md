@@ -106,6 +106,8 @@ From `shared.concept.test-human-entry`.
 
 Walks the ABDM P1 functional test cases, registration and login with an ABHA address, against the PHR app you built and the sandbox. Each case ends in one of five recorded outcomes, never in an opinion.
 
+NHA's sheet lists no APIs for these cases. Before building, read `references/test-matrix.md` in this skill: build each mandatory case's Expected Result for your entity type into the app screen, and use this module's journeys for the calls. The test run uses it to know what each case exercises.
+
 ## What this skill does
 
 - Runs every P1 case in the PHR app set against your app and the sandbox, one case at a time

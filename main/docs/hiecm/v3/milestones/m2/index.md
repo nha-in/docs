@@ -68,6 +68,7 @@ Every M2 call and callback with its error codes in one file: 24 operations, 120 
 - Integrate24 operations, with hosts and headers.
 - Debug120 error codes, each with its fix.
 - TestTests from offline pins to a live sandbox.
+- Test-matrix
 
 `mkdir -p .claude/skills && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m2.tar.gz | tar -xzf - -C .claude/skills`
 
