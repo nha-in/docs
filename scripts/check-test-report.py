@@ -30,6 +30,13 @@ catalogue/shared/concepts/test-workbook-write-back.md, and checks:
   the report then lists the case with its agreement;
 - PHR's "Optional / Mandatory" markings are read, agree with the PHR test case
   page for every case, and only a mandatory PHR failure blocks;
+- a CONDITIONAL PASS passes the gate for a mandatory case, is printed with
+  its condition, counted on its own and listed with its condition in the
+  report; a case's steps render as a Step, Result and Note table; the writer
+  refuses a conditional-pass with no condition;
+- plan lists the 100 M1 cases in sheet order with their applicability: the
+  demographic group not applicable for a private entity, SHARE_PATIENT_PROFILE_701
+  mandatory;
 - build writes a PDF beside the DOCX that opens, and its text holds the cover
   title, the fourteen section openers in order, every case id, the header
   eyebrow, CONFIDENTIAL and the page count, with numbers masked and none of
@@ -70,6 +77,26 @@ RESULTS = ["Test case ID", "Title", "Marking", "Status", "Iterations"]
 LOG = ["Test case ID", "Status", "Iterations", "Failure reason", "Error code"]
 RID = ["6f1c2a4e-1b2c-4d3e-8f90-0a1b2c3d4e5f", "a02d7c11-9e8f-4a6b-b5c4-d3e2f1a0b9c8",
        "b7a1e3d2-5c4b-4a39-8271-605f4e3d2c1b"]
+# Identity values a result may carry by mistake, and how each must read once masked.
+# check-test-report.py carries the same corpus, and checks both scripts mask it alike.
+JWT = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0In0.c2lnbmF0dXJlX3g5"
+LEAKS = {"234567890123": "XXXX XXXX 0123", "2345 6789 0126": "XXXX XXXX 0126", "2345-6789-0127": "XXXX XXXX 0127",
+         "91-2345-6789-0124": "XX-XXXX-XXXX-0124", "91234567890125": "XX-XXXX-XXXX-0125",
+         "asha.verma@sbx": "xxxxxxerma@sbx", "priya_k99@abdm": "xxxxx_k99@abdm", "abc@sbx": "xxx@sbx",
+         "9876543210": "XXXXXX3210", "09876543211": "XXXXXX3211", "098765 43212": "XXXXXX3212",
+         "987 654 3213": "XXXXXX3213", "98-7654-3214": "XXXXXX3214", "+91 98765 43215": "XXXXXX3215",
+         '"firstName": "Asha"': '"firstName": "[masked]"', '"lastName": "Verma"': '"lastName": "[masked]"',
+         '"dob": "01-01-1990"': '"dob": "[masked]"', '"yearOfBirth": "1990"': '"yearOfBirth": "[masked]"',
+         '"address": "12 MG Road Pune"': '"address": "[masked]"', '"pinCode": "411001"': '"pinCode": "[masked]"',
+         '"email": "asha@example.invalid"': '"email": "[masked]"', '"photo": "iVBORw0KGgoAAAANS"': '"photo": "[masked]"',
+         "name: Asha Verma": "name: [masked]", '"tokens": {"token": "opaque123x"}': '"tokens": {"token": "[redacted]"}',
+         "X-token: Bearer opaque456y": "X-token: [redacted]", "Authorization: Bearer opaque789z": "Authorization: Bearer [redacted]",
+         JWT: "[token]"}
+# Parts of the corpus that must never appear in any form once masked.
+SECRETS = ["opaque123x", "opaque456y", "opaque789z", "Asha", "Verma", "411001", "1990", "iVBORw0", "MG Road",
+           "asha@example"]
+# Joined with a separator no masking rule reads across.
+CORPUS_TEXT = " ; ".join(LEAKS)
 failures = []
 
 
@@ -83,6 +110,13 @@ def ok(condition, message):
         print(f"ok   {message}")
     else:
         fail(message)
+
+
+def masker(source):
+    """The mask() a script defines, run without its main()."""
+    space = {"__name__": "masker"}
+    exec(compile(source, "masker", "exec"), space)
+    return space["mask"]
 
 
 def block(path):
@@ -175,6 +209,18 @@ def main():
     writer = work / "abdm_workbook.py"
     report.write_text(block(ATOM))
     writer.write_text(block(WRITER))
+    report_mask, writer_mask = masker(report.read_text()), masker(writer.read_text())
+
+    # The masking corpus: the report masks every value, and the writer's mask() gives the same text.
+    missed = [raw for raw, masked in LEAKS.items() if raw in report_mask(CORPUS_TEXT) or masked not in report_mask(CORPUS_TEXT)]
+    missed += [x for x in SECRETS if x in report_mask(CORPUS_TEXT)]
+    ok(not missed, f"masking: the report masks every value in the corpus: {missed[:4]}")
+    samples = list(LEAKS) + [CORPUS_TEXT, "HTTP 200 " + CORPUS_TEXT, "6f1c2a4e-1234-5678-9012-0a1b2c3d4e5f",
+                             "Steps: 1 PASS; 2 needs tester (asha.verma@sbx); 3 PASS"]
+    differ = [x for x in samples if report_mask(x) != writer_mask(x)]
+    ok(not differ, f"masking: the writer's and the report's mask() agree on the whole corpus: {differ[:2]}")
+    ok(report_mask("6f1c2a4e-1234-5678-9012-0a1b2c3d4e5f") == "6f1c2a4e-1234-5678-9012-0a1b2c3d4e5f",
+       "masking: a UUID with digit segments is left whole")
 
     def run(script, *args):
         return subprocess.run([sys.executable, str(script), *map(str, args)], capture_output=True, text=True)
@@ -521,7 +567,8 @@ def main():
            f"PHR: check prints the {len(noted)} markings that are not plain, as the page shows them")
         ok(sum(1 for i in pids if rows.get(i, ["", "", ""])[2] == "Optional") == 15,
            "PHR: NHA's 15 Optional cases are Optional")
-        differ = [i for i in pids if re.sub(r"\s+", " ", rows.get(i, ["", ""])[1]) != titles.get(i)]
+        # The report masks every text it prints, a title too: "(name@abdm)" reads "(xxxx@abdm)".
+        differ = [i for i in pids if re.sub(r"\s+", " ", rows.get(i, ["", ""])[1]) != report_mask(titles.get(i, ""))]
         ok(not differ, f"PHR: titles are read from Test Title and agree with the page for every case: {differ[:5]}")
     else:
         fail(f"PHR ui build failed: {out.stderr.strip()}")
@@ -531,6 +578,101 @@ def main():
     out = check(phr, "ui", "private")
     ok(out.returncode == 1 and f"not passed {must}: FAIL" in out.stdout and out.stdout.count("not passed ") == 1,
        f"PHR: a mandatory FAIL ({must}) blocks and is the only case listed, the Optional FAIL ({may}) does not")
+
+    # Conditional pass and steps, on M1's ui columns.
+    cond_results = results(ids, {"CRT_ABHA_113": "conditional-pass"},
+                            {"CRT_ABHA_113": "Number shown; the address sits on another screen"})
+    for res in cond_results:
+        if res["id"] == "CRT_ABHA_113":
+            res["iterations"] = 1
+        if res["id"] == "CRT_ABHA_103":
+            res.update(outcome="needs-human", remarks="a second ABHA address, asked at readiness and at the case")
+            res["steps"] = [{"step": 1, "outcome": "passed"},
+                            {"step": 2, "outcome": "needs-human", "note": "a second ABHA address"},
+                            {"step": 3, "outcome": "passed"}]
+    fill(m1, "ui", cond_results)
+    out = check(m1, "ui", "private")
+    ok(out.returncode == 0 and "conditional pass CRT_ABHA_113: Number shown; the address sits on another screen"
+       in out.stdout, "conditional pass: a mandatory CONDITIONAL PASS passes the gate and is printed with its condition")
+    cond_doc = work / "out" / "report-conditional.docx"
+    out = run(report, "build", m1, "--run", "ui", "--entity", "private", "--meta", meta_path, "--evidence", evidence,
+              "--out", cond_doc, "--format", "docx")
+    if out.returncode == 0 and cond_doc.exists():
+        doc = Document(str(cond_doc))
+        stats = next((t for t in doc.tables if header_of(t) == ["Measure", "Count"]), None)
+        counts = {r.cells[0].text: r.cells[1].text for r in stats.rows[1:]} if stats else {}
+        ok(counts.get("Conditional pass") == "1" and counts.get("PASS") == str(len(ids) - 2)
+           and counts.get("No result") == "1",
+           f"conditional pass: counted on its own: {counts}")
+        listed = next((t for t in doc.tables if header_of(t) == ["Test case ID", "Title", "Condition"]), None)
+        ok(listed is not None and len(listed.rows) == 2 and listed.rows[1].cells[0].text == "CRT_ABHA_113"
+           and "another screen" in listed.rows[1].cells[2].text, "conditional pass: listed with its condition")
+        by_fn = next((t for t in doc.tables if header_of(t)[:4] == ["Function", "Cases", "PASS", "Conditional pass"]), None)
+        ok(by_fn is not None and sum(int(r.cells[3].text) for r in by_fn.rows[1:]) == 1,
+           "conditional pass: the table by function counts it in its own column")
+        ev = evidence_tables(doc).get("CRT_ABHA_113", {})
+        ok(ev.get("Status") == "CONDITIONAL PASS" and ev.get("Failure reason", "").startswith("Condition: "),
+           f"conditional pass: its evidence names the condition: {ev.get('Failure reason')}")
+        step_tables = [t for t in doc.tables if header_of(t) == ["Step", "Result", "Note"]]
+        ok(len(step_tables) == 1 and [[c.text for c in r.cells] for r in step_tables[0].rows[1:]] ==
+           [["1", "PASS", ""], ["2", "needs tester", "a second ABHA address"], ["3", "PASS", ""]],
+           "steps: a case with steps shows a Step, Result and Note table in its evidence")
+    else:
+        fail(f"conditional pass build failed: {out.stderr.strip()}")
+    (work / "nocond.json").write_text(json.dumps([{"id": "CRT_ABHA_113", "outcome": "conditional-pass", "remarks": ""}]))
+    out = run(writer, "write", m1, "--run", "ui", "--results", work / "nocond.json")
+    ok(out.returncode != 0 and "conditional-pass needs remarks" in out.stderr,
+       "conditional pass: the writer refuses one with no condition")
+
+    # Hand typed statuses: read in any case and spacing; a CONDITIONAL PASS with no condition blocks.
+    hand = work / "hand" / M1.name
+    hand.parent.mkdir()
+    shutil.copy2(M1, hand)
+    fill(hand, "ui", results(ids))
+    wb = openpyxl.load_workbook(hand)
+    ws = wb.worksheets[0]
+    for row in ws.iter_rows(min_row=1, max_row=15):
+        names = [re.sub(r"\s+", " ", str(c.value or "")).strip() for c in row]
+        if "Test Case ID" in names:
+            top, idc = row[0].row, names.index("Test Case ID") + 1
+            sc, rc = names.index("Status(PASS/FAIL)") + 1, names.index("Remarks") + 1
+            break
+    where = {str(ws.cell(r, idc).value or "").replace(" ", ""): r for r in range(top + 1, ws.max_row + 1)}
+    ws.cell(where["CRT_ABHA_101"], sc).value = " pass "
+    ws.cell(where["CRT_ABHA_102"], sc).value = "Conditional pass"
+    ws.cell(where["CRT_ABHA_104"], rc).value = "Aadhaar 2345 6789 0126 mobile +91 98765 43215 " + '"firstName": "Asha"'
+    wb.save(hand)
+    out = check(hand, "ui", "private")
+    ok(out.returncode == 0, "hand typed: ' pass ' and 'Conditional pass' with a condition pass the gate")
+    hand_doc = work / "out" / "report-hand.docx"
+    run(report, "build", hand, "--run", "ui", "--entity", "private", "--meta", meta_path, "--out", hand_doc,
+        "--format", "docx")
+    text = doc_text(Document(str(hand_doc))) if hand_doc.exists() else ""
+    ok(text and "2345 6789 0126" not in text and "98765 43215" not in text and "Asha" not in text
+       and "XXXX XXXX 0126" in text and "XXXXXX3215" in text,
+       "hand typed: Remarks written into the sheet by hand are masked in the report")
+    wb = openpyxl.load_workbook(hand)
+    wb.worksheets[0].cell(where["CRT_ABHA_102"], rc).value = None
+    wb.save(hand)
+    out = check(hand, "ui", "private")
+    ok(out.returncode == 1 and "not passed CRT_ABHA_102: CONDITIONAL PASS with no condition in Remarks" in out.stdout,
+       "hand typed: a mandatory CONDITIONAL PASS with empty Remarks blocks the gate")
+
+    # plan: every M1 case, in sheet order, with its applicability for the entity type.
+    fresh = work / "plan" / M1.name
+    fresh.parent.mkdir()
+    shutil.copy2(M1, fresh)
+    out = run(report, "plan", fresh, "--run", "ui", "--entity", "private")
+    lines = [line for line in out.stdout.splitlines() if not line.startswith("total ")]
+    rows = {line.split(" | ")[0]: line.split(" | ") for line in lines}
+    ok(out.returncode == 0 and len(lines) == 100 and [line.split(" | ")[0] for line in lines] == ids,
+       f"plan: one line per M1 case in sheet order ({len(lines)})")
+    ok(rows.get("CRT_ABHA_301", ["", "", ""])[2].startswith("not applicable"),
+       f"plan: CRT_ABHA_301 is not applicable for a private entity: {rows.get('CRT_ABHA_301')}")
+    ok(rows.get("SHARE_PATIENT_PROFILE_701", ["", "", ""])[2] == "mandatory; applies: PHR App (read as all)",
+       f"plan: SHARE_PATIENT_PROFILE_701 is mandatory: {rows.get('SHARE_PATIENT_PROFILE_701')}")
+    ok(all(r[3] == "open" for r in rows.values()) and out.stdout.splitlines()[-1].startswith("total 100 cases"),
+       "plan: an unrun workbook reads open for every case, then the totals")
 
     shutil.rmtree(work)
     sys.exit(1 if failures else 0)

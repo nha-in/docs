@@ -808,7 +808,7 @@ function reportSection() {
   return [
     '## Writing the test report',
     '',
-    'When the last case is recorded, save the script below as `abdm-ft/abdm_report.py` and run `check`. Run `build` only when `check` exits 0.',
+    'Save the script below as `abdm-ft/abdm_report.py` before the readiness check, and make the run log from its `plan`. When the last case is recorded, run `check`. Run `build` only when `check` exits 0.',
     '',
     body.replace(/^## /gm, '### ').trim(),
     '',

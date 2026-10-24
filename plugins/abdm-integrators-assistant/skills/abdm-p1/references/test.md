@@ -55,9 +55,19 @@ Before every field, ask one question: does this field take a person's identity, 
 
 3. Wait for the tester's reply. Do not ask them to tell you the value; they type it into the screen, so it never passes through you.
 4. After `done`, take the snapshot, with that field's value replaced by `[redacted]`, and go on with the next step yourself.
-5. No reply, `skip`, or the tester not present: record the case `needs-human` with `Needs tester: <the value>`, and go to the next case.
+5. No reply, `skip`, or the tester not present: ask once more, naming the field. If the tester says they cannot provide it in this run, record the case `needs-human` with `Needs tester: <the field>, asked at <the step>`, and go to the next case. If they stay silent after the second ask, record the same `needs-human`, with `Needs tester: <the field>, asked at <the step>, no answer after two asks`.
 
 **In an `ft` run (terminal):** prompt in the terminal with input hidden, name what is needed and where it came from ("the OTP sent to the mobile ending 1234"), send it once, and hold it only for that call. Never write it to the run log, the results file or the workbook.
+
+**Never repeat an identity.** Reading a page, a snapshot or a network response puts a person's values in front of you. Never repeat an Aadhaar number, mobile number, ABHA number, ABHA address or a person's name read from a page or a response: not in chat, the run log, Remarks, a command or a file.
+
+| Instead of | Write |
+|---|---|
+| The tester's own identity | Its last four characters: "ABHA ending 8219", "the mobile ending 1234", "the ABHA address ending r7k2@sbx" |
+| Another patient's data, such as a row in the app's patient list | Nothing from it at all. Say "another patient's row" and go on |
+| Asking the tester to enter a value | The field's name, never the value: "type the ABHA address into the ABHA Address field" |
+
+**Ask before a case is left untested.** Every input a case needs is asked for in the readiness check, and asked again when the run reaches that case: a second mobile, a mobile that holds no ABHA, an Aadhaar that holds no ABHA, a second ABHA address, a fingerprint or face device, the ABHA app, a counter QR code, a public callback URL. A case is recorded `needs-human` only after the tester has said they cannot provide it in this run, and its Remarks name what was asked, such as `Needs tester: a second ABHA address, asked at readiness and at the case`. Never record such a case `not-run`, and never leave it blank. `not-run` is only for a case that does not apply: the entity type, an optional capability you do not offer, or no published operation for it.
 
 **Never, in any run type:**
 
@@ -76,6 +86,8 @@ Before every field, ask one question: does this field take a person's identity, 
 - At every identity, code or approval step, the run log shows the prompt that was given to the tester and their `done`, or the case is `needs-human`.
 - No value from the "Never" table appears in any field the agent typed into: `browser_type` was never called on an identity, document, code or password field.
 - No case is `failed` because of a value the agent supplied.
+- No Aadhaar number, mobile, ABHA number, ABHA address or name read from a page or a response appears in chat, the run log, Remarks or a command: only last four characters, such as "ABHA ending 8219".
+- Every `needs-human` case names in Remarks what the tester was asked for, and no case waiting on a person, device or value is `not-run` or blank.
 
 ### When it goes wrong
 
@@ -86,11 +98,13 @@ Before every field, ask one question: does this field take a person's identity, 
 | You find that a value was typed by the agent, made up or reused, earlier in this run | Stop the run. Every case from that point is void: do not write those results to the workbook, mark them `pending` in the run log with `void: agent entered <value type>`, tell the tester, and run those cases again with the tester entering the value |
 | The OTP never arrives | Ask the tester to use the screen's resend option once, then wait. Still nothing: `needs-human` with `Needs tester: OTP not received` |
 | The browser is headless or not on the tester's screen | Stop before the first case and ask the tester to restart the Playwright server without `--headless` |
+| You are about to repeat an Aadhaar number, mobile, ABHA number, ABHA address or name you read on a page or in a response, in chat, the run log, Remarks, a command or a file | Stop. Write the last four characters only, such as "ABHA ending 8219". If it is another patient's data, write nothing from it |
+| A case needs an input the run does not have, such as a second ABHA address or a mobile with no ABHA | Ask the tester for it now, even if it was asked at readiness. Only after they say they cannot provide it in this run, record `needs-human` naming what was asked |
 | An identity field already holds a value at the start of a case | The app kept it from an earlier case, or the browser autofilled it. Ask the tester to clear it and type the value for this case; note it in the run record. Never run a case on a value the tester did not enter for it |
 
 From `shared.concept.test-human-entry`.
 
-Walks the ABDM P1 functional test cases, registration and login with an ABHA address, against the PHR app you built and the sandbox. Each case ends in one of four recorded outcomes, never in an opinion.
+Walks the ABDM P1 functional test cases, registration and login with an ABHA address, against the PHR app you built and the sandbox. Each case ends in one of five recorded outcomes, never in an opinion.
 
 ## What this skill does
 
@@ -108,7 +122,7 @@ Walks the ABDM P1 functional test cases, registration and login with an ABHA add
 | Your PHR app running against the sandbox hosts | Your build on a device or an emulator. The skill drives your app, not the sandbox directly |
 | A way to trigger each journey in your app | A screen, an API or a script. Say which at the start |
 | A person with a mobile number, for the self declared cases | Present for the run. Every OTP and every password is a human step and the skill stops for it |
-| A person who holds an ABHA number with an Aadhaar linked mobile, for the KYC cases | Present for the run. Without one the ABHA number and Aadhaar cases are `needs-human` |
+| A person who holds an ABHA number with an Aadhaar linked mobile, for the KYC cases | Present for the run. Without one the ABHA number and Aadhaar cases are `needs-human`, after it was asked for at readiness and again at the case, and the tester said they cannot provide it in this run |
 | An ABHA address that already exists, with a password set | For the login and reset password cases |
 | A folder for the run log | Your repository. `abdm-ft/` unless you name another |
 | NHA's PHR test case workbook, required: the results and the report are built from it | It ships with this skill, in its `workbook/` folder (on the docs site, `/skills/abdm-p1/workbook/`): copy it into `abdm-ft/` before the run, and never use another copy, so the sheet matches the cases below. It has one tab per PHR milestone and no case ids; the script adds a Test Case ID column with the ids this skill uses. Writing into it needs Python 3.9 or later with `openpyxl` and `Pillow` |
@@ -141,20 +155,32 @@ The first question is the run type. `ft` is the API functional test: your PHR ap
 
 A `missing` row that a mandatory case needs stops the run before the first call. Say what is missing and ask the one question that would fix it.
 
+**Ask for every input the cases need.** In the readiness check, ask for each input a chosen case needs beyond the rows above, such as a second mobile, a mobile that holds no ABHA, an Aadhaar that holds no ABHA, a second ABHA address, a fingerprint or face device, the ABHA app, a counter QR code or a public callback URL. Record each as `ready` or `missing`. Ask again for a `missing` one when the run reaches the case that needs it. Only when the tester says they cannot provide it in this run is that case `needs-human`, with what was asked in Remarks.
+
+**The case plan.** Before the first case, run `python3 abdm-ft/abdm_report.py plan <workbook> --run <ft or ui> --entity <government or private>`, as "Writing the test report" sets out. It lists every case in the workbook, in sheet order, with its group, what it is for your entity type and its status so far. The run log's rows are made from that list. No case may be dropped: a case that cannot run is `needs-human` with its need named, after asking, or `not-run` with the rule that makes it not apply. Before the tester leaves, run `python3 abdm-ft/abdm_workbook.py open <workbook> --run <ft or ui> --entity <government or private>` and read the list out, including every `NA on a mandatory case` line, so every case still waiting for them is done, or asked about, while they are there.
+
 ## How this skill runs
 
 Every case is an observe, orient, decide, act loop. Observe the live state: the last response, the last REQUEST-ID, what your screen shows. Orient against the case below. Decide the cheapest action that produces a new observation. Act, paste the raw result, return to observe. A case is done only when its exit condition is observed, never because the step should have worked.
 
 Loop limit: 3 passes per test case. Hitting the limit is an escalation: state what was observed with request ids, what was tried, name one section of this skill or one operation page to read, and ask one question.
 
-### The four outcomes
+### The five outcomes
 
 | Outcome | Record it when | Never when |
 |---|---|---|
 | `passed` | The exit condition is observed and the observation is pasted verbatim | The response was not pasted. A pass with no output is a fail |
+| `conditional-pass` | The Expected Result is met and observed as for `passed`, with a gap beside it, such as a point in the sheet's Suggestions for the Functional Tester column not met. Remarks name the condition | The Expected Result is not met. That is `failed`. A Suggestions gap alone never makes a FAIL |
 | `failed` | Three passes and the exit condition was not observed, or the sandbox returned the refusal the case expects you to handle and your app did not handle it | A human step was missing. That is `needs-human` |
-| `needs-human` | The case reached an OTP, a password, a consent tap or a person who was not there | Ever as a substitute for a fail you can see |
-| `not-run` | The case is optional and you do not claim it, or no P specification publishes the operation it needs | To skip a mandatory case that applies to you |
+| `needs-human` | The case reached an OTP, a password, a consent tap or a person who was not there | Ever as a substitute for a fail you can see, or before the tester was asked for what the case needs and said they cannot provide it in this run |
+| `not-run` | The case is optional and you do not claim it, or no P specification publishes the operation it needs | To skip a mandatory case that applies to you, or for a case waiting on a person, a device or test data. That is `needs-human` |
+
+### Judging a case
+
+- The sheet's Expected Result column decides the outcome. Its Steps To Be Executed say what to do. Its Suggestions for the Functional Tester column is guidance: a gap against it, with the Expected Result met, is a `conditional-pass`, never on its own a FAIL.
+- A message that means the same as the one the sheet quotes is a PASS. Quote both in the run record.
+- A case with several steps records a result for each step, in its result's `steps`. The case is `failed` only when a step's expected result fails. When every step run passes and a step could not be run, the case is `needs-human`, naming that step and what it needs.
+- A case waiting on a person, a device or test data is `needs-human` only after the tester was asked for it, at the readiness check and again at the case, and said they cannot provide it in this run. Remarks name what was asked. Such a case is never `not-run` and never blank. `not-run` is only for a case that does not apply: the entity type, an optional capability you do not offer, or no published operation for it.
 
 ### The three kinds of evidence
 
@@ -162,7 +188,7 @@ Every case names one of these. It decides what the manifest carries.
 
 - **sandbox.** A call the gateway sees. Evidence is the HTTP status, the body and the REQUEST-ID, pasted. The exit condition is a literal in the body. A reviewer can check this against the gateway's own record, which is why it outranks the other two.
 - **screen.** A rule about what your app shows or stores, which no call proves. Evidence is one screenshot or a short recording. A screen case is attested, not observed, and the manifest marks it so. In a `ui` run the agent observes the screen itself instead, as "Running a case as a UI test" sets out.
-- **human.** A step only a person can do. Evidence is the observation immediately before it and the outcome `needs-human` when nobody was there.
+- **human.** A step only a person can do. Evidence is the observation immediately before it and the outcome `needs-human` when nobody was there after two asks.
 
 ### Rules that hold for every case
 
@@ -191,7 +217,7 @@ next: PHR_ADDR_105
 The run is logged to a file as it happens, so the person can follow it, stop and resume it, and hand it to a reviewer. Create it before the first case, at `abdm-ft/p1-<YYYYMMDD-HHMM>.md`.
 
 - The header names this skill, the set, the entity type, the time started, and the readiness check row by row.
-- Every case chosen gets a row before the first call, each `pending`.
+- Every case `plan` lists gets a row before the first call, each `pending`, in the order `plan` prints them. A case outside the ones chosen for this run stays `pending`, so the log always shows what is still open.
 - A case reads `running` while its loop runs. When it ends, update its row at once: outcome, request ids, the literal that matched or the reason, and the evidence file for a `screen` case. Then append its run record block under the table.
 - A stopped run resumes from the log: the first row that is still `pending` or `running` is the next case.
 - Never write a secret to it: no token, OTP, password, Aadhaar number, full mobile, client secret or private key. A request id, a txnId and a masked mobile are fine.
@@ -203,7 +229,7 @@ Readiness: credentials ready; system ready; OTP person ready; biometric device n
 | Case | Outcome | Request ids | Observed |
 |---|---|---|---|
 | PHR_ADDR_101 | passed | 6f1c..., a02d... | exit condition matched, pasted below |
-| PHR_ADDR_102 | needs-human | b7a1... | OTP prompt shown, left blank |
+| PHR_ADDR_102 | needs-human | b7a1... | OTP asked for twice, no answer |
 | PHR_ADDR_103 | running | | |
 | PHR_ADDR_104 | pending | | |
 ```
@@ -218,7 +244,7 @@ Every step that needs someone to authenticate stops and asks in the terminal. Th
 | Read OTPs, passwords and secrets with input hidden, and hold them only for that call | Use a fixed, test or default OTP, or one from an earlier run |
 | Fetch a fresh session token at the start of the run from the credentials in the readiness check | Hard code a token, or reuse one from an earlier run |
 | Wait while the person approves on their phone, then observe the callback or status that proves it | Mock, stub or replay a response so the case can carry on |
-| Record `needs-human` only after the prompt was shown and left blank | Record any outcome for an authentication step that was never asked |
+| Record `needs-human` only after the prompt was shown, asked again naming the field, and the tester said they cannot provide it in this run or stayed silent after the second ask. Remarks name what was asked | Record any outcome for an authentication step that was never asked |
 
 A runner that reaches an authenticated call without asking is broken, not finished. Stop, fix the runner, and run the case again.
 
@@ -237,7 +263,7 @@ Asked for a test script, a test command or automated tests, build one interactiv
 | Run each `sandbox` case's success path and the refusal its exit condition names, as separate checks | The case passes only when both are observed |
 | Compare the status and the body literal the exit condition names, such as `200` with `authResult` `success`, or `400` with `code` `ABDM-9999: ` and the message `This ABHA Address already exists. Please create with unique ABHA address` | A status alone never passes a check |
 | A `4xx` passes only where the case's exit condition names that refusal | A `400` on a success path step is `failed` |
-| A blank answer at a prompt records the case `needs-human` and moves to the next case | Nobody present is neither a pass nor a fail |
+| A blank answer at a prompt asks once more, naming the field. A second blank, or the tester saying they cannot provide it in this run, records the case `needs-human` with what was asked in Remarks, and moves to the next case | Nobody present is neither a pass nor a fail |
 | A `screen` case prints its check, then asks `passed? y/n` and the evidence file name | No call proves a screen, so the case is attested |
 | At the end, print one line per case name with its outcome and request ids, then write the manifest in the last section | The person reads outcomes by case name, not by script step |
 
@@ -494,12 +520,33 @@ For each chosen case, at most 3 passes. Record the number of passes the case too
    The screen text shows what was typed into each field. Before saving it, replace the value of every field the tester typed an identity value, an OTP or a password into with `[redacted]`. For an OTP step, take the screenshot only after the field is submitted or cleared. Never save a snapshot or screenshot that shows an OTP, password or full Aadhaar number.
 
 4. An Aadhaar number, a mobile number, an OTP, an ABHA number or address, a password, a captcha, a document number, a biometric or an approval stops the case. Click the field, then ask the tester to type the value into the browser or the app themselves and reply `done`, as the rule at the top of this skill sets out. Never type it yourself, never ask the tester to tell you the value, and never put in a made-up, sample or earlier value. In the run log write `<Aadhaar entered by tester>`, `<OTP entered by tester>` and so on in its place.
-5. Judge the case. The pass condition is the case's exit condition and screen check in this skill, not the sheet's prose. The case is `passed` when the screen holds both. Paste into the run record the exact on-screen text or element you matched for each. When one holds and the other does not, the pass failed: say which one is missing. When the skill's case gives no literal for the screen, quote the on-screen text you believe satisfies the sheet's Expected Result, and record the case `needs-human` with `tester to confirm` in Remarks. Never record such a case `passed`.
+5. Judge the case, by the rules in "Judging a case" below. The case's exit condition and screen check in this skill are how the sheet's Expected Result is observed. The case is `passed` when the screen holds both. Paste into the run record the exact on-screen text or element you matched for each. When one holds and the other does not, the pass failed: say which one is missing. When the skill's case gives no literal for the screen, quote the on-screen text you believe satisfies the sheet's Expected Result, and record the case `needs-human` with `tester to confirm` in Remarks. Never record such a case `passed`.
 6. Write the result into the workbook, as `shared.concept.test-workbook-write-back` sets out, with `--run ui`. A `ui` run fills NHA's own columns:
 
    ```bash
    python3 abdm-ft/abdm_workbook.py write <workbook> --run ui --results abdm-ft/<workbook name>-ui-results.json --executed-by "<tester>" --application "<your application>"
    ```
+
+#### Judging a case
+
+The sheet has three columns that describe a case. Each has one job.
+
+| Column | What it does |
+|---|---|
+| Expected Result | Decides the outcome. Met is a pass, not met is a FAIL |
+| Steps To Be Executed | Says what to do. Follow them in order |
+| Suggestions for the Functional Tester | Guidance. A gap against it, with the Expected Result met, is a `conditional-pass`, never on its own a FAIL |
+
+| Situation | Outcome |
+|---|---|
+| The Expected Result is met, and nothing beside it falls short | `passed` |
+| The Expected Result is met, with a gap beside it, such as a Suggestions point not met | `conditional-pass`, with the condition in Remarks: what was met, then the gap |
+| The screen shows a message that means the same as the one the sheet quotes, in other words | `passed`. Quote both in the run record |
+| The Expected Result is not met | `failed`, with the reason |
+| A case with several steps: every step run passes, and a step could not be run | `needs-human`, naming that step and what it needs, after the tester was asked for it |
+| A case with several steps: a step's expected result fails | `failed`, naming that step. Only a failing step makes the case FAIL |
+
+A case with several steps records a result for each step in its result's `steps`, as `shared.concept.test-workbook-write-back` sets out, so the report shows which step held and which did not.
 
 #### The PHR proof rule
 
@@ -532,7 +579,8 @@ Collect the reason in this order, and stop at the first one that names it. The R
 - `abdm-ft/evidence/<case id>/` holds one `<n>.png` and one `<n>.txt` for every step run, and `phr.png` for a case under the PHR proof rule.
 - The run log pastes, for every `passed` case, the exact on-screen text or element that matched the exit condition and the screen check.
 - A case whose screen check has no literal in the skill is `needs-human` with `tester to confirm`, never `passed`.
-- `write` exits `0`, and the workbook row shows `PASS`, `FAIL`, `NA` or blank in `Status(PASS/FAIL)`, a number from 1 to 3 in `Iterations`, and the reason in `Remarks`.
+- Every `conditional-pass` names its condition in Remarks, and every multi step case lists its steps there.
+- `write` exits `0`, and the workbook row shows `PASS`, `CONDITIONAL PASS`, `FAIL`, `NA` or blank in `Status(PASS/FAIL)`, a number from 1 to 3 in `Iterations`, and the reason in `Remarks`.
 - No OTP, password, token or full Aadhaar number appears in the run log, a screenshot, the evidence text, the results file or the workbook. Every typed OTP, password or Aadhaar field in a `.txt` file reads `[redacted]`.
 
 ### When it goes wrong
@@ -545,6 +593,9 @@ Collect the reason in this order, and stop at the first one that names it. The R
 | `adb devices` lists nothing, or `unauthorized` | No emulator running, or the phone has not accepted the computer | Start the emulator, or accept the prompt on the phone |
 | `maestro: command not found` | Maestro is not installed or not on the path | Print its install command, wait, check again |
 | A step's element is not in the snapshot | The screen differs from the sheet's Steps | Record the pass as failed with the snapshot line nearest to it. Never invent a step |
+| You are about to record FAIL because a Suggestions for the Functional Tester point is not met | The Suggestions column is guidance, not the Expected Result | Check the Expected Result. Met: `conditional-pass` with the gap as the condition. Not met: `failed` |
+| The screen's message reads differently from the one the sheet quotes | The wording differs, the meaning may not | Same meaning: `passed`, with both quoted. Different meaning: `failed` |
+| A multi step case has a step that could not be run | A person, device or value the step needs is missing | Ask the tester for it. If they cannot provide it in this run, the case is `needs-human` naming the step; never collapse it to FAIL |
 | The reason is still unknown after all five sources | The fault leaves no trace a `ui` run can see | Record `failed` with what each source showed, and ask the tester for the server log command |
 
 From `shared.concept.test-ui-run`.
@@ -572,9 +623,21 @@ overwrites the other:
 | Outcome | Status written | Remarks written |
 |---|---|---|
 | `passed` | `PASS` | what matched |
+| `conditional-pass` | `CONDITIONAL PASS` | the condition: the Expected Result was met, and what beside it was not, such as a gap against the Suggestions for the Functional Tester column. Required: the writer refuses a conditional pass with empty remarks |
 | `failed` | `FAIL` | the reason: the HTTP status and ABDM error code, the missing callback, or the exception from your server log |
-| `needs-human` | blank | `Needs tester:` and the step that was left |
+| `needs-human` | blank | `Needs tester:`, the step that was left, and what the tester was asked for |
 | `not-run` | `NA` | why it does not apply |
+
+A case with more than one step can carry its step results. Each step is `passed`, `failed`, `needs-human` or `not-run`, with a short note, and the writer appends them to Remarks in one line, such as `Steps: 1 PASS; 2 needs tester (a second ABHA address); 3 PASS`. A step waiting on a person, a device or test data is `needs-human`, never `not-run`. The report shows the steps as a table in the case's evidence. The writer refuses steps that disagree with the case's outcome:
+
+| Outcome | Its steps |
+|---|---|
+| `passed` | Every step `passed` |
+| `conditional-pass` | No step `failed` |
+| `failed` | Any steps; a case with a `failed` step is always `failed` |
+| `needs-human` | At least one step `needs-human`, and no step `failed` |
+
+The writer masks the Response and Remarks values before it writes them, with the same masking block as the report: a 12 digit Aadhaar number, with or without spaces or hyphens, reads `XXXX XXXX 1234`, a 14 digit ABHA number, with or without hyphens, `XX-XXXX-XXXX-1234`, a 10 digit mobile, with or without `0`, `91` or `+91` in front and spaces or hyphens inside, `XXXXXX1234`, an ABHA address ending `@sbx` or `@abdm` keeps the last four characters before the `@` with the rest as `x` (four or fewer are all `x`), a JWT reads `[token]`, a value after a password, secret, token or OTP label, and a `Bearer` credential, read `[redacted]`, and the value of a profile field (`firstName`, `middleName`, `lastName`, `fullName`, `name`, `dob`, `dayOfBirth`, `monthOfBirth`, `yearOfBirth`, `address`, `pinCode`, `photo`, `profilePhoto`, `kycPhoto`, `email`), in JSON or as `key: value`, reads `[masked]`. Masking is the backstop, not the rule: never put an identity value in a result in the first place.
 
 ### Before you start
 
@@ -587,7 +650,13 @@ overwrites the other:
 
   python3 abdm_workbook.py cases  WORKBOOK
   python3 abdm_workbook.py write  WORKBOOK --run ft|ui --results RESULTS.json
-  python3 abdm_workbook.py open   WORKBOOK --run ft|ui
+  python3 abdm_workbook.py open   WORKBOOK --run ft|ui [--entity government|private]
+
+A result's outcome is passed, conditional-pass, failed, needs-human or not-run.
+A conditional-pass needs remarks naming the condition. A result may carry
+"steps": [{"step": 1, "outcome": "passed", "note": ""}], appended to Remarks.
+Response and Remarks are masked before they are written: Aadhaar, ABHA number,
+ABHA address, mobile, JWT and any value after a secret's label.
 
 Needs openpyxl and Pillow (pip install openpyxl pillow); Pillow keeps the
 sheet's logos when it is saved.
@@ -608,8 +677,11 @@ COLUMNS = {
     "ft": {"status": ["FT Status"], "response": ["FT Response with Code"],
            "iterations": ["FT Iterations"], "remarks": ["FT Remarks"]},
 }
-STATUS = {"passed": "PASS", "failed": "FAIL", "needs-human": "", "not-run": "NA"}
-CLOSED = {"PASS", "NA"}
+STATUS = {"passed": "PASS", "conditional-pass": "CONDITIONAL PASS", "failed": "FAIL",
+          "needs-human": "", "not-run": "NA"}
+CLOSED = {"PASS", "CONDITIONAL PASS", "NA"}
+# A step of a multi step case, as Remarks shows it.
+STEP_STATUS = {"passed": "PASS", "failed": "FAIL", "needs-human": "needs tester", "not-run": "not run"}
 # NHA's PHR sheet numbers its rows but gives them no ids. Each tab is one PHR
 # milestone, and a case's id is built the way the HMIS ids are: row 3.2 of the
 # P1 tab is PHR_ADDR_302, row 5.1.1 of P2 is PHR_APP_50101, a row numbered 9
@@ -622,6 +694,93 @@ HEADER_BLOCK = {"Test Executed by:": "executed_by", "Test Execution date:": "dat
 
 def norm(text):
     return re.sub(r"\s+", " ", str(text or "")).strip()
+
+
+# Masking. This block is the same in abdm_workbook.py and abdm_report.py, so the
+# sheet and the report hide the same things in the same way.
+# A JWT: three base64url segments, the first a JSON header, so starting eyJ.
+JWT = re.compile(r"\beyJ[\w-]+\.[\w-]+\.[\w-]*")
+SECRET_WORDS = r"pass(?:word|wd)|secret|token|otp|credentials?|api[ _-]?key|private[ _-]?key"
+
+
+def labelled(words):
+    """A value after a label naming a secret: "client secret: x", "OTP 482913", "otp":"482913",
+    "X-token: Bearer x". Only a value is taken, never the { or [ that opens an object or a list."""
+    return re.compile(
+        r"(\b[\w-]*(?:" + words + r")[\w-]*['\"]?\s*[:=]\s*['\"]?)(?![\[{])((?:Bearer\s+)?[^\s'\",;}]+)"
+        r"|(\b(?:" + words + r")\b\s+(?:is\s+)?)((?=[^\s,;]*\d)[^\s,;]{4,})", re.I)
+
+
+LABELLED = labelled(SECRET_WORDS)
+BEARER = re.compile(r"\bBearer\s+(?!\[token\]|\[redacted\])[^\s'\",;}]+")
+# A person's profile fields, by key, in JSON or in "key: value" and "key=value" text. A quoted
+# value is taken whole; an unquoted one runs on over words that start with a capital or a digit.
+PROFILE_KEYS = (r"firstName|middleName|lastName|fullName|name|dob|dayOfBirth|monthOfBirth|yearOfBirth|"
+                r"address|pinCode|pincode|photo|profilePhoto|kycPhoto|email")
+PROFILE = re.compile(
+    r"(['\"]?\b(?i:" + PROFILE_KEYS + r")\b['\"]?\s*[:=]\s*)(?![\[{])"
+    r"(\"(?:[^\"\\]|\\.)*\"|'[^']*'|[^\s,;}\]]+(?: (?!Steps:)[A-Z0-9][^\s,;}\]]*)*)")
+ABHA_ADDRESS = re.compile(r"(?<![\w.-])([A-Za-z0-9._]+)@(sbx|abdm)\b(?!\.\w)", re.I)
+# A digit run is not a number to mask when it is a segment of a UUID.
+LEAD, TRAIL = r"(?<!\d)(?<![0-9a-fA-F]-)", r"(?!\d)(?!-[0-9a-fA-F])"
+ABHA_NUMBER = re.compile(LEAD + r"\d{2}[ -]?\d{4}[ -]?\d{4}[ -]?(\d{4})" + TRAIL)
+AADHAAR = re.compile(LEAD + r"\d{4}[ -]?\d{4}[ -]?(\d{4})" + TRAIL)
+MOBILE = re.compile(r"(?<![\d+])(?<![0-9a-fA-F]-)(?:\+91[ -]?|91[ -]?|0)?[6-9](?:[ -]?\d){5}"
+                    r"[ -]?(\d)[ -]?(\d)[ -]?(\d)[ -]?(\d)" + TRAIL)
+
+
+def profile(m):
+    quote = m.group(2)[0] if m.group(2)[:1] in ("'", '"') else ""
+    return m.group(1) + quote + "[masked]" + quote
+
+
+def address(m):
+    """An ABHA address keeps the last four characters before the @, the rest as x. Four or fewer: all x."""
+    name = m.group(1)
+    if len(name) <= 4:
+        return "x" * len(name) + "@" + m.group(2)
+    return "x" * (len(name) - 4) + name[-4:] + "@" + m.group(2)
+
+
+def mask(text):
+    """A JWT to [token], a secret's value and a Bearer credential to [redacted], a profile field's
+    value to [masked], an ABHA address to xxxxxx1234@sbx, ABHA numbers to XX-XXXX-XXXX-1234, any
+    other 12 digit run to XXXX XXXX 1234, a mobile, with or without 0 or +91, to XXXXXX1234."""
+    text = JWT.sub("[token]", str(text))
+    text = LABELLED.sub(lambda m: (m.group(1) or m.group(3)) + "[redacted]", text)
+    text = BEARER.sub("Bearer [redacted]", text)
+    text = PROFILE.sub(profile, text)
+    text = ABHA_ADDRESS.sub(address, text)
+    text = ABHA_NUMBER.sub(r"XX-XXXX-XXXX-\1", text)
+    text = AADHAAR.sub(r"XXXX XXXX \1", text)
+    return MOBILE.sub(r"XXXXXX\1\2\3\4", text)
+# End of the masking block.
+
+
+def steps_text(case, steps):
+    """A multi step case's steps as one line: "Steps: 1 PASS; 2 needs tester (what); 3 PASS"."""
+    if not isinstance(steps, list):
+        sys.exit(case + ": steps must be a list of {\"step\": n, \"outcome\": ..., \"note\": ...}")
+    parts = []
+    for s in steps:
+        if not isinstance(s, dict) or s.get("outcome") not in STEP_STATUS:
+            sys.exit(case + ": a step's outcome must be one of " + ", ".join(STEP_STATUS))
+        note = mask(norm(s.get("note", ""))).replace(";", ",")
+        parts.append(str(s.get("step", len(parts) + 1)) + " " + STEP_STATUS[s["outcome"]] +
+                     (" (" + note + ")" if note else ""))
+    return "Steps: " + "; ".join(parts) if parts else ""
+
+
+def steps_agree(outcome, steps):
+    """Why a case's outcome does not agree with its steps, or None when it does."""
+    seen = [s.get("outcome") for s in steps if isinstance(s, dict)]
+    if "failed" in seen and outcome != "failed":
+        return "a failed step makes the case failed"
+    if outcome == "passed" and any(x != "passed" for x in seen):
+        return "a passed case needs every step passed"
+    if outcome == "needs-human" and "needs-human" not in seen:
+        return "a needs-human case needs a step that is needs-human"
+    return None
 
 
 def load(path):
@@ -773,10 +932,19 @@ def write(path, run, results, meta):
             sys.exit(f"{r['id']}: outcome must be one of {', '.join(STATUS)}")
         ws, row = rows[r["id"]]
         top, cols, fields = where[ws.title]
-        remarks = r.get("remarks", "")
+        remarks = norm(r.get("remarks", ""))
+        if r["outcome"] == "conditional-pass" and not remarks:
+            sys.exit(f"{r['id']}: a conditional-pass needs remarks naming the condition")
         if r["outcome"] == "needs-human":
             remarks = f"Needs tester: {remarks}".strip()
-        values = {"status": STATUS[r["outcome"]], "response": r.get("response", ""),
+        remarks = mask(remarks)
+        if r.get("steps"):
+            line = steps_text(r["id"], r["steps"])
+            wrong = steps_agree(r["outcome"], r["steps"])
+            if wrong:
+                sys.exit(f"{r['id']}: steps disagree with the outcome {r['outcome']}: {wrong}")
+            remarks = " ".join(x for x in (remarks, line) if x)
+        values = {"status": STATUS[r["outcome"]], "response": mask(r.get("response") or ""),
                   "iterations": r.get("iterations", ""), "remarks": remarks}
         for key, value in values.items():
             cell = anchor(ws, row, fields[key])
@@ -789,31 +957,128 @@ def write(path, run, results, meta):
     return missing
 
 
+# Which cases are mandatory for an entity type: the same reading of the marking
+# column and the group's Applicable To as abdm_report.py's plan and check use.
+OPTIONAL = ("no", "optional", "non-mandatory", "non mandatory", "not mandatory")
+
+
+def marking_col(cols):
+    return next((col for name, col in sorted(cols.items(), key=lambda x: x[1])
+                 if "mandatory" in name.lower() and "optional" in name.lower()), None)
+
+
+
+def classify(text, entity):
+    """(kind, label, note, pair ids) for one marking and entity type."""
+    t = norm(text)
+    low = t.lower()
+    if not t:
+        return "mandatory", "Not marked, treated as mandatory", "no marking: treated as mandatory", None
+    if low.startswith("either"):
+        ids = [i.replace(" ", "") for i in re.findall(r"\b[A-Z][A-Z0-9]*(?: ?_[A-Z0-9]+)+\b", t)]
+        gov, priv = "gov" in low, "priv" in low
+        if (entity == "government" and gov) or (entity == "private" and priv) or not (gov or priv):
+            return "pair", "Either " + " or ".join(ids), "either rule: one of " + " or ".join(ids) + " must pass", ids
+        return "optional", "Optional", "either rule names the other entity type: optional for " + entity, None
+    if low in OPTIONAL or low.startswith(("optional", "non-mandatory", "non mandatory", "not mandatory", "no ")):
+        return "optional", "Optional", None, None
+    m = re.match(r"(mandatory|yes)\b[\s,:]*(.*)$", low)
+    if not m:
+        return "mandatory", "Unrecognised, treated as mandatory", "unrecognised marking: treated as mandatory", None
+    rest = m.group(2)
+    if not rest:
+        return "mandatory", "Mandatory", None, None
+    if rest.startswith("•"):
+        # PHR's profile cases: "Mandatory" then a bullet list of the mandatory and optional fields.
+        return "mandatory", "Mandatory", "lists mandatory and optional fields: the case is mandatory", None
+    conditional = "(" in rest or re.search(r"\bif\b", rest) is not None
+    who = re.match(r"for\s+(.*)$", rest)
+    if who and m.group(1) == "mandatory":
+        head = who.group(1).split("(")[0]
+        gov, priv = "gov" in head, "priv" in head
+        if (gov or priv) and not ((entity == "government" and gov) or (entity == "private" and priv)):
+            return "optional", "Optional", "mandatory for the other entity type only: optional for " + entity, None
+        if conditional:
+            return "mandatory", "Mandatory (conditional)", "conditional: treated as mandatory", None
+        return "mandatory", "Mandatory", "mandatory for " + entity, None
+    if conditional:
+        return "mandatory", "Mandatory (conditional)", "conditional: treated as mandatory", None
+    return "mandatory", "Unrecognised, treated as mandatory", "unrecognised marking: treated as mandatory", None
+
+
+
+def group_applies(ws, top, cols):
+    """Each case row's group Applicable To, carried down from the row that heads the group."""
+    acol, icol = cols.get("Applicable To"), cols.get("Test Case ID")
+    if not acol or not icol:
+        return {}
+    out, current = {}, ""
+    for r in range(top + 1, ws.max_row + 1):
+        applies = norm(anchor(ws, r, acol).value)
+        if applies:
+            current = applies
+        if norm(ws.cell(r, icol).value):
+            out[r] = current
+    return out
+
+
+
+def restricted_to(applies):
+    """The one entity type a group is for, when it names only one: government or private."""
+    low = applies.lower()
+    gov, priv = "gov" in low, "priv" in low
+    if "all" in low or "both" in low or gov == priv:
+        return None
+    return "government" if gov else "private"
+
+
+
 def status_of(ws, row, col):
     return norm(anchor(ws, row, col).value)
 
 
-def still_open(path, run):
-    """Cases that are not yet PASS or NA in this run type's status column."""
+def still_open(path, run, entity=None):
+    """Cases not yet PASS, CONDITIONAL PASS or NA in this run type's status column. With an entity
+    type, also an NA on a case mandatory for it, as the report's gate blocks one."""
     path = Path(path)
     wb = load(path)
     backup = path.with_name(f"{path.stem}.before-abdm-run{path.suffix}")
     original = load(backup) if backup.exists() else None
+    found, applies_by = [], {}
     for case, (ws, row) in index(wb).items():
         top, cols = header_row(ws)
         col = next((cols[n] for n in COLUMNS[run]["status"] if n in cols), None)
-        if col is None:
-            print(case)
-            continue
-        cell = anchor(ws, row, col)
-        run_col = cols.get(f"{norm(ws.cell(top, col).value)} (run)")
-        if run_col and original is not None and norm(original[ws.title][cell.coordinate].value):
-            # NHA wrote in this cell, so the run's status is only in the "(run)" column.
-            status = status_of(ws, row, run_col)
-        else:
-            status = norm(cell.value)
+        status = ""
+        if col is not None:
+            cell = anchor(ws, row, col)
+            run_col = cols.get(f"{norm(ws.cell(top, col).value)} (run)")
+            if run_col and original is not None and norm(original[ws.title][cell.coordinate].value):
+                # NHA wrote in this cell, so the run's status is only in the "(run)" column.
+                status = status_of(ws, row, run_col)
+            else:
+                status = norm(cell.value)
+        kind, pair = "mandatory", None
+        if entity:
+            if ws.title not in applies_by:
+                applies_by[ws.title] = group_applies(ws, top, cols)
+            mcol = marking_col(cols)
+            kind, _, _, pair = classify(norm(anchor(ws, row, mcol).value) if mcol else "", entity)
+            only = restricted_to(applies_by[ws.title].get(row, ""))
+            if only and only != entity:
+                kind, pair = "optional", None
+        found.append((case, status.upper(), kind, pair))
+    passing = {case for case, status, _, _ in found if status in ("PASS", "CONDITIONAL PASS")}
+    paired = {i for _, _, kind, pair in found if kind == "pair" for i in pair}
+    for case, status, kind, pair in found:
         if status not in CLOSED:
             print(case)
+        elif entity and status == "NA":
+            if case in paired:
+                ids = next((p for _, _, k, p in found if k == "pair" and case in p), [case])
+                if not any(i in passing for i in ids):
+                    print(case + " (NA on a mandatory case, either " + " or ".join(ids) + ")")
+            elif kind == "mandatory":
+                print(case + " (NA on a mandatory case)")
 
 
 def main():
@@ -824,12 +1089,14 @@ def main():
     p.add_argument("--results")
     p.add_argument("--executed-by", default="")
     p.add_argument("--application", default="")
+    p.add_argument("--entity", choices=["government", "private"],
+                   help="open: also list an NA on a case mandatory for this entity type")
     a = p.parse_args()
     if a.action == "cases":
         wb = load(a.workbook)
         print(json.dumps({ws.title: list(cases(ws)) for ws in wb.worksheets}, indent=1))
     elif a.action == "open":
-        still_open(a.workbook, a.run or sys.exit("--run is needed"))
+        still_open(a.workbook, a.run or sys.exit("--run is needed"), a.entity)
     else:
         if not (a.run and a.results):
             sys.exit("write needs --run and --results")
@@ -861,6 +1128,13 @@ if __name__ == "__main__":
    {"id": "CRT_ABHA_105", "outcome": "failed", "response": "POST /v3/enrollment/request/otp HTTP 400 ABDM-1204", "iterations": 3, "remarks": "Invalid OTP value; OTP read from the wrong field"}
    ```
 
+   A case with steps adds them, and a conditional pass names its condition in `remarks`:
+
+   ```json
+   [{"id": "SHARE_PATIENT_PROFILE_702", "outcome": "needs-human", "iterations": 1, "remarks": "a second ABHA address, asked at readiness and at the case; the tester has none for this run", "steps": [{"step": 1, "outcome": "passed"}, {"step": 2, "outcome": "needs-human", "note": "a second ABHA address"}, {"step": 3, "outcome": "passed"}, {"step": 4, "outcome": "passed"}]},
+    {"id": "CRT_ABHA_113", "outcome": "conditional-pass", "iterations": 1, "remarks": "Expected Result met: ABHA number and address shown with the profile. Condition: <the Suggestions for the Functional Tester point that was not met>"}]
+   ```
+
    `id` is the id `cases` printed. A sheet that repeats an id lists the repeat as `<id>#2`, such as HFR's second bridge linkage, `HFR-118#2` to `HFR-123#2`, and the result for that row uses that id. `iterations` is the number of loop passes the case took, whether it ended passed or failed. Never put a token, OTP, Aadhaar number or full mobile in any field.
 
 3. Then write it into the workbook, so a stopped run loses nothing:
@@ -871,17 +1145,19 @@ if __name__ == "__main__":
 
    The first write copies the workbook to `<name>.before-abdm-run.xlsx` beside it, and every later write reads that copy to tell NHA's text from the run's. Every write rewrites the result cells of every case in the file, so writing again is safe. The header block above the table gets the tester, the date and the application, and a later write updates them. When NHA sends a new version of the workbook, delete the old `.before-abdm-run.xlsx` before the first write to it.
 
-4. To resume, list the cases whose status for the run type is neither `PASS` nor `NA`, and run only those:
+4. To resume, list the cases whose status for the run type is not `PASS`, `CONDITIONAL PASS` or `NA`, and run only those. With `--entity`, the list also holds every `NA` on a case mandatory for that entity type, marked `(NA on a mandatory case)`, because the report's gate blocks it unless NHA agreed it is not run. Read the list out before the tester leaves, so every case still waiting for them is done or asked about while they are there:
 
    ```bash
-   python3 abdm-ft/abdm_workbook.py open <workbook> --run ft
+   python3 abdm-ft/abdm_workbook.py open <workbook> --run ft --entity private
    ```
 
 ### How you know it worked
 
 - `write` exits `0` and prints nothing. It exits `1` and prints `not in the workbook: <id>` for any case id the workbook does not hold.
 - Opened again, each case's row shows the status, response, iterations and remark you wrote. Every cell NHA filled holds what NHA put there, with its formatting, and the logos, merged cells, column widths and frozen panes are as NHA sent them. Two parts of the file are not kept: printer settings and SharePoint metadata, neither of which a reader sees.
-- `open` lists exactly the cases whose status is neither `PASS` nor `NA`.
+- `open` lists exactly the cases whose status is not `PASS`, `CONDITIONAL PASS` or `NA`, in any case and spacing, and with `--entity` each `NA` on a mandatory case too.
+- Every `CONDITIONAL PASS` row carries its condition in Remarks, and a case with steps reads `Steps: ...` at the end of its Remarks.
+- No Aadhaar number, ABHA number, ABHA address, mobile, token or OTP appears in the Response or Remarks columns: each reads in its masked form.
 
 ### When it goes wrong
 
@@ -891,14 +1167,19 @@ if __name__ == "__main__":
 | The logos are gone after a write | Pillow is missing, so the images were not read | Install Pillow, copy `<name>.before-abdm-run.xlsx` back over the workbook, and write again |
 | `case id on more than one tab` | Two tabs carry the same id | Ask NHA which one counts. The script writes neither until it is resolved |
 | `not in the workbook: <id>` | The workbook is another version of the set, or the id was typed with a space | Check the id against `cases`. Never rename a case to fit |
-| `outcome must be one of` | An outcome outside the four | Use `passed`, `failed`, `needs-human` or `not-run` |
+| `outcome must be one of` | An outcome outside the five | Use `passed`, `conditional-pass`, `failed`, `needs-human` or `not-run` |
+| `a conditional-pass needs remarks naming the condition` | A conditional pass with empty remarks | Write the condition in `remarks`: what was met, and the gap beside it |
+| `a step's outcome must be one of` | A step outcome outside the four a step can have | Use `passed`, `failed`, `needs-human` or `not-run` for each step |
+| `steps disagree with the outcome` | The case's outcome does not follow from its steps, such as `passed` with a step not passed | Set the outcome by the table above: a `failed` step makes the case `failed`; a step waiting on the tester makes it `needs-human` |
+| `open` lists `<id> (NA on a mandatory case)` | A case mandatory for your entity type is recorded `NA` | Run it, or record why with NHA's agreement in `agreed_not_run` for the report |
+| An identity value shows in clear in Remarks | It was written by an earlier version of the writer, or in a form the masking does not know | Correct the results file so it names the value by its last four characters, and write again |
 | The workbook will not open in Excel while the run writes | Excel holds a lock on it | Close it in Excel; the next write catches up |
 
 From `shared.concept.test-workbook-write-back`.
 
 ## Writing the test report
 
-When the last case is recorded, save the script below as `abdm-ft/abdm_report.py` and run `check`. Run `build` only when `check` exits 0.
+Save the script below as `abdm-ft/abdm_report.py` before the readiness check, and make the run log from its `plan`. When the last case is recorded, run `check`. Run `build` only when `check` exits 0.
 
 ### In plain words
 
@@ -910,8 +1191,19 @@ always agree.
 
 The report is written only when the run has passed. Its gate is every
 mandatory case that applies to your entity type, government or private, with
-status `PASS` in the run type's column. A mandatory case that is `FAIL` or
-blank stops it, and so does one that is `NA` unless NHA agreed it is not run.
+status `PASS` or `CONDITIONAL PASS` in the run type's column. A mandatory case
+that is `FAIL` or blank stops it, and so does one that is `NA` unless NHA
+agreed it is not run.
+
+A conditional pass is a case whose Expected Result was met with a gap beside
+it, such as a point in the sheet's Suggestions for the Functional Tester column
+that was not met. It passes the gate only with its condition written in
+Remarks, and the report counts it on its own and lists every one with its
+condition, so a reviewer sees each gap.
+
+The same script also plans the run. `plan` lists every case in the workbook,
+in sheet order, with its group, what it is for your entity type and its status
+so far. The run log is made from that list, so no case is ever dropped.
 
 | Run type | Report | Evidence per case |
 |---|---|---|
@@ -933,16 +1225,16 @@ way.
 | Cover | Title, product, organisation, milestone, run type, document id, version, release date, a confidentiality line | `meta.json`, `--run` |
 | Contents | Every section and every case id with its page number. The Word copy holds a contents field that Word fills in on opening | The headings below |
 | 1. Document control | Document title, id, version, prepared, reviewed, approved and released by, release date; change history; distribution list by name, organisation and role | `meta.json` `document` |
-| 2. Executive summary | The run in one paragraph: cases, PASS, FAIL, NA, no result, whether every mandatory case holds, how many took more than one pass | The workbook's counts |
+| 2. Executive summary | The run in one paragraph: cases, PASS, conditional pass, FAIL, NA, no result, whether every mandatory case holds, how many took more than one pass | The workbook's counts |
 | 3. ABDM details | Entity, product, category, role, entity type, milestone, API version, run type, dates, days, most passes any case took, executed by, recordings | `meta.json`, the workbook |
-| 4. Results summary | A counts table, a table by the workbook's Function column, and one row per case with marking, status and iterations; any mandatory case NHA agreed is not run, with the agreement | The workbook, `agreed_not_run` |
+| 4. Results summary | A counts table with conditional pass on its own, a table by the workbook's Function column, one row per case with marking, status and iterations, every conditional pass with its condition, and any mandatory case NHA agreed is not run, with the agreement | The workbook, `agreed_not_run` |
 | 5. Scope and limitations | Applications and URLs; role, entity type, run type, workbook, tabs, cases; optional cases not passed; the limitation that results hold for the build tested on those dates, and any `limitations` | `meta.json`, the workbook |
 | 6. Flow details | For linking and consent flows: the ABHA address used and the HI types created or tested | `meta.json` `flows` |
 | 7. Test environment and tools | Browser, Playwright, PHR app, emulator, the model that ran the agent, with versions | `meta.json` `environment` |
 | 8. Test team | Name, role and qualifications of each tester, reviewer and approver | `meta.json` `team` |
-| 9. Approach and methodology | How the agent ran cases, the three pass limit, how OTPs and consents were given, the run type, REQUEST-IDs, and what PASS, FAIL, NA and no result mean | Fixed text, `--run` |
+| 9. Approach and methodology | How the agent ran cases, the three pass limit, how OTPs and consents were given, the run type, REQUEST-IDs, and what PASS, conditional pass, FAIL, NA and no result mean | Fixed text, `--run` |
 | 10. Test data | The ABHA numbers and addresses used, masked | `meta.json` `test_data` |
-| 11. Evidence | Per case, a heading with its id and title, then one table of test case ID, title, marking, expected result, observed, status, iterations, failure reason with any error code, and request ids; then the response with its code; then each screenshot with a numbered caption naming the case and step | The workbook, `findings`, `--manifest`, the evidence folder |
+| 11. Evidence | Per case, a heading with its id and title, then one table of test case ID, title, marking, expected result, observed, status, iterations, failure reason with any error code, and request ids; for a case with steps, a table of each step's result; then the response with its code; then each screenshot with a numbered caption naming the case and step | The workbook, `findings`, `--manifest`, the evidence folder |
 | 12. Failures and iterations log | Every case not PASS or that took more than one pass, with its failure reason and error code | The workbook |
 | 13. Conclusion and sign-off | The result in one paragraph, then a sign-off table for preparer, reviewer and approver with date and signature | The counts, `meta.json` `document` |
 | 14. Annexures | Recording links, the completed workbook, the REQUEST-ID manifest, the evidence folder | `meta.json`, the arguments |
@@ -957,8 +1249,8 @@ it is, so a reviewer can look it up in the gateway's record; anything else in
 that field is masked like the rest of the report.
 
 What the report never holds: a login, password, client secret, token or OTP,
-an unmasked Aadhaar number, ABHA number or mobile, and anyone's email or phone
-number. The team and distribution tables take a name, a role and an
+an unmasked Aadhaar number, ABHA number, ABHA address or mobile, and anyone's
+email or phone number. The team and distribution tables take a name, a role and an
 organisation only.
 
 How the marking column is read. It is the first column whose name holds both
@@ -1048,12 +1340,15 @@ signing off sees them.
 ```python
 """Check that a functional test run may be reported, and write the report.
 
+  python3 abdm_report.py plan  WORKBOOK --run ft|ui --entity government|private
   python3 abdm_report.py check WORKBOOK --run ft|ui --entity government|private [--meta meta.json]
   python3 abdm_report.py build WORKBOOK --run ft|ui --meta meta.json --evidence DIR --out REPORT.pdf
       [--manifest RUN.json] [--format pdf|docx|both] [--fonts DIR]
 
-check lists every mandatory case not PASS for the run type and exits 1, or
-exits 0 when there is none. build refuses unless check passes, then writes the
+plan prints every case in sheet order with its group, its applicability for the
+entity type and its status so far, then the totals: the run log is made from it.
+check lists every mandatory case not PASS or CONDITIONAL PASS for the run type
+and exits 1, or exits 0 when there is none. build refuses unless check passes, then writes the
 report. A mandatory case NA passes only when meta.json's agreed_not_run names it.
 --manifest is the run's manifest of case ids to REQUEST-IDs, printed per case.
 build writes REPORT.pdf, the report to submit, and REPORT.docx beside it, the
@@ -1082,23 +1377,10 @@ COLUMNS = {
 TITLE = ["functionality", "feature", "test title"]
 OPTIONAL = ("no", "optional", "non-mandatory", "non mandatory", "not mandatory")
 FORBIDDEN = re.compile(r"pass(word|wd)|secret|token|credential|api[_ -]?key|private[_ -]?key", re.I)
-# A JWT: three base64url segments, the first a JSON header, so starting eyJ.
-JWT = re.compile(r"\beyJ[\w-]+\.[\w-]+\.[\w-]*")
-SECRET_WORDS = r"pass(?:word|wd)|secret|token|otp|credentials?|api[ _-]?key|private[ _-]?key"
-
-
-def labelled(words):
-    """A value after a label naming a secret: "client secret: x", "OTP 482913", "otp":"482913"."""
-    return re.compile(
-        r"(\b[\w-]*(?:" + words + r")[\w-]*['\"]?\s*[:=]\s*['\"]?)([^\s'\",;}]+)"
-        r"|(\b(?:" + words + r")\b\s+(?:is\s+)?)((?=[^\s,;]*\d)[^\s,;]{4,})", re.I)
-
-
-LABELLED = labelled(SECRET_WORDS)
-# What meta.json may never hold as a value. An OTP is masked, not refused: it
-# has expired by the time a report is written, and findings name the OTP step.
-LABELLED_CREDENTIAL = labelled(r"pass(?:word|wd)|secret|token|credentials?|api[ _-]?key|private[ _-]?key")
-LABEL = re.compile(r"\b(?:" + SECRET_WORDS + r")\b", re.I)
+# The statuses that pass a case, and how a multi step case's steps read in Remarks.
+PASSING = ("PASS", "CONDITIONAL PASS")
+STEPS = re.compile(r"\bSteps: (.+)$")
+STEP = re.compile(r"^(\d+) (PASS|FAIL|needs tester|not run)(?: \((.*)\))?$")
 IMAGES = (".png", ".jpg", ".jpeg", ".gif", ".bmp")
 RUN_NAME = {"ui": "UI functional test", "ft": "API functional test"}
 SECTIONS = ["Document control", "Executive summary", "ABDM details", "Results summary",
@@ -1118,14 +1400,71 @@ def norm(text):
     return re.sub(r"\s+", " ", str(text if text is not None else "")).strip()
 
 
+# Masking. This block is the same in abdm_workbook.py and abdm_report.py, so the
+# sheet and the report hide the same things in the same way.
+# A JWT: three base64url segments, the first a JSON header, so starting eyJ.
+JWT = re.compile(r"\beyJ[\w-]+\.[\w-]+\.[\w-]*")
+SECRET_WORDS = r"pass(?:word|wd)|secret|token|otp|credentials?|api[ _-]?key|private[ _-]?key"
+
+
+def labelled(words):
+    """A value after a label naming a secret: "client secret: x", "OTP 482913", "otp":"482913",
+    "X-token: Bearer x". Only a value is taken, never the { or [ that opens an object or a list."""
+    return re.compile(
+        r"(\b[\w-]*(?:" + words + r")[\w-]*['\"]?\s*[:=]\s*['\"]?)(?![\[{])((?:Bearer\s+)?[^\s'\",;}]+)"
+        r"|(\b(?:" + words + r")\b\s+(?:is\s+)?)((?=[^\s,;]*\d)[^\s,;]{4,})", re.I)
+
+
+LABELLED = labelled(SECRET_WORDS)
+BEARER = re.compile(r"\bBearer\s+(?!\[token\]|\[redacted\])[^\s'\",;}]+")
+# A person's profile fields, by key, in JSON or in "key: value" and "key=value" text. A quoted
+# value is taken whole; an unquoted one runs on over words that start with a capital or a digit.
+PROFILE_KEYS = (r"firstName|middleName|lastName|fullName|name|dob|dayOfBirth|monthOfBirth|yearOfBirth|"
+                r"address|pinCode|pincode|photo|profilePhoto|kycPhoto|email")
+PROFILE = re.compile(
+    r"(['\"]?\b(?i:" + PROFILE_KEYS + r")\b['\"]?\s*[:=]\s*)(?![\[{])"
+    r"(\"(?:[^\"\\]|\\.)*\"|'[^']*'|[^\s,;}\]]+(?: (?!Steps:)[A-Z0-9][^\s,;}\]]*)*)")
+ABHA_ADDRESS = re.compile(r"(?<![\w.-])([A-Za-z0-9._]+)@(sbx|abdm)\b(?!\.\w)", re.I)
+# A digit run is not a number to mask when it is a segment of a UUID.
+LEAD, TRAIL = r"(?<!\d)(?<![0-9a-fA-F]-)", r"(?!\d)(?!-[0-9a-fA-F])"
+ABHA_NUMBER = re.compile(LEAD + r"\d{2}[ -]?\d{4}[ -]?\d{4}[ -]?(\d{4})" + TRAIL)
+AADHAAR = re.compile(LEAD + r"\d{4}[ -]?\d{4}[ -]?(\d{4})" + TRAIL)
+MOBILE = re.compile(r"(?<![\d+])(?<![0-9a-fA-F]-)(?:\+91[ -]?|91[ -]?|0)?[6-9](?:[ -]?\d){5}"
+                    r"[ -]?(\d)[ -]?(\d)[ -]?(\d)[ -]?(\d)" + TRAIL)
+
+
+def profile(m):
+    quote = m.group(2)[0] if m.group(2)[:1] in ("'", '"') else ""
+    return m.group(1) + quote + "[masked]" + quote
+
+
+def address(m):
+    """An ABHA address keeps the last four characters before the @, the rest as x. Four or fewer: all x."""
+    name = m.group(1)
+    if len(name) <= 4:
+        return "x" * len(name) + "@" + m.group(2)
+    return "x" * (len(name) - 4) + name[-4:] + "@" + m.group(2)
+
+
 def mask(text):
-    """A JWT to [token], a value after a secret's label to [redacted], ABHA numbers to
-    XX-XXXX-XXXX-1234, any other 12 digit run to XXXX XXXX 1234, a mobile to XXXXXX1234."""
+    """A JWT to [token], a secret's value and a Bearer credential to [redacted], a profile field's
+    value to [masked], an ABHA address to xxxxxx1234@sbx, ABHA numbers to XX-XXXX-XXXX-1234, any
+    other 12 digit run to XXXX XXXX 1234, a mobile, with or without 0 or +91, to XXXXXX1234."""
     text = JWT.sub("[token]", str(text))
     text = LABELLED.sub(lambda m: (m.group(1) or m.group(3)) + "[redacted]", text)
-    text = re.sub(r"(?<!\d)\d{2}[ -]?\d{4}[ -]?\d{4}[ -]?(\d{4})(?!\d)", r"XX-XXXX-XXXX-\1", text)
-    text = re.sub(r"(?<!\d)\d{4}[ -]?\d{4}[ -]?(\d{4})(?!\d)", r"XXXX XXXX \1", text)
-    return re.sub(r"(?<!\d)[6-9]\d{4}[ -]?\d(\d{4})(?!\d)", r"XXXXXX\1", text)
+    text = BEARER.sub("Bearer [redacted]", text)
+    text = PROFILE.sub(profile, text)
+    text = ABHA_ADDRESS.sub(address, text)
+    text = ABHA_NUMBER.sub(r"XX-XXXX-XXXX-\1", text)
+    text = AADHAAR.sub(r"XXXX XXXX \1", text)
+    return MOBILE.sub(r"XXXXXX\1\2\3\4", text)
+# End of the masking block.
+
+
+# What meta.json may never hold as a value. An OTP is masked, not refused: it
+# has expired by the time a report is written, and findings name the OTP step.
+LABELLED_CREDENTIAL = labelled(r"pass(?:word|wd)|secret|token|credentials?|api[ _-]?key|private[ _-]?key")
+LABEL = re.compile(r"\b(?:" + SECRET_WORDS + r")\b", re.I)
 
 
 def load(path):
@@ -1274,6 +1613,27 @@ def group_applies(ws, top, cols):
     return out
 
 
+def group_names(ws, top, cols):
+    """Each case row's group: the Function carried down from the row that heads the group,
+    else the last section heading, a row whose only value is a short title in its first column."""
+    fcol, icol = cols.get("Function"), cols.get("Test Case ID")
+    if not icol:
+        return {}
+    first = min(cols.values())
+    out, current = {}, ""
+    for r in range(top + 1, ws.max_row + 1):
+        name = norm(anchor(ws, r, fcol).value) if fcol else ""
+        filled = [c for c in ws[r] if norm(c.value)]
+        if name:
+            current = name
+        elif (len(filled) == 1 and filled[0].column == first and len(norm(filled[0].value)) <= 60
+              and not re.fullmatch(r"[\d.]+", norm(filled[0].value))):
+            current = norm(filled[0].value)
+        if norm(ws.cell(r, icol).value):
+            out[r] = current or norm(ws.title)
+    return out
+
+
 def restricted_to(applies):
     """The one entity type a group is for, when it names only one: government or private."""
     low = applies.lower()
@@ -1291,11 +1651,12 @@ def read_cases(path, run, entity):
     backup = path.with_name(path.stem + ".before-abdm-run" + path.suffix)
     original = load(backup) if backup.exists() else None
     out = []
-    applies_by = {}
+    applies_by, groups_by = {}, {}
     for case, (ws, row) in index(wb).items():
         top, cols = header_row(ws)
         if ws.title not in applies_by:
             applies_by[ws.title] = group_applies(ws, top, cols)
+            groups_by[ws.title] = group_names(ws, top, cols)
         mcol = marking_col(cols)
         marking = norm(anchor(ws, row, mcol).value) if mcol else ""
         tcol = find(cols, TITLE)
@@ -1308,6 +1669,7 @@ def read_cases(path, run, entity):
                "expected": norm(anchor(ws, row, ecol).value) if ecol else "",
                "function": (norm(anchor(ws, row, fcol).value) if fcol else "") or ws.title}
         rec["applies"] = applies_by[ws.title].get(row, "")
+        rec["group"] = groups_by[ws.title].get(row, "") or norm(ws.title)
         for key, names in COLUMNS[run].items():
             rec[key] = value(ws, row, top, cols, names, original)
         rec["status"] = rec["status"].upper()
@@ -1330,28 +1692,36 @@ def read_cases(path, run, entity):
     for rec in out:
         only = restricted_to(rec["applies"])
         if only and only != entity:
-            rec.update(kind="optional", pair=None, label="Not for a " + entity + " entity",
+            rec.update(kind="optional", pair=None, label="Not for a " + entity + " entity", na=True,
                        note="the group applies to " + rec["applies"] + " only: not for a " + entity + " entity")
     groups = {k: v for k, v in groups.items() if any(by_id[i]["kind"] == "pair" for i in v if i in by_id)}
     return out, list(groups.values())
 
 
 def gate(recs, groups, agreed):
-    """Mandatory cases not PASS. NA passes only on a case NHA agreed not to run."""
+    """Mandatory cases not PASS or CONDITIONAL PASS. NA passes only on a case NHA agreed not to run."""
     blocking = []
     by_id = {r["id"]: r for r in recs}
 
     def through(r):
-        return r["status"] == "PASS" or (r["status"] == "NA" and r["id"] in agreed)
+        if r["status"] == "CONDITIONAL PASS":
+            # A conditional pass passes only with its condition written down.
+            return bool(STEPS.sub("", r["remarks"]).strip())
+        return r["status"] in PASSING or (r["status"] == "NA" and r["id"] in agreed)
+
+    def shown_status(r):
+        if r["status"] == "CONDITIONAL PASS" and not through(r):
+            return "CONDITIONAL PASS with no condition in Remarks"
+        return r["status"] or "blank"
 
     for r in recs:
         if r["kind"] == "mandatory" and not through(r):
-            blocking.append(r["id"] + ": " + (r["status"] or "blank"))
+            blocking.append(r["id"] + ": " + shown_status(r))
     for ids in groups:
         present = [by_id[i] for i in ids if i in by_id]
         if present and not any(through(r) for r in present):
             blocking.append(" or ".join(r["id"] for r in present) + ": " +
-                            ", ".join(r["status"] or "blank" for r in present))
+                            ", ".join(shown_status(r) for r in present))
     return blocking
 
 
@@ -1380,7 +1750,45 @@ def run_check(path, run, entity, agreed):
     mandatory = sum(1 for r in recs if r["kind"] == "mandatory") + len(groups)
     print(str(len(blocking)) + " of " + str(mandatory) + " mandatory case(s) for a " + entity +
           " entity not PASS in the " + run + " run")
+    for r in recs:
+        if r["status"] == "CONDITIONAL PASS":
+            print("conditional pass " + r["id"] + ": " + mask(r["remarks"] or "no condition recorded"))
     return recs, groups, blocking
+
+
+def applicability(r):
+    """What a case is for this entity type, in the words plan prints."""
+    if r.get("na"):
+        return "not applicable (group " + r["group"] + ", Applicable To: " + r["applies"] + ")"
+    if r["kind"] == "pair":
+        what = "mandatory, either " + " or ".join(r["pair"])
+    elif r["kind"] == "mandatory":
+        what = "conditional" if "conditional" in r["label"].lower() else "mandatory"
+    else:
+        what = "optional"
+    low = r["applies"].lower()
+    if r["applies"] and not restricted_to(r["applies"]) and not ("all" in low or "both" in low or
+                                                                  ("gov" in low and "priv" in low)):
+        # An Applicable To that names neither entity type, such as "PHR App", is read as all.
+        what += "; applies: " + r["applies"] + " (read as all)"
+    return what
+
+
+def run_plan(path, run, entity):
+    """Every case in sheet order: id, group, applicability, status so far. Then the totals."""
+    recs, _ = read_cases(path, run, entity)
+    if not recs:
+        sys.exit("no Test Case ID column with ids in " + Path(path).name + ": nothing to plan")
+    counts, statuses = {}, {}
+    for r in recs:
+        what = applicability(r)
+        status = r["status"] or "open"
+        print(" | ".join([r["id"], r["group"], what, status]))
+        key = what.split(" (")[0].split(",")[0].split(";")[0]
+        counts[key] = counts.get(key, 0) + 1
+        statuses[status] = statuses.get(status, 0) + 1
+    print("total " + str(len(recs)) + " cases: " + ", ".join(str(v) + " " + k for k, v in counts.items()) +
+          "; status: " + ", ".join(str(v) + " " + k for k, v in statuses.items()))
 
 
 def forbidden(meta, where="meta.json"):
@@ -1450,6 +1858,17 @@ def shown(row, header=False):
             for c, text in enumerate(row)]
 
 
+def step_rows(remarks):
+    """A multi step case's steps, read back from the "Steps: ..." the writer put at the end of Remarks."""
+    found = STEPS.search(remarks or "")
+    rows = []
+    for part in (found.group(1).split("; ") if found else []):
+        m = STEP.match(part.strip())
+        if m:
+            rows.append([m.group(1), m.group(2), m.group(3) or ""])
+    return rows
+
+
 def content(path, run, meta, evidence, recs, groups, manifest=None, draft=None):
     """What the report says, as a list of blocks. The DOCX and the PDF draw the same blocks."""
     dm = meta.get("document", {})
@@ -1473,19 +1892,23 @@ def content(path, run, meta, evidence, recs, groups, manifest=None, draft=None):
 
     n = len(recs)
     passed = sum(1 for r in recs if r["status"] == "PASS")
+    conditional = [r for r in recs if r["status"] == "CONDITIONAL PASS"]
+    cond = len(conditional)
     failed = sum(1 for r in recs if r["status"] == "FAIL")
     na = sum(1 for r in recs if r["status"] == "NA")
-    blank = n - passed - failed - na
+    blank = n - passed - cond - failed - na
     mandatory = sum(1 for r in recs if r["kind"] == "mandatory") + len(groups)
     retried = [r for r in recs if r["iterations"] > 1]
     log = [r for r in recs if r["iterations"] > 1 or r["status"] != "PASS"]
     agreed = [r for r in recs if r.get("agreed")]
     findings = meta.get("findings", {})
     if agreed:
-        held = (" All " + str(mandatory) + " mandatory cases that apply to a " + entity + " entity are PASS, except " +
-                str(len(agreed)) + " NA that NHA agreed not to run, listed in the results summary.")
+        held = (" All " + str(mandatory) + " mandatory cases that apply to a " + entity + " entity are PASS or "
+                "conditional pass, except " + str(len(agreed)) + " NA that NHA agreed not to run, listed in the "
+                "results summary.")
     else:
-        held = " All " + str(mandatory) + " mandatory cases that apply to a " + entity + " entity are PASS."
+        held = (" All " + str(mandatory) + " mandatory cases that apply to a " + entity + " entity are PASS or "
+                "conditional pass.")
     if draft:
         held = (" This is a draft, not the report to submit: " + str(len(draft)) + " of the " + str(mandatory) +
                 " mandatory cases that apply to a " + entity + " entity are not yet PASS, listed below.")
@@ -1496,6 +1919,8 @@ def content(path, run, meta, evidence, recs, groups, manifest=None, draft=None):
             return "Agreed not run: " + r["agreed"]
         if r["status"] == "PASS" and r["iterations"] <= 1:
             return "None"
+        if r["status"] == "CONDITIONAL PASS":
+            return "Condition: " + (STEPS.sub("", r["remarks"]).strip() or "not recorded")
         text = r["remarks"] or r["response"] or "Not recorded"
         if r["status"] == "PASS":
             text = "Passed on pass " + str(r["iterations"]) + ". Earlier passes: " + text
@@ -1534,7 +1959,8 @@ def content(path, run, meta, evidence, recs, groups, manifest=None, draft=None):
         meta.get("organisation", "") + " against ABDM " + milestone + ", API version " +
         meta.get("api_version", "V3") + ", from " + dates.get("start", "") + " to " + dates.get("end", "") +
         ". The workbook " + Path(path).name + " holds " + str(n) + " cases. " + str(passed) + " are PASS, " +
-        str(failed) + " FAIL, " + str(na) + " NA and " + str(blank) + " have no result." + held + " " +
+        str(cond) + " conditional pass, " + str(failed) + " FAIL, " + str(na) + " NA and " + str(blank) +
+        " have no result." + held + " " +
         str(len(retried)) + " cases took more than one pass.")
     if draft:
         add("callout", ["Draft. The report to submit is built only when every mandatory case below is PASS."])
@@ -1557,7 +1983,8 @@ def content(path, run, meta, evidence, recs, groups, manifest=None, draft=None):
 
     # 4. Results summary: counts, then by function, then one row per case.
     add("h1", SECTIONS[3])
-    add("stats", [["Cases in the workbook", n], ["PASS", passed], ["FAIL", failed], ["NA", na], ["No result", blank],
+    add("stats", [["Cases in the workbook", n], ["PASS", passed], ["Conditional pass", cond], ["FAIL", failed],
+                  ["NA", na], ["No result", blank],
                   ["Mandatory for a " + entity + " entity", mandatory], ["Took more than one pass", len(retried)]])
     add("h2", "Results by function")
     functions = []
@@ -1568,13 +1995,22 @@ def content(path, run, meta, evidence, recs, groups, manifest=None, draft=None):
     for fn in functions:
         these = [r for r in recs if r["function"] == fn]
         rows.append([fn, len(these), sum(1 for r in these if r["status"] == "PASS"),
+                     sum(1 for r in these if r["status"] == "CONDITIONAL PASS"),
                      sum(1 for r in these if r["status"] == "FAIL"), sum(1 for r in these if r["status"] == "NA"),
-                     sum(1 for r in these if r["kind"] == "mandatory" and r["status"] != "PASS" and not r.get("agreed"))])
-    table(rows, header=["Function", "Cases", "PASS", "FAIL", "NA", "Mandatory not PASS"])
+                     sum(1 for r in these if r["kind"] == "mandatory" and r["status"] not in PASSING
+                         and not r.get("agreed"))])
+    table(rows, header=["Function", "Cases", "PASS", "Conditional pass", "FAIL", "NA", "Mandatory not PASS"])
     add("h2", "Results by case")
     table([[r["id"], r["title"], r["label"], (r["status"] or "Not recorded") + (" (agreed not run)" if r.get("agreed")
             else ""), r["iterations"] or ""] for r in recs],
           header=["Test case ID", "Title", "Marking", "Status", "Iterations"])
+    add("h2", "Conditional passes")
+    if conditional:
+        add("note", ["Each case below met its Expected Result with a gap beside it. The condition is the gap."])
+        table([[r["id"], r["title"], STEPS.sub("", r["remarks"]).strip() or "Not recorded"] for r in conditional],
+              header=["Test case ID", "Title", "Condition"])
+    else:
+        add("para", "No case is a conditional pass.")
     if agreed:
         add("h2", "Mandatory cases NHA agreed not to run")
         add("note", ["NHA agreed that each case below does not apply. The gate lets a mandatory NA through only "
@@ -1590,7 +2026,7 @@ def content(path, run, meta, evidence, recs, groups, manifest=None, draft=None):
     sheets = sorted(set(r["sheet"] for r in recs), key=[r["sheet"] for r in recs].index)
     table([["Role", meta.get("role", "")], ["Entity type", entity], ["Run type", run],
            ["Workbook", Path(path).name], ["Tabs", ", ".join(sheets)], ["Cases", n]])
-    skipped = [r for r in recs if r["kind"] == "optional" and r["status"] != "PASS"]
+    skipped = [r for r in recs if r["kind"] == "optional" and r["status"] not in PASSING]
     add("h2", "Optional cases not passed")
     if skipped:
         table([[r["id"], r["title"], r["status"] or "Not recorded"] for r in skipped],
@@ -1648,6 +2084,8 @@ def content(path, run, meta, evidence, recs, groups, manifest=None, draft=None):
         "a reviewer can look up in the gateway's own record.",
     ])
     table([["PASS", "The case's expected result was observed."],
+           ["CONDITIONAL PASS", "The expected result was observed, with a gap beside it, such as a point in the "
+            "Suggestions for the Functional Tester column not met. The condition is listed in the results summary."],
            ["FAIL", "The expected result was not observed in three passes. The failure reason says what was."],
            ["NA", "The case was not run: optional and not offered, or mandatory with NHA's agreement."],
            ["Not recorded", "The case has no result in the workbook."]], header=["Status", "Meaning"])
@@ -1676,7 +2114,7 @@ def content(path, run, meta, evidence, recs, groups, manifest=None, draft=None):
             for step, shot in enumerate(files, 1):
                 figure += 1
                 shots.append((shot, figure, step))
-        add("case", r, values, r["response"], shots)
+        add("case", r, values, r["response"], shots, step_rows(r["remarks"]))
 
     # 12. Failures and iterations log
     add("h1", SECTIONS[11])
@@ -1692,8 +2130,8 @@ def content(path, run, meta, evidence, recs, groups, manifest=None, draft=None):
     add("lead",
         "In the " + run + " run of " + meta.get("product", "") + " for " + milestone + "," +
         held.replace(" All", " all", 1) + " Of " + str(n) + " cases, " +
-        str(passed) + " are PASS, " + str(failed) + " FAIL, " + str(na) + " NA and " + str(blank) +
-        " have no result.")
+        str(passed) + " are PASS, " + str(cond) + " conditional pass, " + str(failed) + " FAIL, " + str(na) +
+        " NA and " + str(blank) + " have no result.")
     table([["Prepared by", dm.get("prepared_by", ""), "", ""], ["Reviewed by", dm.get("reviewed_by", ""), "", ""],
            ["Approved by", dm.get("approved_by", ""), "", ""]], header=["Sign-off", "Name", "Date", "Signature"])
 
@@ -1820,9 +2258,11 @@ def write_docx(m, out):
         elif kind == "gap":
             doc.add_paragraph("")
         elif kind == "case":
-            r, values, response, shots = block[1:]
+            r, values, response, shots, steps = block[1:]
             doc.add_heading(r["id"] + ": " + r["title"], level=2)
             table([[k, v] for k, v in zip(CASE_FIELDS, values)], header=["Field", "Value"])
+            if steps:
+                table(steps, header=["Step", "Result", "Note"])
             if response:
                 p = doc.add_paragraph()
                 p.add_run("Response with code: ").bold = True
@@ -1875,7 +2315,10 @@ MILESTONES = {"M1": "M1 Identity", "M2": "M2 Health Information Provider", "M3":
 WIDTHS = {
     ("Version", "Date", "By", "Change"): [.12, .18, .25, .45],
     ("Name", "Organisation", "Role"): [.34, .36, .30],
-    ("Function", "Cases", "PASS", "FAIL", "NA", "Mandatory not PASS"): [.38, .11, .11, .11, .11, .18],
+    ("Function", "Cases", "PASS", "Conditional pass", "FAIL", "NA", "Mandatory not PASS"):
+        [.30, .09, .09, .14, .09, .09, .20],
+    ("Test case ID", "Title", "Condition"): [.24, .30, .46],
+    ("Step", "Result", "Note"): [.10, .22, .68],
     ("Test case ID", "Title", "Marking", "Status", "Iterations"): [.24, .36, .17, .10, .13],
     ("Test case ID", "Title", "Agreed by and when"): [.25, .37, .38],
     ("Test case ID", "Title", "Status"): [.25, .60, .15],
@@ -2055,7 +2498,7 @@ def write_pdf(m, out, fonts_dir=None):
 
     def status(text):
         word = clean(text).split(" ")[0].upper()
-        color = "blue" if word == "PASS" else "otext" if word == "FAIL" else "ink4"
+        color = "blue" if word in ("PASS", "CONDITIONAL") else "otext" if word == "FAIL" else "ink4"
         return Tracked(text or "Not recorded", size=7.2, color=color, space=0.6)
 
     def grid(rows, header=None, pad=6.5):
@@ -2265,11 +2708,13 @@ def write_pdf(m, out, fonts_dir=None):
             elif kind == "gap":
                 out.append(Spacer(1, 10))
             elif kind == "case":
-                r, values, response, shots = block[1:]
+                r, values, response, shots, steps = block[1:]
                 head = [CondPageBreak(200), Rule("line", 0.6, before=6, after=14, top=False), Mark("c" + r["id"]),
                         Tracked(r["id"], size=7.5, color="otext", space=0.9, after=5),
                         Paragraph(escape(clean(r["title"])), S["case"]),
                         grid([[k, v] for k, v in zip(CASE_FIELDS, values)], pad=4.6)]
+                if steps:
+                    head += [Spacer(1, 8), grid(steps, ["Step", "Result", "Note"], pad=4.6)]
                 if response:
                     code = Table([[Tracked("Response with code", size=6.6, color="ink4", space=0.7, after=3)],
                                   [para(response, "code")]], colWidths=[TW], hAlign="LEFT")
@@ -2409,7 +2854,7 @@ def build(path, run, meta, evidence, out, recs, groups, manifest=None, fmt="both
 
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument("action", choices=["check", "build"])
+    p.add_argument("action", choices=["plan", "check", "build"])
     p.add_argument("workbook")
     p.add_argument("--run", choices=["ft", "ui"], required=True)
     p.add_argument("--entity", choices=["government", "private"])
@@ -2435,6 +2880,9 @@ def main():
     entity = a.entity or meta.get("entity_type")
     if entity not in ("government", "private"):
         sys.exit("--entity, or entity_type in meta.json, must be government or private")
+    if a.action == "plan":
+        run_plan(a.workbook, a.run, entity)
+        return
     recs, groups, blocking = run_check(a.workbook, a.run, entity, agreed_cases(meta))
     if blocking and not (a.action == "build" and a.draft):
         if a.action == "build":
@@ -2451,6 +2899,14 @@ if __name__ == "__main__":
 ```
 
 ### What happens
+
+**Before the first case, plan the run from the workbook:**
+
+```bash
+python3 abdm-ft/abdm_report.py plan <workbook> --run ui --entity private
+```
+
+It prints one line per case, in sheet order: the case id, its group (the sheet's Function, else its section heading), what it is for your entity type (`mandatory`, `mandatory, either <id> or <id>`, `conditional`, `optional`, or `not applicable` with the group and its Applicable To; an Applicable To that names neither entity type, such as `PHR App`, adds `applies: PHR App (read as all)`), and its status so far in the run type's column, `open` when blank. Then one `total` line. NHA's PHR workbook carries no case ids until the writer's first write adds them, so for P1 to P4 write an empty results file, `[]`, with `abdm_workbook.py write` first, then run `plan`. Create the run log's rows from this list, one per case. No case may be dropped: a case that cannot run is `needs-human` with what it needs named, after the tester was asked for it, or `not-run` with the rule that makes it not apply. Before the tester leaves, run `python3 abdm-ft/abdm_workbook.py open <workbook> --run ui --entity private` and read the list out, so every case still waiting for them is done or asked about while they are there.
 
 1. When the last case is recorded and written into the workbook, run the gate for the run type and your entity type:
 
@@ -2482,14 +2938,16 @@ if __name__ == "__main__":
 
 ### How you know it worked
 
-- `check` exits `0` and its last line reads `0 of <n> mandatory case(s) for a <entity> entity not PASS in the <run> run`.
+- `plan` prints one line per case in the workbook, 100 for M1, then a `total` line, and the run log has a row for every one of them.
+- `check` exits `0` and reads `0 of <n> mandatory case(s) for a <entity> entity not PASS in the <run> run`, followed by one `conditional pass <id>: <condition>` line per conditional pass.
+- The results summary counts conditional pass on its own, in the tiles, the table by function and the executive summary, and lists every conditional pass with its condition. A case whose Remarks end in `Steps: ...` shows a Step, Result and Note table in its evidence.
 - `build` prints a `fonts:` line naming each font it used or replaced, then `wrote abdm-ft/report-m1.docx` and `wrote abdm-ft/report-m1.pdf`, and exits `0`.
 - The PDF opens on a navy cover with the milestone in orange, the key facts in a ruled grid and the confidentiality note. Page 2 is the contents, with every section and every case id and its page. Every later page reads the report title at the top left and `Confidential` and `Page N of M` at the bottom.
 - Both files open with the cover and the contents, then the fourteen headings from Document control to Annexures, in order. Every page of the Word copy has the report title at the top and `Confidential, page N of M` at the bottom.
 - The results summary has one row per case in the workbook, after the counts. Each case's evidence section starts with its nine row table, then its response, then its screenshots in name order, each captioned with its figure number, case id and step: `FIGURE <n> · <case id>, STEP <k> · <file>` in the PDF, `Figure <n>: <case id>, step <k> (<file>)` in the Word copy.
 - With `--manifest`, each case's Request IDs row lists the REQUEST-IDs the manifest gives it, or reads `None in the manifest`.
-- No 12 digit number appears anywhere in either file, the PDF's header and footer included: an Aadhaar number reads `XXXX XXXX 1234` and an ABHA number `XX-XXXX-XXXX-1234`, with the last four digits kept. A 10 digit mobile reads `XXXXXX1234`.
-- No token or secret appears in it: a JWT reads `[token]`, and a value after a label naming a password, secret, token, OTP, credential, API key or private key reads `[redacted]`. This covers the workbook's Response and Remarks values and the findings, as well as `meta.json`.
+- No 12 digit number appears anywhere in either file, the PDF's header and footer included: an Aadhaar number reads `XXXX XXXX 1234` and an ABHA number `XX-XXXX-XXXX-1234`, with the last four digits kept. A 10 digit mobile, with or without `0`, `91` or `+91` and spaces or hyphens inside, reads `XXXXXX1234`, and an ABHA address ending `@sbx` or `@abdm` keeps only the last four characters before the `@`, the rest as `x`, or is all `x` when four or fewer. A profile field's value, `firstName`, `lastName`, `name`, `dob`, `address`, `pinCode`, `photo`, `email` and the like, reads `[masked]`. The writer uses the same masking block, so the sheet and the report agree.
+- No token or secret appears in it: a JWT reads `[token]`, and a value after a label naming a password, secret, token, OTP, credential, API key or private key reads `[redacted]`, as does a `Bearer` credential. This covers the workbook's Response and Remarks values and the findings, as well as `meta.json`.
 
 ### When it goes wrong
 
@@ -2502,6 +2960,9 @@ if __name__ == "__main__":
 | `not passed <id>: NA` | A mandatory case was recorded not run, and `agreed_not_run` does not list it | Run it, or agree with NHA that it does not apply, keep the reason in its remarks, and add it to `agreed_not_run` with who agreed and when. Pass `--meta` to `check` |
 | `agreed_not_run must map each case id` | An entry has no agreement text | Write who at NHA agreed and when for every case listed |
 | `not passed <id>: blank` | The case needs a tester step, or never ran | Finish it with the tester, then write it back |
+| `not passed <id>: CONDITIONAL PASS with no condition in Remarks` | The Remarks cell for a conditional pass is empty, which the writer refuses, so it was typed into the sheet by hand. The gate blocks it | Write the result again through `abdm_workbook.py write` with the condition in `remarks` |
+| A case is missing from the run log | The run log was written by hand, not from `plan` | Run `plan` again and add a row for every case it lists. Never drop a case to finish sooner |
+| `plan` prints `not applicable` for a case you expected to run | The sheet's group Applicable To names the other entity type only | Check `--entity`. A group for the other entity type is `not-run` with that rule in Remarks |
 | `marking <id> "...": unrecognised marking: treated as mandatory`, or `no marking` | NHA used a marking the script does not know, such as PHR's note on row P1 3.6, or left it blank | Ask NHA what it means for your entity type. Never edit NHA's marking to pass the gate |
 | `meta.json carries a credential` | `meta.json` has a password, secret, token or credentials field, or a value holding a JWT or a credential's label with its value | Delete the field or the value. A report never carries a credential |
 | `the workbook has a (run) column but no .before-abdm-run copy` | The writer's copy of NHA's workbook was moved or deleted | Put it back beside the workbook. Without it the script cannot tell NHA's text from the run's |
@@ -2537,4 +2998,4 @@ Mark the run log finished, with the time and the count of each outcome. Then wri
 }
 ```
 
-Then say, in three lines: how many cases passed, failed, need a human and were not run; which mandatory cases are not `passed`; and the one case to fix first.
+Then say, in three lines: how many cases passed, passed with a condition, failed, need a human and were not run; which mandatory cases are not `passed`; and the one case to fix first.

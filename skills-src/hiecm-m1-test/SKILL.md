@@ -4,7 +4,7 @@ description: "Use when walking the ABDM M1 functional test cases (ABHA creation 
 ---
 # HIE-CM m1 test
 
-Walks the ABDM M1 functional test cases, ABHA creation and verification, against the system you built and the sandbox. Each case ends in one of four recorded outcomes, never in an opinion.
+Walks the ABDM M1 functional test cases, ABHA creation and verification, against the system you built and the sandbox. Each case ends in one of five recorded outcomes, never in an opinion.
 
 ## What this skill does
 
@@ -22,7 +22,8 @@ Walks the ABDM M1 functional test cases, ABHA creation and verification, against
 | Your system running against the sandbox hosts | Your deployment or a local build. The skill drives your system, not the sandbox directly |
 | A way to trigger each journey in your system | A screen, an API or a script. Say which at the start |
 | A person with an Aadhaar linked mobile, for OTP cases | Present at the desk for the run. Every OTP is a human step and the skill stops for it |
-| A fingerprint or face device, for the biometric cases | Only if you claim those cases. A claimed case with no device present is recorded `needs-human` |
+| An Aadhaar that holds no ABHA, for the full ABHA creation journey | The tester. Say this before the run: the creation cases need an Aadhaar with no ABHA on it. An existing ABHA can be deleted on the ABHA sandbox portal, https://abhasbx.abdm.gov.in/abha/v3, to free that Aadhaar, as NHA recommends. A tester who keeps the existing ABHA still runs most creation cases, as "An existing ABHA is not a stop" below sets out |
+| A fingerprint or face device, for the biometric cases | Only if you claim those cases. A claimed case with no device present is recorded `needs-human`, after it was asked for at readiness and again at the case, and the tester said they cannot provide it in this run |
 | A public callback URL and a facility QR code for each of two counters, for SHARE_PATIENT_PROFILE_701 and 702 | Your deployment, registered with the bridge. The profile share arrives there |
 | Whether you are a government or a private integrator | The set marks some cases mandatory for one and optional for the other |
 | A folder for the run log | Your repository. `abdm-ft/` unless you name another |
@@ -51,11 +52,16 @@ The first question is the run type. `ft` is the API functional test: your system
 | Your system | It answers on the address you gave, against the sandbox hosts |
 | People and devices | Each is named for this run: who receives the OTPs, who approves in the PHR app, which device scans |
 | Entity type and claimed capabilities | Answered, because they decide which cases are mandatory |
+| An Aadhaar with no ABHA | The tester was told, before the first case, that the full creation journey needs an Aadhaar that holds no ABHA, and that an existing ABHA can be deleted on https://abhasbx.abdm.gov.in/abha/v3 to free it, as NHA recommends. Record `ready` when they have one, or `existing ABHA kept` when they keep theirs |
 | The run log | Its folder exists and can be written: `abdm-ft/` in your repository unless you name another |
 | The workbook | `python3 abdm-ft/abdm_workbook.py cases <workbook>` lists the case ids, and every case chosen is among them. Required: without it there are no results in the sheet and no report, so ask for it before the first case |
 | UI readiness, for a `ui` or `all` run | Every row of the readiness check in "Running a case as a UI test" is `ready`: Node, the Playwright tools, a browser, the application URL and the tester login. `not needed` for an `ft` run |
 
 A `missing` row that a mandatory case needs stops the run before the first call. Say what is missing and ask the one question that would fix it.
+
+**Ask for every input the cases need.** In the readiness check, ask for each input a chosen case needs beyond the rows above, such as a second mobile, a mobile that holds no ABHA, an Aadhaar that holds no ABHA, a second ABHA address, a fingerprint or face device, the ABHA app, a counter QR code or a public callback URL. Record each as `ready` or `missing`. Ask again for a `missing` one when the run reaches the case that needs it. Only when the tester says they cannot provide it in this run is that case `needs-human`, with what was asked in Remarks.
+
+**The case plan.** Before the first case, run `python3 abdm-ft/abdm_report.py plan <workbook> --run <ft or ui> --entity <government or private>`, as "Writing the test report" sets out. It lists every case in the workbook, in sheet order, with its group, what it is for your entity type and its status so far. The run log's rows are made from that list. No case may be dropped: a case that cannot run is `needs-human` with its need named, after asking, or `not-run` with the rule that makes it not apply. Before the tester leaves, run `python3 abdm-ft/abdm_workbook.py open <workbook> --run <ft or ui> --entity <government or private>` and read the list out, including every `NA on a mandatory case` line, so every case still waiting for them is done, or asked about, while they are there.
 
 ## How this skill runs
 
@@ -63,14 +69,22 @@ Every case is an observe, orient, decide, act loop. Observe the live state: the 
 
 Loop limit: 3 passes per test case. Hitting the limit is an escalation: state what was observed with request ids, what was tried, name one section of this skill or one operation page to read, and ask one question.
 
-### The four outcomes
+### The five outcomes
 
 | Outcome | Record it when | Never when |
 |---|---|---|
 | `passed` | The exit condition is observed and the observation is pasted verbatim | The response was not pasted. A pass with no output is a fail |
+| `conditional-pass` | The Expected Result is met and observed as for `passed`, with a gap beside it, such as a point in the sheet's Suggestions for the Functional Tester column not met. Remarks name the condition | The Expected Result is not met. That is `failed`. A Suggestions gap alone never makes a FAIL |
 | `failed` | Three passes and the exit condition was not observed, or the sandbox returned the refusal the case expects you to handle and your system did not handle it | A human step was missing. That is `needs-human` |
-| `needs-human` | The case reached an OTP, a biometric scan, an operator's document check, or a person or device that was not there | Ever as a substitute for a fail you can see |
-| `not-run` | The case does not apply to your entity, you do not claim the optional capability, or ABDM publishes no operation for it | To skip a mandatory case that applies to you |
+| `needs-human` | The case reached an OTP, a biometric scan, an operator's document check, or a person or device that was not there | Ever as a substitute for a fail you can see, or before the tester was asked for what the case needs and said they cannot provide it in this run |
+| `not-run` | The case does not apply to your entity, you do not claim the optional capability, or ABDM publishes no operation for it | To skip a mandatory case that applies to you, or for a case waiting on a person, a device or test data. That is `needs-human` |
+
+### Judging a case
+
+- The sheet's Expected Result column decides the outcome. Its Steps To Be Executed say what to do. Its Suggestions for the Functional Tester column is guidance: a gap against it, with the Expected Result met, is a `conditional-pass`, never on its own a FAIL.
+- A message that means the same as the one the sheet quotes is a PASS. Quote both in the run record.
+- A case with several steps records a result for each step, in its result's `steps`. The case is `failed` only when a step's expected result fails. When every step run passes and a step could not be run, the case is `needs-human`, naming that step and what it needs.
+- A case waiting on a person, a device or test data is `needs-human` only after the tester was asked for it, at the readiness check and again at the case, and said they cannot provide it in this run. Remarks name what was asked. Such a case is never `not-run` and never blank. `not-run` is only for a case that does not apply: the entity type, an optional capability you do not offer, or no published operation for it.
 
 ### The three kinds of evidence
 
@@ -78,7 +92,7 @@ Every case names one of these. It decides what the manifest carries.
 
 - **sandbox.** A call the gateway sees. Evidence is the HTTP status, the body and the REQUEST-ID, pasted. The exit condition is a literal in the body. A reviewer can check this against the gateway's own record, which is why it outranks the other two.
 - **screen.** A rule about what your system shows or stores, which no call proves. Evidence is one screenshot or a short recording and the design rule it satisfies. A screen case is attested, not observed, and the manifest marks it so. In a `ui` run the agent observes the screen itself instead, as "Running a case as a UI test" sets out.
-- **human.** A step only a person can do. Evidence is the observation just before it and the outcome `needs-human` when nobody was there.
+- **human.** A step only a person can do. Evidence is the observation just before it and the outcome `needs-human` when nobody was there after two asks.
 
 ### Rules that hold for every case
 
@@ -108,7 +122,7 @@ next: CRT_ABHA_113
 The run is logged to a file as it happens, so the person can follow it, stop and resume it, and hand it to a reviewer. Create it before the first case, at `abdm-ft/m1-<YYYYMMDD-HHMM>.md`.
 
 - The header names this skill, the set, the entity type, the time started, and the readiness check row by row.
-- Every case chosen gets a row before the first call, each `pending`.
+- Every case `plan` lists gets a row before the first call, each `pending`, in the order `plan` prints them. A case outside the ones chosen for this run stays `pending`, so the log always shows what is still open.
 - A case reads `running` while its loop runs. When it ends, update its row at once: outcome, request ids, the literal that matched or the reason, and the evidence file for a `screen` case. Then append its run record block under the table.
 - A stopped run resumes from the log: the first row that is still `pending` or `running` is the next case.
 - Never write a secret to it: no token, OTP, password, Aadhaar number, full mobile, client secret or private key. A request id, a txnId and a masked mobile are fine.
@@ -120,7 +134,7 @@ Readiness: credentials ready; system ready; OTP person ready; biometric device n
 | Case | Outcome | Request ids | Observed |
 |---|---|---|---|
 | CRT_ABHA_101 | passed | 6f1c..., a02d... | exit condition matched, pasted below |
-| CRT_ABHA_105 | needs-human | b7a1... | OTP prompt shown, left blank |
+| CRT_ABHA_105 | needs-human | b7a1... | OTP asked for twice, no answer |
 | CRT_ABHA_106 | running | | |
 | CRT_ABHA_107 | pending | | |
 ```
@@ -135,7 +149,7 @@ Every step that needs someone to authenticate stops and asks in the terminal. Th
 | Read OTPs, passwords and secrets with input hidden, and hold them only for that call | Use a fixed, test or default OTP, or one from an earlier run |
 | Fetch a fresh session token at the start of the run from the credentials in the readiness check | Hard code a token, or reuse one from an earlier run |
 | Wait while the person approves on their phone, then observe the callback or status that proves it | Mock, stub or replay a response so the case can carry on |
-| Record `needs-human` only after the prompt was shown and left blank | Record any outcome for an authentication step that was never asked |
+| Record `needs-human` only after the prompt was shown, asked again naming the field, and the tester said they cannot provide it in this run or stayed silent after the second ask. Remarks name what was asked | Record any outcome for an authentication step that was never asked |
 
 A runner that reaches an authenticated call without asking is broken, not finished. Stop, fix the runner, and run the case again.
 
@@ -154,7 +168,7 @@ Asked for a test script, a test command or automated tests, build one interactiv
 | Run each `sandbox` case's success path and each refusal its exit condition names, as separate checks. Run a refusal labelled "Extra check, not in the set" too, and log it on its own line | The outcome is decided only by what the set asks. An extra check is logged, and never passes or fails the case |
 | Compare the status and the body literal the exit condition names, such as `200` with `tokens.token` present, or `422` with `error.code` `ABDM-1204` | A status alone never passes a check |
 | A `4xx` passes only where the case's exit condition names that refusal | A `400` on a success path step is `failed` |
-| A blank answer at a prompt records the case `needs-human` and moves to the next case | Nobody present is neither a pass nor a fail |
+| A blank answer at a prompt asks once more, naming the field. A second blank, or the tester saying they cannot provide it in this run, records the case `needs-human` with what was asked in Remarks, and moves to the next case | Nobody present is neither a pass nor a fail |
 | A `screen` case prints its check, then asks `passed? y/n` and the evidence file name | No call proves a screen, so the case is attested |
 | At the end, print one line per case id with its outcome and request ids, then write the manifest in the last section | The person reads outcomes by case id, not by script step |
 
@@ -182,6 +196,18 @@ Loop limit: 3 passes per test case.
 
 **Preconditions.** A gateway access token less than 30 minutes old. A person present with an Aadhaar linked mobile. Their Aadhaar number searched first on the login path and not found, so the run creates rather than duplicates.
 
+**A fresh Aadhaar, said before the run.** The full creation journey needs an Aadhaar that holds no ABHA. Tell the tester so at the readiness check, before the first case: an existing ABHA can be deleted on the ABHA sandbox portal, https://abhasbx.abdm.gov.in/abha/v3, to free that Aadhaar, as NHA recommends.
+
+**An existing ABHA is not a stop.** If the tester keeps the existing ABHA, run the cases anyway. For an Aadhaar that already holds an ABHA, `m1_post_v3_enrollment_enrol_byaadhaar_otp` answers 200 with `message` `This account already exist` and `isNew` `false`, and still returns the account's `txnId`, `tokens` with `token` and `refreshToken`, and the full `ABHAProfile`, with `ABHANumber`, `phrAddress` and the masked `mobile`. So these still run on that response:
+
+| Case | Runs on |
+|---|---|
+| CRT_ABHA_112, the address step | The same `txnId`. A person can create more than one ABHA address for the same ABHA number |
+| CRT_ABHA_113, the profile shown | `ABHAProfile`, and the address from CRT_ABHA_112 |
+| CRT_ABHA_114, the card | `m1_get_v3_profile_account_abha_card`, sent with `tokens.token` as `X-token` |
+
+Only a case that truly needs a brand new ABHA waits for a fresh Aadhaar, and is `needs-human` with `an Aadhaar with no ABHA` in Remarks after the tester was asked for one. If your application offers no address step for an existing account, that is your application's FAIL on CRT_ABHA_112, not a `not-run`.
+
 #### CRT_ABHA_101, the option exists. Mandatory. `sandbox`
 
 Your system offers ABHA creation by Aadhaar OTP, and the journey completes. Drive it end to end through your screen or API.
@@ -194,7 +220,7 @@ Exit condition: three literals, all pasted.
 2. `m1_post_v3_enrollment_enrol_abha_address_create_abha_aadhaar_otp` returns 200 with `healthIdNumber` and `preferredAbhaAddress`.
 3. `m1_get_v3_profile_account`, sent with that `X-token`, returns 200 with the same `ABHANumber`.
 
-Nudge: read `message` on step 1. `Account created successfully` is a new account. `This account already exist` is a 200 too, and it means the search-first rule was skipped or the sandbox person already holds one. Record which, because the second is a screen failure on CRT_ABHA_101 even though the API passed.
+Nudge: read `message` and `isNew` on step 1. `Account created successfully` with `isNew` `true` is a new account. `This account already exist` with `isNew` `false` is a 200 too, and is not a failure: the Aadhaar already holds an ABHA. Your application must carry on from that response to the profile, the card and the address step, as "An existing ABHA is not a stop" above sets out. Say in the run log that the account existed, and that steps 1 to 3 ran on it.
 
 #### CRT_ABHA_104, an invalid Aadhaar number is refused before any call. Mandatory. `screen`
 
@@ -210,7 +236,7 @@ The same consent offered in at least one language other than English. Evidence: 
 
 #### CRT_ABHA_105, the Aadhaar OTP is requested and can be entered. Mandatory. `sandbox`, then `human`
 
-Exit condition: `m1_post_v3_enrollment_request_otp_aadhaar_otp` returns 200 with a `txnId` and a `message` that names the masked mobile. Paste it. Then stop: the OTP arrives on the person's phone and only they enter it. If they are not there, record `needs-human` and the txnId, and do not mark the case passed or failed.
+Exit condition: `m1_post_v3_enrollment_request_otp_aadhaar_otp` returns 200 with a `txnId` and a `message` that names the masked mobile. Paste it. Then stop: the OTP arrives on the person's phone and only they enter it. If they are not there, ask again naming the OTP field; only when the tester says they cannot provide it in this run, or stays silent after the second ask, record `needs-human` with what was asked and the txnId, and do not mark the case passed or failed.
 
 Screen checks alongside: the prompt tells the person the OTP went to the mobile linked with Aadhaar and shows the last digits, which the `message` carries. The OTP field accepts only six digits. An incomplete, wrong or expired OTP shows the message the API returned.
 
@@ -271,7 +297,7 @@ After a creation or a verification, your system searches its own records by mobi
 
 Applies to every integrator. Optional, every case. The set lists no API for this group. ABDM publishes the face authentication creation flow, so the operation ids below are the ones that observe it. `hiecm.flow.m1-create-abha-face-auth`
 
-Face authentication is a `human` step on a device. The person scans a QR code from your screen with the ABHA app, logged out, and captures their face in the ABHA Face RD app on their phone. Without that phone and that person, record every case from CRT_ABHA_106_FA on that you claim as `needs-human`, with that reason. A case you do not claim is `not-run`, because the whole group is optional.
+Face authentication is a `human` step on a device. The person scans a QR code from your screen with the ABHA app, logged out, and captures their face in the ABHA Face RD app on their phone. Ask for that phone and that person at readiness and again at each case. Without them, record every case from CRT_ABHA_106_FA on that you claim as `needs-human`, naming what was asked, after it was asked for at readiness and again at the case, and the tester said they cannot provide it in this run. A case you do not claim is `not-run`, because the whole group is optional.
 
 Loop limit: 3 passes per test case.
 
@@ -305,7 +331,7 @@ The person opens the ABHA app logged out, taps the scanner at the top left of th
 
 #### CRT_ABHA_107_FA, the ABHA Face RD app is not installed. Optional. `human`
 
-On a phone without the ABHA Face RD app, the scan sends the person to the Play Store or App Store to install it, and they can then continue or restart. This is the ABHA app's behaviour, not your system's. Evidence: the phone screen at the store. If you claim the case and no such phone is available, record `needs-human` with that reason.
+On a phone without the ABHA Face RD app, the scan sends the person to the Play Store or App Store to install it, and they can then continue or restart. This is the ABHA app's behaviour, not your system's. Evidence: the phone screen at the store. If you claim the case and no such phone is available, record `needs-human` naming what was asked, after it was asked for at readiness and again at the case, and the tester said they cannot provide it in this run.
 
 #### CRT_ABHA_108_FA, face authentication succeeds. Optional. `sandbox`, `human`
 
@@ -367,7 +393,7 @@ Applies to every integrator. Optional, every case. Each case runs as its counter
 
 The creation call is `m1_post_v3_enrollment_enrol_byaadhaar_fingerprint` or `m1_post_v3_enrollment_enrol_byaadhaar_iris`. The calls after it are the same flow's: for fingerprint `m1_post_v3_enrollment_request_otp_mobile_verify_create_ab_64b04e`, `m1_post_v3_enrollment_auth_byabdm_mobile_verify_create_ab_3b237a`, `m1_get_v3_enrollment_enrol_suggestion_create_abha_fingerprint` and `m1_post_v3_enrollment_enrol_abha_address_create_abha_fingerprint`; for iris `m1_post_v3_enrollment_request_otp_mobile_verify_create_abha_iris`, `m1_post_v3_enrollment_auth_byabdm_mobile_verify_create_abha_iris`, `m1_get_v3_enrollment_enrol_suggestion_create_abha_iris` and `m1_post_v3_enrollment_enrol_abha_address_create_abha_iris`.
 
-If you do not claim biometric creation, the whole group is `not-run`. If you claim it and no registered fingerprint or iris device is at hand, record each case that scans as `needs-human`, with that reason.
+If you do not claim biometric creation, the whole group is `not-run`. If you claim it and no registered fingerprint or iris device is at hand, record each case that scans as `needs-human`, naming the device, after it was asked for at readiness and again at the case, and the tester said they cannot provide it in this run.
 
 Loop limit: 3 passes per test case.
 
@@ -587,7 +613,7 @@ Pick an account already linked to one of your patients. After VRFY_ABHA_305 your
 
 Optional, every case. The set lists no API for this group. ABDM publishes the find by face flow: `m1_post_v3_profile_account_abha_search_find_abha_face`, `m1_post_v3_profile_login_request_otp_find_abha_face` with the chosen account's `index` and the search `txnId`, `m1_post_v3_enrollment_enrol_capturepid_find_abha_face` polled every 5 to 10 seconds, then `m1_post_v3_profile_login_verify_find_abha_face`. `hiecm.flow.m1-find-abha`
 
-Face authentication is a `human` step on a device, as in CRT_ABHA_101_FA to 117_FA. Without a phone with the ABHA app and the person, record every case from VRFY_ABHA_305_FA on that you claim as `needs-human`, with that reason. A case you do not claim is `not-run`.
+Face authentication is a `human` step on a device, as in CRT_ABHA_101_FA to 117_FA. Without a phone with the ABHA app and the person, record every case from VRFY_ABHA_305_FA on that you claim as `needs-human`, naming what was asked, after it was asked for at readiness and again at the case, and the tester said they cannot provide it in this run. A case you do not claim is `not-run`.
 
 Loop limit: 3 passes per test case.
 
@@ -631,7 +657,7 @@ The person does a scan that fails. Exit condition: one of the two refusals the s
 
 Optional, every case. The set names `/abha/api/v3/profile/account/abha/search`, `/abha/api/v3/profile/login/request/otp` and a verify path on the production host. Run the sandbox operations of the published find by fingerprint flow instead: `m1_post_v3_profile_account_abha_search_find_abha_fingerprint`, `m1_post_v3_profile_login_request_otp_find_abha_fingerprint` and `m1_post_v3_profile_login_verify_find_abha_fingerprint`. For iris, `m1_post_v3_profile_account_abha_search_find_abha_iris`, `m1_post_v3_profile_login_request_otp_find_abha_iris` and `m1_post_v3_profile_login_verify_find_abha_iris`. `hiecm.flow.m1-find-abha`
 
-Without a registered fingerprint or iris device, the cases that scan and that you claim are `needs-human`, with that reason. A case you do not claim is `not-run`.
+Without a registered fingerprint or iris device, the cases that scan and that you claim are `needs-human`, naming the device, after it was asked for at readiness and again at the case, and the tester said they cannot provide it in this run. A case you do not claim is `not-run`.
 
 Loop limit: 3 passes per test case.
 
@@ -693,7 +719,7 @@ As CRT_ABHA_106, on the login screen.
 
 Optional, every case. The set names `/abha/api/v3/profile/login/request/otp` and `/abha/api/v3/profile/login/verify`. In the published specification the fingerprint use of those two paths takes an ABHA number, not an Aadhaar number. The login that takes an encrypted Aadhaar number with a biometric is `m1_post_v3_1_profile_login_verify_fingerprint`, or `m1_post_v3_1_profile_login_verify_iris`, one call each. Run that, and say in the run log that it is the v3.1 call.
 
-Without a registered fingerprint or iris device, the cases that scan and that you claim are `needs-human`, with that reason. A case you do not claim is `not-run`.
+Without a registered fingerprint or iris device, the cases that scan and that you claim are `needs-human`, naming the device, after it was asked for at readiness and again at the case, and the tester said they cannot provide it in this run. A case you do not claim is `not-run`.
 
 Loop limit: 3 passes per test case.
 
@@ -809,4 +835,4 @@ Mark the run log finished, with the time and the count of each outcome. Then wri
 }
 ```
 
-Then say, in three lines: how many cases passed, failed, need a human and were not run; which mandatory cases for your entity are not `passed`; and the one case to fix first.
+Then say, in three lines: how many cases passed, passed with a condition, failed, need a human and were not run; which mandatory cases for your entity are not `passed`; and the one case to fix first.

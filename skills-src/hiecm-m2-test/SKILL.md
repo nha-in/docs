@@ -4,7 +4,7 @@ description: "Use when walking the ABDM M2 functional test cases (Health Informa
 ---
 # HIE-CM m2 test
 
-Walks the ABDM M2 functional test cases, Health Information Provider, against the system you built and the sandbox. Each case ends in one of four recorded outcomes, never in an opinion.
+Walks the ABDM M2 functional test cases, Health Information Provider, against the system you built and the sandbox. Each case ends in one of five recorded outcomes, never in an opinion.
 
 ## What this skill does
 
@@ -59,6 +59,10 @@ The first question is the run type. `ft` is the API functional test: your system
 
 A `missing` row that a mandatory case needs stops the run before the first call. Say what is missing and ask the one question that would fix it.
 
+**Ask for every input the cases need.** In the readiness check, ask for each input a chosen case needs beyond the rows above, such as a second mobile, a mobile that holds no ABHA, an Aadhaar that holds no ABHA, a second ABHA address, a fingerprint or face device, the ABHA app, a counter QR code or a public callback URL. Record each as `ready` or `missing`. Ask again for a `missing` one when the run reaches the case that needs it. Only when the tester says they cannot provide it in this run is that case `needs-human`, with what was asked in Remarks.
+
+**The case plan.** Before the first case, run `python3 abdm-ft/abdm_report.py plan <workbook> --run <ft or ui> --entity <government or private>`, as "Writing the test report" sets out. It lists every case in the workbook, in sheet order, with its group, what it is for your entity type and its status so far. The run log's rows are made from that list. No case may be dropped: a case that cannot run is `needs-human` with its need named, after asking, or `not-run` with the rule that makes it not apply. Before the tester leaves, run `python3 abdm-ft/abdm_workbook.py open <workbook> --run <ft or ui> --entity <government or private>` and read the list out, including every `NA on a mandatory case` line, so every case still waiting for them is done, or asked about, while they are there.
+
 **Preflight.** Not a test case, and never counted as one.
 
 1. `gateway_post_gateway_v3_sessions` returns 202 with `accessToken` present.
@@ -73,14 +77,22 @@ Every case is an observe, orient, decide, act loop. Observe the live state: the 
 
 Loop limit: 3 passes per test case. Hitting the limit is an escalation: state what was observed with request ids, what was tried, name one section of this skill or one operation page to read, and ask one question.
 
-### The four outcomes
+### The five outcomes
 
 | Outcome | Record it when | Never when |
 |---|---|---|
 | `passed` | The exit condition is observed, including the callback, and the observation is pasted verbatim | The response was not pasted, or only the 202 was seen. A pass with no output is a fail |
+| `conditional-pass` | The Expected Result is met and observed as for `passed`, with a gap beside it, such as a point in the sheet's Suggestions for the Functional Tester column not met. Remarks name the condition | The Expected Result is not met. That is `failed`. A Suggestions gap alone never makes a FAIL |
 | `failed` | Three passes and the exit condition was not observed, or the callback never arrived, or it carried the refusal the case expects you to handle and your system did not handle it | A human step was missing. That is `needs-human` |
-| `needs-human` | The case reached an OTP, a PHR app login, a consent approval or revocation, a records pull, or a person who was not there | Ever as a substitute for a fail you can see |
-| `not-run` | The case does not apply to your entity, you do not claim the optional capability, or ABDM publishes no operation for it | To skip a mandatory case that applies to you |
+| `needs-human` | The case reached an OTP, a PHR app login, a consent approval or revocation, a records pull, or a person who was not there | Ever as a substitute for a fail you can see, or before the tester was asked for what the case needs and said they cannot provide it in this run |
+| `not-run` | The case does not apply to your entity, you do not claim the optional capability, or ABDM publishes no operation for it | To skip a mandatory case that applies to you, or for a case waiting on a person, a device or test data. That is `needs-human` |
+
+### Judging a case
+
+- The sheet's Expected Result column decides the outcome. Its Steps To Be Executed say what to do. Its Suggestions for the Functional Tester column is guidance: a gap against it, with the Expected Result met, is a `conditional-pass`, never on its own a FAIL.
+- A message that means the same as the one the sheet quotes is a PASS. Quote both in the run record.
+- A case with several steps records a result for each step, in its result's `steps`. The case is `failed` only when a step's expected result fails. When every step run passes and a step could not be run, the case is `needs-human`, naming that step and what it needs.
+- A case waiting on a person, a device or test data is `needs-human` only after the tester was asked for it, at the readiness check and again at the case, and said they cannot provide it in this run. Remarks name what was asked. Such a case is never `not-run` and never blank. `not-run` is only for a case that does not apply: the entity type, an optional capability you do not offer, or no published operation for it.
 
 ### The three kinds of evidence
 
@@ -88,7 +100,7 @@ Every case names one of these, or a combination. It decides what the manifest ca
 
 - **sandbox.** A call the gateway sees, and the callback that answers it. Evidence is the HTTP status, the body and the REQUEST-ID of the call, and the body of the callback POST that arrived at your URL, both pasted. The exit condition is a literal in the callback. A reviewer can check this against the gateway's own record, which is why it outranks the other two.
 - **screen.** A rule about what your system shows or stores, which no call proves. Evidence is one screenshot or a short recording and the rule it satisfies. A screen case is attested, not observed, and the manifest marks it so. In a `ui` run the agent observes the screen itself instead, as "Running a case as a UI test" sets out.
-- **human.** A step only a person can do. Evidence is the observation immediately before it and the outcome `needs-human` when nobody was there.
+- **human.** A step only a person can do. Evidence is the observation immediately before it and the outcome `needs-human` when nobody was there after two asks.
 
 ### Rules that hold for every case
 
@@ -124,7 +136,7 @@ next: HIP_INTI_LINK_506
 The run is logged to a file as it happens, so the person can follow it, stop and resume it, and hand it to a reviewer. Create it before the first case, at `abdm-ft/m2-<YYYYMMDD-HHMM>.md`.
 
 - The header names this skill, the set, the entity type, the time started, and the readiness check row by row.
-- Every case chosen gets a row before the first call, each `pending`.
+- Every case `plan` lists gets a row before the first call, each `pending`, in the order `plan` prints them. A case outside the ones chosen for this run stays `pending`, so the log always shows what is still open.
 - A case reads `running` while its loop runs. When it ends, update its row at once: outcome, request ids, the literal that matched or the reason, and the evidence file for a `screen` case. Then append its run record block under the table.
 - A stopped run resumes from the log: the first row that is still `pending` or `running` is the next case.
 - Never write a secret to it: no token, OTP, password, Aadhaar number, full mobile, client secret or private key. A request id, a txnId and a masked mobile are fine.
@@ -151,7 +163,7 @@ Every step that needs someone to authenticate stops and asks in the terminal. Th
 | Read OTPs, passwords and secrets with input hidden, and hold them only for that call | Use a fixed, test or default OTP, or one from an earlier run |
 | Fetch a fresh session token at the start of the run from the credentials in the readiness check | Hard code a token, or reuse one from an earlier run |
 | Wait while the person approves on their phone, then observe the callback or status that proves it | Mock, stub or replay a response so the case can carry on |
-| Record `needs-human` only after the prompt was shown and left blank | Record any outcome for an authentication step that was never asked |
+| Record `needs-human` only after the prompt was shown, asked again naming the field, and the tester said they cannot provide it in this run or stayed silent after the second ask. Remarks name what was asked | Record any outcome for an authentication step that was never asked |
 
 A runner that reaches an authenticated call without asking is broken, not finished. Stop, fix the runner, and run the case again.
 
@@ -170,7 +182,7 @@ Asked for a test script, a test command or automated tests, build one interactiv
 | Run each `sandbox` case's success path and each refusal its exit condition names, as separate checks. Run a refusal labelled "Extra check, not in the set" too, and log it on its own line | The outcome is decided only by what the set asks. An extra check is logged, and never passes or fails the case |
 | Compare the callback literal the exit condition names, such as `linkToken` present, or `status` `Successfully Linked care context`. An extra check compares its literal the same way, such as `error.code` `ABDM-1037` | A status alone never passes a check, and a 202 never does |
 | A `4xx` passes only where the case's exit condition names that refusal | A `400` on a success path step is `failed` |
-| A blank answer at a prompt records the case `needs-human` and moves to the next case | Nobody present is neither a pass nor a fail |
+| A blank answer at a prompt asks once more, naming the field. A second blank, or the tester saying they cannot provide it in this run, records the case `needs-human` with what was asked in Remarks, and moves to the next case | Nobody present is neither a pass nor a fail |
 | A `screen` case prints its check, then asks `passed? y/n` and the evidence file name | No call proves a screen, so the case is attested |
 | Run the preflight first, label it `preflight`, and keep it out of the case counts | It tests your setup, not a case |
 | At the end, print one line per case id with its outcome and request ids, then write the manifest in the last section | The person reads outcomes by case id, not by script step |
@@ -271,7 +283,7 @@ The cases run in the set's order: 601, 602, 603, 606, 604, 605, 607.
 
 #### USER_INIT_LINK_601, the person logs in to the PHR app. Mandatory. `human`
 
-The person logs in to the ABDM sandbox PHR app; stop for that. Evidence: their confirmation, or `needs-human`. No call of yours proves this step.
+The person logs in to the ABDM sandbox PHR app; stop for that. Evidence: their confirmation, or `needs-human` after asking twice with no login. No call of yours proves this step.
 
 #### USER_INIT_LINK_602, your facility can be found. Mandatory. `human` and `screen`
 
@@ -390,4 +402,4 @@ Mark the run log finished, with the time and the count of each outcome. Then wri
 }
 ```
 
-Then say, in three lines: how many cases passed, failed, need a human and were not run; which mandatory cases for your entity are not `passed`; and the one case to fix first.
+Then say, in three lines: how many cases passed, passed with a condition, failed, need a human and were not run; which mandatory cases for your entity are not `passed`; and the one case to fix first.
