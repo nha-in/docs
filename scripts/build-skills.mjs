@@ -1281,6 +1281,73 @@ function buildByFunctionality(module, mapping, whole, wholeFrozen, parts) {
   return {files, pluginFiles, entry};
 }
 
+// The case to API matrix, catalogue/hiecm/tests/matrix/<module>.json, written
+// by scripts/build-test-cases.py from NHA's workbook: each case's group, its
+// marking for each entity type, its Expected Result, and the operations and
+// journeys its APIs column names. A module built per job ships it as
+// references/test-matrix.md, which its scaffold and test sources name.
+// scripts/check-test-matrix.mjs holds the JSON to the pages and the specs.
+function addTestMatrix(moduleId, files, covers) {
+  const file = join(root, 'catalogue', 'hiecm', 'tests', 'matrix', `${moduleId}.json`);
+  if (!existsSync(file)) return;
+  const matrix = JSON.parse(readFileSync(file, 'utf8'));
+  const esc = (text) => String(text).replace(/\|/g, '\\|').replace(/\s+/g, ' ').trim();
+  const short = (text) => text.split(/[;(]/)[0].trim();
+  const marking = (c) => {
+    const [g, p] = ['government', 'private'].map((e) => short(c.marking[e]));
+    return g === p ? g : `government: ${g}; private: ${p}`;
+  };
+  const mandatory = (c) => c.mandatory.government || c.mandatory.private;
+  const withApis = !matrix.note;
+  const groups = new Map();
+  for (const c of matrix.cases) {
+    if (!groups.has(c.group)) groups.set(c.group, []);
+    groups.get(c.group).push(c);
+  }
+  const journeysFor = (entity) =>
+    [...new Set(matrix.cases.filter((c) => c.mandatory[entity]).flatMap((c) => c.apis.flatMap((a) => a.journeys ?? [])))].sort();
+  const name = moduleId.toUpperCase();
+  const out = [
+    `# ${name} test case matrix`,
+    '',
+    `Every case in NHA's ${name} workbook, in the order the sheet groups them, with its marking, its Expected Result and the calls its APIs column names. Before building, read it and build every journey that a case mandatory for your entity type calls. Build each mandatory case's Expected Result into the screen, not only its calls. The test run uses it to know what each case exercises.`,
+    '',
+    `Marking is for a government and a private entity, as \`abdm_report.py plan\` reads the workbook. Mandatory cases come first in each group. ${matrix.cases.length} cases; ${matrix.cases.filter(mandatory).length} mandatory for at least one entity type.`,
+    '',
+  ];
+  if (withApis) {
+    out.push(
+      'An operation in another module\'s specification is named with that module. An unresolved path is one the sheet names that no operation in the specifications matches, with the reason: work out the call from the Expected Result and the specification.',
+      '',
+      ...['government', 'private'].map((e) => `- Journeys the mandatory cases call for a ${e} entity: ${journeysFor(e).map((j) => `\`${j}\``).join(', ') || 'none named'}.`),
+      '',
+    );
+  } else {
+    out.push(matrix.note, '');
+  }
+  for (const [group, cases] of groups) {
+    out.push(`## ${esc(group)}`, '');
+    const head = withApis ? ['Case', 'Marking', 'Operations', 'Journeys', 'Unresolved', 'Expected Result'] : ['Case', 'Marking', 'Expected Result'];
+    out.push(`| ${head.join(' | ')} |`, `|${' --- |'.repeat(head.length)}`);
+    for (const c of [...cases.filter(mandatory), ...cases.filter((x) => !mandatory(x))]) {
+      const row = [`\`${c.id}\` ${esc(c.title)}`, esc(marking(c))];
+      if (withApis) {
+        const ops = c.apis.filter((a) => a.operations).flatMap((a) => a.operations.map((op) => `\`${op}\`${a.other_module ? ` (${[a.spec].flat().join(', ')} specification)` : ''}`));
+        const journeys = [...new Set(c.apis.flatMap((a) => a.journeys ?? []))].map((j) => `\`${j}\``);
+        const unresolved = [...new Set(c.apis.filter((a) => a.unresolved).map((a) => `\`${a.path}\`: ${a.reason}`))];
+        row.push([...new Set(ops)].join(', ') || 'none', journeys.join(', ') || 'none', esc(unresolved.join('; ')) || 'none');
+      }
+      row.push(esc(c.expected) || 'Not stated.');
+      out.push(`| ${row.join(' | ')} |`);
+    }
+    out.push('');
+  }
+  files['references/test-matrix.md'] = out.join('\n');
+  covers.push(
+    `- **Test matrix.** Each of the ${matrix.cases.length} NHA cases with its marking for each entity type, its Expected Result and the operations and journeys it calls. Read it before building. [references/test-matrix.md](references/test-matrix.md)`,
+  );
+}
+
 for (const module of MODULES) {
   const whole = build(module, siteUrl);
   // Same content, but the one line naming a canonical URL falls back to
@@ -1392,6 +1459,7 @@ for (const module of MODULES) {
       `- **Test.** The functional test cases, one loop each, run as API or UI tests, with results written into NHA's workbook and the final test report once every mandatory case passes. Never hands-off: a tester enters every Aadhaar number, mobile number and OTP. [references/test.md](references/test.md)`,
     );
   }
+  addTestMatrix(module.id, files, covers);
 
   // The manifest row comes first, because the router's prompts are built from it.
   const entry = {

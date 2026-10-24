@@ -6,6 +6,8 @@ description: "Use when walking the ABDM P3 functional test cases (PHR subscripti
 
 Walks the ABDM P3 functional test cases against the system you built and the sandbox: subscription requests, auto approval policies and the consent requests an HIU raises for a PHR user. Each case ends in one of five recorded outcomes, never in an opinion.
 
+Before building, read `references/test-matrix.md` in this skill: build every journey that a case mandatory for your entity type calls, and build each mandatory case's Expected Result into the screen, not only its calls. The test run uses it to know what each case exercises.
+
 ## What this skill does
 
 - Runs every P3 case in the PHR app set against your PHR app, your HIU service or both, one case at a time

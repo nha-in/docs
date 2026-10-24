@@ -6,6 +6,8 @@ description: "Use when walking the ABDM P4 functional test cases (the health loc
 
 Walks the ABDM P4 functional test cases, the health locker, against the locker and PHR app you built and the sandbox. Each case ends in one of five recorded outcomes, never in an opinion.
 
+Before building, read `references/test-matrix.md` in this skill: build every journey that a case mandatory for your entity type calls, and build each mandatory case's Expected Result into the screen, not only its calls. The test run uses it to know what each case exercises.
+
 ## What this skill does
 
 - Runs every P4 case in the PHR app set against your locker and your PHR app, one case at a time

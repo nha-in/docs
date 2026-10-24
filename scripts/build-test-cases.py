@@ -24,12 +24,21 @@ share, told apart only by the request body's scope, stays plain code rather
 than linking to a guess. Where a sheet has both an old API column and a V3
 one, the V3 column is read.
 
-Usage: python3 scripts/build-test-cases.py [--check]
-Needs openpyxl.
+It also writes the case to API matrix of each module skill built per job,
+catalogue/hiecm/tests/matrix/<module>.json: every case with its group, its
+marking for each entity type as `abdm_report.py plan` reads it, its Expected
+Result, and each API path the sheet names resolved to operation ids and
+journeys. See matrix() below.
+
+Usage: python3 scripts/build-test-cases.py [--check] [--matrix-out DIR]
+--matrix-out writes only the matrices, into DIR, for check-test-matrix.mjs.
+Needs openpyxl and node.
 """
 import json
 import re
+import subprocess
 import sys
+import tempfile
 from collections import Counter
 from pathlib import Path
 from urllib.parse import urlparse
@@ -412,7 +421,7 @@ def sections_of(spec):
             found, groups = extract(source["sheet"], tab, prefix)
             session = session or found
             title = f"{prefix} {name}" if prefix else source.get("section", "").format(tab=name)
-            sections.append({"title": title, "prefix": prefix, "groups": groups})
+            sections.append({"title": title, "prefix": prefix, "groups": groups, "sheet": source["sheet"]})
     return session, sections
 
 
@@ -542,12 +551,197 @@ def render(spec, session, sections, routes):
     return "\n".join(out)
 
 
+# The case to API matrix. Each module skill built per job ships one, as
+# references/test-matrix.md, so its build knows which journeys each NHA case
+# exercises without the module being rebuilt per functionality. M1 is built
+# per functionality from catalogue/hiecm/tests/m1.yaml and has none. The PHR
+# sheet is one tab per PHR milestone, and each P skill takes its own tab.
+MATRIX = ROOT / "catalogue" / "hiecm" / "tests" / "matrix"
+MATRICES = {
+    "m2": {"page": "m2", "specs": ["m2"]},
+    "m3": {"page": "m3", "specs": ["m3"]},
+    "m4": {"page": "m4", "specs": ["m4"]},
+    "p1": {"page": "phr", "specs": ["p1"], "prefix": "P1"},
+    "p2": {"page": "phr", "specs": ["p2"], "prefix": "P2"},
+    "p3": {"page": "phr", "specs": ["p3"], "prefix": "P3"},
+    "p4": {"page": "phr", "specs": ["p4"], "prefix": "P4"},
+}
+REPORT_ATOM = ROOT / "catalogue" / "shared" / "concepts" / "test-report.md"
+WRITER_ATOM = ROOT / "catalogue" / "shared" / "concepts" / "test-workbook-write-back.md"
+ENTITIES = ("government", "private")
+NO_APIS = "NHA's PHR sheet has no APIs column, so no case names its calls. Read the P specification and journeys for the calls a case's steps imply."
+NO_ID = "no case id in NHA's sheet, so the workbook and the report cannot record it"
+DOCS_LINK = "a link to a documentation page, which names no call"
+
+
+def script_of(atom):
+    """The functions of the script an atom ships, its main() not run."""
+    found = re.search(r"```python\n(.*?)\n```", atom.read_text(), re.S)
+    space = {"__name__": "matrix"}
+    exec(compile(found.group(1), str(atom), "exec"), space)
+    return space
+
+
+def with_ids(sheet, folder):
+    """A copy of a workbook whose tabs carry a Test Case ID column.
+
+    The PHR sheet has none. The writer adds the column on its first write, so
+    its own functions add it here, and the report reads the ids it reads in a run.
+    """
+    writer = script_of(WRITER_ATOM)
+    book = writer["load"](sheet)
+    for ws in book.worksheets:
+        top, cols = writer["header_row"](ws)
+        if top is not None and "Test Case ID" not in cols:
+            ids = writer["cases"](ws)
+            col = writer["add_column"](ws, top, cols, "Test Case ID")
+            for case, row in ids.items():
+                ws.cell(row, col).value = case
+    target = Path(folder) / Path(sheet).name
+    book.save(target)
+    return target
+
+
+def markings(sheet):
+    """Case id to {entity: (what plan prints, mandatory)}, by abdm_report.py's own read_cases."""
+    report = script_of(REPORT_ATOM)
+    with tempfile.TemporaryDirectory() as folder:
+        path = with_ids(sheet, folder)
+        out = {}
+        for entity in ENTITIES:
+            recs, _ = report["read_cases"](path, "ui", entity)
+            for r in recs:
+                what = report["applicability"](r)
+                must = not r.get("na") and r["kind"] in ("mandatory", "pair")
+                out.setdefault(r["id"], {})[entity] = {"marking": what, "mandatory": must}
+    return out
+
+
+def api_index():
+    """Every HIE-CM v3 operation and journey, as scripts/lib/journeys.mjs reads them."""
+    lib = (ROOT / "scripts" / "lib" / "journeys.mjs").as_uri()
+    code = (
+        f"import {{operationIndex, loadJourneys}} from '{lib}';"
+        "const ops = [...operationIndex()].map(([id, e]) => ({id, module: e.module, method: e.method, path: e.path}));"
+        "const journeys = [...loadJourneys()].flatMap(([module, list]) => list.map((j) => ({module, id: j.id, ops: (j.steps ?? []).map((s) => s.op)})));"
+        "console.log(JSON.stringify({ops, journeys}));"
+    )
+    out = subprocess.run(["node", "--input-type=module", "-e", code], cwd=ROOT, capture_output=True, text=True, check=True)
+    return json.loads(out.stdout)
+
+
+def segments_match(spec, sheet):
+    return len(spec) == len(sheet) and all(a == b or (a.startswith("{") and a.endswith("}")) for a, b in zip(spec, sheet))
+
+
+def resolve(url, specs, index):
+    """One API the sheet names, as {source, path, method, spec, operations, journeys} or flagged unresolved."""
+    parsed = urlparse(url)
+    entry = {"source": url}
+    method = None
+    if parsed.fragment.startswith("/"):
+        # A Swagger UI link names its operation in the fragment, method last.
+        raw = parsed.fragment.rstrip("/").split("/")[-1]
+        name = re.sub(r"Using(GET|POST|PUT|PATCH|DELETE)$", "", raw)
+        found = re.search(r"Using(GET|POST|PUT|PATCH|DELETE)$", raw)
+        method = found.group(1).lower() if found else None
+        if name not in SWAGGER:
+            return {**entry, "path": name, "unresolved": True,
+                    "reason": "a Swagger operation name that names no operation in the specifications"}
+        path = SWAGGER[name]
+    elif "documentation" in parsed.path or parsed.query:
+        return {**entry, "path": parsed.path, "unresolved": True, "reason": DOCS_LINK}
+    else:
+        path = re.sub(r"\{\{([^}]+)\}\}", r"{\1}", parsed.path).rstrip("/") or "/"
+    sheet = path.strip("/").split("/")
+    exact, tail = [], []
+    for op in index["ops"]:
+        if method and op["method"] != method:
+            continue
+        spec = op["path"].split("#")[0].strip("/").split("/")
+        if segments_match(spec, sheet):
+            exact.append(op)
+        elif len(spec) >= 3 and segments_match(spec, sheet[-len(spec):]):
+            # The host's own prefix, such as /api on a registry host, before the specified path.
+            tail.append(op)
+    found = exact or tail
+    if not found:
+        return {**entry, "path": path, **({"method": method.upper()} if method else {}), "unresolved": True,
+                "reason": "no operation in the specifications has this path"}
+    own = [op for op in found if op["module"] in specs]
+    chosen = own or found
+    modules = sorted({op["module"] for op in chosen})
+    ids = sorted(op["id"] for op in chosen)
+    journeys = sorted({j["id"] for j in index["journeys"] for op in ids if op in j["ops"]})
+    out = {**entry, "path": path, "method": "/".join(sorted({op["method"].upper() for op in chosen})),
+           "spec": modules[0] if len(modules) == 1 else modules, "operations": ids, "journeys": journeys}
+    if not own:
+        out["other_module"] = True
+    return out
+
+
+def matrix(name, spec, sections, index):
+    """One module's matrix: its cases in page order, each with what it calls."""
+    picked = [s for s in sections if not spec.get("prefix") or s["prefix"] == spec["prefix"]]
+    marks = {}
+    for sheet in dict.fromkeys(s["sheet"] for s in picked):
+        marks[sheet] = markings(sheet)
+    cases, seen = [], Counter()
+    for section in picked:
+        for group in section["groups"]:
+            label = f"{section['title']}: {group['label']}" if section["title"] and not spec.get("prefix") else group["label"]
+            for case in group["cases"]:
+                # A repeated id is #2, #3 in the report, as in the writer.
+                seen[(section["sheet"], case["id"])] += 1
+                n = seen[(section["sheet"], case["id"])]
+                key = case["id"] if n == 1 else f"{case['id']}#{n}"
+                mark = marks[section["sheet"]].get(key)
+                if mark is None and case["id"] == "No id":
+                    # A case the sheet forgot to number: no run can record it in the workbook.
+                    mark = {e: {"marking": NO_ID, "mandatory": False} for e in ENTITIES}
+                if mark is None:
+                    sys.exit(f"{name}: {key} is on the page but abdm_report.py read_cases does not read it from {section['sheet'].name}")
+                cases.append({
+                    "id": case["id"],
+                    "anchor": case["anchor"],
+                    "group": label,
+                    "title": case["title"],
+                    "marking": {e: mark[e]["marking"] for e in ENTITIES},
+                    "mandatory": {e: mark[e]["mandatory"] for e in ENTITIES},
+                    "expected": " ".join(case["expected"].split()),
+                    "apis": [resolve(u, spec["specs"], index) for u in case["apis"]],
+                })
+    out = {
+        "module": name,
+        "generated": "scripts/build-test-cases.py from NHA's workbook. Fix the sheet or the script, never this file.",
+        "page": f"site/docs/hiecm/v3/resources/test-cases/{spec['page']}.mdx",
+        "workbooks": [str(Path(s).relative_to(ROOT)) for s in dict.fromkeys(s["sheet"] for s in picked)],
+        "specs": spec["specs"],
+    }
+    if not any(c["apis"] for c in cases):
+        out["note"] = NO_APIS
+    out["cases"] = cases
+    return json.dumps(out, indent=2, ensure_ascii=False) + "\n"
+
+
+def matrices(sections_by_page):
+    index = api_index()
+    for sections in sections_by_page.values():
+        anchors_for(sections)
+    return {name: matrix(name, spec, sections_by_page[spec["page"]], index) for name, spec in MATRICES.items()}
+
+
 def main():
     check = "--check" in sys.argv
+    only = Path(sys.argv[sys.argv.index("--matrix-out") + 1]) if "--matrix-out" in sys.argv else None
     routes = load_routes()
     stale = False
+    by_page = {}
     for name, spec in PAGES.items():
         session, sections = sections_of(spec)
+        by_page[name] = sections
+        if only:
+            continue
         text = render(spec, session, sections, routes)
         target = OUT / f"{name}.mdx"
         cases = len(every_case(sections))
@@ -560,6 +754,17 @@ def main():
         else:
             target.write_text(text)
             print(f"  {target.relative_to(ROOT)}: {groups} group(s), {cases} case(s)")
+    for name, text in matrices(by_page).items():
+        target = (only or MATRIX) / f"{name}.json"
+        if check and not only:
+            current = target.read_text() if target.exists() else ""
+            if current != text:
+                stale = True
+            print(f"  {target.relative_to(ROOT)}: {'current' if current == text else 'OUT OF DATE'}")
+        else:
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text(text)
+            print(f"  {target}: {len(json.loads(text)['cases'])} case(s)")
     if stale:
         print("Run: python3 scripts/build-test-cases.py")
         sys.exit(1)

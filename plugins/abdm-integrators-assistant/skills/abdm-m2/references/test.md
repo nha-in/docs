@@ -106,6 +106,8 @@ From `shared.concept.test-human-entry`.
 
 Walks the ABDM M2 functional test cases, Health Information Provider, against the system you built and the sandbox. Each case ends in one of five recorded outcomes, never in an opinion.
 
+Before building, read `references/test-matrix.md` in this skill: build every journey that a case mandatory for your entity type calls, and build each mandatory case's Expected Result into the screen, not only its calls. The test run uses it to know what each case exercises.
+
 ## What this skill does
 
 - Runs every M2 test case in the Building HIP set against your system and the sandbox, one case at a time

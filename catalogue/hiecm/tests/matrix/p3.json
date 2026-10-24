@@ -1,0 +1,254 @@
+{
+  "module": "p3",
+  "generated": "scripts/build-test-cases.py from NHA's workbook. Fix the sheet or the script, never this file.",
+  "page": "site/docs/hiecm/v3/resources/test-cases/phr.mdx",
+  "workbooks": [
+    "catalogue/hiecm/openapi/.raw/nha-2026-10-01-phr-tests/PHR_MOBILE_APP_TEST_CASES.xlsx"
+  ],
+  "specs": [
+    "p3"
+  ],
+  "note": "NHA's PHR sheet has no APIs column, so no case names its calls. Read the P specification and journeys for the calls a case's steps imply.",
+  "cases": [
+    {
+      "id": "PHR_HIU_10101",
+      "anchor": "phr_hiu_10101",
+      "group": "1.1. Subscription Request",
+      "title": "Subscription Request receives in the PHR app",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Notification is received in the PHR app Subscription requests is received in the PHR app",
+      "apis": []
+    },
+    {
+      "id": "PHR_HIU_10102",
+      "anchor": "phr_hiu_10102",
+      "group": "1.1. Subscription Request",
+      "title": "\"Grant\" subscription request",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Notification is sent to HIU for creation of health record Subscription is provided to the HIU for selected \"HI type\", \"type of visit\" and \"time period\"",
+      "apis": []
+    },
+    {
+      "id": "PHR_HIU_10103",
+      "anchor": "phr_hiu_10103",
+      "group": "1.1. Subscription Request",
+      "title": "\"Deny\" subscription request",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "No more notification is sent to HIU requesting health record from patient",
+      "apis": []
+    },
+    {
+      "id": "PHR_HIU_10104",
+      "anchor": "phr_hiu_10104",
+      "group": "1.1. Subscription Request",
+      "title": "\"Expired\" subscription request",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Subscription request is expired in 2 hours if no action (grant/deny) is taken by patient Subsciption is provided to HIU for set \"time period\" only",
+      "apis": []
+    },
+    {
+      "id": "PHR_HIU_10105",
+      "anchor": "phr_hiu_10105",
+      "group": "1.1. Subscription Request",
+      "title": "\"Edit\" subscription request",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "After editing active subscription request and saving changes - Subscription is provided to the HIU for selected \"HI type\", \"type of visit\" and \"time period\" only",
+      "apis": []
+    },
+    {
+      "id": "PHR_HIU_10201",
+      "anchor": "phr_hiu_10201",
+      "group": "1.2. Auto approval policy",
+      "title": "Set up auto approval policy - Enabled",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Patient do not have to manually approve consent request received from HIU for seamless patient experience Notification is sent to HIU whenever new record is created at HIP. History of all types of request received and action taken on it are seen in PHR app",
+      "apis": []
+    },
+    {
+      "id": "PHR_HIU_10202",
+      "anchor": "phr_hiu_10202",
+      "group": "1.2. Auto approval policy",
+      "title": "Didn't set up auto approval policy",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Consent request is received in PHR app, whenever new record is created in HIP and record can be shared only if patient grant consent request",
+      "apis": []
+    },
+    {
+      "id": "PHR_HIU_10203",
+      "anchor": "phr_hiu_10203",
+      "group": "1.2. Auto approval policy",
+      "title": "\"Disabled\" auto approval policy",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Auto approval of consent request should stop immediately and Consent request is received in PHR app, whenever new record is created in HIP. Record can be shared only if patient grant consent request",
+      "apis": []
+    },
+    {
+      "id": "PHR_HIU_10301",
+      "anchor": "phr_hiu_10301",
+      "group": "1.3. Consent Request",
+      "title": "Notification is sent to hospital HIU",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Notification is sent to Hospital HIU whenever new record is created at HIP.",
+      "apis": []
+    },
+    {
+      "id": "PHR_HIU_10302",
+      "anchor": "phr_hiu_10302",
+      "group": "1.3. Consent Request",
+      "title": "Notification is sent to PHR app",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Notification is sent to PHR app after HIU creates consent request",
+      "apis": []
+    },
+    {
+      "id": "PHR_HIU_10401",
+      "anchor": "phr_hiu_10401",
+      "group": "1.4. Types of Request (Approved / Denied / Expired / Revoked)",
+      "title": "Approved: HIU should be able to view the health data of a APPROVED consent request",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "HIU can fetch and view health data for the approved/granted consent request HIU can fetch and view health data for the approved/granted consent request",
+      "apis": []
+    },
+    {
+      "id": "PHR_HIU_10402",
+      "anchor": "phr_hiu_10402",
+      "group": "1.4. Types of Request (Approved / Denied / Expired / Revoked)",
+      "title": "Denied: HIU should not be able to view the health data of a DENIED consent request",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "HIU cannot fetch health data for the approved consent request",
+      "apis": []
+    },
+    {
+      "id": "PHR_HIU_10403",
+      "anchor": "phr_hiu_10403",
+      "group": "1.4. Types of Request (Approved / Denied / Expired / Revoked)",
+      "title": "Expired : HIU should not be able to view the health data of a EXPIRED consent request",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "HIU cannot fetch health data for the Expired/not acted upon consent requests HIU cannot fetch health data for the Expired/not acted upon consent requests",
+      "apis": []
+    },
+    {
+      "id": "PHR_HIU_10404",
+      "anchor": "phr_hiu_10404",
+      "group": "1.4. Types of Request (Approved / Denied / Expired / Revoked)",
+      "title": "Revoked: HIU should not be able to view the health data of a REVOKED consent request",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "HIU cannot fetch health data for the revoked consent request",
+      "apis": []
+    },
+    {
+      "id": "PHR_HIU_10501",
+      "anchor": "phr_hiu_10501",
+      "group": "1.5. Fetching the consent artefact by the HIU",
+      "title": "Fetching the consent artefact by the HIU",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Correct health record should be seen against each HIP",
+      "apis": []
+    }
+  ]
+}

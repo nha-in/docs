@@ -1,0 +1,1118 @@
+{
+  "module": "p1",
+  "generated": "scripts/build-test-cases.py from NHA's workbook. Fix the sheet or the script, never this file.",
+  "page": "site/docs/hiecm/v3/resources/test-cases/phr.mdx",
+  "workbooks": [
+    "catalogue/hiecm/openapi/.raw/nha-2026-10-01-phr-tests/PHR_MOBILE_APP_TEST_CASES.xlsx"
+  ],
+  "specs": [
+    "p1"
+  ],
+  "note": "NHA's PHR sheet has no APIs column, so no case names its calls. Read the P specification and journeys for the calls a case's steps imply.",
+  "cases": [
+    {
+      "id": "PHR_ADDR_101",
+      "anchor": "phr_addr_101",
+      "group": "1. ABHA address creation with mobile number flow (Self Declared Flow - without KYC)",
+      "title": "Registration Flow : ABHA address creation with mobile number flow (Self Declared Flow - without KYC)",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_102",
+      "anchor": "phr_addr_102",
+      "group": "1. ABHA address creation with mobile number flow (Self Declared Flow - without KYC)",
+      "title": "Registration Flow : ABHA address creation with mobile number flow (Self Declared Flow - without KYC)",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_103",
+      "anchor": "phr_addr_103",
+      "group": "1. ABHA address creation with mobile number flow (Self Declared Flow - without KYC)",
+      "title": "Registration Flow : ABHA address creation with mobile number flow (Self Declared Flow - without KYC)",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_104",
+      "anchor": "phr_addr_104",
+      "group": "1. ABHA address creation with mobile number flow (Self Declared Flow - without KYC)",
+      "title": "Registration Flow : ABHA address creation with mobile number flow (Self Declared Flow - without KYC)",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Mobile OTP shall receive on the entered mobile number to vaidate mobile no for creating ABHA address",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_105",
+      "anchor": "phr_addr_105",
+      "group": "1. ABHA address creation with mobile number flow (Self Declared Flow - without KYC)",
+      "title": "Registration Flow : ABHA address creation with mobile number flow (Self Declared Flow - without KYC)",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Resend mobile OTP after 60 seconds, if first OTP is not yet received in an individual's mobile number. Vaidate mobile no to create ABHA address",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_106",
+      "anchor": "phr_addr_106",
+      "group": "1. ABHA address creation with mobile number flow (Self Declared Flow - without KYC)",
+      "title": "Registration Flow : ABHA address creation with mobile number flow (Self Declared Flow - without KYC)",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "PHR app should search based on mobile number linked with ABHA address and display all such ABHA addresses to select any one and login",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_107",
+      "anchor": "phr_addr_107",
+      "group": "1. ABHA address creation with mobile number flow (Self Declared Flow - without KYC)",
+      "title": "Registration Flow : ABHA address creation with mobile number flow (Self Declared Flow - without KYC)",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_108",
+      "anchor": "phr_addr_108",
+      "group": "1. ABHA address creation with mobile number flow (Self Declared Flow - without KYC)",
+      "title": "Registration Flow : ABHA address creation with mobile number flow (Self Declared Flow - without KYC)",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Display both mandatory and optional profile details to create self-declared ABHA address",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_109",
+      "anchor": "phr_addr_109",
+      "group": "1. ABHA address creation with mobile number flow (Self Declared Flow - without KYC)",
+      "title": "Registration Flow : ABHA address creation with mobile number flow (Self Declared Flow - without KYC)",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "When an individual tries to create ABHA address for first time. Post clicking on checkbox beside user information agreement, an individual is able to register successfully.",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_110",
+      "anchor": "phr_addr_110",
+      "group": "1. ABHA address creation with mobile number flow (Self Declared Flow - without KYC)",
+      "title": "Registration Flow : ABHA address creation with mobile number flow (Self Declared Flow - without KYC)",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Same entered ABHA address is successfully created to login in PHR app.",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_111",
+      "anchor": "phr_addr_111",
+      "group": "1. ABHA address creation with mobile number flow (Self Declared Flow - without KYC)",
+      "title": "Registration Flow : ABHA address creation with mobile number flow (Self Declared Flow - without KYC)",
+      "marking": {
+        "government": "optional",
+        "private": "optional"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "ABHA addresses are suggested as per an individual's name, username of e-mail ID",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_112",
+      "anchor": "phr_addr_112",
+      "group": "1. ABHA address creation with mobile number flow (Self Declared Flow - without KYC)",
+      "title": "Registration Flow : ABHA address creation with mobile number flow (Self Declared Flow - without KYC)",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Password is successfully created to login in PHR app using login via ABHA address flow",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_113",
+      "anchor": "phr_addr_113",
+      "group": "1. ABHA address creation with mobile number flow (Self Declared Flow - without KYC)",
+      "title": "Registration Flow : ABHA address creation with mobile number flow (Self Declared Flow - without KYC)",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "An individual should able to login with updated ABHA address and password.",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_114",
+      "anchor": "phr_addr_114",
+      "group": "1. ABHA address creation with mobile number flow (Self Declared Flow - without KYC)",
+      "title": "Registration Flow : ABHA address creation with mobile number flow (Self Declared Flow - without KYC)",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Post agreeing to \"Personal Data Processing Consent Form\", an individual can login.",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_201",
+      "anchor": "phr_addr_201",
+      "group": "2. Registration Flow : ABHA address creation with ABHA number flow",
+      "title": "Registration Flow : ABHA address creation with ABHA number flow (KYC verified flow)",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_202",
+      "anchor": "phr_addr_202",
+      "group": "2. Registration Flow : ABHA address creation with ABHA number flow",
+      "title": "Registration Flow : ABHA address creation with ABHA number flow (KYC verified flow)",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_203",
+      "anchor": "phr_addr_203",
+      "group": "2. Registration Flow : ABHA address creation with ABHA number flow",
+      "title": "Registration Flow : ABHA address creation with ABHA number flow (KYC verified flow)",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_204",
+      "anchor": "phr_addr_204",
+      "group": "2. Registration Flow : ABHA address creation with ABHA number flow",
+      "title": "Registration Flow : ABHA address creation with ABHA number flow (KYC verified flow)",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Aadhaar OTP/mobile OTP shall receive on the mobile no linked with entered ABHA no. Vaidate ABHA no for creating ABHA address",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_205",
+      "anchor": "phr_addr_205",
+      "group": "2. Registration Flow : ABHA address creation with ABHA number flow",
+      "title": "Registration Flow : ABHA address creation with ABHA number flow (KYC verified flow)",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Resend Aadhaar OTP / mobile OTP after 60 seconds, if first OTP is not yet received in an individual's mobile no. Vaidate ABHA no to create ABHA address",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_206",
+      "anchor": "phr_addr_206",
+      "group": "2. Registration Flow : ABHA address creation with ABHA number flow",
+      "title": "Registration Flow : ABHA address creation with ABHA number flow (KYC verified flow)",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "PHR app should search based on ABHA no linked with ABHA address and display all such ABHA addresses to select any one in which an individua wishes to login",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_207",
+      "anchor": "phr_addr_207",
+      "group": "2. Registration Flow : ABHA address creation with ABHA number flow",
+      "title": "Registration Flow : ABHA address creation with ABHA number flow (KYC verified flow)",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_208",
+      "anchor": "phr_addr_208",
+      "group": "2. Registration Flow : ABHA address creation with ABHA number flow",
+      "title": "Registration Flow : ABHA address creation with ABHA number flow (KYC verified flow)",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Display both mandatory and optional profile details to create KYC verified ABHA address",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_209",
+      "anchor": "phr_addr_209",
+      "group": "2. Registration Flow : ABHA address creation with ABHA number flow",
+      "title": "Registration Flow : ABHA address creation with ABHA number flow (KYC verified flow)",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "When an individual tries to lcreate ABHA address for first time. Post clicking on checkbox beside user information agreement, an individual is able to successfully register in PHR app.",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_210",
+      "anchor": "phr_addr_210",
+      "group": "2. Registration Flow : ABHA address creation with ABHA number flow",
+      "title": "Registration Flow : ABHA address creation with ABHA number flow (KYC verified flow)",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Same entered ABHA address is successfully created to login in PHR app.",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_211",
+      "anchor": "phr_addr_211",
+      "group": "2. Registration Flow : ABHA address creation with ABHA number flow",
+      "title": "Registration Flow : ABHA address creation with ABHA number flow (KYC verified flow)",
+      "marking": {
+        "government": "optional",
+        "private": "optional"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "ABHA addresses are suggested as per an individual's name & username of e-mail ID",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_212",
+      "anchor": "phr_addr_212",
+      "group": "2. Registration Flow : ABHA address creation with ABHA number flow",
+      "title": "Registration Flow : ABHA address creation with ABHA number flow (KYC verified flow)",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Password is successfully created to login in PHR app using login via ABHA address flow",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_213",
+      "anchor": "phr_addr_213",
+      "group": "2. Registration Flow : ABHA address creation with ABHA number flow",
+      "title": "Registration Flow : ABHA address creation with ABHA number flow (KYC verified flow)",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "An individual should able to login with updated ABHA address and password.",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_214",
+      "anchor": "phr_addr_214",
+      "group": "2. Registration Flow : ABHA address creation with ABHA number flow",
+      "title": "Registration Flow : ABHA address creation with ABHA number flow (KYC verified flow)",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Post agreeing to \"Personal Data Processing Consent Form\", an individual can login.",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_301",
+      "anchor": "phr_addr_301",
+      "group": "3. ABHA number creation with KYC",
+      "title": "ABHA number creation with KYC such as Aadhaar, DL, etc. Suppose an individual is creating ABHA number using Aadhaar as KYC",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_302",
+      "anchor": "phr_addr_302",
+      "group": "3. ABHA number creation with KYC",
+      "title": "PHR_ADDR_302",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_303",
+      "anchor": "phr_addr_303",
+      "group": "3. ABHA number creation with KYC",
+      "title": "PHR_ADDR_303",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_304",
+      "anchor": "phr_addr_304",
+      "group": "3. ABHA number creation with KYC",
+      "title": "PHR_ADDR_304",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Aadhaar no is successfully validated using Aadhaar OTP",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_305",
+      "anchor": "phr_addr_305",
+      "group": "3. ABHA number creation with KYC",
+      "title": "PHR_ADDR_305",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Resend Aadhaar OTP after 60 seconds, if first OTP is not yet received in an individual's mobile no linked with Aadhaar. Vaidate ABHA no to create ABHA address",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_306",
+      "anchor": "phr_addr_306",
+      "group": "3. ABHA number creation with KYC",
+      "title": "PHR_ADDR_306",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_307",
+      "anchor": "phr_addr_307",
+      "group": "3. ABHA number creation with KYC",
+      "title": "PHR_ADDR_307",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_308",
+      "anchor": "phr_addr_308",
+      "group": "3. ABHA number creation with KYC",
+      "title": "PHR_ADDR_308",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "ABHA number is created using Aadhaar demographic details as KYC",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_309",
+      "anchor": "phr_addr_309",
+      "group": "3. ABHA number creation with KYC",
+      "title": "Second Flow Another Mobile no",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_310",
+      "anchor": "phr_addr_310",
+      "group": "3. ABHA number creation with KYC",
+      "title": "PHR_ADDR_310",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_311",
+      "anchor": "phr_addr_311",
+      "group": "3. ABHA number creation with KYC",
+      "title": "PHR_ADDR_311",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_312",
+      "anchor": "phr_addr_312",
+      "group": "3. ABHA number creation with KYC",
+      "title": "PHR_ADDR_312",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_313",
+      "anchor": "phr_addr_313",
+      "group": "3. ABHA number creation with KYC",
+      "title": "PHR_ADDR_313",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_314",
+      "anchor": "phr_addr_314",
+      "group": "3. ABHA number creation with KYC",
+      "title": "PHR_ADDR_314",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Same entered ABHA address is successfully created to login in PHR app.",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_315",
+      "anchor": "phr_addr_315",
+      "group": "3. ABHA number creation with KYC",
+      "title": "PHR_ADDR_315",
+      "marking": {
+        "government": "optional",
+        "private": "optional"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "ABHA addresses are suggested as per an individual's name & username of e-mail ID",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_316",
+      "anchor": "phr_addr_316",
+      "group": "3. ABHA number creation with KYC",
+      "title": "PHR_ADDR_316",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "ABHA number is created using Aadhaar demographic details as KYC",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_402",
+      "anchor": "phr_addr_402",
+      "group": "4.1. Login with mobile number flow",
+      "title": "Login with mobile number flow",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_403",
+      "anchor": "phr_addr_403",
+      "group": "4.1. Login with mobile number flow",
+      "title": "Login with mobile number flow",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "An individual shall validate entered mobile number by entering mobile OTP. Vaidate mobile no to login in PHR app",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_404",
+      "anchor": "phr_addr_404",
+      "group": "4.1. Login with mobile number flow",
+      "title": "Login with mobile number flow",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Resend mobile OTP after 60 seconds, if first mobile OTP is not yet received to an individual's mobile.Vaidate mobile no to login in PHR app",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_405",
+      "anchor": "phr_addr_405",
+      "group": "4.1. Login with mobile number flow",
+      "title": "Login with mobile number flow",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "PHR app should search based on mobile number linked with ABHA address and display all such ABHA addresses to select any one and login",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_501",
+      "anchor": "phr_addr_501",
+      "group": "5. Login with e-mail ID flow (Optional )",
+      "title": "Login with e-mail ID flow",
+      "marking": {
+        "government": "optional",
+        "private": "optional"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "An individual shall validate entered e-mail ID by entering e-mail OTP. Vaidate e-mail ID to login in PHR app",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_502",
+      "anchor": "phr_addr_502",
+      "group": "5. Login with e-mail ID flow (Optional )",
+      "title": "Login with e-mail ID flow",
+      "marking": {
+        "government": "optional",
+        "private": "optional"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Resend e-mail OTP after 60 seconds, if first e-mail OTP is not yet received to an individual's e-mail ID.Vaidate e-mail ID to login in PHR app",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_503",
+      "anchor": "phr_addr_503",
+      "group": "5. Login with e-mail ID flow (Optional )",
+      "title": "Login with e-mail ID flow",
+      "marking": {
+        "government": "optional",
+        "private": "optional"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "PHR app should search based on e-mail ID linked with ABHA address and display all such ABHA addresses to select any one and login",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_601",
+      "anchor": "phr_addr_601",
+      "group": "6. Login with easy to remember ABHA address flow",
+      "title": "Login with easy to remember ABHA address (name@abdm) flow",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_602",
+      "anchor": "phr_addr_602",
+      "group": "6. Login with easy to remember ABHA address flow",
+      "title": "Login with easy to remember ABHA address (name@abdm) flow",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Post validation of ABHA address via password, an individual is able to successfully login",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_603",
+      "anchor": "phr_addr_603",
+      "group": "6. Login with easy to remember ABHA address flow",
+      "title": "Login with easy to remember ABHA address (name@abdm) flow",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Post validation of ABHA address via OTP, an individual is able to successfully login",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_604",
+      "anchor": "phr_addr_604",
+      "group": "6. Login with easy to remember ABHA address flow",
+      "title": "Login with easy to remember ABHA address (name@abdm) flow",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Resend Aadhaar OTP / mobile OTP/e-mail OTP after 60 seconds, if first OTP is not yet received.Vaidate ABHA address via Aadhaar OTP / mobile OTP/e-mail OTP to login in PHR app",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_701",
+      "anchor": "phr_addr_701",
+      "group": "7. Login with default ABHA address flow",
+      "title": "Login with default ABHA address (14-digit@abdm) flow",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_702",
+      "anchor": "phr_addr_702",
+      "group": "7. Login with default ABHA address flow",
+      "title": "Login with default ABHA address (14-digit@abdm) flow",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Post validation of ABHA address, an individual is able to successfully login",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_703",
+      "anchor": "phr_addr_703",
+      "group": "7. Login with default ABHA address flow",
+      "title": "Login with default ABHA address (14-digit@abdm) flow",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Resend Aadhaar OTP / mobile OTP after 60 seconds, if first OTP is not yet received.Vaidate ABHA address via Aadhaar OTP / mobile OTP to login in PHR app",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_801",
+      "anchor": "phr_addr_801",
+      "group": "8. Login with ABHA number flow",
+      "title": "Login with ABHA number flow",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_802",
+      "anchor": "phr_addr_802",
+      "group": "8. Login with ABHA number flow",
+      "title": "Login with ABHA number flow",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Post validation of ABHA number, an individual is able to successfully login",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_803",
+      "anchor": "phr_addr_803",
+      "group": "8. Login with ABHA number flow",
+      "title": "Login with ABHA number flow",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Resend Aadhaar OTP / mobile OTP after 60 seconds, if first OTP is not yet received.Vaidate ABHA number via Aadhaar OTP / mobile OTP to login in PHR app",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_901",
+      "anchor": "phr_addr_901",
+      "group": "9. Login with Aadhaar number flow",
+      "title": "Login with Aadhaar number flow",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_902",
+      "anchor": "phr_addr_902",
+      "group": "9. Login with Aadhaar number flow",
+      "title": "Login with Aadhaar number flow",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Post validation of Aadhaar number, an individual is able to successfully login",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_903",
+      "anchor": "phr_addr_903",
+      "group": "9. Login with Aadhaar number flow",
+      "title": "Login with Aadhaar number flow",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Resend Aadhaar OTP / mobile OTP after 60 seconds, if first OTP is not yet received.Vaidate ABHA number via Aadhaar OTP / mobile OTP to login in PHR app",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_1001",
+      "anchor": "phr_addr_1001",
+      "group": "10. Reset Password",
+      "title": "Reset Password",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Post login in PHR app with any of the modes. An individual can reset the password.",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_1002",
+      "anchor": "phr_addr_1002",
+      "group": "10. Reset Password",
+      "title": "Reset Password",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_1003",
+      "anchor": "phr_addr_1003",
+      "group": "10. Reset Password",
+      "title": "Reset Password",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Password is created successfully as per password policy.",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_1004",
+      "anchor": "phr_addr_1004",
+      "group": "10. Reset Password",
+      "title": "Reset Password",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Confirm the same password by re-entering it again to create the password",
+      "apis": []
+    },
+    {
+      "id": "PHR_ADDR_1005",
+      "anchor": "phr_addr_1005",
+      "group": "10. Reset Password",
+      "title": "Reset Password",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Post creation of new password, password shall change and an individual can login with new password.",
+      "apis": []
+    }
+  ]
+}

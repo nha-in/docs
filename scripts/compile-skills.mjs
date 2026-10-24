@@ -106,6 +106,10 @@ function buildSkill(module, hasErrorsPage) {
     '## How this skill runs', '',
     'Every journey below is an OODA loop, not a recipe: observe the actual state (last response, last error), orient against the step matched below, decide the cheapest next action, act, and return to observe. A step is done only when its exit condition is observed against the sandbox, never because it "should have worked."', '',
     'Loop limit: 8 passes per step. Hitting the limit is an escalation: state what was observed, what was tried, and which operation page to read, then ask one question.', '',
+    // The case to API matrix build-test-cases.py writes from NHA's workbook ships beside this loop.
+    ...(existsSync(join(root, 'catalogue', 'hiecm', 'tests', 'matrix', `${module}.json`))
+      ? ['Before building, read `references/test-matrix.md` in this skill: build every journey that a case mandatory for your entity type calls, and build each mandatory case\'s Expected Result into the screen, not only its calls. The test run uses it to know what each case exercises.', '']
+      : []),
     '## Journeys', '', sections.join('\n\n'), '',
     '## Where the detail is', '', `- Every operation, with its body fields and responses: /docs/hiecm/v3/api/${module}`, ...(hasErrorsPage ? [`- Error codes: /docs/hiecm/v3/api/${module}/errors`] : []), '',
   ].join('\n');

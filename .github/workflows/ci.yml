@@ -62,6 +62,9 @@ jobs:
       # Every NHA UI test case maps to one functionality, with journeys and
       # operations that exist (catalogue/hiecm/tests/<module>.yaml).
       - run: npm run check:test-mapping
+      # Every case on a test case page is in its module's case to API matrix,
+      # with operations and journeys that exist, and the matrix is current.
+      - run: npm run check:test-matrix
       - run: npm run lint:questions
 
   lint-sources:

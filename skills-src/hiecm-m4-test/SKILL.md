@@ -6,6 +6,8 @@ description: "Use when walking the ABDM M4 functional test cases (Health Facilit
 
 Walks the ABDM M4 functional test cases, facility and professional registration, against the system you built and the sandbox. Each case ends in one of five recorded outcomes, never in an opinion.
 
+Before building, read `references/test-matrix.md` in this skill: build every journey that a case mandatory for your entity type calls, and build each mandatory case's Expected Result into the screen, not only its calls. The test run uses it to know what each case exercises.
+
 ## What this skill does
 
 - Runs every M4 test case against your system and the sandbox, one case at a time

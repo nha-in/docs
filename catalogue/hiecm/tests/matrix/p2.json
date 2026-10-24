@@ -1,0 +1,1198 @@
+{
+  "module": "p2",
+  "generated": "scripts/build-test-cases.py from NHA's workbook. Fix the sheet or the script, never this file.",
+  "page": "site/docs/hiecm/v3/resources/test-cases/phr.mdx",
+  "workbooks": [
+    "catalogue/hiecm/openapi/.raw/nha-2026-10-01-phr-tests/PHR_MOBILE_APP_TEST_CASES.xlsx"
+  ],
+  "specs": [
+    "p2"
+  ],
+  "note": "NHA's PHR sheet has no APIs column, so no case names its calls. Read the P specification and journeys for the calls a case's steps imply.",
+  "cases": [
+    {
+      "id": "PHR_APP_101",
+      "anchor": "phr_app_101",
+      "group": "1. Health and Facility records linking: User initiated linking flow (Discovery Flow) - Complete Discovery of HIP, linking, fetching and viewing of records in PHR app",
+      "title": "Link HIP",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Patient will be directed to next screen to search HIP after clicking on \"Link my Health Records\" tab / \"+\" symbol in \"Linked Facility\" tab",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_102",
+      "anchor": "phr_app_102",
+      "group": "1. Health and Facility records linking: User initiated linking flow (Discovery Flow) - Complete Discovery of HIP, linking, fetching and viewing of records in PHR app",
+      "title": "Discover HIP",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Patient should be able to search ABDM compliant facility using PHR app",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_103",
+      "anchor": "phr_app_103",
+      "group": "1. Health and Facility records linking: User initiated linking flow (Discovery Flow) - Complete Discovery of HIP, linking, fetching and viewing of records in PHR app",
+      "title": "Display of patient details",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Details of HIP should be visible once individual search for HIP",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_104",
+      "anchor": "phr_app_104",
+      "group": "1. Health and Facility records linking: User initiated linking flow (Discovery Flow) - Complete Discovery of HIP, linking, fetching and viewing of records in PHR app",
+      "title": "Fill Patient ID (Optional)",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Patient can use this in customized way as per search",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_105",
+      "anchor": "phr_app_105",
+      "group": "1. Health and Facility records linking: User initiated linking flow (Discovery Flow) - Complete Discovery of HIP, linking, fetching and viewing of records in PHR app",
+      "title": "Matching of API specifications to link record",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Already linked care-context should not be discovered in the response. Linked care context will be discovered in \"Linked Facilty\" tab",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_106",
+      "anchor": "phr_app_106",
+      "group": "1. Health and Facility records linking: User initiated linking flow (Discovery Flow) - Complete Discovery of HIP, linking, fetching and viewing of records in PHR app",
+      "title": "Link records",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Display of all correct details of records for the purpose of linking Only the selected record is linked and not selected one is not linked",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_107",
+      "anchor": "phr_app_107",
+      "group": "1. Health and Facility records linking: User initiated linking flow (Discovery Flow) - Complete Discovery of HIP, linking, fetching and viewing of records in PHR app",
+      "title": "Fill mobile OTP received to complete linking of record .",
+      "marking": {
+        "government": "optional",
+        "private": "optional"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "1. OTP will be received when individual clicks on fetch records, after matching of API specifications. 2. Specific error message is displayed as mentioned in test summary / steps",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_108",
+      "anchor": "phr_app_108",
+      "group": "1. Health and Facility records linking: User initiated linking flow (Discovery Flow) - Complete Discovery of HIP, linking, fetching and viewing of records in PHR app",
+      "title": "Linked facility will be visible in \"Linked Facility\" tab. Click on \"Pull Records\" button to fetch and view records.",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Health-records should be fetched in the app. Health-records should be fetched in the app.",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_109",
+      "anchor": "phr_app_109",
+      "group": "1. Health and Facility records linking: User initiated linking flow (Discovery Flow) - Complete Discovery of HIP, linking, fetching and viewing of records in PHR app",
+      "title": "Display message regarding fetching of records may take time in \"My Records\" tab",
+      "marking": {
+        "government": "optional",
+        "private": "optional"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "1. Display message when an individual hover over I button 2. Status message should be displayed in case records takes time to fetch",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_110",
+      "anchor": "phr_app_110",
+      "group": "1. Health and Facility records linking: User initiated linking flow (Discovery Flow) - Complete Discovery of HIP, linking, fetching and viewing of records in PHR app",
+      "title": "Records will be displayed in \"My Records\" tab. Click on the attached report to view the health record.",
+      "marking": {
+        "government": "optional",
+        "private": "optional"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Health record details should be visible",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_111",
+      "anchor": "phr_app_111",
+      "group": "1. Health and Facility records linking: User initiated linking flow (Discovery Flow) - Complete Discovery of HIP, linking, fetching and viewing of records in PHR app",
+      "title": "View record in mobile device",
+      "marking": {
+        "government": "optional",
+        "private": "optional"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Records should open",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_201",
+      "anchor": "phr_app_201",
+      "group": "2. Health Programme records linking, fetching and viewing of records: User initiated linking (Discovery Flow)",
+      "title": "Link Programme",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Patient will be directed to next search screen",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_202",
+      "anchor": "phr_app_202",
+      "group": "2. Health Programme records linking, fetching and viewing of records: User initiated linking (Discovery Flow)",
+      "title": "Select Health Programme",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Select integrated government health programme with the PHR app.",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_203",
+      "anchor": "phr_app_203",
+      "group": "2. Health Programme records linking, fetching and viewing of records: User initiated linking (Discovery Flow)",
+      "title": "Display of patient details",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Patient details should be visible after selecting government health programme in PHR app",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_204",
+      "anchor": "phr_app_204",
+      "group": "2. Health Programme records linking, fetching and viewing of records: User initiated linking (Discovery Flow)",
+      "title": "Fill PM-JAY ID (Optional)",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Patient can use this in customized way as per search",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_205",
+      "anchor": "phr_app_205",
+      "group": "2. Health Programme records linking, fetching and viewing of records: User initiated linking (Discovery Flow)",
+      "title": "Matching of API specifications",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Already linked care-context should not be discovered in the response Linked care context will be discovered in \"Linked Facilty\" tab",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_206",
+      "anchor": "phr_app_206",
+      "group": "2. Health Programme records linking, fetching and viewing of records: User initiated linking (Discovery Flow)",
+      "title": "Link records",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Display of all correct details of records for the purpose of linking Only the selected record is linked and not selected one is not linked",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_207",
+      "anchor": "phr_app_207",
+      "group": "2. Health Programme records linking, fetching and viewing of records: User initiated linking (Discovery Flow)",
+      "title": "Fill mobile OTP received to complete linking of record .",
+      "marking": {
+        "government": "optional",
+        "private": "optional"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "1. OTP will be received when individual clicks on fetch records, after matching of API specifications. 2. Specific error message is displayed as mentioned in test summary / steps 1. OTP will be received when individual clicks on fetch records, after matching of API specifications. 2. Specific error message is displayed as mentioned in test summary / steps 1. OTP will be received when individual clicks on fetch records, after matching of API specifications. 2. Specific error message is displayed as mentioned in test summary / steps",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_208",
+      "anchor": "phr_app_208",
+      "group": "2. Health Programme records linking, fetching and viewing of records: User initiated linking (Discovery Flow)",
+      "title": "Linked programme will be visible in \"Linked Facility\" tab. Click on \"Pull Records\" button to fetch and view records",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Health-records should be fetched in the PHR mobile app. Health-records should be fetched in the PHR mobile app.",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_209",
+      "anchor": "phr_app_209",
+      "group": "2. Health Programme records linking, fetching and viewing of records: User initiated linking (Discovery Flow)",
+      "title": "Display message regarding fetching of records may take time in \"My Records\" tab",
+      "marking": {
+        "government": "optional",
+        "private": "optional"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "1. Display message when an individual hover over I button 2. Status message should be displayed in case records takes time to fetch",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_210",
+      "anchor": "phr_app_210",
+      "group": "2. Health Programme records linking, fetching and viewing of records: User initiated linking (Discovery Flow)",
+      "title": "Records will be displayed in \"My Records\" tab. Click on the attached report to view the health record.",
+      "marking": {
+        "government": "optional",
+        "private": "optional"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Health record details should be visible",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_211",
+      "anchor": "phr_app_211",
+      "group": "2. Health Programme records linking, fetching and viewing of records: User initiated linking (Discovery Flow)",
+      "title": "View record in mobile device",
+      "marking": {
+        "government": "optional",
+        "private": "optional"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Records should open",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_300",
+      "anchor": "phr_app_300",
+      "group": "HIP initiated linking flow - When health records are linked with ABHA address at the health facility / health programme.",
+      "title": "Post linking of health records with ABHA address by the HIP with patient consent, the individual can view the health records on the PHR mobile app",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Health records should be linked, fetched and viewed in PHR app",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_400",
+      "anchor": "phr_app_400",
+      "group": "Sharing of health records with patient's consent to the HIU",
+      "title": "HIU should be able to view the health data of a APPROVED consent request",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "HIU individual should be able to view the health data of selected HI type from PHR app or HIU application. HIU individual should be able to view the health data of selected HI type from PHR app or HIU application. HIU individual should be able to view the health data of selected HI type from PHR app or HIU application. HIU individual should be able to view the health data of selected HI type from PHR app or HIU application. HIU individual should be able to view the health data of selected HI type from PHR app or HIU application. HIU individual should be able to view the health data of selected HI type from PHR app or HIU application. HIU individual should be able to view the health data of selected HI type from PHR app or HIU application. HIU individual should be able to view the health data of selected HI type from PHR app or HIU application. HIU individual should be able to view the health data of selected HI type from PHR app or HIU application. HIU individual should be able to view the health data of selected HI type from PHR app or HIU application. HIU individual should be able to view the health data of selected HI type from PHR app or HIU application. HIU individual should be able to view the health data of selected HI type from PHR app or HIU application. HIU individual should be able to view the health data of selected HI type from PHR app or HIU application. HIU individual should be able to view the health data of selected HI type from PHR app or HIU application. HIU individual should be able to view the health data of selected HI type from PHR app or HIU application. https://www.nrces.in/ndhm/fhir/r4/StructureDefinition-InvoiceRecord.html",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_50101",
+      "anchor": "phr_app_50101",
+      "group": "5.1. Scan QR Code using PHR app for sharing patient profile to HIP",
+      "title": "HIP scans the QR code from patient's PHR app",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "HIP/HIU should be able to scan the QR code within 10 seconds. Thereafter patient can see profile details, consent language and then decide to either share or cancel the profile details.",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_50102",
+      "anchor": "phr_app_50102",
+      "group": "5.1. Scan QR Code using PHR app for sharing patient profile to HIP",
+      "title": "HIP scans the QR code from patient's PHR app",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Patient profile details in PHR app are shared successfully with the HMIS of HIP/HIU with patient's consent.",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_50103",
+      "anchor": "phr_app_50103",
+      "group": "5.1. Scan QR Code using PHR app for sharing patient profile to HIP",
+      "title": "Individual scans the HIP QR code at the facilty registration counter using PHR app",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Consent is received on PHR app to share the details",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_50201",
+      "anchor": "phr_app_50201",
+      "group": "5.2. Scan QR Code using phone camera or any other 3rd party QR scanner for sharing patient profile to HIP",
+      "title": "Scan QR Code using phone camera or any other 3rd party QR scanner Use Case 1: ABDM compliant PHR application is already installed in user's phone",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Once the user selected the PHR application from the pop-up list, the PHR app will launch.",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_50202",
+      "anchor": "phr_app_50202",
+      "group": "5.2. Scan QR Code using phone camera or any other 3rd party QR scanner for sharing patient profile to HIP",
+      "title": "Scan QR Code using phone camera or any other 3rd party QR scanner Use Case 1: ABDM compliant PHR application is already installed in user's phone",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Post selecting PHR app, user will be redirected to the login page.",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_50203",
+      "anchor": "phr_app_50203",
+      "group": "5.2. Scan QR Code using phone camera or any other 3rd party QR scanner for sharing patient profile to HIP",
+      "title": "Scan QR Code using phone camera or any other 3rd party QR scanner Use Case 1: ABDM compliant PHR application is already installed in user's phone",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "After the successful login, user will be redirected to the share profile page.",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_50204",
+      "anchor": "phr_app_50204",
+      "group": "5.2. Scan QR Code using phone camera or any other 3rd party QR scanner for sharing patient profile to HIP",
+      "title": "Scan QR Code using phone camera or any other 3rd party QR scanner Use Case 1: ABDM compliant PHR application is already installed in user's phone",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Post clicking on \"Share\" button, user profile is successfully shared with the HIP and if user click on \"Cancel\" button then user profile is not shared with the HIP.",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_50205",
+      "anchor": "phr_app_50205",
+      "group": "5.2. Scan QR Code using phone camera or any other 3rd party QR scanner for sharing patient profile to HIP",
+      "title": "Scan QR Code using phone camera or any other 3rd party QR scanner Use Case 1: ABDM compliant PHR application is already installed in user's phone",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Once the user selected application launches,",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_50206",
+      "anchor": "phr_app_50206",
+      "group": "5.2. Scan QR Code using phone camera or any other 3rd party QR scanner for sharing patient profile to HIP",
+      "title": "Scan QR Code using phone camera or any other 3rd party QR scanner Use Case 1: ABDM compliant PHR application is already installed in user's phone",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "User will be redirected to the share profile page.",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_50207",
+      "anchor": "phr_app_50207",
+      "group": "5.2. Scan QR Code using phone camera or any other 3rd party QR scanner for sharing patient profile to HIP",
+      "title": "Scan QR Code using phone camera or any other 3rd party QR scanner Use Case 1: ABDM compliant PHR application is already installed in user's phone",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Post clicking on \"Share\" button, user profile is successfully shared with the HIP and if user click on \"Cancel\" button then user profile is not shared with the HIP.",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_50208",
+      "anchor": "phr_app_50208",
+      "group": "5.2. Scan QR Code using phone camera or any other 3rd party QR scanner for sharing patient profile to HIP",
+      "title": "Scan QR Code using phone camera or any other 3rd party QR scanner. Use Case 2: ABDM compliant PHR application is not installed in user's phone.",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "After scanning the QR code, the user sees a browser from where he/she would be redirected to a User Initiated Deep link web page.",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_50209",
+      "anchor": "phr_app_50209",
+      "group": "5.2. Scan QR Code using phone camera or any other 3rd party QR scanner for sharing patient profile to HIP",
+      "title": "Scan QR Code using phone camera or any other 3rd party QR scanner. Use Case 2: ABDM compliant PHR application is not installed in user's phone.",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "This webpage will show the list of all the ABDM compliant PHR applications, from where the user has an option to select any application of his choice. User will be redirected to the play store / app store to install the PHR app",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_50210",
+      "anchor": "phr_app_50210",
+      "group": "5.2. Scan QR Code using phone camera or any other 3rd party QR scanner for sharing patient profile to HIP",
+      "title": "Scan QR Code using phone camera or any other 3rd party QR scanner. Use Case 2: ABDM compliant PHR application is not installed in user's phone.",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "User is able to create ABHA address and Password. Then redirect to share profile page.",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_50211",
+      "anchor": "phr_app_50211",
+      "group": "5.2. Scan QR Code using phone camera or any other 3rd party QR scanner for sharing patient profile to HIP",
+      "title": "Scan QR Code using phone camera or any other 3rd party QR scanner. Use Case 2: ABDM compliant PHR application is not installed in user's phone.",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Post clicking on \"Share\" button, user profile is successfully shared with the HIP and if user click on \"Cancel\" button then user profile is not shared with the HIP.",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_600",
+      "anchor": "phr_app_600",
+      "group": "Display Profile Details with status as KYC Verified / Self-Declared",
+      "title": "Showing individual's profile details in the PHR app",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Patient profile details are displayed in the PHR app with their status such as KYC verified and Self-Declared.",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_700",
+      "anchor": "phr_app_700",
+      "group": "Download ABHA address card in the PDF format",
+      "title": "Download ABHA address card",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Individual is able to share / download the ABHA address card in device and profile details are displayed in it. ABHA no, ABHA address and mobile no",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_901",
+      "anchor": "phr_app_901",
+      "group": "9. \"Requests\" Section within \"Consents\" tab of PHR app:",
+      "title": "\"Requests\" section in the \"Consents\" tab of PHR app",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "All request on which action is not yet taken by patient are displayed in \"Requested\". Patient health record should not be shared with HIU if patient has not acted on consent request received.",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_902",
+      "anchor": "phr_app_902",
+      "group": "9. \"Requests\" Section within \"Consents\" tab of PHR app:",
+      "title": "\"Requests\" section in the \"Consents\" tab of PHR app",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "All request which are denied by patient are displayed in \"Denied\". Patient health record should not be shared with HIU if consent is denied by patient",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_903",
+      "anchor": "phr_app_903",
+      "group": "9. \"Requests\" Section within \"Consents\" tab of PHR app:",
+      "title": "\"Requests\" section in the \"Consents\" tab of PHR app",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "All request which are expired by individual are displayed in \"Expired\". Patient health record should not be shared with HIU if consent is expired by patient",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_1001",
+      "anchor": "phr_app_1001",
+      "group": "10. \"Approved\" Section within \"Consents\" tab of PHR app:",
+      "title": "\"Approved\" section in the \"Consents\" tab of PHR app",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "All request which are granted by patient are displayed in \"Granted\". Patient health record are successfully shared with HIU if consent is granted by patient",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_1002",
+      "anchor": "phr_app_1002",
+      "group": "10. \"Approved\" Section within \"Consents\" tab of PHR app:",
+      "title": "\"Approved\" section in the \"Consents\" tab of PHR app",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "All request which are revoked by patient are displayed in \"Revoked\". Patient health record are successfully shared with HIU if consent is granted by patient.",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_1101",
+      "anchor": "phr_app_1101",
+      "group": "11. \"My Records\" tab : Fetching of health records into \"My Records\" tab , post linking of health records with ABHA address",
+      "title": "View patient helth records in \"My Records\" tab of PHR app",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Record details are displayed after clicking on record",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_1102",
+      "anchor": "phr_app_1102",
+      "group": "11. \"My Records\" tab : Fetching of health records into \"My Records\" tab , post linking of health records with ABHA address",
+      "title": "View patient helth records in \"My Records\" tab of PHR app",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "All details of record like HI type, Date, Time, Name of Doctor/Facilty are displayed",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_1103",
+      "anchor": "phr_app_1103",
+      "group": "11. \"My Records\" tab : Fetching of health records into \"My Records\" tab , post linking of health records with ABHA address",
+      "title": "View patient helth records in \"My Records\" tab of PHR app",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Able to view the health record",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_1201",
+      "anchor": "phr_app_1201",
+      "group": "12. \"Linked Facility\" tab: All linked providers (health locker, health facility and health programme) are listed in this tab.",
+      "title": "\"Linked Facility\" tab in PHR app",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "All linked providers are listed here.",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_1300",
+      "anchor": "phr_app_1300",
+      "group": "Edit Subscription Request/Disable auto approval request",
+      "title": "Edit active subscription request",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Changes in Active subscription requested are saved",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_1400",
+      "anchor": "phr_app_1400",
+      "group": "Edit Subscription Request/Disable auto approval request",
+      "title": "Disable auto approval requests",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Auto - approval policy can be disabled. Auto - approval policy can be disabled.",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_1501",
+      "anchor": "phr_app_1501",
+      "group": "15. Link ABHA no to the ABHA address",
+      "title": "Link ABHA no to the ABHA address",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "In case ABHA no is not linked with ABHA address - \"Link ABHA number\" option should be provided.",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_1502",
+      "anchor": "phr_app_1502",
+      "group": "15. Link ABHA no to the ABHA address",
+      "title": "Link ABHA no to the ABHA address",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Enter 14-digit ABHA no",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_1503",
+      "anchor": "phr_app_1503",
+      "group": "15. Link ABHA no to the ABHA address",
+      "title": "Link ABHA no to the ABHA address",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "ABHA number is successfully validated by aadhar OTP / mobile OTP",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_1504",
+      "anchor": "phr_app_1504",
+      "group": "15. Link ABHA no to the ABHA address",
+      "title": "Link ABHA no to the ABHA address",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Resend OTP option is working",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_1505",
+      "anchor": "phr_app_1505",
+      "group": "15. Link ABHA no to the ABHA address",
+      "title": "Link ABHA no to the ABHA address",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Post OTP validation - a) Message is displayed informing an individual that ABHA no is linked with ABHA address b) ABHA number is visible in profile / home screen c) Profile details are changed as per ABHA number. d) \"Self-Declared\" status is changed to \"KYC verified\" in profile / home screen",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_1506",
+      "anchor": "phr_app_1506",
+      "group": "15. Link ABHA no to the ABHA address",
+      "title": "Link ABHA no to the ABHA address",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Post clicking on \"Go back to home screen\" tab, an individual is able to go back to home screen",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_1701",
+      "anchor": "phr_app_1701",
+      "group": "17. Edit profile for KYC verified profile",
+      "title": "Edit profile for KYC verified profiles",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Post mobile OTP validation, mobile no is updated successfully.",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_1703",
+      "anchor": "phr_app_1703",
+      "group": "17. Edit profile for KYC verified profile",
+      "title": "Edit profile for KYC verified profiles",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Fields such as address line 1, district, state and pin-code can be updated successfully.",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_1801",
+      "anchor": "phr_app_1801",
+      "group": "18. Edit profile for Self-Declared profile",
+      "title": "Edit profile for Self-Declared profile",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Photo is updated successfully",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_1802",
+      "anchor": "phr_app_1802",
+      "group": "18. Edit profile for Self-Declared profile",
+      "title": "Edit profile for Self-Declared profile",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Name is updated successfully",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_1803",
+      "anchor": "phr_app_1803",
+      "group": "18. Edit profile for Self-Declared profile",
+      "title": "Edit profile for Self-Declared profile",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Gender is updated successfully",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_1804",
+      "anchor": "phr_app_1804",
+      "group": "18. Edit profile for Self-Declared profile",
+      "title": "Edit profile for Self-Declared profile",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "DoB is update successfully",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_1805",
+      "anchor": "phr_app_1805",
+      "group": "18. Edit profile for Self-Declared profile",
+      "title": "Edit profile for Self-Declared profile",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Post mobile OTP validation, mobile no is updated successfully.",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_1807",
+      "anchor": "phr_app_1807",
+      "group": "18. Edit profile for Self-Declared profile",
+      "title": "Edit profile for Self-Declared profile",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Fields such as address line 1, district, state and pin-code can be updated successfully.",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_1901",
+      "anchor": "phr_app_1901",
+      "group": "19. Deep Link flow",
+      "title": "Deep Link Flow: Send SMS to patient mobile to initiate record linking and fetching in PHR app",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Patient registers and create health record at facility but do not provide ABHA address for linking of records with ABHA address.",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_1902",
+      "anchor": "phr_app_1902",
+      "group": "19. Deep Link flow",
+      "title": "Deep Link Flow: Send SMS to patient mobile to initiate record linking and fetching in PHR app",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Health Facility is participating in ABDM, then it will notify ABDM when there is a new health record for this patient.",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_1903",
+      "anchor": "phr_app_1903",
+      "group": "19. Deep Link flow",
+      "title": "Deep Link Flow: Send SMS to patient mobile to initiate record linking and fetching in PHR app",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "ABDM will send SMS to patient along with the deep link, if health record is created but not linked with ABHA address",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_1904",
+      "anchor": "phr_app_1904",
+      "group": "19. Deep Link flow",
+      "title": "Deep Link Flow: Send SMS to patient mobile to initiate record linking and fetching in PHR app",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Post patient click on the deep link ABDM compliant PHR apps such as ABHA, Dreifcase, Raxa, Eka Care, Pay TM, Arogya Setu, etc. Going forward, other PHR app's will also add up to this list. User can select any one of the PHR app of his/her choice.",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_1905",
+      "anchor": "phr_app_1905",
+      "group": "19. Deep Link flow",
+      "title": "Deep Link Flow: Send SMS to patient mobile to initiate record linking and fetching in PHR app",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Install the selected PHR app successfully from the list.",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_1906",
+      "anchor": "phr_app_1906",
+      "group": "19. Deep Link flow",
+      "title": "Deep Link Flow: Send SMS to patient mobile to initiate record linking and fetching in PHR app",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "New user is able to create ABHA address and Password by any of the three registration flows (Registration via ABHA no, Registration via Mobile No, Registration via Email ID)",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_1907",
+      "anchor": "phr_app_1907",
+      "group": "19. Deep Link flow",
+      "title": "Deep Link Flow: Send SMS to patient mobile to initiate record linking and fetching in PHR app",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Launch the selected PHR app from the list",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_1908",
+      "anchor": "phr_app_1908",
+      "group": "19. Deep Link flow",
+      "title": "Deep Link Flow: Send SMS to patient mobile to initiate record linking and fetching in PHR app",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Read above point 1 - (1.1 to 1.11) and check that record is fetched and viewed using User initiated linking (Discovery Flow) Patient is able to login in PHR app by any one of the mode (Login via mobile no, login via email ID, login via ABHA number, login via ABHA address) Post successful login in PHR app, patient is able to scan the QR Code at ABDM compliant health facility. Patient profile details such as ABHA number, ABHA address, Name, Date of Birth, Gender, Mobile No and Address are successfully shared at the HMIS side By sharing the profile details, patient has given the consent for registration and linking of health records and consent statement needs to be displayed before sharing of patient profile details to the HMIS side of the hospital. Display below notification in app: Successfully shared your details with <Hospiatal Name>. Your token number is <> Display token number for valid configurable set time duration. Patient is able to scan the QR Code at the ABDM compliant health facility using third party scanner / phone camera. Check that, post scanning the QR code with the third party scanner / phone camera, display installed ABDM compliant PHR apps and browser Check that post clicking on browser, display the list of all ABDM compliant PHR apps. Patient can choose any one of the PHR app and click on it. If the selected PHR app is not installed in mobile device, then patient is redirected to play store / app store to install the app or if the selected PHR app is already installed then patient can login and share profile to get token no. In this case, patient is already looged-in, so patient is redirected to share profile page of PHR app Patient profile details such as ABHA number, ABHA address, Name, Date of Birth, Gender, Mobile No and Address are successfully shared at the HMIS side By sharing the profile details, patient has given the consent for registration and linking of health records and consent statement needs to be displayed in the PHR app, before sharing of patient profile details to the HMIS side of the hospital. Display below notification in app: Successfully shared your details with <Hospiatal Name>. Your token number is <> Display token number for valid configurable set time duration. Patient is able to scan the QR Code at the ABDM compliant health facility using third party scanner / phone camera. Check that post scanning the QR code with the third party scanner / phone camera, display installed ABDM compliant PHR apps and browser Check that post clicking on browser, display the list of all ABDM compliant PHR apps. Patient can choose any one of the PHR app and click on it. If the selected PHR app is not installed in mobile device, then patient is redirected to play store / app store to install the app or if the selected PHR app is already installed then patient can login and share profile to get token no. In this case, patient is not looged-in, so patient needs to login into the PHR app via any one of the modes (Login via mobile no, login via email ID, login via ABHA number, login via ABHA address) Patient is redirected to share profile page of PHR app Patient profile details such as ABHA number, ABHA address, Name, Date of Birth, Gender, Mobile No and Address are successfully shared at the HMIS side",
+      "apis": []
+    },
+    {
+      "id": "PHR_APP_2001",
+      "anchor": "phr_app_2001",
+      "group": "20. Scan and Share",
+      "title": "PHR_APP_2001",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "By sharing the profile details, patient has given the consent for registration and linking of health records and consent statement needs to be displayed in the PHR app, before sharing of patient profile details to the HMIS side of the hospital. Display below notification in app: Successfully shared your details with <Hospiatal Name>. Your token number is <> Display token number for valid configurable set time duration. Patient is able to scan the QR Code at the ABDM compliant health facility using third party scanner / phone camera. Display list of all ABDM compliant PHR apps (randomly) and patient can select any one of them which he/she wishes to install in mobile device. Patient is redirected to Google Play Store / app store to download / install the selected mobile PHR app Post installation, PHR app is launched.",
+      "apis": []
+    }
+  ]
+}

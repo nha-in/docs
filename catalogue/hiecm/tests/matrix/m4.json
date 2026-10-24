@@ -1,0 +1,5432 @@
+{
+  "module": "m4",
+  "generated": "scripts/build-test-cases.py from NHA's workbook. Fix the sheet or the script, never this file.",
+  "page": "site/docs/hiecm/v3/resources/test-cases/m4.mdx",
+  "workbooks": [
+    "catalogue/hiecm/openapi/.raw/nha-2026-10-22-m4-tests/HFR_Test_Cases.xlsx",
+    "catalogue/hiecm/openapi/.raw/nha-2026-10-22-m4-tests/HPR_Test_Cases.xlsx"
+  ],
+  "specs": [
+    "m4"
+  ],
+  "cases": [
+    {
+      "id": "HFR-001",
+      "anchor": "hfr-001",
+      "group": "HFR Search facility: Facility search",
+      "title": "Search through facility id",
+      "marking": {
+        "government": "optional",
+        "private": "optional"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Facility id should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Search/v15SearchFacilitiesFuzzyPostUsingPOST",
+          "path": "v15SearchFacilitiesFuzzyPost",
+          "unresolved": true,
+          "reason": "a Swagger operation name that names no operation in the specifications"
+        }
+      ]
+    },
+    {
+      "id": "HFR-002",
+      "anchor": "hfr-002",
+      "group": "HFR Search facility: Facility search",
+      "title": "search through facility name",
+      "marking": {
+        "government": "conditional",
+        "private": "conditional"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Facility name should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Search/v15SearchFacilitiesFuzzyPostUsingPOST",
+          "path": "v15SearchFacilitiesFuzzyPost",
+          "unresolved": true,
+          "reason": "a Swagger operation name that names no operation in the specifications"
+        }
+      ]
+    },
+    {
+      "id": "HFR-003",
+      "anchor": "hfr-003",
+      "group": "HFR Search facility: Facility search",
+      "title": "To fill the facility ownership",
+      "marking": {
+        "government": "conditional",
+        "private": "conditional"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Facility ownership should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Search/v15SearchFacilitiesFuzzyPostUsingPOST",
+          "path": "v15SearchFacilitiesFuzzyPost",
+          "unresolved": true,
+          "reason": "a Swagger operation name that names no operation in the specifications"
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET",
+          "path": "/v1.5/facility/get-master-data",
+          "method": "GET",
+          "spec": "m4",
+          "operations": [
+            "m4_get_v1_5_facility_get_master_data"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetOwnershipSubtypeUsingPOST",
+          "path": "/v1.5/facility/get-owner-subtype",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_get_owner_subtype"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-004",
+      "anchor": "hfr-004",
+      "group": "HFR Search facility: Facility search",
+      "title": "To fill the facility state",
+      "marking": {
+        "government": "conditional",
+        "private": "conditional"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Facility state should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Search/v15SearchFacilitiesFuzzyPostUsingPOST",
+          "path": "v15SearchFacilitiesFuzzyPost",
+          "unresolved": true,
+          "reason": "a Swagger operation name that names no operation in the specifications"
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetLGDStatesUsingGET",
+          "path": "/v1.5/facility/lgd/states",
+          "method": "GET",
+          "spec": "m4",
+          "operations": [
+            "m4_get_v1_5_facility_lgd_states"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-005",
+      "anchor": "hfr-005",
+      "group": "HFR Search facility: Facility search",
+      "title": "To fill the facility district",
+      "marking": {
+        "government": "optional",
+        "private": "optional"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Facility district should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Search/v15SearchFacilitiesFuzzyPostUsingPOST",
+          "path": "v15SearchFacilitiesFuzzyPost",
+          "unresolved": true,
+          "reason": "a Swagger operation name that names no operation in the specifications"
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetLGDDistrictsUsingGET",
+          "path": "/v1.5/facility/lgd/districts",
+          "method": "GET",
+          "spec": "m4",
+          "operations": [
+            "m4_get_v1_5_facility_lgd_districts"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-006",
+      "anchor": "hfr-006",
+      "group": "HFR Search facility: Facility search",
+      "title": "To fill the facility sub-district",
+      "marking": {
+        "government": "optional",
+        "private": "optional"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Facility subdistrictshould get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Search/v15SearchFacilitiesFuzzyPostUsingPOST",
+          "path": "v15SearchFacilitiesFuzzyPost",
+          "unresolved": true,
+          "reason": "a Swagger operation name that names no operation in the specifications"
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetLGDSubDistrictsUsingGET",
+          "path": "/v1.5/facility/lgd/subdistricts",
+          "method": "GET",
+          "spec": "m4",
+          "operations": [
+            "m4_get_v1_5_facility_lgd_subdistricts"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-007",
+      "anchor": "hfr-007",
+      "group": "HFR Search facility: Facility search",
+      "title": "To fill the facility pincode",
+      "marking": {
+        "government": "optional",
+        "private": "optional"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Facility pincode should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Search/v15SearchFacilitiesFuzzyPostUsingPOST",
+          "path": "v15SearchFacilitiesFuzzyPost",
+          "unresolved": true,
+          "reason": "a Swagger operation name that names no operation in the specifications"
+        }
+      ]
+    },
+    {
+      "id": "HFR-008",
+      "anchor": "hfr-008",
+      "group": "HFR Search facility: Facility search",
+      "title": "To show number of pages",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "should have default value as 1",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Search/v15SearchFacilitiesFuzzyPostUsingPOST",
+          "path": "v15SearchFacilitiesFuzzyPost",
+          "unresolved": true,
+          "reason": "a Swagger operation name that names no operation in the specifications"
+        }
+      ]
+    },
+    {
+      "id": "HFR-009",
+      "anchor": "hfr-009",
+      "group": "HFR Search facility: Facility search",
+      "title": "To show number of facilities per page",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "should have default value as 10",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Search/v15SearchFacilitiesFuzzyPostUsingPOST",
+          "path": "v15SearchFacilitiesFuzzyPost",
+          "unresolved": true,
+          "reason": "a Swagger operation name that names no operation in the specifications"
+        }
+      ]
+    },
+    {
+      "id": "HFR-010",
+      "anchor": "hfr-010",
+      "group": "HFR Registration: Facility Registration(Basic demographics of the facility)",
+      "title": "To Save the facilty basic details",
+      "marking": {
+        "government": "mandatory; applies: Facilty Manager (read as all)",
+        "private": "mandatory; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Filled Facility Name",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-011",
+      "anchor": "hfr-011",
+      "group": "HFR Registration: Facility Registration(Basic demographics of the facility)",
+      "title": "Fill the geographic location",
+      "marking": {
+        "government": "mandatory; applies: Facilty Manager (read as all)",
+        "private": "mandatory; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Latitude has been filled as per the definition",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-012",
+      "anchor": "hfr-012",
+      "group": "HFR Registration: Facility Registration(Basic demographics of the facility)",
+      "title": "Fill the geographic location",
+      "marking": {
+        "government": "mandatory; applies: Facilty Manager (read as all)",
+        "private": "mandatory; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "longitude has been filled as per the definition",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-013",
+      "anchor": "hfr-013",
+      "group": "HFR Registration: Facility Registration(Basic demographics of the facility)",
+      "title": "To select the country",
+      "marking": {
+        "government": "mandatory; applies: Facilty Manager (read as all)",
+        "private": "mandatory; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-014",
+      "anchor": "hfr-014",
+      "group": "HFR Registration: Facility Registration(Basic demographics of the facility)",
+      "title": "To select the State",
+      "marking": {
+        "government": "mandatory; applies: Facilty Manager (read as all)",
+        "private": "mandatory; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "State should get selected",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetLGDStatesUsingGET",
+          "path": "/v1.5/facility/lgd/states",
+          "method": "GET",
+          "spec": "m4",
+          "operations": [
+            "m4_get_v1_5_facility_lgd_states"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-015",
+      "anchor": "hfr-015",
+      "group": "HFR Registration: Facility Registration(Basic demographics of the facility)",
+      "title": "To select the District",
+      "marking": {
+        "government": "mandatory; applies: Facilty Manager (read as all)",
+        "private": "mandatory; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "District should get selected",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetLGDDistrictsUsingGET",
+          "path": "/v1.5/facility/lgd/districts",
+          "method": "GET",
+          "spec": "m4",
+          "operations": [
+            "m4_get_v1_5_facility_lgd_districts"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-016",
+      "anchor": "hfr-016",
+      "group": "HFR Registration: Facility Registration(Basic demographics of the facility)",
+      "title": "To select the Sub-district",
+      "marking": {
+        "government": "mandatory; applies: Facilty Manager (read as all)",
+        "private": "mandatory; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Sub-District should get selected",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetLGDSubDistrictsUsingGET",
+          "path": "/v1.5/facility/lgd/subdistricts",
+          "method": "GET",
+          "spec": "m4",
+          "operations": [
+            "m4_get_v1_5_facility_lgd_subdistricts"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-017",
+      "anchor": "hfr-017",
+      "group": "HFR Registration: Facility Registration(Basic demographics of the facility)",
+      "title": "To fill the facility address",
+      "marking": {
+        "government": "mandatory; applies: Facilty Manager (read as all)",
+        "private": "mandatory; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Address should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-018",
+      "anchor": "hfr-018",
+      "group": "HFR Registration: Facility Registration(Basic demographics of the facility)",
+      "title": "To fill the facility address",
+      "marking": {
+        "government": "optional; applies: Facilty Manager (read as all)",
+        "private": "optional; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Address should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-019",
+      "anchor": "hfr-019",
+      "group": "HFR Registration: Facility Registration(Basic demographics of the facility)",
+      "title": "To enter the facility pincode",
+      "marking": {
+        "government": "mandatory; applies: Facilty Manager (read as all)",
+        "private": "mandatory; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Pincode should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-020",
+      "anchor": "hfr-020",
+      "group": "HFR Registration: Facility Registration(Basic demographics of the facility)",
+      "title": "To select the facility working days",
+      "marking": {
+        "government": "conditional; applies: Facilty Manager (read as all)",
+        "private": "conditional; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "working days should get selected",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET",
+          "path": "/v1.5/facility/get-master-types",
+          "method": "GET",
+          "spec": "m4",
+          "operations": [
+            "m4_get_v1_5_facility_get_master_types"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET",
+          "path": "/v1.5/facility/get-master-data",
+          "method": "GET",
+          "spec": "m4",
+          "operations": [
+            "m4_get_v1_5_facility_get_master_data"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-021",
+      "anchor": "hfr-021",
+      "group": "HFR Registration: Facility Registration(Basic demographics of the facility)",
+      "title": "To fill the opening hours of the facility",
+      "marking": {
+        "government": "mandatory; applies: Facilty Manager (read as all)",
+        "private": "mandatory; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Facility Timings should get saved",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-022",
+      "anchor": "hfr-022",
+      "group": "HFR Registration: Facility Registration(Basic demographics of the facility)",
+      "title": "To select the facility operational status",
+      "marking": {
+        "government": "mandatory; applies: Facilty Manager (read as all)",
+        "private": "mandatory; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Facility operational status should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET",
+          "path": "/v1.5/facility/get-master-types",
+          "method": "GET",
+          "spec": "m4",
+          "operations": [
+            "m4_get_v1_5_facility_get_master_types"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET",
+          "path": "/v1.5/facility/get-master-data",
+          "method": "GET",
+          "spec": "m4",
+          "operations": [
+            "m4_get_v1_5_facility_get_master_data"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-023",
+      "anchor": "hfr-023",
+      "group": "HFR Registration: Facility Registration(Basic demographics of the facility)",
+      "title": "To enter the facility landline number for public display",
+      "marking": {
+        "government": "optional; applies: Facilty Manager (read as all)",
+        "private": "optional; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Landline number should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-024",
+      "anchor": "hfr-024",
+      "group": "HFR Registration: Facility Registration(Basic demographics of the facility)",
+      "title": "To enter the facility mobile number for public display",
+      "marking": {
+        "government": "optional; applies: Facilty Manager (read as all)",
+        "private": "optional; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Mobile number should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-025",
+      "anchor": "hfr-025",
+      "group": "HFR Registration: Facility Registration(Basic demographics of the facility)",
+      "title": "To enter the email for public display",
+      "marking": {
+        "government": "optional; applies: Facilty Manager (read as all)",
+        "private": "optional; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Facility email should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-026",
+      "anchor": "hfr-026",
+      "group": "HFR Registration: Facility Registration(Basic demographics of the facility)",
+      "title": "To enter the hospital website link",
+      "marking": {
+        "government": "optional; applies: Facilty Manager (read as all)",
+        "private": "optional; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Proper Website should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-027",
+      "anchor": "hfr-027",
+      "group": "HFR Registration: Facility Registration(Basic demographics of the facility)",
+      "title": "facility file Uploads",
+      "marking": {
+        "government": "optional; applies: Facilty Manager (read as all)",
+        "private": "optional; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Photograph should get saved",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-028",
+      "anchor": "hfr-028",
+      "group": "HFR Registration: Facility Registration(Basic demographics of the facility)",
+      "title": "facility file Uploads",
+      "marking": {
+        "government": "optional; applies: Facilty Manager (read as all)",
+        "private": "optional; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Photograph should get saved",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-029",
+      "anchor": "hfr-029",
+      "group": "HFR Registration: Facility Registration(Basic demographics of the facility)",
+      "title": "facility file Uploads",
+      "marking": {
+        "government": "optional; applies: Facilty Manager (read as all)",
+        "private": "optional; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Address proof type should get selected",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET",
+          "path": "/v1.5/facility/get-master-types",
+          "method": "GET",
+          "spec": "m4",
+          "operations": [
+            "m4_get_v1_5_facility_get_master_types"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET",
+          "path": "/v1.5/facility/get-master-data",
+          "method": "GET",
+          "spec": "m4",
+          "operations": [
+            "m4_get_v1_5_facility_get_master_data"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-030",
+      "anchor": "hfr-030",
+      "group": "HFR Registration: Facility Registration(Basic demographics of the facility)",
+      "title": "facility file Uploads",
+      "marking": {
+        "government": "conditional; applies: Facilty Manager (read as all)",
+        "private": "conditional; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Address proof should get saved",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-031",
+      "anchor": "hfr-031",
+      "group": "HFR Registration: Facility Registration(Basic demographics of the facility)",
+      "title": "To provide the ownership details",
+      "marking": {
+        "government": "mandatory; applies: Facilty Manager (read as all)",
+        "private": "mandatory; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Facility ownership should get saved",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET",
+          "path": "/v1.5/facility/get-master-types",
+          "method": "GET",
+          "spec": "m4",
+          "operations": [
+            "m4_get_v1_5_facility_get_master_types"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET",
+          "path": "/v1.5/facility/get-master-data",
+          "method": "GET",
+          "spec": "m4",
+          "operations": [
+            "m4_get_v1_5_facility_get_master_data"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-032",
+      "anchor": "hfr-032",
+      "group": "HFR Registration: Facility Registration(Basic demographics of the facility)",
+      "title": "To provide the ownership details",
+      "marking": {
+        "government": "conditional; applies: Facilty Manager (read as all)",
+        "private": "conditional; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Facility ownership subtype should get saved",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET",
+          "path": "/v1.5/facility/get-master-data",
+          "method": "GET",
+          "spec": "m4",
+          "operations": [
+            "m4_get_v1_5_facility_get_master_data"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetOwnershipSubtypeUsingPOST",
+          "path": "/v1.5/facility/get-owner-subtype",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_get_owner_subtype"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-033",
+      "anchor": "hfr-033",
+      "group": "HFR Registration: Facility Registration(Basic demographics of the facility)",
+      "title": "To provide the ownership details",
+      "marking": {
+        "government": "conditional; applies: Facilty Manager (read as all)",
+        "private": "conditional; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET",
+          "path": "/v1.5/facility/get-master-types",
+          "method": "GET",
+          "spec": "m4",
+          "operations": [
+            "m4_get_v1_5_facility_get_master_types"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET",
+          "path": "/v1.5/facility/get-master-data",
+          "method": "GET",
+          "spec": "m4",
+          "operations": [
+            "m4_get_v1_5_facility_get_master_data"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-034",
+      "anchor": "hfr-034",
+      "group": "HFR Registration: Facility Registration(Basic demographics of the facility)",
+      "title": "To provide the details of system of medicine",
+      "marking": {
+        "government": "mandatory; applies: Facilty Manager (read as all)",
+        "private": "mandatory; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "System of medicine should get saved",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET",
+          "path": "/v1.5/facility/get-master-types",
+          "method": "GET",
+          "spec": "m4",
+          "operations": [
+            "m4_get_v1_5_facility_get_master_types"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET",
+          "path": "/v1.5/facility/get-master-data",
+          "method": "GET",
+          "spec": "m4",
+          "operations": [
+            "m4_get_v1_5_facility_get_master_data"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-035",
+      "anchor": "hfr-035",
+      "group": "HFR Registration: Facility Registration(Basic demographics of the facility)",
+      "title": "To enter the type of facility",
+      "marking": {
+        "government": "mandatory; applies: Facilty Manager (read as all)",
+        "private": "mandatory; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Facility Type should get saved",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FetchFacilityTypesUsingPOST",
+          "path": "/v1.5/facility/fetch-facility-type",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_fetch_facility_type"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-036",
+      "anchor": "hfr-036",
+      "group": "HFR Registration: Facility Registration(Basic demographics of the facility)",
+      "title": "To enter the type of facility",
+      "marking": {
+        "government": "mandatory; applies: Facilty Manager (read as all)",
+        "private": "mandatory; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Facility sub type should get saved",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FetchFacilitySubTypesUsingPOST",
+          "path": "/v1.5/facility/fetch-facility-Sub-type",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_fetch_facility_sub_type"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-037",
+      "anchor": "hfr-037",
+      "group": "HFR Registration: Facility Registration(Basic demographics of the facility)",
+      "title": "To enter the type of services provided",
+      "marking": {
+        "government": "mandatory; applies: Facilty Manager (read as all)",
+        "private": "mandatory; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Multiple type of service should get selected",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET",
+          "path": "/v1.5/facility/get-master-types",
+          "method": "GET",
+          "spec": "m4",
+          "operations": [
+            "m4_get_v1_5_facility_get_master_types"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET",
+          "path": "/v1.5/facility/get-master-data",
+          "method": "GET",
+          "spec": "m4",
+          "operations": [
+            "m4_get_v1_5_facility_get_master_data"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-038",
+      "anchor": "hfr-038",
+      "group": "HFR Registration: Facility Registration(Basic demographics of the facility)",
+      "title": "To enter the Specialization",
+      "marking": {
+        "government": "mandatory; applies: Facilty Manager (read as all)",
+        "private": "mandatory; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Multiple Specialization should get selected",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetSpecialitiesUsingPOST",
+          "path": "/v1.5/facility/get-specialities",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_get_specialities"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-039",
+      "anchor": "hfr-039",
+      "group": "HFR Registration: Facility Registration(Capture Health program ids)",
+      "title": "Linked program Id",
+      "marking": {
+        "government": "optional; applies: Registration Additional API (read as all)",
+        "private": "optional; applies: Registration Additional API (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "It should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST",
+          "path": "/v1.5/facility/additional-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_additional_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-040",
+      "anchor": "hfr-040",
+      "group": "HFR Registration: Facility Registration(Capture Health program ids)",
+      "title": "Linked program Id",
+      "marking": {
+        "government": "optional; applies: Registration Additional API (read as all)",
+        "private": "optional; applies: Registration Additional API (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "It should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST",
+          "path": "/v1.5/facility/additional-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_additional_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-041",
+      "anchor": "hfr-041",
+      "group": "HFR Registration: Facility Registration(Capture Health program ids)",
+      "title": "Linked program Id",
+      "marking": {
+        "government": "optional; applies: Registration Additional API (read as all)",
+        "private": "optional; applies: Registration Additional API (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "It should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST",
+          "path": "/v1.5/facility/additional-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_additional_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-042",
+      "anchor": "hfr-042",
+      "group": "HFR Registration: Facility Registration(Capture Health program ids)",
+      "title": "Linked program Id",
+      "marking": {
+        "government": "optional; applies: Registration Additional API (read as all)",
+        "private": "optional; applies: Registration Additional API (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "It should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST",
+          "path": "/v1.5/facility/additional-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_additional_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-043",
+      "anchor": "hfr-043",
+      "group": "HFR Registration: Facility Registration(Capture Health program ids)",
+      "title": "Linked program Id",
+      "marking": {
+        "government": "optional; applies: Registration Additional API (read as all)",
+        "private": "optional; applies: Registration Additional API (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "It should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST",
+          "path": "/v1.5/facility/additional-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_additional_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-044",
+      "anchor": "hfr-044",
+      "group": "HFR Registration: Facility Registration(Capture Health program ids)",
+      "title": "Linked program Id",
+      "marking": {
+        "government": "optional; applies: Registration Additional API (read as all)",
+        "private": "optional; applies: Registration Additional API (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "It should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST",
+          "path": "/v1.5/facility/additional-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_additional_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-045",
+      "anchor": "hfr-045",
+      "group": "HFR Registration: Facility Registration(Capture Health program ids)",
+      "title": "Linked program Id",
+      "marking": {
+        "government": "optional; applies: Registration Additional API (read as all)",
+        "private": "optional; applies: Registration Additional API (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "It should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST",
+          "path": "/v1.5/facility/additional-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_additional_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-046",
+      "anchor": "hfr-046",
+      "group": "HFR Registration: Facility Registration(Capture Health program ids)",
+      "title": "Linked program Id",
+      "marking": {
+        "government": "optional; applies: Registration Additional API (read as all)",
+        "private": "optional; applies: Registration Additional API (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "It should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST",
+          "path": "/v1.5/facility/additional-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_additional_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-047",
+      "anchor": "hfr-047",
+      "group": "HFR Registration: Facility Registration(Capture facility details information-infrastructure and specialization",
+      "title": "systemOfMedicineCode",
+      "marking": {
+        "government": "mandatory; applies: Registration Detailed API (read as all)",
+        "private": "mandatory; applies: Registration Detailed API (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "System of medicine should get selected",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST",
+          "path": "/v1.5/facility/detailed-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_detailed_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET",
+          "path": "/v1.5/facility/get-master-types",
+          "method": "GET",
+          "spec": "m4",
+          "operations": [
+            "m4_get_v1_5_facility_get_master_types"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET",
+          "path": "/v1.5/facility/get-master-data",
+          "method": "GET",
+          "spec": "m4",
+          "operations": [
+            "m4_get_v1_5_facility_get_master_data"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-048",
+      "anchor": "hfr-048",
+      "group": "HFR Registration: Facility Registration(Capture facility details information-infrastructure and specialization",
+      "title": "isSpecializationAvalaible",
+      "marking": {
+        "government": "mandatory; applies: Registration Detailed API (read as all)",
+        "private": "mandatory; applies: Registration Detailed API (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "HFR-049",
+      "anchor": "hfr-049",
+      "group": "HFR Registration: Facility Registration(Capture facility details information-infrastructure and specialization",
+      "title": "specialities",
+      "marking": {
+        "government": "conditional; applies: Registration Detailed API (read as all)",
+        "private": "conditional; applies: Registration Detailed API (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST",
+          "path": "/v1.5/facility/detailed-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_detailed_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetSpecialitiesUsingPOST",
+          "path": "/v1.5/facility/get-specialities",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_get_specialities"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-050",
+      "anchor": "hfr-050",
+      "group": "HFR Registration: Facility Registration(Capture facility details information-infrastructure and specialization",
+      "title": "countIPDBedsWithoutOxygen",
+      "marking": {
+        "government": "optional; applies: Registration Detailed API (read as all)",
+        "private": "optional; applies: Registration Detailed API (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Details should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST",
+          "path": "/v1.5/facility/detailed-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_detailed_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-051",
+      "anchor": "hfr-051",
+      "group": "HFR Registration: Facility Registration(Capture facility details information-infrastructure and specialization",
+      "title": "countIPDBedsWithOxygen",
+      "marking": {
+        "government": "optional; applies: Registration Detailed API (read as all)",
+        "private": "optional; applies: Registration Detailed API (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Details should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST",
+          "path": "/v1.5/facility/detailed-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_detailed_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-052",
+      "anchor": "hfr-052",
+      "group": "HFR Registration: Facility Registration(Capture facility details information-infrastructure and specialization",
+      "title": "countICUBedsWithVentilators",
+      "marking": {
+        "government": "optional; applies: Registration Detailed API (read as all)",
+        "private": "optional; applies: Registration Detailed API (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Details should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST",
+          "path": "/v1.5/facility/detailed-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_detailed_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-053",
+      "anchor": "hfr-053",
+      "group": "HFR Registration: Facility Registration(Capture facility details information-infrastructure and specialization",
+      "title": "countICUBedsWithoutVentilators",
+      "marking": {
+        "government": "optional; applies: Registration Detailed API (read as all)",
+        "private": "optional; applies: Registration Detailed API (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Details should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST",
+          "path": "/v1.5/facility/detailed-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_detailed_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-054",
+      "anchor": "hfr-054",
+      "group": "HFR Registration: Facility Registration(Capture facility details information-infrastructure and specialization",
+      "title": "countHDUBedsWithFunctionalVentilators",
+      "marking": {
+        "government": "optional; applies: Registration Detailed API (read as all)",
+        "private": "optional; applies: Registration Detailed API (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Details should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST",
+          "path": "/v1.5/facility/detailed-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_detailed_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-055",
+      "anchor": "hfr-055",
+      "group": "HFR Registration: Facility Registration(Capture facility details information-infrastructure and specialization",
+      "title": "countHDUBedsWithVentilators",
+      "marking": {
+        "government": "optional; applies: Registration Detailed API (read as all)",
+        "private": "optional; applies: Registration Detailed API (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Details should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST",
+          "path": "/v1.5/facility/detailed-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_detailed_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-056",
+      "anchor": "hfr-056",
+      "group": "HFR Registration: Facility Registration(Capture facility details information-infrastructure and specialization",
+      "title": "countHDUBedsWithoutVentilators",
+      "marking": {
+        "government": "optional; applies: Registration Detailed API (read as all)",
+        "private": "optional; applies: Registration Detailed API (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Details should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST",
+          "path": "/v1.5/facility/detailed-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_detailed_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-057",
+      "anchor": "hfr-057",
+      "group": "HFR Registration: Facility Registration(Capture facility details information-infrastructure and specialization",
+      "title": "totalNumberOfVentilators",
+      "marking": {
+        "government": "mandatory; applies: Registration Detailed API (read as all)",
+        "private": "mandatory; applies: Registration Detailed API (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Details should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST",
+          "path": "/v1.5/facility/detailed-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_detailed_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-058",
+      "anchor": "hfr-058",
+      "group": "HFR Registration: Facility Registration(Capture facility details information-infrastructure and specialization",
+      "title": "countDayCareBedsWithoutOxygen",
+      "marking": {
+        "government": "optional; applies: Registration Detailed API (read as all)",
+        "private": "optional; applies: Registration Detailed API (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Details should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST",
+          "path": "/v1.5/facility/detailed-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_detailed_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-059",
+      "anchor": "hfr-059",
+      "group": "HFR Registration: Facility Registration(Capture facility details information-infrastructure and specialization",
+      "title": "countDayCareBedsWithOxygen",
+      "marking": {
+        "government": "optional; applies: Registration Detailed API (read as all)",
+        "private": "optional; applies: Registration Detailed API (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Details should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST",
+          "path": "/v1.5/facility/detailed-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_detailed_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-060",
+      "anchor": "hfr-060",
+      "group": "HFR Registration: Facility Registration(Capture facility details information-infrastructure and specialization",
+      "title": "totalNumberOfBeds",
+      "marking": {
+        "government": "mandatory; applies: Registration Detailed API (read as all)",
+        "private": "mandatory; applies: Registration Detailed API (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Details should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST",
+          "path": "/v1.5/facility/detailed-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_detailed_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-061",
+      "anchor": "hfr-061",
+      "group": "HFR Registration: Facility Registration(Capture facility details information-infrastructure and specialization",
+      "title": "countDentalChairs",
+      "marking": {
+        "government": "optional; applies: Registration Detailed API (read as all)",
+        "private": "optional; applies: Registration Detailed API (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Details should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST",
+          "path": "/v1.5/facility/detailed-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_detailed_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-062",
+      "anchor": "hfr-062",
+      "group": "HFR Registration: Facility submission",
+      "title": "sourceOfInformation",
+      "marking": {
+        "government": "optional; applies: Registration Submit API (read as all)",
+        "private": "optional; applies: Registration Submit API (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Facility shold get submitted",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15SubmitFacilityDetailsUsingPOST",
+          "path": "/v1.5/facility/submit-facility",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_submit_facility"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-063",
+      "anchor": "hfr-063",
+      "group": "HFR Registration: Facility submission",
+      "title": "sourceUniqueID",
+      "marking": {
+        "government": "optional; applies: Registration Submit API (read as all)",
+        "private": "optional; applies: Registration Submit API (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "HFR-064",
+      "anchor": "hfr-064",
+      "group": "HFR Facility update: Facility Registration(Basic demographics of the facility)",
+      "title": "To edit the facilty basic details",
+      "marking": {
+        "government": "mandatory; applies: Facilty Manager (read as all)",
+        "private": "mandatory; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Filled Facility Name",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-065",
+      "anchor": "hfr-065",
+      "group": "HFR Facility update: Facility Registration(Basic demographics of the facility)",
+      "title": "Change the geographic location",
+      "marking": {
+        "government": "mandatory; applies: Facilty Manager (read as all)",
+        "private": "mandatory; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Latitude has been filled as per the definition",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-066",
+      "anchor": "hfr-066",
+      "group": "HFR Facility update: Facility Registration(Basic demographics of the facility)",
+      "title": "Change the geographic location",
+      "marking": {
+        "government": "mandatory; applies: Facilty Manager (read as all)",
+        "private": "mandatory; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "longitude has been filled as per the definition",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-067",
+      "anchor": "hfr-067",
+      "group": "HFR Facility update: Facility Registration(Basic demographics of the facility)",
+      "title": "To select the country",
+      "marking": {
+        "government": "mandatory; applies: Facilty Manager (read as all)",
+        "private": "mandatory; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-068",
+      "anchor": "hfr-068",
+      "group": "HFR Facility update: Facility Registration(Basic demographics of the facility)",
+      "title": "To edit the State",
+      "marking": {
+        "government": "mandatory; applies: Facilty Manager (read as all)",
+        "private": "mandatory; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "State should get selected",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetLGDStatesUsingGET",
+          "path": "/v1.5/facility/lgd/states",
+          "method": "GET",
+          "spec": "m4",
+          "operations": [
+            "m4_get_v1_5_facility_lgd_states"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-069",
+      "anchor": "hfr-069",
+      "group": "HFR Facility update: Facility Registration(Basic demographics of the facility)",
+      "title": "To edit the District",
+      "marking": {
+        "government": "mandatory; applies: Facilty Manager (read as all)",
+        "private": "mandatory; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "District should get selected",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetLGDDistrictsUsingGET",
+          "path": "/v1.5/facility/lgd/districts",
+          "method": "GET",
+          "spec": "m4",
+          "operations": [
+            "m4_get_v1_5_facility_lgd_districts"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-070",
+      "anchor": "hfr-070",
+      "group": "HFR Facility update: Facility Registration(Basic demographics of the facility)",
+      "title": "To edit the Sub-district",
+      "marking": {
+        "government": "mandatory; applies: Facilty Manager (read as all)",
+        "private": "mandatory; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Sub-District should get selected",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetLGDSubDistrictsUsingGET",
+          "path": "/v1.5/facility/lgd/subdistricts",
+          "method": "GET",
+          "spec": "m4",
+          "operations": [
+            "m4_get_v1_5_facility_lgd_subdistricts"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-071",
+      "anchor": "hfr-071",
+      "group": "HFR Facility update: Facility Registration(Basic demographics of the facility)",
+      "title": "To edit the facility address",
+      "marking": {
+        "government": "mandatory; applies: Facilty Manager (read as all)",
+        "private": "mandatory; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Address should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-072",
+      "anchor": "hfr-072",
+      "group": "HFR Facility update: Facility Registration(Basic demographics of the facility)",
+      "title": "To edit the facility address",
+      "marking": {
+        "government": "optional; applies: Facilty Manager (read as all)",
+        "private": "optional; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Address should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-073",
+      "anchor": "hfr-073",
+      "group": "HFR Facility update: Facility Registration(Basic demographics of the facility)",
+      "title": "To edit the facility pincode",
+      "marking": {
+        "government": "mandatory; applies: Facilty Manager (read as all)",
+        "private": "mandatory; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Pincode should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-074",
+      "anchor": "hfr-074",
+      "group": "HFR Facility update: Facility Registration(Basic demographics of the facility)",
+      "title": "To edit the facility working days",
+      "marking": {
+        "government": "conditional; applies: Facilty Manager (read as all)",
+        "private": "conditional; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "working days should get selected",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET",
+          "path": "/v1.5/facility/get-master-types",
+          "method": "GET",
+          "spec": "m4",
+          "operations": [
+            "m4_get_v1_5_facility_get_master_types"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET",
+          "path": "/v1.5/facility/get-master-data",
+          "method": "GET",
+          "spec": "m4",
+          "operations": [
+            "m4_get_v1_5_facility_get_master_data"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-075",
+      "anchor": "hfr-075",
+      "group": "HFR Facility update: Facility Registration(Basic demographics of the facility)",
+      "title": "To edit the opening hours of the facility",
+      "marking": {
+        "government": "mandatory; applies: Facilty Manager (read as all)",
+        "private": "mandatory; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Facility Timings should get saved",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-076",
+      "anchor": "hfr-076",
+      "group": "HFR Facility update: Facility Registration(Basic demographics of the facility)",
+      "title": "To edit the facility operational status",
+      "marking": {
+        "government": "mandatory; applies: Facilty Manager (read as all)",
+        "private": "mandatory; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Facility operational status should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET",
+          "path": "/v1.5/facility/get-master-types",
+          "method": "GET",
+          "spec": "m4",
+          "operations": [
+            "m4_get_v1_5_facility_get_master_types"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET",
+          "path": "/v1.5/facility/get-master-data",
+          "method": "GET",
+          "spec": "m4",
+          "operations": [
+            "m4_get_v1_5_facility_get_master_data"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-077",
+      "anchor": "hfr-077",
+      "group": "HFR Facility update: Facility Registration(Basic demographics of the facility)",
+      "title": "To eidt the facility landline number for public display",
+      "marking": {
+        "government": "optional; applies: Facilty Manager (read as all)",
+        "private": "optional; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Landline number should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-078",
+      "anchor": "hfr-078",
+      "group": "HFR Facility update: Facility Registration(Basic demographics of the facility)",
+      "title": "To edit the facility mobile number for public display",
+      "marking": {
+        "government": "optional; applies: Facilty Manager (read as all)",
+        "private": "optional; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Mobile number should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-079",
+      "anchor": "hfr-079",
+      "group": "HFR Facility update: Facility Registration(Basic demographics of the facility)",
+      "title": "To edit the email for public display",
+      "marking": {
+        "government": "optional; applies: Facilty Manager (read as all)",
+        "private": "optional; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Facility email should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-080",
+      "anchor": "hfr-080",
+      "group": "HFR Facility update: Facility Registration(Basic demographics of the facility)",
+      "title": "To edit the hospital website link",
+      "marking": {
+        "government": "optional; applies: Facilty Manager (read as all)",
+        "private": "optional; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Proper Website should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-081",
+      "anchor": "hfr-081",
+      "group": "HFR Facility update: Facility Registration(Basic demographics of the facility)",
+      "title": "edit facility file Uploads",
+      "marking": {
+        "government": "optional; applies: Facilty Manager (read as all)",
+        "private": "optional; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Photograph should get saved",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-082",
+      "anchor": "hfr-082",
+      "group": "HFR Facility update: Facility Registration(Basic demographics of the facility)",
+      "title": "edit facility file Uploads",
+      "marking": {
+        "government": "optional; applies: Facilty Manager (read as all)",
+        "private": "optional; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Photograph should get saved",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-083",
+      "anchor": "hfr-083",
+      "group": "HFR Facility update: Facility Registration(Basic demographics of the facility)",
+      "title": "edit facility file Uploads",
+      "marking": {
+        "government": "optional; applies: Facilty Manager (read as all)",
+        "private": "optional; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Address proof type should get selected",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET",
+          "path": "/v1.5/facility/get-master-types",
+          "method": "GET",
+          "spec": "m4",
+          "operations": [
+            "m4_get_v1_5_facility_get_master_types"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET",
+          "path": "/v1.5/facility/get-master-data",
+          "method": "GET",
+          "spec": "m4",
+          "operations": [
+            "m4_get_v1_5_facility_get_master_data"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-084",
+      "anchor": "hfr-084",
+      "group": "HFR Facility update: Facility Registration(Basic demographics of the facility)",
+      "title": "edit facility file Uploads",
+      "marking": {
+        "government": "conditional; applies: Facilty Manager (read as all)",
+        "private": "conditional; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Address proof should get saved",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-085",
+      "anchor": "hfr-085",
+      "group": "HFR Facility update: Facility Registration(Basic demographics of the facility)",
+      "title": "To edit the ownership details",
+      "marking": {
+        "government": "mandatory; applies: Facilty Manager (read as all)",
+        "private": "mandatory; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Facility ownership should get saved",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET",
+          "path": "/v1.5/facility/get-master-types",
+          "method": "GET",
+          "spec": "m4",
+          "operations": [
+            "m4_get_v1_5_facility_get_master_types"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET",
+          "path": "/v1.5/facility/get-master-data",
+          "method": "GET",
+          "spec": "m4",
+          "operations": [
+            "m4_get_v1_5_facility_get_master_data"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-086",
+      "anchor": "hfr-086",
+      "group": "HFR Facility update: Facility Registration(Basic demographics of the facility)",
+      "title": "To edit the ownership details",
+      "marking": {
+        "government": "conditional; applies: Facilty Manager (read as all)",
+        "private": "conditional; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Facility ownership subtype should get saved",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET",
+          "path": "/v1.5/facility/get-master-data",
+          "method": "GET",
+          "spec": "m4",
+          "operations": [
+            "m4_get_v1_5_facility_get_master_data"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetOwnershipSubtypeUsingPOST",
+          "path": "/v1.5/facility/get-owner-subtype",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_get_owner_subtype"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-087",
+      "anchor": "hfr-087",
+      "group": "HFR Facility update: Facility Registration(Basic demographics of the facility)",
+      "title": "To edit the ownership details",
+      "marking": {
+        "government": "conditional; applies: Facilty Manager (read as all)",
+        "private": "conditional; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET",
+          "path": "/v1.5/facility/get-master-types",
+          "method": "GET",
+          "spec": "m4",
+          "operations": [
+            "m4_get_v1_5_facility_get_master_types"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET",
+          "path": "/v1.5/facility/get-master-data",
+          "method": "GET",
+          "spec": "m4",
+          "operations": [
+            "m4_get_v1_5_facility_get_master_data"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-088",
+      "anchor": "hfr-088",
+      "group": "HFR Facility update: Facility Registration(Basic demographics of the facility)",
+      "title": "To edit the details of system of medicine",
+      "marking": {
+        "government": "mandatory; applies: Facilty Manager (read as all)",
+        "private": "mandatory; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "System of medicine should get saved",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET",
+          "path": "/v1.5/facility/get-master-types",
+          "method": "GET",
+          "spec": "m4",
+          "operations": [
+            "m4_get_v1_5_facility_get_master_types"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET",
+          "path": "/v1.5/facility/get-master-data",
+          "method": "GET",
+          "spec": "m4",
+          "operations": [
+            "m4_get_v1_5_facility_get_master_data"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-089",
+      "anchor": "hfr-089",
+      "group": "HFR Facility update: Facility Registration(Basic demographics of the facility)",
+      "title": "To edit the type of facility",
+      "marking": {
+        "government": "mandatory; applies: Facilty Manager (read as all)",
+        "private": "mandatory; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Facility Type should get saved",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FetchFacilityTypesUsingPOST",
+          "path": "/v1.5/facility/fetch-facility-type",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_fetch_facility_type"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-090",
+      "anchor": "hfr-090",
+      "group": "HFR Facility update: Facility Registration(Basic demographics of the facility)",
+      "title": "To edit the type of facility",
+      "marking": {
+        "government": "mandatory; applies: Facilty Manager (read as all)",
+        "private": "mandatory; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Facility sub type should get saved",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FetchFacilitySubTypesUsingPOST",
+          "path": "/v1.5/facility/fetch-facility-Sub-type",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_fetch_facility_sub_type"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-091",
+      "anchor": "hfr-091",
+      "group": "HFR Facility update: Facility Registration(Basic demographics of the facility)",
+      "title": "To edit the type of services provided",
+      "marking": {
+        "government": "mandatory; applies: Facilty Manager (read as all)",
+        "private": "mandatory; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Multiple type of service should get selected",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET",
+          "path": "/v1.5/facility/get-master-types",
+          "method": "GET",
+          "spec": "m4",
+          "operations": [
+            "m4_get_v1_5_facility_get_master_types"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET",
+          "path": "/v1.5/facility/get-master-data",
+          "method": "GET",
+          "spec": "m4",
+          "operations": [
+            "m4_get_v1_5_facility_get_master_data"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-092",
+      "anchor": "hfr-092",
+      "group": "HFR Facility update: Facility Registration(Basic demographics of the facility)",
+      "title": "To edit the Specialization",
+      "marking": {
+        "government": "mandatory; applies: Facilty Manager (read as all)",
+        "private": "mandatory; applies: Facilty Manager (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Multiple Specialization should get selected",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
+          "path": "/v1.5/facility/basic-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_basic_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetSpecialitiesUsingPOST",
+          "path": "/v1.5/facility/get-specialities",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_get_specialities"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-093",
+      "anchor": "hfr-093",
+      "group": "HFR Facility update: Facility Registration(Capture Health program ids)",
+      "title": "Edit Linked program Id",
+      "marking": {
+        "government": "optional; applies: Registration Additional details update API (read as all)",
+        "private": "optional; applies: Registration Additional details update API (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "It should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST",
+          "path": "/v1.5/facility/additional-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_additional_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-094",
+      "anchor": "hfr-094",
+      "group": "HFR Facility update: Facility Registration(Capture Health program ids)",
+      "title": "Edit Linked program Id",
+      "marking": {
+        "government": "optional; applies: Registration Additional details update API (read as all)",
+        "private": "optional; applies: Registration Additional details update API (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "It should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST",
+          "path": "/v1.5/facility/additional-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_additional_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-095",
+      "anchor": "hfr-095",
+      "group": "HFR Facility update: Facility Registration(Capture Health program ids)",
+      "title": "Edit Linked program Id",
+      "marking": {
+        "government": "optional; applies: Registration Additional details update API (read as all)",
+        "private": "optional; applies: Registration Additional details update API (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "It should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST",
+          "path": "/v1.5/facility/additional-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_additional_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-096",
+      "anchor": "hfr-096",
+      "group": "HFR Facility update: Facility Registration(Capture Health program ids)",
+      "title": "Edit Linked program Id",
+      "marking": {
+        "government": "optional; applies: Registration Additional details update API (read as all)",
+        "private": "optional; applies: Registration Additional details update API (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "It should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST",
+          "path": "/v1.5/facility/additional-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_additional_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-097",
+      "anchor": "hfr-097",
+      "group": "HFR Facility update: Facility Registration(Capture Health program ids)",
+      "title": "Edit Linked program Id",
+      "marking": {
+        "government": "optional; applies: Registration Additional details update API (read as all)",
+        "private": "optional; applies: Registration Additional details update API (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "It should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST",
+          "path": "/v1.5/facility/additional-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_additional_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-098",
+      "anchor": "hfr-098",
+      "group": "HFR Facility update: Facility Registration(Capture Health program ids)",
+      "title": "Edit Linked program Id",
+      "marking": {
+        "government": "optional; applies: Registration Additional details update API (read as all)",
+        "private": "optional; applies: Registration Additional details update API (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "It should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST",
+          "path": "/v1.5/facility/additional-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_additional_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-099",
+      "anchor": "hfr-099",
+      "group": "HFR Facility update: Facility Registration(Capture Health program ids)",
+      "title": "Edit Linked program Id",
+      "marking": {
+        "government": "optional; applies: Registration Additional details update API (read as all)",
+        "private": "optional; applies: Registration Additional details update API (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "It should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST",
+          "path": "/v1.5/facility/additional-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_additional_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-100",
+      "anchor": "hfr-100",
+      "group": "HFR Facility update: Facility Registration(Capture Health program ids)",
+      "title": "Edit Linked program Id",
+      "marking": {
+        "government": "optional; applies: Registration Additional details update API (read as all)",
+        "private": "optional; applies: Registration Additional details update API (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "It should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST",
+          "path": "/v1.5/facility/additional-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_additional_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-101",
+      "anchor": "hfr-101",
+      "group": "HFR Facility update: Facility Registration(Capture facility details information-infrastructure and specialization",
+      "title": "To edit systemOfMedicine",
+      "marking": {
+        "government": "mandatory; applies: Registration Detailed details update API (read as all)",
+        "private": "mandatory; applies: Registration Detailed details update API (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "System of medicine should get selected",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST",
+          "path": "/v1.5/facility/detailed-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_detailed_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET",
+          "path": "/v1.5/facility/get-master-types",
+          "method": "GET",
+          "spec": "m4",
+          "operations": [
+            "m4_get_v1_5_facility_get_master_types"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET",
+          "path": "/v1.5/facility/get-master-data",
+          "method": "GET",
+          "spec": "m4",
+          "operations": [
+            "m4_get_v1_5_facility_get_master_data"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-102",
+      "anchor": "hfr-102",
+      "group": "HFR Facility update: Facility Registration(Capture facility details information-infrastructure and specialization",
+      "title": "to edit if Specialization is Avalaible",
+      "marking": {
+        "government": "mandatory; applies: Registration Detailed details update API (read as all)",
+        "private": "mandatory; applies: Registration Detailed details update API (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "HFR-103",
+      "anchor": "hfr-103",
+      "group": "HFR Facility update: Facility Registration(Capture facility details information-infrastructure and specialization",
+      "title": "To edit specialities",
+      "marking": {
+        "government": "conditional; applies: Registration Detailed details update API (read as all)",
+        "private": "conditional; applies: Registration Detailed details update API (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST",
+          "path": "/v1.5/facility/detailed-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_detailed_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        },
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetSpecialitiesUsingPOST",
+          "path": "/v1.5/facility/get-specialities",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_get_specialities"
+          ],
+          "journeys": [
+            "m4-utilities"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-104",
+      "anchor": "hfr-104",
+      "group": "HFR Facility update: Facility Registration(Capture facility details information-infrastructure and specialization",
+      "title": "To edit countIPDBedsWithoutOxygen",
+      "marking": {
+        "government": "optional; applies: Registration Detailed details update API (read as all)",
+        "private": "optional; applies: Registration Detailed details update API (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Details should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST",
+          "path": "/v1.5/facility/detailed-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_detailed_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-105",
+      "anchor": "hfr-105",
+      "group": "HFR Facility update: Facility Registration(Capture facility details information-infrastructure and specialization",
+      "title": "To edit countIPDBedsWithOxygen",
+      "marking": {
+        "government": "optional; applies: Registration Detailed details update API (read as all)",
+        "private": "optional; applies: Registration Detailed details update API (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Details should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST",
+          "path": "/v1.5/facility/detailed-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_detailed_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-106",
+      "anchor": "hfr-106",
+      "group": "HFR Facility update: Facility Registration(Capture facility details information-infrastructure and specialization",
+      "title": "To edit countICUBedsWithVentilators",
+      "marking": {
+        "government": "optional; applies: Registration Detailed details update API (read as all)",
+        "private": "optional; applies: Registration Detailed details update API (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Details should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST",
+          "path": "/v1.5/facility/detailed-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_detailed_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-107",
+      "anchor": "hfr-107",
+      "group": "HFR Facility update: Facility Registration(Capture facility details information-infrastructure and specialization",
+      "title": "To edit countICUBedsWithoutVentilators",
+      "marking": {
+        "government": "optional; applies: Registration Detailed details update API (read as all)",
+        "private": "optional; applies: Registration Detailed details update API (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Details should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST",
+          "path": "/v1.5/facility/detailed-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_detailed_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-108",
+      "anchor": "hfr-108",
+      "group": "HFR Facility update: Facility Registration(Capture facility details information-infrastructure and specialization",
+      "title": "To edit countHDUBedsWithFunctionalVentilators",
+      "marking": {
+        "government": "optional; applies: Registration Detailed details update API (read as all)",
+        "private": "optional; applies: Registration Detailed details update API (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Details should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST",
+          "path": "/v1.5/facility/detailed-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_detailed_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-109",
+      "anchor": "hfr-109",
+      "group": "HFR Facility update: Facility Registration(Capture facility details information-infrastructure and specialization",
+      "title": "To edit countHDUBedsWithVentilators",
+      "marking": {
+        "government": "optional; applies: Registration Detailed details update API (read as all)",
+        "private": "optional; applies: Registration Detailed details update API (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Details should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST",
+          "path": "/v1.5/facility/detailed-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_detailed_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-110",
+      "anchor": "hfr-110",
+      "group": "HFR Facility update: Facility Registration(Capture facility details information-infrastructure and specialization",
+      "title": "To edit countHDUBedsWithoutVentilators",
+      "marking": {
+        "government": "optional; applies: Registration Detailed details update API (read as all)",
+        "private": "optional; applies: Registration Detailed details update API (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Details should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST",
+          "path": "/v1.5/facility/detailed-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_detailed_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-111",
+      "anchor": "hfr-111",
+      "group": "HFR Facility update: Facility Registration(Capture facility details information-infrastructure and specialization",
+      "title": "To edit totalNumberOfVentilators",
+      "marking": {
+        "government": "mandatory; applies: Registration Detailed details update API (read as all)",
+        "private": "mandatory; applies: Registration Detailed details update API (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Details should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST",
+          "path": "/v1.5/facility/detailed-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_detailed_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-112",
+      "anchor": "hfr-112",
+      "group": "HFR Facility update: Facility Registration(Capture facility details information-infrastructure and specialization",
+      "title": "To edit countDayCareBedsWithoutOxygen",
+      "marking": {
+        "government": "optional; applies: Registration Detailed details update API (read as all)",
+        "private": "optional; applies: Registration Detailed details update API (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Details should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST",
+          "path": "/v1.5/facility/detailed-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_detailed_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-113",
+      "anchor": "hfr-113",
+      "group": "HFR Facility update: Facility Registration(Capture facility details information-infrastructure and specialization",
+      "title": "To edit countDayCareBedsWithOxygen",
+      "marking": {
+        "government": "optional; applies: Registration Detailed details update API (read as all)",
+        "private": "optional; applies: Registration Detailed details update API (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Details should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST",
+          "path": "/v1.5/facility/detailed-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_detailed_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-114",
+      "anchor": "hfr-114",
+      "group": "HFR Facility update: Facility Registration(Capture facility details information-infrastructure and specialization",
+      "title": "To edit totalNumberOfBeds",
+      "marking": {
+        "government": "mandatory; applies: Registration Detailed details update API (read as all)",
+        "private": "mandatory; applies: Registration Detailed details update API (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Details should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST",
+          "path": "/v1.5/facility/detailed-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_detailed_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-115",
+      "anchor": "hfr-115",
+      "group": "HFR Facility update: Facility Registration(Capture facility details information-infrastructure and specialization",
+      "title": "To edit countDentalChairs",
+      "marking": {
+        "government": "optional; applies: Registration Detailed details update API (read as all)",
+        "private": "optional; applies: Registration Detailed details update API (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Details should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST",
+          "path": "/v1.5/facility/detailed-information",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_detailed_information"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-116",
+      "anchor": "hfr-116",
+      "group": "HFR Facility update: Facility submission",
+      "title": "sourceOfInformation",
+      "marking": {
+        "government": "optional; applies: Registration Resubmit API (read as all)",
+        "private": "optional; applies: Registration Resubmit API (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Facility shold get submitted",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15SubmitFacilityDetailsUsingPOST",
+          "path": "/v1.5/facility/submit-facility",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_5_facility_submit_facility"
+          ],
+          "journeys": [
+            "m4-onboarding-apis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-117",
+      "anchor": "hfr-117",
+      "group": "HFR Facility update: Facility submission",
+      "title": "sourceUniqueID",
+      "marking": {
+        "government": "optional; applies: Registration Resubmit API (read as all)",
+        "private": "optional; applies: Registration Resubmit API (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "HFR-118",
+      "anchor": "hfr-118",
+      "group": "HFR Bridge linkage: Bridge linkage",
+      "title": "Fill the facility Id",
+      "marking": {
+        "government": "mandatory; applies: Bridge linkage (read as all)",
+        "private": "mandatory; applies: Bridge linkage (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Facility should get validated",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Multiple%20HRP%20API/v1MutipleHRPAddUpdateServicesUsingPOST",
+          "path": "/v1/bridges/MutipleHRPAddUpdateServices",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_bridges_mutiplehrpaddupdateservices"
+          ],
+          "journeys": [
+            "m4-multiple-hrp-api"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-119",
+      "anchor": "hfr-119",
+      "group": "HFR Bridge linkage: Bridge linkage",
+      "title": "Fill the facility Name",
+      "marking": {
+        "government": "mandatory; applies: Bridge linkage (read as all)",
+        "private": "mandatory; applies: Bridge linkage (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Facility Name should fetch",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Multiple%20HRP%20API/v1MutipleHRPAddUpdateServicesUsingPOST",
+          "path": "/v1/bridges/MutipleHRPAddUpdateServices",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_bridges_mutiplehrpaddupdateservices"
+          ],
+          "journeys": [
+            "m4-multiple-hrp-api"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-120",
+      "anchor": "hfr-120",
+      "group": "HFR Bridge linkage: Bridge linkage",
+      "title": "Fill the bridge Id",
+      "marking": {
+        "government": "mandatory; applies: Bridge linkage (read as all)",
+        "private": "mandatory; applies: Bridge linkage (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Bridge id should get validated",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Multiple%20HRP%20API/v1MutipleHRPAddUpdateServicesUsingPOST",
+          "path": "/v1/bridges/MutipleHRPAddUpdateServices",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_bridges_mutiplehrpaddupdateservices"
+          ],
+          "journeys": [
+            "m4-multiple-hrp-api"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-121",
+      "anchor": "hfr-121",
+      "group": "HFR Bridge linkage: Bridge linkage",
+      "title": "Fill the hip Name",
+      "marking": {
+        "government": "mandatory; applies: Bridge linkage (read as all)",
+        "private": "mandatory; applies: Bridge linkage (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Valid HIP name should get filled",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Multiple%20HRP%20API/v1MutipleHRPAddUpdateServicesUsingPOST",
+          "path": "/v1/bridges/MutipleHRPAddUpdateServices",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_bridges_mutiplehrpaddupdateservices"
+          ],
+          "journeys": [
+            "m4-multiple-hrp-api"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-122",
+      "anchor": "hfr-122",
+      "group": "HFR Bridge linkage: Bridge linkage",
+      "title": "Fill the HIP type",
+      "marking": {
+        "government": "mandatory; applies: Bridge linkage (read as all)",
+        "private": "mandatory; applies: Bridge linkage (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Multiple%20HRP%20API/v1MutipleHRPAddUpdateServicesUsingPOST",
+          "path": "/v1/bridges/MutipleHRPAddUpdateServices",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_bridges_mutiplehrpaddupdateservices"
+          ],
+          "journeys": [
+            "m4-multiple-hrp-api"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-123",
+      "anchor": "hfr-123",
+      "group": "HFR Bridge linkage: Bridge linkage",
+      "title": "Provide details if the bridge is Active or not",
+      "marking": {
+        "government": "mandatory; applies: Bridge linkage (read as all)",
+        "private": "mandatory; applies: Bridge linkage (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Multiple%20HRP%20API/v1MutipleHRPAddUpdateServicesUsingPOST",
+          "path": "/v1/bridges/MutipleHRPAddUpdateServices",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_bridges_mutiplehrpaddupdateservices"
+          ],
+          "journeys": [
+            "m4-multiple-hrp-api"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-118",
+      "anchor": "hfr-118-2",
+      "group": "HFR Bridge linkage: Bridge linkage",
+      "title": "Fill the facility Id",
+      "marking": {
+        "government": "mandatory; applies: Second Bridge linkage (read as all)",
+        "private": "mandatory; applies: Second Bridge linkage (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Facility should get validated",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Multiple%20HRP%20API/v1MutipleHRPAddUpdateServicesUsingPOST",
+          "path": "/v1/bridges/MutipleHRPAddUpdateServices",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_bridges_mutiplehrpaddupdateservices"
+          ],
+          "journeys": [
+            "m4-multiple-hrp-api"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-119",
+      "anchor": "hfr-119-2",
+      "group": "HFR Bridge linkage: Bridge linkage",
+      "title": "Fill the facility Name",
+      "marking": {
+        "government": "mandatory; applies: Second Bridge linkage (read as all)",
+        "private": "mandatory; applies: Second Bridge linkage (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Facility Name should fetch",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Multiple%20HRP%20API/v1MutipleHRPAddUpdateServicesUsingPOST",
+          "path": "/v1/bridges/MutipleHRPAddUpdateServices",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_bridges_mutiplehrpaddupdateservices"
+          ],
+          "journeys": [
+            "m4-multiple-hrp-api"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-120",
+      "anchor": "hfr-120-2",
+      "group": "HFR Bridge linkage: Bridge linkage",
+      "title": "Fill the bridge Id",
+      "marking": {
+        "government": "mandatory; applies: Second Bridge linkage (read as all)",
+        "private": "mandatory; applies: Second Bridge linkage (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Bridge id should get validated",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Multiple%20HRP%20API/v1MutipleHRPAddUpdateServicesUsingPOST",
+          "path": "/v1/bridges/MutipleHRPAddUpdateServices",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_bridges_mutiplehrpaddupdateservices"
+          ],
+          "journeys": [
+            "m4-multiple-hrp-api"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-121",
+      "anchor": "hfr-121-2",
+      "group": "HFR Bridge linkage: Bridge linkage",
+      "title": "Fill the hip Name",
+      "marking": {
+        "government": "mandatory; applies: Second Bridge linkage (read as all)",
+        "private": "mandatory; applies: Second Bridge linkage (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Valid HIP name should get filled and HIP name should not be repeated",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Multiple%20HRP%20API/v1MutipleHRPAddUpdateServicesUsingPOST",
+          "path": "/v1/bridges/MutipleHRPAddUpdateServices",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_bridges_mutiplehrpaddupdateservices"
+          ],
+          "journeys": [
+            "m4-multiple-hrp-api"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-122",
+      "anchor": "hfr-122-2",
+      "group": "HFR Bridge linkage: Bridge linkage",
+      "title": "Fill the HIP type",
+      "marking": {
+        "government": "mandatory; applies: Second Bridge linkage (read as all)",
+        "private": "mandatory; applies: Second Bridge linkage (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Multiple%20HRP%20API/v1MutipleHRPAddUpdateServicesUsingPOST",
+          "path": "/v1/bridges/MutipleHRPAddUpdateServices",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_bridges_mutiplehrpaddupdateservices"
+          ],
+          "journeys": [
+            "m4-multiple-hrp-api"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HFR-123",
+      "anchor": "hfr-123-2",
+      "group": "HFR Bridge linkage: Bridge linkage",
+      "title": "Provide details if the bridge is Active or not",
+      "marking": {
+        "government": "mandatory; applies: Second Bridge linkage (read as all)",
+        "private": "mandatory; applies: Second Bridge linkage (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Multiple%20HRP%20API/v1MutipleHRPAddUpdateServicesUsingPOST",
+          "path": "/v1/bridges/MutipleHRPAddUpdateServices",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_bridges_mutiplehrpaddupdateservices"
+          ],
+          "journeys": [
+            "m4-multiple-hrp-api"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HPR-002",
+      "anchor": "hpr-002",
+      "group": "HPR: Creation of HPR Profile",
+      "title": "Create your Healthcare Professional ID via Aadhaar",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": [
+        {
+          "source": "https://hpridsbx.abdm.gov.in/api/v1/registration/aadhaar/generateOtp",
+          "path": "/api/v1/registration/aadhaar/generateOtp",
+          "unresolved": true,
+          "reason": "no operation in the specifications has this path"
+        }
+      ]
+    },
+    {
+      "id": "No id",
+      "anchor": "no-id",
+      "group": "HPR: Creation of HPR Profile",
+      "title": "Aadhaar collection and Error Message",
+      "marking": {
+        "government": "no case id in NHA's sheet, so the workbook and the report cannot record it",
+        "private": "no case id in NHA's sheet, so the workbook and the report cannot record it"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "User is prompted to enter correct Aadhaar Number",
+      "apis": [
+        {
+          "source": "https://hpridsbx.abdm.gov.in/api/v1/registration/aadhaar/generateOtp",
+          "path": "/api/v1/registration/aadhaar/generateOtp",
+          "unresolved": true,
+          "reason": "no operation in the specifications has this path"
+        }
+      ]
+    },
+    {
+      "id": "HPR-003",
+      "anchor": "hpr-003",
+      "group": "HPR: Creation of HPR Profile",
+      "title": "consent collection",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Please refer the cell no -M5",
+      "apis": [
+        {
+          "source": "https://hpridsbx.abdm.gov.in/api/v1/registration/aadhaar/generateOtp",
+          "path": "/api/v1/registration/aadhaar/generateOtp",
+          "unresolved": true,
+          "reason": "no operation in the specifications has this path"
+        }
+      ]
+    },
+    {
+      "id": "HPR-004",
+      "anchor": "hpr-004",
+      "group": "HPR: Creation of HPR Profile",
+      "title": "Suggestions:- Consent collection should be multilingual",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "User provides consent for sharing of Aadhaar details and creation of HPR. System records user consent for compliance with Health Data Management Policy.",
+      "apis": [
+        {
+          "source": "https://hpridsbx.abdm.gov.in/api/v1/registration/aadhaar/generateOtp",
+          "path": "/api/v1/registration/aadhaar/generateOtp",
+          "unresolved": true,
+          "reason": "no operation in the specifications has this path"
+        }
+      ]
+    },
+    {
+      "id": "HPR-005",
+      "anchor": "hpr-005",
+      "group": "HPR: Creation of HPR Profile",
+      "title": "Aadhaar collection and Error Message",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "User is prompted to enter correct Aadhaar Number",
+      "apis": [
+        {
+          "source": "https://hpridsbx.abdm.gov.in/api/v1/registration/aadhaar/generateOtp",
+          "path": "/api/v1/registration/aadhaar/generateOtp",
+          "unresolved": true,
+          "reason": "no operation in the specifications has this path"
+        }
+      ]
+    },
+    {
+      "id": "HPR-006",
+      "anchor": "hpr-006",
+      "group": "HPR: Creation of HPR Profile",
+      "title": "Captcha",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": [
+        {
+          "source": "https://hpridsbx.abdm.gov.in/api/v1/registration/aadhaar/generateOtp",
+          "path": "/api/v1/registration/aadhaar/generateOtp",
+          "unresolved": true,
+          "reason": "no operation in the specifications has this path"
+        }
+      ]
+    },
+    {
+      "id": "HPR-007",
+      "anchor": "hpr-007",
+      "group": "HPR: Creation of HPR Profile",
+      "title": "Aadhaar OTP Collection",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": [
+        {
+          "source": "https://hpridsbx.abdm.gov.in/api/v1/registration/aadhaar/generateOtp",
+          "path": "/api/v1/registration/aadhaar/generateOtp",
+          "unresolved": true,
+          "reason": "no operation in the specifications has this path"
+        }
+      ]
+    },
+    {
+      "id": "HPR-008",
+      "anchor": "hpr-008",
+      "group": "HPR: Creation of HPR Profile",
+      "title": "Resend OTP",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "User will able to send OTP again and verify it",
+      "apis": []
+    },
+    {
+      "id": "HPR-010",
+      "anchor": "hpr-010",
+      "group": "HPR: Creation of HPR Profile",
+      "title": "Communication Mobile Number verification-I",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": [
+        {
+          "source": "https://hpridsbx.abdm.gov.in/api/v1/registration/aadhaar/demographicAuthViaMobile",
+          "path": "/api/v1/registration/aadhaar/demographicAuthViaMobile",
+          "unresolved": true,
+          "reason": "no operation in the specifications has this path"
+        }
+      ]
+    },
+    {
+      "id": "HPR-011",
+      "anchor": "hpr-011",
+      "group": "HPR: Creation of HPR Profile",
+      "title": "Communication Mobile Number verification-II",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": [
+        {
+          "source": "https://hpridsbx.abdm.gov.in/api/v1/registration/aadhaar/createHprIdWithPreVerified",
+          "path": "/api/v1/registration/aadhaar/createHprIdWithPreVerified",
+          "unresolved": true,
+          "reason": "no operation in the specifications has this path"
+        }
+      ]
+    },
+    {
+      "id": "HPR-018",
+      "anchor": "hpr-018",
+      "group": "HPR: Register In HPR",
+      "title": "hprToken",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Received Token",
+      "apis": [
+        {
+          "source": "https://doctorsbx.abdm.gov.in/apis/v1/doctors/register-professional-new",
+          "path": "/apis/v1/doctors/register-professional-new",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_doctors_register_professional_new"
+          ],
+          "journeys": [
+            "m4-enrollment"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HPR-019",
+      "anchor": "hpr-019",
+      "group": "HPR: Register In HPR",
+      "title": "profilePhoto",
+      "marking": {
+        "government": "optional",
+        "private": "optional"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "Photo will be displayed",
+      "apis": []
+    },
+    {
+      "id": "HPR-020",
+      "anchor": "hpr-020",
+      "group": "HPR: Register In HPR",
+      "title": "Healthcare Professional ID",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Healthcare Professional ID is successfully genearted",
+      "apis": []
+    },
+    {
+      "id": "HPR-022",
+      "anchor": "hpr-022",
+      "group": "HPR: Register In HPR",
+      "title": "Mobile Number",
+      "marking": {
+        "government": "optional",
+        "private": "optional"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "HPR-024",
+      "anchor": "hpr-024",
+      "group": "HPR: Register In HPR",
+      "title": "Email and Email Status",
+      "marking": {
+        "government": "optional",
+        "private": "optional"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "HPR-026",
+      "anchor": "hpr-026",
+      "group": "HPR: Register In HPR",
+      "title": "Salutation *",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "HPR-027",
+      "anchor": "hpr-027",
+      "group": "HPR: Register In HPR",
+      "title": "First Name *",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "First name is fetched from the Aadhaar database.",
+      "apis": []
+    },
+    {
+      "id": "HPR-028",
+      "anchor": "hpr-028",
+      "group": "HPR: Register In HPR",
+      "title": "Middle Name",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Middle Name is fetched from the Aadhaar database.",
+      "apis": []
+    },
+    {
+      "id": "HPR-029",
+      "anchor": "hpr-029",
+      "group": "HPR: Register In HPR",
+      "title": "Last Name",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "Last name is fetched from the Aadhaar database.",
+      "apis": []
+    },
+    {
+      "id": "HPR-030",
+      "anchor": "hpr-030",
+      "group": "HPR: Register In HPR",
+      "title": "Father's Name",
+      "marking": {
+        "government": "optional",
+        "private": "optional"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "User is able to fill the Father's Name.",
+      "apis": []
+    },
+    {
+      "id": "HPR-031",
+      "anchor": "hpr-031",
+      "group": "HPR: Register In HPR",
+      "title": "Mother's Name",
+      "marking": {
+        "government": "optional",
+        "private": "optional"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "User is able to fill the Mother's Name.",
+      "apis": []
+    },
+    {
+      "id": "HPR-032",
+      "anchor": "hpr-032",
+      "group": "HPR: Register In HPR",
+      "title": "Spouse's Name",
+      "marking": {
+        "government": "optional",
+        "private": "optional"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "User is able to fill the Spouse Name.",
+      "apis": []
+    },
+    {
+      "id": "HPR-033",
+      "anchor": "hpr-033",
+      "group": "HPR: Register In HPR",
+      "title": "Nationality",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "HPR-036",
+      "anchor": "hpr-036",
+      "group": "HPR: Register In HPR",
+      "title": "Languages spoken *",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "HPR-037",
+      "anchor": "hpr-037",
+      "group": "HPR: Register In HPR",
+      "title": "Address as per KYC :",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "HPR-038",
+      "anchor": "hpr-038",
+      "group": "HPR: Register In HPR",
+      "title": "Is this communication address same as your address as per KYC ?",
+      "marking": {
+        "government": "optional",
+        "private": "optional"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "HPR-039",
+      "anchor": "hpr-039",
+      "group": "HPR: Register In HPR",
+      "title": "Communication Address *",
+      "marking": {
+        "government": "optional",
+        "private": "optional"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "HPR-040",
+      "anchor": "hpr-040",
+      "group": "HPR: Register In HPR",
+      "title": "Name *",
+      "marking": {
+        "government": "optional",
+        "private": "optional"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "HPR-041",
+      "anchor": "hpr-041",
+      "group": "HPR: Register In HPR",
+      "title": "Country*",
+      "marking": {
+        "government": "optional",
+        "private": "optional"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "HPR-042",
+      "anchor": "hpr-042",
+      "group": "HPR: Register In HPR",
+      "title": "State/Union Territory *",
+      "marking": {
+        "government": "optional",
+        "private": "optional"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "HPR-043",
+      "anchor": "hpr-043",
+      "group": "HPR: Register In HPR",
+      "title": "District *",
+      "marking": {
+        "government": "optional",
+        "private": "optional"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "HPR-044",
+      "anchor": "hpr-044",
+      "group": "HPR: Register In HPR",
+      "title": "Sub District",
+      "marking": {
+        "government": "optional",
+        "private": "optional"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "HPR-045",
+      "anchor": "hpr-045",
+      "group": "HPR: Register In HPR",
+      "title": "City/Town/Village",
+      "marking": {
+        "government": "optional",
+        "private": "optional"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "HPR-046",
+      "anchor": "hpr-046",
+      "group": "HPR: Register In HPR",
+      "title": "Postal Code(PIN) *",
+      "marking": {
+        "government": "optional",
+        "private": "optional"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "HPR-054",
+      "anchor": "hpr-054",
+      "group": "HPR: Register In HPR",
+      "title": "category",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "HPR-055",
+      "anchor": "hpr-055",
+      "group": "HPR: Register In HPR",
+      "title": "categoryId",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "HPR-056",
+      "anchor": "hpr-056",
+      "group": "HPR: Register In HPR",
+      "title": "registeredWithCouncil",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "HPR-057",
+      "anchor": "hpr-057",
+      "group": "HPR: Register In HPR",
+      "title": "registrationNumber",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "HPR-058",
+      "anchor": "hpr-058",
+      "group": "HPR: Register In HPR",
+      "title": "registrationDate",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "HPR-059",
+      "anchor": "hpr-059",
+      "group": "HPR: Register In HPR",
+      "title": "registrationCertificate",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "HPR-060",
+      "anchor": "hpr-060",
+      "group": "HPR: Register In HPR",
+      "title": "isNameDifferentInCertificate",
+      "marking": {
+        "government": "optional",
+        "private": "optional"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "HPR-061",
+      "anchor": "hpr-061",
+      "group": "HPR: Register In HPR",
+      "title": "proofOfNameChangeCertificate",
+      "marking": {
+        "government": "optional",
+        "private": "optional"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "HPR-062",
+      "anchor": "hpr-062",
+      "group": "HPR: Register In HPR",
+      "title": "nameOfDegreeOrDiplomaObtained",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "HPR-063",
+      "anchor": "hpr-063",
+      "group": "HPR: Register In HPR",
+      "title": "country",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "HPR-064",
+      "anchor": "hpr-064",
+      "group": "HPR: Register In HPR",
+      "title": "state",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "HPR-065",
+      "anchor": "hpr-065",
+      "group": "HPR: Register In HPR",
+      "title": "college",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "HPR-066",
+      "anchor": "hpr-066",
+      "group": "HPR: Register In HPR",
+      "title": "university",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "HPR-067",
+      "anchor": "hpr-067",
+      "group": "HPR: Register In HPR",
+      "title": "monthOfAwardingDegreeDiploma",
+      "marking": {
+        "government": "optional",
+        "private": "optional"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "HPR-068",
+      "anchor": "hpr-068",
+      "group": "HPR: Register In HPR",
+      "title": "yearOfAwardingDegreeDiploma",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "HPR-069",
+      "anchor": "hpr-069",
+      "group": "HPR: Register In HPR",
+      "title": "degreeCertificate",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "HPR-070",
+      "anchor": "hpr-070",
+      "group": "HPR: Register In HPR",
+      "title": "isNameDifferentInCertificate",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "HPR-071",
+      "anchor": "hpr-071",
+      "group": "HPR: Register In HPR",
+      "title": "proofOfNameChangeCertificate",
+      "marking": {
+        "government": "optional",
+        "private": "optional"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "HPR-072",
+      "anchor": "hpr-072",
+      "group": "HPR: Register In HPR",
+      "title": "Are you currentlty working (Yes/No)",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "HPR-073",
+      "anchor": "hpr-073",
+      "group": "HPR: Register In HPR",
+      "title": "IF No, so please ask the reason for non working",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "HPR-074",
+      "anchor": "hpr-074",
+      "group": "HPR: Register In HPR",
+      "title": "If Yes, So radio button (Govt, Pvt or Both)",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "HPR-075",
+      "anchor": "hpr-075",
+      "group": "HPR: Register In HPR",
+      "title": "If Govt /Both, so document attachment is mandatory to upload upto 5 mb",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": []
+    },
+    {
+      "id": "HPR-076",
+      "anchor": "hpr-076",
+      "group": "HPR: Register In HPR",
+      "title": "If Govt/Both so facility decalartion is mandatory (Professinal can search the facility via name/Facility id)",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": [
+        {
+          "source": "https://facilitysbx.abdm.gov.in/FacilityManagement/v1.5/facility/search",
+          "path": "/FacilityManagement/v1.5/facility/search",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_facilitymanagement_v1_5_facility_search"
+          ],
+          "journeys": [
+            "m4-search"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HPR-077",
+      "anchor": "hpr-077",
+      "group": "HPR: Register In HPR",
+      "title": "Preview Profile & Submit",
+      "marking": {
+        "government": "mandatory",
+        "private": "mandatory"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": [
+        {
+          "source": "https://doctorsbx.abdm.gov.in/apis/v1/doctors/register-professional-new",
+          "path": "/apis/v1/doctors/register-professional-new",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_doctors_register_professional_new"
+          ],
+          "journeys": [
+            "m4-enrollment"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HPR-078",
+      "anchor": "hpr-078",
+      "group": "HPR: Fetch Professionals details",
+      "title": "fetchProfessionalsdetails",
+      "marking": {
+        "government": "optional; applies: Fetch Professionals details (read as all)",
+        "private": "optional; applies: Fetch Professionals details (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "",
+      "apis": [
+        {
+          "source": "https://doctorsbx.abdm.gov.in/apis/v1/doctors/fetch-professional-info",
+          "path": "/apis/v1/doctors/fetch-professional-info",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_doctors_fetch_professional_info"
+          ],
+          "journeys": [
+            "m4-enrollment"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HPR-079",
+      "anchor": "hpr-079",
+      "group": "HPR: Update Professionals details",
+      "title": "update-professional",
+      "marking": {
+        "government": "mandatory; applies: Update Professionals details (read as all)",
+        "private": "mandatory; applies: Update Professionals details (read as all)"
+      },
+      "mandatory": {
+        "government": true,
+        "private": true
+      },
+      "expected": "",
+      "apis": [
+        {
+          "source": "https://doctorsbx.abdm.gov.in/apis/v1/doctors/update-professional",
+          "path": "/apis/v1/doctors/update-professional",
+          "unresolved": true,
+          "reason": "no operation in the specifications has this path"
+        }
+      ]
+    },
+    {
+      "id": "HPR-080",
+      "anchor": "hpr-080",
+      "group": "HPR: Upload Document API",
+      "title": "Upload- Document",
+      "marking": {
+        "government": "optional; applies: Upload Document API (read as all)",
+        "private": "optional; applies: Upload Document API (read as all)"
+      },
+      "mandatory": {
+        "government": false,
+        "private": false
+      },
+      "expected": "",
+      "apis": [
+        {
+          "source": "https://doctorsbx.abdm.gov.in/apis/v1/doctors/fetch-documents-list",
+          "path": "/apis/v1/doctors/fetch-documents-list",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_doctors_fetch_documents_list"
+          ],
+          "journeys": [
+            "m4-enrollment"
+          ]
+        },
+        {
+          "source": "https://doctorsbx.abdm.gov.in/apis/v1/uploads/upload-document",
+          "path": "/apis/v1/uploads/upload-document",
+          "method": "POST",
+          "spec": "m4",
+          "operations": [
+            "m4_post_v1_uploads_upload_document"
+          ],
+          "journeys": [
+            "m4-enrollment"
+          ]
+        }
+      ]
+    }
+  ]
+}

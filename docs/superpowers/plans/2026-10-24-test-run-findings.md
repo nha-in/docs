@@ -207,8 +207,8 @@ Each step is its own branch and pull request, ends with the `adversarial-reviewe
 | 3 | The M1 mapping, `catalogue/hiecm/tests/m1.yaml`, and its CI check | Every M1 case maps to a functionality; CI fails on an unmapped case |
 | 4 | The per functionality M1 skill: `build-skills.mjs` writes `SKILL.md`, `functionalities/`, `run.md`, `errors.md`; the five job files go; the eleven screen requirements land in their functionality files | `validate:skills` passes; each M1 functionality file holds its cases, screen requirements, calls and errors; no rule appears in two files |
 | 5 | `/abdm-build` and `/abdm-test`, the tracker in `INTEGRATION-PLAN.md`, entity type first scope, findings file | A dry run on SMART HMS's recorded results places each functionality in the tracker, lists its failing cases and the screen requirement each lacks |
-| 6 | The same for M2, M3, M4 and P1 to P4 | Every module's cases are mapped and every module skill is built per functionality |
-| 7 | A full run on SMART HMS through `/abdm-test m1`, the holder present, the test data plan prepared | Every mandatory case is run, NA or needs-human with its need; the report is final, or a draft listing only what is truly open |
+| 6 | A generated case to API matrix for M2, M3, M4 and P1 to P4 (user, 25 October 2026: in the interest of time, instead of rebuilding each module per functionality): each case's group, marking per entity type, the sheet's API paths resolved to operation ids and journeys, unresolved paths flagged; shipped in each module skill and referenced from its build and test sections | Every case in each shipped workbook appears in its module's matrix; CI fails on a case missing from it or an operation id that does not exist |
+| 7 | Dropped for now (user, 25 October 2026). A full run on SMART HMS through `/abdm-test m1`, the holder present, the test data plan prepared | Every mandatory case is run, NA or needs-human with its need; the report is final, or a draft listing only what is truly open |
 
 ## 6. Proving it
 
