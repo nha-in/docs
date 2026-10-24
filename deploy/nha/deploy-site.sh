@@ -64,8 +64,10 @@ test -f "$repo/site/build/index.html"
 echo "==> site ($ENVIRONMENT): syncing to s3://$SITE_BUCKET/main/"
 # Fingerprinted assets first, cached for a year; everything else revalidates, which is what
 # makes a deploy visible without a CDN invalidation. Same four passes as deploy.sh.
+# A fresh build gives every file a new modified time, which sync takes as changed; an assets/
+# file named after its contents is unchanged whenever its name and size match (--size-only).
 aws s3 sync "$repo/site/build/" "s3://$SITE_BUCKET/main/" --delete --only-show-errors \
-  --exclude "*" --include "assets/*" \
+  --exclude "*" --include "assets/*" --size-only \
   --cache-control "public,max-age=31536000,immutable"
 aws s3 sync "$repo/site/build/" "s3://$SITE_BUCKET/main/" --delete --only-show-errors \
   --exclude "assets/*" \
@@ -80,7 +82,10 @@ aws s3 sync "$repo/site/build/" "s3://$SITE_BUCKET/main/" --delete --only-show-e
   --cache-control "public,max-age=0,must-revalidate"
 
 echo "==> site ($ENVIRONMENT): keeping a copy at s3://$SITE_BUCKET/$VERSION/"
-aws s3 sync "$repo/site/build/" "s3://$SITE_BUCKET/$VERSION/" --only-show-errors
+# Copied inside S3 from main/, which now holds exactly this build, instead of uploaded a
+# second time. metadata-directive keeps each file's type and cache headers and skips tags.
+aws s3 sync "s3://$SITE_BUCKET/main/" "s3://$SITE_BUCKET/$VERSION/" --only-show-errors \
+  --copy-props metadata-directive
 
 echo "version:     $VERSION"
 echo "environment: $ENVIRONMENT"
