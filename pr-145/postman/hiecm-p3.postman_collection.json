@@ -1,0 +1,718 @@
+{
+  "info": {
+    "name": "ABDM HIE-CM P3 Subscription",
+    "description": "Generated from the ABDM HIE-CM specifications. Import hiecm-sandbox.postman_environment.json beside it and fill in clientId and clientSecret: the collection fetches a gateway session token before a call when it needs one.\n\nFolders follow the order a journey is built in. Send the steps in order: each response keeps the txnId and the X-token it returns as collection variables, and the steps after it read them. Callbacks are not included: ABDM sends those to your bridge URL, so receiving them needs a public endpoint, not Postman.\n\nValues ABDM expects encrypted, such as an Aadhaar number or an OTP, are shown as the specification gives them. Encrypt your own values before sending.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Gets a gateway session token when there is none or it has expired.",
+          "(function () {",
+          "if (pm.request.url.getPath().endsWith('/api/hiecm/gateway/v3/sessions')) return;",
+          "const expiry = Number(pm.environment.get('accessTokenExpiry') || 0);",
+          "if (pm.environment.get('accessToken') && Date.now() < expiry) return;",
+          "pm.sendRequest({",
+          "  url: pm.variables.replaceIn('{{gatewayUrl}}/api/hiecm/gateway/v3/sessions'),",
+          "  method: 'POST',",
+          "  header: {",
+          "    'Content-Type': 'application/json',",
+          "    'REQUEST-ID': pm.variables.replaceIn('{{$guid}}'),",
+          "    'TIMESTAMP': new Date().toISOString(),",
+          "    'X-CM-ID': pm.variables.replaceIn('{{cmId}}'),",
+          "  },",
+          "  body: {",
+          "    mode: 'raw',",
+          "    raw: JSON.stringify({",
+          "      clientId: pm.variables.get('clientId'),",
+          "      clientSecret: pm.variables.get('clientSecret'),",
+          "      grantType: 'client_credentials',",
+          "    }),",
+          "  },",
+          "}, (error, response) => {",
+          "  if (error || response.code >= 300) {",
+          "    console.error('Session token request failed', error || response.text());",
+          "    return;",
+          "  }",
+          "  const {accessToken, expiresIn} = response.json();",
+          "  pm.environment.set('accessToken', accessToken);",
+          "  // A minute early, so a token never expires between this check and the call.",
+          "  pm.environment.set('accessTokenExpiry', Date.now() + (expiresIn - 60) * 1000);",
+          "});",
+          "})();"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Keeps what this response hands to the calls after it, such as the txnId an",
+          "// OTP request returns and the X-token a login returns, as collection variables.",
+          "(function () {",
+          "let body;",
+          "try { body = pm.response.json(); } catch (error) { return; }",
+          "function carriedValues(body) {",
+          "  const list = Array.isArray(body);",
+          "  const first = list ? body[0] : body;",
+          "  if (!first || typeof first !== \"object\") return {};",
+          "  const read = (path) => {",
+          "    let at = first;",
+          "    for (const key of path.split(\".\")) {",
+          "      if (!at || typeof at !== \"object\") return void 0;",
+          "      at = at[key];",
+          "    }",
+          "    return typeof at === \"string\" && at ? at : void 0;",
+          "  };",
+          "  const out = {};",
+          "  const txnId = read(\"txnId\");",
+          "  if (txnId) out[list ? \"searchTxnId\" : \"txnId\"] = txnId;",
+          "  const tokenAt = [\"tokens.token\", \"jwtResponse.token\", \"token\"].find((path) => read(path));",
+          "  if (tokenAt) {",
+          "    const token = read(tokenAt);",
+          "    out[\"X-token\"] = token;",
+          "    out.jwtToken = token;",
+          "    const refresh = read(tokenAt.replace(/token$/, \"refreshToken\"));",
+          "    if (refresh) out[\"R-jwtToken\"] = refresh;",
+          "  }",
+          "  return out;",
+          "}",
+          "const values = carriedValues(body);",
+          "Object.keys(values).forEach(function (key) { pm.collectionVariables.set(key, values[key]); });",
+          "})();"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "txnId",
+      "value": ""
+    },
+    {
+      "key": "searchTxnId",
+      "value": ""
+    },
+    {
+      "key": "X-token",
+      "value": ""
+    },
+    {
+      "key": "jwtToken",
+      "value": ""
+    },
+    {
+      "key": "R-jwtToken",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Subscription request and notifications, HIU side",
+      "item": [
+        {
+          "name": "1. Initiate subscription request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "REQUEST-ID",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "TIMESTAMP",
+                "value": "{{$isoTimestamp}}"
+              },
+              {
+                "key": "X-CM-ID",
+                "value": "{{cmId}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{gatewayUrl}}/api/hiecm/subscription-requests/v3/init",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "api",
+                "hiecm",
+                "subscription-requests",
+                "v3",
+                "init"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"subscription\": {\n    \"purpose\": {\n      \"text\": \"Care Management\",\n      \"code\": \"CAREMGT\",\n      \"refUri\": \"https://abc.def.in\"\n    },\n    \"patient\": {\n      \"id\": \"<ABHA_ADDRESS>\"\n    },\n    \"hiu\": {\n      \"id\": \"INDIA_HIU\",\n      \"name\": \"INDIA HIU\",\n      \"type\": \"HIU\"\n    },\n    \"hips\": [\n      {\n        \"id\": \"INDIA_HIP\",\n        \"name\": \"INDIA HIP\",\n        \"type\": \"HIP\"\n      }\n    ],\n    \"categories\": [\n      \"LINK\"\n    ],\n    \"period\": {\n      \"from\": \"2024-05-09T10:34:00.389Z\",\n      \"to\": \"2024-05-09T10:34:00.389Z\"\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Be invoked by Health Information Users (HIUs), patients, or users through the Personal Health Record (PHR) application to initiate a subscription request. By using this API, individuals can start the process of subscribing to specific health information services or updates. This functionality is essential for enabling users to manage their health data subscriptions effectively, ensuring they receive timely and relevant health information."
+          }
+        },
+        {
+          "name": "4. Answer the subscription request notification",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "REQUEST-ID",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "TIMESTAMP",
+                "value": "{{$isoTimestamp}}"
+              },
+              {
+                "key": "X-CM-ID",
+                "value": "{{cmId}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{gatewayUrl}}/api/hiecm/subscription-requests/v3/hiu/on-notify",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "api",
+                "hiecm",
+                "subscription-requests",
+                "v3",
+                "hiu",
+                "on-notify"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"acknowledgement\": {\n    \"status\": \"OK\",\n    \"subscriptionRequestId\": \"f29f0e59-8388-4698-9fe6-05db67aeac46\"\n  },\n  \"error\": {\n    \"code\": \"ABDM-1001\",\n    \"message\": \"No data found\"\n  },\n  \"response\": {\n    \"requestId\": \"f29f0e59-8388-4698-9fe6-05db67aeac46\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Be invoked by the Health Information User (HIU) to respond to notifications received from the /subscription-requests/hiu/notify API. By using this API, the HIU can acknowledge and process the subscription request notifications, ensuring that the system accurately reflects the status and actions taken. This functionality is essential for maintaining the integrity and synchronization of subscription requests, supporting efficient and transparent health information exchange within the healthcare ecosystem."
+          }
+        },
+        {
+          "name": "6. Answer the care context subscription notification",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "REQUEST-ID",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "TIMESTAMP",
+                "value": "{{$isoTimestamp}}"
+              },
+              {
+                "key": "X-CM-ID",
+                "value": "{{cmId}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{gatewayUrl}}/api/hiecm/subscription-requests/v3/hiu/care-context/on-notify",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "api",
+                "hiecm",
+                "subscription-requests",
+                "v3",
+                "hiu",
+                "care-context",
+                "on-notify"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"acknowledgement\": {\n    \"status\": \"OK\",\n    \"eventId\": \"3c2f0e59-8388-4698-9fe6-05db67aeac46\"\n  },\n  \"error\": {\n    \"code\": \"ABDM-1001\",\n    \"message\": \"No data found\"\n  },\n  \"response\": {\n    \"requestId\": \"f29f0e59-8388-4698-9fe6-05db67aeac46\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Be invoked by the Health Information User (HIU) to respond to notifications received from the /api/v3/hiu/subscription/notify API. By using this API, the HIU can acknowledge and process notifications related to care context subscriptions, ensuring that the system accurately reflects the status and actions taken. This functionality is essential for maintaining the integrity and synchronization of care context subscription requests, supporting efficient and transparent health information exchange within the healthcare ecosystem."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Subscription approval and management, PHR side",
+      "item": [
+        {
+          "name": "1. Approve subscription request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "REQUEST-ID",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "TIMESTAMP",
+                "value": "{{$isoTimestamp}}"
+              },
+              {
+                "key": "X-CM-ID",
+                "value": "{{cmId}}"
+              },
+              {
+                "key": "X-AUTH-TOKEN",
+                "value": "<TOKEN>"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{gatewayUrl}}/api/hiecm/subscription-requests/v3/:subscriptionRequestId/approve",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "api",
+                "hiecm",
+                "subscription-requests",
+                "v3",
+                ":subscriptionRequestId",
+                "approve"
+              ],
+              "variable": [
+                {
+                  "key": "subscriptionRequestId",
+                  "value": ""
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"isApplicableForAllHIPs\": true,\n  \"includedSources\": [\n    {\n      \"hiTypes\": [\n        \"Prescription\",\n        \"DiagnosticReport\",\n        \"OPConsultation\",\n        \"DischargeSummary\",\n        \"ImmunizationRecord\",\n        \"HealthDocumentRecord\",\n        \"WellnessRecord\",\n        \"Invoice\"\n      ],\n      \"purpose\": {\n        \"text\": \"Care Management\",\n        \"code\": \"CAREMGT\",\n        \"refUri\": \"www.abdm.gov.in\"\n      },\n      \"categories\": [\n        \"LINK\",\n        \"DATA\"\n      ],\n      \"period\": {\n        \"from\": \"2025-01-09T09:00:00.000Z\",\n        \"to\": \"2124-12-31T09:00:00.000Z\"\n      }\n    }\n  ],\n  \"excludedSources\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Be invoked by the patient or user through the Personal Health Record (PHR) application to approve a subscription request. By using this API, individuals can grant permission for the requested subscription, ensuring that they receive the desired health information services or updates. This functionality is essential for enabling users to manage their health data subscriptions effectively, ensuring they have control over the information they receive. The API supports secure and efficient approval of subscription requests, enhancing the overall user experience within the healthcare ecosystem."
+          }
+        },
+        {
+          "name": "2. Deny subscription request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "REQUEST-ID",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "TIMESTAMP",
+                "value": "{{$isoTimestamp}}"
+              },
+              {
+                "key": "X-CM-ID",
+                "value": "{{cmId}}"
+              },
+              {
+                "key": "X-AUTH-TOKEN",
+                "value": "<TOKEN>"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{gatewayUrl}}/api/hiecm/subscription-requests/v3/:subscriptionRequestId/deny",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "api",
+                "hiecm",
+                "subscription-requests",
+                "v3",
+                ":subscriptionRequestId",
+                "deny"
+              ],
+              "variable": [
+                {
+                  "key": "subscriptionRequestId",
+                  "value": ""
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Subscription denied.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Be invoked by the patient or user through the Personal Health Record (PHR) application to deny a subscription request. By using this API, individuals can reject the requested subscription, ensuring that they do not receive unwanted health information services or updates. This functionality is essential for enabling users to manage their health data subscriptions effectively, maintaining control over the information they receive. The API supports secure and efficient denial of subscription requests, enhancing the overall user experience within the healthcare ecosystem."
+          }
+        },
+        {
+          "name": "3. Fetch his/her subscription requests details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "REQUEST-ID",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "TIMESTAMP",
+                "value": "{{$isoTimestamp}}"
+              },
+              {
+                "key": "X-CM-ID",
+                "value": "{{cmId}}"
+              },
+              {
+                "key": "X-AUTH-TOKEN",
+                "value": "<TOKEN>"
+              }
+            ],
+            "url": {
+              "raw": "{{gatewayUrl}}/api/hiecm/subscription-requests/v3/requests?limit=5&offset=5&status=ALL",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "api",
+                "hiecm",
+                "subscription-requests",
+                "v3",
+                "requests"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "5"
+                },
+                {
+                  "key": "offset",
+                  "value": "5"
+                },
+                {
+                  "key": "status",
+                  "value": "ALL"
+                }
+              ]
+            },
+            "description": "Be invoked by the patient or user through the Personal Health Record (PHR) application to fetch details of their subscription requests. By using this API, patients can retrieve comprehensive information about all their subscription requests, including the status and specifics of each request. This functionality is essential for maintaining transparency and enabling patients to manage their subscriptions effectively. The API supports secure and efficient access to subscription data, enhancing the overall user experience within the healthcare ecosystem."
+          }
+        },
+        {
+          "name": "4. Edit the subscription details",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "REQUEST-ID",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "TIMESTAMP",
+                "value": "{{$isoTimestamp}}"
+              },
+              {
+                "key": "X-CM-ID",
+                "value": "{{cmId}}"
+              },
+              {
+                "key": "X-AUTH-TOKEN",
+                "value": "<TOKEN>"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{gatewayUrl}}/api/hiecm/subscription-requests/v3/patients/:subscriptionID",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "api",
+                "hiecm",
+                "subscription-requests",
+                "v3",
+                "patients",
+                ":subscriptionID"
+              ],
+              "variable": [
+                {
+                  "key": "subscriptionID",
+                  "value": ""
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hiuId\": \"INDIA_HIU\",\n  \"subscriptionEditAndApprovalRequest\": {\n    \"isApplicableForAllHIPs\": true,\n    \"includedSources\": [\n      {\n        \"hiTypes\": [\n          \"Prescription\"\n        ],\n        \"purpose\": {\n          \"text\": \"Care Management\",\n          \"code\": \"CAREMGT\",\n          \"refUri\": \"https://abc.def.in\"\n        },\n        \"hip\": {\n          \"id\": \"INDIA_HIP\",\n          \"name\": \"INDIA HIP\",\n          \"type\": \"HIP\"\n        },\n        \"categories\": [\n          \"LINK\"\n        ],\n        \"period\": {\n          \"from\": \"2024-05-09T10:34:00.389Z\",\n          \"to\": \"2024-05-09T10:34:00.389Z\"\n        },\n        \"status\": \"SUCCESS\"\n      }\n    ],\n    \"excludedSources\": [\n      {\n        \"hiTypes\": [\n          \"Prescription\"\n        ],\n        \"purpose\": {\n          \"text\": \"Care Management\",\n          \"code\": \"CAREMGT\",\n          \"refUri\": \"https://abc.def.in\"\n        },\n        \"hip\": {\n          \"id\": \"INDIA_HIP\",\n          \"name\": \"INDIA HIP\",\n          \"type\": \"HIP\"\n        },\n        \"categories\": [\n          \"LINK\"\n        ],\n        \"period\": {\n          \"from\": \"2024-05-09T10:34:00.389Z\",\n          \"to\": \"2024-05-09T10:34:00.389Z\"\n        },\n        \"status\": \"SUCCESS\"\n      }\n    ]\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Edit the details of an existing subscription. By invoking this API, users can update the parameters and preferences associated with a specific subscription identified by the subscription ID."
+          }
+        },
+        {
+          "name": "5. Disable the subscription by subscription ID",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "REQUEST-ID",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "TIMESTAMP",
+                "value": "{{$isoTimestamp}}"
+              },
+              {
+                "key": "X-CM-ID",
+                "value": "{{cmId}}"
+              },
+              {
+                "key": "X-AUTH-TOKEN",
+                "value": "<TOKEN>"
+              }
+            ],
+            "url": {
+              "raw": "{{gatewayUrl}}/api/hiecm/subscription-requests/v3/disable/:subscriptionID",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "api",
+                "hiecm",
+                "subscription-requests",
+                "v3",
+                "disable",
+                ":subscriptionID"
+              ],
+              "variable": [
+                {
+                  "key": "subscriptionID",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Disable an existing subscription identified by the subscription ID. By invoking this API, users can deactivate the subscription, ensuring that the associated health information services or updates are no longer delivered."
+          }
+        },
+        {
+          "name": "6. Enable the subscription by subscription ID",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "REQUEST-ID",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "TIMESTAMP",
+                "value": "{{$isoTimestamp}}"
+              },
+              {
+                "key": "X-CM-ID",
+                "value": "{{cmId}}"
+              },
+              {
+                "key": "X-AUTH-TOKEN",
+                "value": "<TOKEN>"
+              }
+            ],
+            "url": {
+              "raw": "{{gatewayUrl}}/api/hiecm/subscription-requests/v3/enable/:subscriptionID",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "api",
+                "hiecm",
+                "subscription-requests",
+                "v3",
+                "enable",
+                ":subscriptionID"
+              ],
+              "variable": [
+                {
+                  "key": "subscriptionID",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Enable an existing subscription identified by the subscription ID. By invoking this API, users can activate the subscription, ensuring that the associated health information services or updates are delivered as requested. This functionality is essential for managing subscriptions effectively, allowing users to control the activation status of their health data subscriptions. The API supports secure and efficient enablement of subscriptions, enhancing the overall user experience within the healthcare ecosystem."
+          }
+        },
+        {
+          "name": "7. Fetch his/her subscription details by subscription REQUEST-ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "REQUEST-ID",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "TIMESTAMP",
+                "value": "{{$isoTimestamp}}"
+              },
+              {
+                "key": "X-CM-ID",
+                "value": "{{cmId}}"
+              },
+              {
+                "key": "X-AUTH-TOKEN",
+                "value": "<TOKEN>"
+              }
+            ],
+            "url": {
+              "raw": "{{gatewayUrl}}/api/hiecm/subscription-requests/v3/request/:subscriptionRequestId",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "api",
+                "hiecm",
+                "subscription-requests",
+                "v3",
+                "request",
+                ":subscriptionRequestId"
+              ],
+              "variable": [
+                {
+                  "key": "subscriptionRequestId",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Be invoked by the patient or user through the Personal Health Record (PHR) application to fetch their subscription details using the subscription REQUEST-ID. By using this API, individuals can retrieve comprehensive information about a specific subscription request, including its status, scope, and any associated conditions. This functionality is essential for enabling users to manage their health data subscriptions effectively, ensuring they have access to accurate and up-to-date subscription information."
+          }
+        },
+        {
+          "name": "8. Fetch his/her subscription details by subscription ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "REQUEST-ID",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "TIMESTAMP",
+                "value": "{{$isoTimestamp}}"
+              },
+              {
+                "key": "X-CM-ID",
+                "value": "{{cmId}}"
+              },
+              {
+                "key": "X-AUTH-TOKEN",
+                "value": "<TOKEN>"
+              }
+            ],
+            "url": {
+              "raw": "{{gatewayUrl}}/api/hiecm/subscription-requests/v3/:subscriptionID",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "api",
+                "hiecm",
+                "subscription-requests",
+                "v3",
+                ":subscriptionID"
+              ],
+              "variable": [
+                {
+                  "key": "subscriptionID",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Be invoked by the patient or user through the Personal Health Record (PHR) application to fetch their subscription details using the subscription ID. By using this API, individuals can retrieve comprehensive information about a specific subscription, including its status, scope, and any associated conditions. This functionality is essential for enabling users to manage their health data subscriptions effectively, ensuring they have access to accurate and up-to-date subscription information."
+          }
+        }
+      ]
+    }
+  ]
+}
