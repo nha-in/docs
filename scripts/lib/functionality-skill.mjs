@@ -216,3 +216,27 @@ export function functionalityFile({f, index, total, cases, gov, priv, screens, j
   for (const g of groups) lines.push(g, '');
   return lines.join('\n').replace(/\n{3,}/g, '\n\n');
 }
+
+const CASE_ID = /\b[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+\b/g;
+
+/**
+ * The screen requirements of one functionality file, each with the case ids
+ * it cites: every table row under `## Screen requirements` whose last cell
+ * names a case. The findings a run writes ask this of each failed case, so it
+ * is read from the file the integrator holds, not from the atoms behind it.
+ */
+export function screenRequirements(markdown, others = []) {
+  const section = h2Sections(markdown).find(([heading]) => heading === 'Screen requirements')?.[1] ?? '';
+  const out = [];
+  for (const line of section.split('\n')) {
+    if (!/^\|.*\|\s*$/.test(line) || /^\|\s*-/.test(line)) continue;
+    const cells = line.replace(/^\||\|\s*$/g, '').split(/(?<!\\)\|/).map((c) => c.trim());
+    const cases = [...new Set(cells.at(-1).match(CASE_ID) ?? [])];
+    if (cells.length < 2 || !cases.length) continue;
+    const requirement = cells[0].replace(/\\\|/g, '|');
+    // A row naming another functionality hands its cases there: it states no check of its own.
+    const delegates_to = others.filter((id) => new RegExp(`(^|[^a-z0-9-])${id}($|[^a-z0-9-])`).test(requirement));
+    out.push(delegates_to.length ? {requirement, cases, delegates_to} : {requirement, cases});
+  }
+  return out;
+}

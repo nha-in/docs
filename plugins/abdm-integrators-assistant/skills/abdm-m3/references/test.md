@@ -156,14 +156,14 @@ The first question is the run type. `ft` is the API functional test: your system
 | People and devices | Each is named for this run: who receives the OTPs, who approves in the PHR app, which device scans |
 | Entity type and claimed capabilities | Answered, because they decide which cases are mandatory |
 | The run log | Its folder exists and can be written: `abdm-ft/` in your repository unless you name another |
-| The workbook | `python3 abdm-ft/abdm_workbook.py cases <workbook>` lists the case ids, and every case chosen is among them. Required: without it there are no results in the sheet and no report, so ask for it before the first case |
+| The workbook | `python3 -I abdm-ft/abdm_workbook.py cases <workbook>` lists the case ids, and every case chosen is among them. Required: without it there are no results in the sheet and no report, so ask for it before the first case |
 | UI readiness, for a `ui` or `all` run | Every row of the readiness check in "Running a case as a UI test" is `ready`: Node, the Playwright tools, a browser, the application URL and the tester login, and the person who sends the PHR app screenshots. `not needed` for an `ft` run |
 
 A `missing` row that a mandatory case needs stops the run before the first call. Say what is missing and ask the one question that would fix it.
 
 **Ask for every input the cases need.** In the readiness check, ask for each input a chosen case needs beyond the rows above, such as a second mobile, a mobile that holds no ABHA, an Aadhaar that holds no ABHA, a second ABHA address, a fingerprint or face device, the ABHA app, a counter QR code or a public callback URL. Record each as `ready` or `missing`. Ask again for a `missing` one when the run reaches the case that needs it. Only when the tester says they cannot provide it in this run is that case `needs-human`, with what was asked in Remarks.
 
-**The case plan.** Before the first case, run `python3 abdm-ft/abdm_report.py plan <workbook> --run <ft or ui> --entity <government or private>`, as "Writing the test report" sets out. It lists every case in the workbook, in sheet order, with its group, what it is for your entity type and its status so far. The run log's rows are made from that list. No case may be dropped: a case that cannot run is `needs-human` with its need named, after asking, or `not-run` with the rule that makes it not apply. Before the tester leaves, run `python3 abdm-ft/abdm_workbook.py open <workbook> --run <ft or ui> --entity <government or private>` and read the list out, including every `NA on a mandatory case` line, so every case still waiting for them is done, or asked about, while they are there.
+**The case plan.** Before the first case, run `python3 -I abdm-ft/abdm_report.py plan <workbook> --run <ft or ui> --entity <government or private>`, as "Writing the test report" sets out. It lists every case in the workbook, in sheet order, with its group, what it is for your entity type and its status so far. The run log's rows are made from that list. No case may be dropped: a case that cannot run is `needs-human` with its need named, after asking, or `not-run` with the rule that makes it not apply. Before the tester leaves, run `python3 -I abdm-ft/abdm_workbook.py open <workbook> --run <ft or ui> --entity <government or private>` and read the list out, including every `NA on a mandatory case` line, so every case still waiting for them is done, or asked about, while they are there.
 
 ## How this skill runs
 
@@ -465,6 +465,121 @@ Exit condition, in order:
 
 Screen check: open the revoked consent in your system and try to view its records. The records fetched under it are no longer shown, and your system says the consent was revoked rather than showing an empty record.
 
+## The environment survey
+
+Run this before the readiness check, and before any other script in this section. `/abdm-test-setup`, `/abdm-build` and `/abdm-test` run it first.
+
+### In plain words
+
+A run stalls when the interpreter on PATH lacks a library the workbook writer
+needs, or when a browser is installed that nobody told the Playwright server
+about. The survey finds what the machine already has before asking for
+anything, and writes it to `abdm-ft/env.json`. Every later script runs under
+the interpreter that file names.
+
+| What | How it is found | Chosen |
+|---|---|---|
+| Python | `python3` and `python3.x` on PATH, Homebrew's prefixes, every pyenv version, every conda environment, `uv python find` and uv's own builds, any `.venv` or `venv` in the project, and `abdm-ft/.venv`. Each is asked for its version and whether `openpyxl`, `PIL`, `docx` and `reportlab` import, in isolated mode (`-I`, or `-E -s` where `-I` is refused), from a new empty folder, with only `PATH`, `HOME` and `LANG` set, so no file in the project and no `PYTHONPATH` or `PYTHONSTARTUP` runs | The newest Python 3.9 or later with all four; between two of the same version, the one found first, in that order with `abdm-ft/.venv` first. Else the newest 3.9 or later, with the missing libraries named |
+| A browser, for a `ui` run | An installed Google Chrome, an installed Microsoft Edge, and Playwright's own Chromium in its cache | Chrome first, because the Playwright server launches it with no option. Edge needs `--browser msedge`, Playwright's Chromium `--browser chromium`, or the same value in `PLAYWRIGHT_MCP_BROWSER` |
+| A PHR app on Android, with `--phr-package` | `adb` on PATH or in the Android SDK, a line ending in `device` from `adb devices`, the package on that device, and `maestro` | Each is `true` or a path when present |
+
+Whether the Playwright MCP tools are loaded is a question about your agent,
+not the machine, so the script cannot answer it. Read your tool list for
+`browser_navigate`, `browser_snapshot`, `browser_click`, `browser_type` and
+`browser_take_screenshot`, under whatever prefix your agent gives the
+`playwright` server, and record the answer beside the survey.
+
+### Before you start
+
+- Python 3, any version, on PATH as `python3`, to run the survey itself. It
+  imports nothing outside the standard library, and runs itself again in
+  isolated mode when started without `-I`, before it imports anything.
+- NHA's workbook copied into `abdm-ft/` from the skill's `workbook/` folder.
+  The first command refuses, exit 4, until it is there:
+
+  ```bash
+  python3 -I abdm-ft/abdm_env.py workbook --skill <this skill folder>
+  ```
+- The script, `scripts/abdm_env.py` in the test skill's folder, copied to
+  `abdm-ft/abdm_env.py`.
+
+### What happens
+
+1. Run the survey. Add `--run ft` for an API run with no browser, and
+   `--phr-package <package>` for a PHR app on Android.
+
+   ```bash
+   python3 -I abdm-ft/abdm_env.py survey --run ui
+   ```
+
+   It prints one line per interpreter with what it lacks, the one chosen and
+   why, the browser and its `--browser` value, and `ready`, or `missing:` and
+   what is missing. It exits 0 when ready, 1 otherwise.
+2. A later survey reuses `abdm-ft/env.json` only for the same run type and
+   PHR package, while nothing was missing, the interpreter it names still
+   imports all four libraries, and for a `ui` run Node and the browser still
+   answer. It prints `reusing`. `--refresh` surveys again.
+3. When a library is missing, the survey prints the one install that fixes
+   it: create `abdm-ft/.venv` from the newest Python 3.9 or later that is not
+   itself a virtual environment and does not live in the project, then install
+   `openpyxl`, `pillow`, `python-docx` and `reportlab` into it, `reportlab<5`
+   on Python 3.9, with pip's fixed arguments and no index of anyone's
+   choosing. Ask the tester once whether to run it. On a yes:
+
+   ```bash
+   python3 -I abdm-ft/abdm_env.py install --yes
+   ```
+
+   It surveys again and builds the two commands from what it just found,
+   never from `env.json`, runs them with a timeout each, then surveys again.
+   Without `--yes` it installs nothing, prints the exact commands for the
+   tester to run, and exits 3. It refuses, exit 5, when `abdm-ft`,
+   `abdm-ft/.venv` or `env.json` is a symlink. Never install into the system's
+   Python, a Homebrew or conda base, or the project's own environment.
+4. When no browser is reachable, the survey prints
+   `npx playwright install chromium`. Offer it in the same question as the
+   Python install, run it only on the tester's yes, and then start the
+   Playwright server with `--browser chromium`.
+5. Every script after this runs under the interpreter `env.json` names.
+   Wherever a section says `python3 -I abdm-ft/abdm_workbook.py` or
+   `python3 -I abdm-ft/abdm_report.py`, run it under that interpreter, always
+   with `-I`:
+
+   ```bash
+   "$(python3 -I abdm-ft/abdm_env.py python)" -I abdm-ft/abdm_report.py plan <workbook> --run ui --entity private
+   ```
+
+### How you know it worked
+
+The survey prints `ready` and exits 0, `abdm-ft/env.json` names an
+interpreter whose four libraries are listed with their versions, and for a
+`ui` run it names a browser. The file holds paths, versions and a timestamp,
+never a credential or an identity value.
+
+### When it goes wrong
+
+| What you see | Why | Do this |
+|---|---|---|
+| `missing: Python 3.9 or later` and no install command | No interpreter on the machine is 3.9 or later | Install Python 3.9 or later from https://www.python.org/downloads, then survey again |
+| `missing: python library ...` | The newest Python lacks a library | Ask the tester, then `install --yes`. Without a yes, print the command |
+| `missing: a browser` | No Chrome, Edge or Playwright Chromium was found | Ask the tester, then `npx playwright install chromium`, and start the Playwright server with `--browser chromium` |
+| `browser_navigate` names a missing browser although the survey found one | The server was started for a different browser | Start it with the `--browser` value the survey printed |
+| `missing: Node 18 or later` | The Playwright server runs on `npx` | Install the LTS release from https://nodejs.org |
+| `ModuleNotFoundError` from a script after a `ready` survey | The script was run with another `python3` | Run it under `"$(python3 -I abdm-ft/abdm_env.py python)" -I` |
+| A library the tester installed with `pip install --user` is reported missing | Isolated mode ignores the user's site folder, as every script here runs | Install into `abdm-ft/.venv` on the tester's yes |
+| `refused: ... is a symlink` | `abdm-ft`, `abdm-ft/.venv` or `env.json` points somewhere else | Make it a plain folder or file in the project, then run it again |
+| `refused: NHA's workbook ... is not in abdm-ft` | The workbook was not copied, or was renamed | Copy it from the skill's `workbook/` folder under its own name |
+
+### The script
+
+The script ships with this skill as `scripts/abdm_env.py`. Copy `abdm_env.py` from there; never retype it or rebuild it from this text:
+
+```bash
+mkdir -p abdm-ft && cp <this skill folder>/scripts/abdm_env.py abdm-ft/abdm_env.py
+```
+
+From `shared.concept.test-environment`.
+
 ## Running a case as a UI test
 
 Read this section when the run type is `ui` or `all`. Its readiness check joins the one above, and every rule above still holds.
@@ -499,7 +614,7 @@ The `ui` readiness check runs before the first case. Check every row the chosen 
 | For a PHR app on Android: the app | `adb shell pm list packages <package>` prints `package:<package>` | `adb install <path to the APK>` |
 | For a PHR app on Android: Maestro | `maestro --version` prints a version | `curl -fsSL "https://get.maestro.mobile.dev" \| bash` |
 
-When a row is `missing`: stop, print its install command exactly as above, and wait for the tester to say it is done. Then check the row again. Never install anything yourself. After 3 checks of the same row still `missing`, stop the run and ask one question about that row.
+When a row is `missing`: stop, print its install command exactly as above, and wait for the tester to say it is done. Then check the row again. The one exception is an install `shared.concept.test-environment` prints, which you run only after the tester says yes. Never install anything without that yes. After 3 checks of the same row still `missing`, stop the run and ask one question about that row.
 
 ### What happens
 
@@ -523,7 +638,7 @@ For each chosen case, at most 3 passes. Record the number of passes the case too
 6. Write the result into the workbook, as `shared.concept.test-workbook-write-back` sets out, with `--run ui`. A `ui` run fills NHA's own columns:
 
    ```bash
-   python3 abdm-ft/abdm_workbook.py write <workbook> --run ui --results abdm-ft/<workbook name>-ui-results.json --executed-by "<tester>" --application "<your application>"
+   python3 -I abdm-ft/abdm_workbook.py write <workbook> --run ui --results abdm-ft/<workbook name>-ui-results.json --executed-by "<tester>" --application "<your application>"
    ```
 
 #### Judging a case
@@ -641,7 +756,7 @@ The writer masks the Response and Remarks values before it writes them, with the
 ### Before you start
 
 - The workbook for the module, copied from the test skill's own `workbook/` folder into your repository beside the run log, such as `abdm-ft/M1_ABHA_CREATION_VERIFICATION_SCAN_AND_SHARE.xlsx`. The skill ships the sheet its cases come from, so use that copy rather than another. M4 has two, HFR and HPR: each is its own workbook with its own results file. The PHR workbook has no case ids: the script builds them from each tab and row, `PHR_ADDR_302` for row 3.2 of the ABHA address creation tab, exactly as the test case page shows them, and its first write adds a `Test Case ID` column holding them.
-- Python 3.9 or later with `openpyxl` and `Pillow`: `pip install openpyxl pillow`. Pillow is what keeps the sheet's logos when it is saved.
+- Python 3.9 or later with `openpyxl` and `Pillow`. Pillow is what keeps the sheet's logos when it is saved. The environment survey, `shared.concept.test-environment`, finds an interpreter that has them, or installs them into `abdm-ft/.venv` on the tester's yes. Run the script under the interpreter it names.
 - The script `scripts/abdm_workbook.py` from this skill, copied to `abdm-ft/abdm_workbook.py` before the readiness check, which runs it.
 
 The script ships with this skill as `scripts/abdm_workbook.py`. Copy `abdm_workbook.py` from there; never retype it or rebuild it from this text:
@@ -655,7 +770,7 @@ mkdir -p abdm-ft && cp <this skill folder>/scripts/abdm_workbook.py abdm-ft/abdm
 1. Before the first case, list the case ids the workbook holds:
 
    ```bash
-   python3 abdm-ft/abdm_workbook.py cases <workbook>
+   python3 -I abdm-ft/abdm_workbook.py cases <workbook>
    ```
 
    Run the cases in that list. A case id the skill carries that the workbook lacks is a different version of the set: say so before the run starts.
@@ -678,7 +793,7 @@ mkdir -p abdm-ft && cp <this skill folder>/scripts/abdm_workbook.py abdm-ft/abdm
 3. Then write it into the workbook, so a stopped run loses nothing:
 
    ```bash
-   python3 abdm-ft/abdm_workbook.py write <workbook> --run ft --results abdm-ft/<workbook name>-ft-results.json --executed-by "<tester>" --application "<your system>"
+   python3 -I abdm-ft/abdm_workbook.py write <workbook> --run ft --results abdm-ft/<workbook name>-ft-results.json --executed-by "<tester>" --application "<your system>"
    ```
 
    The first write copies the workbook to `<name>.before-abdm-run.xlsx` beside it, and every later write reads that copy to tell NHA's text from the run's. Every write rewrites the result cells of every case in the file, so writing again is safe. The header block above the table gets the tester, the date and the application, and a later write updates them. When NHA sends a new version of the workbook, delete the old `.before-abdm-run.xlsx` before the first write to it.
@@ -686,7 +801,7 @@ mkdir -p abdm-ft && cp <this skill folder>/scripts/abdm_workbook.py abdm-ft/abdm
 4. To resume, list the cases whose status for the run type is not `PASS`, `CONDITIONAL PASS` or `NA`, and run only those. With `--entity`, the list also holds every `NA` on a case mandatory for that entity type, marked `(NA on a mandatory case)`, because the report's gate blocks it unless NHA agreed it is not run. Read the list out before the tester leaves, so every case still waiting for them is done or asked about while they are there:
 
    ```bash
-   python3 abdm-ft/abdm_workbook.py open <workbook> --run ft --entity private
+   python3 -I abdm-ft/abdm_workbook.py open <workbook> --run ft --entity private
    ```
 
 ### How you know it worked
@@ -701,7 +816,7 @@ mkdir -p abdm-ft && cp <this skill folder>/scripts/abdm_workbook.py abdm-ft/abdm
 
 | Observed | Cause | Do |
 |---|---|---|
-| `ModuleNotFoundError: No module named 'openpyxl'` | Not installed | `pip install openpyxl pillow` |
+| `ModuleNotFoundError: No module named 'openpyxl'` | The script ran under an interpreter without it | Run it under `"$(python3 -I abdm-ft/abdm_env.py python)" -I`. If the survey found none with it, install into `abdm-ft/.venv` on the tester's yes |
 | The logos are gone after a write | Pillow is missing, so the images were not read | Install Pillow, copy `<name>.before-abdm-run.xlsx` back over the workbook, and write again |
 | `case id on more than one tab` | Two tabs carry the same id | Ask NHA which one counts. The script writes neither until it is resolved |
 | `not in the workbook: <id>` | The workbook is another version of the set, or the id was typed with a space | Check the id against `cases`. Never rename a case to fit |
@@ -859,7 +974,7 @@ signing off sees them.
 
 - The workbook the run wrote into, with its results, as `shared.concept.test-workbook-write-back` leaves it.
 - For a `ui` report, the screenshots under `abdm-ft/evidence/<case id>/`, one folder per case id as `cases` prints it. They are placed in name order, so name them `01-consent.png`, `02-otp.png`. PNG, JPEG, GIF, BMP, WebP and TIFF are read; HEIC and PDF files are read only where Pillow can open them, so export them to PNG. Blur any Aadhaar number, OTP or full mobile on a screenshot before it goes in the folder: the script masks text, not images.
-- Python 3.9 or later with `openpyxl`, `Pillow`, `python-docx` and `reportlab`: `pip install openpyxl pillow python-docx reportlab`. On Python 3.9, ReportLab 5 does not install; use `pip install "reportlab<5"`. All four are open source (MIT, the HPND licence, MIT and BSD). ReportLab draws the PDF itself, so no office suite is needed.
+- Python 3.9 or later with `openpyxl`, `Pillow`, `python-docx` and `reportlab`, `reportlab<5` on Python 3.9, which ReportLab 5 does not support. The environment survey, `shared.concept.test-environment`, finds an interpreter that has all four, or installs them into `abdm-ft/.venv` on the tester's yes. Run the script under the interpreter it names. All four are open source (MIT, the HPND licence, MIT and BSD). ReportLab draws the PDF itself, so no office suite is needed.
 - Optionally, the design system's fonts as `.ttf` files: Newsreader for headings, Public Sans for text and JetBrains Mono for labels and case ids, all under the SIL Open Font License. The script looks in the folder given with `--fonts`, then `abdm-ft/fonts/`, then `~/Library/Fonts`, `/Library/Fonts` and `/usr/share/fonts`, and prints which it used. A font it does not find is replaced by the PDF's own Times-Roman, Helvetica or Courier, which are the design system's fallbacks, so the report is complete either way.
 - The script `scripts/abdm_report.py` from this skill, copied to `abdm-ft/abdm_report.py`.
 - A `meta.json` for the report, written by you, with placeholder values replaced. It carries no credential: the script refuses any field named like `password`, `secret`, `token` or `credentials`, and any value that holds a token or a credential's label with its value, such as `client secret: ...`. `agreed_not_run` is only for mandatory cases NHA agreed are not run; leave it `{}` otherwise. `flows` is for M2 and M3 linking and consent flows; leave it `[]` for M1. `team` and `distribution` carry no email or phone number.
@@ -921,15 +1036,15 @@ mkdir -p abdm-ft && cp <this skill folder>/scripts/abdm_report.py abdm-ft/abdm_r
 **Before the first case, plan the run from the workbook:**
 
 ```bash
-python3 abdm-ft/abdm_report.py plan <workbook> --run ui --entity private
+python3 -I abdm-ft/abdm_report.py plan <workbook> --run ui --entity private
 ```
 
-It prints one line per case, in sheet order: the case id, its group (the sheet's Function, else its section heading), what it is for your entity type (`mandatory`, `mandatory, either <id> or <id>`, `conditional`, `optional`, or `not applicable` with the group and its Applicable To; an Applicable To that names neither entity type, such as `PHR App`, adds `applies: PHR App (read as all)`), and its status so far in the run type's column, `open` when blank. Then one `total` line. NHA's PHR workbook carries no case ids until the writer's first write adds them, so for P1 to P4 write an empty results file, `[]`, with `abdm_workbook.py write` first, then run `plan`. Create the run log's rows from this list, one per case. No case may be dropped: a case that cannot run is `needs-human` with what it needs named, after the tester was asked for it, or `not-run` with the rule that makes it not apply. Before the tester leaves, run `python3 abdm-ft/abdm_workbook.py open <workbook> --run ui --entity private` and read the list out, so every case still waiting for them is done or asked about while they are there.
+It prints one line per case, in sheet order: the case id, its group (the sheet's Function, else its section heading), what it is for your entity type (`mandatory`, `mandatory, either <id> or <id>`, `conditional`, `optional`, or `not applicable` with the group and its Applicable To; an Applicable To that names neither entity type, such as `PHR App`, adds `applies: PHR App (read as all)`), and its status so far in the run type's column, `open` when blank. Then one `total` line. NHA's PHR workbook carries no case ids until the writer's first write adds them, so for P1 to P4 write an empty results file, `[]`, with `abdm_workbook.py write` first, then run `plan`. Create the run log's rows from this list, one per case. No case may be dropped: a case that cannot run is `needs-human` with what it needs named, after the tester was asked for it, or `not-run` with the rule that makes it not apply. Before the tester leaves, run `python3 -I abdm-ft/abdm_workbook.py open <workbook> --run ui --entity private` and read the list out, so every case still waiting for them is done or asked about while they are there.
 
 1. When the last case is recorded and written into the workbook, run the gate for the run type and your entity type:
 
    ```bash
-   python3 abdm-ft/abdm_report.py check <workbook> --run ui --entity private --meta abdm-ft/meta.json
+   python3 -I abdm-ft/abdm_report.py check <workbook> --run ui --entity private --meta abdm-ft/meta.json
    ```
 
    `--meta` is optional for `check`: it is read for `agreed_not_run`. The script prints one `marking` line for every case whose marking is entity specific, conditional, an either rule, a field list, blank or unrecognised, with how it was treated, and one `agreed not run <id>: <agreement>` line per mandatory `NA` case `agreed_not_run` lets through. Then one `not passed <id>: <status>` line per mandatory case in the way, an either pair as `<id> or <id>: <status>, <status>`, and a count.
@@ -937,7 +1052,7 @@ It prints one line per case, in sheet order: the case id, its group (the sheet's
 2. If it exits `1`, the run is not finished, but the tester still gets a PDF of where it stands. Build the draft:
 
    ```bash
-   python3 abdm-ft/abdm_report.py build <workbook> --run ui --meta abdm-ft/meta.json --evidence abdm-ft/evidence --manifest abdm-ft/m1-<YYYYMMDD-HHMM>.json --out abdm-ft/draft-report-m1.pdf --draft
+   python3 -I abdm-ft/abdm_report.py build <workbook> --run ui --meta abdm-ft/meta.json --evidence abdm-ft/evidence --manifest abdm-ft/m1-<YYYYMMDD-HHMM>.json --out abdm-ft/draft-report-m1.pdf --draft
    ```
 
    The draft is the same report, marked Draft on the cover and in the header of every page. Its executive summary ends on `<n> mandatory cases are still open.`, and each of them is in the failures log or the table of cases not tested. It is never the report to submit. Then rerun the cases `check` listed, as `open` in `shared.concept.test-workbook-write-back` does, and run `check` again. Every run ends with a PDF: the report when `check` exits `0`, the draft when it does not.
@@ -945,7 +1060,7 @@ It prints one line per case, in sheet order: the case id, its group (the sheet's
 3. Only when `check` exits `0`, write the one line findings into `meta.json` under `findings`, keyed by case id. A case without one gets its Remarks value. Then build:
 
    ```bash
-   python3 abdm-ft/abdm_report.py build <workbook> --run ui --meta abdm-ft/meta.json --evidence abdm-ft/evidence --manifest abdm-ft/m1-<YYYYMMDD-HHMM>.json --out abdm-ft/report-m1.pdf
+   python3 -I abdm-ft/abdm_report.py build <workbook> --run ui --meta abdm-ft/meta.json --evidence abdm-ft/evidence --manifest abdm-ft/m1-<YYYYMMDD-HHMM>.json --out abdm-ft/report-m1.pdf
    ```
 
    `entity_type` in `meta.json` is the entity type, unless `--entity` is given. `build` runs the gate again and refuses with the same list if it fails. `--manifest` is optional. It writes `abdm-ft/report-m1.pdf`, the report to submit, and `abdm-ft/report-m1.docx` beside it, the editable copy, whichever of the two suffixes `--out` names. `--format pdf` writes the PDF alone and `--format docx` the Word copy alone; the default is `both`. `--fonts <folder>` points it at the design system's fonts if they are somewhere else.
@@ -953,6 +1068,22 @@ It prints one line per case, in sheet order: the case id, its group (the sheet's
 4. Submit the PDF as it is: its contents list and page numbers are already filled in. If you edit the Word copy instead, open it in Word or LibreOffice and accept the prompt to update fields, which fills in its contents and page count, then export it to PDF. A screenshot that needs a highlight box gets it before it goes in the evidence folder.
 
 5. For an `ft` report, use `--run ft` in both commands. The evidence for each case is its `FT Response with Code` value, and `--evidence` is not read.
+
+6. A skill built per functionality, M1 today, ships `scripts/functionalities.json` beside this script: each functionality's cases, and which of them a screen requirement in its file cites. Copy it into `abdm-ft/` with the script. Then `build` also writes `<report>-findings.md` beside the report, the draft included. To write the findings without a report, after a functionality's test:
+
+   ```bash
+   python3 -I abdm-ft/abdm_report.py findings <workbook> --run ui --entity private --out abdm-ft/draft-report-m1.pdf
+   ```
+
+   It lists each FAIL and CONDITIONAL PASS with its functionality and the screen requirement that states the check for it. A row that only hands the case to another functionality, such as "follow create-abha-aadhaar-otp", does not count by itself: the finding follows it to that functionality's rule for the case of the same title and names it. A case with no such rule gets a Catalogue issue, written out ready to paste and never filed by the script.
+
+7. The same file feeds the tracker in `INTEGRATION-PLAN.md`. After every change of state, and after every write into the workbook:
+
+   ```bash
+   python3 -I abdm-ft/abdm_report.py tracker <workbook> --run ui --entity private --set create-abha-aadhaar-otp=tested --build <build id>
+   ```
+
+   `--set <id>=building`, `built` or `tested` records where one functionality stands, `--set <id>=in-scope` adds an optional one, and `--screen <case id>=<screen or route>` records what satisfies a case. Each can repeat. The tracker writes its rows between the two `abdm-tracker` markers in `INTEGRATION-PLAN.md`, creating the file or the section when missing, and keeps its state in `abdm-ft/tracker.json`. `--entity` is needed once; later calls read it from the state. A case counts as passed exactly as `check` counts it: a CONDITIONAL PASS needs its condition in Remarks, and an `NA` closes a mandatory case only when `agreed_not_run` in the `--meta` file names it. A held `building` or `built` state gives way once a later write into the workbook makes the functionality passed or failing. It prints one line per functionality, its id and state with its failing case ids, then the counts.
 
 ### How you know it worked
 
@@ -967,14 +1098,15 @@ It prints one line per case, in sheet order: the case id, its group (the sheet's
 - The failures and iterations log lists only failed, blocked and conditional pass cases.
 - With `--manifest`, each tested case's Request IDs line lists the REQUEST-IDs the manifest gives it, or reads `None in the manifest`. A value that is not a UUID reads `[invalid id]`.
 - No 12 digit number appears anywhere in either file, the PDF's header and footer included: an Aadhaar number reads `XXXX XXXX 1234` and an ABHA number `XX-XXXX-XXXX-1234`, with the last four digits kept. A 10 digit mobile, with or without `0`, `91` or `+91` and spaces or hyphens inside, reads `XXXXXX1234`, and an ABHA address ending `@sbx` or `@abdm` keeps only the last four characters before the `@`, the rest as `x`, or is all `x` when four or fewer. A profile field's value, `firstName`, `lastName`, `name`, `dob`, `address`, `pinCode`, `photo`, `email` and the like, reads `[masked]`, in any case and to the end of its clause, so `Name: asha verma` reads `Name: [masked]`. Dates of birth and dd/mm/yyyy dates are masked as the writer masks them, because the writer uses the same masking block, so the sheet and the report agree.
+- With `functionalities.json` beside the script, `build` and `findings` print `findings: <n> FAIL or CONDITIONAL PASS, <m> without a screen requirement`, a `catalogue issue <id> in <functionality>` line for each of the `m`, and `wrote <report>-findings.md`. `tracker` prints `wrote INTEGRATION-PLAN.md and abdm-ft/tracker.json`. With no optional functionality added, its failing and open mandatory cases are the ones `check` lists.
 - No token or secret appears in it: a JWT reads `[token]`, and a value after a label naming a password, secret, token, OTP, credential, API key or private key reads `[redacted]`, as does a `Bearer` credential. This covers the workbook's Response and Remarks values and the findings, as well as `meta.json`.
 
 ### When it goes wrong
 
 | Observed | Cause | Do |
 |---|---|---|
-| `ModuleNotFoundError: No module named 'docx'` or `'reportlab'` | python-docx or ReportLab is not installed | `pip install openpyxl pillow python-docx reportlab` |
-| `ImportError: reportlab requires 3.10+` | A ReportLab release newer than your Python was installed, on Python 3.9 | `pip install "reportlab<5"`, or use Python 3.10 or later |
+| `ModuleNotFoundError: No module named 'docx'` or `'reportlab'` | The script ran under an interpreter without them | Run it under `"$(python3 -I abdm-ft/abdm_env.py python)" -I`. If the survey found none with them, install into `abdm-ft/.venv` on the tester's yes |
+| `ImportError: reportlab requires 3.10+` | A ReportLab release newer than your Python was installed, on Python 3.9 | Survey again with `--refresh`: it skips that interpreter, and its install puts `reportlab<5` into `abdm-ft/.venv` on Python 3.9 |
 | `fonts: Public Sans not found, Helvetica in its place` | That font is not in any folder the script looks in | Nothing, the report is complete with the fallback. For the design system's own face, put its `.ttf` files in `abdm-ft/fonts/` and build again |
 | `not passed CRT_ABHA_105: FAIL` | A mandatory case failed | Fix the cause the Remarks name, rerun the case, write it back, run `check` again |
 | `not passed <id>: NA` | A mandatory case was recorded not run, and `agreed_not_run` does not list it | Run it, or agree with NHA that it does not apply, keep the reason in its remarks, and add it to `agreed_not_run` with who agreed and when. Pass `--meta` to `check` |
@@ -990,6 +1122,8 @@ It prints one line per case, in sheet order: the case id, its group (the sheet's
 | `no Test Case ID column with ids` | The workbook has no case ids, as NHA's PHR workbook does not, and no write has added them yet | Write the run's results with `shared.concept.test-workbook-write-back` first: its first write adds the `Test Case ID` column |
 | `the manifest carries a credential` | The manifest JSON holds a token, secret or password field or value | Write the manifest as the test skill does, case ids to request ids and nothing else |
 | The Word copy's contents page reads `Open in Word and update fields` | Its fields have not been updated since the script wrote them. The PDF is not affected | Open the file in Word or LibreOffice and update fields, then save |
+| `no functionalities.json beside this script` | The module's skill is not built per functionality yet, or the file was not copied into `abdm-ft/` | Copy `scripts/functionalities.json` from the skill. A module without one has no tracker and no findings; use its plan file steps |
+| `the tracker holds no entity type` | The first tracker call for this workbook, with no `--entity` | Ask the tester, government or private, and pass `--entity` |
 | A screenshot is missing from the report | Its file is not under `<evidence>/<case id>/`, or its extension is not png, jpg, jpeg, gif, bmp, webp, tif, tiff, heic, heif or pdf. Or the case was not tested: only passed, conditional pass and failed cases have evidence | Move it into the case's folder, named as `cases` prints the id, and build again. For a case not tested, finish it first |
 | A case you ran is under Cases not tested as `Blocked` | Its status is blank and its Remarks start `Needs tester:`, as the writer leaves a `needs-human` case | Finish the step with the tester, write the result again, and build again |
 | A case is counted `Not applicable` though you ran it | Its status is `NA`, as the writer writes a `not-run` case; or its group is for the other entity type only, listed as `Run, not applicable` | Write the result again with the outcome it had. For the group, check `--entity` |

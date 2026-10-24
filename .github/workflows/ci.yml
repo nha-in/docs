@@ -58,6 +58,10 @@ jobs:
       - run: python3 -m pip install --quiet openpyxl pillow python-docx reportlab pypdf
       - run: python3 scripts/check-workbook-writeback.py
       - run: python3 scripts/check-test-report.py
+      # The environment survey every run starts with, and the tracker and
+      # findings file the M1 skill writes.
+      - run: python3 scripts/check-test-environment.py
+      - run: python3 scripts/check-tracker-findings.py
       - run: npm run check:sections
       # Every NHA UI test case maps to one functionality, with journeys and
       # operations that exist (catalogue/hiecm/tests/<module>.yaml).

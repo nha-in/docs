@@ -71,7 +71,7 @@ The `ui` readiness check runs before the first case. Check every row the chosen 
 | For a PHR app on Android: the app | `adb shell pm list packages <package>` prints `package:<package>` | `adb install <path to the APK>` |
 | For a PHR app on Android: Maestro | `maestro --version` prints a version | `curl -fsSL "https://get.maestro.mobile.dev" \| bash` |
 
-When a row is `missing`: stop, print its install command exactly as above, and wait for the tester to say it is done. Then check the row again. Never install anything yourself. After 3 checks of the same row still `missing`, stop the run and ask one question about that row.
+When a row is `missing`: stop, print its install command exactly as above, and wait for the tester to say it is done. Then check the row again. The one exception is an install `shared.concept.test-environment` prints, which you run only after the tester says yes. Never install anything without that yes. After 3 checks of the same row still `missing`, stop the run and ask one question about that row.
 
 ## What happens
 
@@ -95,7 +95,7 @@ For each chosen case, at most 3 passes. Record the number of passes the case too
 6. Write the result into the workbook, as `shared.concept.test-workbook-write-back` sets out, with `--run ui`. A `ui` run fills NHA's own columns:
 
    ```bash
-   python3 abdm-ft/abdm_workbook.py write <workbook> --run ui --results abdm-ft/<workbook name>-ui-results.json --executed-by "<tester>" --application "<your application>"
+   python3 -I abdm-ft/abdm_workbook.py write <workbook> --run ui --results abdm-ft/<workbook name>-ui-results.json --executed-by "<tester>" --application "<your application>"
    ```
 
 #### Judging a case

@@ -76,6 +76,17 @@ The cases each entity type must pass. Every other case is optional for that enti
 
 Results gathered while building come from different builds. The report to submit comes from one run of every case in the workbook, on one final build, as [run.md](references/run.md) sets out, with the tester present.
 
+## Two commands
+
+With the integrators plugin installed, each starts with the environment survey and refuses to go on without NHA's workbook in `abdm-ft/`.
+
+| Command | Does |
+|---|---|
+| `/abdm-build m1` | Starts or resumes the loops: reads the tracker, asks the entity type when the tracker lacks it, takes the next functionality in the table above whose mandatory cases have not passed, and runs its loop |
+| `/abdm-test m1` | The final run on one build: every input asked for up front, the case plan, every mandatory case, the workbook, then the report or the draft and its findings |
+
+Without the plugin, follow the same order by hand: [run.md](references/run.md) holds every step.
+
 ## Try asking
 
 - "Add ABHA creation by Aadhaar OTP to this codebase"
@@ -102,6 +113,8 @@ Integration work starts from a plan file and keeps it current. Before the first 
 
 The last steps are the module's functional test cases. Their run log is its own file, linked from the plan. Never write a secret to the plan: no token, client secret, OTP, password or patient identifier.
 
+For M1, the functionality rows of `INTEGRATION-PLAN.md` are the tracker [run.md](references/run.md) defines, and `abdm_report.py tracker` writes them. They take the place of the step statuses above for each functionality.
+
 ## What is in this folder
 
 - **functionalities/**: 17 files, one loop each, in the order of the table above.
@@ -109,7 +122,7 @@ The last steps are the module's functional test cases. Their run log is its own 
 - **[foundations.md](references/foundations.md)**: the rules across calls, hosts, headers, the codebase survey and the design rules across functionalities.
 - **[errors.md](references/errors.md)**: every code the M1 specification returns, and the loop from a code to a fix.
 - **workbook/**: NHA's workbook, copied into `abdm-ft/` before a run.
-- **scripts/**: `abdm_workbook.py` and `abdm_report.py`, copied into `abdm-ft/` before a run, never retyped.
+- **scripts/**: `abdm_env.py`, the environment survey; `abdm_workbook.py`; `abdm_report.py`, which also writes the tracker and the findings; and `functionalities.json`, which they read. All four are copied into `abdm-ft/` before a run, never retyped.
 
 ## Where the detail is
 

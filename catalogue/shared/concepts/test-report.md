@@ -168,7 +168,7 @@ signing off sees them.
 
 - The workbook the run wrote into, with its results, as `shared.concept.test-workbook-write-back` leaves it.
 - For a `ui` report, the screenshots under `abdm-ft/evidence/<case id>/`, one folder per case id as `cases` prints it. They are placed in name order, so name them `01-consent.png`, `02-otp.png`. PNG, JPEG, GIF, BMP, WebP and TIFF are read; HEIC and PDF files are read only where Pillow can open them, so export them to PNG. Blur any Aadhaar number, OTP or full mobile on a screenshot before it goes in the folder: the script masks text, not images.
-- Python 3.9 or later with `openpyxl`, `Pillow`, `python-docx` and `reportlab`: `pip install openpyxl pillow python-docx reportlab`. On Python 3.9, ReportLab 5 does not install; use `pip install "reportlab<5"`. All four are open source (MIT, the HPND licence, MIT and BSD). ReportLab draws the PDF itself, so no office suite is needed.
+- Python 3.9 or later with `openpyxl`, `Pillow`, `python-docx` and `reportlab`, `reportlab<5` on Python 3.9, which ReportLab 5 does not support. The environment survey, `shared.concept.test-environment`, finds an interpreter that has all four, or installs them into `abdm-ft/.venv` on the tester's yes. Run the script under the interpreter it names. All four are open source (MIT, the HPND licence, MIT and BSD). ReportLab draws the PDF itself, so no office suite is needed.
 - Optionally, the design system's fonts as `.ttf` files: Newsreader for headings, Public Sans for text and JetBrains Mono for labels and case ids, all under the SIL Open Font License. The script looks in the folder given with `--fonts`, then `abdm-ft/fonts/`, then `~/Library/Fonts`, `/Library/Fonts` and `/usr/share/fonts`, and prints which it used. A font it does not find is replaced by the PDF's own Times-Roman, Helvetica or Courier, which are the design system's fallbacks, so the report is complete either way.
 - The script below, saved as `abdm-ft/abdm_report.py`.
 - A `meta.json` for the report, written by you, with placeholder values replaced. It carries no credential: the script refuses any field named like `password`, `secret`, `token` or `credentials`, and any value that holds a token or a credential's label with its value, such as `client secret: ...`. `agreed_not_run` is only for mandatory cases NHA agreed are not run; leave it `{}` otherwise. `flows` is for M2 and M3 linking and consent flows; leave it `[]` for M1. `team` and `distribution` carry no email or phone number.
@@ -222,10 +222,13 @@ signing off sees them.
 ```python
 """Check that a functional test run may be reported, and write the report.
 
-  python3 abdm_report.py plan  WORKBOOK --run ft|ui --entity government|private
-  python3 abdm_report.py check WORKBOOK --run ft|ui --entity government|private [--meta meta.json]
-  python3 abdm_report.py build WORKBOOK --run ft|ui --meta meta.json --evidence DIR --out REPORT.pdf
+  python3 -I abdm_report.py plan  WORKBOOK --run ft|ui --entity government|private
+  python3 -I abdm_report.py check WORKBOOK --run ft|ui --entity government|private [--meta meta.json]
+  python3 -I abdm_report.py build WORKBOOK --run ft|ui --meta meta.json --evidence DIR --out REPORT.pdf
       [--manifest RUN.json] [--format pdf|docx|both] [--fonts DIR]
+  python3 -I abdm_report.py tracker  WORKBOOK --run ft|ui [--entity government|private] [--plan INTEGRATION-PLAN.md] [--meta meta.json]
+      [--set ID=building|built|tested|in-scope] [--screen CASE=ROUTE] [--build BUILD]
+  python3 -I abdm_report.py findings WORKBOOK --run ft|ui --entity government|private --out REPORT.pdf
 
 plan prints every case in sheet order with its group, its applicability for the
 entity type and its status so far, then the totals: the run log is made from it.
@@ -238,6 +241,12 @@ editable copy; --format picks one of them. For a ui run it also writes
 REPORT-screenshots.json, naming each figure's full size file for the annexure. The PDF uses Newsreader, Public Sans
 and JetBrains Mono where it finds them (--fonts DIR, abdm-ft/fonts, then the
 system's font folders), else Times-Roman, Helvetica and Courier.
+tracker and findings read functionalities.json, which a module skill built per
+functionality ships beside this script. tracker writes the functionality
+tracker into INTEGRATION-PLAN.md, its state in tracker.json beside the
+workbook. findings writes REPORT-findings.md: each FAIL and CONDITIONAL PASS,
+its functionality, and whether a screen requirement in that functionality's
+file cites it. build writes the findings too, when functionalities.json is there.
 Needs openpyxl, Pillow, python-docx and reportlab
 (pip install openpyxl pillow python-docx reportlab).
 """
@@ -612,16 +621,21 @@ def read_cases(path, run, entity):
     return out, list(groups.values())
 
 
+def passes_gate(r, agreed):
+    """One case through the gate: PASS, a CONDITIONAL PASS with its condition written down, or NA on a
+    case NHA agreed is not run. The gate and the tracker both read this."""
+    if r["status"] == "CONDITIONAL PASS":
+        return bool(STEPS.sub("", r["remarks"]).strip())
+    return r["status"] in PASSING or (r["status"] == "NA" and r["id"] in agreed)
+
+
 def gate(recs, groups, agreed):
     """Mandatory cases not PASS or CONDITIONAL PASS. NA passes only on a case NHA agreed not to run."""
     blocking = []
     by_id = {r["id"]: r for r in recs}
 
     def through(r):
-        if r["status"] == "CONDITIONAL PASS":
-            # A conditional pass passes only with its condition written down.
-            return bool(STEPS.sub("", r["remarks"]).strip())
-        return r["status"] in PASSING or (r["status"] == "NA" and r["id"] in agreed)
+        return passes_gate(r, agreed)
 
     def shown_status(r):
         if r["status"] == "CONDITIONAL PASS" and not through(r):
@@ -1887,9 +1901,304 @@ def build(path, run, meta, evidence, out, recs, groups, manifest=None, fmt="both
         write_pdf(m, out.with_suffix(".pdf"), fonts_dir)
 
 
+# A module skill built per functionality ships functionalities.json beside this
+# script: each functionality's cases and their titles, and the screen requirements
+# in its file with the cases each cites and the functionality it hands a case to.
+# The tracker and the findings are written from it and from the workbook; the
+# markings stay in the workbook, read as plan reads them, and a case is through
+# by the same passes_gate the gate uses.
+TRACKER_SET = {"building": "building", "built": "built and waiting for the tester", "tested": "tested"}
+HELD = ("building", "built and waiting for the tester")
+
+
+def load_functionalities(path=None):
+    p = Path(path) if path else Path(__file__).resolve().parent / "functionalities.json"
+    if not p.exists():
+        return None
+    data = json.loads(p.read_text())
+    return data if data.get("functionalities") else None
+
+
+def shown_result(r, agreed=()):
+    """A case's result as the tracker and the findings show it."""
+    if r is None:
+        return "not in the workbook"
+    if r["status"] == "CONDITIONAL PASS" and not passes_gate(r, agreed):
+        return "CONDITIONAL PASS with no condition"
+    if r["status"] == "NA" and r["id"] in agreed:
+        return "NA, agreed"
+    if r["status"] in ("PASS", "CONDITIONAL PASS", "FAIL", "NA"):
+        return r["status"]
+    if not r["status"] and r["remarks"].lower().startswith("needs tester"):
+        return "needs tester"
+    return r["status"] or "open"
+
+
+def run_date(path):
+    """The Test Execution date the writer put in the sheet's header block, when it holds one."""
+    wb = load(path)
+    for ws in wb.worksheets:
+        for row in ws.iter_rows(min_row=1, max_row=15):
+            for cell in row:
+                text = norm(cell.value)
+                if text.startswith("Test Execution date:"):
+                    m = re.search(r"\d{4}-\d{2}-\d{2}", text)
+                    if m:
+                        return m.group(0)
+    return ""
+
+
+def judged_on(f, by_id, state):
+    """A functionality's scope and the cases it is judged on: each mandatory case alone, an either pair
+    together, or every applicable case of an optional functionality the tester added."""
+    present = [by_id[c] for c in f["cases"] if c in by_id]
+    if present and all(r.get("na") for r in present):
+        return "not applicable", []
+    mandatory, seen = [], set()
+    for r in present:
+        if r["kind"] == "mandatory":
+            mandatory.append([r["id"]])
+        elif r["kind"] == "pair":
+            ids = tuple(i for i in r["pair"] if i in by_id)
+            if ids not in seen:
+                seen.add(ids)
+                mandatory.append(list(ids))
+    if mandatory:
+        return "mandatory", mandatory
+    if f["id"] in state.get("in_scope", []):
+        return "optional, added", [[r["id"]] for r in present if not r.get("na")]
+    return "optional", []
+
+
+def from_workbook(groups_of, by_id, agreed, tested):
+    """The state the workbook gives: passed, failing, built and waiting for the tester, or not started."""
+    def through(ids):
+        return any(passes_gate(by_id[i], agreed) for i in ids)
+
+    if all(through(ids) for ids in groups_of):
+        return "passed"
+    if any(by_id[i]["status"] == "FAIL" for ids in groups_of if not through(ids) for i in ids):
+        return "failing"
+    if tested or any(shown_result(by_id[i], agreed) != "open" for ids in groups_of for i in ids):
+        return "built and waiting for the tester"
+    return "not started"
+
+
+def run_tracker(a, entity, agreed):
+    """Write the functionality tracker into INTEGRATION-PLAN.md from the workbook, functionalities.json
+    and the tracker state, and print where each functionality stands, by id."""
+    data = load_functionalities(a.functionalities)
+    if not data:
+        sys.exit("no functionalities.json beside this script: this module's skill is not built per functionality "
+                 "yet, so it has no tracker. Use its INTEGRATION-PLAN.md steps instead")
+    state_path = Path(a.state) if a.state else Path(a.workbook).resolve().parent / "tracker.json"
+    state = json.loads(state_path.read_text()) if state_path.exists() else {}
+    entity = entity or state.get("entity")
+    if entity not in ("government", "private"):
+        sys.exit("the tracker holds no entity type: ask the tester, government or private, then pass --entity")
+    if state.get("entity") and state["entity"] != entity:
+        sys.exit("the tracker says " + state["entity"] + " and --entity says " + entity + ": ask the tester which")
+    state["entity"], state["module"] = entity, data.get("module", "")
+    by_fid = {f["id"]: f for f in data["functionalities"]}
+    owner = {c: f["id"] for f in data["functionalities"] for c in f["cases"]}
+    recs, _ = read_cases(a.workbook, a.run, entity)
+    by_id = {r["id"]: r for r in recs}
+    today = date.today().isoformat()
+
+    def snapshot(fid):
+        """What the workbook holds for a functionality's cases now, to tell when a later run changed it."""
+        return {c: shown_result(by_id.get(c), agreed) for c in by_fid[fid]["cases"]}
+
+    for item in a.set or []:
+        fid, _, what = item.partition("=")
+        if fid not in by_fid or what not in list(TRACKER_SET) + ["in-scope"]:
+            sys.exit("--set takes <functionality id>=building|built|tested|in-scope, not " + item)
+        if what == "in-scope":
+            state["in_scope"] = sorted(set(state.get("in_scope", [])) | {fid})
+            continue
+        entry = state.setdefault("functionalities", {}).setdefault(fid, {})
+        entry.update(state=TRACKER_SET[what], date=today, snapshot=snapshot(fid))
+        if a.build:
+            entry["build"] = mask(norm(a.build))
+    for item in a.screen or []:
+        case, _, where = item.partition("=")
+        if case not in owner or not where.strip():
+            sys.exit("--screen takes <case id>=<screen or route> for a case in functionalities.json, not " + case)
+        state.setdefault("screens", {})[case] = mask(norm(where))
+    when = run_date(a.workbook)
+    rows, counts, tally_of = [], {}, {"passed": 0, "failing": 0, "open": 0, "total": 0}
+    for f in data["functionalities"]:
+        scope, groups_of = judged_on(f, by_id, state)
+        entry = state.get("functionalities", {}).get(f["id"], {})
+        if scope == "not applicable":
+            st = "not applicable"
+        elif scope == "optional":
+            st = "optional, not in scope"
+        else:
+            st = from_workbook(groups_of, by_id, agreed, entry.get("state") == "tested")
+            if entry.get("state") in HELD:
+                # A held state gives way once a later write into the workbook settles the functionality.
+                if st in ("passed", "failing") and entry.get("snapshot") != snapshot(f["id"]):
+                    entry.pop("state")
+                    entry.pop("snapshot", None)
+                else:
+                    st = entry["state"]
+        listed = []
+        for ids in groups_of:
+            listed.append(" or ".join(i + " " + shown_result(by_id.get(i), agreed) for i in ids))
+            tally_of["total"] += 1
+            if any(passes_gate(by_id[i], agreed) for i in ids if i in by_id):
+                tally_of["passed"] += 1
+            elif any(by_id[i]["status"] == "FAIL" for i in ids if i in by_id):
+                tally_of["failing"] += 1
+            else:
+                tally_of["open"] += 1
+        screens = "; ".join(i + ": " + state.get("screens", {}).get(i, "not mapped") for ids in groups_of for i in ids)
+        tested = any(shown_result(by_id.get(i), agreed) not in ("open", "not in the workbook") for ids in groups_of for i in ids)
+        rows.append([str(f["order"]), f["title"] + " (`" + f["id"] + "`)",
+                     ", ".join(listed) or ("none for a " + entity + " entity"), screens, st,
+                     entry.get("date") or (when if tested else ""), entry.get("build", "not recorded" if tested else "")])
+        if scope not in ("not applicable", "optional"):
+            counts[st] = counts.get(st, 0) + 1
+        failing = [i for ids in groups_of for i in ids if shown_result(by_id.get(i), agreed) == "FAIL"]
+        print(f["id"] + ": " + st + (" (" + ", ".join(failing) + " FAIL)" if failing else ""))
+    in_scope = sum(counts.values())
+    module = data.get("module", "").upper()
+    lines = ["<!-- abdm-tracker start: written by abdm_report.py tracker. Never edit it by hand -->",
+             "",
+             "Entity type: " + entity + ". Run: " + a.run + ". Workbook: " + Path(a.workbook).name + ". Written " + today + ".",
+             "",
+             "In scope: " + str(in_scope) + " functionalities. " +
+             ", ".join(str(counts[k]) + " " + k for k in ("passed", "failing", "built and waiting for the tester",
+                                                         "building", "not started") if counts.get(k)) + ". " +
+             "Mandatory cases: " + str(tally_of["total"]) + ", " + str(tally_of["passed"]) + " passed, " +
+             str(tally_of["failing"]) + " failing, " + str(tally_of["open"]) + " open.",
+             "",
+             "| # | Functionality | Mandatory cases and results | Screen or route | State | Date | Build |",
+             "|---|---|---|---|---|---|---|"]
+    lines += ["| " + " | ".join(c.replace("|", "/") for c in row) + " |" for row in rows]
+    lines += ["", "<!-- abdm-tracker end -->"]
+    block = "\n".join(lines)
+    plan = Path(a.plan)
+    text = plan.read_text() if plan.exists() else "# Integration plan\n"
+    found = re.search(r"<!-- abdm-tracker start.*?<!-- abdm-tracker end -->", text, re.S)
+    if found:
+        text = text[:found.start()] + block + text[found.end():]
+    else:
+        text = text.rstrip("\n") + "\n\n## Functionality tracker, " + module + "\n\n" + block + "\n"
+    plan.write_text(text)
+    state_path.parent.mkdir(parents=True, exist_ok=True)
+    state_path.write_text(json.dumps(state, indent=1))
+    print("in scope " + str(in_scope) + "; mandatory cases " + str(tally_of["total"]) + ", " +
+          str(tally_of["passed"]) + " passed, " + str(tally_of["failing"]) + " failing, " +
+          str(tally_of["open"]) + " open")
+    print("wrote " + str(plan) + " and " + str(state_path))
+
+
+def words(text):
+    return set(re.findall(r"[a-z0-9]+", str(text).lower())) - {"the", "a", "an", "of", "and", "or", "to", "is"}
+
+
+def coverage(case, f, by_fid):
+    """How a functionality's file covers one case: ("own", rule) when a screen requirement states its check
+    for the case; ("through", rule, target, counterpart) when the only rows citing it hand it to another
+    functionality and that one states a check for the case of the same title; else ("none", reason)."""
+    if not f:
+        return ("none", "the case is in no functionality")
+    rows = [q for q in f.get("screen_requirements", []) if case in q["cases"]]
+    own = [q for q in rows if not q.get("delegates_to")]
+    if own:
+        return ("own", own[0]["requirement"], len(own))
+    title = words(f.get("titles", {}).get(case, ""))
+    for q in rows:
+        for target in q.get("delegates_to", []):
+            t = by_fid.get(target)
+            if not t:
+                continue
+            # The case of the same title, else the closest; a tie goes to the first in the file.
+            scored = sorted(((-(len(title & words(tt)) / max(1, len(title | words(tt)))), i, c)
+                             for i, (c, tt) in enumerate(t.get("titles", {}).items())))
+            scored = [(-x, c) for x, _, c in scored]
+            if not scored or scored[0][0] < 0.5:
+                continue
+            counterpart = scored[0][1]
+            rules = [r for r in t.get("screen_requirements", []) if counterpart in r["cases"] and not r.get("delegates_to")]
+            if rules:
+                return ("through", rules[0]["requirement"], target, counterpart)
+    if rows:
+        return ("none", "it hands the case to " + ", ".join(sorted({t for q in rows for t in q["delegates_to"]})) +
+                ", which states no check for its case of the same title")
+    return ("none", "no screen requirement cites it")
+
+
+def cut(text, size=120):
+    return text if len(text) <= size else text[:size - 3].rsplit(" ", 1)[0] + "..."
+
+
+def write_findings(path, run, entity, out, data, recs=None):
+    """<report>-findings.md beside the report: each FAIL and CONDITIONAL PASS, its functionality, and the screen
+    requirement that states the check for it, in its own file or in the one it hands the case to. A case with
+    none is a Catalogue issue to file."""
+    if recs is None:
+        recs, _ = read_cases(path, run, entity)
+    by_fid = {f["id"]: f for f in data["functionalities"]}
+    owner = {c: f for f in data["functionalities"] for c in f["cases"]}
+    found = [r for r in recs if r["status"] in ("FAIL", "CONDITIONAL PASS")]
+    rows, issues = [], []
+    for r in found:
+        f = owner.get(r["id"])
+        how = coverage(r["id"], f, by_fid)
+        if how[0] == "own":
+            answer = 'yes: "' + cut(how[1]) + '"' + (" and " + str(how[2] - 1) + " more" if how[2] > 1 else "")
+        elif how[0] == "through":
+            answer = "yes, through " + how[2] + ", its rule for " + how[3] + ': "' + cut(how[1]) + '"'
+        else:
+            answer = "none, " + how[1] + ": Catalogue issue to file, below"
+            issues.append((r, f, how[1]))
+        rows.append([r["id"], r["status"], (f["title"] + " (`" + f["id"] + "`)") if f else "not in functionalities.json", answer])
+    module = data.get("module", "").upper()
+    lines = ["# Findings, " + module + " " + run + " run", "",
+             "Written " + date.today().isoformat() + " from " + Path(path).name + " for a " + entity + " entity. "
+             "Each FAIL and CONDITIONAL PASS, its functionality, and the screen requirement that states the check "
+             "for it: in its own functionality file, or in the one a row there hands it to.", ""]
+    if rows:
+        lines += ["| Case | Result | Functionality | Screen requirement stating its check |", "|---|---|---|---|"]
+        lines += ["| " + " | ".join(c.replace("|", "/") for c in row) + " |" for row in rows]
+    else:
+        lines.append("No case is FAIL or CONDITIONAL PASS.")
+    lines += ["", "## Catalogue issues to file", ""]
+    if not issues:
+        lines.append("None: every FAIL and CONDITIONAL PASS has a screen requirement stating its check.")
+    else:
+        lines += ["Not filed. Paste each into a new issue on the ABDM Developer Portal repository. Write the "
+                  "observed line in your own words, with no Aadhaar number, mobile, ABHA number, ABHA address or name.", ""]
+        for r, f, why in issues:
+            where = (f["title"] + " (" + f["id"] + "), " + f["file"]) if f else "no functionality: the case is not in functionalities.json"
+            lines += ["### " + r["id"] + ": no screen requirement in " + (f["id"] if f else "any functionality"), "",
+                      "```text",
+                      "Title: " + (f["id"] if f else module) + ": no screen requirement states the check for " + r["id"],
+                      "Functionality: " + where,
+                      "Case: " + r["id"] + ", " + r["status"] + " in a " + run + " run for a " + entity + " entity",
+                      "Why: " + why,
+                      "Expected Result: " + mask(r["expected"]),
+                      "Observed: <one line, in your own words>",
+                      "Asked: a screen requirement in the functionality file that states the check for " + r["id"] +
+                      ", so the next integrator builds for it before the test.",
+                      "```", ""]
+    target = Path(out)
+    target = target.with_name(target.stem + "-findings.md")
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text("\n".join(lines).rstrip("\n") + "\n")
+    print("findings: " + str(len(found)) + " FAIL or CONDITIONAL PASS, " + str(len(issues)) +
+          " without a screen requirement")
+    for r, f, _ in issues:
+        print("catalogue issue " + r["id"] + " in " + (f["id"] if f else "no functionality"))
+    print("wrote " + str(target))
+
+
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument("action", choices=["plan", "check", "build"])
+    p.add_argument("action", choices=["plan", "check", "build", "tracker", "findings"])
     p.add_argument("workbook")
     p.add_argument("--run", choices=["ft", "ui"], required=True)
     p.add_argument("--entity", choices=["government", "private"])
@@ -1901,6 +2210,12 @@ def main():
     p.add_argument("--fonts")
     p.add_argument("--draft", action="store_true",
                    help="build even when mandatory cases are not PASS, marked Draft on every page")
+    p.add_argument("--functionalities", help="tracker, findings: functionalities.json, else the one beside this script")
+    p.add_argument("--plan", default="INTEGRATION-PLAN.md", help="tracker: the plan file the tracker is written into")
+    p.add_argument("--state", help="tracker: its state file, else tracker.json beside the workbook")
+    p.add_argument("--set", action="append", help="tracker: <functionality id>=building|built|tested|in-scope")
+    p.add_argument("--screen", action="append", help="tracker: <case id>=<the screen or route that satisfies it>")
+    p.add_argument("--build", help="tracker: the build a functionality was tested on, with --set <id>=tested")
     a = p.parse_args()
     meta = {}
     if a.action == "build" and not (a.meta and a.out):
@@ -1913,10 +2228,21 @@ def main():
                      "which never goes in a report: " + ", ".join(bad))
         meta["entity_type"] = a.entity or meta.get("entity_type")
     entity = a.entity or meta.get("entity_type")
+    if a.action == "tracker":
+        run_tracker(a, entity, agreed_cases(meta))
+        return
     if entity not in ("government", "private"):
         sys.exit("--entity, or entity_type in meta.json, must be government or private")
     if a.action == "plan":
         run_plan(a.workbook, a.run, entity)
+        return
+    if a.action == "findings":
+        data = load_functionalities(a.functionalities)
+        if not data:
+            sys.exit("no functionalities.json beside this script: this module's skill is not built per functionality yet")
+        if not a.out:
+            sys.exit("findings needs --out, the report it sits beside")
+        write_findings(a.workbook, a.run, entity, a.out, data)
         return
     recs, groups, blocking = run_check(a.workbook, a.run, entity, agreed_cases(meta))
     if blocking and not (a.action == "build" and a.draft):
@@ -1927,6 +2253,9 @@ def main():
     if a.action == "build":
         build(a.workbook, a.run, meta, a.evidence, a.out, recs, groups, a.manifest, a.format, a.fonts,
               blocking if blocking else None)
+        data = load_functionalities(a.functionalities)
+        if data:
+            write_findings(a.workbook, a.run, entity, a.out, data, recs)
 
 
 if __name__ == "__main__":
@@ -1938,15 +2267,15 @@ if __name__ == "__main__":
 **Before the first case, plan the run from the workbook:**
 
 ```bash
-python3 abdm-ft/abdm_report.py plan <workbook> --run ui --entity private
+python3 -I abdm-ft/abdm_report.py plan <workbook> --run ui --entity private
 ```
 
-It prints one line per case, in sheet order: the case id, its group (the sheet's Function, else its section heading), what it is for your entity type (`mandatory`, `mandatory, either <id> or <id>`, `conditional`, `optional`, or `not applicable` with the group and its Applicable To; an Applicable To that names neither entity type, such as `PHR App`, adds `applies: PHR App (read as all)`), and its status so far in the run type's column, `open` when blank. Then one `total` line. NHA's PHR workbook carries no case ids until the writer's first write adds them, so for P1 to P4 write an empty results file, `[]`, with `abdm_workbook.py write` first, then run `plan`. Create the run log's rows from this list, one per case. No case may be dropped: a case that cannot run is `needs-human` with what it needs named, after the tester was asked for it, or `not-run` with the rule that makes it not apply. Before the tester leaves, run `python3 abdm-ft/abdm_workbook.py open <workbook> --run ui --entity private` and read the list out, so every case still waiting for them is done or asked about while they are there.
+It prints one line per case, in sheet order: the case id, its group (the sheet's Function, else its section heading), what it is for your entity type (`mandatory`, `mandatory, either <id> or <id>`, `conditional`, `optional`, or `not applicable` with the group and its Applicable To; an Applicable To that names neither entity type, such as `PHR App`, adds `applies: PHR App (read as all)`), and its status so far in the run type's column, `open` when blank. Then one `total` line. NHA's PHR workbook carries no case ids until the writer's first write adds them, so for P1 to P4 write an empty results file, `[]`, with `abdm_workbook.py write` first, then run `plan`. Create the run log's rows from this list, one per case. No case may be dropped: a case that cannot run is `needs-human` with what it needs named, after the tester was asked for it, or `not-run` with the rule that makes it not apply. Before the tester leaves, run `python3 -I abdm-ft/abdm_workbook.py open <workbook> --run ui --entity private` and read the list out, so every case still waiting for them is done or asked about while they are there.
 
 1. When the last case is recorded and written into the workbook, run the gate for the run type and your entity type:
 
    ```bash
-   python3 abdm-ft/abdm_report.py check <workbook> --run ui --entity private --meta abdm-ft/meta.json
+   python3 -I abdm-ft/abdm_report.py check <workbook> --run ui --entity private --meta abdm-ft/meta.json
    ```
 
    `--meta` is optional for `check`: it is read for `agreed_not_run`. The script prints one `marking` line for every case whose marking is entity specific, conditional, an either rule, a field list, blank or unrecognised, with how it was treated, and one `agreed not run <id>: <agreement>` line per mandatory `NA` case `agreed_not_run` lets through. Then one `not passed <id>: <status>` line per mandatory case in the way, an either pair as `<id> or <id>: <status>, <status>`, and a count.
@@ -1954,7 +2283,7 @@ It prints one line per case, in sheet order: the case id, its group (the sheet's
 2. If it exits `1`, the run is not finished, but the tester still gets a PDF of where it stands. Build the draft:
 
    ```bash
-   python3 abdm-ft/abdm_report.py build <workbook> --run ui --meta abdm-ft/meta.json --evidence abdm-ft/evidence --manifest abdm-ft/m1-<YYYYMMDD-HHMM>.json --out abdm-ft/draft-report-m1.pdf --draft
+   python3 -I abdm-ft/abdm_report.py build <workbook> --run ui --meta abdm-ft/meta.json --evidence abdm-ft/evidence --manifest abdm-ft/m1-<YYYYMMDD-HHMM>.json --out abdm-ft/draft-report-m1.pdf --draft
    ```
 
    The draft is the same report, marked Draft on the cover and in the header of every page. Its executive summary ends on `<n> mandatory cases are still open.`, and each of them is in the failures log or the table of cases not tested. It is never the report to submit. Then rerun the cases `check` listed, as `open` in `shared.concept.test-workbook-write-back` does, and run `check` again. Every run ends with a PDF: the report when `check` exits `0`, the draft when it does not.
@@ -1962,7 +2291,7 @@ It prints one line per case, in sheet order: the case id, its group (the sheet's
 3. Only when `check` exits `0`, write the one line findings into `meta.json` under `findings`, keyed by case id. A case without one gets its Remarks value. Then build:
 
    ```bash
-   python3 abdm-ft/abdm_report.py build <workbook> --run ui --meta abdm-ft/meta.json --evidence abdm-ft/evidence --manifest abdm-ft/m1-<YYYYMMDD-HHMM>.json --out abdm-ft/report-m1.pdf
+   python3 -I abdm-ft/abdm_report.py build <workbook> --run ui --meta abdm-ft/meta.json --evidence abdm-ft/evidence --manifest abdm-ft/m1-<YYYYMMDD-HHMM>.json --out abdm-ft/report-m1.pdf
    ```
 
    `entity_type` in `meta.json` is the entity type, unless `--entity` is given. `build` runs the gate again and refuses with the same list if it fails. `--manifest` is optional. It writes `abdm-ft/report-m1.pdf`, the report to submit, and `abdm-ft/report-m1.docx` beside it, the editable copy, whichever of the two suffixes `--out` names. `--format pdf` writes the PDF alone and `--format docx` the Word copy alone; the default is `both`. `--fonts <folder>` points it at the design system's fonts if they are somewhere else.
@@ -1970,6 +2299,22 @@ It prints one line per case, in sheet order: the case id, its group (the sheet's
 4. Submit the PDF as it is: its contents list and page numbers are already filled in. If you edit the Word copy instead, open it in Word or LibreOffice and accept the prompt to update fields, which fills in its contents and page count, then export it to PDF. A screenshot that needs a highlight box gets it before it goes in the evidence folder.
 
 5. For an `ft` report, use `--run ft` in both commands. The evidence for each case is its `FT Response with Code` value, and `--evidence` is not read.
+
+6. A skill built per functionality, M1 today, ships `scripts/functionalities.json` beside this script: each functionality's cases, and which of them a screen requirement in its file cites. Copy it into `abdm-ft/` with the script. Then `build` also writes `<report>-findings.md` beside the report, the draft included. To write the findings without a report, after a functionality's test:
+
+   ```bash
+   python3 -I abdm-ft/abdm_report.py findings <workbook> --run ui --entity private --out abdm-ft/draft-report-m1.pdf
+   ```
+
+   It lists each FAIL and CONDITIONAL PASS with its functionality and the screen requirement that states the check for it. A row that only hands the case to another functionality, such as "follow create-abha-aadhaar-otp", does not count by itself: the finding follows it to that functionality's rule for the case of the same title and names it. A case with no such rule gets a Catalogue issue, written out ready to paste and never filed by the script.
+
+7. The same file feeds the tracker in `INTEGRATION-PLAN.md`. After every change of state, and after every write into the workbook:
+
+   ```bash
+   python3 -I abdm-ft/abdm_report.py tracker <workbook> --run ui --entity private --set create-abha-aadhaar-otp=tested --build <build id>
+   ```
+
+   `--set <id>=building`, `built` or `tested` records where one functionality stands, `--set <id>=in-scope` adds an optional one, and `--screen <case id>=<screen or route>` records what satisfies a case. Each can repeat. The tracker writes its rows between the two `abdm-tracker` markers in `INTEGRATION-PLAN.md`, creating the file or the section when missing, and keeps its state in `abdm-ft/tracker.json`. `--entity` is needed once; later calls read it from the state. A case counts as passed exactly as `check` counts it: a CONDITIONAL PASS needs its condition in Remarks, and an `NA` closes a mandatory case only when `agreed_not_run` in the `--meta` file names it. A held `building` or `built` state gives way once a later write into the workbook makes the functionality passed or failing. It prints one line per functionality, its id and state with its failing case ids, then the counts.
 
 ## How you know it worked
 
@@ -1984,14 +2329,15 @@ It prints one line per case, in sheet order: the case id, its group (the sheet's
 - The failures and iterations log lists only failed, blocked and conditional pass cases.
 - With `--manifest`, each tested case's Request IDs line lists the REQUEST-IDs the manifest gives it, or reads `None in the manifest`. A value that is not a UUID reads `[invalid id]`.
 - No 12 digit number appears anywhere in either file, the PDF's header and footer included: an Aadhaar number reads `XXXX XXXX 1234` and an ABHA number `XX-XXXX-XXXX-1234`, with the last four digits kept. A 10 digit mobile, with or without `0`, `91` or `+91` and spaces or hyphens inside, reads `XXXXXX1234`, and an ABHA address ending `@sbx` or `@abdm` keeps only the last four characters before the `@`, the rest as `x`, or is all `x` when four or fewer. A profile field's value, `firstName`, `lastName`, `name`, `dob`, `address`, `pinCode`, `photo`, `email` and the like, reads `[masked]`, in any case and to the end of its clause, so `Name: asha verma` reads `Name: [masked]`. Dates of birth and dd/mm/yyyy dates are masked as the writer masks them, because the writer uses the same masking block, so the sheet and the report agree.
+- With `functionalities.json` beside the script, `build` and `findings` print `findings: <n> FAIL or CONDITIONAL PASS, <m> without a screen requirement`, a `catalogue issue <id> in <functionality>` line for each of the `m`, and `wrote <report>-findings.md`. `tracker` prints `wrote INTEGRATION-PLAN.md and abdm-ft/tracker.json`. With no optional functionality added, its failing and open mandatory cases are the ones `check` lists.
 - No token or secret appears in it: a JWT reads `[token]`, and a value after a label naming a password, secret, token, OTP, credential, API key or private key reads `[redacted]`, as does a `Bearer` credential. This covers the workbook's Response and Remarks values and the findings, as well as `meta.json`.
 
 ## When it goes wrong
 
 | Observed | Cause | Do |
 |---|---|---|
-| `ModuleNotFoundError: No module named 'docx'` or `'reportlab'` | python-docx or ReportLab is not installed | `pip install openpyxl pillow python-docx reportlab` |
-| `ImportError: reportlab requires 3.10+` | A ReportLab release newer than your Python was installed, on Python 3.9 | `pip install "reportlab<5"`, or use Python 3.10 or later |
+| `ModuleNotFoundError: No module named 'docx'` or `'reportlab'` | The script ran under an interpreter without them | Run it under `"$(python3 -I abdm-ft/abdm_env.py python)" -I`. If the survey found none with them, install into `abdm-ft/.venv` on the tester's yes |
+| `ImportError: reportlab requires 3.10+` | A ReportLab release newer than your Python was installed, on Python 3.9 | Survey again with `--refresh`: it skips that interpreter, and its install puts `reportlab<5` into `abdm-ft/.venv` on Python 3.9 |
 | `fonts: Public Sans not found, Helvetica in its place` | That font is not in any folder the script looks in | Nothing, the report is complete with the fallback. For the design system's own face, put its `.ttf` files in `abdm-ft/fonts/` and build again |
 | `not passed CRT_ABHA_105: FAIL` | A mandatory case failed | Fix the cause the Remarks name, rerun the case, write it back, run `check` again |
 | `not passed <id>: NA` | A mandatory case was recorded not run, and `agreed_not_run` does not list it | Run it, or agree with NHA that it does not apply, keep the reason in its remarks, and add it to `agreed_not_run` with who agreed and when. Pass `--meta` to `check` |
@@ -2007,6 +2353,8 @@ It prints one line per case, in sheet order: the case id, its group (the sheet's
 | `no Test Case ID column with ids` | The workbook has no case ids, as NHA's PHR workbook does not, and no write has added them yet | Write the run's results with `shared.concept.test-workbook-write-back` first: its first write adds the `Test Case ID` column |
 | `the manifest carries a credential` | The manifest JSON holds a token, secret or password field or value | Write the manifest as the test skill does, case ids to request ids and nothing else |
 | The Word copy's contents page reads `Open in Word and update fields` | Its fields have not been updated since the script wrote them. The PDF is not affected | Open the file in Word or LibreOffice and update fields, then save |
+| `no functionalities.json beside this script` | The module's skill is not built per functionality yet, or the file was not copied into `abdm-ft/` | Copy `scripts/functionalities.json` from the skill. A module without one has no tracker and no findings; use its plan file steps |
+| `the tracker holds no entity type` | The first tracker call for this workbook, with no `--entity` | Ask the tester, government or private, and pass `--entity` |
 | A screenshot is missing from the report | Its file is not under `<evidence>/<case id>/`, or its extension is not png, jpg, jpeg, gif, bmp, webp, tif, tiff, heic, heif or pdf. Or the case was not tested: only passed, conditional pass and failed cases have evidence | Move it into the case's folder, named as `cases` prints the id, and build again. For a case not tested, finish it first |
 | A case you ran is under Cases not tested as `Blocked` | Its status is blank and its Remarks start `Needs tester:`, as the writer leaves a `needs-human` case | Finish the step with the tester, write the result again, and build again |
 | A case is counted `Not applicable` though you ran it | Its status is `NA`, as the writer writes a `not-run` case; or its group is for the other entity type only, listed as `Run, not applicable` | Write the result again with the outcome it had. For the group, check `--entity` |
