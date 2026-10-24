@@ -139,9 +139,12 @@ Both `/abdm-build` and `/abdm-test` load the module skill and `run.md` before an
 
 ### 3.8 Coverage rules
 
-1. An existing ABHA is not a stop: on `isNew: false` the profile (113), the card (114) and the address step (112, with the same `txnId`) still run. More than one ABHA address can be created for the same ABHA number; the skill states no limit.
-2. The test data plan is part of readiness: the identities the mandatory cases need, which one Aadhaar holder covers, and the order that reuses outputs (the address created in 112 is the second address for 702 step 2).
-3. SHARE_PATIENT_PROFILE_701 and 702 are always planned, with what they need: the ABHA app, a counter QR, the bridge callback reaching the product.
+NHA's observations on the run (24 October 2026, "Observations UI Test case run") add two rules, folded in below: say upfront that the full creation journey needs a fresh Aadhaar, and how to free one; and ask for every missing input before a case is ever left untested.
+
+1. **A fresh Aadhaar, said upfront.** The readiness check tells the tester before the run that the full ABHA creation journey needs an Aadhaar with no ABHA, and that an existing ABHA can be deleted on the ABHA sandbox portal (https://abhasbx.abdm.gov.in/abha/v3) to free it, as NHA recommends. If the tester keeps the existing ABHA, an existing ABHA is still not a stop: on `isNew: false` the profile (113), the card (114) and the address step (112, with the same `txnId`) run on that response, and only the cases that need a new ABHA wait for a fresh Aadhaar. More than one ABHA address can be created for the same ABHA number; the skill states no limit.
+2. **Ask before not tested.** Every input a case needs (from the mapping's `needs`) is asked for in the readiness check, and asked again when the run reaches the case. A case is recorded needs-human only after the tester has said they cannot provide it at this run, and Remarks name what was asked and when.
+3. The test data plan is part of readiness: the identities the mandatory cases need, which one Aadhaar holder covers, and the order that reuses outputs (the address created in 112 is the second address for 702 step 2).
+4. SHARE_PATIENT_PROFILE_701 and 702 are always planned, with what they need: the ABHA app, a counter QR, the bridge callback reaching the product.
 
 ### 3.9 Judging rules
 
