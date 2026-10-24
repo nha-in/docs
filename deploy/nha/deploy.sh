@@ -49,10 +49,38 @@ fi
 site_url="$SITE_URL"
 mcp_url="$SITE_URL/mcp"
 
-echo "==> site: building for $site_url"
+# Each phase prints its start time, and the exit trap lists how long each one took, so a
+# slow or failed deploy shows where its time went. Plain strings, not arrays: macOS bash 3.2
+# treats an empty array as unbound under set -u.
+timings=""
+phase_name=""
+phase_start=$SECONDS
+end_phase() {
+  [[ -n "$phase_name" ]] || return 0
+  timings+="$(printf '%6ss  %s' "$((SECONDS - phase_start))" "$phase_name")"$'\n'
+  phase_name=""
+}
+phase() {
+  end_phase
+  phase_name="$1"
+  phase_start=$SECONDS
+  echo "==> $(date +%H:%M:%S) $1"
+}
+report_timings() {
+  end_phase
+  printf '\ntime per phase:\n%s%6ss  total\n' "$timings" "$SECONDS"
+}
+trap report_timings EXIT
+
+phase "site: installing dependencies"
+(cd "$repo" && npm ci)
+
+phase "site: building for $site_url"
 # CHAT_URL is the origin the Ask AI panel posts /api/chat to; the CDN forwards /api/* to
 # docs-mcp on the site's own hostname. Without it the panel ships as a labelled mock.
-(cd "$repo" && npm ci && DOCUSAURUS_URL="$site_url" DOCUSAURUS_BASE_URL=/ MCP_URL="$mcp_url" CHAT_URL="$site_url" npm run build)
+(cd "$repo" && DOCUSAURUS_URL="$site_url" DOCUSAURUS_BASE_URL=/ MCP_URL="$mcp_url" CHAT_URL="$site_url" npm run build)
+
+phase "site: publishing to s3://$SITE_BUCKET/main/"
 
 # The CDN serves main/ (its origin path). Fingerprinted assets go first, cached for a year,
 # so every file a page references is in the bucket before the page is; pages and the spec
@@ -84,7 +112,7 @@ aws s3 sync "$repo/site/build/" "s3://$SITE_BUCKET/main/" --delete --only-show-e
 
 # The same build under <version>/, which the CDN never serves and later deploys never
 # delete. An earlier version goes back live with one sync from <version>/ to main/.
-echo "==> site: keeping a copy at s3://$SITE_BUCKET/$VERSION/"
+phase "site: keeping a copy at s3://$SITE_BUCKET/$VERSION/"
 aws s3 sync "$repo/site/build/" "s3://$SITE_BUCKET/$VERSION/" --only-show-errors
 
 registry="$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com"
@@ -92,13 +120,13 @@ image="$registry/$ECR_REPOSITORY:$VERSION"
 
 # The search index is baked into the image and must be built with the same embedding
 # provider the server runs with, or the server refuses to start.
-echo "==> docs-mcp: building the search index against Bedrock in $REGION"
+phase "docs-mcp: building the search index against Bedrock in $REGION"
 (cd "$repo/mcp" && EMBED_PROVIDER=bedrock AWS_REGION="$REGION" go run ./cmd/indexer -catalogue ../catalogue -out catalogue.db)
 
 # amd64 to match the service's X86_64 CPU architecture. Pushed under the
 # version only, never as latest: the service runs whichever version
 # the infrastructure names, so the rollout, and any rollback, goes through it.
-echo "==> docs-mcp: building and pushing $image"
+phase "docs-mcp: building and pushing $image"
 aws ecr get-login-password | docker login --username AWS --password-stdin "$registry"
 # The layer cache lives beside the images in the same repository, under one tag, so a
 # deploy from any machine reuses the Go module and compile layers of the last one.
