@@ -155,7 +155,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"acknowledgement\": {\n    \"status\": \"SUCCESS\",\n    \"abhaAddress\": \"<ABHA_ADDRESS>\",\n    \"profile\": {\n      \"context\": \"43\",\n      \"tokenNumber\": \"3\",\n      \"expiry\": 180\n    }\n  },\n  \"error\": {\n    \"code\": \"ABDM-9999\",\n    \"message\": \"Unknown exception\"\n  },\n  \"response\": {\n    \"requestId\": \"6f0b4665-a915-4c92-aa36-65afb4a2cd71\"\n  }\n}",
+              "raw": "{\n  \"acknowledgement\": {\n    \"status\": \"SUCCESS\",\n    \"abhaAddress\": \"<ABHA_ADDRESS_FROM_THE_SHARE>\",\n    \"profile\": {\n      \"context\": \"<COUNTER_ID_FROM_THE_SHARE>\",\n      \"tokenNumber\": \"<TOKEN_NUMBER_YOUR_QUEUE_ISSUED>\",\n      \"expiry\": \"<TOKEN_EXPIRY_AS_A_NUMBER>\"\n    }\n  },\n  \"response\": {\n    \"requestId\": \"<REQUEST_ID_OF_THE_SHARE>\"\n  }\n}",
               "options": {
                 "raw": {
                   "language": "json"

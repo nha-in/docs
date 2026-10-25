@@ -167,7 +167,7 @@ curl --request PATCH \
 
 **Exit condition (Observe until this is true)**
 
-A 202 response. The specification gives no body for it, so read what comes back.
+A 202 response to `PATCH /api/hiecm/gateway/v3/bridge/url` in `gateway-abdm-gateway`, whose body the specification does not give: read what comes back.
 
 ### Session (`gateway-abdm-sessions`)
 

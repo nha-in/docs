@@ -145,19 +145,15 @@ curl --request POST \
   --data '{
   "acknowledgement": {
     "status": "SUCCESS",
-    "abhaAddress": "<ABHA_ADDRESS>",
+    "abhaAddress": "<ABHA_ADDRESS_FROM_THE_SHARE>",
     "profile": {
-      "context": "43",
-      "tokenNumber": "3",
-      "expiry": 180
+      "context": "<COUNTER_ID_FROM_THE_SHARE>",
+      "tokenNumber": "<TOKEN_NUMBER_YOUR_QUEUE_ISSUED>",
+      "expiry": "<TOKEN_EXPIRY_AS_A_NUMBER>"
     }
   },
-  "error": {
-    "code": "ABDM-9999",
-    "message": "Unknown exception"
-  },
   "response": {
-    "requestId": "6f0b4665-a915-4c92-aa36-65afb4a2cd71"
+    "requestId": "<REQUEST_ID_OF_THE_SHARE>"
   }
 }'
 ```

@@ -8,6 +8,8 @@ Every journey below is an OODA loop, not a recipe: observe the actual state (las
 
 Loop limit: 8 passes per step. Hitting the limit is an escalation: state what was observed, what was tried, and which operation page to read, then ask one question.
 
+NHA's sheet lists no APIs for these cases. Before building, read `references/test-matrix.md` in this skill: build each mandatory case's Expected Result for your entity type into the app screen, and use this module's journeys for the calls. The test run uses it to know what each case exercises.
+
 ## Before the first journey, when the codebase already exists
 
 Skip this section only for a system that does not exist yet. Otherwise it runs first, and its exit condition is a written plan, not a call.
@@ -339,7 +341,7 @@ curl --request GET \
 
 **Exit condition (Observe until this is true)**
 
-A 200 response. The specification gives no body for it, so read what comes back.
+A 200 response to `GET /abha/api/v3/profile/account/abha-card` in `p1-create-abha-number-aadhaar-otp`, whose body the specification does not give: read what comes back.
 
 ### Create ABHA address, mobile number (`p1-create-abha-address-mobile`)
 

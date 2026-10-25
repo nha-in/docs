@@ -64,12 +64,13 @@ The last steps are the module's functional test cases. Their run log is its own 
 - **Integrate.** 91 operations, with their hosts and headers. [references/integrate.md](references/integrate.md)
 - **Debug.** The specification's examples return no error code for this module. [references/debug.md](references/debug.md)
 - **Test.** The functional test cases, one loop each, run as API or UI tests, with results written into NHA's workbook and the final test report once every mandatory case passes. Never hands-off: a tester enters every Aadhaar number, mobile number and OTP. [references/test.md](references/test.md)
+- **Test matrix.** Each of the 190 NHA cases with its marking for each entity type and its Expected Result, and the operations and journeys the sheet lists for its group. Read it before building. [references/test-matrix.md](references/test-matrix.md)
 
 This file is the map. Each line above is a file beside it, opened one at a time rather than read through.
 
 ## Before anything else
 
-- Treat every request and response shape in this skill as unconfirmed until the sandbox has answered you. Check a response before you rely on its shape.
+- Paste the sandbox response at every step and check it against the shape this skill gives before you build on it. A step is done when its response is observed.
 - Neither registry moves a health record. M4 establishes who the professional is and what the facility is, so every record flow has a verified provider behind it.
 - The register professional call carries an `hprToken` in its payload, beside the practitioner.
 - The facility calls are keyed to a `trackingId`, and the facility status values in the examples include `Draft` and `Submitted`. Read the status rather than assuming a facility is complete.

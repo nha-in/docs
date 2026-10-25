@@ -61,13 +61,14 @@ The last steps are the module's functional test cases. Their run log is its own 
 - **Integrate.** 18 operations, with their hosts and headers. [references/integrate.md](references/integrate.md)
 - **Debug.** The specification's examples return no error code for this module. [references/debug.md](references/debug.md)
 - **Test.** The functional test cases, one loop each, run as API or UI tests, with results written into NHA's workbook and the final test report once every mandatory case passes. Never hands-off: a tester enters every Aadhaar number, mobile number and OTP. [references/test.md](references/test.md)
+- **Test matrix.** Each of the 15 NHA cases with its marking for each entity type and its Expected Result. Read it before building. [references/test-matrix.md](references/test-matrix.md)
 
 This file is the map. Each line above is a file beside it, opened one at a time rather than read through.
 
 ## Before anything else
 
-- Treat every request and response shape in this skill as unconfirmed until the sandbox has answered you. Check a response before you rely on its shape.
-- The design section is different in kind. Its rules come from building a working front desk against the sandbox, and each atom it cites names what was observed and the date it was seen.
+- Paste the sandbox response at every step and check it against the shape this skill gives before you build on it. A step is done when its response is observed.
+- The design section's rules come from building a working front desk against the sandbox, and each atom it cites names what was observed and the date it was seen.
 
 ## Practices that hold across every call
 

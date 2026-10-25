@@ -7,14 +7,14 @@ Complete the steps yourself by running the commands directly. Ask the user only 
 Ask the user which of these this project needs, and install only what they name:
 
 - `abdm-gateway`: Gateway, sessions and the bridge registry. Sections: scaffold, integrate, debug.
-- `abdm-m1`: M1, create and verify ABHA. Sections: scaffold, design, integrate, debug, test.
-- `abdm-m2`: M2, create and link records. Sections: scaffold, design, integrate, debug, test.
-- `abdm-m3`: M3, fetch data with consent. Sections: scaffold, design, integrate, debug, test.
-- `abdm-m4`: M4, register facilities and professionals. Sections: scaffold, integrate, debug, test.
-- `abdm-p1`: P1, PHR registration and login. Sections: scaffold, integrate, debug, test.
-- `abdm-p2`: P2, Consents Management. Sections: scaffold, integrate, debug, test.
-- `abdm-p3`: P3, PHR subscriptions. Sections: scaffold, design, integrate, debug, test.
-- `abdm-p4`: P4, health lockers. Sections: scaffold, integrate, debug, test.
+- `abdm-m1`: M1, create and verify ABHA. Sections: functionalities, run, foundations, errors.
+- `abdm-m2`: M2, create and link records. Sections: scaffold, design, integrate, debug, test, test-matrix.
+- `abdm-m3`: M3, fetch data with consent. Sections: scaffold, design, integrate, debug, test, test-matrix.
+- `abdm-m4`: M4, register facilities and professionals. Sections: scaffold, integrate, debug, test, test-matrix.
+- `abdm-p1`: P1, PHR registration and login. Sections: scaffold, integrate, debug, test, test-matrix.
+- `abdm-p2`: P2, Consents Management. Sections: scaffold, integrate, debug, test, test-matrix.
+- `abdm-p3`: P3, PHR subscriptions. Sections: scaffold, design, integrate, debug, test, test-matrix.
+- `abdm-p4`: P4, health lockers. Sections: scaffold, integrate, debug, test, test-matrix.
 - `abdm-scan-and-register`: Scan and register. Sections: scaffold, integrate, debug.
 - `abdm-scan-and-pay`: Scan and pay. Sections: scaffold, integrate, debug.
 - `abdm-record-share`: Patient scan and record share. Sections: scaffold, integrate, debug.
@@ -55,9 +55,15 @@ Each skill is a folder in the cross-agent Agent Skills format: a `SKILL.md` that
 `https://nha-in.github.io/docs/pr-136/skills/index.json` lists every skill and the exact files it is made of, so fetch that first and work from it rather than guessing at reference names. For example:
 
 ```
-mkdir -p .claude/skills/abdm-m1/references
-curl -fsSL https://nha-in.github.io/docs/pr-136/skills/abdm-m1/SKILL.md -o .claude/skills/abdm-m1/SKILL.md
-for f in scaffold integrate debug; do curl -fsSL https://nha-in.github.io/docs/pr-136/skills/abdm-m1/references/$f.md -o .claude/skills/abdm-m1/references/$f.md; done
+mkdir -p .claude/skills/abdm-scan-and-register/references
+curl -fsSL https://nha-in.github.io/docs/pr-136/skills/abdm-scan-and-register/SKILL.md -o .claude/skills/abdm-scan-and-register/SKILL.md
+for f in scaffold integrate debug; do curl -fsSL https://nha-in.github.io/docs/pr-136/skills/abdm-scan-and-register/references/$f.md -o .claude/skills/abdm-scan-and-register/references/$f.md; done
+```
+
+A skill that `index.json` gives an `archive`, such as `abdm-m1`, holds folders a loop over sections cannot fetch. Take the archive instead:
+
+```
+mkdir -p .claude/skills && curl -fsSL https://nha-in.github.io/docs/pr-136/skills/abdm-m1.tar.gz | tar -xzf - -C .claude/skills
 ```
 
 - https://nha-in.github.io/docs/pr-136/skills/abdm-gateway/
@@ -86,9 +92,8 @@ For other agents, add an HTTP MCP server named `abdm-docs` at `https://docs.abdm
 
 ## 4. Report back
 
-Tell the user what you installed and where you suggest starting. Offer three prompts from the **Try asking** section of the skills that fit, and ask what they are building. Two cautions to keep for the whole engagement:
+Tell the user what you installed and where you suggest starting. Offer three prompts from the **Try asking** section of the skills that fit, and ask what they are building. One caution to keep for the whole engagement:
 
-- Nothing in these skills has been run against the ABDM sandbox. Verify response shapes against real calls before relying on them.
 - The skills are snapshots. The current documentation lives at https://nha-in.github.io/docs/pr-136/; prefer it, and the MCP server when connected, over any downloaded copy that has aged.
 
 ## 5. Plan before you build

@@ -139,23 +139,22 @@ The setup also connects the [Docs MCP server](/docs/pr-136/docs/hiecm/v3/getting
 
 ## Install a skill
 
-One file per job, in three shapes. A module skill carries every endpoint, header and error code for that milestone, provider side (M1 to M4) or patient side (P1 to P4). A scaffold or debug skill is a procedure instead: it works against the sandbox in a loop that ends on an observed result, not on a call returning 200. Every module skill carries both, under its `references/`. The FHIR skills build or audit NRCES compliant bundles.
+One file per job, in three shapes. A module skill carries every endpoint, header and error code for that milestone, provider side (M1 to M4) or patient side (P1 to P4). A scaffold or debug skill is a procedure instead: it works against the sandbox in a loop that ends on an observed result, not on a call returning 200. Every module skill carries both, under its `references/`. M1 is built per functionality instead: one file per thing a person does, each a loop from its screens to its own test cases. The FHIR skills build or audit NRCES compliant bundles.
 
 M1 agent skill
 
 The whole of M1: the calls, the loop that builds them, every error code and the tests.
 
-[SKILL.md](/docs/pr-136/skills/abdm-m1/SKILL.md "The router. Use the command below to take the references with it.")
+[Download skill](/docs/pr-136/skills/abdm-m1.tar.gz "The whole skill folder, as a .tar.gz archive.")
 
-- ScaffoldBuilds each flow until the sandbox confirms it.
-- DesignWhat a screen must do, and never claim.
-- Integrate123 operations, with hosts and headers.
-- Debug17 error codes, each with its fix.
-- TestTests from offline pins to a live sandbox.
+- Functionalities17 loops, each from screen to test.
+- RunThe test run, from readiness to report.
+- FoundationsRules across calls, hosts and headers.
+- Errors17 error codes, and the debug loop.
 
-`mkdir -p .claude/skills/abdm-m1/references && curl -fsSL https://nha-in.github.io/docs/pr-136/skills/abdm-m1/SKILL.md -o .claude/skills/abdm-m1/SKILL.md && for f in scaffold design integrate debug test; do curl -fsSL https://nha-in.github.io/docs/pr-136/skills/abdm-m1/references/$f.md -o .claude/skills/abdm-m1/references/$f.md; done`
+`mkdir -p .claude/skills && curl -fsSL https://nha-in.github.io/docs/pr-136/skills/abdm-m1.tar.gz | tar -xzf - -C .claude/skills`
 
-[Open in Claude](claude://code/new?q=Install%20the%20ABDM%20M1%20agent%20skill%20into%20this%20project%2C%20then%20help%20me%20use%20it.%0A%0ARun%20this%3A%0Amkdir%20-p%20.claude%2Fskills%2Fabdm-m1%2Freferences%20%26%26%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fpr-136%2Fskills%2Fabdm-m1%2FSKILL.md%20-o%20.claude%2Fskills%2Fabdm-m1%2FSKILL.md%20%26%26%20for%20f%20in%20scaffold%20design%20integrate%20debug%20test%3B%20do%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fpr-136%2Fskills%2Fabdm-m1%2Freferences%2F%24f.md%20-o%20.claude%2Fskills%2Fabdm-m1%2Freferences%2F%24f.md%3B%20done%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20ABDM%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
+[Open in Claude](claude://code/new?q=Install%20the%20ABDM%20M1%20agent%20skill%20into%20this%20project%2C%20then%20help%20me%20use%20it.%0A%0ARun%20this%3A%0Amkdir%20-p%20.claude%2Fskills%20%26%26%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fpr-136%2Fskills%2Fabdm-m1.tar.gz%20%7C%20tar%20-xzf%20-%20-C%20.claude%2Fskills%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20ABDM%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
 
 Drops the skill into this project. Claude loads it when a task matches.
 
@@ -163,19 +162,19 @@ How to use it
 
 1. Run the command above in the repository you are integrating.
 2. Ask your agent for the job in your own words. "Add ABHA creation by Aadhaar OTP to this codebase", "why am I getting ABDM-1017". The skill loads when the task matches it.
-3. Check what it writes against these pages. The skill carries the facts, not the sandbox: nothing in it has been run against ABDM.
+3. Check what it writes against these pages. The skill names the cases it could not reach on the NHCX sandbox, and nothing in it is re-verified here.
 4. Open in Claude needs that app installed. It fills the composer and waits: nothing runs until you read it and press Enter.
 
 Download all skills
 
-- [Create and verify ABHA (M1)](https://nha-in.github.io/docs/pr-136/skills/abdm-m1/SKILL.md)
-- [Creation, Linking and Sharing of Health Records (M2)](https://nha-in.github.io/docs/pr-136/skills/abdm-m2/SKILL.md)
-- [Health Information Exchange with Consent (M3)](https://nha-in.github.io/docs/pr-136/skills/abdm-m3/SKILL.md)
-- [Register Healthcare Professionals and Health Facilities (M4)](https://nha-in.github.io/docs/pr-136/skills/abdm-m4/SKILL.md)
-- [PHR registration and login (P1)](https://nha-in.github.io/docs/pr-136/skills/abdm-p1/SKILL.md)
-- [Consents Management (P2)](https://nha-in.github.io/docs/pr-136/skills/abdm-p2/SKILL.md)
-- [PHR subscriptions (P3)](https://nha-in.github.io/docs/pr-136/skills/abdm-p3/SKILL.md)
-- [Health lockers (P4)](https://nha-in.github.io/docs/pr-136/skills/abdm-p4/SKILL.md)
+- [Create and verify ABHA (M1)](https://nha-in.github.io/docs/pr-136/skills/abdm-m1.tar.gz)
+- [Creation, Linking and Sharing of Health Records (M2)](https://nha-in.github.io/docs/pr-136/skills/abdm-m2.tar.gz)
+- [Health Information Exchange with Consent (M3)](https://nha-in.github.io/docs/pr-136/skills/abdm-m3.tar.gz)
+- [Register Healthcare Professionals and Health Facilities (M4)](https://nha-in.github.io/docs/pr-136/skills/abdm-m4.tar.gz)
+- [PHR registration and login (P1)](https://nha-in.github.io/docs/pr-136/skills/abdm-p1.tar.gz)
+- [Consents Management (P2)](https://nha-in.github.io/docs/pr-136/skills/abdm-p2.tar.gz)
+- [PHR subscriptions (P3)](https://nha-in.github.io/docs/pr-136/skills/abdm-p3.tar.gz)
+- [Health lockers (P4)](https://nha-in.github.io/docs/pr-136/skills/abdm-p4.tar.gz)
 - [FHIR bundles](https://nha-in.github.io/docs/pr-136/skills/abdm-fhir/SKILL.md)
 
 ## Prompting an agent to build against ABDM

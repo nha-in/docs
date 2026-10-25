@@ -18,7 +18,7 @@ The suggested journey, in five steps:
 1. **Start registering the patient** in your own system, under your own number.
 2. **Ask whether they have an ABHA.** No means the form is typed by hand, and the patient is treated exactly the same.
 3. **Take one identifier.** Aadhaar is the one to recommend, because it is the only route that ends in a KYC verified ABHA number. Mobile sits beside it. Under Aadhaar only, ask how they prove it: an OTP, a face scan, or a fingerprint or iris reader.
-4. **Log in or create, decided by the answer.** Every identifier starts on the login path. One account signs the person in. Several need a chooser. None offers creation.
+4. **Offer both: find an existing ABHA, or create one.** Functional testing expects a Create ABHA option beside verification. On the find path, one account signs the person in, several need a chooser, and none offers creation. On the create path, an Aadhaar that already holds an ABHA is not a stop: `enrol/byAadhaar` returns that account, and the journey carries on to its profile, card and ABHA address.
 5. **Fill your form from what came back,** and let the receptionist confirm it rather than type it.
 
 Whatever journey you build, these hold:
@@ -32,11 +32,11 @@ Notes for AI agents
 
 **Before you start.** A gateway session, the M1 certificate for encrypting identifiers, and a decision on what the desk does when the person has no ABHA and does not want one today.
 
-**What happens.** Send every identifier, Aadhaar included, to the login OTP request first, never straight to enrolment. Read `accounts` on the verify response: one account, call verify user with its `ABHANumber` and the same `txnId`; several, show a chooser and do the same with the chosen one; none, offer creation. Then read the profile at `/abha/api/v3/profile/account` with the `X-token` and fill the form.
+**What happens.** Offer Create ABHA beside the find and login paths, as CRT\_ABHA\_101 requires. On a find or login path, read `accounts` on the verify response: one account, call verify user with its `ABHANumber` and the same `txnId`; several, show a chooser and do the same with the chosen one; none, offer creation. On the create path, `enrol/byAadhaar` answering `isNew` false returns the existing account's profile and tokens: carry on to the profile, card and ABHA address step, never create a second account. Then read the profile at `/abha/api/v3/profile/account` with the `X-token` and fill the form.
 
-**How you know it worked.** A person with an ABHA registers with their details arriving from the profile and the receptionist correcting at most one field. A person who declines is still registered, with no error, and can be offered ABHA again from their chart. A person who already holds an ABHA, run through the path a new patient takes, ends signed in to the account they had.
+**How you know it worked.** A person with an ABHA registers with their details arriving from the profile and the receptionist correcting at most one field. A person who declines is still registered, with no error, and can be offered ABHA again from their chart. A person who already holds an ABHA ends on the account they had, whether they chose to find it or to create one.
 
-**When it goes wrong.** Two ABHA numbers for one person: the journey branched into creation without reading `accounts`. The desk types everything and then links an ABHA: the order is wrong, fetch the profile first. A refused encrypted field shown to the person as a wrong number: check the padding before you blame the number, see [encryption](/docs/pr-136/docs/hiecm/v3/concepts/encryption).
+**When it goes wrong.** Two ABHA numbers for one person: the journey ignored `accounts` on a find path, or `isNew` on the create path. The desk types everything and then links an ABHA: the order is wrong, fetch the profile first. A refused encrypted field shown to the person as a wrong number: check the padding before you blame the number, see [encryption](/docs/pr-136/docs/hiecm/v3/concepts/encryption).
 
 ## Next
 
