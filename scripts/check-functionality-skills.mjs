@@ -9,8 +9,12 @@
 //    a blockquote such as the consent language, and code.
 // 2. Every functionality file is complete: its cases, a screen requirement
 //    citing each of them, its calls and its errors.
-// 3. No job file is left beside the functionality files, every relative link
-//    lands inside the folder, every atom cited exists, and no em dash.
+// 3. The five familiar entry points (scaffold, design, integrate, debug, test)
+//    exist as indexes: each opens by naming /abdm-build, links every
+//    functionality file, and every link in them lands on a file and a heading
+//    that exist. They copy no rule, so check 1 holds them too.
+// 4. Every relative link lands inside the folder, every atom cited exists, and
+//    no em dash.
 //
 //   node scripts/check-functionality-skills.mjs              the integrators plugin
 //   node scripts/check-functionality-skills.mjs <skills dir>  any copy, such as a broken one
@@ -30,6 +34,18 @@ function walk(dir) {
     const p = join(dir, name);
     return statSync(p).isDirectory() ? walk(p) : name.endsWith('.md') ? [p] : [];
   });
+}
+
+/** The anchors of a markdown file's headings, as the site slugs them. */
+export function headingSlugs(text) {
+  const out = new Set();
+  let inCode = false;
+  for (const line of text.split('\n')) {
+    if (line.startsWith('```')) inCode = !inCode;
+    const m = !inCode && line.match(/^#{1,6}\s+(.+?)\s*#*$/);
+    if (m) out.add(m[1].toLowerCase().replace(/[^\p{L}\p{N}\s-]/gu, '').trim().replace(/\s/g, '-'));
+  }
+  return out;
 }
 
 const CASE_IDS = /^[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+(?:,\s*[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+)*$/;
@@ -98,7 +114,6 @@ export function checkFolder(folder, mapping, atoms) {
   const files = walk(folder);
   const rel = (f) => relative(folder, f);
 
-  for (const job of JOB_FILES) if (existsSync(join(folder, 'references', job))) fail(`references/${job} is a job file; a skill built per functionality has none`);
   for (const must of ['SKILL.md', 'references/run.md', 'references/errors.md']) if (!existsSync(join(folder, must))) fail(`${must} is missing`);
 
   // 1. No rule in two files.
@@ -127,7 +142,26 @@ export function checkFolder(folder, mapping, atoms) {
     }
   }
 
-  // 3. Links, atoms, em dashes.
+  // 3. The five entry points are indexes into the functionality files.
+  for (const job of JOB_FILES) {
+    const file = join(folder, 'references', job);
+    if (!existsSync(file)) { fail(`references/${job} is missing: a skill built per functionality keeps the five entry points as indexes`); continue; }
+    const text = readFileSync(file, 'utf8');
+    if (!text.includes('/abdm-build')) fail(`references/${job} does not name /abdm-build`);
+    for (const f of mapping.functionalities ?? []) {
+      if (!text.includes(`](functionalities/${f.id}.md#`)) fail(`references/${job} does not link functionalities/${f.id}.md to a section`);
+    }
+    for (const [, target] of text.matchAll(/\]\(([^)\s]+)\)/g)) {
+      const [path, anchor] = target.split('#');
+      if (/^(https?:|mailto:|\/)/.test(target)) continue;
+      const resolved = join(dirname(file), path);
+      if (!existsSync(resolved)) { fail(`references/${job} links to a missing file: ${target}`); continue; }
+      if (!anchor) fail(`references/${job} links ${target} with no section`);
+      else if (!headingSlugs(readFileSync(resolved, 'utf8')).has(anchor)) fail(`references/${job} links ${target}, and ${path} has no such heading`);
+    }
+  }
+
+  // 4. Links, atoms, em dashes.
   for (const file of files) {
     const text = readFileSync(file, 'utf8');
     if (text.includes('\u2014')) fail(`${rel(file)} holds an em dash`);
