@@ -316,10 +316,12 @@ func skillBlock(module, section, body string) string {
 	return fmt.Sprintf("<skill module=%q section=%q>\n%s%s\n</skill>", module, section, rule, body)
 }
 
-// A module skill built per functionality has no scaffold, design, integrate
-// or debug file. Its router lists one file per functionality, as a table
-// row linking references/functionalities/<id>.md, and the parts every loop
-// shares live in foundations.md and errors.md. functionalityLinkRe reads
+// A module skill built per functionality lists one file per functionality in
+// its router, as a table row linking references/functionalities/<id>.md, and
+// the parts every loop shares live in foundations.md and errors.md. It may
+// also keep scaffold, design, integrate, debug and test files, as indexes into
+// those files; the router linking functionalities is what marks it, not the
+// absence of job files. functionalityLinkRe reads
 // those rows, in the router's build order.
 var functionalityLinkRe = regexp.MustCompile(`\[([^\]]+)\]\(references/functionalities/([a-z0-9-]+)\.md\)`)
 
@@ -335,7 +337,7 @@ type Functionality struct {
 }
 
 // RouterFunctionalities lists the functionalities a router links, in its
-// order. None means the module still has its job files.
+// order. None means the module is read by its job files.
 func RouterFunctionalities(router string) []Functionality {
 	var out []Functionality
 	seen := map[string]bool{}

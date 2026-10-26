@@ -22,7 +22,7 @@ import {parse} from 'yaml';
 import {cleanDescription} from './lib/titles.mjs';
 import {errorsFromSpec, errorsByOperation} from './lib/spec-errors.mjs';
 import {loadPage, applicability, ENTITIES} from './lib/test-case-page.mjs';
-import {journeySections, buildLoopRules, splitTestLoop, atomBody, functionalityFile, mandatoryFor, screenRequirements} from './lib/functionality-skill.mjs';
+import {journeySections, buildLoopRules, splitTestLoop, atomBody, functionalityFile, mandatoryFor, screenRequirements, jobIndexes, JOB_SECTIONS} from './lib/functionality-skill.mjs';
 import {NEEDS} from './check-test-mapping.mjs';
 import {loadJourneys, stepDataName} from './lib/journeys.mjs';
 import {tryAsking, tryAskingSection, planSection, PLAN_RULE} from './lib/try-asking.mjs';
@@ -1276,7 +1276,9 @@ function buildByFunctionality(module, mapping, whole, wholeFrozen, parts) {
     errorExample: (codes.find((c) => c.code.startsWith('ABDM-')) ?? codes[0])?.code ?? null,
     operations: operations.filter((op) => op.moduleId === module.id || op.moduleId === 'gateway').length,
     codes: codes.length,
-    sections: ['functionalities', 'run', 'foundations', 'errors'],
+    // The card lists the same five rows as every other module. The functionality
+    // files, run, foundations and errors ship in the folder and the archive.
+    sections: [...JOB_SECTIONS],
     functionalities: functionalities.length,
     folder: true,
   };
@@ -1314,6 +1316,16 @@ function buildByFunctionality(module, mapping, whole, wholeFrozen, parts) {
     '|---|---|---|---|',
     ...table,
     '',
+    '## Familiar entry points',
+    '',
+    `The same five sections every other module has. Each is an index that links the matching part of every functionality file above, so a job can be opened across all of them or one at a time.`,
+    '',
+    '- **[Scaffold](references/scaffold.md)**: the calls of each functionality.',
+    '- **[Design](references/design.md)**: foundations, then the screen requirements of each.',
+    '- **[Integrate](references/integrate.md)**: the integrate notes of each.',
+    '- **[Debug](references/debug.md)**: errors.md, then the errors of each.',
+    '- **[Test](references/test.md)**: run.md, then the cases of each and how they run.',
+    '',
     '## Starting a loop',
     '',
     '1. Build, in the order of the table, each functionality with a mandatory case for your entity type. An integration that already exists starts each loop at Test.',
@@ -1341,6 +1353,7 @@ function buildByFunctionality(module, mapping, whole, wholeFrozen, parts) {
     '',
     '## What is in this folder',
     '',
+    '- **scaffold.md, design.md, integrate.md, debug.md, test.md**: the familiar entry points, each an index into the functionality files.',
     `- **functionalities/**: ${functionalities.length} files, one loop each, in the order of the table above.`,
     '- **[run.md](references/run.md)**: the rules every test run follows, from the readiness check to the report.',
     '- **[foundations.md](references/foundations.md)**: the rules across calls, hosts, headers, the codebase survey and the design rules across functionalities.',
@@ -1352,6 +1365,7 @@ function buildByFunctionality(module, mapping, whole, wholeFrozen, parts) {
   ].filter((part) => part !== undefined).join('\n');
 
   Object.assign(files, scriptFiles(module.id));
+  Object.assign(files, jobIndexes({module: entry.module, moduleId: module.id, functionalities}));
   files['SKILL.md'] = skillMd(head(whole));
   const pluginFiles = {...files, 'SKILL.md': skillMd(head(wholeFrozen))};
   return {files, pluginFiles, entry};
@@ -1551,8 +1565,10 @@ for (const module of MODULES) {
     errorExample: (codes.find((c) => c.code.startsWith('ABDM-')) ?? codes[0])?.code ?? null,
     operations: operationCount,
     codes: codeCount,
+    // The matrix is a lookup the build and test sections read, not a job of
+    // its own, so it ships in the archive but is not a row on the install card.
     sections: Object.keys(files)
-      .filter((path) => path.startsWith('references/'))
+      .filter((path) => path.startsWith('references/') && path !== 'references/test-matrix.md')
       .map((path) => path.replace(/^references\/|\.md$/g, '')),
   };
 

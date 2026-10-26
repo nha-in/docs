@@ -240,3 +240,50 @@ export function screenRequirements(markdown, others = []) {
   }
   return out;
 }
+
+/**
+ * The five job sections every module keeps, in the order the install card
+ * lists them. A module built per functionality names them too, as indexes.
+ */
+export const JOB_SECTIONS = ['scaffold', 'design', 'integrate', 'debug', 'test'];
+
+/**
+ * The five familiar entry points of a module built per functionality:
+ * references/scaffold.md, design.md, integrate.md, debug.md and test.md, each
+ * a short index into the matching section of every functionality file, in
+ * build order. They hold no rule: each line is a link, so nothing is written
+ * twice. scripts/check-functionality-skills.mjs holds every link to a file
+ * and a heading that exist.
+ *   module          'M1'
+ *   moduleId        'm1', the argument of /abdm-build
+ *   functionalities [{id, title}] in build order
+ */
+export function jobIndexes({module, moduleId, functionalities}) {
+  const lead = (what) => `${module} is organised per functionality, so this index ${what}. To work through them in order, run \`/abdm-build ${moduleId}\`.`;
+  const each = (anchors) =>
+    functionalities.map((f, i) => `${i + 1}. ${anchors.map(([label, anchor]) => `[${anchors.length > 1 ? `${f.title}, ${label}` : f.title}](functionalities/${f.id}.md#${anchor})`).join('; ')}`);
+  const page = (title, intro, before, rows, after = []) =>
+    [`# ${title}, ${module}`, '', intro, '', ...before, ...(before.length ? [''] : []), ...rows, ...(after.length ? ['', ...after] : []), ''].join('\n');
+  return {
+    'references/scaffold.md': page('Scaffold', lead('lists the calls of each one'), [], each([['calls', 'calls']])),
+    'references/design.md': page(
+      'Design',
+      lead('lists the screen requirements of each one'),
+      ['Rules that hold across every functionality: [foundations.md](foundations.md#design-rules-across-functionalities).'],
+      each([['screen requirements', 'screen-requirements']]),
+    ),
+    'references/integrate.md': page('Integrate', lead('lists the integrate notes of each one'), [], each([['integrate notes', 'integrate-notes']])),
+    'references/debug.md': page(
+      'Debug',
+      lead('lists the errors of each one'),
+      ['Every code and the loop from a code to a fix: [errors.md](errors.md#every-code-in-the-specification).'],
+      each([['errors', 'errors']]),
+    ),
+    'references/test.md': page(
+      'Test',
+      lead('lists the cases of each one and how they run'),
+      ['The rules every test run follows, from readiness to report: [run.md](run.md#the-test-cases).'],
+      each([['cases', 'cases'], ['how they run', 'how-the-cases-run']]),
+    ),
+  };
+}
