@@ -1,0 +1,152 @@
+# Send a catalog through the Gateway
+
+`POST /api/v1/uhi/on_search`
+
+Accepter for all the on_search response from the HSPAs
+
+Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
+
+```bash
+curl --request POST \
+  --url https://uhigatewaysandbox.abdm.gov.in/api/v1/uhi/on_search \
+  --header 'Authorization: <SIGNED_AUTHORIZATION_HEADER>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "context": {
+    "domain": "nic2008:47721",
+    "country": "IND",
+    "city": "std:011",
+    "action": "on_search",
+    "core_version": "0.7.1",
+    "consumer_id": "nha.eua",
+    "consumer_uri": "https://uhieuasandbox.abdm.gov.in/api/v1/euaService",
+    "provider_id": "pmbi.hspa",
+    "provider_uri": "https://staging-nha-pmbi.pmbi.co.in/api/store",
+    "message_id": "e9a19230-f951-11ec-b135-53aea776f66b",
+    "timestamp": "2026-06-09T18:24:35",
+    "transaction_id": "e9a19230-f951-11ec-b135-53aea776f66b"
+  },
+  "message": {
+    "catalog": {
+      "descriptor": {
+        "name": "JAN AUSHADHI KENDRA HSPA",
+        "images": "https://janaushadhi.gov.in/img/bhartiya_janaushadhi_priyojna_2.svg",
+        "short_desc": "",
+        "long_desc": ""
+      },
+      "providers": [
+        {
+          "id": "77041",
+          "descriptor": {
+            "name": "Aceclofenac 100 mg Paracetamol 325 mg Serratiopeptidase 15 mg",
+            "code": "638",
+            "symbol": "",
+            "short_desc": "",
+            "long_desc": ""
+          },
+          "items": [
+            {
+              "id": "0",
+              "price": {
+                "currency": "INR",
+                "value": "21.000"
+              },
+              "quantity": {
+                "measure": {
+                  "unit": "10's"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "76476",
+          "descriptor": {
+            "name": "Aceclofenac 100mg and Paracetamol 325mg Tablets",
+            "code": "1",
+            "symbol": "",
+            "short_desc": "",
+            "long_desc": ""
+          },
+          "items": [
+            {
+              "id": "0",
+              "price": {
+                "currency": "INR",
+                "value": "10.320"
+              },
+              "quantity": {
+                "measure": {
+                  "unit": "10's"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}'
+```
+
+## Headers
+
+- `Authorization` (string, required): UHI Auth header
+
+## Body
+
+- `context` (object, required): Describes a DHP message context
+- `context.domain` (object, required)
+- `context.country` (object, required)
+- `context.city` (object, required)
+- `context.action` (string, required): Defines the DHP API call. Any actions other than the enumerated actions are not supported by DHP Protocol One of: search, select, init, confirm, status, on_search, on_select, on_init, on_confirm, on_confirm_audit, on_status, on_status_audit, on_cancel_audit.
+- `context.core_version` (string, required): Version of DHP core API specification being used
+- `context.consumer_id` (string, required): Unique id of the Consumer. By default it is the fully qualified domain name of the Consumer
+- `context.consumer_uri` (string, required): URI of the Consumer for accepting callbacks. Must have the same domain name as the consumer_id
+- `context.provider_id` (string): Unique id of the Provider. By default it is the fully qualified domain name of the Provider
+- `context.provider_uri` (string): URI of the Provider. Must have the same domain name as the provider_id
+- `context.transaction_id` (string, required): This is a unique value which persists across all API calls from search through confirm
+- `context.message_id` (string, required): This is a unique value which persists during a request / callback cycle
+- `context.timestamp` (string, required): Time of request generation in RFC3339 format
+- `context.key` (string): The encryption public key of the sender
+- `context.ttl` (string): The duration in ISO8601 format after timestamp for which this message holds valid
+- `message` (object)
+- `message.catalog` (object, required): Describes a DHP-Provider catalog
+- `message.catalog.descriptor` (object)
+- `message.catalog.categories` (object[])
+- `message.catalog.fulfillments` (object[])
+- `message.catalog.payments` (object[])
+- `message.catalog.providers` (object[])
+- `message.catalog.exp` (string): Time after which catalog has to be refreshed
+- `error` (object): Describes an error object
+- `error.type` (string, required)
+- `error.code` (string, required): DHP specific error code. For full list of error codes, refer to error_codes.md in the root folder of this repo
+- `error.path` (string): Path to json schema generating the error. Used only during json schema validation errors
+- `error.message` (string): Human readable message describing the error
+
+## Responses
+
+- `200`: Acknowledgement of message received
+  - `message` (object)
+  - `message.ack` (object, required)
+  - `error` (object): Describes an error object
+  - `error.type` (string, required)
+  - `error.code` (string, required): DHP specific error code. For full list of error codes, refer to error_codes.md in the root folder of this repo
+  - `error.path` (string): Path to json schema generating the error. Used only during json schema validation errors
+  - `error.message` (string): Human readable message describing the error
+
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+
+```json
+{
+  "message": {
+    "ack": "<ACK>"
+  },
+  "error": {
+    "type": "<TYPE>",
+    "code": "<CODE>",
+    "path": "<PATH>",
+    "message": "<MESSAGE>"
+  }
+}
+```

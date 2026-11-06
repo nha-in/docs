@@ -1,0 +1,84 @@
+{
+  "catalogue_version": "2026.09.16",
+  "built": "2026-09-16",
+  "skills": [
+    {
+      "name": "uhi-consultation",
+      "title": "Physical Consultation",
+      "archive": "uhi-consultation.tar.gz",
+      "files": [
+        "SKILL.md",
+        "references/debug.md",
+        "references/design.md",
+        "references/integrate.md",
+        "references/scaffold.md",
+        "references/test.md"
+      ]
+    },
+    {
+      "name": "uhi-ambulance",
+      "title": "Ambulance Booking",
+      "archive": "uhi-ambulance.tar.gz",
+      "files": [
+        "SKILL.md",
+        "references/debug.md",
+        "references/design.md",
+        "references/integrate.md",
+        "references/scaffold.md",
+        "references/test.md"
+      ]
+    },
+    {
+      "name": "uhi-pmjay-hem",
+      "title": "PM-JAY HEM hospital discovery",
+      "archive": "uhi-pmjay-hem.tar.gz",
+      "files": [
+        "SKILL.md",
+        "references/debug.md",
+        "references/design.md",
+        "references/integrate.md",
+        "references/scaffold.md",
+        "references/test.md"
+      ]
+    },
+    {
+      "name": "uhi-blood-bank",
+      "title": "Blood Bank discovery",
+      "archive": "uhi-blood-bank.tar.gz",
+      "files": [
+        "SKILL.md",
+        "references/debug.md",
+        "references/design.md",
+        "references/integrate.md",
+        "references/scaffold.md",
+        "references/test.md"
+      ]
+    },
+    {
+      "name": "uhi-jan-aushadhi",
+      "title": "Jan Aushadhi",
+      "archive": "uhi-jan-aushadhi.tar.gz",
+      "files": [
+        "SKILL.md",
+        "references/debug.md",
+        "references/design.md",
+        "references/integrate.md",
+        "references/scaffold.md",
+        "references/test.md"
+      ]
+    },
+    {
+      "name": "uhi-notto",
+      "title": "NOTTO hospital discovery",
+      "archive": "uhi-notto.tar.gz",
+      "files": [
+        "SKILL.md",
+        "references/debug.md",
+        "references/design.md",
+        "references/integrate.md",
+        "references/scaffold.md",
+        "references/test.md"
+      ]
+    }
+  ]
+}

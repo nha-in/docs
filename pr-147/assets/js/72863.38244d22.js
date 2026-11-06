@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["72863"],{36514(e,a,d){d.r(a),d.d(a,{__iconNode:()=>c,default:()=>t});var s=d(34438);let c=[["path",{d:"M3 10A6.06 6.06 0 0 1 12 10 A6.06 6.06 0 0 0 21 10",key:"13lfmc"}],["path",{d:"M6 3v12a6 6 0 0 0 12 0V3",key:"1jnivp"}]],t=(0,s.A)("zodiac-ophiuchus",c)}}]);

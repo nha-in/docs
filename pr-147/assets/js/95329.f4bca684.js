@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["95329"],{3480(s,e,d){d.r(e),d.d(e,{__iconNode:()=>a,default:()=>h});var _=d(34438);let a=[["path",{d:"M2 16s9-15 20-4C11 23 2 8 2 8",key:"h4oh4o"}]],h=(0,_.A)("fish-symbol",a)}}]);
