@@ -10,7 +10,7 @@ NHA's PHR sheet has no APIs column, so no case names its calls. Read the P speci
 
 | Case | Marking | Expected Result |
 | --- | --- | --- |
-| `PHR_LOCKER_101` Discovery & add health locker Linking locker with existing Health ID (PHR address) | optional | Locker will be linked with the health id. A consent request will be sent to the PHR app for linking. Locker will be linked with the health id. A consent request will be sent to the PHR app for linking. Locker will be linked with the health id. A consent request will be sent to the PHR app for linking. Locker will be linked with the health id. A consent request will be sent to the PHR app for linking. |
+| `PHR_LOCKER_101` Discovery & add health locker Linking locker with existing Health ID (ABHA address) | optional | Locker will be linked with the health id. A consent request will be sent to the PHR app for linking. Locker will be linked with the health id. A consent request will be sent to the PHR app for linking. Locker will be linked with the health id. A consent request will be sent to the PHR app for linking. Locker will be linked with the health id. A consent request will be sent to the PHR app for linking. |
 
 ## 2. Set up a Health Locker through PHR app
 
@@ -43,8 +43,8 @@ NHA's PHR sheet has no APIs column, so no case names its calls. Read the P speci
 | `PHR_LOCKER_401` Upload Document Fields | mandatory | Not stated. |
 | `PHR_LOCKER_402` Processing of the uploaded document in the health locker, to find that uploaded document is health record or not | mandatory | Process will be done at locker level |
 | `PHR_LOCKER_403` Locker stores the record against care context | mandatory | Records will be stored |
-| `PHR_LOCKER_404` Link the uploaded document to Health ID (PHR address) by linking the care context on CM - HIP initiated linking | mandatory | Care context will be added |
-| `PHR_LOCKER_405` After document is linked to Health ID (PHR address), the locker is displayed in the "Providers" tab of PHR app | mandatory | Locker will be created in PHR |
+| `PHR_LOCKER_404` Link the uploaded document to Health ID (ABHA address) by linking the care context on CM - HIP initiated linking | mandatory | Care context will be added |
+| `PHR_LOCKER_405` After document is linked to Health ID (ABHA address), the locker is displayed in the "Providers" tab of PHR app | mandatory | Locker will be created in PHR |
 | `PHR_LOCKER_406` Click on "Get Data" to fetch the record in the "Records" tab of PHR app | mandatory | Records will be fetched |
 | `PHR_LOCKER_407` Click on the record received in the "Records" tab of PHR app - to see record details and open the attachment to view patient record | mandatory | Records will be viewed from attachments |
 
