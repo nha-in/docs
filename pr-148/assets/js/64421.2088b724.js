@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["64421"],{2180(e,s,d){d.r(s),d.d(s,{__iconNode:()=>_,default:()=>a});var t=d(34438);let _=[["path",{d:"m15 18-6-6 6-6",key:"1wnfg3"}]],a=(0,t.A)("chevron-left",_)}}]);

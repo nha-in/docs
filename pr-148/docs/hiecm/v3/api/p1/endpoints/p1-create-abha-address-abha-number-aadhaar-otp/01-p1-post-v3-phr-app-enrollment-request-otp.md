@@ -1,0 +1,59 @@
+# Request enrolment OTP
+
+`POST /abha/api/v3/phr/app/enrollment/request/otp`
+
+Flows:
+- P1-Registration-login › P1 - Create ABHA Address Flow › Enrolment via Mobile › OTP Request - Mobile
+- P1-Registration-login › P1 - Create ABHA Address Flow › Enrolment via ABHA Number-ABHA OTP › OTP Request - ABHA OTP
+- P1-Registration-login › P1 - Create ABHA Address Flow › Enrolment via ABHA Number-Aadhaar OTP › OTP Request - AADHAR OTP
+
+```bash
+curl --request POST \
+  --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/enrollment/request/otp \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "scope": [
+    "abha-login",
+    "aadhaar-verify"
+  ],
+  "loginHint": "abha-number",
+  "loginId": "{{encryptedData}}",
+  "otpSystem": "aadhaar"
+}'
+```
+
+## Authorization
+
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
+
+## Headers
+
+- `REQUEST-ID` (string, required): Unique UUID for each request.
+- `TIMESTAMP` (string, required): Request timestamp in UTC, ISO-8601 with Z.
+
+## Body
+
+- `scope` (string[], required)
+- `loginHint` (string, required)
+- `loginId` (string, required)
+- `otpSystem` (string, required)
+
+## Responses
+
+- `200`: OK
+  - `txnId` (string)
+  - `message` (string)
+- `400`: Bad Request
+  See Error codes for this module: /docs/hiecm/v3/api/p1/errors
+
+Example 200 response. The values are placeholders:
+
+```json
+{
+  "txnId": "1bda575d-02pd-40be-77e6-1e3efca52a82",
+  "message": "OTP is sent to Mobile number ending with ******2425"
+}
+```

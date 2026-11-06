@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["71536"],{14643(e,c,t){t.r(c),t.d(c,{__iconNode:()=>h,default:()=>k});var d=t(34438);let h=[["rect",{width:"20",height:"12",x:"2",y:"6",rx:"2",key:"9lu3g6"}],["circle",{cx:"12",cy:"12",r:"2",key:"1c9p78"}],["path",{d:"M6 12h.01M18 12h.01",key:"113zkx"}]],k=(0,d.A)("banknote",h)}}]);

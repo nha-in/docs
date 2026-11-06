@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["764"],{12279(e,t,s){s.r(t),s.d(t,{__iconNode:()=>c,default:()=>h});var d=s(34438);let c=[["path",{d:"M6 12h12",key:"8npq4p"}],["rect",{x:"2",y:"8",width:"20",height:"8",rx:"4",key:"86l77p"}]],h=(0,d.A)("usb-c-port",c)}}]);

@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["10902"],{49333(e,d,t){t.r(d),t.d(d,{__iconNode:()=>s,default:()=>c});var a=t(34438);let s=[["path",{d:"M6 16.326A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 .5 8.973",key:"1cez44"}],["path",{d:"m13 12-3 5h4l-3 5",key:"1t22er"}]],c=(0,a.A)("cloud-lightning",s)}}]);
