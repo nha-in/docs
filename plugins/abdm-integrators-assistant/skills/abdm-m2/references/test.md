@@ -844,6 +844,15 @@ From `shared.concept.test-workbook-write-back`.
 
 Copy `scripts/abdm_report.py` from this skill to `abdm-ft/abdm_report.py` before the readiness check, and make the run log from its `plan`. When the last case is recorded, run `check`. Run `build` only when `check` exits 0.
 
+The report prints each case as a numbered step under the test case it belongs to, the way NHA's own reports read, so the run has two things to collect that no script can work out.
+
+| Collect | When | Where it goes |
+|---|---|---|
+| One line per case saying what was done and what the screen showed, in the past tense | As the case runs, from the step and the screen in front of you. Never written later from the sheet alone | `narration` in `meta.json`, keyed by case id |
+| One screen recording per test case | Once that test case is finished | `recording_links` in `meta.json`, keyed by the name of the test case as the sheet heads it |
+
+Where a case has no narration the report prints the sheet's own line for it, which says what the case checks but not what happened. Collect the narration: it is the difference NHA asked for.
+
 ### In plain words
 
 A functional test run ends with NHA's workbook filled in, one row per case.
@@ -887,21 +896,24 @@ read the same way.
 | Part | What it holds | Comes from |
 |---|---|---|
 | Cover | Title, product, organisation, milestone, run type, document id, version, release date, a confidentiality line | `meta.json`, `--run` |
-| Contents | Every section, and each function group in the evidence, with its page number. The Word copy holds a contents field that Word fills in on opening | The headings below |
+| Contents | Every section, and each test case in the test execution details, with its page number. The Word copy holds a contents field that Word fills in on opening | The headings below |
 | 1. Document control | Document title, id, version, prepared, reviewed, approved and released by, release date; change history; distribution list by name, organisation and role | `meta.json` `document` |
 | 2. Executive summary | The counts table, for all cases and for mandatory cases, each term defined in one line under it, then `Ready for sandbox exit.` or `<n> mandatory cases are still open.` | The workbook, `plan`'s applicability, the gate |
-| 3. ABDM details | Entity, product, category, role, entity type, milestone, API version, run type, dates, days, most passes any case took, executed by, recordings | `meta.json`, the workbook |
-| 4. Results summary | The counts by function group; every conditional pass with its condition; any mandatory case NHA agreed is not run, with the agreement; then every case not tested, blocked or not applicable, once, with what it needs or why it does not apply | The workbook, `agreed_not_run` |
-| 5. Scope and limitations | Applications and URLs; workbook and tabs; the limitation that results hold for the build tested on those dates, and any `limitations` | `meta.json`, the workbook |
-| 6. Flow details | For linking and consent flows: the ABHA address used and the HI types created or tested | `meta.json` `flows` |
-| 7. Test environment and tools | Browser, Playwright, PHR app, emulator, the model that ran the agent, with versions | `meta.json` `environment` |
-| 8. Test team | Name, role and qualifications of each tester, reviewer and approver | `meta.json` `team` |
-| 9. Approach and methodology | One line each: who ran the cases, the three pass limit, how OTPs and consents were given, the PHR app proof, the run type, REQUEST-IDs | Fixed text, `--run` |
-| 10. Test data | The ABHA numbers and addresses used, masked | `meta.json` `test_data` |
-| 11. Evidence | Tested cases only, passed, conditional pass or failed, under their function group in sheet order. Per case: its id and title; the result line (status, passes, marking, any condition or error code); the expected result; what was observed; its REQUEST-IDs; a table of its steps if it has them; the response for an `ft` run; then its screenshots | The workbook, `findings`, `--manifest`, the evidence folder |
-| 12. Failures and iterations log | Failed, blocked and conditional pass cases only, with the reason, the condition or what is needed, and any error code | The workbook |
-| 13. Conclusion and sign-off | The same ready line as the summary, then a sign-off table for preparer, reviewer and approver with date and signature | The gate, `meta.json` `document` |
-| 14. Annexures | Recording links, the completed workbook, the REQUEST-ID manifest, the full size screenshots in the evidence folder and the file listing them | `meta.json`, the arguments |
+| 3. Scope of work | One line naming the application, then every test case this report covers, in sheet order, with its scenario beside it | The workbook, `meta.json` `applications` |
+| 4. ABDM details | Entity, product, category, role, entity type, milestone, API version, run type, dates, days, most passes any case took, executed by, recordings | `meta.json`, the workbook |
+| 5. Execution summary | The identifiers the run used, such as the ABHA address created and the mobile number that returned several profiles, then Yes or No against each test case and whether recordings exist. The identifiers are the tester's; the Yes or No is counted from the workbook, so it cannot claim more than the run did | `meta.json` `execution_summary`, the workbook |
+| 6. Results summary | The counts by function group; every conditional pass with its condition; any mandatory case NHA agreed is not run, with the agreement; then every case not tested, blocked or not applicable, once, with what it needs or why it does not apply | The workbook, `agreed_not_run` |
+| 7. Scope and limitations | Applications and URLs; workbook and tabs; the limitation that results hold for the build tested on those dates, and any `limitations` | `meta.json`, the workbook |
+| 8. Flow details | For linking and consent flows: the ABHA address used and the HI types created or tested | `meta.json` `flows` |
+| 9. Test environment and tools | Browser, Playwright, PHR app, emulator, the model that ran the agent, with versions | `meta.json` `environment` |
+| 10. Test team | Name, role and qualifications of each tester, reviewer and approver | `meta.json` `team` |
+| 11. Approach and methodology | One line each: who ran the cases, the three pass limit, how OTPs and consents were given, the PHR app proof, the run type, REQUEST-IDs | Fixed text, `--run` |
+| 12. Test data | The ABHA numbers and addresses used, masked | `meta.json` `test_data` |
+| 13. Test execution details | Tested cases only, passed, conditional pass or failed, under the test case they belong to, in sheet order. Each test case opens with a block naming its scenario, its number and its recording link. Each of its cases then prints as a numbered step: the sheet's number for it and the line it prints, then the result line (status, passes, marking, any condition or error code); the expected result; what was observed; its REQUEST-IDs; its case id; a table of its sub steps if it has them; the response for an `ft` run; then its screenshots | The workbook, `narration`, `recording_links`, `findings`, `--manifest`, the evidence folder |
+| 14. Failures and iterations log | Failed, blocked and conditional pass cases only, with the reason, the condition or what is needed, and any error code | The workbook |
+| 15. Conclusion and sign-off | The same ready line as the summary, then a sign-off table for preparer, reviewer and approver with date and signature | The gate, `meta.json` `document` |
+| 16. Annexures | Recording links, the completed workbook, the REQUEST-ID manifest, the full size screenshots in the evidence folder and the file listing them | `meta.json`, the arguments |
+| 17. Contact | Who to ask about the report: name, role, organisation and email | `meta.json` `contact` |
 
 | Count | What it means |
 |---|---|
@@ -1031,7 +1043,14 @@ signing off sees them.
   "limitations": [],
   "findings": {"CRT_ABHA_101": "The Create ABHA option opens the Aadhaar consent screen."},
   "agreed_not_run": {},
-  "recordings": [{"title": "M1 ui run, full trace", "link": "<LINK TO THE RECORDING>"}]
+  "recordings": [{"title": "M1 ui run, full trace", "link": "<LINK TO THE RECORDING>"}],
+  "execution_summary": [
+    {"item": "ABHA address created with the mobile number flow", "value": "<TEST ABHA ADDRESS>@sbx"},
+    {"item": "Mobile number that returned several profiles", "value": "<TEST MOBILE NUMBER>"}
+  ],
+  "recording_links": {"<NAME OF TEST CASE, AS THE SHEET HEADS IT>": "<LINK TO THAT SCENARIO'S RECORDING>"},
+  "narration": {"CRT_ABHA_101": "<WHAT THE TESTER DID AND WHAT THE SCREEN SHOWED, IN THE PAST TENSE>"},
+  "contact": [{"name": "<NAME>", "role": "<ROLE>", "organisation": "<ORGANISATION>", "email": "<EMAIL>"}]
 }
 ```
 
@@ -1103,7 +1122,7 @@ It prints one line per case, in sheet order: the case id, its group (the sheet's
 - The results summary counts each function group in sheet order, lists every conditional pass with its condition, and lists every case not tested, blocked or not applicable once, with what it needs or why it does not apply. A tested case whose Remarks end in `Steps: ...` shows a Step, Result and Note table in its evidence.
 - `build` prints `wrote abdm-ft/report-m1-screenshots.json` for a `ui` run, a `fonts:` line naming each font it used or replaced, then `wrote abdm-ft/report-m1.docx` and `wrote abdm-ft/report-m1.pdf`, and exits `0`.
 - The PDF opens on a navy cover with the milestone in orange, the key facts in a ruled grid and the confidentiality note. Page 2 is the contents, with every section, each function group in the evidence, and its page. Every later page reads the report title at the top left and `Confidential` and `Page N of M` at the bottom, and every page outside the evidence holds at least four lines of text besides them. No section opener, group heading or case heading ends a page.
-- Both files open with the cover and the contents, then the fourteen headings from Document control to Annexures, in order. Every page of the Word copy has the report title at the top and `Confidential, page N of M` at the bottom.
+- Both files open with the cover and the contents, then the seventeen headings from Document control to Contact, in order. Every page of the Word copy has the report title at the top and `Confidential, page N of M` at the bottom.
 - The evidence holds every tested case and no other, under its function group. Each starts with its id and title, then its result line, expected result, observed result and REQUEST-IDs, then its screenshots, two rows to a page: a landscape one 140 mm wide or more, portrait ones up to three to a row, each captioned with its figure number and step: `Fig <n>, step <k>` in the PDF, `Figure <n>, step <k>` in the Word copy. `<report>-screenshots.json` names each figure's full size file.
 - The failures and iterations log lists only failed, blocked and conditional pass cases.
 - With `--manifest`, each tested case's Request IDs line lists the REQUEST-IDs the manifest gives it, or reads `None in the manifest`. A value that is not a UUID reads `[invalid id]`.

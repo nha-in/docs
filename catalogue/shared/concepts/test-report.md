@@ -9,7 +9,8 @@ summary: >
   When every mandatory case in NHA's workbook is PASS for a run type, a script
   reads the workbook and the run's screenshots and writes the test report NHA
   asks for, as a designed PDF to submit and a Word copy to edit, with a cover,
-  a contents list and fourteen fixed sections: a counts table that adds up,
+  a contents list and seventeen fixed sections in the order NHA's own reports
+  use: a counts table that adds up,
   evidence for tested cases only, grouped by function, with every screenshot
   printed to be read, and every other case once in one table. Aadhaar, ABHA and mobile
   numbers are masked and no credential, token or OTP is in it.
@@ -71,21 +72,24 @@ read the same way.
 | Part | What it holds | Comes from |
 |---|---|---|
 | Cover | Title, product, organisation, milestone, run type, document id, version, release date, a confidentiality line | `meta.json`, `--run` |
-| Contents | Every section, and each function group in the evidence, with its page number. The Word copy holds a contents field that Word fills in on opening | The headings below |
+| Contents | Every section, and each test case in the test execution details, with its page number. The Word copy holds a contents field that Word fills in on opening | The headings below |
 | 1. Document control | Document title, id, version, prepared, reviewed, approved and released by, release date; change history; distribution list by name, organisation and role | `meta.json` `document` |
 | 2. Executive summary | The counts table, for all cases and for mandatory cases, each term defined in one line under it, then `Ready for sandbox exit.` or `<n> mandatory cases are still open.` | The workbook, `plan`'s applicability, the gate |
-| 3. ABDM details | Entity, product, category, role, entity type, milestone, API version, run type, dates, days, most passes any case took, executed by, recordings | `meta.json`, the workbook |
-| 4. Results summary | The counts by function group; every conditional pass with its condition; any mandatory case NHA agreed is not run, with the agreement; then every case not tested, blocked or not applicable, once, with what it needs or why it does not apply | The workbook, `agreed_not_run` |
-| 5. Scope and limitations | Applications and URLs; workbook and tabs; the limitation that results hold for the build tested on those dates, and any `limitations` | `meta.json`, the workbook |
-| 6. Flow details | For linking and consent flows: the ABHA address used and the HI types created or tested | `meta.json` `flows` |
-| 7. Test environment and tools | Browser, Playwright, PHR app, emulator, the model that ran the agent, with versions | `meta.json` `environment` |
-| 8. Test team | Name, role and qualifications of each tester, reviewer and approver | `meta.json` `team` |
-| 9. Approach and methodology | One line each: who ran the cases, the three pass limit, how OTPs and consents were given, the PHR app proof, the run type, REQUEST-IDs | Fixed text, `--run` |
-| 10. Test data | The ABHA numbers and addresses used, masked | `meta.json` `test_data` |
-| 11. Evidence | Tested cases only, passed, conditional pass or failed, under their function group in sheet order. Per case: its id and title; the result line (status, passes, marking, any condition or error code); the expected result; what was observed; its REQUEST-IDs; a table of its steps if it has them; the response for an `ft` run; then its screenshots | The workbook, `findings`, `--manifest`, the evidence folder |
-| 12. Failures and iterations log | Failed, blocked and conditional pass cases only, with the reason, the condition or what is needed, and any error code | The workbook |
-| 13. Conclusion and sign-off | The same ready line as the summary, then a sign-off table for preparer, reviewer and approver with date and signature | The gate, `meta.json` `document` |
-| 14. Annexures | Recording links, the completed workbook, the REQUEST-ID manifest, the full size screenshots in the evidence folder and the file listing them | `meta.json`, the arguments |
+| 3. Scope of work | One line naming the application, then every test case this report covers, in sheet order, with its scenario beside it | The workbook, `meta.json` `applications` |
+| 4. ABDM details | Entity, product, category, role, entity type, milestone, API version, run type, dates, days, most passes any case took, executed by, recordings | `meta.json`, the workbook |
+| 5. Execution summary | The identifiers the run used, such as the ABHA address created and the mobile number that returned several profiles, then Yes or No against each test case and whether recordings exist. The identifiers are the tester's; the Yes or No is counted from the workbook, so it cannot claim more than the run did | `meta.json` `execution_summary`, the workbook |
+| 6. Results summary | The counts by function group; every conditional pass with its condition; any mandatory case NHA agreed is not run, with the agreement; then every case not tested, blocked or not applicable, once, with what it needs or why it does not apply | The workbook, `agreed_not_run` |
+| 7. Scope and limitations | Applications and URLs; workbook and tabs; the limitation that results hold for the build tested on those dates, and any `limitations` | `meta.json`, the workbook |
+| 8. Flow details | For linking and consent flows: the ABHA address used and the HI types created or tested | `meta.json` `flows` |
+| 9. Test environment and tools | Browser, Playwright, PHR app, emulator, the model that ran the agent, with versions | `meta.json` `environment` |
+| 10. Test team | Name, role and qualifications of each tester, reviewer and approver | `meta.json` `team` |
+| 11. Approach and methodology | One line each: who ran the cases, the three pass limit, how OTPs and consents were given, the PHR app proof, the run type, REQUEST-IDs | Fixed text, `--run` |
+| 12. Test data | The ABHA numbers and addresses used, masked | `meta.json` `test_data` |
+| 13. Test execution details | Tested cases only, passed, conditional pass or failed, under the test case they belong to, in sheet order. Each test case opens with a block naming its scenario, its number and its recording link. Each of its cases then prints as a numbered step: the sheet's number for it and the line it prints, then the result line (status, passes, marking, any condition or error code); the expected result; what was observed; its REQUEST-IDs; its case id; a table of its sub steps if it has them; the response for an `ft` run; then its screenshots | The workbook, `narration`, `recording_links`, `findings`, `--manifest`, the evidence folder |
+| 14. Failures and iterations log | Failed, blocked and conditional pass cases only, with the reason, the condition or what is needed, and any error code | The workbook |
+| 15. Conclusion and sign-off | The same ready line as the summary, then a sign-off table for preparer, reviewer and approver with date and signature | The gate, `meta.json` `document` |
+| 16. Annexures | Recording links, the completed workbook, the REQUEST-ID manifest, the full size screenshots in the evidence folder and the file listing them | `meta.json`, the arguments |
+| 17. Contact | Who to ask about the report: name, role, organisation and email | `meta.json` `contact` |
 
 | Count | What it means |
 |---|---|
@@ -215,7 +219,14 @@ signing off sees them.
   "limitations": [],
   "findings": {"CRT_ABHA_101": "The Create ABHA option opens the Aadhaar consent screen."},
   "agreed_not_run": {},
-  "recordings": [{"title": "M1 ui run, full trace", "link": "<LINK TO THE RECORDING>"}]
+  "recordings": [{"title": "M1 ui run, full trace", "link": "<LINK TO THE RECORDING>"}],
+  "execution_summary": [
+    {"item": "ABHA address created with the mobile number flow", "value": "<TEST ABHA ADDRESS>@sbx"},
+    {"item": "Mobile number that returned several profiles", "value": "<TEST MOBILE NUMBER>"}
+  ],
+  "recording_links": {"<NAME OF TEST CASE, AS THE SHEET HEADS IT>": "<LINK TO THAT SCENARIO'S RECORDING>"},
+  "narration": {"CRT_ABHA_101": "<WHAT THE TESTER DID AND WHAT THE SCREEN SHOWED, IN THE PAST TENSE>"},
+  "contact": [{"name": "<NAME>", "role": "<ROLE>", "organisation": "<ORGANISATION>", "email": "<EMAIL>"}]
 }
 ```
 
@@ -225,7 +236,7 @@ signing off sees them.
   python3 -I abdm_report.py plan  WORKBOOK --run ft|ui --entity government|private
   python3 -I abdm_report.py check WORKBOOK --run ft|ui --entity government|private [--meta meta.json]
   python3 -I abdm_report.py build WORKBOOK --run ft|ui --meta meta.json --evidence DIR --out REPORT.pdf
-      [--manifest RUN.json] [--format pdf|docx|both] [--fonts DIR]
+      [--manifest RUN.json] [--format pdf|docx|both] [--fonts DIR] [--tab TAB]
   python3 -I abdm_report.py tracker  WORKBOOK --run ft|ui [--entity government|private] [--plan INTEGRATION-PLAN.md] [--meta meta.json]
       [--set ID=building|built|tested|in-scope] [--screen CASE=ROUTE] [--build BUILD]
   python3 -I abdm_report.py findings WORKBOOK --run ft|ui --entity government|private --out REPORT.pdf
@@ -236,6 +247,10 @@ check lists every mandatory case not PASS or CONDITIONAL PASS for the run type
 and exits 1, or exits 0 when there is none. build refuses unless check passes, then writes the
 report. A mandatory case NA passes only when meta.json's agreed_not_run names it.
 --manifest is the run's manifest of case ids to REQUEST-IDs, printed per case.
+--tab names the workbook tab the report covers. NHA's PHR workbook holds one tab
+per PHR milestone and NHA asks for one report per milestone, so a P1 to P4 run
+names its own tab and is neither blocked nor padded by the other three. Left
+out, every tab is read, which is right for a workbook with one tab.
 build writes REPORT.pdf, the report to submit, and REPORT.docx beside it, the
 editable copy; --format picks one of them. For a ui run it also writes
 REPORT-screenshots.json, naming each figure's full size file for the annexure. The PDF uses Newsreader, Public Sans
@@ -267,6 +282,12 @@ COLUMNS = {
 # Header names vary by sheet and spacing: "Mandatory/ Optional" on HMIS and
 # HPR, "Optional / Mandatory" on PHR; "Functionality", "Feature" or "Test Title".
 TITLE = ["functionality", "feature", "test title"]
+# The column holding what a case does, printed as the step's own line in the test execution
+# details: "Test Scenario" on the PHR tabs, "Test Case" on the HMIS and HPR ones, "Steps" where
+# neither is there. The title column is never used for it.
+STEP_TEXT = ["test scenario", "test case", "steps"]
+# The sheet's own row number, which is the step number NHA's reports print: 1.1, 4.2, 5.3.
+ROW_NUMBER = re.compile(r"s[rl]?\.?\s*no\.?$", re.I)
 OPTIONAL = ("no", "optional", "non-mandatory", "non mandatory", "not mandatory")
 FORBIDDEN = re.compile(r"pass(word|wd)|secret|token|credential|api[_ -]?key|private[_ -]?key", re.I)
 # The statuses that pass a case, and how a multi step case's steps read in Remarks.
@@ -275,12 +296,19 @@ STEPS = re.compile(r"\bSteps: (.+)$")
 STEP = re.compile(r"^(\d+) (PASS|FAIL|needs tester|not run)(?: \((.*)\))?$")
 IMAGES = (".png", ".jpg", ".jpeg", ".gif", ".bmp", ".webp", ".tif", ".tiff", ".heic", ".heif", ".pdf")
 RUN_NAME = {"ui": "UI functional test", "ft": "API functional test"}
-SECTIONS = ["Document control", "Executive summary", "ABDM details", "Results summary",
-            "Scope and limitations", "Flow details", "Test environment and tools", "Test team",
-            "Approach and methodology", "Test data", "Evidence", "Failures and iterations log",
-            "Conclusion and sign-off", "Annexures"]
-# The fixed fields of each tested case's evidence table, in order, under its id and title.
-CASE_FIELDS = ["Result", "Expected result", "Observed", "Request IDs"]
+# The report's sections, in the order they print. NHA's own reports open with an
+# executive summary, the scope of work, an execution summary naming the run's
+# identifiers, and then the test execution details, so those four come first in
+# that order; every other section keeps the place it has always had.
+SECTIONS = ["Document control", "Executive summary", "Scope of work", "ABDM details",
+            "Execution summary", "Results summary", "Scope and limitations", "Flow details",
+            "Test environment and tools", "Test team", "Approach and methodology", "Test data",
+            "Test execution details", "Failures and iterations log", "Conclusion and sign-off",
+            "Annexures", "Contact"]
+# The fixed fields of each tested case's evidence table, in order, under the step's number and
+# the line it prints. The id comes last because the heading no longer carries it: NHA's reports
+# head a step with its number, and the id is what a reviewer matches against the workbook.
+CASE_FIELDS = ["Result", "Expected result", "Observed", "Request IDs", "Test case ID"]
 # Where each case stands. Tested is passed, conditional pass or failed; applicable is
 # tested, blocked or not tested; every case is applicable or not applicable.
 TESTED = ("PASS", "CONDITIONAL PASS", "FAIL")
@@ -429,9 +457,22 @@ def anchor(ws, row, col):
     return ws.cell(row, col)
 
 
-def index(wb):
+def tabs_named(wb, tab):
+    """The worksheets a tab scope names, matched on the title with its spacing ignored. NHA's own
+    tab titles carry leading and double spaces, so they are never typed exactly."""
+    if not tab:
+        return wb.worksheets
+    wanted = [norm(x).lower() for x in tab.split(",") if norm(x)]
+    found = [ws for ws in wb.worksheets if norm(ws.title).lower() in wanted]
+    if not found:
+        sys.exit("no tab named " + tab + " in the workbook: it holds "
+                 + ", ".join(norm(ws.title) for ws in wb.worksheets))
+    return found
+
+
+def index(wb, tab=None):
     rows, twice = {}, []
-    for ws in wb.worksheets:
+    for ws in tabs_named(wb, tab):
         for case, row in cases(ws).items():
             if case in rows:
                 twice.append(case)
@@ -518,6 +559,35 @@ def iterations(text):
         return 0
 
 
+def lost_zero(number, last):
+    """A cell typed 2.10 is stored as 2.1, so after 2.9 a row reading 2.1 is 2.10. The same rule
+    is in abdm_workbook.py, which builds the PHR case ids from these numbers."""
+    parts, before = number.split("."), last.split(".")
+    if len(parts) == 2 and len(before) == 2 and parts[0] == before[0]:
+        if before[1] == str(int(parts[1]) * 10 - 1):
+            return parts[0] + "." + str(int(parts[1]) * 10)
+    return number
+
+
+def row_numbers(ws, top, cols):
+    """Each case row's number as the sheet writes it, which is the step number NHA's reports
+    print. Read in sheet order, because the lost zero rule needs the number before it."""
+    ncol = next((col for name, col in sorted(cols.items(), key=lambda x: x[1])
+                 if ROW_NUMBER.search(name)), None)
+    icol = cols.get("Test Case ID")
+    if not ncol or not icol:
+        return {}
+    out, last = {}, ""
+    for r in range(top + 1, ws.max_row + 1):
+        number = norm(ws.cell(r, ncol).value)
+        if re.fullmatch(r"\d+(\.\d+)*", number):
+            number = lost_zero(number, last)
+            last = number
+        if norm(ws.cell(r, icol).value):
+            out[r] = number
+    return out
+
+
 def group_applies(ws, top, cols):
     """Each case row's group Applicable To, carried down from the row that heads the group."""
     acol, icol = cols.get("Applicable To"), cols.get("Test Case ID")
@@ -534,26 +604,52 @@ def group_applies(ws, top, cols):
 
 
 def group_names(ws, top, cols):
-    """Each case row's group: the Function carried down from the row that heads the group,
-    else the last section heading. A section heading is a row with no case id whose values sit in
-    the first two columns only: a title, alone or after its number, as on the PHR sheet's
-    "4.1 | Login with mobile number flow" and "| Edit Profile"."""
+    """Each case row's scenario and group. The group is the Function carried down from the row
+    that heads the group, else the last section heading. A section heading is a row with no case
+    id whose values sit in the first two columns only: a title, alone or after its number, as on
+    the PHR sheet's "4.1 | Login with mobile number flow" and "| Edit Profile".
+
+    The scenario is the level above the group, which NHA's own reports print as "Name of
+    Scenario" over "Name of Test Case". On a sheet with a Function column there is no level
+    above, so the scenario is the group. On the PHR sheets a heading row followed straight by
+    another heading row is the scenario, as rows 2 and 3 of the ABHA address creation tab are
+    "Registration Flow" over "ABHA address creation with mobile number flow". A heading that
+    stands alone is a group under the scenario last declared that way, and where a group's name
+    repeats that scenario before a colon, as "Registration Flow : ABHA address creation with
+    ABHA number flow" does, the repeat is dropped. Until a scenario is declared, a group is its
+    own scenario."""
     fcol, icol = cols.get("Function"), cols.get("Test Case ID")
     if not icol:
         return {}
     first = min(cols.values())
-    out, current = {}, ""
+    out, current, scenario = {}, "", ""
+    pending = None  # a heading not yet known to be a scenario: the next row decides
     for r in range(top + 1, ws.max_row + 1):
         name = norm(anchor(ws, r, fcol).value) if fcol else ""
         filled = [c for c in ws[r] if norm(c.value)]
         titles = [norm(c.value) for c in filled if not re.fullmatch(r"[\d.]+", norm(c.value))]
+        heading = (filled and not norm(ws.cell(r, icol).value)
+                   and all(c.column in (first, first + 1) for c in filled)
+                   and len(titles) == 1 and len(titles[0]) <= 240)
         if name:
-            current = name
-        elif (filled and not norm(ws.cell(r, icol).value) and all(c.column in (first, first + 1) for c in filled)
-              and len(titles) == 1 and len(titles[0]) <= 120):
-            current = titles[0]
+            current, scenario, pending = name, name, None
+            # A Function column names the group, and that sheet has no level above it.
+        elif heading:
+            if pending is not None:
+                # Two headings in a row: the first was the scenario, this one is the group.
+                scenario, current, pending = pending, titles[0], None
+            else:
+                pending = titles[0]
+        elif pending is not None:
+            # A case row follows the heading, so the heading was the group, not a scenario.
+            current, pending = pending, None
+            rest = current[len(scenario):] if scenario else ""
+            if scenario and current.lower().startswith(scenario.lower()) and rest.lstrip().startswith(":"):
+                current = rest.lstrip().lstrip(":").strip() or current
         if norm(ws.cell(r, icol).value):
-            out[r] = current or norm(ws.title)
+            # A scenario is only ever declared by a pair of heading rows. A tab that has no
+            # such pair, as the Locker tab has none, gives every group itself as its scenario.
+            out[r] = (scenario or current or norm(ws.title), current or norm(ws.title))
     return out
 
 
@@ -566,33 +662,42 @@ def restricted_to(applies):
     return "government" if gov else "private"
 
 
-def read_cases(path, run, entity):
-    """Every case in sheet order, with its marking, the run's values and treatment."""
+def read_cases(path, run, entity, tab=None):
+    """Every case in sheet order, with its marking, the run's values and treatment. A tab scope
+    narrows it to the tabs named, which is how one report covers one milestone."""
     wb = load(path)
     path = Path(path)
     # The copy the writer made before its first write: what NHA's own cells held.
     backup = path.with_name(path.stem + ".before-abdm-run" + path.suffix)
     original = load(backup) if backup.exists() else None
     out = []
-    applies_by, groups_by = {}, {}
-    for case, (ws, row) in index(wb).items():
+    applies_by, groups_by, numbers_by = {}, {}, {}
+    for case, (ws, row) in index(wb, tab).items():
         top, cols = header_row(ws)
         if ws.title not in applies_by:
             applies_by[ws.title] = group_applies(ws, top, cols)
             groups_by[ws.title] = group_names(ws, top, cols)
+            numbers_by[ws.title] = row_numbers(ws, top, cols)
         mcol = marking_col(cols)
         marking = norm(anchor(ws, row, mcol).value) if mcol else ""
         tcol = find(cols, TITLE)
         title = norm(anchor(ws, row, tcol).value) if tcol else ""
         ecol = find(cols, ["expected result"])
         fcol = cols.get("Function")
+        scol = next((cols[n] for n in sorted(cols, key=lambda n: cols[n])
+                     for w in STEP_TEXT if w in n.lower() and not n.endswith(" (run)")
+                     and cols[n] != tcol), None)
         kind, label, note, pair = classify(marking, entity)
         rec = {"id": case, "sheet": ws.title, "title": title or case, "marking": marking,
                "kind": kind, "label": label, "note": note, "pair": pair,
                "expected": norm(anchor(ws, row, ecol).value) if ecol else "",
                "function": (norm(anchor(ws, row, fcol).value) if fcol else "") or ws.title}
         rec["applies"] = applies_by[ws.title].get(row, "")
-        rec["group"] = groups_by[ws.title].get(row, "") or norm(ws.title)
+        rec["scenario"], rec["group"] = groups_by[ws.title].get(row) or (norm(ws.title),) * 2
+        # The step's own line and the sheet's number for it. A number merged down belongs to the
+        # row it starts on, so a row without one of its own carries no number.
+        rec["step_text"] = norm(anchor(ws, row, scol).value) if scol else ""
+        rec["number"] = numbers_by[ws.title].get(row, "")
         for key, names in COLUMNS[run].items():
             rec[key] = value(ws, row, top, cols, names, original)
         rec["raw_status"], rec["status"] = rec["status"], rec["status"].upper()
@@ -662,8 +767,8 @@ def agreed_cases(meta):
     return {norm(k).replace(" ", ""): norm(v) for k, v in agreed.items()}
 
 
-def run_check(path, run, entity, agreed):
-    recs, groups = read_cases(path, run, entity)
+def run_check(path, run, entity, agreed, tab=None):
+    recs, groups = read_cases(path, run, entity, tab)
     if not recs:
         sys.exit("no Test Case ID column with ids in " + Path(path).name + ": nothing to report on")
     for r in recs:
@@ -758,9 +863,9 @@ def tally(recs):
     return c
 
 
-def run_plan(path, run, entity):
+def run_plan(path, run, entity, tab=None):
     """Every case in sheet order: id, group, applicability, status so far. Then the totals."""
-    recs, _ = read_cases(path, run, entity)
+    recs, _ = read_cases(path, run, entity, tab)
     if not recs:
         sys.exit("no Test Case ID column with ids in " + Path(path).name + ": nothing to plan")
     counts, statuses = {}, {}
@@ -917,10 +1022,12 @@ def content(path, run, meta, evidence, recs, groups, manifest=None, draft=None, 
     findings = meta.get("findings", {})
     ready = ("Ready for sandbox exit." if not draft else
              str(len(draft)) + " mandatory case" + (" is" if len(draft) == 1 else "s are") + " still open.")
-    functions = []
+    functions, scenarios = [], {}
     for r in recs:
         if r["group"] not in functions:
             functions.append(r["group"])
+        # The scenario a group sits under, which NHA's reports print over the test case name.
+        scenarios.setdefault(r["group"], r.get("scenario") or r["group"])
     by_function = [r for fn in functions for r in recs if r["group"] == fn]
 
     def condition(r):
@@ -968,7 +1075,7 @@ def content(path, run, meta, evidence, recs, groups, manifest=None, draft=None, 
         return text
 
     # 1. Document control
-    add("h1", SECTIONS[0])
+    add("h1", "Document control")
     table([["Document title", title], ["Document id", dm.get("id", "FT-" + milestone)],
            ["Version", dm.get("version", "")], ["Prepared by", dm.get("prepared_by", "")],
            ["Reviewed by", dm.get("reviewed_by", "")], ["Approved by", dm.get("approved_by", "")],
@@ -983,7 +1090,7 @@ def content(path, run, meta, evidence, recs, groups, manifest=None, draft=None, 
            else [str(d), "", ""] for d in dist] or [["", "", ""]], header=["Name", "Organisation", "Role"])
 
     # 2. Executive summary: the counts, each term in one line, then whether the run is done.
-    add("h1", SECTIONS[1])
+    add("h1", "Executive summary")
     keys = ["cases", "applicable", "tested", "passed", "conditional pass", "failed", "blocked", "not tested",
             "not applicable"]
     add("counts", [[name, everything[k], mandatory[k]] for (name, _), k in zip(COUNTS, keys)],
@@ -991,8 +1098,17 @@ def content(path, run, meta, evidence, recs, groups, manifest=None, draft=None, 
         [[name, meaning.replace("not applicable", "not applicable to a " + entity + " entity")
           if name == "Applicable to this integrator" else meaning] for name, meaning in COUNTS], ready)
 
-    # 3. ABDM details
-    add("h1", SECTIONS[2])
+    # 3. Scope of work: the scenarios and the functionalities under them, in sheet order.
+    add("h1", "Scope of work")
+    apps_named = ", ".join(a.get("name", "") if isinstance(a, dict) else str(a)
+                           for a in meta.get("applications", [])) or meta.get("product", "")
+    add("para", "This report covers the functional test scenarios of " + (apps_named or "the application")
+        + ". The scenarios below are the ones NHA's workbook sets out for " + milestone + ".")
+    add("bullets", [fn + " (" + scenarios[fn] + ")" if scenarios.get(fn) and scenarios[fn] != fn else fn
+                    for fn in functions])
+
+    # 4. ABDM details
+    add("h1", "ABDM details")
     recordings = meta.get("recordings", [])
     table([["Entity name", meta.get("organisation", "")], ["Product name", meta.get("product", "")],
            ["Category", meta.get("category", "")], ["Role", meta.get("role", "")], ["Entity type", entity],
@@ -1004,8 +1120,21 @@ def content(path, run, meta, evidence, recs, groups, manifest=None, draft=None, 
            ["Test executed by", meta.get("executed_by", "")],
            ["Recordings", str(len(recordings)) + " listed in the annexures" if recordings else "None"]])
 
-    # 4. Results summary: by function, the conditional passes, the agreed NA, then every case not tested.
-    add("h1", SECTIONS[3])
+    # 5. Execution summary: the identifiers the run used, then whether each scenario was tested
+    # and whether recordings exist. The identifiers are the tester's; the yes or no is counted
+    # from the workbook, so it cannot say more than the run did.
+    add("h1", "Execution summary")
+    summary = meta.get("execution_summary", [])
+    if isinstance(summary, dict):
+        summary = [{"item": k, "value": v} for k, v in summary.items()]
+    rows = [[d.get("item", ""), d.get("value", "")] if isinstance(d, dict) else [str(d), ""] for d in summary]
+    table(rows or [["No identifier recorded", ""]])
+    add("h2", "Scenarios tested")
+    table([[fn, "Yes" if any(r["group"] == fn and r in tested for r in recs) else "No"] for fn in functions]
+          + [["Recordings available", "Yes" if recordings else "No"]])
+
+    # 6. Results summary: by function, the conditional passes, the agreed NA, then every case not tested.
+    add("h1", "Results summary")
     add("h2", "Results by function")
     rows = []
     for fn in functions:
@@ -1027,7 +1156,7 @@ def content(path, run, meta, evidence, recs, groups, manifest=None, draft=None, 
               header=["Test case ID", "Title", "Marking", "Status", "Needed, or why not applicable"])
 
     # 5. Scope and limitations
-    add("h1", SECTIONS[4])
+    add("h1", "Scope and limitations")
     apps = meta.get("applications", [])
     table([[a.get("name", ""), a.get("url", "")] if isinstance(a, dict) else [str(a), ""] for a in apps]
           or [["", ""]], header=["Application", "URL"])
@@ -1038,7 +1167,7 @@ def content(path, run, meta, evidence, recs, groups, manifest=None, draft=None, 
                                     [str(x) for x in meta.get("limitations", [])])]])
 
     # 6. Flow details
-    add("h1", SECTIONS[5])
+    add("h1", "Flow details")
     flows = meta.get("flows", [])
     if flows:
         table([[f.get("name", ""), ", ".join(f.get("abha_addresses", [])), ", ".join(f.get("hi_types", []))]
@@ -1048,7 +1177,7 @@ def content(path, run, meta, evidence, recs, groups, manifest=None, draft=None, 
         add("para", "No linking or consent flow in this milestone.")
 
     # 7. Test environment and tools
-    add("h1", SECTIONS[6])
+    add("h1", "Test environment and tools")
     env = dict(meta.get("environment", {}))
     names = [("browser", "Browser"), ("browser_version", "Browser version"), ("playwright", "Playwright"),
              ("phr_app", "PHR app"), ("phr_app_version", "PHR app version"), ("emulator", "Emulator"),
@@ -1058,13 +1187,13 @@ def content(path, run, meta, evidence, recs, groups, manifest=None, draft=None, 
     table(rows, header=["Tool", "Version or value"])
 
     # 8. Test team
-    add("h1", SECTIONS[7])
+    add("h1", "Test team")
     team = meta.get("team", [])
     table([[m.get("name", ""), m.get("role", ""), m.get("qualifications", "")] for m in team if isinstance(m, dict)]
           or [[meta.get("executed_by", ""), "Tester", ""]], header=["Name", "Role", "Qualifications"])
 
     # 9. Approach and methodology: one line each.
-    add("h1", SECTIONS[8])
+    add("h1", "Approach and methodology")
     table([["Runner", "An agent ran each case with the module's test skill and wrote the result into the workbook."],
            ["Passes", "At most three per case. Iterations is the number of passes a case took."],
            ["Approvals", "A person gave every OTP, consent and approval as the case needed it. The agent kept no OTP."],
@@ -1074,23 +1203,36 @@ def content(path, run, meta, evidence, recs, groups, manifest=None, draft=None, 
            ["Request IDs", "A fresh one on every call. Look each up in the gateway's own record."]])
 
     # 10. Test data
-    add("h1", SECTIONS[9])
+    add("h1", "Test data")
     data = meta.get("test_data", [])
     if isinstance(data, dict):
         data = [{"item": k, "value": v} for k, v in data.items()]
     table([[d.get("item", ""), d.get("value", "")] for d in data] or [["", ""]], header=["Item", "Value"])
 
-    # 11. Evidence: tested cases only, by function. Each: a result line, the expected and observed
-    # results, its REQUEST-IDs, any steps, the response for an ft run, then its screenshots in rows.
-    add("h1", SECTIONS[10])
+    # 13. Test execution details: tested cases only, under the test case they belong to, in the
+    # shape NHA's own reports use. Each test case opens with its scenario, its number and its
+    # recording link, and each of its cases then prints as a numbered step: the step's own line
+    # from the sheet, the result, the expected and observed results, its REQUEST-IDs, any sub
+    # steps, the response for an ft run, and its screenshots in rows.
+    add("h1", "Test execution details")
     figures = []
     if not tested:
         add("para", "No case was tested.")
-    for fn in functions:
+    narration = meta.get("narration", {})
+    if isinstance(narration, list):
+        narration = {str(x.get("id") or x.get("case") or ""): x.get("narration", "")
+                     for x in narration if isinstance(x, dict)}
+    links = meta.get("recording_links", {})
+    if isinstance(links, list):
+        links = {str(x.get("functionality") or x.get("scenario") or ""): x.get("link", "")
+                 for x in links if isinstance(x, dict)}
+    for n, fn in enumerate(functions, 1):
         these = [r for r in recs if r["group"] == fn and r in tested]
         if not these:
             continue
         add("group", fn)
+        table([["Name of scenario", scenarios.get(fn, fn)], ["Sr. no.", str(n)],
+               ["Name of test case", fn], ["Recording link", links.get(fn) or "None given"]])
         for r in these:
             observed = findings.get(r["id"]) or STEPS.sub("", r["remarks"]).strip() or "None recorded."
             result = r["status"] + ", " + passes(r) + ". Marking: " + r["label"] + "." + either(r)
@@ -1099,7 +1241,12 @@ def content(path, run, meta, evidence, recs, groups, manifest=None, draft=None, 
             err = codes(r["response"], r["remarks"]) if r["status"] != "PASS" or r["iterations"] > 1 else ""
             if err:
                 result += " Error code: " + err + "."
-            values = [result, r["expected"] or "Not given in the workbook", observed, rid_text(r)]
+            values = [result, r["expected"] or "Not given in the workbook", observed, rid_text(r), r["id"]]
+            # The step as NHA's reports print it: the sheet's own number, then what the step did.
+            # A narration the run recorded is used first, then the sheet's own line for the step,
+            # then the case title. Nothing here is invented: every source is the run or the sheet.
+            r["step_number"] = r["number"] or r["id"]
+            r["step_line"] = (narration.get(r["id"]) or r["step_text"] or r["title"])
             shots, unread = [], []
             if run == "ui":
                 folder = Path(evidence) / r["id"]
@@ -1122,7 +1269,7 @@ def content(path, run, meta, evidence, recs, groups, manifest=None, draft=None, 
             add("case", r, values, r["response"] if run == "ft" else "", rows, step_rows(r["remarks"]), unread)
 
     # 12. Failures and iterations log: failed, blocked and conditional pass only.
-    add("h1", SECTIONS[11])
+    add("h1", "Failures and iterations log")
     if log:
         table([[r["id"], standing(r).capitalize(), r["iterations"] or "",
                 (condition(r) if r["status"] == "CONDITIONAL PASS" else needed(r) if standing(r) == "blocked"
@@ -1133,13 +1280,13 @@ def content(path, run, meta, evidence, recs, groups, manifest=None, draft=None, 
         add("para", "No case failed, is blocked or passed with a condition.")
 
     # 13. Conclusion and sign-off
-    add("h1", SECTIONS[12])
+    add("h1", "Conclusion and sign-off")
     add("ready", ready)
     table([["Prepared by", dm.get("prepared_by", ""), "", ""], ["Reviewed by", dm.get("reviewed_by", ""), "", ""],
            ["Approved by", dm.get("approved_by", ""), "", ""]], header=["Sign-off", "Name", "Date", "Signature"])
 
     # 14. Annexures
-    add("h1", SECTIONS[13])
+    add("h1", "Annexures")
     table([[x.get("title", ""), x.get("link", "")] if isinstance(x, dict) else [str(x), ""] for x in recordings]
           or [["", ""]], header=["Recording", "Link"])
     listing = Path(out).stem + "-screenshots.json" if out else "Not written"
@@ -1148,6 +1295,22 @@ def content(path, run, meta, evidence, recs, groups, manifest=None, draft=None, 
            ["Full size screenshots", (str(evidence) + ", each figure listed in " + listing if run == "ui"
                                       else "Not used: the responses are the evidence")]],
           header=["Annexure", "File"])
+
+    # 17. Contact: who to ask about this report.
+    add("h1", "Contact")
+    contacts = meta.get("contact", [])
+    if isinstance(contacts, dict):
+        contacts = [contacts]
+    table([[c.get("name", ""), c.get("role", ""), c.get("organisation", ""), c.get("email", "")]
+           for c in contacts if isinstance(c, dict)]
+          or [[meta.get("executed_by", ""), "Tester", meta.get("organisation", ""), ""]],
+          header=["Name", "Role", "Organisation", "Email"])
+
+    # The headings printed must be the sections the contents page lists, in that order.
+    printed = [b[1] for b in blocks if b[0] == "h1"]
+    if printed != SECTIONS:
+        sys.exit("the report printed sections " + ", ".join(printed) + " but SECTIONS lists "
+                 + ", ".join(SECTIONS) + ": the two have to agree, or the contents page is wrong")
 
     return {
         "title": title, "label": label, "run": run, "milestone": milestone, "entity": entity, "safe": safe,
@@ -1319,6 +1482,9 @@ def write_docx(m, out):
             table(block[1], header=block[2])
         elif kind == "para":
             doc.add_paragraph(block[1])
+        elif kind == "bullets":
+            for line in block[1]:
+                doc.add_paragraph(line, style="List Bullet")
         elif kind == "counts":
             table(block[1], header=block[2])
             for term, meaning in block[3]:
@@ -1330,7 +1496,7 @@ def write_docx(m, out):
             doc.add_paragraph().add_run(block[1]).bold = True
         elif kind == "case":
             r, values, response, rows, steps, unread = block[1:]
-            doc.add_heading(r["id"] + ": " + r["title"], level=3)
+            doc.add_heading(r["step_number"] + "  " + r["step_line"], level=3)
             table([[k, v] for k, v in zip(CASE_FIELDS, values)])
             if steps:
                 table(steps, header=["Step", "Result", "Note"])
@@ -1486,6 +1652,7 @@ def write_pdf(m, out, fonts_dir=None):
         "cover": style("cover", "serif", 38, 43, "off"),
         "coversub": style("coversub", "sans", 11.5, 16, "ice"),
         "fact": style("fact", "sans", 10, 13.5, "ink"),
+        "bullet": style("bullet", "sans", 9.5, 14.5, "ink3", spaceAfter=4, leftIndent=14, bulletIndent=2),
     }
 
     def para(text, s="body"):
@@ -1647,6 +1814,9 @@ def write_pdf(m, out, fonts_dir=None):
             for n, piece in enumerate(pieces_of(text, 1200)):
                 spans.append(("SPAN", (0, len(rows)), (1, len(rows))))
                 rows.append([cell(name, piece, n == 0), ""])
+        # The id closes the block, beside the last line rather than on a line of its own.
+        spans.append(("SPAN", (0, len(rows)), (1, len(rows))))
+        rows.append([cell(CASE_FIELDS[4], values[4]), ""])
         t = Table(rows, colWidths=[TW * 0.56, TW * 0.44], hAlign="LEFT")
         t.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "TOP"), ("LEFTPADDING", (0, 0), (-1, -1), 0),
                                ("RIGHTPADDING", (0, 0), (-1, -1), 0), ("TOPPADDING", (0, 0), (-1, -1), 1.6),
@@ -1710,10 +1880,10 @@ def write_pdf(m, out, fonts_dir=None):
                                    ("LINEBELOW", (0, 0), (-1, -1), 0.6, C["line"])]))
             return t
 
-        split = SECTIONS.index("Evidence") + 1
+        split = SECTIONS.index("Test execution details") + 1
         out.append(sections(SECTIONS[:split], 1))
         if functions:
-            # Under Evidence, each function group with the page it starts on.
+            # Under the test execution details, each test case with the page it starts on.
             rows = [["", para(name, "small"), para(str(marks.get("g" + name, 0)), "tocpage")] for name in functions]
             groups_t = Table(rows, colWidths=[40, TW - 80, 40], hAlign="LEFT")
             groups_t.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "TOP"), ("LEFTPADDING", (0, 0), (-1, -1), 0),
@@ -1761,13 +1931,17 @@ def write_pdf(m, out, fonts_dir=None):
                 place([callout([block[1]], "lead"), Spacer(1, 10)])
             elif kind == "para":
                 place([para(block[1])])
+            elif kind == "bullets":
+                place([Paragraph(escape(clean(line)), S["bullet"], bulletText="\u2022")
+                       for line in block[1]] + [Spacer(1, 10)])
             elif kind == "case":
                 # A case flows on from the one before; its heading and fields stay with its first screenshot.
                 r, values, response, rows, steps, unread = block[1:]
                 lead = [Rule("line", 0.6, before=2, after=6, top=False), Mark("c" + r["id"]),
                         Paragraph('<font name="' + F["mono"] + '" size="8" color="' + INK["otext"] + '">' +
-                                  escape(clean(r["id"])) + "</font>&nbsp;&nbsp; " + escape(clean(r["title"])),
-                                  S["case"]), facts(values)]
+                                  escape(clean(r["step_number"])) + "</font>&nbsp;&nbsp; " +
+                                  escape(clean(r["step_line"])), S["case"]),
+                        facts(values)]
                 lead += [para(note, "small") for note in unread]
                 if steps:
                     lead += [Spacer(1, 4), grid(steps, ["Step", "Result", "Note"], pad=2.6)]
@@ -2001,7 +2175,7 @@ def run_tracker(a, entity, agreed):
     state["entity"], state["module"] = entity, data.get("module", "")
     by_fid = {f["id"]: f for f in data["functionalities"]}
     owner = {c: f["id"] for f in data["functionalities"] for c in f["cases"]}
-    recs, _ = read_cases(a.workbook, a.run, entity)
+    recs, _ = read_cases(a.workbook, a.run, entity, a.tab)
     by_id = {r["id"]: r for r in recs}
     today = date.today().isoformat()
 
@@ -2135,12 +2309,12 @@ def cut(text, size=120):
     return text if len(text) <= size else text[:size - 3].rsplit(" ", 1)[0] + "..."
 
 
-def write_findings(path, run, entity, out, data, recs=None):
+def write_findings(path, run, entity, out, data, recs=None, tab=None):
     """<report>-findings.md beside the report: each FAIL and CONDITIONAL PASS, its functionality, and the screen
     requirement that states the check for it, in its own file or in the one it hands the case to. A case with
     none is a Catalogue issue to file."""
     if recs is None:
-        recs, _ = read_cases(path, run, entity)
+        recs, _ = read_cases(path, run, entity, tab)
     by_fid = {f["id"]: f for f in data["functionalities"]}
     owner = {c: f for f in data["functionalities"] for c in f["cases"]}
     found = [r for r in recs if r["status"] in ("FAIL", "CONDITIONAL PASS")]
@@ -2208,6 +2382,10 @@ def main():
     p.add_argument("--manifest")
     p.add_argument("--format", choices=["pdf", "docx", "both"], default="both")
     p.add_argument("--fonts")
+    p.add_argument("--tab", help="the workbook tab, or tabs separated by commas, this report covers. "
+                                 "NHA's PHR workbook holds one tab per PHR milestone and NHA asks for one "
+                                 "report per milestone, so a P1 to P4 run names its own tab. Left out, "
+                                 "every tab is read, which is right for a workbook with one tab")
     p.add_argument("--draft", action="store_true",
                    help="build even when mandatory cases are not PASS, marked Draft on every page")
     p.add_argument("--functionalities", help="tracker, findings: functionalities.json, else the one beside this script")
@@ -2234,7 +2412,7 @@ def main():
     if entity not in ("government", "private"):
         sys.exit("--entity, or entity_type in meta.json, must be government or private")
     if a.action == "plan":
-        run_plan(a.workbook, a.run, entity)
+        run_plan(a.workbook, a.run, entity, a.tab)
         return
     if a.action == "findings":
         data = load_functionalities(a.functionalities)
@@ -2242,9 +2420,9 @@ def main():
             sys.exit("no functionalities.json beside this script: this module's skill is not built per functionality yet")
         if not a.out:
             sys.exit("findings needs --out, the report it sits beside")
-        write_findings(a.workbook, a.run, entity, a.out, data)
+        write_findings(a.workbook, a.run, entity, a.out, data, None, a.tab)
         return
-    recs, groups, blocking = run_check(a.workbook, a.run, entity, agreed_cases(meta))
+    recs, groups, blocking = run_check(a.workbook, a.run, entity, agreed_cases(meta), a.tab)
     if blocking and not (a.action == "build" and a.draft):
         if a.action == "build":
             print("no report: every mandatory case must be PASS first. --draft writes a draft marked as one",
@@ -2255,7 +2433,7 @@ def main():
               blocking if blocking else None)
         data = load_functionalities(a.functionalities)
         if data:
-            write_findings(a.workbook, a.run, entity, a.out, data, recs)
+            write_findings(a.workbook, a.run, entity, a.out, data, recs, a.tab)
 
 
 if __name__ == "__main__":
@@ -2324,7 +2502,7 @@ It prints one line per case, in sheet order: the case id, its group (the sheet's
 - The results summary counts each function group in sheet order, lists every conditional pass with its condition, and lists every case not tested, blocked or not applicable once, with what it needs or why it does not apply. A tested case whose Remarks end in `Steps: ...` shows a Step, Result and Note table in its evidence.
 - `build` prints `wrote abdm-ft/report-m1-screenshots.json` for a `ui` run, a `fonts:` line naming each font it used or replaced, then `wrote abdm-ft/report-m1.docx` and `wrote abdm-ft/report-m1.pdf`, and exits `0`.
 - The PDF opens on a navy cover with the milestone in orange, the key facts in a ruled grid and the confidentiality note. Page 2 is the contents, with every section, each function group in the evidence, and its page. Every later page reads the report title at the top left and `Confidential` and `Page N of M` at the bottom, and every page outside the evidence holds at least four lines of text besides them. No section opener, group heading or case heading ends a page.
-- Both files open with the cover and the contents, then the fourteen headings from Document control to Annexures, in order. Every page of the Word copy has the report title at the top and `Confidential, page N of M` at the bottom.
+- Both files open with the cover and the contents, then the seventeen headings from Document control to Contact, in order. Every page of the Word copy has the report title at the top and `Confidential, page N of M` at the bottom.
 - The evidence holds every tested case and no other, under its function group. Each starts with its id and title, then its result line, expected result, observed result and REQUEST-IDs, then its screenshots, two rows to a page: a landscape one 140 mm wide or more, portrait ones up to three to a row, each captioned with its figure number and step: `Fig <n>, step <k>` in the PDF, `Figure <n>, step <k>` in the Word copy. `<report>-screenshots.json` names each figure's full size file.
 - The failures and iterations log lists only failed, blocked and conditional pass cases.
 - With `--manifest`, each tested case's Request IDs line lists the REQUEST-IDs the manifest gives it, or reads `None in the manifest`. A value that is not a UUID reads `[invalid id]`.

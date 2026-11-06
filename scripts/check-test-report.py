@@ -12,7 +12,7 @@ catalogue/shared/concepts/test-workbook-write-back.md, and checks:
   government entity, while a private entity needs CRT_ABHA_114 itself;
 - build refuses while the gate fails, and refuses a meta.json that carries a
   field named like a credential, a JWT or a client secret as a value;
-- the report has the cover, a contents field and the fourteen section
+- the report has the cover, a contents field and the seventeen section
   headings in order, the report title in the page header, Confidential and
   page fields in the footer, header rows that repeat, one captioned inline
   image per screenshot for a ui report and none for an ft report, a
@@ -40,7 +40,7 @@ catalogue/shared/concepts/test-workbook-write-back.md, and checks:
   demographic group not applicable for a private entity, SHARE_PATIENT_PROFILE_701
   mandatory;
 - build writes a PDF beside the DOCX that opens, and its text holds the cover
-  title, the fourteen section openers in order, every case id, the header
+  title, the seventeen section openers in order, every case id, the header
   eyebrow, CONFIDENTIAL and the page count, with numbers masked and none of
   the leak fixtures' secrets; --format docx writes no PDF and --format pdf no
   DOCX;
@@ -92,11 +92,15 @@ M1 = RAW / "nha-2026-10-22-m1-tests" / "M1_ABHA_CREATION_VERIFICATION_SCAN_AND_S
 HPR = RAW / "nha-2026-10-22-m4-tests" / "HPR_Test_Cases.xlsx"
 PHR = RAW / "nha-2026-10-01-phr-tests" / "PHR_MOBILE_APP_TEST_CASES.xlsx"
 PHR_PAGE = ROOT / "site" / "docs" / "hiecm" / "v3" / "resources" / "test-cases" / "phr.mdx"
-SECTIONS = ["Document control", "Executive summary", "ABDM details", "Results summary",
-            "Scope and limitations", "Flow details", "Test environment and tools", "Test team",
-            "Approach and methodology", "Test data", "Evidence", "Failures and iterations log",
-            "Conclusion and sign-off", "Annexures"]
-CASE_FIELDS = ["Result", "Expected result", "Observed", "Request IDs"]
+SECTIONS = ["Document control", "Executive summary", "Scope of work", "ABDM details",
+            "Execution summary", "Results summary", "Scope and limitations", "Flow details",
+            "Test environment and tools", "Test team", "Approach and methodology", "Test data",
+            "Test execution details", "Failures and iterations log", "Conclusion and sign-off",
+            "Annexures", "Contact"]
+CASE_FIELDS = ["Result", "Expected result", "Observed", "Request IDs", "Test case ID"]
+# The header block that opens each test case in the test execution details, as NHA's own reports
+# print it over the numbered steps.
+SCENARIO_FIELDS = ["Name of scenario", "Sr. no.", "Name of test case", "Recording link"]
 LOG = ["Test case ID", "Status", "Iterations", "Failure reason", "Error code"]
 NOT_TESTED = ["Test case ID", "Title", "Marking", "Status", "Needed, or why not applicable"]
 COUNTS = ["Cases in NHA's sheet", "Applicable to this integrator", "Tested", "Passed", "Conditional pass", "Failed",
@@ -161,8 +165,9 @@ def header_of(table):
 
 
 def evidence_tables(doc):
-    """Case id to its evidence as {field: value}: the "<id>: <title>" heading and the table of the
-    fixed fields under it, with the marking read from the result line."""
+    """Case id to its evidence as {field: value}. A step's heading is its number and the line it
+    prints, as NHA's own reports head a step, so the id is read from the table under it rather
+    than from the heading. The marking is read from the result line."""
     from docx.table import Table
     found, heading = {}, None
     for el in doc.element.body.iterchildren():
@@ -172,12 +177,25 @@ def evidence_tables(doc):
         elif el.tag.endswith("}tbl") and heading:
             t = Table(el, doc._body)
             if [r.cells[0].text for r in t.rows] == CASE_FIELDS:
-                case, _, title = heading.partition(": ")
                 values = {r.cells[0].text: r.cells[1].text for r in t.rows}
+                case = values["Test case ID"]
+                number, _, line = heading.partition("  ")
                 marking = re.search(r"Marking: (.+?)\.(?: |$)", values["Result"])
-                values.update({"Test case ID": case, "Title": title, "Marking": marking.group(1) if marking else ""})
+                values.update({"Title": line.strip() or number, "Step number": number.strip(),
+                               "Marking": marking.group(1) if marking else ""})
                 found[case] = values
             heading = None
+    return found
+
+
+def scenario_blocks(doc):
+    """Each test case's header block in the test execution details, as {field: value}, keyed by
+    the name of test case it carries."""
+    found = {}
+    for t in doc.tables:
+        if [r.cells[0].text for r in t.rows] == SCENARIO_FIELDS:
+            values = {r.cells[0].text: r.cells[1].text for r in t.rows}
+            found[values["Name of test case"]] = values
     return found
 
 
@@ -242,7 +260,7 @@ def pdf_checks(path, title, ids, label):
             order = False
             break
         at = found + len(mark)
-    ok(order, f"{label}: the fourteen section openers and headings appear in order")
+    ok(order, f"{label}: the seventeen section openers and headings appear in order")
     missing = [i for i in ids if i not in flat]
     ok(not missing, f"{label}: every case id is in the PDF text ({len(ids)}): {missing[:5]}")
     ok(flat.count(title.upper()) >= 3 and flat.count("CONFIDENTIAL") >= 3 and re.search(r"PAGE 3 OF \d+", flat),
@@ -323,10 +341,10 @@ def page_marks(path):
 def evidence_filled(path, label):
     """No evidence page less than half filled, but the last one and a page whose next block could not fit."""
     pages = pdf_pages(path)
-    starts = [n for n, lines in enumerate(pages) if "11 · EVIDENCE" in " ".join(lines)]
-    ends = [n for n, lines in enumerate(pages) if "12 · FAILURES" in " ".join(lines)]
+    starts = [n for n, lines in enumerate(pages) if "13 · TEST EXECUTION DETAILS" in " ".join(lines)]
+    ends = [n for n, lines in enumerate(pages) if "14 · FAILURES" in " ".join(lines)]
     if not (starts and ends):
-        return fail(f"{label}: the evidence section is not found")
+        return fail(f"{label}: the test execution details section is not found")
     marks, frame = page_marks(path), 257.0
     half = []
     for n in range(starts[0], ends[0] - 1):
@@ -338,7 +356,7 @@ def evidence_filled(path, label):
     ok(not half, f"{label}: no evidence page is less than half filled when its next block would fit: {half[:6]}")
 
 
-HEADINGS = SECTIONS + ["Change history", "Distribution", "Results by function", "Conditional passes",
+HEADINGS = SECTIONS + ["Change history", "Distribution", "Scenarios tested", "Results by function", "Conditional passes",
                        "Mandatory cases NHA agreed not to run", "Cases not tested"]
 
 
@@ -359,8 +377,8 @@ def page_rules(path, title, label, ids=(), groups=(), sources=None):
     ok(not small, f"{label}: every screenshot prints readably, portrait 45 mm wide or more, landscape 140 mm "
                   f"or more: {small[:4]}")
     ok(not short, f"{label}: every screenshot keeps its source pixels, up to 300 dpi: {short[:4]}")
-    starts = [n for n, lines in enumerate(pages) if "11 · EVIDENCE" in " ".join(lines)]
-    ends = [n for n, lines in enumerate(pages) if "12 · FAILURES" in " ".join(lines)]
+    starts = [n for n, lines in enumerate(pages) if "13 · TEST EXECUTION DETAILS" in " ".join(lines)]
+    ends = [n for n, lines in enumerate(pages) if "14 · FAILURES" in " ".join(lines)]
     evidence = range(starts[0], ends[0]) if starts and ends else range(0)
     thin = [n + 1 for n, lines in enumerate(pages) if n and n not in evidence and len(body_lines(lines, title)) < 4]
     ok(not thin, f"{label}: every page outside the evidence holds four lines of text: pages {thin[:8]}")
@@ -378,7 +396,7 @@ def page_rules(path, title, label, ids=(), groups=(), sources=None):
 
 
 def region(flat, start, end):
-    """The PDF text between two section openers, such as 11 EVIDENCE and 12 FAILURES."""
+    """The PDF text between two section openers, such as 13 TEST EXECUTION DETAILS and 14 FAILURES."""
     a = flat.find(start)
     b = flat.find(end, a + 1)
     return flat[a:b] if a >= 0 and b > a else ""
@@ -553,7 +571,7 @@ def main():
     if out_doc.exists():
         doc = Document(str(out_doc))
         heads = [p.text for p in doc.paragraphs if p.style.name in ("Title", "Heading 1")]
-        ok(heads == ["M1 UI functional test report"] + SECTIONS, f"M1 ui: cover and 14 headings in order: {heads}")
+        ok(heads == ["M1 UI functional test report"] + SECTIONS, f"M1 ui: cover and 17 headings in order: {heads}")
         parts = layout(doc, "M1 UI functional test report")
         ok(all(parts.values()), f"M1 ui: contents field, page header, footer and repeating header rows: {parts}")
         ok(len(doc.inline_shapes) == 4, f"M1 ui: 4 inline images, got {len(doc.inline_shapes)}")
@@ -792,9 +810,47 @@ def main():
         ok(sum(1 for i in pids if rows.get(i, ["", "", ""])[2] == "Optional") == 15,
            "PHR: NHA's 15 Optional cases are Optional")
         # The report masks every text it prints, a title too: "(name@abdm)" reads "(xxxx@abdm)".
-        differ = [i for i in pids if re.sub(r"\s+", " ", rows.get(i, ["", ""])[1]) != report_mask(titles.get(i, ""))]
-        shown_titles = [(i, rows.get(i, ["", ""])[1], report_mask(titles.get(i, ""))) for i in differ[:2]]
-        ok(not differ, f"PHR: titles are read from Test Title and agree with the page for every case: {shown_titles}")
+        # Each test case is named once, in the header block over its numbered steps, which is
+        # where NHA's own reports carry it. The name is a heading row of the sheet, so it has to
+        # be one of the titles the page carries, or the opening of one: NHA's heading rows both
+        # abbreviate and extend the Test Titles on the rows under them, as "Login with e-mail ID
+        # flow (Optional )" heads rows titled "Login with e-mail ID flow".
+        blocks = scenario_blocks(Document(str(phr_doc)))
+
+        def flat_text(x):
+            return re.sub(r"\s+", " ", x).strip().lower()
+
+        # Every Test Title the workbook carries, on a heading row and on a case row alike. A
+        # heading row's name is often only on that row, never on a case row, which is why the
+        # page's per case titles cannot answer this: the sheet has to.
+        from_sheet = set()
+        for ws in openpyxl.load_workbook(phr).worksheets:
+            head = [re.sub(r"\s+", " ", str(c.value or "")).strip().lower() for c in ws[1]]
+            if "test title" not in head:
+                continue
+            col = head.index("test title") + 1
+            # A heading row writes its name in the Test Title column or, where the row carries no
+            # number, in the number column itself: row 2 of the PHR App Functionality tab does.
+            for r in range(1, ws.max_row + 1):
+                for c in {1, col}:
+                    raw = ws.cell(r, c).value
+                    if not raw:
+                        continue
+                    name = flat_text(report_mask(str(raw)))
+                    from_sheet.add(name)
+                    # A name that opens with its scenario and a colon also counts without it.
+                    from_sheet.add(flat_text(name.partition(" : ")[2]) or name)
+        invented = []
+        for v in blocks.values():
+            name = flat_text(v["Name of test case"])
+            if not any(name == s or name.startswith(s) or s.startswith(name) for s in from_sheet if s):
+                invented.append(v["Name of test case"])
+        ok(blocks and not invented,
+           f"PHR: every test case is named once over its steps, in the sheet's own words: {invented[:3]}")
+        each = [v["Name of test case"] for v in blocks.values() if not v["Sr. no."] or not v["Recording link"]]
+        ok(not each, f"PHR: every test case block carries a number and a recording link: {each[:3]}")
+        scenes = [v["Name of test case"] for v in blocks.values() if not v["Name of scenario"]]
+        ok(not scenes, f"PHR: every test case block names its scenario: {scenes[:3]}")
     else:
         fail(f"PHR ui build failed: {out.stderr.strip()}")
     must = next(i for i in pids if page[i] == "Mandatory")
@@ -1167,10 +1223,10 @@ def shape_checks(work, report, writer, run, ids):
         ok(word_counts == {label: expected[k] for label, k in zip(COUNTS, KEYS)},
            f"{name}: the Word copy's counts table matches the PDF's")
         tested = [i for i in ids if standing(i) in ("passed", "conditional pass", "failed")]
-        shown = ids_in(region(flat, "11 · EVIDENCE", "12 · FAILURES"), ids)
+        shown = ids_in(region(flat, "13 · TEST EXECUTION DETAILS", "14 · FAILURES"), ids)
         ok(shown == tested, f"{name}: evidence holds the tested cases only ({len(shown)} of {len(tested)}): "
                             f"{sorted(set(shown) ^ set(tested))[:5]}")
-        logged = ids_in(region(flat, "12 · FAILURES", "13 · CONCLUSION"), ids)
+        logged = ids_in(region(flat, "14 · FAILURES", "15 · CONCLUSION"), ids)
         due = [i for i in ids if standing(i) in ("failed", "blocked", "conditional pass")]
         ok(logged == due, f"{name}: the failures log holds only failed, blocked and conditional pass cases: {logged}")
         if doc:
