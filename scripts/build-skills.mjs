@@ -882,8 +882,17 @@ function withUiRun(test, moduleId) {
 // gate on every applicable mandatory case, then the report NHA asked for.
 const REPORT_ATOM = 'shared.concept.test-report';
 const REPORT_MODULES = new Set(['m1', 'm2', 'm3', 'm4', 'p1', 'p2', 'p3', 'p4']);
+// NHA's PHR workbook holds one tab per PHR milestone, and NHA asks for one report per
+// milestone, so each PHR skill names its own tab. A module absent here reads every tab,
+// which is right for the M1 to M4 workbooks, each of which has one.
+const REPORT_TABS = {
+  p1: 'ABHA address creation',
+  p2: 'PHR App Functionality',
+  p3: 'Building HIU Service for PHR',
+  p4: 'Locker',
+};
 
-function reportSection() {
+function reportSection(moduleId) {
   const {atoms} = loadAtoms();
   const entry = atoms.get(REPORT_ATOM);
   if (!entry) throw new Error(`${REPORT_ATOM} is missing, and every test section folds it in`);
@@ -892,6 +901,18 @@ function reportSection() {
     '## Writing the test report',
     '',
     'Copy `scripts/abdm_report.py` from this skill to `abdm-ft/abdm_report.py` before the readiness check, and make the run log from its `plan`. When the last case is recorded, run `check`. Run `build` only when `check` exits 0.',
+    '',
+    ...(REPORT_TABS[moduleId]
+      ? [`Pass \`--tab "${REPORT_TABS[moduleId]}"\` to \`plan\`, \`check\` and \`build\`. NHA's PHR workbook holds one tab per PHR milestone and NHA asks for one report per milestone, so without it this run is blocked by the other three tabs' cases and the report counts them as not tested.`, '']
+      : []),
+    'The report prints each case as a numbered step under the test case it belongs to, the way NHA\'s own reports read, so the run has two things to collect that no script can work out.',
+    '',
+    '| Collect | When | Where it goes |',
+    '|---|---|---|',
+    '| One line per case saying what was done and what the screen showed, in the past tense | As the case runs, from the step and the screen in front of you. Never written later from the sheet alone | `narration` in `meta.json`, keyed by case id |',
+    '| One screen recording per test case | Once that test case is finished | `recording_links` in `meta.json`, keyed by the name of the test case as the sheet heads it |',
+    '',
+    'Where a case has no narration the report prints the sheet\'s own line for it, which says what the case checks but not what happened. Collect the narration: it is the difference NHA asked for.',
     '',
     withoutScript(body, REPORT_ATOM).replace(/^## /gm, '### ').trim(),
     '',
@@ -905,7 +926,7 @@ function withReport(test, moduleId) {
   if (!test || !REPORT_MODULES.has(moduleId)) return test;
   const marker = '\n## When the last case is recorded\n';
   const at = test.indexOf(marker);
-  const section = reportSection();
+  const section = reportSection(moduleId);
   if (at === -1) return `${test.trimEnd()}\n\n${section}`;
   return `${test.slice(0, at)}\n${section}${test.slice(at)}`;
 }
