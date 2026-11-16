@@ -12,7 +12,8 @@ const perFunctionalityRouter = "# ABDM M1\n\n| # | Functionality | Gov | Private
 	"| 1 | [Create ABHA by Aadhaar OTP](references/functionalities/create-abha-aadhaar-otp.md) | x | x |\n" +
 	"| 2 | [Log in with ABHA number](references/functionalities/login-abha-number.md) | x | x |\n" +
 	"| 3 | [Find ABHA by mobile](references/functionalities/find-abha-mobile.md) | x | x |\n" +
-	"| 4 | [Find ABHA by mobile with face authentication](references/functionalities/find-abha-face-auth.md) | none | none |\n"
+	"| 4 | [Find ABHA by mobile with face authentication](references/functionalities/find-abha-face-auth.md) | none | none |\n\n" +
+	"[Scaffold](references/scaffold.md), [Design](references/design.md), [Debug](references/debug.md)\n"
 
 // perFunctionalityService carries M1 built per functionality and M2 with its job files.
 func perFunctionalityService(fm *fakeModel) *Service {
@@ -24,8 +25,12 @@ func perFunctionalityService(fm *fakeModel) *Service {
 		"abdm-m1/functionalities/create-abha-aadhaar-otp": "# Create ABHA by Aadhaar OTP\n\nThe consent screen.",
 		"abdm-m1/functionalities/login-abha-number":       "# Log in with ABHA number\n\nBoth routes.",
 		"abdm-m1/functionalities/find-abha-face-auth":     "# Find with face\n\nQR after the choice.",
-		"abdm-m2/":      "# ABDM M2\n\nRouter.",
-		"abdm-m2/debug": "# Debug M2\n\nABDM-1017 means already linked.",
+		// M1 also keeps the five job files, as indexes. They must not be read in place of the router path.
+		"abdm-m1/scaffold": "# Scaffold, M1\n\nINDEX-ONLY scaffold.",
+		"abdm-m1/design":   "# Design, M1\n\nINDEX-ONLY design.",
+		"abdm-m1/debug":    "# Debug, M1\n\nINDEX-ONLY debug.",
+		"abdm-m2/":         "# ABDM M2\n\nRouter.",
+		"abdm-m2/debug":    "# Debug M2\n\nABDM-1017 means already linked.",
 	}
 	return &Service{
 		Model:     fm,
@@ -91,11 +96,11 @@ func TestRespondCommandOnAPerFunctionalityModule(t *testing.T) {
 		want, not              []string
 	}{
 		{"design", "Design the M1 find ABHA by mobile list", "skill://abdm-m1/functionalities/find-abha-mobile",
-			[]string{`section="router"`, `section="foundations"`, `section="functionalities/find-abha-mobile"`, "List before any OTP"}, []string{`section="errors"`, scaffoldRule}},
+			[]string{`section="router"`, `section="foundations"`, `section="functionalities/find-abha-mobile"`, "List before any OTP"}, []string{`section="errors"`, scaffoldRule, "INDEX-ONLY"}},
 		{"debug", "M1 returned ABDM-1204", "skill://abdm-m1/errors",
-			[]string{`section="router"`, `section="errors"`, "wrong OTP"}, []string{`section="functionalities/`}},
+			[]string{`section="router"`, `section="errors"`, "wrong OTP"}, []string{`section="functionalities/`, "INDEX-ONLY"}},
 		{"scaffold", "Scaffold M1", "skill://abdm-m1",
-			[]string{`section="router"`, "Find ABHA by mobile", scaffoldRule}, []string{`section="foundations"`, `section="errors"`}},
+			[]string{`section="router"`, "Find ABHA by mobile", scaffoldRule}, []string{`section="foundations"`, `section="errors"`, "INDEX-ONLY"}},
 		{"integrate", "Integrate M1 login with ABHA number", "skill://abdm-m1/functionalities/login-abha-number",
 			[]string{`section="router"`, "Both routes."}, []string{`section="foundations"`}},
 	} {
