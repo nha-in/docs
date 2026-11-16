@@ -1,0 +1,226 @@
+{
+  "info": {
+    "name": "UHI NOTTO hospital discovery",
+    "description": "Generated from the UHI Gateway specification v2.0.2 and its journeys. Import uhi-sandbox.postman_environment.json beside it.\n\nEvery UHI call is signed. Generate your key pair and a header for each body with the Header Generation Utility, https://github.com/NHA-ABDM/UHI/tree/main/header_generator_utility. Sign the body exactly as shown, paste the header into the authorization variable, and send. Change one byte of the body and the header no longer matches it.\n\nA call answers only with an ACK. The results arrive later at your consumer_uri, so set consumerUri to a public HTTPS endpoint you can watch. From init onwards, calls go straight to the other side, at providerUri or consumerUri.\n\nFolders follow the order a journey is built in. Signing: https://docs.abdm.gov.in/docs/uhi/v1/concepts/signing",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Refuses to send a UHI request whose Authorization header is missing or has",
+          "// expired. A header is signed over one body and lasts a few seconds, so sign",
+          "// the body shown again, with the Header Generation Utility, before each send.",
+          "(function () {",
+          "const pasted = pm.variables.get('authorization');",
+          "if (!pasted) throw new Error('Paste the Authorization header you generated for this exact body into the authorization variable.');",
+          "let header;",
+          "try { header = JSON.parse(pasted); } catch (error) { return; }",
+          "const expires = Number(header.expires || 0);",
+          "if (expires && expires * 1000 < Date.now()) {",
+          "  throw new Error('The Authorization header expired at ' + new Date(expires * 1000).toISOString() + '. Sign this body again and paste the new header.');",
+          "}",
+          "})();"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "NOTTO hospital discovery",
+      "item": [
+        {
+          "name": "1. Search through the Gateway",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{authorization}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{gatewayUrl}}/api/v1/uhi/search",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "uhi",
+                "search"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\"context\":{\"domain\":\"nic2004:86100\",\"country\":\"IND\",\"city\":\"std:011\",\"action\":\"search\",\"core_version\":\"0.7.1\",\"consumer_id\":\"nha.eua\",\"consumer_uri\":\"https://uhieuasandbox.abdm.gov.in/api/v1/euaService\",\"message_id\":\"e9a19230-f951-11ec-b135-53aea776f66b\",\"timestamp\":\"2026-07-15T15:24:35\",\"transaction_id\":\"e9a19230-f951-11ec-b135-53aea776f66b\"},\"message\":{\"intent\":{\"category\":{\"descriptor\":{\"code\":\"3\",\"name\":\"Kidney\"}},\"fulfillment\":{\"type\":\"NOTTO_HOSPITAL\",\"start\":{\"time\":{\"timestamp\":\"2026-07-15T00:00:00\"}},\"end\":{\"time\":{\"timestamp\":\"2026-07-15T23:59:59\"}}},\"item\":{\"descriptor\":{\"code\":\"NOTTO\",\"name\":\"NOTTO\"}}}}}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Search for services by intent\n\nSign this request first: [Signing](/docs/uhi/v1/concepts/signing)."
+          }
+        },
+        {
+          "name": "2. Search an HSPA",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{authorization}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{providerUri}}/search",
+              "host": [
+                "{{providerUri}}"
+              ],
+              "path": [
+                "search"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\"context\":{\"domain\":\"nic2004:86100\",\"country\":\"IND\",\"city\":\"std:011\",\"action\":\"search\",\"core_version\":\"0.7.1\",\"consumer_id\":\"nha.eua\",\"consumer_uri\":\"https://uhieuasandbox.abdm.gov.in/api/v1/euaService\",\"message_id\":\"e9a19230-f951-11ec-b135-53aea776f66b\",\"timestamp\":\"2026-07-15T15:24:35\",\"transaction_id\":\"e9a19230-f951-11ec-b135-53aea776f66b\"},\"message\":{\"intent\":{\"category\":{\"descriptor\":{\"code\":\"3\",\"name\":\"Kidney\"}},\"fulfillment\":{\"type\":\"NOTTO_HOSPITAL\",\"start\":{\"time\":{\"timestamp\":\"2026-07-15T00:00:00\"}},\"end\":{\"time\":{\"timestamp\":\"2026-07-15T23:59:59\"}}},\"item\":{\"descriptor\":{\"code\":\"NOTTO\",\"name\":\"NOTTO\"}}}}}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Search for services by intent\n *** First search coming from UHI gateway will include header(X-Gateway-Authorisation)\n Second search will be a peer to peer connection and will now contain contain the header Authorisation***\n\nSign this request first: [Signing](/docs/uhi/v1/concepts/signing)."
+          }
+        },
+        {
+          "name": "3. Send a catalog through the Gateway",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{authorization}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{gatewayUrl}}/api/v1/uhi/on_search",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "uhi",
+                "on_search"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\"context\":{\"domain\":\"nic2004:86100\",\"country\":\"IND\",\"city\":\"std:011\",\"action\":\"on_search\",\"timestamp\":\"2026-08-21T10:02:42\",\"core_version\":\"0.7.1\",\"consumer_id\":\"nha.eua\",\"consumer_uri\":\"https://uhieuasandbox.abdm.gov.in/api/v1/euaService\",\"provider_id\":\"notto.hspa\",\"provider_uri\":\"https://notto.mohfw.gov.in/notto/integrationservice/uhi/transplant-retrieval-centres\",\"transaction_id\":\"58ae09a0-9d19-11f1-b423-c52fd9bd5606\",\"message_id\":\"58ae09a0-9d19-11f1-b423-c52fd9bd5606\"},\"message\":{\"catalog\":{\"descriptor\":{\"name\":\"NOTTO\",\"images\":\"NOTTO image url\",\"flag\":false,\"short_desc\":\"National Organ And Tissue Transplant Organization\"},\"providers\":[{\"id\":6086143.1,\"descriptor\":{\"name\":\"MEDANTA THE MEDICITY\",\"code\":\"Private\",\"flag\":false},\"categories\":[{\"id\":\"4\",\"descriptor\":{\"name\":\"Pancreas\",\"code\":\"8\",\"flag\":false}},{\"id\":\"7\",\"descriptor\":{\"name\":\"Hand\",\"code\":\"15\",\"flag\":false}},{\"id\":\"2\",\"descriptor\":{\"name\":\"Heart\",\"code\":\"4\",\"flag\":false}},{\"id\":\"1\",\"descriptor\":{\"name\":\"Kidney\",\"code\":\"3\",\"flag\":false}},{\"id\":\"0\",\"descriptor\":{\"name\":\"Liver\",\"code\":\"2\",\"flag\":false}},{\"id\":\"5\",\"descriptor\":{\"name\":\"Cornea\",\"code\":\"10\",\"flag\":false}},{\"id\":\"3\",\"descriptor\":{\"name\":\"Intestine\",\"code\":\"7\",\"flag\":false}},{\"id\":\"6\",\"descriptor\":{\"name\":\"Lung\",\"code\":\"12\",\"flag\":false}}],\"fulfillments\":[{\"id\":\"0\",\"type\":\"Establishment Year\",\"start\":{\"time\":{\"timestamp\":\"2009\"}},\"tags\":{\"transplant_centre\":\"true\",\"retrieval_centre\":\"true\",\"tissue_bank\":\"false\",\"cornea\":\"false\"}}],\"location\":{\"city\":{},\"gps\":\"28.439161, 77.041129\",\"address\":\"<ADDRESS>\",\"district\":{\"name\":\"GURGAON\"},\"state\":{\"name\":\"HARYANA\"}},\"contact\":{\"phone\":\"0124-4141414\",\"email\":\"<EMAIL>\",\"tags\":{\"nodal_officer_contact\":\"0124-4141414\",\"website\":\"\"}}},{\"id\":\"24474288.1\",\"descriptor\":{\"name\":\"ZYDUS HOSPITALS AND HEALTHCARE RESEARCH PVT LTD\",\"code\":\"Private\",\"flag\":false},\"categories\":[{\"id\":\"4\",\"descriptor\":{\"name\":\"Hand\",\"code\":\"15\",\"flag\":false}},{\"id\":\"2\",\"descriptor\":{\"name\":\"Heart\",\"code\":\"4\",\"flag\":false}},{\"id\":\"1\",\"descriptor\":{\"name\":\"Kidney\",\"code\":\"3\",\"flag\":false}},{\"id\":\"0\",\"descriptor\":{\"name\":\"Liver\",\"code\":\"2\",\"flag\":false}},{\"id\":\"3\",\"descriptor\":{\"name\":\"Lung\",\"code\":\"12\",\"flag\":false}}],\"fulfillments\":[{\"id\":\"0\",\"type\":\"Establishment Year\",\"start\":{\"time\":{\"timestamp\":\"2015\"}},\"tags\":{\"transplant_centre\":\"true\",\"retrieval_centre\":\"true\",\"tissue_bank\":\"false\",\"cornea\":\"false\"}}],\"location\":{\"city\":{},\"gps\":\"23.058744, 72.516632\",\"address\":\"<ADDRESS>\",\"district\":{\"name\":\"AHMADABAD\"},\"state\":{\"name\":\"GUJARAT\"}},\"contact\":{\"email\":\"<EMAIL>\",\"tags\":{\"nodal_officer_contact\":\"079-66190716\",\"website\":\"\"}}}]}}}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Accepter for all the on_search response from the HSPAs\n\nSign this request first: [Signing](/docs/uhi/v1/concepts/signing)."
+          }
+        },
+        {
+          "name": "4. Send a catalog to the EUA",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{authorization}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{consumerUri}}/on_search",
+              "host": [
+                "{{consumerUri}}"
+              ],
+              "path": [
+                "on_search"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\"context\":{\"domain\":\"nic2004:86100\",\"country\":\"IND\",\"city\":\"std:011\",\"action\":\"on_search\",\"timestamp\":\"2026-08-21T10:02:42\",\"core_version\":\"0.7.1\",\"consumer_id\":\"nha.eua\",\"consumer_uri\":\"https://uhieuasandbox.abdm.gov.in/api/v1/euaService\",\"provider_id\":\"notto.hspa\",\"provider_uri\":\"https://notto.mohfw.gov.in/notto/integrationservice/uhi/transplant-retrieval-centres\",\"transaction_id\":\"58ae09a0-9d19-11f1-b423-c52fd9bd5606\",\"message_id\":\"58ae09a0-9d19-11f1-b423-c52fd9bd5606\"},\"message\":{\"catalog\":{\"descriptor\":{\"name\":\"NOTTO\",\"images\":\"NOTTO image url\",\"flag\":false,\"short_desc\":\"National Organ And Tissue Transplant Organization\"},\"providers\":[{\"id\":6086143.1,\"descriptor\":{\"name\":\"MEDANTA THE MEDICITY\",\"code\":\"Private\",\"flag\":false},\"categories\":[{\"id\":\"4\",\"descriptor\":{\"name\":\"Pancreas\",\"code\":\"8\",\"flag\":false}},{\"id\":\"7\",\"descriptor\":{\"name\":\"Hand\",\"code\":\"15\",\"flag\":false}},{\"id\":\"2\",\"descriptor\":{\"name\":\"Heart\",\"code\":\"4\",\"flag\":false}},{\"id\":\"1\",\"descriptor\":{\"name\":\"Kidney\",\"code\":\"3\",\"flag\":false}},{\"id\":\"0\",\"descriptor\":{\"name\":\"Liver\",\"code\":\"2\",\"flag\":false}},{\"id\":\"5\",\"descriptor\":{\"name\":\"Cornea\",\"code\":\"10\",\"flag\":false}},{\"id\":\"3\",\"descriptor\":{\"name\":\"Intestine\",\"code\":\"7\",\"flag\":false}},{\"id\":\"6\",\"descriptor\":{\"name\":\"Lung\",\"code\":\"12\",\"flag\":false}}],\"fulfillments\":[{\"id\":\"0\",\"type\":\"Establishment Year\",\"start\":{\"time\":{\"timestamp\":\"2009\"}},\"tags\":{\"transplant_centre\":\"true\",\"retrieval_centre\":\"true\",\"tissue_bank\":\"false\",\"cornea\":\"false\"}}],\"location\":{\"city\":{},\"gps\":\"28.439161, 77.041129\",\"address\":\"<ADDRESS>\",\"district\":{\"name\":\"GURGAON\"},\"state\":{\"name\":\"HARYANA\"}},\"contact\":{\"phone\":\"0124-4141414\",\"email\":\"<EMAIL>\",\"tags\":{\"nodal_officer_contact\":\"0124-4141414\",\"website\":\"\"}}},{\"id\":\"24474288.1\",\"descriptor\":{\"name\":\"ZYDUS HOSPITALS AND HEALTHCARE RESEARCH PVT LTD\",\"code\":\"Private\",\"flag\":false},\"categories\":[{\"id\":\"4\",\"descriptor\":{\"name\":\"Hand\",\"code\":\"15\",\"flag\":false}},{\"id\":\"2\",\"descriptor\":{\"name\":\"Heart\",\"code\":\"4\",\"flag\":false}},{\"id\":\"1\",\"descriptor\":{\"name\":\"Kidney\",\"code\":\"3\",\"flag\":false}},{\"id\":\"0\",\"descriptor\":{\"name\":\"Liver\",\"code\":\"2\",\"flag\":false}},{\"id\":\"3\",\"descriptor\":{\"name\":\"Lung\",\"code\":\"12\",\"flag\":false}}],\"fulfillments\":[{\"id\":\"0\",\"type\":\"Establishment Year\",\"start\":{\"time\":{\"timestamp\":\"2015\"}},\"tags\":{\"transplant_centre\":\"true\",\"retrieval_centre\":\"true\",\"tissue_bank\":\"false\",\"cornea\":\"false\"}}],\"location\":{\"city\":{},\"gps\":\"23.058744, 72.516632\",\"address\":\"<ADDRESS>\",\"district\":{\"name\":\"AHMADABAD\"},\"state\":{\"name\":\"GUJARAT\"}},\"contact\":{\"email\":\"<EMAIL>\",\"tags\":{\"nodal_officer_contact\":\"079-66190716\",\"website\":\"\"}}}]}}}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Sends catalogue.\n\nThe header X-Gateway-Authorisation is sent only by UHI gateway during first onsearch only. \nThe header Authorisation is passed by HSPA to EUA during second onsearch and following APIs.\nBoth headers are required on respective calls as mentioned above.\n\nSign this request first: [Signing](/docs/uhi/v1/concepts/signing).\n\nRetry behaviour: not yet published."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Look up a signing key",
+      "item": [
+        {
+          "name": "Look up a network participant",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{authorization}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{gatewayUrl}}/api/v1/networkregistry/lookup",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "networkregistry",
+                "lookup"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\"subscriber_id\":\"nha.eua\",\"type\":\"EUA\",\"domain\":\"nic2008:86201\",\"country\":\"IND\",\"city\":\"std:08752\",\"pub_key_id\":\"nha.eua.k1\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "The network participant will trigger the subscribe call to the registry to register its public key.\n\nThe header Authorisation is accepted and verified by the /lookup API. \nUse your header generation details to generate header and payload should contain details of partner on whom lookup is intended.\n\nSign this request first: [Signing](/docs/uhi/v1/concepts/signing)."
+          }
+        }
+      ]
+    }
+  ]
+}

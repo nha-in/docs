@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["76833"],{57368(e,c,s){s.r(c),s.d(c,{__iconNode:()=>r,default:()=>t});var k=s(34438);let r=[["circle",{cx:"18",cy:"18",r:"3",key:"1xkwt0"}],["circle",{cx:"6",cy:"6",r:"3",key:"1lh9wr"}],["path",{d:"M6 21V9a9 9 0 0 0 9 9",key:"7kw0sc"}]],t=(0,k.A)("git-merge",r)}}]);

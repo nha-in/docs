@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["3184"],{50099(e,a,s){s.r(a),s.d(a,{__iconNode:()=>d,default:()=>_});var t=s(34438);let d=[["path",{d:"M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z",key:"17jzev"}]],_=(0,t.A)("thermometer",d)}}]);

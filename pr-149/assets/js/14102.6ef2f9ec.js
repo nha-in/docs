@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["14102"],{10549(e,s,c){c.r(s),c.d(s,{__iconNode:()=>l,default:()=>_});var d=c(34438);let l=[["ellipse",{cx:"12",cy:"12",rx:"10",ry:"6",key:"swdkt4"}]],_=(0,d.A)("ellipse",l)}}]);

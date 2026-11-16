@@ -1,0 +1,43 @@
+# Get affiliated board by state ID
+
+`GET /apis/v1/masters/affiliated-board/states/{id}`
+
+```bash
+curl --request GET \
+  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/affiliated-board/states/{id} \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
+```
+
+## Authorization
+
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
+
+## Path parameters
+
+- `id` (integer, required)
+
+## Responses
+
+- `200`: OK
+- `404`: Not Found
+
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+
+```json
+[
+  {
+    "id": 0,
+    "name": "<NAME>",
+    "status": false,
+    "visibleStatus": false,
+    "stateId": 0,
+    "courseId": 0,
+    "nationalBoard": false,
+    "councilBoard": false
+  }
+]
+```
