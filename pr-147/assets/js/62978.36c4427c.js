@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["62978"],{19257(e,a,s){s.r(a),s.d(a,{__iconNode:()=>t,default:()=>_});var d=s(34438);let t=[["path",{d:"M6 11h8a4 4 0 0 0 0-8H9v18",key:"18ai8t"}],["path",{d:"M6 15h8",key:"1y8f6l"}]],_=(0,d.A)("russian-ruble",t)}}]);

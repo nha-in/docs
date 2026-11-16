@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["97304"],{32587(e,t,c){c.r(t),c.d(t,{__iconNode:()=>a,default:()=>d});var s=c(34438);let a=[["rect",{width:"12",height:"20",x:"6",y:"2",rx:"2",key:"1oxtiu"}]],d=(0,s.A)("rectangle-vertical",a)}}]);
