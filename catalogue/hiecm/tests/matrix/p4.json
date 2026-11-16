@@ -14,7 +14,7 @@
       "id": "PHR_LOCKER_101",
       "anchor": "phr_locker_101",
       "group": "1. Discovery & add health locker",
-      "title": "Discovery & add health locker Linking locker with existing Health ID (PHR address)",
+      "title": "Discovery & add health locker Linking locker with existing Health ID (ABHA address)",
       "marking": {
         "government": "optional",
         "private": "optional"
@@ -222,7 +222,7 @@
       "id": "PHR_LOCKER_404",
       "anchor": "phr_locker_404",
       "group": "4. Upload document in health locker through PHR app",
-      "title": "Link the uploaded document to Health ID (PHR address) by linking the care context on CM - HIP initiated linking",
+      "title": "Link the uploaded document to Health ID (ABHA address) by linking the care context on CM - HIP initiated linking",
       "marking": {
         "government": "mandatory",
         "private": "mandatory"
@@ -238,7 +238,7 @@
       "id": "PHR_LOCKER_405",
       "anchor": "phr_locker_405",
       "group": "4. Upload document in health locker through PHR app",
-      "title": "After document is linked to Health ID (PHR address), the locker is displayed in the \"Providers\" tab of PHR app",
+      "title": "After document is linked to Health ID (ABHA address), the locker is displayed in the \"Providers\" tab of PHR app",
       "marking": {
         "government": "mandatory",
         "private": "mandatory"
