@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["44956"],{71063(e,s,a){a.r(s),a.d(s,{__iconNode:()=>_,default:()=>l});var d=a(34438);let _=[["line",{x1:"12",x2:"12",y1:"2",y2:"22",key:"7eqyqh"}],["path",{d:"M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6",key:"1b0p4s"}]],l=(0,d.A)("dollar-sign",_)}}]);

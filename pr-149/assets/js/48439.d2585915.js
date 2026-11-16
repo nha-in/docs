@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["48439"],{4714(e,a,d){d.r(a),d.d(a,{__iconNode:()=>k,default:()=>t});var s=d(34438);let k=[["path",{d:"M20 4L9 15",key:"1qkx8z"}],["path",{d:"M21 19L3 19",key:"100sma"}],["path",{d:"M9 15L4 10",key:"9zxff7"}]],t=(0,s.A)("check-line",k)}}]);

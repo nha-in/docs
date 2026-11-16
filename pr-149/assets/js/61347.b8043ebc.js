@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["61347"],{22798(e,t,a){a.r(t),a.d(t,{__iconNode:()=>c,default:()=>d});var s=a(34438);let c=[["rect",{width:"18",height:"18",x:"3",y:"3",rx:"2",key:"afitv7"}],["path",{d:"M17 12h-2l-2 5-2-10-2 5H7",key:"15hlnc"}]],d=(0,s.A)("square-activity",c)}}]);

@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["5671"],{8381(s){s.exports=JSON.parse('{"name":"@scalar/docusaurus","id":"nhcx-biometric"}')}}]);

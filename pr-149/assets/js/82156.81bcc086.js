@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["82156"],{51815(e,s,d){d.r(s),d.d(s,{__iconNode:()=>a,default:()=>_});var t=d(34438);let a=[["path",{d:"m17 18-6-6 6-6",key:"1yerx2"}],["path",{d:"M7 6v12",key:"1p53r6"}]],_=(0,t.A)("chevron-first",a)}}]);

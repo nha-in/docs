@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["77825"],{472(e,c,d){d.r(c),d.d(c,{__iconNode:()=>t,default:()=>s});var i=d(34438);let t=[["circle",{cx:"12",cy:"12",r:"3",key:"1v7zrd"}],["line",{x1:"3",x2:"9",y1:"12",y2:"12",key:"1dyftd"}],["line",{x1:"15",x2:"21",y1:"12",y2:"12",key:"oup4p8"}]],s=(0,i.A)("git-commit-horizontal",t)}}]);

@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["19707"],{70849(s){s.exports=JSON.parse('{"name":"@scalar/docusaurus","id":"nhcx-insurance-plan"}')}}]);
