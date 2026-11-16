@@ -16,7 +16,7 @@ Build the modules you intend to certify before you apply. An audit covering seve
 
 ## 1. Appoint an auditor
 
-Choose an STQC approved agency, or an agency on the [CERT-In empanelled list](https://www.cert-in.org.in/PDF/Empanel_org_2021.pdf).
+Choose an STQC approved agency, or an agency on the [CERT-In empanelled list](https://www.cert-in.org.in/PDF/Empanel_org.pdf).
 
 ## 2. Point the auditor at staging
 

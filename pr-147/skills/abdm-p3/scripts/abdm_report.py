@@ -103,8 +103,20 @@ UUID = re.compile(r"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-
 ERROR = re.compile(r"\b(?:ABDM|MIS|HIS|HIU|HIP|CM|PHR|UHI)-\d{3,5}\b|\bHTTP [45]\d{2}\b|\b[A-Z]\w*(?:Exception|Error)\b")
 
 
+# Terms NHA has renamed but whose old name is still in the sheets. A tester reading a step
+# that says PHR address has to stop and ask what it is, so the report prints the current name.
+# NHA renamed it too: its PHR documentation of 6 November 2026 changed "PHR address" to "ABHA
+# Address" and says the two mean the same thing. This list is the same one in
+# scripts/build-test-cases.py, so the pages and the report call it by one name. The workbook
+# writer has no such list on purpose: it writes into NHA's own sheet, which stays as NHA wrote it.
+RENAMED = [(re.compile(r"PHR\s+address", re.I), "ABHA address")]
+
+
 def norm(text):
-    return re.sub(r"\s+", " ", str(text if text is not None else "")).strip()
+    text = re.sub(r"\s+", " ", str(text if text is not None else "")).strip()
+    for pattern, now in RENAMED:
+        text = pattern.sub(now, text)
+    return text
 
 
 # Masking. This block is the same in abdm_workbook.py and abdm_report.py, so the

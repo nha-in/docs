@@ -65,6 +65,16 @@ The cases each entity type must pass. Every other case is optional for that enti
 | 16 | [Create ABHA by demographic authentication](references/functionalities/create-abha-demo-auth.md) | CRT_ABHA_301, CRT_ABHA_302, CRT_ABHA_304, CRT_ABHA_305, CRT_ABHA_306, CRT_ABHA_307, CRT_ABHA_308 or CRT_ABHA_309 | not applicable: government only |
 | 17 | [Find the benefits linked to an ABHA](references/functionalities/find-abha-benefit.md) | none | not applicable: government only |
 
+## Familiar entry points
+
+The same five sections every other module has. Each is an index that links the matching part of every functionality file above, so a job can be opened across all of them or one at a time.
+
+- **[Scaffold](references/scaffold.md)**: the calls of each functionality.
+- **[Design](references/design.md)**: foundations, then the screen requirements of each.
+- **[Integrate](references/integrate.md)**: the integrate notes of each.
+- **[Debug](references/debug.md)**: errors.md, then the errors of each.
+- **[Test](references/test.md)**: run.md, then the cases of each and how they run.
+
 ## Starting a loop
 
 1. Build, in the order of the table, each functionality with a mandatory case for your entity type. An integration that already exists starts each loop at Test.
@@ -117,6 +127,7 @@ For M1, the functionality rows of `INTEGRATION-PLAN.md` are the tracker [run.md]
 
 ## What is in this folder
 
+- **scaffold.md, design.md, integrate.md, debug.md, test.md**: the familiar entry points, each an index into the functionality files.
 - **functionalities/**: 17 files, one loop each, in the order of the table above.
 - **[run.md](references/run.md)**: the rules every test run follows, from the readiness check to the report.
 - **[foundations.md](references/foundations.md)**: the rules across calls, hosts, headers, the codebase survey and the design rules across functionalities.

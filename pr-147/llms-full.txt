@@ -37132,10 +37132,11 @@ The whole of M1: the calls, the loop that builds them, every error code and the 
 
 [Download skill](/docs/pr-147/skills/abdm-m1.tar.gz "The whole skill folder, as a .tar.gz archive.")
 
-- Functionalities17 loops, each from screen to test.
-- RunThe test run, from readiness to report.
-- FoundationsRules across calls, hosts and headers.
-- Errors17 error codes, and the debug loop.
+- ScaffoldEight steps from discovery to sandbox tests.
+- DesignWhat a screen must do, and never claim.
+- Integrate123 operations, with hosts and headers.
+- Debug17 error codes, each with its fix.
+- TestTests from offline pins to a live sandbox.
 
 `mkdir -p .claude/skills && curl -fsSL https://nha-in.github.io/docs/pr-147/skills/abdm-m1.tar.gz | tar -xzf - -C .claude/skills`
 
@@ -37788,7 +37789,7 @@ Build the modules you intend to certify before you apply. An audit covering seve
 
 ## 1. Appoint an auditor
 
-Choose an STQC approved agency, or an agency on the [CERT-In empanelled list](https://www.cert-in.org.in/PDF/Empanel_org_2021.pdf).
+Choose an STQC approved agency, or an agency on the [CERT-In empanelled list](https://www.cert-in.org.in/PDF/Empanel_org.pdf).
 
 ## 2. Point the auditor at staging
 
@@ -37979,10 +37980,11 @@ Every M1 call, one per use case, with its error codes in one file: 125 operation
 
 [Download skill](/docs/pr-147/skills/abdm-m1.tar.gz "The whole skill folder, as a .tar.gz archive.")
 
-- Functionalities17 loops, each from screen to test.
-- RunThe test run, from readiness to report.
-- FoundationsRules across calls, hosts and headers.
-- Errors17 error codes, and the debug loop.
+- ScaffoldEight steps from discovery to sandbox tests.
+- DesignWhat a screen must do, and never claim.
+- Integrate123 operations, with hosts and headers.
+- Debug17 error codes, each with its fix.
+- TestTests from offline pins to a live sandbox.
 
 `mkdir -p .claude/skills && curl -fsSL https://nha-in.github.io/docs/pr-147/skills/abdm-m1.tar.gz | tar -xzf - -C .claude/skills`
 
@@ -38354,7 +38356,6 @@ Every M2 call and callback with its error codes in one file: 24 operations, 120 
 - Integrate24 operations, with hosts and headers.
 - Debug120 error codes, each with its fix.
 - TestTests from offline pins to a live sandbox.
-- Test-matrix
 
 `mkdir -p .claude/skills && curl -fsSL https://nha-in.github.io/docs/pr-147/skills/abdm-m2.tar.gz | tar -xzf - -C .claude/skills`
 
@@ -38647,7 +38648,6 @@ Every M3 call and callback in one file: 16 operations.
 - Integrate16 operations, with hosts and headers.
 - DebugNo error code is recorded yet.
 - TestTests from offline pins to a live sandbox.
-- Test-matrix
 
 `mkdir -p .claude/skills && curl -fsSL https://nha-in.github.io/docs/pr-147/skills/abdm-m3.tar.gz | tar -xzf - -C .claude/skills`
 
@@ -38838,7 +38838,6 @@ Every M4 call in one file: 104 operations.
 - Integrate91 operations, with hosts and headers.
 - DebugNo error code is recorded yet.
 - TestTests from offline pins to a live sandbox.
-- Test-matrix
 
 `mkdir -p .claude/skills && curl -fsSL https://nha-in.github.io/docs/pr-147/skills/abdm-m4.tar.gz | tar -xzf - -C .claude/skills`
 
@@ -41992,9 +41991,9 @@ The cases for [P4 Locker](/docs/pr-147/docs/hiecm/v3/milestones/p4).
 
 ### 1. Discovery & add health locker
 
-| Case and marking                                        | What is tested                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | Pass when                                                                                                                                                                                                                                                                                                                                                                                                           |
-| ------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [PHR\_LOCKER\_101](#phr_locker_101) Row P4 1.1 Optional | **Discovery & add health locker Linking locker with existing Health ID (PHR address)** Linking locker with an existing health id. Discovery & add health locker Linking locker with existing Health ID (PHR address) Linking locker with an existing health id. Discovery & add health locker Linking locker with existing Health ID (PHR address) Linking locker with an existing health id. Discovery & add health locker Linking locker with existing Health ID (PHR address) Linking locker with an existing health id. | Locker will be linked with the health id. A consent request will be sent to the PHR app for linking. Locker will be linked with the health id. A consent request will be sent to the PHR app for linking. Locker will be linked with the health id. A consent request will be sent to the PHR app for linking. Locker will be linked with the health id. A consent request will be sent to the PHR app for linking. |
+| Case and marking                                        | What is tested                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | Pass when                                                                                                                                                                                                                                                                                                                                                                                                           |
+| ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [PHR\_LOCKER\_101](#phr_locker_101) Row P4 1.1 Optional | **Discovery & add health locker Linking locker with existing Health ID (ABHA address)** Linking locker with an existing health id. Discovery & add health locker Linking locker with existing Health ID (ABHA address) Linking locker with an existing health id. Discovery & add health locker Linking locker with existing Health ID (ABHA address) Linking locker with an existing health id. Discovery & add health locker Linking locker with existing Health ID (ABHA address) Linking locker with an existing health id. | Locker will be linked with the health id. A consent request will be sent to the PHR app for linking. Locker will be linked with the health id. A consent request will be sent to the PHR app for linking. Locker will be linked with the health id. A consent request will be sent to the PHR app for linking. Locker will be linked with the health id. A consent request will be sent to the PHR app for linking. |
 
 ### 2. Set up a Health Locker through PHR app
 
@@ -42027,8 +42026,8 @@ The cases for [P4 Locker](/docs/pr-147/docs/hiecm/v3/milestones/p4).
 | [PHR\_LOCKER\_401](#phr_locker_401) Row P4 4.1 Mandatory | **Upload Document Fields** Mandatory                                                                                                                                                                     | Not stated.                             |
 | [PHR\_LOCKER\_402](#phr_locker_402) Row P4 4.2 Mandatory | **Processing of the uploaded document in the health locker, to find that uploaded document is health record or not** Locker will check if it’s a health document and will process if its health doc only | Process will be done at locker level    |
 | [PHR\_LOCKER\_403](#phr_locker_403) Row P4 4.3 Mandatory | **Locker stores the record against care context** Health records are stored againt care context                                                                                                          | Records will be stored                  |
-| [PHR\_LOCKER\_404](#phr_locker_404) Row P4 4.4 Mandatory | **Link the uploaded document to Health ID (PHR address) by linking the care context on CM - HIP initiated linking** Document can be linked to health and care context will be created                    | Care context will be added              |
-| [PHR\_LOCKER\_405](#phr_locker_405) Row P4 4.5 Mandatory | **After document is linked to Health ID (PHR address), the locker is displayed in the "Providers" tab of PHR app** Locker will be visible in PHR once linked                                             | Locker will be created in PHR           |
+| [PHR\_LOCKER\_404](#phr_locker_404) Row P4 4.4 Mandatory | **Link the uploaded document to Health ID (ABHA address) by linking the care context on CM - HIP initiated linking** Document can be linked to health and care context will be created                   | Care context will be added              |
+| [PHR\_LOCKER\_405](#phr_locker_405) Row P4 4.5 Mandatory | **After document is linked to Health ID (ABHA address), the locker is displayed in the "Providers" tab of PHR app** Locker will be visible in PHR once linked                                            | Locker will be created in PHR           |
 | [PHR\_LOCKER\_406](#phr_locker_406) Row P4 4.6 Mandatory | **Click on "Get Data" to fetch the record in the "Records" tab of PHR app** Records can be fetched when user clicks on get data tab of PHR                                                               | Records will be fetched                 |
 | [PHR\_LOCKER\_407](#phr_locker_407) Row P4 4.7 Mandatory | **Click on the record received in the "Records" tab of PHR app - to see record details and open the attachment to view patient record** View patient record by clicking on the attachments               | Records will be viewed from attachments |
 
@@ -83132,7 +83131,7 @@ Reinstall to move from 1.0.11. [Build with AI](/docs/pr-147/docs/hiecm/v3/gettin
 
 1 change
 
-### The abdm-integrators-assistant plugin is 0.11.0
+### The abdm-integrators-assistant plugin is 0.11.1
 
 Reinstall to move from 0.10.15. [Build with AI](/docs/pr-147/docs/hiecm/v3/getting-started/build-with-ai).
 
@@ -83147,7 +83146,7 @@ Changes that affect what you can build against, newest first. Each entry links t
 
 1 change
 
-- [The abdm-integrators-assistant plugin is 0.11.0](/docs/pr-147/docs/whats-new/2026-11-07#the-abdm-integrators-assistant-plugin-is-0110)
+- [The abdm-integrators-assistant plugin is 0.11.1](/docs/pr-147/docs/whats-new/2026-11-07#the-abdm-integrators-assistant-plugin-is-0111)
 
 ## 19 October 2026
 

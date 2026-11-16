@@ -6,7 +6,7 @@ Changes that affect what you can build against, newest first. Each entry links t
 
 1 change
 
-- [The abdm-integrators-assistant plugin is 0.11.0](/docs/pr-147/docs/whats-new/2026-11-07#the-abdm-integrators-assistant-plugin-is-0110)
+- [The abdm-integrators-assistant plugin is 0.11.1](/docs/pr-147/docs/whats-new/2026-11-07#the-abdm-integrators-assistant-plugin-is-0111)
 
 ## 19 October 2026
 

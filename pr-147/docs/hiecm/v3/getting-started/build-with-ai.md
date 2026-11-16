@@ -147,10 +147,11 @@ The whole of M1: the calls, the loop that builds them, every error code and the 
 
 [Download skill](/docs/pr-147/skills/abdm-m1.tar.gz "The whole skill folder, as a .tar.gz archive.")
 
-- Functionalities17 loops, each from screen to test.
-- RunThe test run, from readiness to report.
-- FoundationsRules across calls, hosts and headers.
-- Errors17 error codes, and the debug loop.
+- ScaffoldEight steps from discovery to sandbox tests.
+- DesignWhat a screen must do, and never claim.
+- Integrate123 operations, with hosts and headers.
+- Debug17 error codes, each with its fix.
+- TestTests from offline pins to a live sandbox.
 
 `mkdir -p .claude/skills && curl -fsSL https://nha-in.github.io/docs/pr-147/skills/abdm-m1.tar.gz | tar -xzf - -C .claude/skills`
 
