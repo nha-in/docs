@@ -37132,10 +37132,11 @@ The whole of M1: the calls, the loop that builds them, every error code and the 
 
 [Download skill](/docs/main/skills/abdm-m1.tar.gz "The whole skill folder, as a .tar.gz archive.")
 
-- Functionalities17 loops, each from screen to test.
-- RunThe test run, from readiness to report.
-- FoundationsRules across calls, hosts and headers.
-- Errors17 error codes, and the debug loop.
+- ScaffoldEight steps from discovery to sandbox tests.
+- DesignWhat a screen must do, and never claim.
+- Integrate123 operations, with hosts and headers.
+- Debug17 error codes, each with its fix.
+- TestTests from offline pins to a live sandbox.
 
 `mkdir -p .claude/skills && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m1.tar.gz | tar -xzf - -C .claude/skills`
 
@@ -37788,7 +37789,7 @@ Build the modules you intend to certify before you apply. An audit covering seve
 
 ## 1. Appoint an auditor
 
-Choose an STQC approved agency, or an agency on the [CERT-In empanelled list](https://www.cert-in.org.in/PDF/Empanel_org_2021.pdf).
+Choose an STQC approved agency, or an agency on the [CERT-In empanelled list](https://www.cert-in.org.in/PDF/Empanel_org.pdf).
 
 ## 2. Point the auditor at staging
 
@@ -37979,10 +37980,11 @@ Every M1 call, one per use case, with its error codes in one file: 125 operation
 
 [Download skill](/docs/main/skills/abdm-m1.tar.gz "The whole skill folder, as a .tar.gz archive.")
 
-- Functionalities17 loops, each from screen to test.
-- RunThe test run, from readiness to report.
-- FoundationsRules across calls, hosts and headers.
-- Errors17 error codes, and the debug loop.
+- ScaffoldEight steps from discovery to sandbox tests.
+- DesignWhat a screen must do, and never claim.
+- Integrate123 operations, with hosts and headers.
+- Debug17 error codes, each with its fix.
+- TestTests from offline pins to a live sandbox.
 
 `mkdir -p .claude/skills && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m1.tar.gz | tar -xzf - -C .claude/skills`
 
@@ -38354,7 +38356,6 @@ Every M2 call and callback with its error codes in one file: 24 operations, 120 
 - Integrate24 operations, with hosts and headers.
 - Debug120 error codes, each with its fix.
 - TestTests from offline pins to a live sandbox.
-- Test-matrix
 
 `mkdir -p .claude/skills && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m2.tar.gz | tar -xzf - -C .claude/skills`
 
@@ -38647,7 +38648,6 @@ Every M3 call and callback in one file: 16 operations.
 - Integrate16 operations, with hosts and headers.
 - DebugNo error code is recorded yet.
 - TestTests from offline pins to a live sandbox.
-- Test-matrix
 
 `mkdir -p .claude/skills && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m3.tar.gz | tar -xzf - -C .claude/skills`
 
@@ -38838,7 +38838,6 @@ Every M4 call in one file: 104 operations.
 - Integrate91 operations, with hosts and headers.
 - DebugNo error code is recorded yet.
 - TestTests from offline pins to a live sandbox.
-- Test-matrix
 
 `mkdir -p .claude/skills && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m4.tar.gz | tar -xzf - -C .claude/skills`
 
