@@ -15,7 +15,7 @@ sources:
     note: >
       NHA's sandbox FAQ carries nine questions on WASA. The answers below
       are drawn from them.
-  - url: https://www.cert-in.org.in/PDF/Empanel_org_2021.pdf
+  - url: https://www.cert-in.org.in/PDF/Empanel_org.pdf
     status: docs-only
     note: >
       The list of empanelled auditors NHA points integrators at when they

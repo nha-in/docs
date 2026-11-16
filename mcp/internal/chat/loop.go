@@ -866,7 +866,10 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 			return s.finish(nil, nil, nil, emit)
 		}
 		use.Module, use.ResolvedBy = module, by
-		if body, ok := s.Skill(module, cmd.Name); ok {
+		// A router that links references/functionalities/ is read per
+		// functionality, whether or not the module also keeps job files.
+		fnParts, perFn := perFunctionalityParts(s.Skill, module, cmd.Name, question)
+		if body, ok := s.Skill(module, cmd.Name); ok && !perFn {
 			cut, truncated := CutSection(body, question, MaxPageChars)
 			use.Status, use.Truncated = "used", truncated
 			use.URI = "skill://" + module + "/" + cmd.Name
@@ -876,7 +879,8 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 			// the same way a retrieved passage does.
 			g.corpus.WriteString(cut)
 			addSource(&sources, Source{ID: use.URI, Title: module + " " + cmd.Name, URL: use.Href})
-		} else if parts, ok := perFunctionalityParts(s.Skill, module, cmd.Name, question); ok {
+		} else if perFn {
+			parts := fnParts
 			// A module built per functionality: the router, the shared file
 			// the command maps to, and the functionality the question
 			// matches, each with an equal share of the budget.
