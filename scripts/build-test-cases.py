@@ -4,7 +4,8 @@
 NHA publishes each milestone's functional test cases as a spreadsheet. The
 sheets are stored untouched under catalogue/hiecm/openapi/.raw/, and this
 turns each one into a page with one table per group of cases, the way the
-sheet lays them out. A case id is an anchor on its row, so it is searchable,
+sheet lays them out. A term NHA has renamed is published under its current
+name, listed in RENAMED below; the sheet itself is never touched. A case id is an anchor on its row, so it is searchable,
 linkable from a milestone or API page, and present in the page's Markdown copy
 for agents. Steps sit behind a Steps toggle in the row, so the table stays
 scannable. The pages carry `generated: true`: fix
@@ -146,10 +147,21 @@ PHR_SECTIONS = {
 }
 
 
+# Terms NHA has renamed but whose old name is still in the sheets. Testers read these pages
+# beside the sheet and asked what a PHR address was, so the pages say the current name. NHA
+# renamed it too: the PHR documentation of 6 November 2026 changed "PHR address" to "ABHA
+# Address" in section 10.1, and says outright that the two mean the same thing. The sheets are
+# stored untouched; only what is published is renamed. shared/glossary/abha-address.md and
+# shared/vocabulary.yaml keep the old name, so a reader who searches for it still arrives.
+RENAMED = [(re.compile(r"PHR\s+address", re.I), "ABHA address")]
+
+
 def clean(value):
     if value is None:
         return ""
     text = str(value).replace("\r", "").replace("—", ", ")
+    for pattern, now in RENAMED:
+        text = pattern.sub(now, text)
     lines = [re.sub(r"\s{2,}", " ", line).strip() for line in text.split("\n")]
     return "\n".join(line for line in lines if line)
 

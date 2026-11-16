@@ -188,6 +188,12 @@ def evidence_tables(doc):
     return found
 
 
+def renamed(text):
+    """The rename the report applies to a term NHA has changed, so a name read straight from the
+    sheet can be compared with the name the report printed. Same list as the report's RENAMED."""
+    return re.sub(r"PHR\s+address", "ABHA address", text, flags=re.I)
+
+
 def scenario_blocks(doc):
     """Each test case's header block in the test execution details, as {field: value}, keyed by
     the name of test case it carries."""
@@ -836,7 +842,9 @@ def main():
                     raw = ws.cell(r, c).value
                     if not raw:
                         continue
-                    name = flat_text(report_mask(str(raw)))
+                    # The report prints a renamed term under its current name, so the
+                    # names gathered here are renamed the same way before they are compared.
+                    name = flat_text(renamed(report_mask(str(raw))))
                     from_sheet.add(name)
                     # A name that opens with its scenario and a colon also counts without it.
                     from_sheet.add(flat_text(name.partition(" : ")[2]) or name)
